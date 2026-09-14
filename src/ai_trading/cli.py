@@ -1124,6 +1124,8 @@ def supervisor_run(
     poll_seconds: float = typer.Option(60.0, min=0.0),
     max_iterations: int = typer.Option(1000000, min=1),
     max_restarts: int = typer.Option(10, min=0, max=100),
+    require_qualification: bool = typer.Option(False),
+    qualification_path: str = typer.Option("artifacts/soak/qualification.json"),
 ) -> None:
     names = [s.strip() for s in symbols.split(",") if s.strip()]
     if len(names) < 2:
@@ -1157,7 +1159,11 @@ def supervisor_run(
             runtime.allocator_config_store.path,
         ],
         audit_path=runtime.audit.path,
-        config=SupervisorConfig(max_restarts=max_restarts),
+        config=SupervisorConfig(
+            max_restarts=max_restarts,
+            require_qualification=require_qualification,
+        ),
+        qualification_store=QualificationStore(qualification_path),
     )
     result = supervisor.run()
 
