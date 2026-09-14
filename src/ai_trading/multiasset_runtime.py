@@ -47,6 +47,7 @@ from .portfolio_intelligence import (
 )
 from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
 from .quality_store import QualityStore
+from .recovery_health import evaluate_recovery_health
 from .regime import detect_regime
 from .risk_governor import GovernorPolicy, GovernorSignals, evaluate_governor
 from .runtime_lock import RuntimeLock
@@ -746,6 +747,7 @@ class MultiAssetPaperRuntime:
                 if confidences
                 else 0.0
             )
+            recovery_health = evaluate_recovery_health(self.lifecycle_log)
             governor = evaluate_governor(
                 GovernorSignals(
                     data_quality=data_quality,
@@ -757,6 +759,9 @@ class MultiAssetPaperRuntime:
                     drawdown=current_drawdown,
                     crisis_mode=crisis_decision.state.mode,
                     liquidity_stressed=stress_report.worst_scenario == "liquidity_crunch",
+                    recovery_degraded=recovery_health.status == "degraded",
+                    recovery_recent_failures=recovery_health.recent_failures,
+                    recovery_fallback_depth=recovery_health.max_fallback_depth,
                 ),
                 self.governor_policy,
             )
