@@ -5,6 +5,7 @@ from itertools import product
 
 import pandas as pd
 
+from .crisis_gate import promotions_allowed
 from .expert_pool import ExpertPoolStore, ExpertRecord, reconcile_pool
 from .expert_sandbox import validate_specialist
 
@@ -118,6 +119,26 @@ def run_expert_factory(
         for name, record in reconciled.items()
         if record.status == "active" and name not in before_active
     ]
+
+    if not promotions_allowed():
+        reconciled = {
+            name: (
+                ExpertRecord(
+                    name=record.name,
+                    kind=record.kind,
+                    status="challenger",
+                    score=record.score,
+                    economic_score=record.economic_score,
+                    validation_score=record.validation_score,
+                    observations=record.observations,
+                    compute_cost=record.compute_cost,
+                )
+                if name in newly_active
+                else record
+            )
+            for name, record in reconciled.items()
+        }
+        newly_active = []
 
     if len(newly_active) > config.max_promotions_per_run:
         keep = set(
