@@ -13,8 +13,8 @@ from .data import load_history
 from .drift import detect_drift
 from .engine import TradingEngine
 from .experiments import ExperimentRegistry
-from .expert_pool import ExpertPoolStore, ExpertRecord, reconcile_pool
 from .expert_factory import FactoryConfig, run_expert_factory
+from .expert_pool import ExpertPoolStore, ExpertRecord, reconcile_pool
 from .expert_pool_manager import refresh_expert_pool
 from .expert_sandbox import validate_specialist
 from .features import make_features
