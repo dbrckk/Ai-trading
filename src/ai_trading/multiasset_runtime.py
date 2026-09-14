@@ -147,6 +147,7 @@ class MultiAssetPaperRuntime:
                 model = self._load_model(symbol)
 
                 learn_label = labels.get(learn_idx)
+                evaluation_prediction = model.predict_one(features.loc[learn_idx, FEATURES])
                 if pd.notna(learn_label):
                     model.learn_one(features.loc[learn_idx, FEATURES], int(learn_label))
 
@@ -175,11 +176,10 @@ class MultiAssetPaperRuntime:
 
                 realized = labels.get(learn_idx)
                 if pd.notna(realized):
-                    previous_prediction = model.predict_one(features.loc[learn_idx, FEATURES])
                     self.quality_store.append(
                         key,
-                        prediction=previous_prediction.side,
-                        confidence=previous_prediction.confidence,
+                        prediction=evaluation_prediction.side,
+                        confidence=evaluation_prediction.confidence,
                         label=int(realized),
                     )
 
