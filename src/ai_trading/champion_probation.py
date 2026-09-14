@@ -5,6 +5,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from .champions import ChampionRecord, ChampionRegistry
+from .model_quarantine import ModelQuarantineStore
 
 
 @dataclass(frozen=True)
@@ -57,10 +58,12 @@ class ChampionProbationManager:
         *,
         store: ChampionProbationStore | None = None,
         policy: ProbationPolicy | None = None,
+        quarantine_store: ModelQuarantineStore | None = None,
     ) -> None:
         self.registry = registry
         self.store = store or ChampionProbationStore()
         self.policy = policy or ProbationPolicy()
+        self.quarantine_store = quarantine_store or ModelQuarantineStore()
 
     def start(self, champion: ChampionRecord) -> ProbationState:
         state = ProbationState(
@@ -70,7 +73,12 @@ class ChampionProbationManager:
         self.store.save(state)
         return state
 
-    def observe(self, metrics: dict[str, float]) -> ProbationResult:
+    def observe(
+        self,
+        metrics: dict[str, float],
+        *,
+        processed_bar: int = 0,
+    ) -> ProbationResult:
         state = self.store.load()
         active = self.registry.active()
         if state is None:
@@ -86,7 +94,7 @@ class ChampionProbationManager:
         ]
         if missing:
             reasons = (f"missing probation metrics: {', '.join(sorted(missing))}",)
-            return self._rollback(state, reasons)
+            return self._rollback(state, reasons, processed_bar=processed_bar)
 
         observations = state.observations + 1
         baseline = state.baseline_metrics
@@ -118,7 +126,11 @@ class ChampionProbationManager:
         self.store.save(updated)
 
         if reasons:
-            return self._rollback(updated, tuple(reasons))
+            return self._rollback(
+                updated,
+                tuple(reasons),
+                processed_bar=processed_bar,
+            )
 
         if observations >= self.policy.min_observations:
             passed = ProbationState(
@@ -129,6 +141,7 @@ class ChampionProbationManager:
                 failure_count=updated.failure_count,
             )
             self.store.save(passed)
+            self.quarantine_store.record_success(passed.version)
             return ProbationResult("pass", (), passed, active)
 
         return ProbationResult("continue", (), updated, active)
@@ -137,6 +150,8 @@ class ChampionProbationManager:
         self,
         state: ProbationState,
         reasons: tuple[str, ...],
+        *,
+        processed_bar: int,
     ) -> ProbationResult:
         rolled_back = self.registry.rollback()
         failed = ProbationState(
@@ -147,4 +162,9 @@ class ChampionProbationManager:
             failure_count=state.failure_count + 1,
         )
         self.store.save(failed)
+        self.quarantine_store.record_failure(
+            failed.version,
+            processed_bar=processed_bar,
+            reason="; ".join(reasons),
+        )
         return ProbationResult("rollback", reasons, failed, rolled_back)
