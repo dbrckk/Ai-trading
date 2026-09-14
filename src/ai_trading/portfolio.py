@@ -99,3 +99,48 @@ def target_notionals(
     if equity <= 0:
         raise ValueError("equity must be positive")
     return weights.astype(float) * float(equity)
+
+
+def risk_parity_weights(
+    returns: pd.DataFrame,
+    *,
+    max_asset_weight: float = 0.35,
+    target_gross_exposure: float = 1.0,
+    iterations: int = 200,
+    tolerance: float = 1e-8,
+) -> pd.Series:
+    clean = returns.astype(float).dropna()
+    if clean.empty or clean.shape[1] < 2:
+        raise ValueError("risk parity requires at least two assets")
+
+    cov = clean.cov().to_numpy(dtype=float)
+    n = cov.shape[0]
+    weights = np.full(n, 1.0 / n, dtype=float)
+    target_rc = np.full(n, 1.0 / n, dtype=float)
+
+    for _ in range(iterations):
+        portfolio_var = float(weights @ cov @ weights)
+        if portfolio_var <= 1e-18:
+            break
+        marginal = cov @ weights
+        risk_contrib = weights * marginal
+        total_rc = float(risk_contrib.sum())
+        if abs(total_rc) <= 1e-18:
+            break
+
+        normalized_rc = risk_contrib / total_rc
+        error = normalized_rc - target_rc
+        if float(np.max(np.abs(error))) < tolerance:
+            break
+
+        safe_rc = np.where(np.abs(normalized_rc) < 1e-12, 1e-12, normalized_rc)
+        weights *= target_rc / safe_rc
+        weights = np.clip(weights, 1e-12, None)
+        weights /= weights.sum()
+
+    raw = pd.Series(weights, index=clean.columns, dtype=float)
+    return _cap_and_normalize(
+        raw,
+        max_weight=max_asset_weight,
+        target_sum=target_gross_exposure,
+    )
