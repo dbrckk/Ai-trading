@@ -132,6 +132,35 @@ class MultiAssetPaperScheduler:
             champion_registry=self.runtime.champion_registry,
             lifecycle_log=self.runtime.lifecycle_log,
         )
+        if not startup.ready and startup.snapshot_available:
+            recovery = recover_latest_consistent_state(
+                self.snapshot_store,
+                destination_root="artifacts",
+                audit_path=self.runtime.audit.path,
+                state_files=self._snapshot_files(),
+            )
+            self.runtime.audit.append(
+                "startup_recovery",
+                {
+                    "restored": recovery.restored,
+                    "snapshot": recovery.snapshot,
+                    "reason": recovery.reason,
+                    "verified": recovery.verified,
+                    "mismatches": list(recovery.mismatches),
+                    "initial_reasons": list(startup.reasons),
+                },
+            )
+            if recovery.restored:
+                startup = run_startup_check(
+                    audit_path=self.runtime.audit.path,
+                    state_files=self._state_files(),
+                    jsonl_files=self._jsonl_files(),
+                    snapshot_store=self.snapshot_store,
+                    governor_store=self.runtime.governor_state_store,
+                    champion_registry=self.runtime.champion_registry,
+                    lifecycle_log=self.runtime.lifecycle_log,
+                )
+
         if not startup.ready:
             raise RuntimeError(
                 "multiasset scheduler startup self-check failed: "
