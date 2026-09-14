@@ -14,7 +14,6 @@ from .model_blend import BlendComponent, blend_predictions
 from .model_quality import evaluate_model_quality
 from .multiasset_state import AssetPosition, MultiAssetStateStore
 from .online import RiverDirectionModel
-from .quality_store import QualityStore
 from .pnl_attribution import attribute_pnl
 from .portfolio import AllocationConfig, inverse_volatility_weights, target_notionals
 from .portfolio_intelligence import (
@@ -22,6 +21,7 @@ from .portfolio_intelligence import (
     apply_portfolio_intelligence,
 )
 from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
+from .quality_store import QualityStore
 from .runtime_lock import RuntimeLock
 
 
