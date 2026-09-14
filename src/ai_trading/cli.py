@@ -1158,6 +1158,7 @@ def supervisor_run(
             runtime.governor_state_store.path,
             runtime.allocation_state_store.path,
             runtime.allocator_config_store.path,
+            runtime.drift_retrain_store.path,
         ],
         audit_path=runtime.audit.path,
         config=SupervisorConfig(
