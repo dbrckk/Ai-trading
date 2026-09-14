@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 import pandas as pd
 import typer
 from rich.console import Console
@@ -31,6 +32,7 @@ from .generations import GenerationStore
 from .global_allocator import GlobalAllocatorConfig, allocate_global_capital
 from .governor_state_store import GovernorStateStore
 from .guardrails import evaluate_health
+from .health_server import HealthServer
 from .metrics import collect_metrics, prometheus_text
 from .multiasset_backtest import MultiAssetWalkForwardBacktester
 from .multiasset_evolution import run_multiasset_evolution_cycle
@@ -47,6 +49,7 @@ from .robustness import block_bootstrap_returns
 from .runtime import PaperAutonomousRuntime
 from .scheduler import PaperScheduler, SchedulerConfig
 from .state_snapshot import AtomicSnapshotStore
+from .supervisor import PaperSupervisor, SupervisorConfig
 from .supervisor_lease import SupervisorLeaseStore
 from .tuning import tune_walk_forward
 from .watchdog import HeartbeatStore, WatchdogPolicy, heartbeat_is_stale
@@ -1086,6 +1089,87 @@ def supervisor_status() -> None:
 @app.command("metrics")
 def metrics() -> None:
     console.print(prometheus_text(collect_metrics()), markup=False)
+
+
+@app.command("health-serve")
+def health_serve(
+    host: str = typer.Option("127.0.0.1"),
+    port: int = typer.Option(8765, min=1, max=65535),
+) -> None:
+    server = HealthServer(host=host, port=port)
+    server.start()
+    console.print(f"Health endpoint listening on http://{host}:{port}/health")
+    try:
+        import time
+
+        while True:
+            time.sleep(3600)
+    except KeyboardInterrupt:
+        server.stop()
+
+
+@app.command("supervisor-run")
+def supervisor_run(
+    symbols: str = typer.Option("GC=F,SI=F,CL=F"),
+    period: str = typer.Option("1y"),
+    interval: str = typer.Option("1d"),
+    poll_seconds: float = typer.Option(60.0, min=0.0),
+    max_iterations: int = typer.Option(1000000, min=1),
+    max_restarts: int = typer.Option(10, min=0, max=100),
+) -> None:
+    names = [s.strip() for s in symbols.split(",") if s.strip()]
+    if len(names) < 2:
+        raise typer.BadParameter("Provide at least two symbols")
+
+    command = [
+        sys.executable,
+        "-m",
+        "ai_trading.cli",
+        "multiasset-loop",
+        "--symbols",
+        ",".join(names),
+        "--period",
+        period,
+        "--interval",
+        interval,
+        "--poll-seconds",
+        str(poll_seconds),
+        "--max-iterations",
+        str(max_iterations),
+    ]
+
+    runtime = MultiAssetPaperRuntime()
+    supervisor = PaperSupervisor(
+        command=command,
+        state_files=[
+            runtime.state_store.path,
+            runtime.crisis_state_store.path,
+            runtime.governor_state_store.path,
+            runtime.allocation_state_store.path,
+            runtime.allocator_config_store.path,
+        ],
+        audit_path=runtime.audit.path,
+        config=SupervisorConfig(max_restarts=max_restarts),
+    )
+    result = supervisor.run()
+
+    table = Table(title="Paper supervisor result")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Restarts", str(result.restarts))
+    table.add_row(
+        "Maintenance stop",
+        "YES" if result.stopped_for_maintenance else "NO",
+    )
+    table.add_row(
+        "Crash loop",
+        "YES" if result.crash_loop_detected else "NO",
+    )
+    table.add_row(
+        "Final exit code",
+        "-" if result.final_exit_code is None else str(result.final_exit_code),
+    )
+    console.print(table)
 
 
 if __name__ == "__main__":
