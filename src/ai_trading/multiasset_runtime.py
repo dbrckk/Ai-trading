@@ -1,12 +1,16 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
+import joblib
 import pandas as pd
 
 from .audit import AuditLog
-from .config import RiskConfig
+from .config import ModelConfig, RiskConfig
+from .features import FEATURES, make_features, make_labels
 from .multiasset_state import AssetPosition, MultiAssetStateStore
+from .online import RiverDirectionModel
 from .portfolio import AllocationConfig, inverse_volatility_weights, target_notionals
 from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
 from .runtime_lock import RuntimeLock
@@ -20,6 +24,8 @@ class MultiAssetStepResult:
     cash: float
     weights: dict[str, float]
     notionals: dict[str, float]
+    signals: dict[str, int]
+    confidences: dict[str, float]
     risk_approved: bool
     risk_reasons: tuple[str, ...]
 
@@ -29,18 +35,39 @@ class MultiAssetPaperRuntime:
         self,
         *,
         risk_config: RiskConfig | None = None,
+        model_config: ModelConfig | None = None,
         allocation_config: AllocationConfig | None = None,
         portfolio_risk_config: PortfolioRiskConfig | None = None,
         state_store: MultiAssetStateStore | None = None,
         audit_log: AuditLog | None = None,
         lock_path: str = "artifacts/multiasset_runtime.lock",
+        model_root: str | Path = "artifacts/models/multiasset",
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
+        self.model_config = model_config or ModelConfig()
         self.allocation_config = allocation_config or AllocationConfig()
         self.portfolio_risk_config = portfolio_risk_config or PortfolioRiskConfig()
         self.state_store = state_store or MultiAssetStateStore()
         self.audit = audit_log or AuditLog("artifacts/multiasset_audit.jsonl")
         self.lock_path = lock_path
+        self.model_root = Path(model_root)
+
+    def _model_path(self, symbol: str) -> Path:
+        safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
+        return self.model_root / f"{safe}.joblib"
+
+    def _load_model(self, symbol: str) -> RiverDirectionModel:
+        path = self._model_path(symbol)
+        if path.exists():
+            return joblib.load(path)
+        return RiverDirectionModel()
+
+    def _save_model(self, symbol: str, model: RiverDirectionModel) -> None:
+        path = self._model_path(symbol)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temp = path.with_suffix(".tmp")
+        joblib.dump(model, temp)
+        temp.replace(path)
 
     def step(self, markets: dict[str, pd.DataFrame]) -> MultiAssetStepResult:
         if len(markets) < 2:
@@ -50,6 +77,8 @@ class MultiAssetPaperRuntime:
             closes = {}
             opens = {}
             execution_times: set[str] = set()
+            features_by_symbol: dict[str, pd.DataFrame] = {}
+            labels_by_symbol: dict[str, pd.Series] = {}
 
             for symbol, df in markets.items():
                 if len(df) < 40:
@@ -57,6 +86,12 @@ class MultiAssetPaperRuntime:
                 closes[symbol] = df["Close"].astype(float)
                 opens[symbol] = df["Open"].astype(float)
                 execution_times.add(str(df.index[-1]))
+                features_by_symbol[symbol] = make_features(df)
+                labels_by_symbol[symbol] = make_labels(
+                    df,
+                    horizon_bars=self.model_config.horizon_bars,
+                    return_threshold=self.model_config.return_threshold,
+                )
 
             if len(execution_times) != 1:
                 raise ValueError("Assets are not aligned on the same latest bar")
@@ -71,6 +106,8 @@ class MultiAssetPaperRuntime:
                     cash=state.cash,
                     weights={},
                     notionals={},
+                    signals={},
+                    confidences={},
                     risk_approved=False,
                     risk_reasons=("bar already processed",),
                 )
@@ -80,9 +117,40 @@ class MultiAssetPaperRuntime:
             if len(returns) < 20:
                 raise ValueError("Insufficient aligned return history")
 
-            weights = inverse_volatility_weights(returns, self.allocation_config)
+            base_weights = inverse_volatility_weights(returns, self.allocation_config)
+
+            signals: dict[str, int] = {}
+            confidences: dict[str, float] = {}
+            signed_weights = base_weights.copy()
+
+            for symbol in base_weights.index:
+                features = features_by_symbol[symbol]
+                labels = labels_by_symbol[symbol]
+                valid = features.dropna().index
+                if len(valid) < 3:
+                    raise ValueError(f"Insufficient valid features for {symbol}")
+
+                signal_idx = valid[-2]
+                learn_idx = valid[-3]
+                model = self._load_model(symbol)
+
+                learn_label = labels.get(learn_idx)
+                if pd.notna(learn_label):
+                    model.learn_one(features.loc[learn_idx, FEATURES], int(learn_label))
+
+                prediction = model.predict_one(features.loc[signal_idx, FEATURES])
+                self._save_model(symbol, model)
+
+                side = prediction.side
+                if prediction.confidence < self.risk_config.min_confidence:
+                    side = 0
+
+                signals[symbol] = side
+                confidences[symbol] = prediction.confidence
+                signed_weights.loc[symbol] = base_weights.loc[symbol] * side
+
             equity = state.equity()
-            notionals = target_notionals(equity, weights)
+            notionals = target_notionals(equity, signed_weights)
 
             risk = evaluate_portfolio_risk(
                 notionals,
@@ -93,7 +161,7 @@ class MultiAssetPaperRuntime:
 
             if risk.approved:
                 total_costs = 0.0
-                for symbol in weights.index:
+                for symbol in signed_weights.index:
                     price = float(opens[symbol].iloc[-1])
                     position = state.positions.setdefault(symbol, AssetPosition())
                     desired_units = float(notionals[symbol]) / price
@@ -107,7 +175,7 @@ class MultiAssetPaperRuntime:
 
                 state.cash -= total_costs
 
-            for symbol in weights.index:
+            for symbol in signed_weights.index:
                 position = state.positions.setdefault(symbol, AssetPosition())
                 position.last_price = float(closes[symbol].iloc[-1])
 
@@ -121,7 +189,10 @@ class MultiAssetPaperRuntime:
                 "multiasset_runtime_step",
                 {
                     "timestamp": execution_time,
-                    "weights": weights.to_dict(),
+                    "base_weights": base_weights.to_dict(),
+                    "signed_weights": signed_weights.to_dict(),
+                    "signals": signals,
+                    "confidences": confidences,
                     "notionals": notionals.to_dict(),
                     "risk_approved": risk.approved,
                     "risk_reasons": list(risk.reasons),
@@ -135,8 +206,10 @@ class MultiAssetPaperRuntime:
                 timestamp=execution_time,
                 equity=current_equity,
                 cash=state.cash,
-                weights={k: float(v) for k, v in weights.items()},
+                weights={k: float(v) for k, v in signed_weights.items()},
                 notionals={k: float(v) for k, v in notionals.items()},
+                signals=signals,
+                confidences=confidences,
                 risk_approved=risk.approved,
                 risk_reasons=risk.reasons,
             )
