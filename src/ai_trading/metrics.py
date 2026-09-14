@@ -26,6 +26,10 @@ class MetricsSnapshot:
     promotion_rejected_total: int
     rollback_total: int
     quarantine_total: int
+    recovery_attempt_total: int
+    recovery_success_total: int
+    recovery_failure_total: int
+    recovery_fallback_depth: int
 
 
 def collect_metrics(
@@ -73,6 +77,24 @@ def collect_metrics(
         ),
         rollback_total=sum(event.event == "rollback" for event in lifecycle_events),
         quarantine_total=sum(record.quarantined for record in quarantine_records.values()),
+        recovery_attempt_total=sum(
+            event.event in {"recovery_succeeded", "recovery_failed"}
+            for event in lifecycle_events
+        ),
+        recovery_success_total=sum(
+            event.event == "recovery_succeeded" for event in lifecycle_events
+        ),
+        recovery_failure_total=sum(
+            event.event == "recovery_failed" for event in lifecycle_events
+        ),
+        recovery_fallback_depth=max(
+            (
+                int(event.metadata.get("fallback_depth", 0))
+                for event in lifecycle_events
+                if event.event in {"recovery_succeeded", "recovery_failed"}
+            ),
+            default=0,
+        ),
     )
 
 
@@ -107,6 +129,14 @@ def prometheus_text(snapshot: MetricsSnapshot) -> str:
             f"ai_trading_rollback_total {snapshot.rollback_total}",
             "# TYPE ai_trading_quarantine_total gauge",
             f"ai_trading_quarantine_total {snapshot.quarantine_total}",
+            "# TYPE ai_trading_recovery_attempt_total counter",
+            f"ai_trading_recovery_attempt_total {snapshot.recovery_attempt_total}",
+            "# TYPE ai_trading_recovery_success_total counter",
+            f"ai_trading_recovery_success_total {snapshot.recovery_success_total}",
+            "# TYPE ai_trading_recovery_failure_total counter",
+            f"ai_trading_recovery_failure_total {snapshot.recovery_failure_total}",
+            "# TYPE ai_trading_recovery_fallback_depth gauge",
+            f"ai_trading_recovery_fallback_depth {snapshot.recovery_fallback_depth}",
             "",
         ]
     )
