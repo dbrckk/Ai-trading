@@ -53,6 +53,7 @@ from .resilience import (
     ResilienceContext,
     ResiliencePolicy,
     ResilienceSignals,
+    ResilienceState,
     ResilienceStateStore,
     adapt_resilience_policy,
     evaluate_resilience,
@@ -823,7 +824,35 @@ class MultiAssetPaperRuntime:
                 effective_signals,
                 adaptive_resilience_policy,
             )
-            self.resilience_state_store.save(resilience.state)
+            persisted_resilience_state = ResilienceState(
+                mode=resilience.state.mode,
+                healthy_streak=resilience.state.healthy_streak,
+                reason=resilience.state.reason,
+                mode_steps=resilience.state.mode_steps,
+                instability_status=stability.status,
+            )
+            self.resilience_state_store.save(persisted_resilience_state)
+            if stability.status != previous_resilience_state.instability_status:
+                self.lifecycle_log.append(
+                    event="resilience_instability",
+                    version="",
+                    model_name="",
+                    reason="; ".join(stability.reasons),
+                    failure_type=(
+                        "technical_failure"
+                        if stability.status != "stable"
+                        else ""
+                    ),
+                    processed_bar=state.processed_bars,
+                    metadata={
+                        "from_status": previous_resilience_state.instability_status,
+                        "to_status": stability.status,
+                        "oscillations": stability.oscillations,
+                        "recovery_streak_events": stability.recovery_streak_events,
+                        "cooldown_count": stability.cooldown_count,
+                        "reasons": list(stability.reasons),
+                    },
+                )
             if resilience.state.mode != previous_resilience_state.mode:
                 self.lifecycle_log.append(
                     event="resilience_transition",
@@ -1014,10 +1043,11 @@ class MultiAssetPaperRuntime:
                         "scenario_losses": stress_report.scenario_losses,
                     },
                     "resilience": {
-                        "mode": resilience.state.mode,
-                        "reason": resilience.state.reason,
-                        "healthy_streak": resilience.state.healthy_streak,
-                        "mode_steps": resilience.state.mode_steps,
+                        "mode": persisted_resilience_state.mode,
+                        "reason": persisted_resilience_state.reason,
+                        "healthy_streak": persisted_resilience_state.healthy_streak,
+                        "mode_steps": persisted_resilience_state.mode_steps,
+                        "instability_status": persisted_resilience_state.instability_status,
                         "exposure_cap": resilience.exposure_cap,
                         "promotions_allowed": resilience.promotions_allowed,
                         "scheduler_allowed": resilience.scheduler_allowed,
