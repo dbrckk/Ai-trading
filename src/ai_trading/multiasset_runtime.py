@@ -292,7 +292,6 @@ class MultiAssetPaperRuntime:
                 clean_features = features.loc[valid, FEATURES]
                 drift_risk_multiplier = 1.0
                 retrain_triggered = False
-                retrain_completed = False
                 if len(clean_features) >= 120:
                     recent_window = clean_features.iloc[-60:]
                     reference_window = clean_features.iloc[:-60]
@@ -360,7 +359,6 @@ class MultiAssetPaperRuntime:
                             max_psi=distribution_drift.max_psi,
                             correlation_shift=distribution_drift.correlation_shift,
                         )
-                        retrain_completed = True
                         drift_by_symbol[symbol]["retrain_completed"] = True
                 except ValueError:
                     batch_model = None
