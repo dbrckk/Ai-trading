@@ -15,6 +15,7 @@ from .audit import AuditLog
 from .config import ModelConfig, RiskConfig
 from .crisis_controller import CrisisPolicy, evaluate_crisis_state, limits_for_state
 from .crisis_state_store import CrisisStateStore
+from .data_quality import evaluate_market_data_quality
 from .economic_meta import economic_route_weight
 from .economic_meta_store import EconomicMetaStore
 from .ensemble import EnsembleDirectionModel
@@ -595,11 +596,14 @@ class MultiAssetPaperRuntime:
                 self.portfolio_risk_config,
             )
 
-            quality_values = []
-            for market in markets.values():
-                required = market.loc[:, ["Open", "High", "Low", "Close"]].tail(40)
-                quality_values.append(float(required.notna().mean().mean()))
-            data_quality = min(quality_values) if quality_values else 0.0
+            data_quality_reports = {
+                symbol: evaluate_market_data_quality(market)
+                for symbol, market in markets.items()
+            }
+            data_quality = min(
+                (report.score for report in data_quality_reports.values()),
+                default=0.0,
+            )
             average_confidence = (
                 sum(confidences.values()) / len(confidences)
                 if confidences
@@ -791,6 +795,14 @@ class MultiAssetPaperRuntime:
                         "reason": governor.reason,
                         "data_quality": data_quality,
                         "average_model_confidence": average_confidence,
+                        "data_quality_reports": {
+                            symbol: {
+                                "score": report.score,
+                                "valid": report.valid,
+                                "reasons": list(report.reasons),
+                            }
+                            for symbol, report in data_quality_reports.items()
+                        },
                     },
                     "crisis": {
                         "mode": crisis_decision.state.mode,
