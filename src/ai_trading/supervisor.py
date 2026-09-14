@@ -55,6 +55,16 @@ class PaperSupervisor:
         self.governor_store = governor_store or GovernorStateStore()
         self.snapshot_store = snapshot_store or AtomicSnapshotStore()
 
+    def _halt_governor(self, reason: str) -> None:
+        previous = self.governor_store.load()
+        self.governor_store.save(
+            GovernorState(
+                verdict="HALT",
+                reason=reason,
+                consecutive_halts=previous.consecutive_halts + 1,
+            )
+        )
+
     def run(self) -> SupervisorResult:
         token = secrets.token_hex(16)
         self.lease_store.acquire(token)
@@ -94,15 +104,12 @@ class PaperSupervisor:
                         restart_index=restarts,
                         reason="worker exited cleanly",
                     )
-                    previous = self.governor_store.load()
-            self.governor_store.save(
-                GovernorState(
-                    verdict="HALT",
-                    reason="supervisor restart budget exhausted",
-                    consecutive_halts=previous.consecutive_halts + 1,
-                )
-            )
-            return SupervisorResult(restarts, False, False, final_exit)
+                    return SupervisorResult(
+                        restarts,
+                        False,
+                        False,
+                        final_exit,
+                    )
 
                 now = time.monotonic()
                 crashes = [
@@ -119,14 +126,7 @@ class PaperSupervisor:
                 )
 
                 if len(crashes) >= self.config.max_crashes_in_window:
-                    previous = self.governor_store.load()
-                    self.governor_store.save(
-                        GovernorState(
-                            verdict="HALT",
-                            reason="supervisor crash-loop detected",
-                            consecutive_halts=previous.consecutive_halts + 1,
-                        )
-                    )
+                    self._halt_governor("supervisor crash-loop detected")
                     return SupervisorResult(
                         restarts,
                         False,
@@ -144,6 +144,7 @@ class PaperSupervisor:
                 )
                 time.sleep(max(0.0, delay))
 
+            self._halt_governor("supervisor restart budget exhausted")
             return SupervisorResult(restarts, False, False, final_exit)
         finally:
             self.lease_store.release(token)
