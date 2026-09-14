@@ -25,6 +25,7 @@ def validate_qualification_record(
     min_normal_ratio: float = 0.90,
     max_halt_ratio: float = 0.01,
     max_mttr_seconds: float | None = None,
+    min_observation_seconds: float = 0.0,
 ) -> QualificationGuardResult:
     reasons: list[str] = []
 
@@ -51,17 +52,36 @@ def validate_qualification_record(
     if record.interval != interval:
         reasons.append("qualification interval does not match")
 
-    if reliability is not None:
-        if reliability.reliability_score < min_reliability_score:
+    effective_reliability = reliability
+    if effective_reliability is None and record.reliability_score is not None:
+        effective_reliability = ReliabilityReport(
+            observation_seconds=float(record.reliability_observation_seconds or 0.0),
+            normal_ratio=float(record.normal_ratio or 0.0),
+            cautious_ratio=0.0,
+            degraded_ratio=0.0,
+            recovery_ratio=0.0,
+            cooldown_ratio=0.0,
+            halt_ratio=float(record.halt_ratio or 0.0),
+            halt_count=0,
+            incident_count=0,
+            mttr_seconds=record.mttr_seconds,
+            mtbf_seconds=record.mtbf_seconds,
+            reliability_score=float(record.reliability_score),
+        )
+
+    if effective_reliability is not None:
+        if effective_reliability.observation_seconds < min_observation_seconds:
+            reasons.append("reliability observation window too short")
+        if effective_reliability.reliability_score < min_reliability_score:
             reasons.append("reliability score below qualification threshold")
-        if reliability.normal_ratio < min_normal_ratio:
+        if effective_reliability.normal_ratio < min_normal_ratio:
             reasons.append("normal-state ratio below qualification threshold")
-        if reliability.halt_ratio > max_halt_ratio:
+        if effective_reliability.halt_ratio > max_halt_ratio:
             reasons.append("halt-state ratio exceeds qualification threshold")
         if (
             max_mttr_seconds is not None
-            and reliability.mttr_seconds is not None
-            and reliability.mttr_seconds > max_mttr_seconds
+            and effective_reliability.mttr_seconds is not None
+            and effective_reliability.mttr_seconds > max_mttr_seconds
         ):
             reasons.append("MTTR exceeds qualification threshold")
 
