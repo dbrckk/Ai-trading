@@ -735,8 +735,10 @@ def expert_evolve(
     table = Table(title=f"Expert evolution: {symbol}")
     table.add_column("Field")
     table.add_column("Value", justify="right")
+    table.add_row("Generation", str(result.generation))
     table.add_row("Mutations evaluated", str(result.evaluated))
     table.add_row("Accepted", str(result.accepted))
+    table.add_row("Portfolio replacements", str(result.replaced))
     console.print(table)
 
 
