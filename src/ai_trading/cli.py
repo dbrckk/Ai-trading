@@ -26,6 +26,7 @@ from .features import make_features
 from .generation_rollback import rollback_generation
 from .generations import GenerationStore
 from .global_allocator import GlobalAllocatorConfig, allocate_global_capital
+from .governor_state_store import GovernorStateStore
 from .guardrails import evaluate_health
 from .multiasset_backtest import MultiAssetWalkForwardBacktester
 from .multiasset_evolution import run_multiasset_evolution_cycle
@@ -903,6 +904,19 @@ def crisis_status() -> None:
         "New promotions",
         "ENABLED" if limits.allow_new_promotions else "FROZEN",
     )
+    console.print(table)
+
+
+@app.command("risk-governor-status")
+def risk_governor_status() -> None:
+    state = GovernorStateStore().load()
+
+    table = Table(title="Risk governor status")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Verdict", state.verdict)
+    table.add_row("Reason", state.reason)
+    table.add_row("Consecutive halts", str(state.consecutive_halts))
     console.print(table)
 
 
