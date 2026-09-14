@@ -48,12 +48,12 @@ from .portfolio_intelligence import (
 from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
 from .quality_store import QualityStore
 from .recovery_health import evaluate_recovery_health
+from .regime import detect_regime
 from .resilience import (
     ResilienceSignals,
     ResilienceStateStore,
     evaluate_resilience,
 )
-from .regime import detect_regime
 from .risk_governor import GovernorPolicy, GovernorSignals, evaluate_governor
 from .runtime_lock import RuntimeLock
 from .specialist_experts import SpecialistDirectionModel
