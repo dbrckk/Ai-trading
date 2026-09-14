@@ -10,6 +10,8 @@ from .alpha_allocation import AlphaAllocationConfig, alpha_risk_weights
 from .audit import AuditLog
 from .config import ModelConfig, RiskConfig
 from .features import FEATURES, make_features, make_labels
+from .meta_router import MetaContext, route_predictions
+from .meta_store import MetaRouterStore
 from .model_blend import BlendComponent, blend_predictions
 from .model_quality import evaluate_model_quality
 from .multiasset_state import AssetPosition, MultiAssetStateStore
@@ -22,6 +24,7 @@ from .portfolio_intelligence import (
 )
 from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
 from .quality_store import QualityStore
+from .regime import detect_regime
 from .runtime_lock import RuntimeLock
 
 
@@ -54,6 +57,7 @@ class MultiAssetPaperRuntime:
         intelligence_config: PortfolioIntelligenceConfig | None = None,
         quality_store: QualityStore | None = None,
         alpha_allocation_config: AlphaAllocationConfig | None = None,
+        meta_store: MetaRouterStore | None = None,
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
@@ -66,6 +70,7 @@ class MultiAssetPaperRuntime:
         self.intelligence_config = intelligence_config or PortfolioIntelligenceConfig()
         self.quality_store = quality_store or QualityStore()
         self.alpha_allocation_config = alpha_allocation_config or AlphaAllocationConfig()
+        self.meta_store = meta_store or MetaRouterStore()
 
     def _model_path(self, symbol: str) -> Path:
         safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
@@ -154,8 +159,34 @@ class MultiAssetPaperRuntime:
                 if pd.notna(learn_label):
                     model.learn_one(features.loc[learn_idx, FEATURES], int(learn_label))
 
-                river_prediction = model.predict_one(features.loc[signal_idx, FEATURES])
+                signal_row = features.loc[signal_idx, FEATURES]
+                river_prediction = model.predict_one(signal_row)
                 self._save_model(symbol, model)
+
+                regime = detect_regime(signal_row)
+                current_equity = state.equity()
+                drawdown = 0.0 if state.peak_equity <= 0 else max(
+                    0.0,
+                    1.0 - current_equity / state.peak_equity,
+                )
+                drawdown_bucket = (
+                    "high"
+                    if drawdown >= 0.10
+                    else "medium"
+                    if drawdown >= 0.05
+                    else "low"
+                )
+                volatility_bucket = (
+                    "high"
+                    if float(signal_row["vol_10"]) >= 0.02
+                    else "normal"
+                )
+                context = MetaContext(
+                    symbol=symbol,
+                    regime=regime.name,
+                    volatility_bucket=volatility_bucket,
+                    drawdown_bucket=drawdown_bucket,
+                )
 
                 records = self.quality_store.load()
                 key = f"{symbol}:river"
@@ -169,9 +200,14 @@ class MultiAssetPaperRuntime:
                 else:
                     quality = 0.50
 
-                blended = blend_predictions(
+                base_blend = blend_predictions(
                     [BlendComponent("river", river_prediction, quality)]
                 )
+                routed = route_predictions(
+                    {"river": base_blend},
+                    self.meta_store.scores(context),
+                )
+                blended = routed.prediction
 
                 side = blended.side
                 if blended.confidence < self.risk_config.min_confidence:
@@ -179,11 +215,26 @@ class MultiAssetPaperRuntime:
 
                 realized = labels.get(learn_idx)
                 if pd.notna(realized):
+                    realized_int = int(realized)
                     self.quality_store.append(
                         key,
                         prediction=evaluation_prediction.side,
                         confidence=evaluation_prediction.confidence,
-                        label=int(realized),
+                        label=realized_int,
+                    )
+                    correct = evaluation_prediction.side == realized_int
+                    edge = (
+                        1.0
+                        if correct and evaluation_prediction.side != 0
+                        else -1.0
+                        if evaluation_prediction.side != 0
+                        else 0.0
+                    )
+                    self.meta_store.update(
+                        context,
+                        "river",
+                        correct=correct,
+                        edge=edge,
                     )
 
                 signals[symbol] = side
