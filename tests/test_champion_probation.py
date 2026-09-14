@@ -1,12 +1,12 @@
 from pathlib import Path
 
-from ai_trading.champions import ChampionRegistry
-from ai_trading.model_quarantine import ModelQuarantineStore
 from ai_trading.champion_probation import (
     ChampionProbationManager,
     ChampionProbationStore,
     ProbationPolicy,
 )
+from ai_trading.champions import ChampionRegistry
+from ai_trading.model_quarantine import ModelQuarantineStore
 
 
 BASELINE = {
@@ -121,7 +121,6 @@ def test_probation_fails_closed_when_metrics_are_missing(tmp_path: Path) -> None
     assert "missing probation metrics" in result.reasons[0]
     assert registry.active() is not None
     assert registry.active().version == "v1"
-
 
 
 def test_probation_rollback_records_model_failure(tmp_path: Path) -> None:
