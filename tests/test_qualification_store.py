@@ -68,6 +68,7 @@ def test_qualification_store_persists_reliability_sla(tmp_path: Path) -> None:
     assert loaded == saved
     assert loaded is not None
     assert loaded.reliability_score == 98.0
+    assert loaded.reliability_observation_seconds == 86_400.0
     assert loaded.normal_ratio == 0.97
     assert loaded.mttr_seconds == 120.0
     assert loaded.mtbf_seconds == 40_000.0
