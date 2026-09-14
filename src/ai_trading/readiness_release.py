@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from hashlib import sha256
+from hmac import compare_digest, new as hmac_new
 from json import JSONDecodeError, dumps, loads
 from pathlib import Path
 
@@ -31,6 +32,8 @@ class ReadinessRelease:
     trend_observations: int
     trend_score_change: float
     release_hash: str
+    signature_algorithm: str
+    signature: str
 
 
 @dataclass(frozen=True)
@@ -82,6 +85,7 @@ def create_readiness_release(
     resilience: ResilienceState,
     trend: ReadinessTrend,
     created_at_utc: str | None = None,
+    signing_key: str | bytes | None = None,
 ) -> ReadinessRelease:
     if not chain.valid:
         raise ValueError("cannot release from invalid readiness history chain")
@@ -103,9 +107,21 @@ def create_readiness_release(
         resilience=resilience,
         trend=trend,
     )
+    release_hash = _canonical_hash(payload)
+    signature_algorithm = "HMAC-SHA256" if signing_key is not None else "NONE"
+    signature = ""
+    if signing_key is not None:
+        key = signing_key.encode("utf-8") if isinstance(signing_key, str) else signing_key
+        signature = hmac_new(
+            key,
+            release_hash.encode("utf-8"),
+            sha256,
+        ).hexdigest()
     return ReadinessRelease(
         **payload,
-        release_hash=_canonical_hash(payload),
+        release_hash=release_hash,
+        signature_algorithm=signature_algorithm,
+        signature=signature,
     )
 
 
@@ -119,6 +135,8 @@ def verify_readiness_release(
     governor: GovernorState,
     resilience: ResilienceState,
     trend: ReadinessTrend,
+    signing_key: str | bytes | None = None,
+    require_signature: bool = True,
 ) -> ReadinessReleaseVerification:
     if release.format_version != RELEASE_FORMAT_VERSION:
         return ReadinessReleaseVerification(False, "unsupported readiness release format")
@@ -142,6 +160,21 @@ def verify_readiness_release(
     expected = _canonical_hash(payload)
     if release.release_hash != expected:
         return ReadinessReleaseVerification(False, "readiness release hash mismatch")
+
+    if require_signature:
+        if release.signature_algorithm != "HMAC-SHA256" or not release.signature:
+            return ReadinessReleaseVerification(False, "readiness release signature missing")
+        if signing_key is None:
+            return ReadinessReleaseVerification(False, "readiness release signing key missing")
+        key = signing_key.encode("utf-8") if isinstance(signing_key, str) else signing_key
+        expected_signature = hmac_new(
+            key,
+            release.release_hash.encode("utf-8"),
+            sha256,
+        ).hexdigest()
+        if not compare_digest(release.signature, expected_signature):
+            return ReadinessReleaseVerification(False, "readiness release signature invalid")
+
     return ReadinessReleaseVerification(True)
 
 
