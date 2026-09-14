@@ -1087,6 +1087,7 @@ def deployment_readiness(
     governor_path: str = typer.Option("artifacts/risk_governor_state.json"),
     readiness_history_path: str = typer.Option("artifacts/readiness_history.jsonl"),
     release_path: str = typer.Option("artifacts/readiness_release.json"),
+    revocations_path: str = typer.Option("artifacts/readiness_revocations.jsonl"),
     signing_key_env: str = typer.Option("AI_TRADING_RELEASE_SIGNING_KEY"),
 ) -> None:
     names = tuple(s.strip() for s in symbols.split(",") if s.strip())
