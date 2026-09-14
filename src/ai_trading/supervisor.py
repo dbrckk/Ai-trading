@@ -6,12 +6,12 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 
+from .governor_state_store import GovernorStateStore
 from .maintenance import MaintenanceStore
 from .restart_log import RestartLog
 from .startup_check import run_startup_check
 from .state_snapshot import AtomicSnapshotStore
 from .supervisor_lease import SupervisorLeaseStore
-from .governor_state_store import GovernorStateStore
 
 
 @dataclass(frozen=True)
