@@ -1,11 +1,11 @@
 from pathlib import Path
 
+from ai_trading.champions import ChampionRegistry
 from ai_trading.champion_probation import (
     ChampionProbationManager,
     ChampionProbationStore,
     ProbationPolicy,
 )
-from ai_trading.champions import ChampionRegistry
 
 
 BASELINE = {
