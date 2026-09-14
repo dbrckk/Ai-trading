@@ -21,6 +21,7 @@ from .control_plane import read_control_plane
 from .crisis_controller import limits_for_state
 from .crisis_state_store import CrisisStateStore
 from .data import load_history
+from .deployment_readiness import evaluate_deployment_readiness
 from .drift import detect_drift
 from .engine import TradingEngine
 from .evolution_manager import run_evolution_cycle
@@ -36,6 +37,7 @@ from .global_allocator import GlobalAllocatorConfig, allocate_global_capital
 from .governor_state_store import GovernorStateStore
 from .guardrails import evaluate_health
 from .health_server import HealthServer
+from .lifecycle_log import LifecycleEventLog
 from .maintenance import MaintenanceState, MaintenanceStore
 from .metrics import collect_metrics, prometheus_text
 from .multiasset_backtest import MultiAssetWalkForwardBacktester
@@ -51,6 +53,8 @@ from .qualification_store import QualificationStore
 from .qualification_suite import run_qualification_suite
 from .readiness import evaluate_readiness
 from .regime_validation import validate_regime_returns
+from .reliability import evaluate_reliability
+from .resilience import ResilienceStateStore
 from .robustness import block_bootstrap_returns
 from .runtime import PaperAutonomousRuntime
 from .runtime_factory import isolated_multiasset_runtime
@@ -961,6 +965,67 @@ def system_status() -> None:
         "RUN" if status.scheduler_should_run else "HALT",
     )
     console.print(table)
+
+
+@app.command("deployment-readiness")
+def deployment_readiness(
+    symbols: str = typer.Option("GC=F,SI=F,CL=F"),
+    period: str = typer.Option("2y"),
+    interval: str = typer.Option("1d"),
+    qualification_path: str = typer.Option("artifacts/soak/qualification.json"),
+    lifecycle_path: str = typer.Option("artifacts/model_lifecycle.jsonl"),
+    resilience_path: str = typer.Option("artifacts/resilience_state.json"),
+    governor_path: str = typer.Option("artifacts/risk_governor_state.json"),
+) -> None:
+    names = tuple(s.strip() for s in symbols.split(",") if s.strip())
+    if not names:
+        raise typer.BadParameter("Provide at least one symbol")
+
+    qualification = QualificationStore(qualification_path).load()
+    resilience_store = ResilienceStateStore(resilience_path)
+    resilience = resilience_store.load()
+    lifecycle = LifecycleEventLog(lifecycle_path)
+    reliability = evaluate_reliability(lifecycle, resilience)
+    governor = GovernorStateStore(governor_path).load()
+
+    readiness = evaluate_deployment_readiness(
+        qualification,
+        reliability=reliability,
+        resilience=resilience,
+        governor=governor,
+        symbols=names,
+        period=period,
+        interval=interval,
+    )
+
+    table = Table(title="Paper-to-live deployment readiness")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Decision", "READY" if readiness.allowed else "BLOCKED")
+    table.add_row("Reliability score", f"{reliability.reliability_score:.2f}")
+    table.add_row("Observation", f"{reliability.observation_seconds / 86400.0:.2f} days")
+    table.add_row("NORMAL ratio", f"{reliability.normal_ratio:.2%}")
+    table.add_row("HALT ratio", f"{reliability.halt_ratio:.2%}")
+    table.add_row(
+        "MTTR",
+        "-" if reliability.mttr_seconds is None else f"{reliability.mttr_seconds:.1f}s",
+    )
+    table.add_row(
+        "MTBF",
+        "-" if reliability.mtbf_seconds is None else f"{reliability.mtbf_seconds:.1f}s",
+    )
+    table.add_row("Resilience", resilience.mode)
+    table.add_row("Instability", resilience.instability_status)
+    table.add_row("Governor", governor.verdict)
+    console.print(table)
+
+    if readiness.reasons:
+        console.print("Blocking reasons:")
+        for reason in readiness.reasons:
+            console.print(f"- {reason}")
+
+    if not readiness.allowed:
+        raise typer.Exit(code=2)
 
 
 @app.command("multiasset-loop")
