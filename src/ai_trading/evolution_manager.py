@@ -133,6 +133,7 @@ def run_evolution_cycle(
                 df,
                 kind=candidate.kind,
                 return_threshold=candidate.return_threshold,
+                horizon_bars=candidate.horizon_bars,
             )
             candidate_returns = specialist_return_series(
                 df,
