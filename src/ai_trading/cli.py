@@ -23,6 +23,7 @@ from .generation_rollback import rollback_generation
 from .generations import GenerationStore
 from .guardrails import evaluate_health
 from .multiasset_backtest import MultiAssetWalkForwardBacktester
+from .multiasset_evolution import run_multiasset_evolution_cycle
 from .multiasset_runtime import MultiAssetPaperRuntime
 from .orchestrator import AutonomousPaperOrchestrator
 from .performance import PerformanceMetrics
@@ -757,6 +758,40 @@ def generation_rollback() -> None:
     table.add_row("Restored generation", str(result.restored.generation))
     table.add_row("Portfolio score", f"{result.restored.portfolio_score:.4f}")
     table.add_row("Active experts", ", ".join(result.active_experts) or "-")
+    console.print(table)
+
+
+@app.command("multiasset-evolve")
+def multiasset_evolve(
+    symbols: str = typer.Option("GC=F,SI=F,CL=F", help="Comma-separated Yahoo symbols"),
+    period: str = typer.Option("5y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+    parent_limit: int = typer.Option(2, min=1, max=10),
+    max_pair_correlation: float = typer.Option(0.85, min=0.0, max=1.0),
+) -> None:
+    names = [s.strip() for s in symbols.split(",") if s.strip()]
+    if len(names) < 2:
+        raise typer.BadParameter("Provide at least two symbols")
+
+    markets = {name: load_history(name, period, interval) for name in names}
+    result = run_multiasset_evolution_cycle(
+        markets,
+        parent_limit=parent_limit,
+        max_pair_correlation=max_pair_correlation,
+    )
+
+    table = Table(title="Multi-asset expert evolution")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Generation", str(result.generation))
+    table.add_row("Symbols", ", ".join(result.symbols))
+    table.add_row("Evolved symbols", str(result.evolved_symbols))
+    table.add_row("Portfolio score", f"{result.portfolio_score:.4f}")
+    table.add_row("Diversified", "YES" if result.diversified else "NO")
+    table.add_row("Max pair correlation", f"{result.max_pair_correlation:.3f}")
+    table.add_row("Accepted", "YES" if result.accepted else "NO")
+    table.add_row("Rolled back", "YES" if result.rolled_back else "NO")
+    table.add_row("Reason", result.reason)
     console.print(table)
 
 
