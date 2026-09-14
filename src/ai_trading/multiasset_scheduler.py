@@ -12,6 +12,7 @@ from .control_plane import read_control_plane
 from .multiasset_runtime import MultiAssetPaperRuntime, MultiAssetStepResult
 from .recovery import recover_latest_consistent_state
 from .session_integrity import compute_session_fingerprint
+from .startup_check import run_startup_check
 from .state_snapshot import AtomicSnapshotStore
 from .watchdog import HeartbeatStore
 
@@ -96,6 +97,18 @@ class MultiAssetPaperScheduler:
         self.snapshot_store.prune(self.config.snapshot_retention)
 
     def run(self) -> list[MultiAssetStepResult]:
+        startup = run_startup_check(
+            audit_path=self.runtime.audit.path,
+            state_files=self._state_files(),
+            snapshot_store=self.snapshot_store,
+            governor_store=self.runtime.governor_state_store,
+        )
+        if not startup.ready:
+            raise RuntimeError(
+                "multiasset scheduler startup self-check failed: "
+                + "; ".join(startup.reasons)
+            )
+
         results: list[MultiAssetStepResult] = []
         iteration = 0
         consecutive_errors = 0
