@@ -55,6 +55,7 @@ class MultiAssetPaperScheduler:
             self.runtime.governor_state_store.path,
             self.runtime.allocation_state_store.path,
             self.runtime.allocator_config_store.path,
+            self.runtime.drift_retrain_store.path,
         ]
 
     def _audit_error(self, exc: Exception, consecutive_errors: int) -> None:
