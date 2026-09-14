@@ -10,6 +10,8 @@ from .data import load_history
 from .engine import TradingEngine
 from .experiments import ExperimentRegistry
 from .promotion import evaluate_challenger
+from .robustness import block_bootstrap_returns
+from .tuning import tune_walk_forward
 
 app = typer.Typer(help="Autonomous trading research CLI")
 console = Console()
@@ -209,6 +211,57 @@ def compare_models(
     console.print(
         f"Promotion: {'YES' if decision.promote else 'NO'} — {decision.reason}"
     )
+
+
+@app.command("robustness")
+def robustness(
+    symbol: str = typer.Option("GC=F", help="Yahoo Finance symbol"),
+    period: str = typer.Option("10y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+    simulations: int = typer.Option(1000, min=100),
+    block_size: int = typer.Option(5, min=1),
+) -> None:
+    df = load_history(symbol, period, interval)
+    report = WalkForwardBacktester(
+        risk_config=RiskConfig(),
+        model_config=ModelConfig(),
+        config=WalkForwardConfig(use_ensemble=True),
+    ).run(df)
+    bootstrap = block_bootstrap_returns(
+        report.equity_curve,
+        simulations=simulations,
+        block_size=block_size,
+    )
+
+    table = Table(title=f"Robustness bootstrap: {symbol}")
+    table.add_column("Metric")
+    table.add_column("Value", justify="right")
+    table.add_row("Median return", f"{bootstrap.median_return:.2%}")
+    table.add_row("5th percentile", f"{bootstrap.p05_return:.2%}")
+    table.add_row("95th percentile", f"{bootstrap.p95_return:.2%}")
+    table.add_row("P(return > 0)", f"{bootstrap.probability_positive:.2%}")
+    table.add_row("P(loss > 10%)", f"{bootstrap.probability_loss_gt_10pct:.2%}")
+    console.print(table)
+
+
+@app.command("tune")
+def tune(
+    symbol: str = typer.Option("GC=F", help="Yahoo Finance symbol"),
+    period: str = typer.Option("10y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+    trials: int = typer.Option(20, min=1, max=500),
+) -> None:
+    df = load_history(symbol, period, interval)
+    result = tune_walk_forward(df, trials=trials, use_ensemble=True)
+
+    table = Table(title=f"Optuna tuning: {symbol}")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Best score", f"{result.best_score:.6f}")
+    table.add_row("Trials", str(result.trials))
+    for key, value in sorted(result.best_params.items()):
+        table.add_row(key, f"{value:.6g}")
+    console.print(table)
 
 
 if __name__ == "__main__":
