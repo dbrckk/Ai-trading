@@ -7,6 +7,7 @@ from .governor_state_store import GovernorStateStore
 from .lifecycle_log import LifecycleEventLog
 from .model_quarantine import ModelQuarantineStore
 from .recovery_health import evaluate_recovery_health
+from .resilience import ResilienceStateStore
 from .supervisor_state import SupervisorStateStore
 from .watchdog import HeartbeatStore, heartbeat_is_stale
 
@@ -32,6 +33,7 @@ class MetricsSnapshot:
     recovery_failure_total: int
     recovery_fallback_depth: int
     recovery_degraded: int
+    resilience_level: int
 
 
 def collect_metrics(
@@ -41,6 +43,7 @@ def collect_metrics(
     supervisor_store: SupervisorStateStore | None = None,
     lifecycle_log: LifecycleEventLog | None = None,
     quarantine_store: ModelQuarantineStore | None = None,
+    resilience_store: ResilienceStateStore | None = None,
 ) -> MetricsSnapshot:
     heartbeat_store = heartbeat_store or HeartbeatStore(
         "artifacts/multiasset_heartbeat.json"
@@ -49,18 +52,28 @@ def collect_metrics(
     supervisor_store = supervisor_store or SupervisorStateStore()
     lifecycle_log = lifecycle_log or LifecycleEventLog()
     quarantine_store = quarantine_store or ModelQuarantineStore()
+    resilience_store = resilience_store or ResilienceStateStore()
     control = read_control_plane(governor_store=governor_store)
     governor = governor_store.load()
     supervisor = supervisor_store.load()
     lifecycle_events = lifecycle_log.list()
     quarantine_records = quarantine_store.load()
     recovery_health = evaluate_recovery_health(lifecycle_log)
+    resilience = resilience_store.load()
 
     crisis_levels = {
         "normal": 0,
         "cautious": 1,
         "defensive": 2,
         "capital-preservation": 3,
+    }
+    resilience_levels = {
+        "NORMAL": 0,
+        "CAUTIOUS": 1,
+        "DEGRADED": 2,
+        "RECOVERY": 3,
+        "COOLDOWN": 4,
+        "HALT": 5,
     }
 
     return MetricsSnapshot(
@@ -99,6 +112,7 @@ def collect_metrics(
             default=0,
         ),
         recovery_degraded=int(recovery_health.status == "degraded"),
+        resilience_level=resilience_levels.get(resilience.mode, 99),
     )
 
 
@@ -143,6 +157,8 @@ def prometheus_text(snapshot: MetricsSnapshot) -> str:
             f"ai_trading_recovery_fallback_depth {snapshot.recovery_fallback_depth}",
             "# TYPE ai_trading_recovery_degraded gauge",
             f"ai_trading_recovery_degraded {snapshot.recovery_degraded}",
+            "# TYPE ai_trading_resilience_level gauge",
+            f"ai_trading_resilience_level {snapshot.resilience_level}",
             "",
         ]
     )
