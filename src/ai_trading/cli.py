@@ -19,8 +19,8 @@ from .orchestrator import AutonomousPaperOrchestrator
 from .performance import PerformanceMetrics
 from .portfolio import AllocationConfig, inverse_volatility_weights, target_notionals
 from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
-from .readiness import evaluate_readiness
 from .promotion import evaluate_challenger
+from .readiness import evaluate_readiness
 from .regime_validation import validate_regime_returns
 from .robustness import block_bootstrap_returns
 from .runtime import PaperAutonomousRuntime
