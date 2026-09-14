@@ -14,8 +14,8 @@ from .expert_pool import ExpertPoolStore
 from .governor_state_store import GovernorStateStore
 from .lifecycle_log import LifecycleEventLog
 from .meta_store import MetaRouterStore
-from .multiasset_runtime import MultiAssetPaperRuntime
 from .model_quarantine import ModelQuarantineStore
+from .multiasset_runtime import MultiAssetPaperRuntime
 from .multiasset_state import MultiAssetStateStore
 from .quality_store import QualityStore
 
