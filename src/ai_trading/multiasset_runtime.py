@@ -291,6 +291,8 @@ class MultiAssetPaperRuntime:
 
                 clean_features = features.loc[valid, FEATURES]
                 drift_risk_multiplier = 1.0
+                retrain_triggered = False
+                retrain_completed = False
                 if len(clean_features) >= 120:
                     recent_window = clean_features.iloc[-60:]
                     reference_window = clean_features.iloc[:-60]
@@ -299,14 +301,6 @@ class MultiAssetPaperRuntime:
                         recent_window,
                     )
                     drift_risk_multiplier = distribution_drift.risk_multiplier
-                    drift_by_symbol[symbol] = {
-                        "max_psi": distribution_drift.max_psi,
-                        "mean_psi": distribution_drift.mean_psi,
-                        "correlation_shift": distribution_drift.correlation_shift,
-                        "risk_multiplier": distribution_drift.risk_multiplier,
-                        "retrain_requested": distribution_drift.retrain_requested,
-                        "drifted_features": list(distribution_drift.drifted_features),
-                    }
                     if (
                         distribution_drift.retrain_requested
                         and self.drift_retrain_store.should_retrain(
@@ -315,19 +309,27 @@ class MultiAssetPaperRuntime:
                         )
                     ):
                         self._batch_model_path(symbol).unlink(missing_ok=True)
-                        self.drift_retrain_store.mark(
-                            symbol,
-                            processed_bar=state.processed_bars,
-                            max_psi=distribution_drift.max_psi,
-                            correlation_shift=distribution_drift.correlation_shift,
-                        )
+                        retrain_triggered = True
+                    drift_by_symbol[symbol] = {
+                        "max_psi": distribution_drift.max_psi,
+                        "mean_psi": distribution_drift.mean_psi,
+                        "correlation_shift": distribution_drift.correlation_shift,
+                        "risk_multiplier": distribution_drift.risk_multiplier,
+                        "retrain_requested": distribution_drift.retrain_requested,
+                        "retrain_triggered": retrain_triggered,
+                        "retrain_completed": False,
+                        "drifted_features": list(distribution_drift.drifted_features),
+                    }
                 else:
+                    distribution_drift = None
                     drift_by_symbol[symbol] = {
                         "max_psi": 0.0,
                         "mean_psi": 0.0,
                         "correlation_shift": 0.0,
                         "risk_multiplier": 1.0,
                         "retrain_requested": False,
+                        "retrain_triggered": False,
+                        "retrain_completed": False,
                         "drifted_features": [],
                     }
 
@@ -351,6 +353,15 @@ class MultiAssetPaperRuntime:
                         signal_idx,
                     )
                     batch_prediction = batch_model.predict_one(signal_row, regime)
+                    if retrain_triggered and distribution_drift is not None:
+                        self.drift_retrain_store.mark(
+                            symbol,
+                            processed_bar=state.processed_bars,
+                            max_psi=distribution_drift.max_psi,
+                            correlation_shift=distribution_drift.correlation_shift,
+                        )
+                        retrain_completed = True
+                        drift_by_symbol[symbol]["retrain_completed"] = True
                 except ValueError:
                     batch_model = None
                     batch_prediction = None
