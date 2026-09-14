@@ -22,6 +22,7 @@ from .expert_lifecycle import evaluate_expert_lifecycle
 from .expert_pool import ExpertPoolStore, compute_budget_weights
 from .features import FEATURES, make_features, make_labels
 from .global_allocator import GlobalAllocatorConfig, allocate_global_capital
+from .governor_state_store import GovernorState, GovernorStateStore
 from .meta_router import MetaContext, route_predictions
 from .meta_store import MetaRouterStore
 from .model_blend import BlendComponent, blend_predictions
@@ -37,6 +38,7 @@ from .portfolio_intelligence import (
 from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
 from .quality_store import QualityStore
 from .regime import detect_regime
+from .risk_governor import GovernorPolicy, GovernorSignals, evaluate_governor
 from .runtime_lock import RuntimeLock
 from .specialist_experts import SpecialistDirectionModel
 from .stress_engine import StressPolicy, run_stress_test
@@ -83,6 +85,8 @@ class MultiAssetPaperRuntime:
         crisis_policy: CrisisPolicy | None = None,
         crisis_state_store: CrisisStateStore | None = None,
         crisis_asset_policy: CrisisAssetPolicy | None = None,
+        governor_policy: GovernorPolicy | None = None,
+        governor_state_store: GovernorStateStore | None = None,
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
@@ -111,6 +115,8 @@ class MultiAssetPaperRuntime:
         self.crisis_policy = crisis_policy or CrisisPolicy()
         self.crisis_state_store = crisis_state_store or CrisisStateStore()
         self.crisis_asset_policy = crisis_asset_policy or CrisisAssetPolicy()
+        self.governor_policy = governor_policy or GovernorPolicy()
+        self.governor_state_store = governor_state_store or GovernorStateStore()
 
 
     def _specialist_path(self, symbol: str, kind: str) -> Path:
@@ -581,8 +587,59 @@ class MultiAssetPaperRuntime:
                 * crisis_decision.exposure_scale
             )
 
-            notionals = target_notionals(equity, intelligent_weights)
+            provisional_notionals = target_notionals(equity, intelligent_weights)
+            provisional_risk = evaluate_portfolio_risk(
+                provisional_notionals,
+                equity,
+                returns,
+                self.portfolio_risk_config,
+            )
 
+            quality_values = []
+            for market in markets.values():
+                required = market.loc[:, ["Open", "High", "Low", "Close"]].tail(40)
+                quality_values.append(float(required.notna().mean().mean()))
+            data_quality = min(quality_values) if quality_values else 0.0
+            average_confidence = (
+                sum(confidences.values()) / len(confidences)
+                if confidences
+                else 0.0
+            )
+            governor = evaluate_governor(
+                GovernorSignals(
+                    data_quality=data_quality,
+                    system_healthy=True,
+                    model_confidence=average_confidence,
+                    portfolio_risk_approved=provisional_risk.approved,
+                    stress_approved=stress_report.approved,
+                    stressed_cvar=stress_report.stressed_cvar,
+                    drawdown=current_drawdown,
+                    crisis_mode=crisis_decision.state.mode,
+                    liquidity_stressed=stress_report.worst_scenario == "liquidity_crunch",
+                ),
+                self.governor_policy,
+            )
+
+            previous_governor = self.governor_state_store.load()
+            consecutive_halts = (
+                previous_governor.consecutive_halts + 1
+                if governor.halt
+                else 0
+            )
+            self.governor_state_store.save(
+                GovernorState(
+                    verdict=governor.verdict,
+                    reason=governor.reason,
+                    consecutive_halts=consecutive_halts,
+                )
+            )
+
+            if governor.verdict == "REDUCE":
+                intelligent_weights = intelligent_weights * governor.exposure_scale
+            elif governor.verdict == "FLATTEN":
+                intelligent_weights = intelligent_weights * 0.0
+
+            notionals = target_notionals(equity, intelligent_weights)
             risk = evaluate_portfolio_risk(
                 notionals,
                 equity,
@@ -594,7 +651,7 @@ class MultiAssetPaperRuntime:
             turnover_by_symbol = {symbol: 0.0 for symbol in intelligent_weights.index}
             costs_by_symbol = {symbol: 0.0 for symbol in intelligent_weights.index}
 
-            if risk.approved:
+            if risk.approved and governor.allow_rebalance:
                 for symbol in intelligent_weights.index:
                     price = float(opens[symbol].iloc[-1])
                     position = state.positions.setdefault(symbol, AssetPosition())
@@ -725,6 +782,16 @@ class MultiAssetPaperRuntime:
                         "worst_scenario": stress_report.worst_scenario,
                         "scenario_losses": stress_report.scenario_losses,
                     },
+                    "governor": {
+                        "verdict": governor.verdict,
+                        "exposure_scale": governor.exposure_scale,
+                        "allow_rebalance": governor.allow_rebalance,
+                        "flatten": governor.flatten,
+                        "halt": governor.halt,
+                        "reason": governor.reason,
+                        "data_quality": data_quality,
+                        "average_model_confidence": average_confidence,
+                    },
                     "crisis": {
                         "mode": crisis_decision.state.mode,
                         "recovery_streak": crisis_decision.state.recovery_streak,
@@ -746,6 +813,9 @@ class MultiAssetPaperRuntime:
                 notionals={k: float(v) for k, v in notionals.items()},
                 signals=signals,
                 confidences=confidences,
-                risk_approved=risk.approved,
-                risk_reasons=risk.reasons,
+                risk_approved=risk.approved and governor.allow_rebalance,
+                risk_reasons=(
+                    risk.reasons
+                    + (() if governor.verdict == "TRADE" else (f"governor {governor.verdict}: {governor.reason}",))
+                ),
             )
