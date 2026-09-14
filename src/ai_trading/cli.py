@@ -1243,6 +1243,9 @@ def paper_soak(
     QualificationStore(Path(workspace) / "qualification.json").save(
         result,
         qualification,
+        symbols=tuple(names),
+        period=period,
+        interval=interval,
     )
     table.add_row("Governor", result.governor_verdict)
     table.add_row("Crisis mode", result.crisis_mode)
