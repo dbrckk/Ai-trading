@@ -23,6 +23,7 @@ from .economic_meta_store import EconomicMetaStore
 from .ensemble import EnsembleDirectionModel
 from .expert_lifecycle import evaluate_expert_lifecycle
 from .expert_pool import ExpertPoolStore, compute_budget_weights
+from .expert_uncertainty import measure_expert_uncertainty
 from .features import FEATURES, make_features, make_labels
 from .global_allocator import GlobalAllocatorConfig, allocate_global_capital
 from .governor_state_store import GovernorState, GovernorStateStore
@@ -267,6 +268,7 @@ class MultiAssetPaperRuntime:
             route_weights_by_symbol: dict[str, dict[str, float]] = {}
             regimes_by_symbol: dict[str, str] = {}
             calibration_by_symbol: dict[str, dict[str, dict[str, float | int]]] = {}
+            uncertainty_by_symbol: dict[str, dict[str, float | int]] = {}
             opportunity_keys: list[str] = []
             opportunity_alpha: dict[str, float] = {}
             opportunity_quality: dict[str, float] = {}
@@ -470,16 +472,36 @@ class MultiAssetPaperRuntime:
                     contextual_scores,
                 )
                 blended = routed.prediction
+                uncertainty = measure_expert_uncertainty(
+                    route_candidates,
+                    routed.weights,
+                )
+                effective_confidence = (
+                    float(blended.confidence) * uncertainty.risk_multiplier
+                )
+                uncertainty_by_symbol[symbol] = {
+                    "disagreement": uncertainty.disagreement,
+                    "consensus_confidence": uncertainty.consensus_confidence,
+                    "risk_multiplier": uncertainty.risk_multiplier,
+                    "experts": uncertainty.experts,
+                    "raw_routed_confidence": float(blended.confidence),
+                    "effective_confidence": effective_confidence,
+                }
+
                 route_weights_by_symbol[symbol] = routed.weights
                 regimes_by_symbol[symbol] = regime.name
                 for model_name, model_weight in routed.weights.items():
                     opportunity_key = f"{symbol}|{model_name}|{regime.name}"
                     opportunity_keys.append(opportunity_key)
-                    opportunity_alpha[opportunity_key] = float(blended.confidence) * float(blended.side) * float(model_weight)
+                    opportunity_alpha[opportunity_key] = (
+                        effective_confidence
+                        * float(blended.side)
+                        * float(model_weight)
+                    )
                     opportunity_quality[opportunity_key] = float(model_weight)
 
                 side = blended.side
-                if blended.confidence < self.risk_config.min_confidence:
+                if effective_confidence < self.risk_config.min_confidence:
                     side = 0
 
                 realized = labels.get(learn_idx)
@@ -526,7 +548,7 @@ class MultiAssetPaperRuntime:
                         )
 
                 signals[symbol] = side
-                confidences[symbol] = blended.confidence
+                confidences[symbol] = effective_confidence
                 signed_weights.loc[symbol] = base_weights.loc[symbol] * side
 
             annualized_volatility = returns.std(ddof=1) * (252 ** 0.5)
@@ -809,6 +831,7 @@ class MultiAssetPaperRuntime:
                     "meta_route_weights": route_weights_by_symbol,
                     "regimes": regimes_by_symbol,
                     "calibration": calibration_by_symbol,
+                    "expert_uncertainty": uncertainty_by_symbol,
                     "global_allocation": (
                         {
                             "approved": global_allocation_report.approved,
