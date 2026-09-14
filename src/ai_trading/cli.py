@@ -12,6 +12,7 @@ from .continuous import run_learning_cycle
 from .data import load_history
 from .drift import detect_drift
 from .engine import TradingEngine
+from .evolution_manager import run_evolution_cycle
 from .experiments import ExperimentRegistry
 from .expert_factory import FactoryConfig, run_expert_factory
 from .expert_pool import ExpertPoolStore, ExpertRecord, reconcile_pool
@@ -714,6 +715,28 @@ def expert_factory_run(
     table.add_row("Evaluated", str(result.evaluated))
     table.add_row("Promoted", str(result.promoted))
     table.add_row("Generated candidates", str(len(result.candidates)))
+    console.print(table)
+
+
+@app.command("expert-evolve")
+def expert_evolve(
+    symbol: str = typer.Option("GC=F", help="Yahoo Finance symbol"),
+    period: str = typer.Option("5y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+    parent_limit: int = typer.Option(3, min=1, max=10),
+) -> None:
+    df = load_history(symbol, period, interval)
+    result = run_evolution_cycle(
+        df,
+        symbol=symbol,
+        parent_limit=parent_limit,
+    )
+
+    table = Table(title=f"Expert evolution: {symbol}")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Mutations evaluated", str(result.evaluated))
+    table.add_row("Accepted", str(result.accepted))
     console.print(table)
 
 
