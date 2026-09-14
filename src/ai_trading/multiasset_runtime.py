@@ -475,6 +475,40 @@ class MultiAssetPaperRuntime:
                 peak_equity=state.peak_equity,
                 config=self.intelligence_config,
             )
+
+            global_allocation_report = None
+            if opportunity_keys:
+                opportunity_returns = pd.DataFrame(index=returns.index)
+                for key in opportunity_keys:
+                    opportunity_symbol = key.split("|", 1)[0]
+                    opportunity_returns[key] = returns[opportunity_symbol]
+
+                global_allocation_report = allocate_global_capital(
+                    opportunity_returns,
+                    expected_alpha=pd.Series(opportunity_alpha, dtype=float),
+                    quality=pd.Series(opportunity_quality, dtype=float),
+                    current_weights=self.allocation_state_store.load(),
+                    transaction_cost_bps=(
+                        self.risk_config.transaction_cost_bps
+                        + self.risk_config.slippage_bps
+                    ),
+                    config=self.global_allocator_config,
+                )
+
+                if global_allocation_report.approved:
+                    asset_scale = pd.Series(
+                        0.0,
+                        index=intelligent_weights.index,
+                        dtype=float,
+                    )
+                    for key, weight in global_allocation_report.weights.items():
+                        opportunity_symbol = str(key).split("|", 1)[0]
+                        if opportunity_symbol in asset_scale.index:
+                            asset_scale.loc[opportunity_symbol] += abs(float(weight))
+
+                    intelligent_weights = intelligent_weights * asset_scale
+                    self.allocation_state_store.save(global_allocation_report.weights)
+
             notionals = target_notionals(equity, intelligent_weights)
 
             risk = evaluate_portfolio_risk(
@@ -598,6 +632,19 @@ class MultiAssetPaperRuntime:
                     "model_alpha_attribution": model_alpha_attribution,
                     "meta_route_weights": route_weights_by_symbol,
                     "regimes": regimes_by_symbol,
+                    "global_allocation": (
+                        {
+                            "approved": global_allocation_report.approved,
+                            "cvar": global_allocation_report.cvar,
+                            "expected_return": global_allocation_report.expected_return,
+                            "turnover": global_allocation_report.turnover,
+                            "estimated_cost": global_allocation_report.estimated_cost,
+                            "reasons": list(global_allocation_report.reasons),
+                            "weights": global_allocation_report.weights.to_dict(),
+                        }
+                        if global_allocation_report is not None
+                        else None
+                    ),
                 },
             )
 
