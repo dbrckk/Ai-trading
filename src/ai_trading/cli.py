@@ -7,12 +7,14 @@ from rich.table import Table
 from .backtest import WalkForwardBacktester, WalkForwardConfig
 from .champions import ChampionRegistry
 from .config import ModelConfig, RiskConfig
+from .continuous import run_learning_cycle
 from .data import load_history
 from .drift import detect_drift
 from .engine import TradingEngine
 from .experiments import ExperimentRegistry
 from .features import make_features
 from .guardrails import evaluate_health
+from .performance import PerformanceMetrics
 from .promotion import evaluate_challenger
 from .regime_validation import validate_regime_returns
 from .robustness import block_bootstrap_returns
@@ -324,6 +326,51 @@ def health_check(
             console.print(f"Rollback unavailable: {exc}")
             raise typer.Exit(code=2) from exc
         console.print(f"Rolled back to champion {restored.version} ({restored.model_name}).")
+
+
+@app.command("learning-cycle")
+def learning_cycle(
+    symbol: str = typer.Option("GC=F", help="Yahoo Finance symbol"),
+    period: str = typer.Option("10y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+    trials: int = typer.Option(10, min=1, max=200),
+) -> None:
+    df = load_history(symbol, period, interval)
+    registry = ChampionRegistry()
+    active = registry.active()
+
+    if active is None:
+        baseline = WalkForwardBacktester(
+            risk_config=RiskConfig(),
+            model_config=ModelConfig(),
+            config=WalkForwardConfig(use_ensemble=False),
+        ).run(df)
+        champion_metrics = baseline.metrics
+    else:
+        champion_metrics = PerformanceMetrics(**active.metrics)
+
+    result = run_learning_cycle(
+        df,
+        symbol=symbol,
+        champion_metrics=champion_metrics,
+        registry=registry,
+        trials=trials,
+    )
+
+    table = Table(title=f"Learning cycle: {symbol}")
+    table.add_column("Check")
+    table.add_column("Value", justify="right")
+    table.add_row("Tuning score", f"{result.tuning.best_score:.6f}")
+    table.add_row("Promotion policy", "PASS" if result.promotion.promote else "FAIL")
+    table.add_row("Regime validation", "PASS" if result.regime_validation.valid else "FAIL")
+    table.add_row(
+        "Bootstrap P(return > 0)",
+        f"{result.robustness.probability_positive:.2%}",
+    )
+    table.add_row("5th percentile return", f"{result.robustness.p05_return:.2%}")
+    table.add_row("Promoted", "YES" if result.promoted else "NO")
+    table.add_row("Champion version", result.champion_version or "-")
+    console.print(table)
 
 
 if __name__ == "__main__":
