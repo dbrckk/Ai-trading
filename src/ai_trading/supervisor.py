@@ -8,6 +8,7 @@ from pathlib import Path
 
 from .governor_state_store import GovernorState, GovernorStateStore
 from .maintenance import MaintenanceStore
+from .qualification_store import QualificationStore
 from .readiness_handshake import wait_for_worker_readiness
 from .restart_log import RestartLog
 from .startup_check import run_startup_check
@@ -29,6 +30,7 @@ class SupervisorConfig:
     heartbeat_timeout_seconds: float = 180.0
     heartbeat_startup_grace_seconds: float = 30.0
     readiness_timeout_seconds: float = 30.0
+    require_qualification: bool = False
 
 
 @dataclass(frozen=True)
@@ -54,6 +56,7 @@ class PaperSupervisor:
         snapshot_store: AtomicSnapshotStore | None = None,
         state_store: SupervisorStateStore | None = None,
         heartbeat_store: HeartbeatStore | None = None,
+        qualification_store: QualificationStore | None = None,
     ) -> None:
         self.command = command
         self.state_files = state_files
@@ -68,6 +71,7 @@ class PaperSupervisor:
         self.heartbeat_store = heartbeat_store or HeartbeatStore(
             "artifacts/multiasset_heartbeat.json"
         )
+        self.qualification_store = qualification_store or QualificationStore()
 
     def _halt_governor(self, reason: str) -> None:
         previous = self.governor_store.load()
@@ -101,6 +105,18 @@ class PaperSupervisor:
                     reason="startup self-check failed",
                 )
                 return SupervisorResult(0, False, False, None)
+
+            if self.config.require_qualification:
+                qualification = self.qualification_store.load()
+                if qualification is None or not qualification.passed:
+                    self._halt_governor("paper qualification gate failed")
+                    self.state_store.save(
+                        status="halted",
+                        worker_pid=None,
+                        restarts=0,
+                        reason="paper qualification gate failed",
+                    )
+                    return SupervisorResult(0, False, False, None)
 
             while restarts <= self.config.max_restarts:
                 maintenance = self.maintenance_store.load()
