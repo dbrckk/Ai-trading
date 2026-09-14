@@ -52,6 +52,11 @@ from .promotion import evaluate_challenger
 from .qualification_store import QualificationStore
 from .qualification_suite import run_qualification_suite
 from .readiness import evaluate_readiness
+from .readiness_release import (
+    ReadinessReleaseStore,
+    create_readiness_release,
+    verify_readiness_release,
+)
 from .readiness_score import ReadinessHistoryStore
 from .readiness_trend import evaluate_readiness_trend
 from .regime_validation import validate_regime_returns
@@ -969,6 +974,78 @@ def system_status() -> None:
     console.print(table)
 
 
+@app.command("create-readiness-release")
+def create_readiness_release_command(
+    symbols: str = typer.Option("GC=F,SI=F,CL=F"),
+    period: str = typer.Option("2y"),
+    interval: str = typer.Option("1d"),
+    qualification_path: str = typer.Option("artifacts/soak/qualification.json"),
+    lifecycle_path: str = typer.Option("artifacts/model_lifecycle.jsonl"),
+    resilience_path: str = typer.Option("artifacts/resilience_state.json"),
+    governor_path: str = typer.Option("artifacts/risk_governor_state.json"),
+    readiness_history_path: str = typer.Option("artifacts/readiness_history.jsonl"),
+    release_path: str = typer.Option("artifacts/readiness_release.json"),
+) -> None:
+    names = tuple(s.strip() for s in symbols.split(",") if s.strip())
+    if not names:
+        raise typer.BadParameter("Provide at least one symbol")
+
+    qualification = QualificationStore(qualification_path).load()
+    if qualification is None:
+        console.print("Qualification record missing")
+        raise typer.Exit(code=2)
+
+    resilience = ResilienceStateStore(resilience_path).load()
+    governor = GovernorStateStore(governor_path).load()
+    lifecycle = LifecycleEventLog(lifecycle_path)
+    reliability = evaluate_reliability(lifecycle, resilience)
+    readiness_store = ReadinessHistoryStore(readiness_history_path)
+    history = readiness_store.list()
+    chain = readiness_store.verify_chain()
+    if not history:
+        console.print("Readiness history missing")
+        raise typer.Exit(code=2)
+
+    composite = history[-1].result
+    trend = evaluate_readiness_trend(history)
+    readiness = evaluate_deployment_readiness(
+        qualification,
+        reliability=reliability,
+        resilience=resilience,
+        governor=governor,
+        symbols=names,
+        period=period,
+        interval=interval,
+        composite=composite,
+        trend=trend,
+        readiness_chain=chain,
+        release_verification=type("V", (), {"valid": True})(),
+        policy=None,
+    )
+    blocking = tuple(
+        reason
+        for reason in readiness.reasons
+        if reason != "readiness release manifest missing"
+    )
+    if blocking:
+        console.print("Cannot create readiness release:")
+        for reason in blocking:
+            console.print(f"- {reason}")
+        raise typer.Exit(code=2)
+
+    release = create_readiness_release(
+        composite=composite,
+        chain_head=history[-1].record_hash,
+        chain=chain,
+        qualification=qualification,
+        governor=governor,
+        resilience=resilience,
+        trend=trend,
+    )
+    ReadinessReleaseStore(release_path).save(release)
+    console.print(f"Readiness release created: {release.release_hash}")
+
+
 @app.command("deployment-readiness")
 def deployment_readiness(
     symbols: str = typer.Option("GC=F,SI=F,CL=F"),
@@ -979,6 +1056,7 @@ def deployment_readiness(
     resilience_path: str = typer.Option("artifacts/resilience_state.json"),
     governor_path: str = typer.Option("artifacts/risk_governor_state.json"),
     readiness_history_path: str = typer.Option("artifacts/readiness_history.jsonl"),
+    release_path: str = typer.Option("artifacts/readiness_release.json"),
 ) -> None:
     names = tuple(s.strip() for s in symbols.split(",") if s.strip())
     if not names:
@@ -995,6 +1073,20 @@ def deployment_readiness(
     readiness_chain = readiness_store.verify_chain()
     composite = readiness_history[-1].result if readiness_history else None
     trend = evaluate_readiness_trend(readiness_history)
+    release_store = ReadinessReleaseStore(release_path)
+    release = release_store.load()
+    release_verification = None
+    if release is not None and composite is not None and qualification is not None:
+        release_verification = verify_readiness_release(
+            release,
+            composite=composite,
+            chain_head=readiness_history[-1].record_hash,
+            chain=readiness_chain,
+            qualification=qualification,
+            governor=governor,
+            resilience=resilience,
+            trend=trend,
+        )
 
     readiness = evaluate_deployment_readiness(
         qualification,
@@ -1007,6 +1099,7 @@ def deployment_readiness(
         composite=composite,
         trend=trend,
         readiness_chain=readiness_chain,
+        release_verification=release_verification,
     )
 
     table = Table(title="Paper-to-live deployment readiness")
@@ -1048,6 +1141,12 @@ def deployment_readiness(
         "VALID" if readiness_chain.valid else "INVALID",
     )
     table.add_row("Readiness records", str(readiness_chain.records))
+    table.add_row(
+        "Readiness release",
+        "VALID"
+        if release_verification is not None and release_verification.valid
+        else "MISSING/INVALID",
+    )
     console.print(table)
 
     if readiness.reasons:
