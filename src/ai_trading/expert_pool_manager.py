@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 import pandas as pd
 
+from .crisis_gate import promotions_allowed
 from .expert_pool import (
     ExpertPoolPolicy,
     ExpertPoolStore,
@@ -67,5 +68,25 @@ def refresh_expert_pool(
         )
 
     reconciled = reconcile_pool(records, policy)
+    if not promotions_allowed():
+        reconciled = {
+            name: (
+                ExpertRecord(
+                    name=record.name,
+                    kind=record.kind,
+                    status="challenger",
+                    score=record.score,
+                    economic_score=record.economic_score,
+                    validation_score=record.validation_score,
+                    observations=record.observations,
+                    compute_cost=record.compute_cost,
+                )
+                if records.get(name) is not None
+                and records[name].status != "active"
+                and record.status == "active"
+                else record
+            )
+            for name, record in reconciled.items()
+        }
     store.save(reconciled)
     return PoolRefreshResult(records=reconciled, sandbox=sandbox_results)
