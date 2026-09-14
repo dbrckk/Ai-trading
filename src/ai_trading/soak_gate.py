@@ -10,6 +10,7 @@ class SoakQualificationPolicy:
     min_cycles: int = 50
     min_success_ratio: float = 0.98
     max_failures: int = 2
+    max_drawdown: float = 0.10
     disallowed_governor_verdicts: tuple[str, ...] = ("HALT",)
 
 
@@ -39,6 +40,8 @@ def evaluate_soak_qualification(
         reasons.append("success ratio below threshold")
     if result.failures > policy.max_failures:
         reasons.append("too many soak failures")
+    if result.max_drawdown > policy.max_drawdown:
+        reasons.append("soak drawdown exceeded threshold")
     if result.governor_verdict in policy.disallowed_governor_verdicts:
         reasons.append(f"governor ended in {result.governor_verdict}")
 
