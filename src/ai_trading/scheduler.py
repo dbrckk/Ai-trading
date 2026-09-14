@@ -6,6 +6,7 @@ from time import monotonic, sleep
 
 import pandas as pd
 
+from .governor_state_store import GovernorStateStore
 from .orchestrator import AutonomousPaperOrchestrator, OrchestrationResult
 
 
@@ -16,6 +17,7 @@ class SchedulerConfig:
     max_consecutive_errors: int = 5
     error_backoff_seconds: float = 5.0
     max_error_backoff_seconds: float = 300.0
+    max_governor_halts: int = 3
 
 
 class PaperScheduler:
@@ -26,11 +28,13 @@ class PaperScheduler:
         data_loader: Callable[[], pd.DataFrame],
         symbol: str,
         config: SchedulerConfig | None = None,
+        governor_state_store: GovernorStateStore | None = None,
     ) -> None:
         self.orchestrator = orchestrator
         self.data_loader = data_loader
         self.symbol = symbol
         self.config = config or SchedulerConfig()
+        self.governor_state_store = governor_state_store or GovernorStateStore()
 
     def _audit_error(self, exc: Exception, consecutive_errors: int) -> None:
         runtime = getattr(self.orchestrator, "runtime", None)
@@ -58,6 +62,15 @@ class PaperScheduler:
                 results.append(result)
                 iteration += 1
                 consecutive_errors = 0
+
+                governor_state = self.governor_state_store.load()
+                if (
+                    governor_state.verdict == "HALT"
+                    and governor_state.consecutive_halts >= self.config.max_governor_halts
+                ):
+                    raise RuntimeError(
+                        "scheduler stopped after repeated risk governor HALT verdicts"
+                    )
             except Exception as exc:
                 consecutive_errors += 1
                 self._audit_error(exc, consecutive_errors)
