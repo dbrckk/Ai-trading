@@ -10,8 +10,10 @@ from .governor_state_store import GovernorState, GovernorStateStore
 from .maintenance import MaintenanceStore
 from .qualification_guard import validate_qualification_record
 from .qualification_store import QualificationStore
+from .reliability import evaluate_reliability
 from .readiness_handshake import wait_for_worker_readiness
 from .resilience import ResilienceStateStore
+from .lifecycle_log import LifecycleEventLog
 from .restart_log import RestartLog
 from .startup_check import run_startup_check
 from .state_snapshot import AtomicSnapshotStore
@@ -37,6 +39,11 @@ class SupervisorConfig:
     qualification_period: str = ""
     qualification_interval: str = ""
     qualification_max_age_hours: float = 24.0
+    require_reliability_qualification: bool = False
+    min_reliability_score: float = 90.0
+    min_normal_ratio: float = 0.90
+    max_halt_ratio: float = 0.01
+    max_mttr_seconds: float | None = None
 
 
 @dataclass(frozen=True)
@@ -64,6 +71,7 @@ class PaperSupervisor:
         heartbeat_store: HeartbeatStore | None = None,
         qualification_store: QualificationStore | None = None,
         resilience_store: ResilienceStateStore | None = None,
+        lifecycle_log: LifecycleEventLog | None = None,
     ) -> None:
         self.command = command
         self.state_files = state_files
@@ -80,6 +88,7 @@ class PaperSupervisor:
         )
         self.qualification_store = qualification_store or QualificationStore()
         self.resilience_store = resilience_store or ResilienceStateStore()
+        self.lifecycle_log = lifecycle_log or LifecycleEventLog()
 
     def _halt_governor(self, reason: str) -> None:
         previous = self.governor_store.load()
@@ -115,12 +124,25 @@ class PaperSupervisor:
                 return SupervisorResult(0, False, False, None)
 
             if self.config.require_qualification:
+                reliability = (
+                    evaluate_reliability(
+                        self.lifecycle_log,
+                        self.resilience_store.load(),
+                    )
+                    if self.config.require_reliability_qualification
+                    else None
+                )
                 guard = validate_qualification_record(
                     self.qualification_store.load(),
                     symbols=self.config.qualification_symbols,
                     period=self.config.qualification_period,
                     interval=self.config.qualification_interval,
                     max_age_hours=self.config.qualification_max_age_hours,
+                    reliability=reliability,
+                    min_reliability_score=self.config.min_reliability_score,
+                    min_normal_ratio=self.config.min_normal_ratio,
+                    max_halt_ratio=self.config.max_halt_ratio,
+                    max_mttr_seconds=self.config.max_mttr_seconds,
                 )
                 if not guard.allowed:
                     reason = "paper qualification gate failed: " + "; ".join(
