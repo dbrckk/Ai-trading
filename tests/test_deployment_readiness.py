@@ -169,7 +169,6 @@ def test_deployment_readiness_rejects_missing_composite_score() -> None:
     assert "composite readiness score missing" in result.reasons
 
 
-
 def test_deployment_readiness_rejects_unstable_trend() -> None:
     trend = ReadinessTrend(
         status="degraded",
@@ -189,11 +188,11 @@ def test_deployment_readiness_rejects_unstable_trend() -> None:
         interval="1d",
         composite=composite_score(),
         trend=trend,
+        readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
     )
 
     assert not result.allowed
     assert "readiness trend is not stable" in result.reasons
-
 
 
 def test_deployment_readiness_rejects_invalid_readiness_chain() -> None:
