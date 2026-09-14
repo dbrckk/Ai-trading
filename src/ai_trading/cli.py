@@ -1012,7 +1012,6 @@ def create_readiness_release_command(
 
     composite = history[-1].result
     trend = evaluate_readiness_trend(history)
-    revocation_store = ReadinessRevocationStore(revocations_path)
 
     readiness = evaluate_deployment_readiness(
         qualification,
@@ -1107,6 +1106,7 @@ def deployment_readiness(
     trend = evaluate_readiness_trend(readiness_history)
     release_store = ReadinessReleaseStore(release_path)
     release = release_store.load()
+    revocation_store = ReadinessRevocationStore(revocations_path)
     release_verification = None
     signing_key = os.getenv(signing_key_env)
     if release is not None and composite is not None and qualification is not None:
