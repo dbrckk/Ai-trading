@@ -19,6 +19,8 @@ from .expert_pool import ExpertPoolStore, ExpertRecord, reconcile_pool
 from .expert_pool_manager import refresh_expert_pool
 from .expert_sandbox import validate_specialist
 from .features import make_features
+from .generation_rollback import rollback_generation
+from .generations import GenerationStore
 from .guardrails import evaluate_health
 from .multiasset_backtest import MultiAssetWalkForwardBacktester
 from .multiasset_runtime import MultiAssetPaperRuntime
@@ -739,6 +741,21 @@ def expert_evolve(
     table.add_row("Mutations evaluated", str(result.evaluated))
     table.add_row("Accepted", str(result.accepted))
     table.add_row("Portfolio replacements", str(result.replaced))
+    console.print(table)
+
+
+@app.command("generation-rollback")
+def generation_rollback() -> None:
+    pool = ExpertPoolStore()
+    generations = GenerationStore()
+    result = rollback_generation(pool, generations)
+
+    table = Table(title="Generation rollback")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Restored generation", str(result.restored.generation))
+    table.add_row("Portfolio score", f"{result.restored.portfolio_score:.4f}")
+    table.add_row("Active experts", ", ".join(result.active_experts) or "-")
     console.print(table)
 
 
