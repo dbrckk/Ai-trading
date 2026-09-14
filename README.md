@@ -71,6 +71,47 @@ Windows PowerShell:
 .venv\Scripts\Activate.ps1
 ```
 
+
+## Validation path
+
+Run the local validation stack before using real market data:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+
+ruff check src tests
+pytest -q
+pytest -q tests/test_smoke_e2e.py
+```
+
+Then exercise the real-data paper path:
+
+```bash
+ai-trading train --symbol GC=F --period 5y
+ai-trading walk-forward --symbol GC=F --period 10y
+ai-trading multiasset-step --symbols GC=F,SI=F,CL=F --period 2y
+ai-trading readiness-check --symbol GC=F --period 10y
+ai-trading system-status
+```
+
+The project remains paper-only. A live broker adapter is intentionally not enabled.
+
+For release-readiness validation, set a signing key outside the repository:
+
+```bash
+export AI_TRADING_RELEASE_SIGNING_KEY="replace-with-a-private-secret"
+ai-trading create-readiness-release
+ai-trading deployment-readiness
+```
+
+A readiness release can be invalidated explicitly:
+
+```bash
+ai-trading revoke-readiness-release --reason "superseded or invalidated"
+```
+
 ## Walk-forward methodology
 
 The V1 evaluator uses sequential out-of-sample folds.
@@ -132,8 +173,8 @@ The predictive model cannot bypass the risk engine. A future live adapter must r
 
 - [x] V0 — data, features, baseline ML model, paper broker, risk engine
 - [x] V1 — purged walk-forward evaluation, realistic next-bar execution, metrics, benchmark, experiment registry
-- [ ] V2 — regime detection + model ensemble + constrained Optuna search
-- [ ] V3 — Monte Carlo / bootstrap robustness + champion/challenger promotion
-- [ ] V4 — event-driven execution adapter (NautilusTrader or Lean)
-- [ ] V5 — multi-asset portfolio allocation and portfolio-level risk
-- [ ] V6 — guarded continuous learning with drift detection and automatic rollback
+- [x] V2 — regime detection + model ensemble + constrained optimization foundations
+- [x] V3 — bootstrap robustness + champion/challenger promotion
+- [ ] V4 — external live execution adapter (NautilusTrader or Lean)
+- [x] V5 — multi-asset portfolio allocation and portfolio-level risk
+- [x] V6 — guarded continuous learning, drift detection, rollback and resilience governance
