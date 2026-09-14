@@ -44,3 +44,14 @@ def test_governor_halts_on_critical_data_failure() -> None:
     decision = evaluate_governor(base_signals(data_quality=0.50))
     assert decision.verdict == "HALT"
     assert decision.halt
+
+
+def test_failed_stress_test_reduces_instead_of_freezing() -> None:
+    decision = evaluate_governor(
+        base_signals(
+            stress_approved=False,
+            stressed_cvar=0.04,
+        )
+    )
+    assert decision.verdict == "REDUCE"
+    assert decision.allow_rebalance
