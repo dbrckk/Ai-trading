@@ -9,7 +9,7 @@ from pathlib import Path
 @dataclass(frozen=True)
 class SupervisorState:
     status: str = "stopped"
-    worker_pid: int | null = null
+    worker_pid: int | None = None
     restarts: int = 0
     last_transition_utc: str = ""
     reason: str = ""
