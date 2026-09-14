@@ -12,6 +12,9 @@ class GovernorPolicy:
     reduce_drawdown: float = 0.08
     max_stressed_cvar: float = 0.08
     reduce_stressed_cvar: float = 0.05
+    halt_recovery_failures: int = 4
+    halt_recovery_fallback_depth: int = 5
+    degraded_recovery_exposure_scale: float = 0.35
 
 
 @dataclass(frozen=True)
@@ -25,6 +28,9 @@ class GovernorSignals:
     drawdown: float
     crisis_mode: str
     liquidity_stressed: bool = False
+    recovery_degraded: bool = False
+    recovery_recent_failures: int = 0
+    recovery_fallback_depth: int = 0
 
 
 @dataclass(frozen=True)
@@ -43,14 +49,19 @@ def evaluate_governor(
 ) -> GovernorDecision:
     policy = policy or GovernorPolicy()
 
-    if not signals.system_healthy or signals.data_quality < policy.halt_data_quality:
+    if (
+        not signals.system_healthy
+        or signals.data_quality < policy.halt_data_quality
+        or signals.recovery_recent_failures >= policy.halt_recovery_failures
+        or signals.recovery_fallback_depth >= policy.halt_recovery_fallback_depth
+    ):
         return GovernorDecision(
             verdict="HALT",
             exposure_scale=0.0,
             allow_rebalance=False,
             flatten=False,
             halt=True,
-            reason="critical operational or data-quality failure",
+            reason="critical operational, recovery, or data-quality failure",
         )
 
     if (
@@ -77,6 +88,16 @@ def evaluate_governor(
             flatten=False,
             halt=False,
             reason="risk gate or data-quality gate failed",
+        )
+
+    if signals.recovery_degraded:
+        return GovernorDecision(
+            verdict="REDUCE",
+            exposure_scale=policy.degraded_recovery_exposure_scale,
+            allow_rebalance=True,
+            flatten=False,
+            halt=False,
+            reason="recovery health degraded",
         )
 
     if (
