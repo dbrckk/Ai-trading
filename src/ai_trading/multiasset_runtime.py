@@ -7,6 +7,7 @@ import joblib
 import pandas as pd
 
 from .allocation_state import AllocationStateStore
+from .calibration_routing import calibration_weight_multiplier
 from .allocator_config_store import AllocatorConfigStore
 from .alpha_allocation import AlphaAllocationConfig, alpha_risk_weights
 from .alpha_attribution import build_alpha_contribution
@@ -417,6 +418,20 @@ class MultiAssetPaperRuntime:
                     route_candidates[candidate_name] = specialist_prediction
 
                 contextual_scores = self.meta_store.scores(context)
+                for calibrated_model in ("river", "ensemble"):
+                    calibration = symbol_calibration.get(calibrated_model)
+                    if calibration is None:
+                        continue
+                    calibration_multiplier = calibration_weight_multiplier(
+                        ece=float(calibration["ece"]),
+                        observations=int(calibration["observations"]),
+                    )
+                    contextual_scores[calibrated_model] = (
+                        contextual_scores.get(calibrated_model, 0.5)
+                        * calibration_multiplier
+                    )
+                    calibration["route_multiplier"] = calibration_multiplier
+
                 for expert_name, budget in pool_budget.items():
                     if expert_name.startswith(f"{symbol}:"):
                         kind = pool_records[expert_name].kind
