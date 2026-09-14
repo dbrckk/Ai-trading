@@ -12,6 +12,7 @@ from .restart_log import RestartLog
 from .startup_check import run_startup_check
 from .state_snapshot import AtomicSnapshotStore
 from .supervisor_lease import SupervisorLeaseStore
+from .supervisor_state import SupervisorStateStore
 
 
 @dataclass(frozen=True)
@@ -44,6 +45,7 @@ class PaperSupervisor:
         restart_log: RestartLog | None = None,
         governor_store: GovernorStateStore | None = None,
         snapshot_store: AtomicSnapshotStore | None = None,
+        state_store: SupervisorStateStore | None = None,
     ) -> None:
         self.command = command
         self.state_files = state_files
@@ -54,6 +56,7 @@ class PaperSupervisor:
         self.restart_log = restart_log or RestartLog()
         self.governor_store = governor_store or GovernorStateStore()
         self.snapshot_store = snapshot_store or AtomicSnapshotStore()
+        self.state_store = state_store or SupervisorStateStore()
 
     def _halt_governor(self, reason: str) -> None:
         previous = self.governor_store.load()
@@ -80,11 +83,23 @@ class PaperSupervisor:
                 governor_store=self.governor_store,
             )
             if not startup.ready:
+                self.state_store.save(
+                    status="halted",
+                    worker_pid=None,
+                    restarts=0,
+                    reason="startup self-check failed",
+                )
                 return SupervisorResult(0, False, False, None)
 
             while restarts <= self.config.max_restarts:
                 maintenance = self.maintenance_store.load()
                 if maintenance.enabled:
+                    self.state_store.save(
+                        status="maintenance",
+                        worker_pid=None,
+                        restarts=restarts,
+                        reason=maintenance.reason,
+                    )
                     return SupervisorResult(
                         restarts,
                         True,
@@ -94,6 +109,12 @@ class PaperSupervisor:
 
                 started = time.monotonic()
                 process = subprocess.Popen(self.command)
+                self.state_store.save(
+                    status="running",
+                    worker_pid=process.pid,
+                    restarts=restarts,
+                    reason="worker running",
+                )
                 final_exit = process.wait()
                 runtime = time.monotonic() - started
 
@@ -102,6 +123,12 @@ class PaperSupervisor:
                         exit_code=final_exit,
                         runtime_seconds=runtime,
                         restart_index=restarts,
+                        reason="worker exited cleanly",
+                    )
+                    self.state_store.save(
+                        status="stopped",
+                        worker_pid=None,
+                        restarts=restarts,
                         reason="worker exited cleanly",
                     )
                     return SupervisorResult(
@@ -127,6 +154,12 @@ class PaperSupervisor:
 
                 if len(crashes) >= self.config.max_crashes_in_window:
                     self._halt_governor("supervisor crash-loop detected")
+                    self.state_store.save(
+                        status="halted",
+                        worker_pid=None,
+                        restarts=restarts,
+                        reason="crash-loop detected",
+                    )
                     return SupervisorResult(
                         restarts,
                         False,
@@ -142,9 +175,21 @@ class PaperSupervisor:
                     self.config.max_backoff_seconds,
                     self.config.initial_backoff_seconds * (2 ** (restarts - 1)),
                 )
+                self.state_store.save(
+                    status="restarting",
+                    worker_pid=None,
+                    restarts=restarts,
+                    reason=f"restart in {delay:.2f}s",
+                )
                 time.sleep(max(0.0, delay))
 
             self._halt_governor("supervisor restart budget exhausted")
+            self.state_store.save(
+                status="halted",
+                worker_pid=None,
+                restarts=restarts,
+                reason="restart budget exhausted",
+            )
             return SupervisorResult(restarts, False, False, final_exit)
         finally:
             self.lease_store.release(token)
