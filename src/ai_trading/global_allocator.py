@@ -114,8 +114,11 @@ def allocate_global_capital(
             if str(key).split("|", 1)[0] == asset:
                 weights.loc[key] *= scale
 
+    # Do not renormalize upward after asset caps: doing so could violate
+    # concentration constraints. A constrained portfolio may intentionally
+    # run below target gross exposure.
     gross = float(weights.sum())
-    if gross > 0:
+    if gross > config.target_gross_exposure + 1e-12:
         weights *= config.target_gross_exposure / gross
 
     current = (
