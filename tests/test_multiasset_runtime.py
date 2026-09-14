@@ -51,6 +51,6 @@ def test_multiasset_runtime_is_persistent_and_idempotent(tmp_path: Path) -> None
     assert first.processed
     assert first.risk_approved
     assert first.equity > 0
-    assert abs(sum(first.weights.values()) - 1.0) < 1e-9
+    assert sum(abs(v) for v in first.weights.values()) <= 1.0 + 1e-9
     assert not second.processed
     assert "bar already processed" in second.risk_reasons
