@@ -26,6 +26,7 @@ class MultiAssetSchedulerConfig:
     snapshot_every_iterations: int = 1
     verify_audit_every_iterations: int = 1
     recover_after_errors: int = 2
+    snapshot_retention: int = 20
 
 
 class MultiAssetPaperScheduler:
@@ -92,6 +93,7 @@ class MultiAssetPaperScheduler:
                 "audit_tail_hash": fingerprint.audit_tail_hash,
             },
         )
+        self.snapshot_store.prune(self.config.snapshot_retention)
 
     def run(self) -> list[MultiAssetStepResult]:
         results: list[MultiAssetStepResult] = []
