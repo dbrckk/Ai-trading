@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pandas as pd
 import typer
 from rich.console import Console
 from rich.table import Table
@@ -471,7 +472,7 @@ def portfolio_analyze(
         df = load_history(name, period, interval)
         closes[name] = df["Close"].astype(float)
 
-    close_frame = __import__("pandas").DataFrame(closes).dropna()
+    close_frame = pd.DataFrame(closes).dropna()
     returns = close_frame.pct_change().dropna()
     weights = inverse_volatility_weights(
         returns,
