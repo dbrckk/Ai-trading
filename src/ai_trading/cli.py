@@ -53,6 +53,7 @@ from .qualification_store import QualificationStore
 from .qualification_suite import run_qualification_suite
 from .readiness import evaluate_readiness
 from .readiness_score import ReadinessHistoryStore
+from .readiness_trend import evaluate_readiness_trend
 from .regime_validation import validate_regime_returns
 from .reliability import evaluate_reliability
 from .resilience import ResilienceStateStore
@@ -991,6 +992,7 @@ def deployment_readiness(
     governor = GovernorStateStore(governor_path).load()
     readiness_history = ReadinessHistoryStore(readiness_history_path).list()
     composite = readiness_history[-1].result if readiness_history else None
+    trend = evaluate_readiness_trend(readiness_history)
 
     readiness = evaluate_deployment_readiness(
         qualification,
@@ -1001,6 +1003,7 @@ def deployment_readiness(
         period=period,
         interval=interval,
         composite=composite,
+        trend=trend,
     )
 
     table = Table(title="Paper-to-live deployment readiness")
@@ -1034,6 +1037,9 @@ def deployment_readiness(
         "Evidence hash",
         "-" if composite is None else composite.evidence_hash[:16],
     )
+    table.add_row("Readiness trend", trend.status)
+    table.add_row("Trend observations", str(trend.observations))
+    table.add_row("Trend score change", f"{trend.score_change:+.2f}")
     console.print(table)
 
     if readiness.reasons:
