@@ -3,7 +3,11 @@ from datetime import UTC, datetime
 from ai_trading.deployment_readiness import evaluate_deployment_readiness
 from ai_trading.governor_state_store import GovernorState
 from ai_trading.qualification_store import QualificationRecord
-from ai_trading.readiness_score import ReadinessComponents, evaluate_composite_readiness
+from ai_trading.readiness_score import (
+    ReadinessChainReport,
+    ReadinessComponents,
+    evaluate_composite_readiness,
+)
 from ai_trading.readiness_trend import ReadinessTrend
 from ai_trading.reliability import ReliabilityReport
 from ai_trading.resilience import ResilienceState
@@ -86,6 +90,7 @@ def test_deployment_readiness_allows_only_fully_healthy_state() -> None:
         interval="1d",
         composite=composite_score(),
         trend=stable_trend(),
+        readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
     )
 
     assert result.allowed
@@ -110,6 +115,7 @@ def test_deployment_readiness_fails_closed_on_resilience_or_governor() -> None:
         interval="1d",
         composite=composite_score(),
         trend=stable_trend(),
+        readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
     )
 
     assert not result.allowed
@@ -138,6 +144,7 @@ def test_deployment_readiness_rejects_short_reliability_history() -> None:
         interval="1d",
         composite=composite_score(),
         trend=stable_trend(),
+        readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
     )
 
     assert not result.allowed
@@ -155,6 +162,7 @@ def test_deployment_readiness_rejects_missing_composite_score() -> None:
         interval="1d",
         composite=None,
         trend=stable_trend(),
+        readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
     )
 
     assert not result.allowed
@@ -185,3 +193,27 @@ def test_deployment_readiness_rejects_unstable_trend() -> None:
 
     assert not result.allowed
     assert "readiness trend is not stable" in result.reasons
+
+
+
+def test_deployment_readiness_rejects_invalid_readiness_chain() -> None:
+    result = evaluate_deployment_readiness(
+        qualified_record(),
+        reliability=reliable_report(),
+        resilience=ResilienceState(mode="NORMAL"),
+        governor=GovernorState(verdict="TRADE"),
+        symbols=("GC=F",),
+        period="2y",
+        interval="1d",
+        composite=composite_score(),
+        trend=stable_trend(),
+        readiness_chain=ReadinessChainReport(
+            valid=False,
+            records=5,
+            legacy_records=0,
+            reason="tampered",
+        ),
+    )
+
+    assert not result.allowed
+    assert "readiness history integrity check failed" in result.reasons
