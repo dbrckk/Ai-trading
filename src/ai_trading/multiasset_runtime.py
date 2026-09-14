@@ -50,8 +50,11 @@ from .quality_store import QualityStore
 from .recovery_health import evaluate_recovery_health
 from .regime import detect_regime
 from .resilience import (
+    ResilienceContext,
+    ResiliencePolicy,
     ResilienceSignals,
     ResilienceStateStore,
+    adapt_resilience_policy,
     evaluate_resilience,
 )
 from .risk_governor import GovernorPolicy, GovernorSignals, evaluate_governor
@@ -109,6 +112,7 @@ class MultiAssetPaperRuntime:
         model_quarantine_store: ModelQuarantineStore | None = None,
         lifecycle_log: LifecycleEventLog | None = None,
         resilience_state_store: ResilienceStateStore | None = None,
+        resilience_policy: ResiliencePolicy | None = None,
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
@@ -147,6 +151,7 @@ class MultiAssetPaperRuntime:
         self.model_quarantine_store = model_quarantine_store or ModelQuarantineStore()
         self.lifecycle_log = lifecycle_log or LifecycleEventLog()
         self.resilience_state_store = resilience_state_store or ResilienceStateStore()
+        self.resilience_policy = resilience_policy or ResiliencePolicy()
 
     def _specialist_path(self, symbol: str, kind: str) -> Path:
         safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
@@ -773,6 +778,19 @@ class MultiAssetPaperRuntime:
                 self.governor_policy,
             )
 
+            recent_incidents = sum(
+                event.event in {"recovery_failed", "rollback", "promotion_rejected"}
+                for event in self.lifecycle_log.list()[-20:]
+            )
+            adaptive_resilience_policy = adapt_resilience_policy(
+                self.resilience_policy,
+                ResilienceContext(
+                    data_quality=data_quality,
+                    drawdown=current_drawdown,
+                    annualized_volatility=float(annualized_volatility.max()),
+                    recent_incidents=recent_incidents,
+                ),
+            )
             resilience = evaluate_resilience(
                 self.resilience_state_store.load(),
                 ResilienceSignals(
@@ -782,6 +800,7 @@ class MultiAssetPaperRuntime:
                     recovery_recent_failures=recovery_health.recent_failures,
                     recovery_fallback_depth=recovery_health.max_fallback_depth,
                 ),
+                adaptive_resilience_policy,
             )
             self.resilience_state_store.save(resilience.state)
             intelligent_weights = intelligent_weights * resilience.exposure_cap
