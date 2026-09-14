@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from .champions import ChampionRecord, ChampionRegistry
 from .drift import DriftReport
 from .performance import PerformanceMetrics
+from .persistence import ModelStore
 
 
 @dataclass(frozen=True)
@@ -40,7 +41,12 @@ def evaluate_health(
 def rollback_if_needed(
     registry: ChampionRegistry,
     decision: HealthDecision,
+    model_store: ModelStore | None = None,
 ) -> ChampionRecord | None:
     if not decision.rollback:
         return None
-    return registry.rollback()
+
+    restored = registry.rollback()
+    if model_store is not None:
+        model_store.activate(restored.version)
+    return restored
