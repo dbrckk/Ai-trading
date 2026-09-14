@@ -38,10 +38,15 @@ def _symbol_pool_returns(
         if record.status != "active" or not record.name.startswith(f"{symbol}:"):
             continue
         parts = record.name.split(":")
+        horizon_part = next(
+            (p for p in parts if p.startswith("h") and p[1:].isdigit()),
+            None,
+        )
         threshold_part = next((p for p in parts if p.startswith("t")), None)
-        if threshold_part is None:
+        if horizon_part is None or threshold_part is None:
             continue
         try:
+            horizon = int(horizon_part[1:])
             threshold = float(threshold_part[1:])
         except ValueError:
             continue
@@ -50,6 +55,7 @@ def _symbol_pool_returns(
                 df,
                 kind=record.kind,
                 return_threshold=threshold,
+                horizon_bars=horizon,
             )
         except ValueError:
             continue
