@@ -5,6 +5,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from threading import Thread
 
 from .control_plane import read_control_plane
+from .metrics import collect_metrics, prometheus_text
 from .watchdog import HeartbeatStore, heartbeat_is_stale
 
 
@@ -12,6 +13,15 @@ class HealthHandler(BaseHTTPRequestHandler):
     heartbeat_store = HeartbeatStore("artifacts/multiasset_heartbeat.json")
 
     def do_GET(self) -> None:
+        if self.path == "/metrics":
+            body = prometheus_text(collect_metrics()).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "text/plain; version=0.0.4")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+
         if self.path not in {"/health", "/ready"}:
             self.send_response(404)
             self.end_headers()
