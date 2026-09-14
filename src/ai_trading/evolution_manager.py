@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 import pandas as pd
 
+from .crisis_gate import promotions_allowed
 from .evolution import MutationConfig, mutate_expert, top_parents
 from .expert_factory import ExpertCandidate
 from .expert_pool import ExpertPoolStore, ExpertRecord, reconcile_pool
@@ -93,6 +94,16 @@ def run_evolution_cycle(
     store = store or ExpertPoolStore()
     generation_store = generation_store or GenerationStore()
     records = store.load()
+    if not promotions_allowed():
+        return EvolutionCycleResult(
+            evaluated=0,
+            accepted=0,
+            replaced=0,
+            generation=generation_store.current_generation(),
+            rolled_back=False,
+            mutated=(),
+        )
+
     parents = top_parents(records, symbol=symbol, limit=parent_limit)
     baseline_returns = _active_pool_returns(df, records, symbol)
 
