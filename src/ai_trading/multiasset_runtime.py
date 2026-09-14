@@ -7,6 +7,7 @@ import joblib
 import pandas as pd
 
 from .alpha_allocation import AlphaAllocationConfig, alpha_risk_weights
+from .allocation_state import AllocationStateStore
 from .alpha_attribution import build_alpha_contribution
 from .audit import AuditLog
 from .config import ModelConfig, RiskConfig
@@ -16,6 +17,7 @@ from .ensemble import EnsembleDirectionModel
 from .expert_lifecycle import evaluate_expert_lifecycle
 from .expert_pool import ExpertPoolStore, compute_budget_weights
 from .features import FEATURES, make_features, make_labels
+from .global_allocator import GlobalAllocatorConfig, allocate_global_capital
 from .meta_router import MetaContext, route_predictions
 from .meta_store import MetaRouterStore
 from .model_blend import BlendComponent, blend_predictions
@@ -69,6 +71,8 @@ class MultiAssetPaperRuntime:
         economic_meta_store: EconomicMetaStore | None = None,
         expert_pool_store: ExpertPoolStore | None = None,
         specialist_model_root: str | Path = "artifacts/models/specialists",
+        allocation_state_store: AllocationStateStore | None = None,
+        global_allocator_config: GlobalAllocatorConfig | None = None,
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
@@ -86,6 +90,8 @@ class MultiAssetPaperRuntime:
         self.economic_meta_store = economic_meta_store or EconomicMetaStore()
         self.expert_pool_store = expert_pool_store or ExpertPoolStore()
         self.specialist_model_root = Path(specialist_model_root)
+        self.allocation_state_store = allocation_state_store or AllocationStateStore()
+        self.global_allocator_config = global_allocator_config or GlobalAllocatorConfig()
 
 
     def _specialist_path(self, symbol: str, kind: str) -> Path:
@@ -213,6 +219,9 @@ class MultiAssetPaperRuntime:
             confidences: dict[str, float] = {}
             route_weights_by_symbol: dict[str, dict[str, float]] = {}
             regimes_by_symbol: dict[str, str] = {}
+            opportunity_keys: list[str] = []
+            opportunity_alpha: dict[str, float] = {}
+            opportunity_quality: dict[str, float] = {}
             signed_weights = base_weights.copy()
 
             for symbol in base_weights.index:
@@ -368,6 +377,11 @@ class MultiAssetPaperRuntime:
                 blended = routed.prediction
                 route_weights_by_symbol[symbol] = routed.weights
                 regimes_by_symbol[symbol] = regime.name
+                for model_name, model_weight in routed.weights.items():
+                    opportunity_key = f"{symbol}|{model_name}|{regime.name}"
+                    opportunity_keys.append(opportunity_key)
+                    opportunity_alpha[opportunity_key] = float(blended.confidence) * float(blended.side) * float(model_weight)
+                    opportunity_quality[opportunity_key] = float(model_weight)
 
                 side = blended.side
                 if blended.confidence < self.risk_config.min_confidence:
