@@ -7,6 +7,7 @@ import joblib
 import pandas as pd
 
 from .alpha_allocation import AlphaAllocationConfig, alpha_risk_weights
+from .alpha_attribution import build_alpha_contribution
 from .audit import AuditLog
 from .config import ModelConfig, RiskConfig
 from .ensemble import EnsembleDirectionModel
@@ -172,6 +173,8 @@ class MultiAssetPaperRuntime:
 
             signals: dict[str, int] = {}
             confidences: dict[str, float] = {}
+            route_weights_by_symbol: dict[str, dict[str, float]] = {}
+            regimes_by_symbol: dict[str, str] = {}
             signed_weights = base_weights.copy()
 
             for symbol in base_weights.index:
@@ -255,6 +258,8 @@ class MultiAssetPaperRuntime:
                     self.meta_store.scores(context),
                 )
                 blended = routed.prediction
+                route_weights_by_symbol[symbol] = routed.weights
+                regimes_by_symbol[symbol] = regime.name
 
                 side = blended.side
                 if blended.confidence < self.risk_config.min_confidence:
@@ -388,6 +393,23 @@ class MultiAssetPaperRuntime:
                 max(equity, 1e-12),
             )
 
+            model_alpha_attribution = {}
+            for symbol, item in attribution.items():
+                model_alpha_attribution[symbol] = {}
+                for model_name, model_weight in route_weights_by_symbol.get(symbol, {}).items():
+                    contribution = build_alpha_contribution(
+                        symbol=symbol,
+                        model=model_name,
+                        regime=regimes_by_symbol.get(symbol, "unknown"),
+                        pnl=item.pnl * float(model_weight),
+                        portfolio_equity=max(equity, 1e-12),
+                    )
+                    model_alpha_attribution[symbol][model_name] = {
+                        "regime": contribution.regime,
+                        "pnl": contribution.pnl,
+                        "return_contribution": contribution.return_contribution,
+                    }
+
             state.processed_bars += 1
             state.last_processed = execution_time
             current_equity = state.equity()
@@ -423,6 +445,9 @@ class MultiAssetPaperRuntime:
                         }
                         for symbol, item in attribution.items()
                     },
+                    "model_alpha_attribution": model_alpha_attribution,
+                    "meta_route_weights": route_weights_by_symbol,
+                    "regimes": regimes_by_symbol,
                 },
             )
 
