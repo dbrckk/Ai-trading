@@ -1162,6 +1162,9 @@ def supervisor_run(
         config=SupervisorConfig(
             max_restarts=max_restarts,
             require_qualification=require_qualification,
+            qualification_symbols=tuple(names),
+            qualification_period=period,
+            qualification_interval=interval,
         ),
         qualification_store=QualificationStore(qualification_path),
     )
