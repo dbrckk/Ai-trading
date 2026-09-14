@@ -75,7 +75,6 @@ class MultiAssetPaperRuntime:
         self.alpha_allocation_config = alpha_allocation_config or AlphaAllocationConfig()
         self.meta_store = meta_store or MetaRouterStore()
 
-
     def _batch_model_path(self, symbol: str) -> Path:
         safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
         return self.batch_model_root / f"{safe}.joblib"
@@ -195,6 +194,7 @@ class MultiAssetPaperRuntime:
                 river_prediction = model.predict_one(signal_row)
                 self._save_model(symbol, model)
 
+                regime = detect_regime(signal_row)
                 batch_model = self._load_or_train_batch_model(
                     symbol,
                     features,
@@ -202,8 +202,6 @@ class MultiAssetPaperRuntime:
                     signal_idx,
                 )
                 batch_prediction = batch_model.predict_one(signal_row, regime)
-
-                regime = detect_regime(signal_row)
                 current_equity = state.equity()
                 drawdown = 0.0 if state.peak_equity <= 0 else max(
                     0.0,
