@@ -17,6 +17,7 @@ class LifecycleEvent:
     failure_type: str
     processed_bar: int
     artifact_sha256: str | None
+    artifact_path: str | None
     metadata: dict[str, Any]
     created_at_utc: str
 
@@ -50,6 +51,7 @@ class LifecycleEventLog:
             failure_type=failure_type,
             processed_bar=int(processed_bar),
             artifact_sha256=artifact_hash,
+            artifact_path=str(artifact_path) if artifact_path is not None else None,
             metadata=metadata or {},
             created_at_utc=datetime.now(UTC).isoformat(),
         )
@@ -65,7 +67,9 @@ class LifecycleEventLog:
         with self.path.open("r", encoding="utf-8") as handle:
             for line in handle:
                 if line.strip():
-                    records.append(LifecycleEvent(**json.loads(line)))
+                    payload = json.loads(line)
+                    payload.setdefault("artifact_path", None)
+                    records.append(LifecycleEvent(**payload))
         return records
 
 
