@@ -3,6 +3,7 @@ from datetime import UTC, datetime
 from ai_trading.deployment_readiness import evaluate_deployment_readiness
 from ai_trading.governor_state_store import GovernorState
 from ai_trading.qualification_store import QualificationRecord
+from ai_trading.readiness_score import ReadinessComponents, evaluate_composite_readiness
 from ai_trading.reliability import ReliabilityReport
 from ai_trading.resilience import ResilienceState
 
@@ -21,6 +22,21 @@ def qualified_record() -> QualificationRecord:
         symbols=("GC=F",),
         period="2y",
         interval="1d",
+        composite=composite_score(),
+    )
+
+
+def composite_score():
+    return evaluate_composite_readiness(
+        ReadinessComponents(
+            performance=96.0,
+            robustness=95.0,
+            reliability=98.0,
+            recovery=96.0,
+            data_quality=99.0,
+            model_stability=95.0,
+            execution_quality=94.0,
+        )
     )
 
 
@@ -57,6 +73,7 @@ def test_deployment_readiness_allows_only_fully_healthy_state() -> None:
         symbols=("GC=F",),
         period="2y",
         interval="1d",
+        composite=composite_score(),
     )
 
     assert result.allowed
@@ -79,6 +96,7 @@ def test_deployment_readiness_fails_closed_on_resilience_or_governor() -> None:
         symbols=("GC=F",),
         period="2y",
         interval="1d",
+        composite=composite_score(),
     )
 
     assert not result.allowed
@@ -105,7 +123,25 @@ def test_deployment_readiness_rejects_short_reliability_history() -> None:
         symbols=("GC=F",),
         period="2y",
         interval="1d",
+        composite=composite_score(),
     )
 
     assert not result.allowed
     assert "reliability observation window too short" in result.reasons
+
+
+
+def test_deployment_readiness_rejects_missing_composite_score() -> None:
+    result = evaluate_deployment_readiness(
+        qualified_record(),
+        reliability=reliable_report(),
+        resilience=ResilienceState(mode="NORMAL"),
+        governor=GovernorState(verdict="TRADE"),
+        symbols=("GC=F",),
+        period="2y",
+        interval="1d",
+        composite=None,
+    )
+
+    assert not result.allowed
+    assert "composite readiness score missing" in result.reasons
