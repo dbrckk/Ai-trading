@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from .control_plane import read_control_plane
 from .governor_state_store import GovernorStateStore
+from .supervisor_state import SupervisorStateStore
 from .watchdog import HeartbeatStore, heartbeat_is_stale
 
 
@@ -14,19 +15,27 @@ class MetricsSnapshot:
     heartbeat_stale: int
     crisis_level: int
     consecutive_halts: int
+    supervisor_running: int
+    supervisor_restarting: int
+    supervisor_maintenance: int
+    supervisor_halted: int
+    supervisor_restarts: int
 
 
 def collect_metrics(
     *,
     heartbeat_store: HeartbeatStore | None = None,
     governor_store: GovernorStateStore | None = None,
+    supervisor_store: SupervisorStateStore | None = None,
 ) -> MetricsSnapshot:
     heartbeat_store = heartbeat_store or HeartbeatStore(
         "artifacts/multiasset_heartbeat.json"
     )
     governor_store = governor_store or GovernorStateStore()
+    supervisor_store = supervisor_store or SupervisorStateStore()
     control = read_control_plane(governor_store=governor_store)
     governor = governor_store.load()
+    supervisor = supervisor_store.load()
 
     crisis_levels = {
         "normal": 0,
@@ -41,6 +50,11 @@ def collect_metrics(
         heartbeat_stale=int(heartbeat_is_stale(heartbeat_store.load())),
         crisis_level=crisis_levels.get(control.crisis_mode, 99),
         consecutive_halts=governor.consecutive_halts,
+        supervisor_running=int(supervisor.status == "running"),
+        supervisor_restarting=int(supervisor.status == "restarting"),
+        supervisor_maintenance=int(supervisor.status == "maintenance"),
+        supervisor_halted=int(supervisor.status == "halted"),
+        supervisor_restarts=supervisor.restarts,
     )
 
 
@@ -57,6 +71,16 @@ def prometheus_text(snapshot: MetricsSnapshot) -> str:
             f"ai_trading_crisis_level {snapshot.crisis_level}",
             "# TYPE ai_trading_consecutive_halts gauge",
             f"ai_trading_consecutive_halts {snapshot.consecutive_halts}",
+            "# TYPE ai_trading_supervisor_running gauge",
+            f"ai_trading_supervisor_running {snapshot.supervisor_running}",
+            "# TYPE ai_trading_supervisor_restarting gauge",
+            f"ai_trading_supervisor_restarting {snapshot.supervisor_restarting}",
+            "# TYPE ai_trading_supervisor_maintenance gauge",
+            f"ai_trading_supervisor_maintenance {snapshot.supervisor_maintenance}",
+            "# TYPE ai_trading_supervisor_halted gauge",
+            f"ai_trading_supervisor_halted {snapshot.supervisor_halted}",
+            "# TYPE ai_trading_supervisor_restarts gauge",
+            f"ai_trading_supervisor_restarts {snapshot.supervisor_restarts}",
             "",
         ]
     )
