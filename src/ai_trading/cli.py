@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+
 import pandas as pd
 import typer
 from rich.console import Console
@@ -33,6 +34,7 @@ from .global_allocator import GlobalAllocatorConfig, allocate_global_capital
 from .governor_state_store import GovernorStateStore
 from .guardrails import evaluate_health
 from .health_server import HealthServer
+from .maintenance import MaintenanceState, MaintenanceStore
 from .metrics import collect_metrics, prometheus_text
 from .multiasset_backtest import MultiAssetWalkForwardBacktester
 from .multiasset_evolution import run_multiasset_evolution_cycle
