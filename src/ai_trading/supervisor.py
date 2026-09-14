@@ -118,6 +118,7 @@ class PaperSupervisor:
                         final_exit,
                     )
 
+                self.heartbeat_store.path.unlink(missing_ok=True)
                 process = subprocess.Popen(self.command)
                 self.state_store.save(
                     status="starting",
