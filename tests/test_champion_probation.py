@@ -8,7 +8,6 @@ from ai_trading.champion_probation import (
 from ai_trading.champions import ChampionRegistry
 from ai_trading.model_quarantine import ModelQuarantineStore
 
-
 BASELINE = {
     "sharpe": 1.0,
     "sortino": 1.2,
