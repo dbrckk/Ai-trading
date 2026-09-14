@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from .governor_state_store import GovernorState
 from .qualification_guard import validate_qualification_record
 from .qualification_store import QualificationRecord
+from .readiness_release import ReadinessReleaseVerification
 from .readiness_score import CompositeReadiness, ReadinessChainReport
 from .readiness_trend import ReadinessTrend
 from .reliability import ReliabilityReport
@@ -22,6 +23,7 @@ class DeploymentReadinessPolicy:
     require_composite_score: bool = True
     min_composite_score: float = 90.0
     require_stable_trend: bool = True
+    require_release_manifest: bool = True
 
 
 @dataclass(frozen=True)
@@ -43,6 +45,7 @@ def evaluate_deployment_readiness(
     composite: CompositeReadiness | None = None,
     trend: ReadinessTrend | None = None,
     readiness_chain: ReadinessChainReport | None = None,
+    release_verification: ReadinessReleaseVerification | None = None,
 ) -> DeploymentReadiness:
     policy = policy or DeploymentReadinessPolicy()
     reasons: list[str] = []
@@ -89,6 +92,11 @@ def evaluate_deployment_readiness(
         reasons.append("readiness history integrity report missing")
     elif not readiness_chain.valid:
         reasons.append("readiness history integrity check failed")
+    if policy.require_release_manifest:
+        if release_verification is None:
+            reasons.append("readiness release manifest missing")
+        elif not release_verification.valid:
+            reasons.append("readiness release verification failed")
 
     return DeploymentReadiness(
         allowed=not reasons,
