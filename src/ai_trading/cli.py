@@ -13,6 +13,7 @@ from .audit_chain import verify_audit_chain
 from .audit_integrity import verify_jsonl_audit
 from .backtest import WalkForwardBacktester, WalkForwardConfig
 from .champions import ChampionRegistry
+from .chaos import ChaosScenario
 from .config import ModelConfig, RiskConfig
 from .continuous import run_learning_cycle
 from .control_plane import read_control_plane
@@ -50,6 +51,7 @@ from .regime_validation import validate_regime_returns
 from .robustness import block_bootstrap_returns
 from .runtime import PaperAutonomousRuntime
 from .scheduler import PaperScheduler, SchedulerConfig
+from .soak import run_multiasset_soak
 from .state_snapshot import AtomicSnapshotStore
 from .supervisor import PaperSupervisor, SupervisorConfig
 from .supervisor_lease import SupervisorLeaseStore
@@ -1172,6 +1174,63 @@ def supervisor_run(
         "-" if result.final_exit_code is None else str(result.final_exit_code),
     )
     console.print(table)
+
+
+@app.command("paper-soak")
+def paper_soak(
+    symbols: str = typer.Option("GC=F,SI=F,CL=F"),
+    period: str = typer.Option("2y"),
+    interval: str = typer.Option("1d"),
+    max_cycles: int = typer.Option(100, min=1, max=5000),
+    chaos_symbol: str = typer.Option(""),
+    chaos_step: int = typer.Option(-1),
+    chaos_name: str = typer.Option("ohlc_violation"),
+) -> None:
+    names = [s.strip() for s in symbols.split(",") if s.strip()]
+    if len(names) < 2:
+        raise typer.BadParameter("Provide at least two symbols")
+
+    markets = {
+        name: load_history(name, period, interval)
+        for name in names
+    }
+
+    chaos = ()
+    if chaos_step >= 0:
+        target = chaos_symbol.strip() or names[0]
+        chaos = (
+            ChaosScenario(
+                name=chaos_name,
+                step=chaos_step,
+                symbol=target,
+            ),
+        )
+
+    result = run_multiasset_soak(
+        MultiAssetPaperRuntime(),
+        markets,
+        max_cycles=max_cycles,
+        chaos=chaos,
+    )
+
+    table = Table(title="Multi-asset paper soak")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Cycles", str(result.cycles))
+    table.add_row("Successes", str(result.successes))
+    table.add_row("Failures", str(result.failures))
+    table.add_row(
+        "Final equity",
+        "-" if result.final_equity is None else f"{result.final_equity:,.2f}",
+    )
+    table.add_row("Governor", result.governor_verdict)
+    table.add_row("Crisis mode", result.crisis_mode)
+    console.print(table)
+
+    if result.errors:
+        console.print("Recent errors:")
+        for error in result.errors[-10:]:
+            console.print(error)
 
 
 if __name__ == "__main__":
