@@ -19,6 +19,7 @@ class QuarantineRecord:
     quarantined: bool = False
     next_eligible_bar: int = 0
     last_reason: str = ""
+    failure_type: str = ""
 
 
 class ModelQuarantineStore:
@@ -52,6 +53,7 @@ class ModelQuarantineStore:
         *,
         processed_bar: int,
         reason: str,
+        failure_type: str = "performance_failure",
         policy: QuarantinePolicy | None = None,
     ) -> QuarantineRecord:
         policy = policy or QuarantinePolicy()
@@ -69,6 +71,7 @@ class ModelQuarantineStore:
             quarantined=failures >= policy.failures_before_quarantine,
             next_eligible_bar=int(processed_bar + backoff),
             last_reason=reason,
+            failure_type=failure_type,
         )
         records[version] = record
         self.save(records)
