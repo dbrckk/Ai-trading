@@ -12,6 +12,7 @@ from .alpha_allocation import AlphaAllocationConfig, alpha_risk_weights
 from .alpha_attribution import build_alpha_contribution
 from .asset_classes import CrisisAssetPolicy, asset_allowed_in_mode
 from .audit import AuditLog
+from .confidence_calibration import conservatively_calibrate_prediction
 from .config import ModelConfig, RiskConfig
 from .crisis_controller import CrisisPolicy, evaluate_crisis_state, limits_for_state
 from .crisis_state_store import CrisisStateStore
@@ -264,6 +265,7 @@ class MultiAssetPaperRuntime:
             confidences: dict[str, float] = {}
             route_weights_by_symbol: dict[str, dict[str, float]] = {}
             regimes_by_symbol: dict[str, str] = {}
+            calibration_by_symbol: dict[str, dict[str, dict[str, float | int]]] = {}
             opportunity_keys: list[str] = []
             opportunity_alpha: dict[str, float] = {}
             opportunity_quality: dict[str, float] = {}
@@ -339,6 +341,32 @@ class MultiAssetPaperRuntime:
                         ).score
                     else:
                         quality_scores[model_name] = 0.50
+
+                symbol_calibration: dict[str, dict[str, float | int]] = {}
+                river_prediction, river_calibration = conservatively_calibrate_prediction(
+                    river_prediction,
+                    records.get(f"{symbol}:river"),
+                )
+                symbol_calibration["river"] = {
+                    "raw_confidence": river_calibration.raw_confidence,
+                    "calibrated_confidence": river_calibration.calibrated_confidence,
+                    "ece": river_calibration.expected_calibration_error,
+                    "observations": river_calibration.observations,
+                }
+
+                if batch_prediction is not None:
+                    batch_prediction, batch_calibration = conservatively_calibrate_prediction(
+                        batch_prediction,
+                        records.get(f"{symbol}:ensemble"),
+                    )
+                    symbol_calibration["ensemble"] = {
+                        "raw_confidence": batch_calibration.raw_confidence,
+                        "calibrated_confidence": batch_calibration.calibrated_confidence,
+                        "ece": batch_calibration.expected_calibration_error,
+                        "observations": batch_calibration.observations,
+                    }
+
+                calibration_by_symbol[symbol] = symbol_calibration
 
                 blend_components = [
                     BlendComponent("river", river_prediction, quality_scores["river"]),
@@ -765,6 +793,7 @@ class MultiAssetPaperRuntime:
                     "model_alpha_attribution": model_alpha_attribution,
                     "meta_route_weights": route_weights_by_symbol,
                     "regimes": regimes_by_symbol,
+                    "calibration": calibration_by_symbol,
                     "global_allocation": (
                         {
                             "approved": global_allocation_report.approved,
