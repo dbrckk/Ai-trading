@@ -1,6 +1,5 @@
 from ai_trading.promotion_guard import PromotionPolicy, evaluate_promotion
 
-
 BASELINE = {
     "sharpe": 1.0,
     "sortino": 1.2,
