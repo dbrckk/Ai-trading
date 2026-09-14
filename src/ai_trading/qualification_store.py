@@ -5,6 +5,7 @@ from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
+from .reliability import ReliabilityReport
 from .soak import SoakResult
 from .soak_gate import SoakQualification
 
@@ -23,6 +24,11 @@ class QualificationRecord:
     symbols: tuple[str, ...] = ()
     period: str = ""
     interval: str = ""
+    reliability_score: float | None = None
+    normal_ratio: float | None = None
+    halt_ratio: float | None = None
+    mttr_seconds: float | None = None
+    mtbf_seconds: float | None = None
 
 
 class QualificationStore:
@@ -48,6 +54,7 @@ class QualificationStore:
         symbols: tuple[str, ...] = (),
         period: str = "",
         interval: str = "",
+        reliability: ReliabilityReport | None = None,
     ) -> QualificationRecord:
         record = QualificationRecord(
             created_at_utc=datetime.now(UTC).isoformat(),
@@ -62,6 +69,13 @@ class QualificationStore:
             symbols=tuple(symbols),
             period=period,
             interval=interval,
+            reliability_score=(
+                reliability.reliability_score if reliability is not None else None
+            ),
+            normal_ratio=(reliability.normal_ratio if reliability is not None else None),
+            halt_ratio=(reliability.halt_ratio if reliability is not None else None),
+            mttr_seconds=(reliability.mttr_seconds if reliability is not None else None),
+            mtbf_seconds=(reliability.mtbf_seconds if reliability is not None else None),
         )
         self.path.parent.mkdir(parents=True, exist_ok=True)
         temp = self.path.with_suffix(".tmp")
