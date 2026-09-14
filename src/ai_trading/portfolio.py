@@ -14,6 +14,49 @@ class AllocationConfig:
     correlation_penalty: float = 0.50
 
 
+def _cap_and_normalize(
+    weights: pd.Series,
+    *,
+    max_weight: float,
+    target_sum: float,
+) -> pd.Series:
+    if max_weight <= 0 or target_sum <= 0:
+        raise ValueError("max_weight and target_sum must be positive")
+    if len(weights) * max_weight + 1e-12 < target_sum:
+        raise ValueError("max_asset_weight is infeasible for the number of assets")
+
+    base = weights.clip(lower=0.0).astype(float)
+    if float(base.sum()) <= 0:
+        base[:] = 1.0
+
+    result = pd.Series(0.0, index=base.index, dtype=float)
+    free = list(base.index)
+    remaining = float(target_sum)
+
+    while free:
+        free_base = base.loc[free]
+        total = float(free_base.sum())
+        if total <= 0:
+            proposal = pd.Series(remaining / len(free), index=free, dtype=float)
+        else:
+            proposal = free_base / total * remaining
+
+        over = proposal[proposal > max_weight + 1e-12]
+        if over.empty:
+            result.loc[free] = proposal
+            break
+
+        for asset in over.index:
+            result.loc[asset] = max_weight
+            remaining -= max_weight
+            free.remove(asset)
+
+        if remaining <= 1e-12:
+            break
+
+    return result
+
+
 def inverse_volatility_weights(
     returns: pd.DataFrame,
     config: AllocationConfig | None = None,
@@ -40,17 +83,13 @@ def inverse_volatility_weights(
     adjusted = raw * penalties
     if float(adjusted.sum()) <= 0:
         adjusted = raw.copy()
-    adjusted = adjusted / adjusted.sum()
 
-    capped = adjusted.clip(
-        lower=config.min_asset_weight,
-        upper=config.max_asset_weight,
+    adjusted = adjusted.clip(lower=config.min_asset_weight)
+    return _cap_and_normalize(
+        adjusted,
+        max_weight=config.max_asset_weight,
+        target_sum=config.target_gross_exposure,
     )
-    if float(capped.sum()) <= 0:
-        raise ValueError("allocation collapsed to zero")
-
-    normalized = capped / capped.sum()
-    return normalized * config.target_gross_exposure
 
 
 def target_notionals(
