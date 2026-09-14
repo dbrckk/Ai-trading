@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from hashlib import sha256
-from json import dumps, loads
+from json import JSONDecodeError, dumps, loads
 from pathlib import Path
 
 SCORE_VERSION = "1.0.0"
@@ -203,7 +203,7 @@ class ReadinessHistoryStore:
                 records += 1
                 try:
                     payload = loads(line)
-                except Exception:
+                except JSONDecodeError:
                     return ReadinessChainReport(
                         valid=False,
                         records=records,
