@@ -31,6 +31,7 @@ from .generations import GenerationStore
 from .global_allocator import GlobalAllocatorConfig, allocate_global_capital
 from .governor_state_store import GovernorStateStore
 from .guardrails import evaluate_health
+from .metrics import collect_metrics, prometheus_text
 from .multiasset_backtest import MultiAssetWalkForwardBacktester
 from .multiasset_evolution import run_multiasset_evolution_cycle
 from .multiasset_runtime import MultiAssetPaperRuntime
@@ -46,6 +47,7 @@ from .robustness import block_bootstrap_returns
 from .runtime import PaperAutonomousRuntime
 from .scheduler import PaperScheduler, SchedulerConfig
 from .state_snapshot import AtomicSnapshotStore
+from .supervisor_lease import SupervisorLeaseStore
 from .tuning import tune_walk_forward
 from .watchdog import HeartbeatStore, WatchdogPolicy, heartbeat_is_stale
 from .watchdog_enforcer import enforce_watchdog
@@ -1043,6 +1045,47 @@ def watchdog_enforce(
         "-" if not result.reasons else "; ".join(result.reasons),
     )
     console.print(table)
+
+
+@app.command("maintenance")
+def maintenance(
+    enabled: bool = typer.Option(..., help="Enable or disable maintenance mode"),
+    reason: str = typer.Option("", help="Maintenance reason"),
+) -> None:
+    store = MaintenanceStore()
+    store.save(MaintenanceState(enabled=enabled, reason=reason))
+    console.print(
+        f"Maintenance={'ON' if enabled else 'OFF'}"
+        + (f" | {reason}" if reason else "")
+    )
+
+
+@app.command("supervisor-status")
+def supervisor_status() -> None:
+    lease = SupervisorLeaseStore().load()
+    maintenance_state = MaintenanceStore().load()
+
+    table = Table(title="Paper supervisor status")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row(
+        "Lease PID",
+        "-" if lease is None else str(lease.owner_pid),
+    )
+    table.add_row(
+        "Maintenance",
+        "ON" if maintenance_state.enabled else "OFF",
+    )
+    table.add_row(
+        "Maintenance reason",
+        maintenance_state.reason or "-",
+    )
+    console.print(table)
+
+
+@app.command("metrics")
+def metrics() -> None:
+    console.print(prometheus_text(collect_metrics()), markup=False)
 
 
 if __name__ == "__main__":
