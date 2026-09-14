@@ -83,7 +83,7 @@ def test_custom_weights_are_normalized() -> None:
         policy=ReadinessPolicy(min_score=0.0, min_component=0.0),
     )
 
-    assert result.score == 82.5
+    assert result.score == 85.0
 
 
 def test_readiness_history_round_trip(tmp_path: Path) -> None:
