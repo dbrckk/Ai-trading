@@ -15,6 +15,7 @@ from .engine import TradingEngine
 from .experiments import ExperimentRegistry
 from .features import make_features
 from .guardrails import evaluate_health
+from .multiasset_runtime import MultiAssetPaperRuntime
 from .orchestrator import AutonomousPaperOrchestrator
 from .performance import PerformanceMetrics
 from .portfolio import AllocationConfig, inverse_volatility_weights, target_notionals
@@ -538,6 +539,46 @@ def readiness_check(
     console.print(table)
     if readiness.reasons:
         console.print("; ".join(readiness.reasons))
+
+
+@app.command("multiasset-step")
+def multiasset_step(
+    symbols: str = typer.Option("GC=F,SI=F,CL=F", help="Comma-separated Yahoo symbols"),
+    period: str = typer.Option("1y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+) -> None:
+    names = [s.strip() for s in symbols.split(",") if s.strip()]
+    if len(names) < 2:
+        raise typer.BadParameter("Provide at least two symbols")
+
+    markets = {name: load_history(name, period, interval) for name in names}
+    result = MultiAssetPaperRuntime().step(markets)
+
+    table = Table(title="Multi-asset paper runtime")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Processed", "YES" if result.processed else "NO")
+    table.add_row("Timestamp", result.timestamp or "-")
+    table.add_row("Equity", f"{result.equity:,.2f}")
+    table.add_row("Cash", f"{result.cash:,.2f}")
+    table.add_row("Risk approved", "YES" if result.risk_approved else "NO")
+    console.print(table)
+
+    if result.weights:
+        weights_table = Table(title="Target allocation")
+        weights_table.add_column("Asset")
+        weights_table.add_column("Weight", justify="right")
+        weights_table.add_column("Notional", justify="right")
+        for name in sorted(result.weights):
+            weights_table.add_row(
+                name,
+                f"{result.weights[name]:.2%}",
+                f"{result.notionals[name]:,.2f}",
+            )
+        console.print(weights_table)
+
+    if result.risk_reasons:
+        console.print("; ".join(result.risk_reasons))
 
 
 if __name__ == "__main__":
