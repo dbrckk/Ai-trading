@@ -3,6 +3,11 @@ from pathlib import Path
 from ai_trading.champions import ChampionRegistry
 from ai_trading.governor_state_store import GovernorStateStore
 from ai_trading.lifecycle_log import LifecycleEventLog
+from ai_trading.readiness_score import (
+    ReadinessComponents,
+    ReadinessHistoryStore,
+    evaluate_composite_readiness,
+)
 from ai_trading.startup_check import run_startup_check
 from ai_trading.state_snapshot import AtomicSnapshotStore
 
@@ -88,4 +93,43 @@ def test_startup_check_halts_on_corrupted_active_artifact(tmp_path: Path) -> Non
     assert not report.ready
     assert not report.active_artifact_valid
     assert "active champion artifact integrity check failed" in report.reasons
+    assert governor.load().verdict == "HALT"
+
+
+
+def test_startup_check_halts_on_tampered_readiness_history(tmp_path: Path) -> None:
+    governor = GovernorStateStore(tmp_path / "governor.json")
+    readiness = ReadinessHistoryStore(tmp_path / "readiness.jsonl")
+    result = evaluate_composite_readiness(
+        ReadinessComponents(
+            performance=95.0,
+            robustness=95.0,
+            reliability=95.0,
+            recovery=95.0,
+            data_quality=95.0,
+            model_stability=95.0,
+            execution_quality=95.0,
+        )
+    )
+    readiness.append(result)
+    readiness.path.write_text(
+        readiness.path.read_text(encoding="utf-8").replace(
+            '"score": 95.0',
+            '"score": 99.0',
+        ),
+        encoding="utf-8",
+    )
+
+    report = run_startup_check(
+        audit_path=tmp_path / "audit.jsonl",
+        state_files=[],
+        jsonl_files=[readiness.path],
+        snapshot_store=AtomicSnapshotStore(tmp_path / "snapshots"),
+        governor_store=governor,
+        readiness_history_store=readiness,
+    )
+
+    assert not report.ready
+    assert not report.jsonl_files_valid
+    assert "readiness history integrity check failed" in report.reasons
     assert governor.load().verdict == "HALT"
