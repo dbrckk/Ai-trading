@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+from pathlib import Path
 
 import pandas as pd
 import typer
@@ -46,6 +47,7 @@ from .performance import PerformanceMetrics
 from .portfolio import AllocationConfig, inverse_volatility_weights, target_notionals
 from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
 from .promotion import evaluate_challenger
+from .qualification_store import QualificationStore
 from .readiness import evaluate_readiness
 from .regime_validation import validate_regime_returns
 from .robustness import block_bootstrap_returns
@@ -1232,6 +1234,10 @@ def paper_soak(
     )
     table.add_row("Max drawdown", f"{result.max_drawdown:.2%}")
     qualification = evaluate_soak_qualification(result)
+    QualificationStore(Path(workspace) / "qualification.json").save(
+        result,
+        qualification,
+    )
     table.add_row("Governor", result.governor_verdict)
     table.add_row("Crisis mode", result.crisis_mode)
     table.add_row(
