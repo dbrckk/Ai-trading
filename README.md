@@ -1,40 +1,55 @@
 # Ai-trading
 
-Autonomous, self-learning trading research platform.
+Autonomous trading research platform focused on reproducible, risk-aware, out-of-sample evaluation.
 
-## Goals
+## Current capabilities
 
-- ingest market data
-- generate features
-- learn from new observations
-- produce autonomous LONG / SHORT / FLAT decisions
-- enforce independent portfolio/risk constraints
-- execute through a broker abstraction
-- run in paper mode by default
-- record every decision for later evaluation and retraining
+- OHLCV ingestion through `yfinance`
+- deterministic feature engineering
+- LONG / SHORT / FLAT probabilistic model
+- independent fail-closed risk engine
+- configurable transaction costs and slippage
+- paper broker
+- purged walk-forward validation
+- next-bar-open execution in walk-forward tests
+- buy-and-hold benchmark
+- Sharpe, Sortino, Calmar, annualized return/volatility and max drawdown
+- append-only experiment registry
+- CI with Ruff + Pytest
 
-The optimization target is **risk-adjusted profit after costs**, not raw backtest profit.
+The optimization target is **risk-adjusted net performance after costs**, not raw backtest profit or win rate.
 
 ## Architecture
 
+```text
+Market data
+    |
+    v
+Feature engine
+    |
+    v
+Model / ensemble
+    |
+    v
+Signal
+    |
+    v
+Independent risk engine
+    |
+    +---- reject
+    |
+    v
+Paper / execution adapter
+    |
+    v
+Equity + audit trail
+    |
+    v
+Walk-forward evaluation
+    |
+    v
+Experiment registry
 ```
-Market data -> Features -> Online model -> Signal
-                                  |
-                                  v
-Portfolio state -> Risk engine -> Decision -> Broker
-                                  |
-                                  v
-                            Audit / metrics
-```
-
-Initial implementation uses:
-- `yfinance` for simple historical data
-- `scikit-learn` SGDClassifier for incremental learning
-- a deterministic paper broker
-- walk-forward-compatible feature/label construction
-- hard risk limits independent from the model
-
-Future adapters are planned for components already ranked in the companion `star-list` catalog: QuantConnect/Lean, NautilusTrader, vectorbt, Qlib, River, Optuna, OpenBB, Riskfolio-Lib, skfolio and QuantStats.
 
 ## Quick start
 
@@ -42,26 +57,83 @@ Future adapters are planned for components already ranked in the companion `star
 python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
+
 ai-trading train --symbol GC=F --period 5y
-ai-trading paper --symbol GC=F --period 1y
+ai-trading paper --symbol GC=F --period 5y
+ai-trading walk-forward --symbol GC=F --period 10y
+
 pytest
 ```
 
-On Windows PowerShell:
+Windows PowerShell:
 
 ```powershell
 .venv\Scripts\Activate.ps1
 ```
 
+## Walk-forward methodology
+
+The V1 evaluator uses sequential out-of-sample folds.
+
+For every fold:
+
+1. only observations strictly before the test window are used for training;
+2. the end of the training set is purged by the prediction horizon;
+3. the model is fitted again on historical data only;
+4. a signal is computed from bar *t*;
+5. the simulated order is executed at bar *t+1* open;
+6. transaction costs and slippage are deducted;
+7. risk limits are applied independently from the predictive model;
+8. strategy equity is compared with buy-and-hold on the same out-of-sample period.
+
+This design reduces look-ahead leakage and makes reported performance harder to overstate.
+
+## Experiments
+
+By default:
+
+```bash
+ai-trading walk-forward --symbol GC=F --period 10y
+```
+
+appends a JSON record to:
+
+```text
+artifacts/experiments.jsonl
+```
+
+The registry stores the model/risk/walk-forward configuration, strategy metrics, benchmark metrics, fold count, decision count and trade count.
+
+## star-list integration strategy
+
+The companion `star-list` catalog identifies the components we intend to integrate progressively rather than importing a large dependency stack immediately.
+
+High-priority candidates:
+
+- **QuantConnect/Lean** — mature backtesting/execution
+- **NautilusTrader** — event-driven execution realism
+- **vectorbt** — fast research and parameter sweeps
+- **Microsoft Qlib** — quantitative ML research
+- **River** — online learning
+- **XGBoost / CatBoost** — tabular alpha models
+- **Optuna** — constrained hyperparameter optimization
+- **hmmlearn / statsmodels / arch** — regimes and volatility
+- **Riskfolio-Lib / skfolio** — portfolio/risk optimization
+- **QuantStats** — reporting
+- **OpenBB** — financial and macro data
+
 ## Safety defaults
 
-Live order routing is intentionally absent from V0. The broker interface is designed for later adapters, but the only included broker is paper-only. Risk limits are applied after the model and cannot be bypassed by a strategy.
+Live order routing is not included yet. The repository currently executes only simulated orders.
+
+The predictive model cannot bypass the risk engine. A future live adapter must remain downstream of the same risk checks and must include explicit activation, exposure caps, kill switches and auditable order state.
 
 ## Roadmap
 
-1. V0: deterministic research + online model + paper broker + risk engine
-2. V1: proper walk-forward backtester, transaction costs/slippage, experiment registry
-3. V2: ensemble models + regime detection + Optuna
-4. V3: event-driven execution adapter (NautilusTrader/Lean)
-5. V4: portfolio allocation and multi-asset risk
-6. V5: guarded continuous learning and champion/challenger promotion
+- [x] V0 — data, features, baseline ML model, paper broker, risk engine
+- [x] V1 — purged walk-forward evaluation, realistic next-bar execution, metrics, benchmark, experiment registry
+- [ ] V2 — regime detection + model ensemble + constrained Optuna search
+- [ ] V3 — Monte Carlo / bootstrap robustness + champion/challenger promotion
+- [ ] V4 — event-driven execution adapter (NautilusTrader or Lean)
+- [ ] V5 — multi-asset portfolio allocation and portfolio-level risk
+- [ ] V6 — guarded continuous learning with drift detection and automatic rollback
