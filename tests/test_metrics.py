@@ -35,7 +35,6 @@ def test_metrics_export_prometheus_text(tmp_path: Path, monkeypatch) -> None:
     assert "ai_trading_crisis_level 2" in text
 
 
-
 def test_metrics_include_model_lifecycle_counters(tmp_path: Path, monkeypatch) -> None:
     import ai_trading.metrics as metrics_module
 
@@ -83,3 +82,47 @@ def test_metrics_include_model_lifecycle_counters(tmp_path: Path, monkeypatch) -
     assert snapshot.quarantine_total == 1
     assert "ai_trading_rollback_total 1" in text
     assert "ai_trading_quarantine_total 1" in text
+
+
+
+def test_metrics_include_recovery_observability(tmp_path: Path, monkeypatch) -> None:
+    import ai_trading.metrics as metrics_module
+
+    monkeypatch.setattr(
+        metrics_module,
+        "read_control_plane",
+        lambda governor_store=None: type(
+            "S",
+            (),
+            {"governor_verdict": "TRADE", "crisis_mode": "normal"},
+        )(),
+    )
+    lifecycle = LifecycleEventLog(tmp_path / "lifecycle.jsonl")
+    lifecycle.append(
+        event="recovery_succeeded",
+        version="",
+        model_name="",
+        metadata={"fallback_depth": 2, "candidates_tested": 3},
+    )
+    lifecycle.append(
+        event="recovery_failed",
+        version="",
+        model_name="",
+        failure_type="technical_failure",
+        metadata={"fallback_depth": 4, "candidates_tested": 5},
+    )
+
+    snapshot = collect_metrics(
+        heartbeat_store=HeartbeatStore(tmp_path / "heartbeat.json"),
+        lifecycle_log=lifecycle,
+        quarantine_store=ModelQuarantineStore(tmp_path / "quarantine.json"),
+    )
+    text = prometheus_text(snapshot)
+
+    assert snapshot.recovery_attempt_total == 2
+    assert snapshot.recovery_success_total == 1
+    assert snapshot.recovery_failure_total == 1
+    assert snapshot.recovery_fallback_depth == 4
+    assert "ai_trading_recovery_attempt_total 2" in text
+    assert "ai_trading_recovery_failure_total 1" in text
+    assert "ai_trading_recovery_fallback_depth 4" in text
