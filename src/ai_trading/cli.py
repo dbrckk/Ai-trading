@@ -5,11 +5,16 @@ from rich.console import Console
 from rich.table import Table
 
 from .backtest import WalkForwardBacktester, WalkForwardConfig
+from .champions import ChampionRegistry
 from .config import ModelConfig, RiskConfig
 from .data import load_history
+from .drift import detect_drift
+from .features import make_features
+from .guardrails import evaluate_health
 from .engine import TradingEngine
 from .experiments import ExperimentRegistry
 from .promotion import evaluate_challenger
+from .regime_validation import validate_regime_returns
 from .robustness import block_bootstrap_returns
 from .tuning import tune_walk_forward
 
@@ -262,6 +267,63 @@ def tune(
     for key, value in sorted(result.best_params.items()):
         table.add_row(key, f"{value:.6g}")
     console.print(table)
+
+
+@app.command("health-check")
+def health_check(
+    symbol: str = typer.Option("GC=F", help="Yahoo Finance symbol"),
+    period: str = typer.Option("10y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+    rollback: bool = typer.Option(False, "--rollback/--no-rollback"),
+) -> None:
+    df = load_history(symbol, period, interval)
+    report = WalkForwardBacktester(
+        risk_config=RiskConfig(),
+        model_config=ModelConfig(),
+        config=WalkForwardConfig(use_ensemble=True),
+    ).run(df)
+
+    features = make_features(df).dropna()
+    split = max(60, int(len(features) * 0.75))
+    reference_features = features.iloc[:split]
+    recent_features = features.iloc[split:]
+
+    strategy_returns = report.equity_curve.pct_change().dropna()
+    return_split = max(20, int(len(strategy_returns) * 0.75))
+    drift = detect_drift(
+        reference_features,
+        recent_features,
+        strategy_returns.iloc[:return_split],
+        strategy_returns.iloc[return_split:],
+    )
+    regime_check = validate_regime_returns(report.regime_returns)
+    health = evaluate_health(report.metrics, drift)
+
+    table = Table(title=f"Health check: {symbol}")
+    table.add_column("Check")
+    table.add_column("Value", justify="right")
+    table.add_row("Healthy", "YES" if health.healthy else "NO")
+    table.add_row("Rollback advised", "YES" if health.rollback else "NO")
+    table.add_row("Health reason", health.reason)
+    table.add_row("Feature drift score", f"{drift.feature_drift_score:.3f}")
+    table.add_row("Return drift score", f"{drift.return_drift_score:.3f}")
+    table.add_row("Regime validation", "PASS" if regime_check.valid else "FAIL")
+    table.add_row("Regimes covered", str(regime_check.covered_regimes))
+    table.add_row("Worst regime return", f"{regime_check.worst_regime_return:.2%}")
+    console.print(table)
+
+    if rollback and (health.rollback or not regime_check.valid):
+        registry = ChampionRegistry()
+        active = registry.active()
+        if active is None:
+            console.print("Rollback unavailable: no active champion registry entry.")
+            raise typer.Exit(code=2)
+        try:
+            restored = registry.rollback()
+        except RuntimeError as exc:
+            console.print(f"Rollback unavailable: {exc}")
+            raise typer.Exit(code=2) from exc
+        console.print(f"Rolled back to champion {restored.version} ({restored.model_name}).")
 
 
 if __name__ == "__main__":
