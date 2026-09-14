@@ -194,7 +194,6 @@ def test_readiness_release_is_content_addressed() -> None:
     assert first.release_hash == second.release_hash
 
 
-
 def test_readiness_release_rejects_wrong_signing_key() -> None:
     comp = composite()
     qual = qualification()
@@ -257,3 +256,46 @@ def test_readiness_release_rejects_unsigned_manifest_by_default() -> None:
 
     assert not verification.valid
     assert verification.reason == "readiness release signature missing"
+
+
+
+def test_readiness_release_store_refuses_overwrite(tmp_path) -> None:
+    comp = composite()
+    qual = qualification()
+    gov = GovernorState(verdict="TRADE")
+    res = ResilienceState(mode="NORMAL")
+    chain = ReadinessChainReport(valid=True, records=5, legacy_records=0)
+    store = ReadinessReleaseStore(tmp_path / "release.json")
+
+    first = create_readiness_release(
+        composite=comp,
+        chain_head="abc123",
+        chain=chain,
+        qualification=qual,
+        governor=gov,
+        resilience=res,
+        trend=trend(),
+        created_at_utc="2026-09-14T20:00:00+00:00",
+        signing_key="test-secret",
+    )
+    second = create_readiness_release(
+        composite=comp,
+        chain_head="abc123",
+        chain=chain,
+        qualification=qual,
+        governor=gov,
+        resilience=res,
+        trend=trend(),
+        created_at_utc="2026-09-14T20:01:00+00:00",
+        signing_key="test-secret",
+    )
+
+    store.save(first)
+    store.save(first)
+
+    try:
+        store.save(second)
+    except FileExistsError as exc:
+        assert "immutable" in str(exc)
+    else:
+        raise AssertionError("expected immutable release overwrite to fail")
