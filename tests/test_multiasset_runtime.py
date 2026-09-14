@@ -5,6 +5,8 @@ import pandas as pd
 
 from ai_trading.audit import AuditLog
 from ai_trading.config import RiskConfig
+from ai_trading.drift import DistributionDriftReport
+from ai_trading.drift_retrain_store import DriftRetrainStore
 from ai_trading.multiasset_runtime import MultiAssetPaperRuntime
 from ai_trading.multiasset_state import MultiAssetStateStore
 from ai_trading.portfolio import AllocationConfig
@@ -54,3 +56,53 @@ def test_multiasset_runtime_is_persistent_and_idempotent(tmp_path: Path) -> None
     assert sum(abs(v) for v in first.weights.values()) <= 1.0 + 1e-9
     assert not second.processed
     assert "bar already processed" in second.risk_reasons
+
+
+
+def test_failed_drift_retrain_does_not_start_cooldown(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    drift_store = DriftRetrainStore(tmp_path / "drift_retrain.json")
+    runtime = MultiAssetPaperRuntime(
+        risk_config=RiskConfig(),
+        allocation_config=AllocationConfig(max_asset_weight=0.6),
+        portfolio_risk_config=PortfolioRiskConfig(
+            max_gross_exposure=1.0,
+            max_net_exposure=1.0,
+            max_asset_exposure=0.6,
+            max_pair_correlation=0.99,
+        ),
+        state_store=MultiAssetStateStore(tmp_path / "state.json"),
+        audit_log=AuditLog(tmp_path / "audit.jsonl"),
+        lock_path=str(tmp_path / "lock"),
+        model_root=tmp_path / "online_models",
+        batch_model_root=tmp_path / "batch_models",
+        specialist_model_root=tmp_path / "specialists",
+        drift_retrain_store=drift_store,
+    )
+
+    monkeypatch.setattr(
+        "ai_trading.multiasset_runtime.detect_distribution_drift",
+        lambda *_args, **_kwargs: DistributionDriftReport(
+            max_psi=0.8,
+            mean_psi=0.4,
+            correlation_shift=0.5,
+            risk_multiplier=0.25,
+            retrain_requested=True,
+            drifted_features=("return_1",),
+        ),
+    )
+
+    def fail_batch_retrain(*_args, **_kwargs):
+        raise ValueError("synthetic retrain failure")
+
+    monkeypatch.setattr(runtime, "_load_or_train_batch_model", fail_batch_retrain)
+
+    markets = {"A": market(11, n=180), "B": market(12, n=180)}
+    result = runtime.step(markets)
+
+    assert result.processed
+    assert drift_store.load() == {}
+    assert drift_store.should_retrain("A", processed_bar=1)
+    assert drift_store.should_retrain("B", processed_bar=1)
