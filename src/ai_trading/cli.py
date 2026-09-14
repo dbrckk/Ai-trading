@@ -47,7 +47,8 @@ from .runtime import PaperAutonomousRuntime
 from .scheduler import PaperScheduler, SchedulerConfig
 from .state_snapshot import AtomicSnapshotStore
 from .tuning import tune_walk_forward
-from .watchdog import HeartbeatStore, heartbeat_is_stale
+from .watchdog import HeartbeatStore, WatchdogPolicy, heartbeat_is_stale
+from .watchdog_enforcer import enforce_watchdog
 
 app = typer.Typer(help="Autonomous trading research CLI")
 console = Console()
@@ -1015,6 +1016,31 @@ def watchdog_status() -> None:
     table.add_row(
         "Last valid snapshot",
         "-" if snapshot is None else snapshot.name,
+    )
+    console.print(table)
+
+
+@app.command("watchdog-enforce")
+def watchdog_enforce(
+    max_heartbeat_age_seconds: float = typer.Option(180.0, min=1.0),
+) -> None:
+    result = enforce_watchdog(
+        heartbeat_store=HeartbeatStore("artifacts/multiasset_heartbeat.json"),
+        audit_path="artifacts/multiasset_audit.jsonl",
+        governor_store=GovernorStateStore(),
+        policy=WatchdogPolicy(
+            max_heartbeat_age_seconds=max_heartbeat_age_seconds,
+        ),
+    )
+
+    table = Table(title="Watchdog enforcement")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Healthy", "YES" if result.healthy else "NO")
+    table.add_row("Halted", "YES" if result.halted else "NO")
+    table.add_row(
+        "Reasons",
+        "-" if not result.reasons else "; ".join(result.reasons),
     )
     console.print(table)
 
