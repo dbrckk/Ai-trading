@@ -18,6 +18,7 @@ from .model_quarantine import ModelQuarantineStore
 from .multiasset_runtime import MultiAssetPaperRuntime
 from .multiasset_state import MultiAssetStateStore
 from .quality_store import QualityStore
+from .readiness_score import ReadinessHistoryStore
 from .resilience import ResilienceStateStore
 
 
@@ -48,4 +49,5 @@ def isolated_multiasset_runtime(root: str | Path) -> MultiAssetPaperRuntime:
         model_quarantine_store=ModelQuarantineStore(root / "model_quarantine.json"),
         lifecycle_log=LifecycleEventLog(root / "model_lifecycle.jsonl"),
         resilience_state_store=ResilienceStateStore(root / "resilience_state.json"),
+        readiness_history_store=ReadinessHistoryStore(root / "readiness_history.jsonl"),
     )
