@@ -6,7 +6,7 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 
-from .governor_state_store import GovernorStateStore
+from .governor_state_store import GovernorState, GovernorStateStore
 from .maintenance import MaintenanceStore
 from .restart_log import RestartLog
 from .startup_check import run_startup_check
@@ -94,7 +94,15 @@ class PaperSupervisor:
                         restart_index=restarts,
                         reason="worker exited cleanly",
                     )
-                    return SupervisorResult(restarts, False, False, final_exit)
+                    previous = self.governor_store.load()
+            self.governor_store.save(
+                GovernorState(
+                    verdict="HALT",
+                    reason="supervisor restart budget exhausted",
+                    consecutive_halts=previous.consecutive_halts + 1,
+                )
+            )
+            return SupervisorResult(restarts, False, False, final_exit)
 
                 now = time.monotonic()
                 crashes = [
@@ -111,6 +119,14 @@ class PaperSupervisor:
                 )
 
                 if len(crashes) >= self.config.max_crashes_in_window:
+                    previous = self.governor_store.load()
+                    self.governor_store.save(
+                        GovernorState(
+                            verdict="HALT",
+                            reason="supervisor crash-loop detected",
+                            consecutive_halts=previous.consecutive_halts + 1,
+                        )
+                    )
                     return SupervisorResult(
                         restarts,
                         False,
