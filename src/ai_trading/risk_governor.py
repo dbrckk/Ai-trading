@@ -56,7 +56,6 @@ def evaluate_governor(
     if (
         signals.drawdown >= policy.flatten_drawdown
         or signals.stressed_cvar >= policy.max_stressed_cvar
-        or signals.crisis_mode == "capital-preservation"
     ):
         return GovernorDecision(
             verdict="FLATTEN",
@@ -69,7 +68,6 @@ def evaluate_governor(
 
     if (
         not signals.portfolio_risk_approved
-        or not signals.stress_approved
         or signals.data_quality < policy.min_data_quality
     ):
         return GovernorDecision(
@@ -82,7 +80,8 @@ def evaluate_governor(
         )
 
     if (
-        signals.crisis_mode in {"cautious", "defensive"}
+        not signals.stress_approved
+        or signals.crisis_mode in {"cautious", "defensive", "capital-preservation"}
         or signals.drawdown >= policy.reduce_drawdown
         or signals.stressed_cvar >= policy.reduce_stressed_cvar
         or signals.liquidity_stressed
