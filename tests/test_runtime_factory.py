@@ -16,3 +16,7 @@ def test_isolated_runtime_routes_artifacts_to_workspace(tmp_path: Path) -> None:
     assert runtime.allocation_state_store.path == root / "global_allocation.json"
     assert runtime.crisis_state_store.path == root / "crisis_state.json"
     assert runtime.governor_state_store.path == root / "risk_governor_state.json"
+    assert runtime.champion_registry.path == root / "champions.jsonl"
+    assert runtime.champion_probation_store.path == root / "champion_probation.json"
+    assert runtime.model_quarantine_store.path == root / "model_quarantine.json"
+    assert runtime.lifecycle_log.path == root / "model_lifecycle.jsonl"
