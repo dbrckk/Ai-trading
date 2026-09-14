@@ -58,6 +58,7 @@ class MultiAssetPaperScheduler:
             self.runtime.drift_retrain_store.path,
             self.runtime.champion_probation_store.path,
             self.runtime.model_quarantine_store.path,
+            self.runtime.resilience_state_store.path,
         ]
 
     def _jsonl_files(self) -> list:
@@ -196,6 +197,8 @@ class MultiAssetPaperScheduler:
             status = read_control_plane(
                 governor_store=self.runtime.governor_state_store,
                 crisis_store=self.runtime.crisis_state_store,
+                lifecycle_log=self.runtime.lifecycle_log,
+                resilience_store=self.runtime.resilience_state_store,
             )
             if not status.scheduler_should_run:
                 raise RuntimeError(
