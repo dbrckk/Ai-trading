@@ -6,6 +6,7 @@ from .governor_state_store import GovernorState
 from .qualification_guard import validate_qualification_record
 from .qualification_store import QualificationRecord
 from .readiness_score import CompositeReadiness
+from .readiness_trend import ReadinessTrend
 from .reliability import ReliabilityReport
 from .resilience import ResilienceState
 
@@ -20,6 +21,7 @@ class DeploymentReadinessPolicy:
     max_qualification_age_hours: float = 24.0
     require_composite_score: bool = True
     min_composite_score: float = 90.0
+    require_stable_trend: bool = True
 
 
 @dataclass(frozen=True)
@@ -39,6 +41,7 @@ def evaluate_deployment_readiness(
     interval: str,
     policy: DeploymentReadinessPolicy | None = None,
     composite: CompositeReadiness | None = None,
+    trend: ReadinessTrend | None = None,
 ) -> DeploymentReadiness:
     policy = policy or DeploymentReadinessPolicy()
     reasons: list[str] = []
@@ -76,6 +79,11 @@ def evaluate_deployment_readiness(
                 reasons.append("composite readiness policy failed")
             if composite.score < policy.min_composite_score:
                 reasons.append("composite readiness score below deployment threshold")
+    if policy.require_stable_trend:
+        if trend is None:
+            reasons.append("readiness trend missing")
+        elif trend.status != "stable":
+            reasons.append("readiness trend is not stable")
 
     return DeploymentReadiness(
         allowed=not reasons,
