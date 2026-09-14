@@ -15,6 +15,7 @@ from .engine import TradingEngine
 from .experiments import ExperimentRegistry
 from .features import make_features
 from .guardrails import evaluate_health
+from .multiasset_backtest import MultiAssetWalkForwardBacktester
 from .multiasset_runtime import MultiAssetPaperRuntime
 from .orchestrator import AutonomousPaperOrchestrator
 from .performance import PerformanceMetrics
@@ -583,6 +584,34 @@ def multiasset_step(
 
     if result.risk_reasons:
         console.print("; ".join(result.risk_reasons))
+
+
+@app.command("multiasset-backtest")
+def multiasset_backtest(
+    symbols: str = typer.Option("GC=F,SI=F,CL=F", help="Comma-separated Yahoo symbols"),
+    period: str = typer.Option("10y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+) -> None:
+    names = [s.strip() for s in symbols.split(",") if s.strip()]
+    if len(names) < 2:
+        raise typer.BadParameter("Provide at least two symbols")
+
+    markets = {name: load_history(name, period, interval) for name in names}
+    report = MultiAssetWalkForwardBacktester().run(markets)
+
+    table = Table(title="Multi-asset walk-forward")
+    table.add_column("Metric")
+    table.add_column("Value", justify="right")
+    table.add_row("Total return", f"{report.metrics.total_return:.2%}")
+    table.add_row("Annualized return", f"{report.metrics.annualized_return:.2%}")
+    table.add_row("Sharpe", f"{report.metrics.sharpe:.3f}")
+    table.add_row("Sortino", f"{report.metrics.sortino:.3f}")
+    table.add_row("Max drawdown", f"{report.metrics.max_drawdown:.2%}")
+    table.add_row("Calmar", f"{report.metrics.calmar:.3f}")
+    table.add_row("Trades", str(report.trades))
+    table.add_row("Decisions", str(report.decisions))
+    table.add_row("Rejected rebalances", str(report.rejected_rebalances))
+    console.print(table)
 
 
 if __name__ == "__main__":
