@@ -1226,6 +1226,11 @@ def paper_soak(
         "Final equity",
         "-" if result.final_equity is None else f"{result.final_equity:,.2f}",
     )
+    table.add_row(
+        "Minimum equity",
+        "-" if result.min_equity is None else f"{result.min_equity:,.2f}",
+    )
+    table.add_row("Max drawdown", f"{result.max_drawdown:.2%}")
     qualification = evaluate_soak_qualification(result)
     table.add_row("Governor", result.governor_verdict)
     table.add_row("Crisis mode", result.crisis_mode)
