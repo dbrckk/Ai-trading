@@ -16,6 +16,8 @@ class RecoveryResult:
     reason: str
     verified: bool = False
     mismatches: tuple[str, ...] = ()
+    candidates_tested: int = 0
+    fallback_depth: int = 0
 
 
 def recover_latest_consistent_state(
@@ -31,6 +33,8 @@ def recover_latest_consistent_state(
             restored=False,
             snapshot=None,
             reason="no valid snapshot available",
+            candidates_tested=0,
+            fallback_depth=0,
         )
 
     if audit_path is None or state_files is None:
@@ -40,6 +44,8 @@ def recover_latest_consistent_state(
             snapshot=str(restored),
             reason="restored latest valid atomic snapshot",
             verified=False,
+            candidates_tested=1,
+            fallback_depth=0,
         )
 
     last_reason = "no logically consistent snapshot available"
@@ -58,7 +64,7 @@ def recover_latest_consistent_state(
             else:
                 backups[path] = None
 
-        for candidate in candidates:
+        for depth, candidate in enumerate(candidates):
             restored = snapshot_store.restore_snapshot(candidate, destination_root)
             verification = verify_checkpoint_state(
                 audit_path,
@@ -72,6 +78,8 @@ def recover_latest_consistent_state(
                     reason="restored and verified consistent atomic snapshot",
                     verified=True,
                     mismatches=(),
+                    candidates_tested=depth + 1,
+                    fallback_depth=depth,
                 )
             last_reason = verification.reason
             last_mismatches = verification.mismatches
@@ -92,4 +100,6 @@ def recover_latest_consistent_state(
         reason=last_reason,
         verified=False,
         mismatches=last_mismatches,
+        candidates_tested=len(candidates),
+        fallback_depth=max(0, len(candidates) - 1),
     )
