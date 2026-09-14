@@ -47,6 +47,7 @@ from .portfolio_intelligence import (
 )
 from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
 from .quality_store import QualityStore
+from .readiness_score import ReadinessHistoryStore
 from .recovery_health import evaluate_recovery_health
 from .regime import detect_regime
 from .resilience import (
@@ -115,6 +116,7 @@ class MultiAssetPaperRuntime:
         lifecycle_log: LifecycleEventLog | None = None,
         resilience_state_store: ResilienceStateStore | None = None,
         resilience_policy: ResiliencePolicy | None = None,
+        readiness_history_store: ReadinessHistoryStore | None = None,
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
@@ -154,6 +156,7 @@ class MultiAssetPaperRuntime:
         self.lifecycle_log = lifecycle_log or LifecycleEventLog()
         self.resilience_state_store = resilience_state_store or ResilienceStateStore()
         self.resilience_policy = resilience_policy or ResiliencePolicy()
+        self.readiness_history_store = readiness_history_store or ReadinessHistoryStore()
 
     def _specialist_path(self, symbol: str, kind: str) -> Path:
         safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
