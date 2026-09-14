@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
 from hashlib import sha256
 from json import dumps, loads
-from datetime import UTC, datetime
 from pathlib import Path
-
 
 SCORE_VERSION = "1.0.0"
 
