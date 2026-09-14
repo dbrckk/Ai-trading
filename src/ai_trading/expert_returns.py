@@ -11,10 +11,15 @@ def specialist_return_series(
     *,
     kind: str,
     return_threshold: float,
+    horizon_bars: int = 1,
     train_fraction: float = 0.70,
 ) -> pd.Series:
     features = make_features(df)
-    labels = make_labels(df, return_threshold=return_threshold)
+    labels = make_labels(
+        df,
+        horizon_bars=horizon_bars,
+        return_threshold=return_threshold,
+    )
     usable = features.dropna().index.intersection(labels.dropna().index)
     if len(usable) < 120:
         raise ValueError("Need at least 120 usable bars")
