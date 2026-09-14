@@ -19,6 +19,7 @@ from .crisis_controller import CrisisPolicy, evaluate_crisis_state, limits_for_s
 from .crisis_state_store import CrisisStateStore
 from .data_quality import evaluate_market_data_quality
 from .drift import detect_distribution_drift
+from .drift_retrain_store import DriftRetrainStore
 from .economic_meta import economic_route_weight
 from .economic_meta_store import EconomicMetaStore
 from .ensemble import EnsembleDirectionModel
@@ -92,6 +93,7 @@ class MultiAssetPaperRuntime:
         crisis_asset_policy: CrisisAssetPolicy | None = None,
         governor_policy: GovernorPolicy | None = None,
         governor_state_store: GovernorStateStore | None = None,
+        drift_retrain_store: DriftRetrainStore | None = None,
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
@@ -122,6 +124,7 @@ class MultiAssetPaperRuntime:
         self.crisis_asset_policy = crisis_asset_policy or CrisisAssetPolicy()
         self.governor_policy = governor_policy or GovernorPolicy()
         self.governor_state_store = governor_state_store or GovernorStateStore()
+        self.drift_retrain_store = drift_retrain_store or DriftRetrainStore()
 
 
     def _specialist_path(self, symbol: str, kind: str) -> Path:
@@ -304,8 +307,20 @@ class MultiAssetPaperRuntime:
                         "retrain_requested": distribution_drift.retrain_requested,
                         "drifted_features": list(distribution_drift.drifted_features),
                     }
-                    if distribution_drift.retrain_requested:
+                    if (
+                        distribution_drift.retrain_requested
+                        and self.drift_retrain_store.should_retrain(
+                            symbol,
+                            processed_bar=state.processed_bars,
+                        )
+                    ):
                         self._batch_model_path(symbol).unlink(missing_ok=True)
+                        self.drift_retrain_store.mark(
+                            symbol,
+                            processed_bar=state.processed_bars,
+                            max_psi=distribution_drift.max_psi,
+                            correlation_shift=distribution_drift.correlation_shift,
+                        )
                 else:
                     drift_by_symbol[symbol] = {
                         "max_psi": 0.0,
