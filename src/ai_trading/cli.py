@@ -21,7 +21,7 @@ from .control_plane import read_control_plane
 from .crisis_controller import limits_for_state
 from .crisis_state_store import CrisisStateStore
 from .data import load_history
-from .deployment_readiness import evaluate_deployment_readiness
+from .deployment_readiness import DeploymentReadinessPolicy, evaluate_deployment_readiness
 from .drift import detect_drift
 from .engine import TradingEngine
 from .evolution_manager import run_evolution_cycle
@@ -1019,8 +1019,7 @@ def create_readiness_release_command(
         composite=composite,
         trend=trend,
         readiness_chain=chain,
-        release_verification=type("V", (), {"valid": True})(),
-        policy=None,
+        policy=DeploymentReadinessPolicy(require_release_manifest=False),
     )
     blocking = tuple(
         reason
