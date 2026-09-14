@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from ai_trading.champions import ChampionRegistry
+from ai_trading.model_quarantine import ModelQuarantineStore
 from ai_trading.champion_probation import (
     ChampionProbationManager,
     ChampionProbationStore,
@@ -120,3 +121,48 @@ def test_probation_fails_closed_when_metrics_are_missing(tmp_path: Path) -> None
     assert "missing probation metrics" in result.reasons[0]
     assert registry.active() is not None
     assert registry.active().version == "v1"
+
+
+
+def test_probation_rollback_records_model_failure(tmp_path: Path) -> None:
+    registry, champion = seeded_registry(tmp_path)
+    quarantine = ModelQuarantineStore(tmp_path / "quarantine.json")
+    manager = ChampionProbationManager(
+        registry,
+        store=ChampionProbationStore(tmp_path / "probation.json"),
+        quarantine_store=quarantine,
+    )
+    manager.start(champion)
+
+    result = manager.observe(
+        {
+            "sharpe": 1.0,
+            "sortino": 1.2,
+            "max_drawdown": 0.18,
+            "calmar": 1.1,
+        },
+        processed_bar=100,
+    )
+
+    record = quarantine.load()["v2"]
+    assert result.action == "rollback"
+    assert record.failures == 1
+    assert record.next_eligible_bar > 100
+
+
+def test_probation_success_clears_model_failures(tmp_path: Path) -> None:
+    registry, champion = seeded_registry(tmp_path)
+    quarantine = ModelQuarantineStore(tmp_path / "quarantine.json")
+    quarantine.record_failure("v2", processed_bar=10, reason="old failure")
+    manager = ChampionProbationManager(
+        registry,
+        store=ChampionProbationStore(tmp_path / "probation.json"),
+        policy=ProbationPolicy(min_observations=1),
+        quarantine_store=quarantine,
+    )
+    manager.start(champion)
+
+    result = manager.observe(BASELINE, processed_bar=100)
+
+    assert result.action == "pass"
+    assert quarantine.load()["v2"].failures == 0
