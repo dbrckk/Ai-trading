@@ -793,7 +793,11 @@ class MultiAssetPaperRuntime:
                 ),
             )
             previous_resilience_state = self.resilience_state_store.load()
-            stability = evaluate_resilience_stability(self.lifecycle_log)
+            stability = evaluate_resilience_stability(
+                self.lifecycle_log,
+                current_mode=previous_resilience_state.mode,
+                current_mode_steps=previous_resilience_state.mode_steps,
+            )
             stability_degraded = stability.status in {"degraded", "critical"}
             stability_critical = stability.status == "critical"
 
@@ -1013,6 +1017,7 @@ class MultiAssetPaperRuntime:
                         "mode": resilience.state.mode,
                         "reason": resilience.state.reason,
                         "healthy_streak": resilience.state.healthy_streak,
+                        "mode_steps": resilience.state.mode_steps,
                         "exposure_cap": resilience.exposure_cap,
                         "promotions_allowed": resilience.promotions_allowed,
                         "scheduler_allowed": resilience.scheduler_allowed,
