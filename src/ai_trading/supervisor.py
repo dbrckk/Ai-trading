@@ -8,6 +8,7 @@ from pathlib import Path
 
 from .governor_state_store import GovernorState, GovernorStateStore
 from .maintenance import MaintenanceStore
+from .qualification_guard import validate_qualification_record
 from .qualification_store import QualificationStore
 from .readiness_handshake import wait_for_worker_readiness
 from .restart_log import RestartLog
@@ -31,6 +32,10 @@ class SupervisorConfig:
     heartbeat_startup_grace_seconds: float = 30.0
     readiness_timeout_seconds: float = 30.0
     require_qualification: bool = False
+    qualification_symbols: tuple[str, ...] = ()
+    qualification_period: str = ""
+    qualification_interval: str = ""
+    qualification_max_age_hours: float = 24.0
 
 
 @dataclass(frozen=True)
@@ -107,14 +112,23 @@ class PaperSupervisor:
                 return SupervisorResult(0, False, False, None)
 
             if self.config.require_qualification:
-                qualification = self.qualification_store.load()
-                if qualification is None or not qualification.passed:
-                    self._halt_governor("paper qualification gate failed")
+                guard = validate_qualification_record(
+                    self.qualification_store.load(),
+                    symbols=self.config.qualification_symbols,
+                    period=self.config.qualification_period,
+                    interval=self.config.qualification_interval,
+                    max_age_hours=self.config.qualification_max_age_hours,
+                )
+                if not guard.allowed:
+                    reason = "paper qualification gate failed: " + "; ".join(
+                        guard.reasons
+                    )
+                    self._halt_governor(reason)
                     self.state_store.save(
                         status="halted",
                         worker_pid=None,
                         restarts=0,
-                        reason="paper qualification gate failed",
+                        reason=reason,
                     )
                     return SupervisorResult(0, False, False, None)
 
