@@ -25,6 +25,9 @@ class ResilienceStability:
 def evaluate_resilience_stability(
     lifecycle_log: LifecycleEventLog,
     policy: ResilienceStabilityPolicy | None = None,
+    *,
+    current_mode: str = "",
+    current_mode_steps: int = 0,
 ) -> ResilienceStability:
     policy = policy or ResilienceStabilityPolicy()
     events = [
@@ -39,11 +42,11 @@ def evaluate_resilience_stability(
         if modes[index] == modes[index - 2] and modes[index] != modes[index - 1]:
             oscillations += 1
 
-    recovery_streak = 0
-    for mode in reversed(modes):
-        if mode != "RECOVERY":
-            break
-        recovery_streak += 1
+    recovery_streak = (
+        int(current_mode_steps)
+        if current_mode == "RECOVERY"
+        else 0
+    )
 
     cooldown_count = sum(mode == "COOLDOWN" for mode in modes)
 
