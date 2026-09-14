@@ -21,6 +21,7 @@ from .expert_sandbox import validate_specialist
 from .features import make_features
 from .generation_rollback import rollback_generation
 from .generations import GenerationStore
+from .global_allocator import GlobalAllocatorConfig, allocate_global_capital
 from .guardrails import evaluate_health
 from .multiasset_backtest import MultiAssetWalkForwardBacktester
 from .multiasset_evolution import run_multiasset_evolution_cycle
@@ -793,6 +794,53 @@ def multiasset_evolve(
     table.add_row("Rolled back", "YES" if result.rolled_back else "NO")
     table.add_row("Reason", result.reason)
     console.print(table)
+
+
+@app.command("global-allocation-check")
+def global_allocation_check(
+    symbols: str = typer.Option("GC=F,SI=F,CL=F", help="Comma-separated Yahoo symbols"),
+    period: str = typer.Option("2y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+) -> None:
+    names = [s.strip() for s in symbols.split(",") if s.strip()]
+    if len(names) < 2:
+        raise typer.BadParameter("Provide at least two symbols")
+
+    series = {}
+    alpha = {}
+    quality = {}
+    for name in names:
+        df = load_history(name, period, interval)
+        ret = df["Close"].astype(float).pct_change().dropna()
+        key = f"{name}|baseline|all"
+        series[key] = ret
+        alpha[key] = float(ret.tail(60).mean())
+        quality[key] = 1.0
+
+    frame = pd.DataFrame(series).dropna()
+    report = allocate_global_capital(
+        frame,
+        expected_alpha=pd.Series(alpha),
+        quality=pd.Series(quality),
+        config=GlobalAllocatorConfig(
+            max_turnover=2.0,
+            max_cvar=0.20,
+        ),
+    )
+
+    table = Table(title="Global capital allocator")
+    table.add_column("Opportunity")
+    table.add_column("Weight", justify="right")
+    for key, weight in report.weights.items():
+        table.add_row(str(key), f"{weight:.2%}")
+    console.print(table)
+    console.print(
+        f"Approved={'YES' if report.approved else 'NO'} | "
+        f"CVaR={report.cvar:.2%} | turnover={report.turnover:.2f} | "
+        f"estimated_cost={report.estimated_cost:.4%}"
+    )
+    if report.reasons:
+        console.print("; ".join(report.reasons))
 
 
 if __name__ == "__main__":
