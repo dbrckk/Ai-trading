@@ -6,6 +6,7 @@ from .allocation_state import AllocationStateStore
 from .allocator_config_store import AllocatorConfigStore
 from .audit import AuditLog
 from .crisis_state_store import CrisisStateStore
+from .drift_retrain_store import DriftRetrainStore
 from .economic_meta_store import EconomicMetaStore
 from .expert_pool import ExpertPoolStore
 from .governor_state_store import GovernorStateStore
@@ -34,4 +35,5 @@ def isolated_multiasset_runtime(root: str | Path) -> MultiAssetPaperRuntime:
         allocator_config_store=AllocatorConfigStore(root / "global_allocator_config.json"),
         crisis_state_store=CrisisStateStore(root / "crisis_state.json"),
         governor_state_store=GovernorStateStore(root / "risk_governor_state.json"),
+        drift_retrain_store=DriftRetrainStore(root / "drift_retrain.json"),
     )
