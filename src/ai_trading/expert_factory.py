@@ -89,6 +89,7 @@ def run_expert_factory(
                 df,
                 kind=candidate.kind,
                 return_threshold=candidate.return_threshold,
+                horizon_bars=candidate.horizon_bars,
             )
         except ValueError:
             continue
