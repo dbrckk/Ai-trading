@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from .lifecycle_log import LifecycleEventLog
 from .model_quarantine import ModelQuarantineStore
 from .promotion_guard import PromotionDecision, PromotionPolicy, evaluate_promotion
 
@@ -78,12 +79,24 @@ class ChampionRegistry:
         config: dict[str, Any],
         policy: PromotionPolicy | None = None,
         quarantine_store: ModelQuarantineStore | None = None,
+        lifecycle_log: LifecycleEventLog | None = None,
+        artifact_path: str | Path | None = None,
         processed_bar: int = 0,
     ) -> tuple[PromotionDecision, ChampionRecord | None]:
         if (
             quarantine_store is not None
             and not quarantine_store.eligible(version, processed_bar=processed_bar)
         ):
+            if lifecycle_log is not None:
+                lifecycle_log.append(
+                    event="promotion_rejected",
+                    version=version,
+                    model_name=model_name,
+                    reason="challenger version is quarantined or in backoff",
+                    failure_type="performance_failure",
+                    processed_bar=processed_bar,
+                    artifact_path=artifact_path,
+                )
             return (
                 PromotionDecision(
                     approved=False,
@@ -103,6 +116,15 @@ class ChampionRegistry:
                 metrics=metrics,
                 config=config,
             )
+            if lifecycle_log is not None:
+                lifecycle_log.append(
+                    event="promotion",
+                    version=version,
+                    model_name=model_name,
+                    reason="no existing champion",
+                    processed_bar=processed_bar,
+                    artifact_path=artifact_path,
+                )
             return (
                 PromotionDecision(
                     approved=True,
@@ -121,6 +143,17 @@ class ChampionRegistry:
             policy=policy,
         )
         if not decision.approved:
+            if lifecycle_log is not None:
+                lifecycle_log.append(
+                    event="promotion_rejected",
+                    version=version,
+                    model_name=model_name,
+                    reason="; ".join(decision.reasons),
+                    failure_type="performance_failure",
+                    processed_bar=processed_bar,
+                    artifact_path=artifact_path,
+                    metadata={"metric_deltas": decision.metric_deltas},
+                )
             return decision, None
 
         promoted = self.promote(
@@ -130,6 +163,15 @@ class ChampionRegistry:
             metrics=metrics,
             config=config,
         )
+        if lifecycle_log is not None:
+            lifecycle_log.append(
+                event="promotion",
+                version=version,
+                model_name=model_name,
+                processed_bar=processed_bar,
+                artifact_path=artifact_path,
+                metadata={"metric_deltas": decision.metric_deltas},
+            )
         return decision, promoted
 
     def rollback(self) -> ChampionRecord:
