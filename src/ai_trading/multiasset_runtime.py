@@ -36,6 +36,7 @@ from .quality_store import QualityStore
 from .regime import detect_regime
 from .runtime_lock import RuntimeLock
 from .specialist_experts import SpecialistDirectionModel
+from .stress_engine import StressPolicy, run_stress_test
 
 
 @dataclass(frozen=True)
@@ -75,6 +76,7 @@ class MultiAssetPaperRuntime:
         allocation_state_store: AllocationStateStore | None = None,
         allocator_config_store: AllocatorConfigStore | None = None,
         global_allocator_config: GlobalAllocatorConfig | None = None,
+        stress_policy: StressPolicy | None = None,
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
@@ -99,6 +101,7 @@ class MultiAssetPaperRuntime:
             or self.allocator_config_store.load()
             or GlobalAllocatorConfig()
         )
+        self.stress_policy = stress_policy or StressPolicy()
 
 
     def _specialist_path(self, symbol: str, kind: str) -> Path:
@@ -520,6 +523,13 @@ class MultiAssetPaperRuntime:
                     # risk until CVaR/turnover/cost constraints are satisfied.
                     intelligent_weights = intelligent_weights * 0.0
 
+            stress_report = run_stress_test(
+                returns.loc[:, intelligent_weights.index],
+                intelligent_weights,
+                policy=self.stress_policy,
+            )
+            intelligent_weights = intelligent_weights * stress_report.risk_scale
+
             notionals = target_notionals(equity, intelligent_weights)
 
             risk = evaluate_portfolio_risk(
@@ -656,6 +666,14 @@ class MultiAssetPaperRuntime:
                         if global_allocation_report is not None
                         else None
                     ),
+                    "stress": {
+                        "approved": stress_report.approved,
+                        "worst_loss": stress_report.worst_loss,
+                        "stressed_cvar": stress_report.stressed_cvar,
+                        "risk_scale": stress_report.risk_scale,
+                        "worst_scenario": stress_report.worst_scenario,
+                        "scenario_losses": stress_report.scenario_losses,
+                    },
                 },
             )
 
