@@ -569,11 +569,15 @@ def multiasset_step(
         weights_table.add_column("Asset")
         weights_table.add_column("Weight", justify="right")
         weights_table.add_column("Notional", justify="right")
+        weights_table.add_column("Signal", justify="right")
+        weights_table.add_column("Confidence", justify="right")
         for name in sorted(result.weights):
             weights_table.add_row(
                 name,
                 f"{result.weights[name]:.2%}",
                 f"{result.notionals[name]:,.2f}",
+                str(result.signals.get(name, 0)),
+                f"{result.confidences.get(name, 0.0):.3f}",
             )
         console.print(weights_table)
 
