@@ -65,6 +65,7 @@ class MultiAssetPaperScheduler:
         return [
             self.runtime.champion_registry.path,
             self.runtime.lifecycle_log.path,
+            self.runtime.readiness_history_store.path,
         ]
 
     def _active_model_files(self) -> list:
@@ -132,6 +133,7 @@ class MultiAssetPaperScheduler:
             governor_store=self.runtime.governor_state_store,
             champion_registry=self.runtime.champion_registry,
             lifecycle_log=self.runtime.lifecycle_log,
+            readiness_history_store=self.runtime.readiness_history_store,
         )
         if not startup.ready and startup.snapshot_available:
             recovery = recover_latest_consistent_state(
@@ -181,6 +183,7 @@ class MultiAssetPaperScheduler:
                     governor_store=self.runtime.governor_state_store,
                     champion_registry=self.runtime.champion_registry,
                     lifecycle_log=self.runtime.lifecycle_log,
+                    readiness_history_store=self.runtime.readiness_history_store,
                 )
 
         if not startup.ready:
