@@ -234,7 +234,7 @@ class MultiAssetPaperRuntime:
             base_weights = inverse_volatility_weights(returns, self.allocation_config)
             allowed_asset_count = max(
                 1,
-                int(round(len(base_weights) * persisted_limits.asset_limit_fraction)),
+                round(len(base_weights) * persisted_limits.asset_limit_fraction),
             )
             allowed_assets = set(
                 base_weights.abs().sort_values(ascending=False).head(allowed_asset_count).index
