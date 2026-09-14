@@ -14,6 +14,7 @@ from .drift import detect_drift
 from .engine import TradingEngine
 from .experiments import ExperimentRegistry
 from .expert_pool import ExpertPoolStore, ExpertRecord, reconcile_pool
+from .expert_pool_manager import refresh_expert_pool
 from .expert_sandbox import validate_specialist
 from .features import make_features
 from .guardrails import evaluate_health
@@ -656,6 +657,35 @@ def expert_sandbox(
     table.add_row("Sortino", f"{result.metrics.sortino:.3f}")
     table.add_row("Max drawdown", f"{result.metrics.max_drawdown:.2%}")
     table.add_row("Observations", str(result.observations))
+    console.print(table)
+
+
+@app.command("expert-pool-refresh")
+def expert_pool_refresh(
+    symbol: str = typer.Option("GC=F", help="Yahoo Finance symbol"),
+    period: str = typer.Option("5y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+) -> None:
+    df = load_history(symbol, period, interval)
+    result = refresh_expert_pool(df, symbol=symbol)
+
+    table = Table(title=f"Expert pool refresh: {symbol}")
+    table.add_column("Expert")
+    table.add_column("Status")
+    table.add_column("Score", justify="right")
+    table.add_column("Validation", justify="right")
+    table.add_column("Obs", justify="right")
+
+    for name, record in sorted(result.records.items()):
+        if not name.startswith(f"{symbol}:"):
+            continue
+        table.add_row(
+            name,
+            record.status,
+            f"{record.score:.3f}",
+            f"{record.validation_score:.3f}",
+            str(record.observations),
+        )
     console.print(table)
 
 
