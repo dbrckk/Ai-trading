@@ -45,6 +45,7 @@ class PaperAutonomousRuntime:
         state_store: RuntimeStateStore | None = None,
         audit_log: AuditLog | None = None,
         online_model_path: str | Path = "artifacts/models/online-river.joblib",
+        lock_path: str | Path = "artifacts/runtime.lock",
         learning_cycle_every_bars: int = 63,
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
@@ -52,6 +53,7 @@ class PaperAutonomousRuntime:
         self.state_store = state_store or RuntimeStateStore()
         self.audit = audit_log or AuditLog()
         self.online_model_path = Path(online_model_path)
+        self.lock_path = Path(lock_path)
         self.learning_cycle_every_bars = learning_cycle_every_bars
         self.risk = RiskEngine(self.risk_config)
 
@@ -102,7 +104,7 @@ class PaperAutonomousRuntime:
         if len(df) < 40:
             raise ValueError("Need at least 40 bars for runtime features")
 
-        with RuntimeLock():
+        with RuntimeLock(self.lock_path):
             features = make_features(df)
             labels = make_labels(
                 df,
@@ -110,18 +112,22 @@ class PaperAutonomousRuntime:
                 return_threshold=self.model_config.return_threshold,
             )
             valid = features.dropna().index
-            if len(valid) < 2:
+            if len(valid) < 3:
                 raise ValueError("Insufficient valid feature rows")
 
-            signal_idx = valid[-1]
-            signal_time = str(signal_idx)
+            signal_idx = valid[-2]
+            signal_pos = int(df.index.get_loc(signal_idx))
+            if signal_pos + 1 >= len(df.index):
+                raise ValueError("No execution bar available after signal bar")
+            execution_idx = df.index[signal_pos + 1]
+            execution_time = str(execution_idx)
             state = self.state_store.load(self.risk_config.starting_cash)
 
-            if state.last_processed == signal_time:
+            if state.last_processed == execution_time:
                 broker = self._broker_from_state(state)
                 return RuntimeStepResult(
                     processed=False,
-                    timestamp=signal_time,
+                    timestamp=execution_time,
                     side=0,
                     confidence=0.0,
                     approved=False,
@@ -133,30 +139,34 @@ class PaperAutonomousRuntime:
                 )
 
             model = self._load_online()
-            previous_idx = valid[-2]
-            previous_label = labels.get(previous_idx)
-            if pd.notna(previous_label):
+            learn_idx = valid[-3]
+            learn_label = labels.get(learn_idx)
+            if pd.notna(learn_label):
                 model.learn_one(
-                    features.loc[previous_idx, FEATURES],
-                    int(previous_label),
+                    features.loc[learn_idx, FEATURES],
+                    int(learn_label),
                 )
 
             row = features.loc[signal_idx, FEATURES]
             prediction: Prediction = model.predict_one(row)
 
-            price = float(df.at[signal_idx, "Close"])
+            execution_price = float(df.at[execution_idx, "Open"])
+            close_price = float(df.at[execution_idx, "Close"])
             broker = self._broker_from_state(state)
-            broker.mark(price)
+            broker.mark(execution_price)
+            broker.state.day_start_equity = broker.state.equity
             snapshot = PortfolioSnapshot(
                 equity=broker.state.equity,
                 peak_equity=broker.state.peak_equity,
                 day_start_equity=broker.state.day_start_equity,
-                current_position_value=broker.state.units * price,
+                current_position_value=broker.state.units * execution_price,
             )
             decision = self.risk.evaluate(prediction, snapshot)
 
             if decision.approved:
-                broker.rebalance(decision.side, decision.target_notional, price)
+                broker.rebalance(decision.side, decision.target_notional, execution_price)
+
+            broker.mark(close_price)
 
             processed_bars = state.processed_bars + 1
             bars_since_cycle = processed_bars - state.last_learning_cycle_bar
@@ -164,7 +174,7 @@ class PaperAutonomousRuntime:
 
             new_state = self._state_from_broker(
                 broker,
-                last_processed=signal_time,
+                last_processed=execution_time,
                 processed_bars=processed_bars,
                 last_learning_cycle_bar=state.last_learning_cycle_bar,
             )
@@ -174,7 +184,8 @@ class PaperAutonomousRuntime:
             self.audit.append(
                 "runtime_step",
                 {
-                    "symbol_time": signal_time,
+                    "signal_time": str(signal_idx),
+                    "execution_time": execution_time,
                     "prediction": asdict(prediction),
                     "risk_decision": asdict(decision),
                     "equity": broker.state.equity,
@@ -186,7 +197,7 @@ class PaperAutonomousRuntime:
 
             return RuntimeStepResult(
                 processed=True,
-                timestamp=signal_time,
+                timestamp=execution_time,
                 side=prediction.side,
                 confidence=prediction.confidence,
                 approved=decision.approved,
