@@ -36,12 +36,12 @@ def test_detects_repeated_mode_oscillation(tmp_path: Path) -> None:
 
 def test_detects_excessive_recovery_duration(tmp_path: Path) -> None:
     log = LifecycleEventLog(tmp_path / "lifecycle.jsonl")
-    for _ in range(4):
-        append_transition(log, "DEGRADED", "RECOVERY")
 
     health = evaluate_resilience_stability(
         log,
         ResilienceStabilityPolicy(max_recovery_streak_events=4),
+        current_mode="RECOVERY",
+        current_mode_steps=4,
     )
 
     assert health.status == "degraded"
