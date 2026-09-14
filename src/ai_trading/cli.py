@@ -13,6 +13,8 @@ from .data import load_history
 from .drift import detect_drift
 from .engine import TradingEngine
 from .experiments import ExperimentRegistry
+from .expert_pool import ExpertPoolStore, ExpertRecord, reconcile_pool
+from .expert_sandbox import validate_specialist
 from .features import make_features
 from .guardrails import evaluate_health
 from .multiasset_backtest import MultiAssetWalkForwardBacktester
@@ -611,6 +613,49 @@ def multiasset_backtest(
     table.add_row("Trades", str(report.trades))
     table.add_row("Decisions", str(report.decisions))
     table.add_row("Rejected rebalances", str(report.rejected_rebalances))
+    console.print(table)
+
+
+@app.command("expert-sandbox")
+def expert_sandbox(
+    symbol: str = typer.Option("GC=F", help="Yahoo Finance symbol"),
+    kind: str = typer.Option("trend", help="trend, range, or high_vol"),
+    period: str = typer.Option("5y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+) -> None:
+    if kind not in {"trend", "range", "high_vol"}:
+        raise typer.BadParameter("kind must be trend, range, or high_vol")
+
+    df = load_history(symbol, period, interval)
+    result = validate_specialist(df, kind=kind)
+
+    pool = ExpertPoolStore()
+    name = f"{symbol}:{kind}"
+    pool.upsert(
+        ExpertRecord(
+            name=name,
+            kind=kind,
+            status="challenger",
+            score=result.validation_score,
+            validation_score=result.validation_score,
+            observations=result.observations,
+            compute_cost=1.0,
+        )
+    )
+    reconciled = reconcile_pool(pool.load())
+    pool.save(reconciled)
+    record = reconciled[name]
+
+    table = Table(title=f"Expert sandbox: {name}")
+    table.add_column("Metric")
+    table.add_column("Value", justify="right")
+    table.add_row("Status", record.status)
+    table.add_row("Validation score", f"{result.validation_score:.3f}")
+    table.add_row("Accuracy", f"{result.accuracy:.3f}")
+    table.add_row("Sharpe", f"{result.metrics.sharpe:.3f}")
+    table.add_row("Sortino", f"{result.metrics.sortino:.3f}")
+    table.add_row("Max drawdown", f"{result.metrics.max_drawdown:.2%}")
+    table.add_row("Observations", str(result.observations))
     console.print(table)
 
 
