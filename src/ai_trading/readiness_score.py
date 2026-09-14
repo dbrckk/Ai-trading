@@ -114,6 +114,16 @@ def evaluate_composite_readiness(
 class ReadinessHistoryRecord:
     created_at_utc: str
     result: CompositeReadiness
+    prev_hash: str = ""
+    record_hash: str = ""
+
+
+@dataclass(frozen=True)
+class ReadinessChainReport:
+    valid: bool
+    records: int
+    legacy_records: int
+    reason: str = ""
 
 
 class ReadinessHistoryStore:
@@ -124,17 +134,26 @@ class ReadinessHistoryStore:
         self.path = Path(path)
 
     def append(self, result: CompositeReadiness) -> ReadinessHistoryRecord:
-        record = ReadinessHistoryRecord(
-            created_at_utc=datetime.now(UTC).isoformat(),
-            result=result,
-        )
+        previous = self.list()
+        prev_hash = previous[-1].record_hash if previous else ""
+        created_at_utc = datetime.now(UTC).isoformat()
         payload = {
-            "created_at_utc": record.created_at_utc,
+            "created_at_utc": created_at_utc,
+            "prev_hash": prev_hash,
             "result": {
                 **asdict(result),
                 "reasons": list(result.reasons),
             },
         }
+        canonical = dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        record_hash = sha256(canonical).hexdigest()
+        record = ReadinessHistoryRecord(
+            created_at_utc=created_at_utc,
+            result=result,
+            prev_hash=prev_hash,
+            record_hash=record_hash,
+        )
+        payload["record_hash"] = record_hash
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.path.open("a", encoding="utf-8") as handle:
             handle.write(dumps(payload, sort_keys=True) + "\n")
@@ -163,6 +182,69 @@ class ReadinessHistoryStore:
                     ReadinessHistoryRecord(
                         created_at_utc=payload["created_at_utc"],
                         result=result,
+                        prev_hash=payload.get("prev_hash", ""),
+                        record_hash=payload.get("record_hash", ""),
                     )
                 )
         return records
+
+
+    def verify_chain(self) -> ReadinessChainReport:
+        if not self.path.exists():
+            return ReadinessChainReport(valid=True, records=0, legacy_records=0)
+
+        previous_hash = ""
+        records = 0
+        legacy_records = 0
+        with self.path.open("r", encoding="utf-8") as handle:
+            for line in handle:
+                if not line.strip():
+                    continue
+                records += 1
+                try:
+                    payload = loads(line)
+                except Exception:
+                    return ReadinessChainReport(
+                        valid=False,
+                        records=records,
+                        legacy_records=legacy_records,
+                        reason="invalid readiness history JSON",
+                    )
+
+                record_hash = payload.get("record_hash", "")
+                prev_hash = payload.get("prev_hash", "")
+                if not record_hash:
+                    legacy_records += 1
+                    previous_hash = ""
+                    continue
+
+                if prev_hash != previous_hash:
+                    return ReadinessChainReport(
+                        valid=False,
+                        records=records,
+                        legacy_records=legacy_records,
+                        reason="readiness history previous hash mismatch",
+                    )
+
+                canonical_payload = dict(payload)
+                canonical_payload.pop("record_hash", None)
+                canonical = dumps(
+                    canonical_payload,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ).encode("utf-8")
+                expected = sha256(canonical).hexdigest()
+                if record_hash != expected:
+                    return ReadinessChainReport(
+                        valid=False,
+                        records=records,
+                        legacy_records=legacy_records,
+                        reason="readiness history record hash mismatch",
+                    )
+                previous_hash = record_hash
+
+        return ReadinessChainReport(
+            valid=True,
+            records=records,
+            legacy_records=legacy_records,
+        )
