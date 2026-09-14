@@ -9,8 +9,11 @@ import pandas as pd
 from .audit import AuditLog
 from .config import ModelConfig, RiskConfig
 from .features import FEATURES, make_features, make_labels
+from .model_blend import BlendComponent, blend_predictions
+from .model_quality import evaluate_model_quality
 from .multiasset_state import AssetPosition, MultiAssetStateStore
 from .online import RiverDirectionModel
+from .quality_store import QualityStore
 from .pnl_attribution import attribute_pnl
 from .portfolio import AllocationConfig, inverse_volatility_weights, target_notionals
 from .portfolio_intelligence import (
@@ -48,6 +51,7 @@ class MultiAssetPaperRuntime:
         lock_path: str = "artifacts/multiasset_runtime.lock",
         model_root: str | Path = "artifacts/models/multiasset",
         intelligence_config: PortfolioIntelligenceConfig | None = None,
+        quality_store: QualityStore | None = None,
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
@@ -58,6 +62,7 @@ class MultiAssetPaperRuntime:
         self.lock_path = lock_path
         self.model_root = Path(model_root)
         self.intelligence_config = intelligence_config or PortfolioIntelligenceConfig()
+        self.quality_store = quality_store or QualityStore()
 
     def _model_path(self, symbol: str) -> Path:
         safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
@@ -145,15 +150,41 @@ class MultiAssetPaperRuntime:
                 if pd.notna(learn_label):
                     model.learn_one(features.loc[learn_idx, FEATURES], int(learn_label))
 
-                prediction = model.predict_one(features.loc[signal_idx, FEATURES])
+                river_prediction = model.predict_one(features.loc[signal_idx, FEATURES])
                 self._save_model(symbol, model)
 
-                side = prediction.side
-                if prediction.confidence < self.risk_config.min_confidence:
+                records = self.quality_store.load()
+                key = f"{symbol}:river"
+                if key in records:
+                    record = records[key]
+                    quality = evaluate_model_quality(
+                        pd.Series(record.predictions),
+                        pd.Series(record.confidences),
+                        pd.Series(record.labels),
+                    ).score
+                else:
+                    quality = 0.50
+
+                blended = blend_predictions(
+                    [BlendComponent("river", river_prediction, quality)]
+                )
+
+                side = blended.side
+                if blended.confidence < self.risk_config.min_confidence:
                     side = 0
 
+                realized = labels.get(learn_idx)
+                if pd.notna(realized):
+                    previous_prediction = model.predict_one(features.loc[learn_idx, FEATURES])
+                    self.quality_store.append(
+                        key,
+                        prediction=previous_prediction.side,
+                        confidence=previous_prediction.confidence,
+                        label=int(realized),
+                    )
+
                 signals[symbol] = side
-                confidences[symbol] = prediction.confidence
+                confidences[symbol] = blended.confidence
                 signed_weights.loc[symbol] = base_weights.loc[symbol] * side
 
             equity = state.equity()
