@@ -157,6 +157,8 @@ class MultiAssetPaperScheduler:
                     recovery = recover_latest_consistent_state(
                         self.snapshot_store,
                         destination_root="artifacts",
+                        audit_path=self.runtime.audit.path,
+                        state_files=self._state_files(),
                     )
                     self.runtime.audit.append(
                         "multiasset_recovery",
@@ -164,6 +166,8 @@ class MultiAssetPaperScheduler:
                             "restored": recovery.restored,
                             "snapshot": recovery.snapshot,
                             "reason": recovery.reason,
+                            "verified": recovery.verified,
+                            "mismatches": list(recovery.mismatches),
                             "consecutive_errors": consecutive_errors,
                         },
                     )
