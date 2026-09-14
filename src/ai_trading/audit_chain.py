@@ -13,6 +13,7 @@ class AuditChainReport:
     lines: int
     invalid_line: int | None
     reason: str
+    legacy_lines: int = 0
 
 
 def _record_hash(record: dict[str, Any]) -> str:
@@ -27,6 +28,8 @@ def verify_audit_chain(path: str | Path) -> AuditChainReport:
 
     expected_prev = "GENESIS"
     lines = 0
+    legacy_lines = 0
+    chain_started = False
 
     with path.open("r", encoding="utf-8") as handle:
         for line_no, line in enumerate(handle, start=1):
@@ -35,22 +38,37 @@ def verify_audit_chain(path: str | Path) -> AuditChainReport:
             try:
                 record = json.loads(line)
             except json.JSONDecodeError:
-                return AuditChainReport(False, lines, line_no, "invalid JSON")
-
-            if "hash" not in record or "prev_hash" not in record:
                 return AuditChainReport(
                     False,
                     lines,
                     line_no,
-                    "missing audit chain fields",
+                    "invalid JSON",
+                    legacy_lines,
                 )
 
+            has_chain_fields = "hash" in record and "prev_hash" in record
+            if not has_chain_fields:
+                if chain_started:
+                    return AuditChainReport(
+                        False,
+                        lines,
+                        line_no,
+                        "unchained record after hash chain started",
+                        legacy_lines,
+                    )
+                legacy_lines += 1
+                lines += 1
+                expected_prev = "LEGACY"
+                continue
+
+            chain_started = True
             if record["prev_hash"] != expected_prev:
                 return AuditChainReport(
                     False,
                     lines,
                     line_no,
                     "previous hash mismatch",
+                    legacy_lines,
                 )
 
             stored_hash = str(record["hash"])
@@ -62,9 +80,15 @@ def verify_audit_chain(path: str | Path) -> AuditChainReport:
                     lines,
                     line_no,
                     "record hash mismatch",
+                    legacy_lines,
                 )
 
             expected_prev = stored_hash
             lines += 1
 
-    return AuditChainReport(True, lines, None, "valid hash chain")
+    reason = (
+        "valid hash chain"
+        if legacy_lines == 0
+        else f"valid chain after {legacy_lines} legacy records"
+    )
+    return AuditChainReport(True, lines, None, reason, legacy_lines)
