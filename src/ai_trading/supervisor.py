@@ -8,12 +8,13 @@ from pathlib import Path
 
 from .governor_state_store import GovernorState, GovernorStateStore
 from .maintenance import MaintenanceStore
-from .process_watch import wait_with_timeout
 from .restart_log import RestartLog
 from .startup_check import run_startup_check
 from .state_snapshot import AtomicSnapshotStore
 from .supervisor_lease import SupervisorLeaseStore
 from .supervisor_state import SupervisorStateStore
+from .watchdog import HeartbeatStore
+from .worker_monitor import WorkerMonitorConfig, monitor_worker
 
 
 @dataclass(frozen=True)
@@ -24,6 +25,8 @@ class SupervisorConfig:
     initial_backoff_seconds: float = 2.0
     max_backoff_seconds: float = 60.0
     worker_timeout_seconds: float | None = None
+    heartbeat_timeout_seconds: float = 180.0
+    heartbeat_startup_grace_seconds: float = 30.0
 
 
 @dataclass(frozen=True)
@@ -48,6 +51,7 @@ class PaperSupervisor:
         governor_store: GovernorStateStore | None = None,
         snapshot_store: AtomicSnapshotStore | None = None,
         state_store: SupervisorStateStore | None = None,
+        heartbeat_store: HeartbeatStore | None = None,
     ) -> None:
         self.command = command
         self.state_files = state_files
@@ -59,6 +63,9 @@ class PaperSupervisor:
         self.governor_store = governor_store or GovernorStateStore()
         self.snapshot_store = snapshot_store or AtomicSnapshotStore()
         self.state_store = state_store or SupervisorStateStore()
+        self.heartbeat_store = heartbeat_store or HeartbeatStore(
+            "artifacts/multiasset_heartbeat.json"
+        )
 
     def _halt_governor(self, reason: str) -> None:
         previous = self.governor_store.load()
@@ -116,9 +123,14 @@ class PaperSupervisor:
                     restarts=restarts,
                     reason="worker running",
                 )
-                watch = wait_with_timeout(
+                watch = monitor_worker(
                     process,
-                    timeout_seconds=self.config.worker_timeout_seconds,
+                    heartbeat_store=self.heartbeat_store,
+                    config=WorkerMonitorConfig(
+                        max_runtime_seconds=self.config.worker_timeout_seconds,
+                        heartbeat_max_age_seconds=self.config.heartbeat_timeout_seconds,
+                        startup_grace_seconds=self.config.heartbeat_startup_grace_seconds,
+                    ),
                 )
                 final_exit = watch.exit_code
                 runtime = watch.runtime_seconds
@@ -154,11 +166,7 @@ class PaperSupervisor:
                     exit_code=final_exit,
                     runtime_seconds=runtime,
                     restart_index=restarts,
-                    reason=(
-                        "worker timeout"
-                        if watch.timed_out
-                        else "worker crashed"
-                    ),
+                    reason=watch.reason,
                 )
 
                 if len(crashes) >= self.config.max_crashes_in_window:
