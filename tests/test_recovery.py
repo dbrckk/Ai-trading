@@ -75,3 +75,41 @@ def test_recovery_skips_newer_logically_inconsistent_snapshot(
     assert result.verified
     assert result.snapshot == str(first)
     assert state.read_text(encoding="utf-8") == '{"value":1}'
+
+
+
+def test_failed_multi_snapshot_recovery_restores_pre_attempt_state(
+    tmp_path: Path,
+) -> None:
+    artifacts = tmp_path / "artifacts"
+    artifacts.mkdir()
+    state = artifacts / "state.json"
+    audit = AuditLog(artifacts / "audit.jsonl")
+    snapshots = AtomicSnapshotStore(tmp_path / "snapshots")
+
+    state.write_text('{"value":1}', encoding="utf-8")
+    snapshot = snapshots.create([state])
+    fingerprint = compute_session_fingerprint([state], audit.path)
+    bad_hashes = dict(fingerprint.state_hashes)
+    bad_hashes["state.json"] = "not-a-real-hash"
+    audit.append(
+        "session_checkpoint",
+        {
+            "snapshot": str(snapshot),
+            "fingerprint": fingerprint.fingerprint,
+            "state_hashes": bad_hashes,
+            "audit_tail_hash": fingerprint.audit_tail_hash,
+        },
+    )
+
+    state.write_text('{"value":999}', encoding="utf-8")
+    result = recover_latest_consistent_state(
+        snapshots,
+        destination_root=artifacts,
+        audit_path=audit.path,
+        state_files=[state],
+    )
+
+    assert not result.restored
+    assert not result.verified
+    assert state.read_text(encoding="utf-8") == '{"value":999}'
