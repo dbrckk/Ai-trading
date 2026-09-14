@@ -12,7 +12,6 @@ from .readiness_score import CompositeReadiness, ReadinessChainReport
 from .readiness_trend import ReadinessTrend
 from .resilience import ResilienceState
 
-
 RELEASE_FORMAT_VERSION = "1.0.0"
 
 
