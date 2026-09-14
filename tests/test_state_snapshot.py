@@ -46,3 +46,20 @@ def test_snapshot_restores_json_and_jsonl_governance_files(tmp_path: Path) -> No
     assert lifecycle.read_text(encoding="utf-8") == (
         '{"event":"promotion","version":"v1"}\n'
     )
+
+
+
+def test_snapshot_restores_file_to_original_nested_path(tmp_path: Path) -> None:
+    artifacts = tmp_path / "artifacts"
+    model_dir = artifacts / "models" / "champions"
+    model_dir.mkdir(parents=True)
+    artifact = model_dir / "v2.joblib"
+    artifact.write_bytes(b"healthy-model")
+
+    store = AtomicSnapshotStore(tmp_path / "snapshots")
+    store.create([artifact])
+
+    artifact.write_bytes(b"corrupted-model")
+    store.restore_latest(artifacts)
+
+    assert artifact.read_bytes() == b"healthy-model"
