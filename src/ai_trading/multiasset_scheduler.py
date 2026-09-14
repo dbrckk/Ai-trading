@@ -66,8 +66,22 @@ class MultiAssetPaperScheduler:
             self.runtime.lifecycle_log.path,
         ]
 
+    def _active_model_files(self) -> list:
+        active = self.runtime.champion_registry.active()
+        if active is None:
+            return []
+        promotions = [
+            event
+            for event in self.runtime.lifecycle_log.list()
+            if event.event == "promotion" and event.version == active.version
+        ]
+        if not promotions:
+            return []
+        artifact_path = promotions[-1].artifact_path
+        return [artifact_path] if artifact_path else []
+
     def _snapshot_files(self) -> list:
-        return self._state_files() + self._jsonl_files()
+        return self._state_files() + self._jsonl_files() + self._active_model_files()
 
     def _audit_error(self, exc: Exception, consecutive_errors: int) -> None:
         self.runtime.audit.append(
