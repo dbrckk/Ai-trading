@@ -10,6 +10,8 @@ from .allocator_tuning import tune_global_allocator
 from .backtest import WalkForwardBacktester, WalkForwardConfig
 from .champions import ChampionRegistry
 from .config import ModelConfig, RiskConfig
+from .crisis_controller import limits_for_state
+from .crisis_state_store import CrisisStateStore
 from .continuous import run_learning_cycle
 from .data import load_history
 from .drift import detect_drift
@@ -881,6 +883,26 @@ def global_allocation_tune(
     table.add_row("Max expert weight", f"{result.best_config.max_expert_weight:.4f}")
     table.add_row("Max turnover", f"{result.best_config.max_turnover:.4f}")
     table.add_row("Target gross", f"{result.best_config.target_gross_exposure:.4f}")
+    console.print(table)
+
+
+@app.command("crisis-status")
+def crisis_status() -> None:
+    state = CrisisStateStore().load()
+    limits = limits_for_state(state)
+
+    table = Table(title="Crisis controller status")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Mode", state.mode)
+    table.add_row("Recovery streak", str(state.recovery_streak))
+    table.add_row("Exposure scale", f"{limits.exposure_scale:.2f}")
+    table.add_row("Max active experts", str(limits.max_active_experts))
+    table.add_row("Asset limit fraction", f"{limits.asset_limit_fraction:.2f}")
+    table.add_row(
+        "New promotions",
+        "ENABLED" if limits.allow_new_promotions else "FROZEN",
+    )
     console.print(table)
 
 
