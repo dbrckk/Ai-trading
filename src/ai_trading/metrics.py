@@ -8,6 +8,7 @@ from .lifecycle_log import LifecycleEventLog
 from .model_quarantine import ModelQuarantineStore
 from .recovery_health import evaluate_recovery_health
 from .resilience import ResilienceStateStore
+from .resilience_stability import evaluate_resilience_stability
 from .supervisor_state import SupervisorStateStore
 from .watchdog import HeartbeatStore, heartbeat_is_stale
 
@@ -34,6 +35,8 @@ class MetricsSnapshot:
     recovery_fallback_depth: int
     recovery_degraded: int
     resilience_level: int
+    resilience_unstable: int
+    resilience_oscillations: int
 
 
 def collect_metrics(
@@ -60,6 +63,7 @@ def collect_metrics(
     quarantine_records = quarantine_store.load()
     recovery_health = evaluate_recovery_health(lifecycle_log)
     resilience = resilience_store.load()
+    resilience_stability = evaluate_resilience_stability(lifecycle_log)
 
     crisis_levels = {
         "normal": 0,
@@ -113,6 +117,8 @@ def collect_metrics(
         ),
         recovery_degraded=int(recovery_health.status == "degraded"),
         resilience_level=resilience_levels.get(resilience.mode, 99),
+        resilience_unstable=int(resilience_stability.status != "stable"),
+        resilience_oscillations=resilience_stability.oscillations,
     )
 
 
@@ -159,6 +165,10 @@ def prometheus_text(snapshot: MetricsSnapshot) -> str:
             f"ai_trading_recovery_degraded {snapshot.recovery_degraded}",
             "# TYPE ai_trading_resilience_level gauge",
             f"ai_trading_resilience_level {snapshot.resilience_level}",
+            "# TYPE ai_trading_resilience_unstable gauge",
+            f"ai_trading_resilience_unstable {snapshot.resilience_unstable}",
+            "# TYPE ai_trading_resilience_oscillations gauge",
+            f"ai_trading_resilience_oscillations {snapshot.resilience_oscillations}",
             "",
         ]
     )
