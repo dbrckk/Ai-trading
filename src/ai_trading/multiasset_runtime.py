@@ -9,6 +9,7 @@ import pandas as pd
 from .alpha_allocation import AlphaAllocationConfig, alpha_risk_weights
 from .audit import AuditLog
 from .config import ModelConfig, RiskConfig
+from .ensemble import EnsembleDirectionModel
 from .features import FEATURES, make_features, make_labels
 from .meta_router import MetaContext, route_predictions
 from .meta_store import MetaRouterStore
@@ -54,6 +55,7 @@ class MultiAssetPaperRuntime:
         audit_log: AuditLog | None = None,
         lock_path: str = "artifacts/multiasset_runtime.lock",
         model_root: str | Path = "artifacts/models/multiasset",
+        batch_model_root: str | Path = "artifacts/models/multiasset_batch",
         intelligence_config: PortfolioIntelligenceConfig | None = None,
         quality_store: QualityStore | None = None,
         alpha_allocation_config: AlphaAllocationConfig | None = None,
@@ -67,10 +69,40 @@ class MultiAssetPaperRuntime:
         self.audit = audit_log or AuditLog("artifacts/multiasset_audit.jsonl")
         self.lock_path = lock_path
         self.model_root = Path(model_root)
+        self.batch_model_root = Path(batch_model_root)
         self.intelligence_config = intelligence_config or PortfolioIntelligenceConfig()
         self.quality_store = quality_store or QualityStore()
         self.alpha_allocation_config = alpha_allocation_config or AlphaAllocationConfig()
         self.meta_store = meta_store or MetaRouterStore()
+
+
+    def _batch_model_path(self, symbol: str) -> Path:
+        safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
+        return self.batch_model_root / f"{safe}.joblib"
+
+    def _load_or_train_batch_model(
+        self,
+        symbol: str,
+        features: pd.DataFrame,
+        labels: pd.Series,
+        signal_idx,
+    ) -> EnsembleDirectionModel:
+        path = self._batch_model_path(symbol)
+        if path.exists():
+            return joblib.load(path)
+
+        train_idx = features.index[features.index < signal_idx]
+        train_idx = train_idx.intersection(labels.dropna().index)
+        if len(train_idx) < 100:
+            raise ValueError(f"Insufficient batch-model history for {symbol}")
+
+        model = EnsembleDirectionModel(random_state=42)
+        model.fit(features.loc[train_idx], labels.loc[train_idx])
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temp = path.with_suffix(".tmp")
+        joblib.dump(model, temp)
+        temp.replace(path)
+        return model
 
     def _model_path(self, symbol: str) -> Path:
         safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
@@ -163,6 +195,14 @@ class MultiAssetPaperRuntime:
                 river_prediction = model.predict_one(signal_row)
                 self._save_model(symbol, model)
 
+                batch_model = self._load_or_train_batch_model(
+                    symbol,
+                    features,
+                    labels,
+                    signal_idx,
+                )
+                batch_prediction = batch_model.predict_one(signal_row, regime)
+
                 regime = detect_regime(signal_row)
                 current_equity = state.equity()
                 drawdown = 0.0 if state.peak_equity <= 0 else max(
@@ -189,22 +229,31 @@ class MultiAssetPaperRuntime:
                 )
 
                 records = self.quality_store.load()
-                key = f"{symbol}:river"
-                if key in records:
-                    record = records[key]
-                    quality = evaluate_model_quality(
-                        pd.Series(record.predictions),
-                        pd.Series(record.confidences),
-                        pd.Series(record.labels),
-                    ).score
-                else:
-                    quality = 0.50
+                quality_scores = {}
+                for model_name in ("river", "ensemble"):
+                    key = f"{symbol}:{model_name}"
+                    if key in records:
+                        record = records[key]
+                        quality_scores[model_name] = evaluate_model_quality(
+                            pd.Series(record.predictions),
+                            pd.Series(record.confidences),
+                            pd.Series(record.labels),
+                        ).score
+                    else:
+                        quality_scores[model_name] = 0.50
 
                 base_blend = blend_predictions(
-                    [BlendComponent("river", river_prediction, quality)]
+                    [
+                        BlendComponent("river", river_prediction, quality_scores["river"]),
+                        BlendComponent("ensemble", batch_prediction, quality_scores["ensemble"]),
+                    ]
                 )
                 routed = route_predictions(
-                    {"river": base_blend},
+                    {
+                        "river": river_prediction,
+                        "ensemble": batch_prediction,
+                        "quality_blend": base_blend,
+                    },
                     self.meta_store.scores(context),
                 )
                 blended = routed.prediction
@@ -216,26 +265,45 @@ class MultiAssetPaperRuntime:
                 realized = labels.get(learn_idx)
                 if pd.notna(realized):
                     realized_int = int(realized)
+                    river_key = f"{symbol}:river"
                     self.quality_store.append(
-                        key,
+                        river_key,
                         prediction=evaluation_prediction.side,
                         confidence=evaluation_prediction.confidence,
                         label=realized_int,
                     )
-                    correct = evaluation_prediction.side == realized_int
-                    edge = (
-                        1.0
-                        if correct and evaluation_prediction.side != 0
-                        else -1.0
-                        if evaluation_prediction.side != 0
-                        else 0.0
+
+                    batch_eval_row = features.loc[learn_idx, FEATURES]
+                    batch_eval_prediction = batch_model.predict_one(
+                        batch_eval_row,
+                        detect_regime(batch_eval_row),
                     )
-                    self.meta_store.update(
-                        context,
-                        "river",
-                        correct=correct,
-                        edge=edge,
+                    ensemble_key = f"{symbol}:ensemble"
+                    self.quality_store.append(
+                        ensemble_key,
+                        prediction=batch_eval_prediction.side,
+                        confidence=batch_eval_prediction.confidence,
+                        label=realized_int,
                     )
+
+                    for model_name, evaluation in (
+                        ("river", evaluation_prediction),
+                        ("ensemble", batch_eval_prediction),
+                    ):
+                        correct = evaluation.side == realized_int
+                        edge = (
+                            1.0
+                            if correct and evaluation.side != 0
+                            else -1.0
+                            if evaluation.side != 0
+                            else 0.0
+                        )
+                        self.meta_store.update(
+                            context,
+                            model_name,
+                            correct=correct,
+                            edge=edge,
+                        )
 
                 signals[symbol] = side
                 confidences[symbol] = blended.confidence
