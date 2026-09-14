@@ -13,6 +13,8 @@ from .alpha_attribution import build_alpha_contribution
 from .asset_classes import CrisisAssetPolicy, asset_allowed_in_mode
 from .audit import AuditLog
 from .calibration_routing import calibration_weight_multiplier
+from .champion_probation import ChampionProbationStore
+from .champions import ChampionRegistry
 from .confidence_calibration import conservatively_calibrate_prediction
 from .config import ModelConfig, RiskConfig
 from .crisis_controller import CrisisPolicy, evaluate_crisis_state, limits_for_state
@@ -29,10 +31,12 @@ from .expert_uncertainty import measure_expert_uncertainty
 from .features import FEATURES, make_features, make_labels
 from .global_allocator import GlobalAllocatorConfig, allocate_global_capital
 from .governor_state_store import GovernorState, GovernorStateStore
+from .lifecycle_log import LifecycleEventLog
 from .meta_router import MetaContext, route_predictions
 from .meta_store import MetaRouterStore
 from .model_blend import BlendComponent, blend_predictions
 from .model_quality import evaluate_model_quality
+from .model_quarantine import ModelQuarantineStore
 from .multiasset_state import AssetPosition, MultiAssetStateStore
 from .online import RiverDirectionModel
 from .pnl_attribution import attribute_pnl
@@ -94,6 +98,10 @@ class MultiAssetPaperRuntime:
         governor_policy: GovernorPolicy | None = None,
         governor_state_store: GovernorStateStore | None = None,
         drift_retrain_store: DriftRetrainStore | None = None,
+        champion_registry: ChampionRegistry | None = None,
+        champion_probation_store: ChampionProbationStore | None = None,
+        model_quarantine_store: ModelQuarantineStore | None = None,
+        lifecycle_log: LifecycleEventLog | None = None,
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
@@ -125,7 +133,12 @@ class MultiAssetPaperRuntime:
         self.governor_policy = governor_policy or GovernorPolicy()
         self.governor_state_store = governor_state_store or GovernorStateStore()
         self.drift_retrain_store = drift_retrain_store or DriftRetrainStore()
-
+        self.champion_registry = champion_registry or ChampionRegistry()
+        self.champion_probation_store = (
+            champion_probation_store or ChampionProbationStore()
+        )
+        self.model_quarantine_store = model_quarantine_store or ModelQuarantineStore()
+        self.lifecycle_log = lifecycle_log or LifecycleEventLog()
 
     def _specialist_path(self, symbol: str, kind: str) -> Path:
         safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
