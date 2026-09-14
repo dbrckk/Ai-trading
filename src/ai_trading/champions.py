@@ -6,6 +6,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from .promotion_guard import PromotionDecision, PromotionPolicy, evaluate_promotion
+
 
 @dataclass(frozen=True)
 class ChampionRecord:
@@ -65,6 +67,54 @@ class ChampionRegistry:
         self._write(updated)
         return promoted
 
+    def promote_if_qualified(
+        self,
+        *,
+        version: str,
+        model_name: str,
+        score: float,
+        metrics: dict[str, float],
+        config: dict[str, Any],
+        policy: PromotionPolicy | None = None,
+    ) -> tuple[PromotionDecision, ChampionRecord | None]:
+        current = self.active()
+        if current is None:
+            promoted = self.promote(
+                version=version,
+                model_name=model_name,
+                score=score,
+                metrics=metrics,
+                config=config,
+            )
+            return (
+                PromotionDecision(
+                    approved=True,
+                    reasons=("no existing champion",),
+                    score_delta=float("inf"),
+                    metric_deltas={},
+                ),
+                promoted,
+            )
+
+        decision = evaluate_promotion(
+            champion_score=current.score,
+            champion_metrics=current.metrics,
+            challenger_score=score,
+            challenger_metrics=metrics,
+            policy=policy,
+        )
+        if not decision.approved:
+            return decision, None
+
+        promoted = self.promote(
+            version=version,
+            model_name=model_name,
+            score=score,
+            metrics=metrics,
+            config=config,
+        )
+        return decision, promoted
+
     def rollback(self) -> ChampionRecord:
         records = self._read()
         active_idx = next((i for i in range(len(records) - 1, -1, -1) if records[i].active), None)
@@ -82,6 +132,8 @@ class ChampionRegistry:
 
     def _write(self, records: list[ChampionRecord]) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        with self.path.open("w", encoding="utf-8") as handle:
+        temp = self.path.with_suffix(".tmp")
+        with temp.open("w", encoding="utf-8") as handle:
             for record in records:
                 handle.write(json.dumps(asdict(record), sort_keys=True) + "\n")
+        temp.replace(self.path)
