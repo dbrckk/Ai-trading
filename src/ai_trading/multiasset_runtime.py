@@ -57,6 +57,7 @@ from .resilience import (
     adapt_resilience_policy,
     evaluate_resilience,
 )
+from .resilience_stability import evaluate_resilience_stability
 from .risk_governor import GovernorPolicy, GovernorSignals, evaluate_governor
 from .runtime_lock import RuntimeLock
 from .specialist_experts import SpecialistDirectionModel
@@ -791,18 +792,56 @@ class MultiAssetPaperRuntime:
                     recent_incidents=recent_incidents,
                 ),
             )
-            resilience = evaluate_resilience(
-                self.resilience_state_store.load(),
-                ResilienceSignals(
-                    governor_verdict=governor.verdict,
-                    crisis_mode=crisis_decision.state.mode,
-                    recovery_degraded=recovery_health.status == "degraded",
-                    recovery_recent_failures=recovery_health.recent_failures,
-                    recovery_fallback_depth=recovery_health.max_fallback_depth,
+            previous_resilience_state = self.resilience_state_store.load()
+            stability = evaluate_resilience_stability(self.lifecycle_log)
+            stability_degraded = stability.status in {"degraded", "critical"}
+            stability_critical = stability.status == "critical"
+
+            effective_signals = ResilienceSignals(
+                governor_verdict=(
+                    "HALT"
+                    if stability_critical
+                    else governor.verdict
                 ),
+                crisis_mode=(
+                    "defensive"
+                    if stability_degraded and crisis_decision.state.mode == "normal"
+                    else crisis_decision.state.mode
+                ),
+                recovery_degraded=(
+                    recovery_health.status == "degraded" or stability_degraded
+                ),
+                recovery_recent_failures=recovery_health.recent_failures,
+                recovery_fallback_depth=recovery_health.max_fallback_depth,
+            )
+            resilience = evaluate_resilience(
+                previous_resilience_state,
+                effective_signals,
                 adaptive_resilience_policy,
             )
             self.resilience_state_store.save(resilience.state)
+            if resilience.state.mode != previous_resilience_state.mode:
+                self.lifecycle_log.append(
+                    event="resilience_transition",
+                    version="",
+                    model_name="",
+                    reason=resilience.state.reason,
+                    failure_type=(
+                        "technical_failure"
+                        if stability_degraded
+                        else ""
+                    ),
+                    processed_bar=state.processed_bars,
+                    metadata={
+                        "from_mode": previous_resilience_state.mode,
+                        "to_mode": resilience.state.mode,
+                        "stability_status": stability.status,
+                        "oscillations": stability.oscillations,
+                        "recovery_streak_events": stability.recovery_streak_events,
+                        "cooldown_count": stability.cooldown_count,
+                        "stability_reasons": list(stability.reasons),
+                    },
+                )
             intelligent_weights = intelligent_weights * resilience.exposure_cap
 
             previous_governor = self.governor_state_store.load()
