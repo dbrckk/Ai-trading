@@ -7,6 +7,7 @@ from .governor_state_store import GovernorStateStore
 from .lifecycle_log import LifecycleEventLog
 from .model_quarantine import ModelQuarantineStore
 from .recovery_health import evaluate_recovery_health
+from .reliability import evaluate_reliability
 from .resilience import ResilienceStateStore
 from .resilience_stability import evaluate_resilience_stability
 from .supervisor_state import SupervisorStateStore
@@ -37,6 +38,9 @@ class MetricsSnapshot:
     resilience_level: int
     resilience_unstable: int
     resilience_oscillations: int
+    reliability_score: float
+    reliability_normal_ratio: float
+    reliability_halt_ratio: float
 
 
 def collect_metrics(
@@ -63,6 +67,7 @@ def collect_metrics(
     quarantine_records = quarantine_store.load()
     recovery_health = evaluate_recovery_health(lifecycle_log)
     resilience = resilience_store.load()
+    reliability = evaluate_reliability(lifecycle_log, resilience)
     resilience_stability = evaluate_resilience_stability(
         lifecycle_log,
         current_mode=resilience.mode,
@@ -123,6 +128,9 @@ def collect_metrics(
         resilience_level=resilience_levels.get(resilience.mode, 99),
         resilience_unstable=int(resilience_stability.status != "stable"),
         resilience_oscillations=resilience_stability.oscillations,
+        reliability_score=reliability.reliability_score,
+        reliability_normal_ratio=reliability.normal_ratio,
+        reliability_halt_ratio=reliability.halt_ratio,
     )
 
 
@@ -173,6 +181,12 @@ def prometheus_text(snapshot: MetricsSnapshot) -> str:
             f"ai_trading_resilience_unstable {snapshot.resilience_unstable}",
             "# TYPE ai_trading_resilience_oscillations gauge",
             f"ai_trading_resilience_oscillations {snapshot.resilience_oscillations}",
+            "# TYPE ai_trading_reliability_score gauge",
+            f"ai_trading_reliability_score {snapshot.reliability_score}",
+            "# TYPE ai_trading_reliability_normal_ratio gauge",
+            f"ai_trading_reliability_normal_ratio {snapshot.reliability_normal_ratio}",
+            "# TYPE ai_trading_reliability_halt_ratio gauge",
+            f"ai_trading_reliability_halt_ratio {snapshot.reliability_halt_ratio}",
             "",
         ]
     )
