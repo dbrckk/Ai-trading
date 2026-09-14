@@ -990,7 +990,9 @@ def deployment_readiness(
     lifecycle = LifecycleEventLog(lifecycle_path)
     reliability = evaluate_reliability(lifecycle, resilience)
     governor = GovernorStateStore(governor_path).load()
-    readiness_history = ReadinessHistoryStore(readiness_history_path).list()
+    readiness_store = ReadinessHistoryStore(readiness_history_path)
+    readiness_history = readiness_store.list()
+    readiness_chain = readiness_store.verify_chain()
     composite = readiness_history[-1].result if readiness_history else None
     trend = evaluate_readiness_trend(readiness_history)
 
@@ -1004,6 +1006,7 @@ def deployment_readiness(
         interval=interval,
         composite=composite,
         trend=trend,
+        readiness_chain=readiness_chain,
     )
 
     table = Table(title="Paper-to-live deployment readiness")
@@ -1040,6 +1043,11 @@ def deployment_readiness(
     table.add_row("Readiness trend", trend.status)
     table.add_row("Trend observations", str(trend.observations))
     table.add_row("Trend score change", f"{trend.score_change:+.2f}")
+    table.add_row(
+        "Readiness chain",
+        "VALID" if readiness_chain.valid else "INVALID",
+    )
+    table.add_row("Readiness records", str(readiness_chain.records))
     console.print(table)
 
     if readiness.reasons:
