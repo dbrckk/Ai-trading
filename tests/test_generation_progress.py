@@ -1,3 +1,5 @@
+import pytest
+
 from ai_trading.generation_progress import compare_generations
 from ai_trading.generations import GenerationSnapshot
 
@@ -17,4 +19,4 @@ def test_generation_progress_detects_improvement() -> None:
     )
     progress = compare_generations(previous, current)
     assert progress.improved
-    assert progress.score_delta == 0.2
+    assert progress.score_delta == pytest.approx(0.2)
