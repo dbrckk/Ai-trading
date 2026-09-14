@@ -14,6 +14,7 @@ from .drift import detect_drift
 from .engine import TradingEngine
 from .experiments import ExperimentRegistry
 from .expert_pool import ExpertPoolStore, ExpertRecord, reconcile_pool
+from .expert_factory import FactoryConfig, run_expert_factory
 from .expert_pool_manager import refresh_expert_pool
 from .expert_sandbox import validate_specialist
 from .features import make_features
@@ -686,6 +687,33 @@ def expert_pool_refresh(
             f"{record.validation_score:.3f}",
             str(record.observations),
         )
+    console.print(table)
+
+
+@app.command("expert-factory-run")
+def expert_factory_run(
+    symbol: str = typer.Option("GC=F", help="Yahoo Finance symbol"),
+    period: str = typer.Option("5y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+    max_candidates: int = typer.Option(12, min=1, max=50),
+    max_promotions: int = typer.Option(3, min=0, max=10),
+) -> None:
+    df = load_history(symbol, period, interval)
+    result = run_expert_factory(
+        df,
+        symbol=symbol,
+        config=FactoryConfig(
+            max_candidates=max_candidates,
+            max_promotions_per_run=max_promotions,
+        ),
+    )
+
+    table = Table(title=f"Expert factory: {symbol}")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Evaluated", str(result.evaluated))
+    table.add_row("Promoted", str(result.promoted))
+    table.add_row("Generated candidates", str(len(result.candidates)))
     console.print(table)
 
 
