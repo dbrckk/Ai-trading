@@ -25,6 +25,7 @@ class QualificationRecord:
     period: str = ""
     interval: str = ""
     reliability_score: float | None = None
+    reliability_observation_seconds: float | None = None
     normal_ratio: float | None = None
     halt_ratio: float | None = None
     mttr_seconds: float | None = None
@@ -71,6 +72,9 @@ class QualificationStore:
             interval=interval,
             reliability_score=(
                 reliability.reliability_score if reliability is not None else None
+            ),
+            reliability_observation_seconds=(
+                reliability.observation_seconds if reliability is not None else None
             ),
             normal_ratio=(reliability.normal_ratio if reliability is not None else None),
             halt_ratio=(reliability.halt_ratio if reliability is not None else None),
