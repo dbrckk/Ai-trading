@@ -21,3 +21,4 @@ def test_isolated_runtime_routes_artifacts_to_workspace(tmp_path: Path) -> None:
     assert runtime.model_quarantine_store.path == root / "model_quarantine.json"
     assert runtime.lifecycle_log.path == root / "model_lifecycle.jsonl"
     assert runtime.resilience_state_store.path == root / "resilience_state.json"
+    assert runtime.readiness_history_store.path == root / "readiness_history.jsonl"
