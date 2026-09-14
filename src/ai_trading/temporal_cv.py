@@ -6,6 +6,7 @@ import pandas as pd
 
 from .features import make_features, make_labels
 from .performance import PerformanceMetrics, compute_metrics
+from .purged_cv import purged_expanding_folds
 from .specialist_experts import SpecialistDirectionModel
 
 
@@ -33,25 +34,28 @@ def temporal_cross_validate_specialist(
     folds: int = 3,
     min_train_bars: int = 120,
     test_bars: int = 40,
+    purge_bars: int = 5,
+    embargo_bars: int = 5,
 ) -> TemporalCVReport:
     features = make_features(df)
     labels = make_labels(df, return_threshold=return_threshold)
     usable = features.dropna().index.intersection(labels.dropna().index)
 
-    required = min_train_bars + folds * test_bars
-    if len(usable) < required:
-        raise ValueError(f"Need at least {required} usable bars for temporal CV")
+    split_folds = purged_expanding_folds(
+        usable,
+        folds=folds,
+        min_train_bars=min_train_bars,
+        test_bars=test_bars,
+        purge_bars=purge_bars,
+        embargo_bars=embargo_bars,
+    )
 
     results: list[FoldResult] = []
-    start = min_train_bars
-    for fold in range(folds):
-        train_idx = usable[: start + fold * test_bars]
-        test_start = start + fold * test_bars
-        test_idx = usable[test_start : test_start + test_bars]
-        if len(test_idx) < 2:
-            break
+    for fold_number, split in enumerate(split_folds):
+        train_idx = split.train_index
+        test_idx = split.test_index
 
-        model = SpecialistDirectionModel(kind, random_state=42 + fold)
+        model = SpecialistDirectionModel(kind, random_state=42 + fold_number)
         model.fit(features.loc[train_idx], labels.loc[train_idx])
 
         equity = [100_000.0]
