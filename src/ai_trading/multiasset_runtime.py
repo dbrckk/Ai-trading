@@ -11,7 +11,12 @@ from .config import ModelConfig, RiskConfig
 from .features import FEATURES, make_features, make_labels
 from .multiasset_state import AssetPosition, MultiAssetStateStore
 from .online import RiverDirectionModel
+from .pnl_attribution import attribute_pnl
 from .portfolio import AllocationConfig, inverse_volatility_weights, target_notionals
+from .portfolio_intelligence import (
+    PortfolioIntelligenceConfig,
+    apply_portfolio_intelligence,
+)
 from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
 from .runtime_lock import RuntimeLock
 
@@ -42,6 +47,7 @@ class MultiAssetPaperRuntime:
         audit_log: AuditLog | None = None,
         lock_path: str = "artifacts/multiasset_runtime.lock",
         model_root: str | Path = "artifacts/models/multiasset",
+        intelligence_config: PortfolioIntelligenceConfig | None = None,
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
@@ -51,6 +57,7 @@ class MultiAssetPaperRuntime:
         self.audit = audit_log or AuditLog("artifacts/multiasset_audit.jsonl")
         self.lock_path = lock_path
         self.model_root = Path(model_root)
+        self.intelligence_config = intelligence_config or PortfolioIntelligenceConfig()
 
     def _model_path(self, symbol: str) -> Path:
         safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
@@ -150,7 +157,24 @@ class MultiAssetPaperRuntime:
                 signed_weights.loc[symbol] = base_weights.loc[symbol] * side
 
             equity = state.equity()
-            notionals = target_notionals(equity, signed_weights)
+            previous_prices = {
+                symbol: state.positions.get(symbol, AssetPosition()).last_price
+                for symbol in signed_weights.index
+            }
+            previous_units = {
+                symbol: state.positions.get(symbol, AssetPosition()).units
+                for symbol in signed_weights.index
+            }
+
+            intelligent_weights, intelligence = apply_portfolio_intelligence(
+                signed_weights,
+                returns,
+                confidences,
+                current_equity=equity,
+                peak_equity=state.peak_equity,
+                config=self.intelligence_config,
+            )
+            notionals = target_notionals(equity, intelligent_weights)
 
             risk = evaluate_portfolio_risk(
                 notionals,
@@ -161,7 +185,7 @@ class MultiAssetPaperRuntime:
 
             if risk.approved:
                 total_costs = 0.0
-                for symbol in signed_weights.index:
+                for symbol in intelligent_weights.index:
                     price = float(opens[symbol].iloc[-1])
                     position = state.positions.setdefault(symbol, AssetPosition())
                     desired_units = float(notionals[symbol]) / price
@@ -175,9 +199,20 @@ class MultiAssetPaperRuntime:
 
                 state.cash -= total_costs
 
-            for symbol in signed_weights.index:
+            for symbol in intelligent_weights.index:
                 position = state.positions.setdefault(symbol, AssetPosition())
                 position.last_price = float(closes[symbol].iloc[-1])
+
+            current_prices = {
+                symbol: float(closes[symbol].iloc[-1])
+                for symbol in intelligent_weights.index
+            }
+            attribution = attribute_pnl(
+                previous_prices,
+                current_prices,
+                previous_units,
+                max(equity, 1e-12),
+            )
 
             state.processed_bars += 1
             state.last_processed = execution_time
@@ -191,6 +226,15 @@ class MultiAssetPaperRuntime:
                     "timestamp": execution_time,
                     "base_weights": base_weights.to_dict(),
                     "signed_weights": signed_weights.to_dict(),
+                    "intelligent_weights": intelligent_weights.to_dict(),
+                    "intelligence": {
+                        "leverage": intelligence.leverage,
+                        "estimated_annual_volatility": intelligence.estimated_annual_volatility,
+                        "drawdown_scale": intelligence.drawdown_scale,
+                        "stress_scale": intelligence.stress_scale,
+                        "confidence_scale": intelligence.confidence_scale,
+                        "stress_detected": intelligence.stress_detected,
+                    },
                     "signals": signals,
                     "confidences": confidences,
                     "notionals": notionals.to_dict(),
@@ -198,6 +242,13 @@ class MultiAssetPaperRuntime:
                     "risk_reasons": list(risk.reasons),
                     "equity": current_equity,
                     "cash": state.cash,
+                    "pnl_attribution": {
+                        symbol: {
+                            "pnl": item.pnl,
+                            "return_contribution": item.return_contribution,
+                        }
+                        for symbol, item in attribution.items()
+                    },
                 },
             )
 
@@ -206,7 +257,7 @@ class MultiAssetPaperRuntime:
                 timestamp=execution_time,
                 equity=current_equity,
                 cash=state.cash,
-                weights={k: float(v) for k, v in signed_weights.items()},
+                weights={k: float(v) for k, v in intelligent_weights.items()},
                 notionals={k: float(v) for k, v in notionals.items()},
                 signals=signals,
                 confidences=confidences,
