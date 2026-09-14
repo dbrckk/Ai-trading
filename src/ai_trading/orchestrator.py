@@ -10,6 +10,7 @@ from .config import ModelConfig, RiskConfig
 from .continuous import ContinuousCycleResult, run_learning_cycle
 from .drift import detect_drift
 from .features import make_features
+from .governor_state_store import GovernorStateStore
 from .guardrails import HealthDecision, evaluate_health
 from .performance import PerformanceMetrics
 from .regime_validation import RegimeValidation, validate_regime_returns
@@ -33,10 +34,12 @@ class AutonomousPaperOrchestrator:
         runtime: PaperAutonomousRuntime | None = None,
         registry: ChampionRegistry | None = None,
         learning_trials: int = 10,
+        governor_state_store: GovernorStateStore | None = None,
     ) -> None:
         self.runtime = runtime or PaperAutonomousRuntime()
         self.registry = registry or ChampionRegistry()
         self.learning_trials = learning_trials
+        self.governor_state_store = governor_state_store or GovernorStateStore()
 
     def _health_checks(
         self,
@@ -89,8 +92,15 @@ class AutonomousPaperOrchestrator:
         elif regime_validation is not None and not regime_validation.valid:
             trigger_reason = f"regime validation failed: {regime_validation.reason}"
 
+        governor_state = self.governor_state_store.load()
+        if trigger_reason is not None and governor_state.verdict != "TRADE":
+            trigger_reason = (
+                f"{trigger_reason}; learning blocked by governor "
+                f"{governor_state.verdict}: {governor_state.reason}"
+            )
+
         cycle: ContinuousCycleResult | None = None
-        if trigger_reason is not None:
+        if trigger_reason is not None and governor_state.verdict == "TRADE":
             active = self.registry.active()
             if active is not None:
                 champion_metrics = PerformanceMetrics(**active.metrics)
