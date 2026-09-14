@@ -20,6 +20,9 @@ class QualificationRecord:
     max_drawdown: float
     governor_verdict: str
     crisis_mode: str
+    symbols: tuple[str, ...] = ()
+    period: str = ""
+    interval: str = ""
 
 
 class QualificationStore:
@@ -34,12 +37,17 @@ class QualificationStore:
             return None
         payload = json.loads(self.path.read_text(encoding="utf-8"))
         payload["reasons"] = tuple(payload.get("reasons", ()))
+        payload["symbols"] = tuple(payload.get("symbols", ()))
         return QualificationRecord(**payload)
 
     def save(
         self,
         result: SoakResult,
         qualification: SoakQualification,
+        *,
+        symbols: tuple[str, ...] = (),
+        period: str = "",
+        interval: str = "",
     ) -> QualificationRecord:
         record = QualificationRecord(
             created_at_utc=datetime.now(UTC).isoformat(),
@@ -51,6 +59,9 @@ class QualificationStore:
             max_drawdown=result.max_drawdown,
             governor_verdict=result.governor_verdict,
             crisis_mode=result.crisis_mode,
+            symbols=tuple(symbols),
+            period=period,
+            interval=interval,
         )
         self.path.parent.mkdir(parents=True, exist_ok=True)
         temp = self.path.with_suffix(".tmp")
