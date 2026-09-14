@@ -10,6 +10,8 @@ from .alpha_allocation import AlphaAllocationConfig, alpha_risk_weights
 from .alpha_attribution import build_alpha_contribution
 from .audit import AuditLog
 from .config import ModelConfig, RiskConfig
+from .economic_meta import economic_route_weight
+from .economic_meta_store import EconomicMetaStore
 from .ensemble import EnsembleDirectionModel
 from .features import FEATURES, make_features, make_labels
 from .meta_router import MetaContext, route_predictions
@@ -61,6 +63,7 @@ class MultiAssetPaperRuntime:
         quality_store: QualityStore | None = None,
         alpha_allocation_config: AlphaAllocationConfig | None = None,
         meta_store: MetaRouterStore | None = None,
+        economic_meta_store: EconomicMetaStore | None = None,
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
@@ -75,6 +78,7 @@ class MultiAssetPaperRuntime:
         self.quality_store = quality_store or QualityStore()
         self.alpha_allocation_config = alpha_allocation_config or AlphaAllocationConfig()
         self.meta_store = meta_store or MetaRouterStore()
+        self.economic_meta_store = economic_meta_store or EconomicMetaStore()
 
     def _batch_model_path(self, symbol: str) -> Path:
         safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
@@ -264,9 +268,22 @@ class MultiAssetPaperRuntime:
 
                 base_blend = blend_predictions(blend_components)
                 route_candidates["quality_blend"] = base_blend
+                contextual_scores = self.meta_store.scores(context)
+                economic_stats = self.economic_meta_store.load()
+                for model_name in route_candidates:
+                    economic_key = (
+                        f"{symbol}|{model_name}|{regime.name}|"
+                        f"{volatility_bucket}|{drawdown_bucket}"
+                    )
+                    if economic_key in economic_stats:
+                        economic_weight = economic_route_weight(economic_stats[economic_key])
+                        contextual_scores[model_name] = (
+                            contextual_scores.get(model_name, 0.5) * economic_weight
+                        )
+
                 routed = route_predictions(
                     route_candidates,
-                    self.meta_store.scores(context),
+                    contextual_scores,
                 )
                 blended = routed.prediction
                 route_weights_by_symbol[symbol] = routed.weights
