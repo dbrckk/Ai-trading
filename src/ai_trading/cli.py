@@ -11,6 +11,7 @@ from .backtest import WalkForwardBacktester, WalkForwardConfig
 from .champions import ChampionRegistry
 from .config import ModelConfig, RiskConfig
 from .continuous import run_learning_cycle
+from .control_plane import read_control_plane
 from .crisis_controller import limits_for_state
 from .crisis_state_store import CrisisStateStore
 from .data import load_history
@@ -31,6 +32,7 @@ from .guardrails import evaluate_health
 from .multiasset_backtest import MultiAssetWalkForwardBacktester
 from .multiasset_evolution import run_multiasset_evolution_cycle
 from .multiasset_runtime import MultiAssetPaperRuntime
+from .multiasset_scheduler import MultiAssetPaperScheduler, MultiAssetSchedulerConfig
 from .orchestrator import AutonomousPaperOrchestrator
 from .performance import PerformanceMetrics
 from .portfolio import AllocationConfig, inverse_volatility_weights, target_notionals
@@ -917,6 +919,68 @@ def risk_governor_status() -> None:
     table.add_row("Verdict", state.verdict)
     table.add_row("Reason", state.reason)
     table.add_row("Consecutive halts", str(state.consecutive_halts))
+    console.print(table)
+
+
+@app.command("system-status")
+def system_status() -> None:
+    status = read_control_plane()
+
+    table = Table(title="AI Trading control plane")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Governor", status.governor_verdict)
+    table.add_row("Governor reason", status.governor_reason)
+    table.add_row("Crisis mode", status.crisis_mode)
+    table.add_row("Recovery streak", str(status.recovery_streak))
+    table.add_row(
+        "Promotions",
+        "ENABLED" if status.promotions_allowed else "FROZEN",
+    )
+    table.add_row(
+        "Scheduler",
+        "RUN" if status.scheduler_should_run else "HALT",
+    )
+    console.print(table)
+
+
+@app.command("multiasset-loop")
+def multiasset_loop(
+    symbols: str = typer.Option("GC=F,SI=F,CL=F", help="Comma-separated Yahoo symbols"),
+    period: str = typer.Option("1y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+    poll_seconds: float = typer.Option(60.0, min=0.0),
+    max_iterations: int = typer.Option(1, min=1, max=10000),
+) -> None:
+    names = [s.strip() for s in symbols.split(",") if s.strip()]
+    if len(names) < 2:
+        raise typer.BadParameter("Provide at least two symbols")
+
+    def loader() -> dict[str, pd.DataFrame]:
+        return {
+            name: load_history(name, period, interval)
+            for name in names
+        }
+
+    scheduler = MultiAssetPaperScheduler(
+        runtime=MultiAssetPaperRuntime(),
+        data_loader=loader,
+        config=MultiAssetSchedulerConfig(
+            poll_seconds=poll_seconds,
+            max_iterations=max_iterations,
+        ),
+    )
+    results = scheduler.run()
+
+    table = Table(title="Multi-asset paper loop")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Iterations", str(len(results)))
+    if results:
+        last = results[-1]
+        table.add_row("Last equity", f"{last.equity:,.2f}")
+        table.add_row("Last cash", f"{last.cash:,.2f}")
+        table.add_row("Risk approved", "YES" if last.risk_approved else "NO")
     console.print(table)
 
 
