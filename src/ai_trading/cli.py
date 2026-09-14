@@ -50,6 +50,7 @@ from .readiness import evaluate_readiness
 from .regime_validation import validate_regime_returns
 from .robustness import block_bootstrap_returns
 from .runtime import PaperAutonomousRuntime
+from .runtime_factory import isolated_multiasset_runtime
 from .scheduler import PaperScheduler, SchedulerConfig
 from .soak import run_multiasset_soak
 from .state_snapshot import AtomicSnapshotStore
@@ -1185,6 +1186,7 @@ def paper_soak(
     chaos_symbol: str = typer.Option(""),
     chaos_step: int = typer.Option(-1),
     chaos_name: str = typer.Option("ohlc_violation"),
+    workspace: str = typer.Option("artifacts/soak"),
 ) -> None:
     names = [s.strip() for s in symbols.split(",") if s.strip()]
     if len(names) < 2:
@@ -1207,7 +1209,7 @@ def paper_soak(
         )
 
     result = run_multiasset_soak(
-        MultiAssetPaperRuntime(),
+        isolated_multiasset_runtime(workspace),
         markets,
         max_cycles=max_cycles,
         chaos=chaos,
