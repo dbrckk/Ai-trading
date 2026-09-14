@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from time import monotonic, sleep
-from typing import Callable
 
 import pandas as pd
 
