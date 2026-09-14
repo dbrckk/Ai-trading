@@ -14,11 +14,13 @@ from .engine import TradingEngine
 from .experiments import ExperimentRegistry
 from .features import make_features
 from .guardrails import evaluate_health
+from .orchestrator import AutonomousPaperOrchestrator
 from .performance import PerformanceMetrics
 from .promotion import evaluate_challenger
 from .regime_validation import validate_regime_returns
 from .robustness import block_bootstrap_returns
 from .runtime import PaperAutonomousRuntime
+from .scheduler import PaperScheduler, SchedulerConfig
 from .tuning import tune_walk_forward
 
 app = typer.Typer(help="Autonomous trading research CLI")
@@ -399,6 +401,54 @@ def runtime_step(
     table.add_row("Units", f"{result.units:.6f}")
     table.add_row("Processed bars", str(result.processed_bars))
     table.add_row("Learning cycle due", "YES" if result.retrain_due else "NO")
+    console.print(table)
+
+
+@app.command("paper-loop")
+def paper_loop(
+    symbol: str = typer.Option("GC=F", help="Yahoo Finance symbol"),
+    period: str = typer.Option("1y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+    poll_seconds: float = typer.Option(60.0, min=0.0),
+    iterations: int = typer.Option(1, min=1, help="Number of scheduler iterations"),
+    learning_trials: int = typer.Option(10, min=1, max=200),
+) -> None:
+    orchestrator = AutonomousPaperOrchestrator(
+        learning_trials=learning_trials,
+    )
+    scheduler = PaperScheduler(
+        orchestrator=orchestrator,
+        data_loader=lambda: load_history(symbol, period, interval),
+        symbol=symbol,
+        config=SchedulerConfig(
+            poll_seconds=poll_seconds,
+            max_iterations=iterations,
+        ),
+    )
+    results = scheduler.run()
+    last = results[-1]
+
+    table = Table(title=f"Autonomous paper loop: {symbol}")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Iterations", str(len(results)))
+    table.add_row("Last processed", "YES" if last.runtime.processed else "NO")
+    table.add_row("Equity", f"{last.runtime.equity:,.2f}")
+    table.add_row("Units", f"{last.runtime.units:.6f}")
+    table.add_row(
+        "Learning cycle triggered",
+        "YES" if last.learning_cycle_triggered else "NO",
+    )
+    table.add_row("Trigger reason", last.trigger_reason or "-")
+    if last.learning_cycle is not None:
+        table.add_row(
+            "Promoted",
+            "YES" if last.learning_cycle.promoted else "NO",
+        )
+        table.add_row(
+            "Champion version",
+            last.learning_cycle.champion_version or "-",
+        )
     console.print(table)
 
 
