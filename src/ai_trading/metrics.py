@@ -4,6 +4,8 @@ from dataclasses import dataclass
 
 from .control_plane import read_control_plane
 from .governor_state_store import GovernorStateStore
+from .lifecycle_log import LifecycleEventLog
+from .model_quarantine import ModelQuarantineStore
 from .supervisor_state import SupervisorStateStore
 from .watchdog import HeartbeatStore, heartbeat_is_stale
 
@@ -20,6 +22,10 @@ class MetricsSnapshot:
     supervisor_maintenance: int
     supervisor_halted: int
     supervisor_restarts: int
+    promotion_total: int
+    promotion_rejected_total: int
+    rollback_total: int
+    quarantine_total: int
 
 
 def collect_metrics(
@@ -27,15 +33,21 @@ def collect_metrics(
     heartbeat_store: HeartbeatStore | None = None,
     governor_store: GovernorStateStore | None = None,
     supervisor_store: SupervisorStateStore | None = None,
+    lifecycle_log: LifecycleEventLog | None = None,
+    quarantine_store: ModelQuarantineStore | None = None,
 ) -> MetricsSnapshot:
     heartbeat_store = heartbeat_store or HeartbeatStore(
         "artifacts/multiasset_heartbeat.json"
     )
     governor_store = governor_store or GovernorStateStore()
     supervisor_store = supervisor_store or SupervisorStateStore()
+    lifecycle_log = lifecycle_log or LifecycleEventLog()
+    quarantine_store = quarantine_store or ModelQuarantineStore()
     control = read_control_plane(governor_store=governor_store)
     governor = governor_store.load()
     supervisor = supervisor_store.load()
+    lifecycle_events = lifecycle_log.list()
+    quarantine_records = quarantine_store.load()
 
     crisis_levels = {
         "normal": 0,
@@ -55,6 +67,12 @@ def collect_metrics(
         supervisor_maintenance=int(supervisor.status == "maintenance"),
         supervisor_halted=int(supervisor.status == "halted"),
         supervisor_restarts=supervisor.restarts,
+        promotion_total=sum(event.event == "promotion" for event in lifecycle_events),
+        promotion_rejected_total=sum(
+            event.event == "promotion_rejected" for event in lifecycle_events
+        ),
+        rollback_total=sum(event.event == "rollback" for event in lifecycle_events),
+        quarantine_total=sum(record.quarantined for record in quarantine_records.values()),
     )
 
 
@@ -81,6 +99,14 @@ def prometheus_text(snapshot: MetricsSnapshot) -> str:
             f"ai_trading_supervisor_halted {snapshot.supervisor_halted}",
             "# TYPE ai_trading_supervisor_restarts gauge",
             f"ai_trading_supervisor_restarts {snapshot.supervisor_restarts}",
+            "# TYPE ai_trading_promotion_total counter",
+            f"ai_trading_promotion_total {snapshot.promotion_total}",
+            "# TYPE ai_trading_promotion_rejected_total counter",
+            f"ai_trading_promotion_rejected_total {snapshot.promotion_rejected_total}",
+            "# TYPE ai_trading_rollback_total counter",
+            f"ai_trading_rollback_total {snapshot.rollback_total}",
+            "# TYPE ai_trading_quarantine_total gauge",
+            f"ai_trading_quarantine_total {snapshot.quarantine_total}",
             "",
         ]
     )
