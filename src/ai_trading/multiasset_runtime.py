@@ -7,6 +7,7 @@ import joblib
 import pandas as pd
 
 from .allocation_state import AllocationStateStore
+from .allocator_config_store import AllocatorConfigStore
 from .alpha_allocation import AlphaAllocationConfig, alpha_risk_weights
 from .alpha_attribution import build_alpha_contribution
 from .audit import AuditLog
@@ -72,6 +73,7 @@ class MultiAssetPaperRuntime:
         expert_pool_store: ExpertPoolStore | None = None,
         specialist_model_root: str | Path = "artifacts/models/specialists",
         allocation_state_store: AllocationStateStore | None = None,
+        allocator_config_store: AllocatorConfigStore | None = None,
         global_allocator_config: GlobalAllocatorConfig | None = None,
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
@@ -91,7 +93,12 @@ class MultiAssetPaperRuntime:
         self.expert_pool_store = expert_pool_store or ExpertPoolStore()
         self.specialist_model_root = Path(specialist_model_root)
         self.allocation_state_store = allocation_state_store or AllocationStateStore()
-        self.global_allocator_config = global_allocator_config or GlobalAllocatorConfig()
+        self.allocator_config_store = allocator_config_store or AllocatorConfigStore()
+        self.global_allocator_config = (
+            global_allocator_config
+            or self.allocator_config_store.load()
+            or GlobalAllocatorConfig()
+        )
 
 
     def _specialist_path(self, symbol: str, kind: str) -> Path:
