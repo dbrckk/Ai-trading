@@ -7,6 +7,7 @@ from rich.table import Table
 
 from .allocator_config_store import AllocatorConfigStore
 from .allocator_tuning import tune_global_allocator
+from .audit_chain import verify_audit_chain
 from .audit_integrity import verify_jsonl_audit
 from .backtest import WalkForwardBacktester, WalkForwardConfig
 from .champions import ChampionRegistry
@@ -991,7 +992,9 @@ def multiasset_loop(
 def watchdog_status() -> None:
     heartbeat_store = HeartbeatStore("artifacts/multiasset_heartbeat.json")
     heartbeat = heartbeat_store.load()
-    audit = verify_jsonl_audit("artifacts/multiasset_audit.jsonl")
+    audit_path = "artifacts/multiasset_audit.jsonl"
+    audit = verify_jsonl_audit(audit_path)
+    chain = verify_audit_chain(audit_path)
     snapshot = AtomicSnapshotStore().latest_valid()
 
     table = Table(title="Paper watchdog status")
@@ -1005,7 +1008,9 @@ def watchdog_status() -> None:
         "Heartbeat stale",
         "YES" if heartbeat_is_stale(heartbeat) else "NO",
     )
-    table.add_row("Audit valid", "YES" if audit.valid else "NO")
+    table.add_row("Audit JSON valid", "YES" if audit.valid else "NO")
+    table.add_row("Audit chain valid", "YES" if chain.valid else "NO")
+    table.add_row("Audit legacy lines", str(chain.legacy_lines))
     table.add_row("Audit lines", str(audit.lines))
     table.add_row(
         "Last valid snapshot",
