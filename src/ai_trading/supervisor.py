@@ -8,6 +8,7 @@ from pathlib import Path
 
 from .governor_state_store import GovernorState, GovernorStateStore
 from .maintenance import MaintenanceStore
+from .readiness_handshake import wait_for_worker_readiness
 from .restart_log import RestartLog
 from .startup_check import run_startup_check
 from .state_snapshot import AtomicSnapshotStore
@@ -27,6 +28,7 @@ class SupervisorConfig:
     worker_timeout_seconds: float | None = None
     heartbeat_timeout_seconds: float = 180.0
     heartbeat_startup_grace_seconds: float = 30.0
+    readiness_timeout_seconds: float = 30.0
 
 
 @dataclass(frozen=True)
@@ -118,22 +120,47 @@ class PaperSupervisor:
 
                 process = subprocess.Popen(self.command)
                 self.state_store.save(
-                    status="running",
+                    status="starting",
                     worker_pid=process.pid,
                     restarts=restarts,
-                    reason="worker running",
+                    reason="waiting for worker readiness",
                 )
-                watch = monitor_worker(
-                    process,
-                    heartbeat_store=self.heartbeat_store,
-                    config=WorkerMonitorConfig(
-                        max_runtime_seconds=self.config.worker_timeout_seconds,
-                        heartbeat_max_age_seconds=self.config.heartbeat_timeout_seconds,
-                        startup_grace_seconds=self.config.heartbeat_startup_grace_seconds,
-                    ),
+
+                readiness = wait_for_worker_readiness(
+                    self.heartbeat_store,
+                    timeout_seconds=self.config.readiness_timeout_seconds,
+                    process=process,
                 )
-                final_exit = watch.exit_code
-                runtime = watch.runtime_seconds
+                if not readiness.ready:
+                    if process.poll() is None:
+                        process.terminate()
+                        try:
+                            process.wait(timeout=5.0)
+                        except subprocess.TimeoutExpired:
+                            process.kill()
+                            process.wait()
+                    watch_reason = readiness.reason
+                    final_exit = process.returncode
+                    runtime = readiness.waited_seconds
+                else:
+                    self.state_store.save(
+                        status="running",
+                        worker_pid=process.pid,
+                        restarts=restarts,
+                        reason="worker ready",
+                    )
+                    watch = monitor_worker(
+                        process,
+                        heartbeat_store=self.heartbeat_store,
+                        config=WorkerMonitorConfig(
+                            max_runtime_seconds=self.config.worker_timeout_seconds,
+                            heartbeat_max_age_seconds=self.config.heartbeat_timeout_seconds,
+                            startup_grace_seconds=self.config.heartbeat_startup_grace_seconds,
+                        ),
+                    )
+                    watch_reason = watch.reason
+                    final_exit = watch.exit_code
+                    runtime = watch.runtime_seconds
 
                 if final_exit == 0:
                     self.restart_log.append(
@@ -166,7 +193,7 @@ class PaperSupervisor:
                     exit_code=final_exit,
                     runtime_seconds=runtime,
                     restart_index=restarts,
-                    reason=watch.reason,
+                    reason=watch_reason,
                 )
 
                 if len(crashes) >= self.config.max_crashes_in_window:
