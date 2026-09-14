@@ -1,4 +1,7 @@
-from ai_trading.promotion_guard import PromotionPolicy, evaluate_promotion
+from ai_trading.promotion_guard import (
+    PromotionPolicy,
+    evaluate_promotion,
+)
 
 
 BASELINE = {
