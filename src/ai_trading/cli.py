@@ -48,6 +48,7 @@ from .portfolio import AllocationConfig, inverse_volatility_weights, target_noti
 from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
 from .promotion import evaluate_challenger
 from .qualification_store import QualificationStore
+from .qualification_suite import run_qualification_suite
 from .readiness import evaluate_readiness
 from .regime_validation import validate_regime_returns
 from .robustness import block_bootstrap_returns
@@ -1271,6 +1272,53 @@ def paper_soak(
         console.print("Recent errors:")
         for error in result.errors[-10:]:
             console.print(error)
+
+
+@app.command("paper-qualification-suite")
+def paper_qualification_suite(
+    symbols: str = typer.Option("GC=F,SI=F,CL=F"),
+    period: str = typer.Option("2y"),
+    interval: str = typer.Option("1d"),
+    max_cycles: int = typer.Option(100, min=10, max=5000),
+    workspace: str = typer.Option("artifacts/qualification_suite"),
+) -> None:
+    names = [s.strip() for s in symbols.split(",") if s.strip()]
+    if len(names) < 2:
+        raise typer.BadParameter("Provide at least two symbols")
+
+    markets = {
+        name: load_history(name, period, interval)
+        for name in names
+    }
+    result = run_qualification_suite(
+        markets,
+        workspace_root=workspace,
+        max_cycles=max_cycles,
+    )
+
+    table = Table(title="Paper qualification suite")
+    table.add_column("Case")
+    table.add_column("Successes", justify="right")
+    table.add_column("Failures", justify="right")
+    table.add_column("Governor")
+    table.add_column("Baseline PASS")
+    table.add_column("Safe fault")
+
+    for case in result.cases:
+        table.add_row(
+            case.name,
+            str(case.soak.successes),
+            str(case.soak.failures),
+            case.soak.governor_verdict,
+            "YES" if case.qualification.passed else "NO",
+            "YES" if case.expected_safe_failure else "NO",
+        )
+
+    console.print(table)
+    console.print(f"Suite={'PASS' if result.passed else 'FAIL'}")
+    if result.reasons:
+        for reason in result.reasons:
+            console.print(reason)
 
 
 if __name__ == "__main__":
