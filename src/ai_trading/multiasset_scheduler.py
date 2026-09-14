@@ -56,7 +56,18 @@ class MultiAssetPaperScheduler:
             self.runtime.allocation_state_store.path,
             self.runtime.allocator_config_store.path,
             self.runtime.drift_retrain_store.path,
+            self.runtime.champion_probation_store.path,
+            self.runtime.model_quarantine_store.path,
         ]
+
+    def _jsonl_files(self) -> list:
+        return [
+            self.runtime.champion_registry.path,
+            self.runtime.lifecycle_log.path,
+        ]
+
+    def _snapshot_files(self) -> list:
+        return self._state_files() + self._jsonl_files()
 
     def _audit_error(self, exc: Exception, consecutive_errors: int) -> None:
         self.runtime.audit.append(
@@ -81,9 +92,9 @@ class MultiAssetPaperScheduler:
             )
 
     def _snapshot(self) -> None:
-        snapshot = self.snapshot_store.create(self._state_files())
+        snapshot = self.snapshot_store.create(self._snapshot_files())
         fingerprint = compute_session_fingerprint(
-            self._state_files(),
+            self._snapshot_files(),
             self.runtime.audit.path,
         )
         self.runtime.audit.append(
@@ -101,8 +112,11 @@ class MultiAssetPaperScheduler:
         startup = run_startup_check(
             audit_path=self.runtime.audit.path,
             state_files=self._state_files(),
+            jsonl_files=self._jsonl_files(),
             snapshot_store=self.snapshot_store,
             governor_store=self.runtime.governor_state_store,
+            champion_registry=self.runtime.champion_registry,
+            lifecycle_log=self.runtime.lifecycle_log,
         )
         if not startup.ready:
             raise RuntimeError(
@@ -172,7 +186,7 @@ class MultiAssetPaperScheduler:
                         self.snapshot_store,
                         destination_root="artifacts",
                         audit_path=self.runtime.audit.path,
-                        state_files=self._state_files(),
+                        state_files=self._snapshot_files(),
                     )
                     self.runtime.audit.append(
                         "multiasset_recovery",
