@@ -198,13 +198,17 @@ class MultiAssetPaperRuntime:
                 self._save_model(symbol, model)
 
                 regime = detect_regime(signal_row)
-                batch_model = self._load_or_train_batch_model(
-                    symbol,
-                    features,
-                    labels,
-                    signal_idx,
-                )
-                batch_prediction = batch_model.predict_one(signal_row, regime)
+                try:
+                    batch_model = self._load_or_train_batch_model(
+                        symbol,
+                        features,
+                        labels,
+                        signal_idx,
+                    )
+                    batch_prediction = batch_model.predict_one(signal_row, regime)
+                except ValueError:
+                    batch_model = None
+                    batch_prediction = None
                 current_equity = state.equity()
                 drawdown = 0.0 if state.peak_equity <= 0 else max(
                     0.0,
@@ -231,7 +235,8 @@ class MultiAssetPaperRuntime:
 
                 records = self.quality_store.load()
                 quality_scores = {}
-                for model_name in ("river", "ensemble"):
+                model_names = ["river"] + (["ensemble"] if batch_prediction is not None else [])
+                for model_name in model_names:
                     key = f"{symbol}:{model_name}"
                     if key in records:
                         record = records[key]
@@ -243,18 +248,24 @@ class MultiAssetPaperRuntime:
                     else:
                         quality_scores[model_name] = 0.50
 
-                base_blend = blend_predictions(
-                    [
-                        BlendComponent("river", river_prediction, quality_scores["river"]),
-                        BlendComponent("ensemble", batch_prediction, quality_scores["ensemble"]),
-                    ]
-                )
+                blend_components = [
+                    BlendComponent("river", river_prediction, quality_scores["river"]),
+                ]
+                route_candidates = {"river": river_prediction}
+                if batch_prediction is not None:
+                    blend_components.append(
+                        BlendComponent(
+                            "ensemble",
+                            batch_prediction,
+                            quality_scores["ensemble"],
+                        )
+                    )
+                    route_candidates["ensemble"] = batch_prediction
+
+                base_blend = blend_predictions(blend_components)
+                route_candidates["quality_blend"] = base_blend
                 routed = route_predictions(
-                    {
-                        "river": river_prediction,
-                        "ensemble": batch_prediction,
-                        "quality_blend": base_blend,
-                    },
+                    route_candidates,
                     self.meta_store.scores(context),
                 )
                 blended = routed.prediction
@@ -276,23 +287,23 @@ class MultiAssetPaperRuntime:
                         label=realized_int,
                     )
 
-                    batch_eval_row = features.loc[learn_idx, FEATURES]
-                    batch_eval_prediction = batch_model.predict_one(
-                        batch_eval_row,
-                        detect_regime(batch_eval_row),
-                    )
-                    ensemble_key = f"{symbol}:ensemble"
-                    self.quality_store.append(
-                        ensemble_key,
-                        prediction=batch_eval_prediction.side,
-                        confidence=batch_eval_prediction.confidence,
-                        label=realized_int,
-                    )
+                    evaluations = [("river", evaluation_prediction)]
+                    if batch_model is not None:
+                        batch_eval_row = features.loc[learn_idx, FEATURES]
+                        batch_eval_prediction = batch_model.predict_one(
+                            batch_eval_row,
+                            detect_regime(batch_eval_row),
+                        )
+                        ensemble_key = f"{symbol}:ensemble"
+                        self.quality_store.append(
+                            ensemble_key,
+                            prediction=batch_eval_prediction.side,
+                            confidence=batch_eval_prediction.confidence,
+                            label=realized_int,
+                        )
+                        evaluations.append(("ensemble", batch_eval_prediction))
 
-                    for model_name, evaluation in (
-                        ("river", evaluation_prediction),
-                        ("ensemble", batch_eval_prediction),
-                    ):
+                    for model_name, evaluation in evaluations:
                         correct = evaluation.side == realized_int
                         edge = (
                             1.0
