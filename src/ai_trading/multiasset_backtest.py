@@ -11,6 +11,7 @@ from .performance import PerformanceMetrics, compute_metrics
 from .portfolio import AllocationConfig, inverse_volatility_weights, target_notionals
 from .portfolio_intelligence import PortfolioIntelligenceConfig, apply_portfolio_intelligence
 from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
+from .regime import detect_regime
 
 
 @dataclass(frozen=True)
@@ -110,8 +111,6 @@ class MultiAssetWalkForwardBacktester:
 
                 for symbol, model in models.items():
                     row = features[symbol].loc[signal_idx, FEATURES]
-                    from .regime import detect_regime
-
                     prediction = model.predict_one(row, detect_regime(row))
                     side = prediction.side if prediction.confidence >= self.risk_config.min_confidence else 0
                     signals[symbol] = side
