@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -985,6 +986,7 @@ def create_readiness_release_command(
     governor_path: str = typer.Option("artifacts/risk_governor_state.json"),
     readiness_history_path: str = typer.Option("artifacts/readiness_history.jsonl"),
     release_path: str = typer.Option("artifacts/readiness_release.json"),
+    signing_key_env: str = typer.Option("AI_TRADING_RELEASE_SIGNING_KEY"),
 ) -> None:
     names = tuple(s.strip() for s in symbols.split(",") if s.strip())
     if not names:
@@ -1032,6 +1034,11 @@ def create_readiness_release_command(
             console.print(f"- {reason}")
         raise typer.Exit(code=2)
 
+    signing_key = os.getenv(signing_key_env)
+    if not signing_key:
+        console.print(f"Missing signing key environment variable: {signing_key_env}")
+        raise typer.Exit(code=2)
+
     release = create_readiness_release(
         composite=composite,
         chain_head=history[-1].record_hash,
@@ -1040,6 +1047,7 @@ def create_readiness_release_command(
         governor=governor,
         resilience=resilience,
         trend=trend,
+        signing_key=signing_key,
     )
     ReadinessReleaseStore(release_path).save(release)
     console.print(f"Readiness release created: {release.release_hash}")
@@ -1056,6 +1064,7 @@ def deployment_readiness(
     governor_path: str = typer.Option("artifacts/risk_governor_state.json"),
     readiness_history_path: str = typer.Option("artifacts/readiness_history.jsonl"),
     release_path: str = typer.Option("artifacts/readiness_release.json"),
+    signing_key_env: str = typer.Option("AI_TRADING_RELEASE_SIGNING_KEY"),
 ) -> None:
     names = tuple(s.strip() for s in symbols.split(",") if s.strip())
     if not names:
@@ -1075,6 +1084,7 @@ def deployment_readiness(
     release_store = ReadinessReleaseStore(release_path)
     release = release_store.load()
     release_verification = None
+    signing_key = os.getenv(signing_key_env)
     if release is not None and composite is not None and qualification is not None:
         release_verification = verify_readiness_release(
             release,
@@ -1085,6 +1095,7 @@ def deployment_readiness(
             governor=governor,
             resilience=resilience,
             trend=trend,
+            signing_key=signing_key,
         )
 
     readiness = evaluate_deployment_readiness(
