@@ -3,7 +3,8 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from hashlib import sha256
-from hmac import compare_digest, new as hmac_new
+from hmac import compare_digest
+from hmac import new as hmac_new
 from json import JSONDecodeError, dumps, loads
 from pathlib import Path
 
