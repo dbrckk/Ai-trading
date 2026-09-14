@@ -58,6 +58,7 @@ from .readiness_release import (
     create_readiness_release,
     verify_readiness_release,
 )
+from .readiness_revocation import ReadinessRevocationStore
 from .readiness_score import ReadinessHistoryStore
 from .readiness_trend import evaluate_readiness_trend
 from .regime_validation import validate_regime_returns
@@ -986,6 +987,7 @@ def create_readiness_release_command(
     governor_path: str = typer.Option("artifacts/risk_governor_state.json"),
     readiness_history_path: str = typer.Option("artifacts/readiness_history.jsonl"),
     release_path: str = typer.Option("artifacts/readiness_release.json"),
+    revocations_path: str = typer.Option("artifacts/readiness_revocations.jsonl"),
     signing_key_env: str = typer.Option("AI_TRADING_RELEASE_SIGNING_KEY"),
 ) -> None:
     names = tuple(s.strip() for s in symbols.split(",") if s.strip())
@@ -1010,6 +1012,8 @@ def create_readiness_release_command(
 
     composite = history[-1].result
     trend = evaluate_readiness_trend(history)
+    revocation_store = ReadinessRevocationStore(revocations_path)
+
     readiness = evaluate_deployment_readiness(
         qualification,
         reliability=reliability,
@@ -1051,6 +1055,26 @@ def create_readiness_release_command(
     )
     ReadinessReleaseStore(release_path).save(release)
     console.print(f"Readiness release created: {release.release_hash}")
+
+
+@app.command("revoke-readiness-release")
+def revoke_readiness_release(
+    reason: str = typer.Option(...),
+    release_path: str = typer.Option("artifacts/readiness_release.json"),
+    revocations_path: str = typer.Option("artifacts/readiness_revocations.jsonl"),
+) -> None:
+    release = ReadinessReleaseStore(release_path).load()
+    if release is None:
+        console.print("Readiness release missing")
+        raise typer.Exit(code=2)
+
+    record = ReadinessRevocationStore(revocations_path).revoke(
+        release.release_hash,
+        reason=reason,
+    )
+    console.print(
+        f"Revoked readiness release {record.release_hash}: {record.reason}"
+    )
 
 
 @app.command("deployment-readiness")
@@ -1110,6 +1134,8 @@ def deployment_readiness(
         trend=trend,
         readiness_chain=readiness_chain,
         release_verification=release_verification,
+        release_hash=(release.release_hash if release is not None else None),
+        revocation_store=revocation_store,
     )
 
     table = Table(title="Paper-to-live deployment readiness")
