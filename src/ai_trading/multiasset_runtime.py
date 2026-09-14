@@ -508,6 +508,10 @@ class MultiAssetPaperRuntime:
 
                     intelligent_weights = intelligent_weights * asset_scale
                     self.allocation_state_store.save(global_allocation_report.weights)
+                else:
+                    # Fail closed: rejected global allocation means no target
+                    # risk until CVaR/turnover/cost constraints are satisfied.
+                    intelligent_weights = intelligent_weights * 0.0
 
             notionals = target_notionals(equity, intelligent_weights)
 
