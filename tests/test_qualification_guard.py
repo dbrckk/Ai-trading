@@ -86,3 +86,38 @@ def test_qualification_guard_rejects_low_reliability() -> None:
     assert "normal-state ratio below qualification threshold" in result.reasons
     assert "halt-state ratio exceeds qualification threshold" in result.reasons
     assert "MTTR exceeds qualification threshold" in result.reasons
+
+
+
+def test_qualification_guard_rejects_insufficient_reliability_observation() -> None:
+    record = QualificationRecord(
+        created_at_utc=datetime.now(UTC).isoformat(),
+        passed=True,
+        success_ratio=1.0,
+        reasons=(),
+        cycles=100,
+        failures=0,
+        max_drawdown=0.01,
+        governor_verdict="TRADE",
+        crisis_mode="normal",
+        symbols=("GC=F",),
+        period="2y",
+        interval="1d",
+        reliability_score=99.0,
+        reliability_observation_seconds=3_600.0,
+        normal_ratio=0.99,
+        halt_ratio=0.0,
+        mttr_seconds=60.0,
+        mtbf_seconds=3_000.0,
+    )
+
+    result = validate_qualification_record(
+        record,
+        symbols=("GC=F",),
+        period="2y",
+        interval="1d",
+        min_observation_seconds=86_400.0,
+    )
+
+    assert not result.allowed
+    assert "reliability observation window too short" in result.reasons
