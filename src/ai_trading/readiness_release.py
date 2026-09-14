@@ -187,6 +187,11 @@ class ReadinessReleaseStore:
 
     def save(self, release: ReadinessRelease) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
+        if self.path.exists():
+            existing = self.load()
+            if existing is not None and existing.release_hash == release.release_hash:
+                return
+            raise FileExistsError("readiness release is immutable once created")
         temp = self.path.with_suffix(".tmp")
         temp.write_text(dumps(asdict(release), sort_keys=True), encoding="utf-8")
         temp.replace(self.path)
