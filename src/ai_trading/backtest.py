@@ -7,7 +7,9 @@ import pandas as pd
 from .broker import PaperBroker
 from .config import ModelConfig, RiskConfig
 from .features import FEATURES, make_features, make_labels
+from .ensemble import EnsembleDirectionModel
 from .model import OnlineDirectionModel
+from .regime import detect_regime
 from .performance import PerformanceMetrics, buy_and_hold_equity, compute_metrics
 from .risk import PortfolioSnapshot, RiskEngine
 
@@ -18,6 +20,7 @@ class WalkForwardConfig:
     test_window_bars: int = 63
     max_train_bars: int | None = 1000
     periods_per_year: int = 252
+    use_ensemble: bool = False
 
     def as_dict(self) -> dict[str, int | None]:
         return asdict(self)
@@ -87,7 +90,10 @@ class WalkForwardBacktester:
             if len(train_idx) < self.config.min_train_bars or len(test_idx) == 0:
                 break
 
-            model = OnlineDirectionModel(random_state=42 + folds)
+            if self.config.use_ensemble:
+                model = EnsembleDirectionModel(random_state=42 + folds)
+            else:
+                model = OnlineDirectionModel(random_state=42 + folds)
             model.fit(features.loc[train_idx], labels.loc[train_idx])
             folds += 1
 
@@ -101,7 +107,11 @@ class WalkForwardBacktester:
                 close_price = float(df.at[execution_idx, "Close"])
 
                 broker.mark(execution_price)
-                prediction = model.predict_one(features.loc[signal_idx, FEATURES])
+                feature_row = features.loc[signal_idx, FEATURES]
+                if self.config.use_ensemble:
+                    prediction = model.predict_one(feature_row, detect_regime(feature_row))
+                else:
+                    prediction = model.predict_one(feature_row)
                 snapshot = PortfolioSnapshot(
                     equity=broker.state.equity,
                     peak_equity=broker.state.peak_equity,
