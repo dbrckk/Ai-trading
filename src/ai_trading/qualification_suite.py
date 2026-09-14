@@ -46,7 +46,7 @@ def run_qualification_suite(
         raise ValueError("qualification suite requires at least two assets")
 
     workspace_root = Path(workspace_root)
-    target_symbol = sorted(markets)[0]
+    target_symbol = min(markets)
     chaos_step = max(0, min(max_cycles - 1, max_cycles // 2))
 
     results: list[QualificationCaseResult] = []
