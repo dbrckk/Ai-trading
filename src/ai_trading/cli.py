@@ -7,6 +7,7 @@ from rich.table import Table
 
 from .allocator_config_store import AllocatorConfigStore
 from .allocator_tuning import tune_global_allocator
+from .audit_integrity import verify_jsonl_audit
 from .backtest import WalkForwardBacktester, WalkForwardConfig
 from .champions import ChampionRegistry
 from .config import ModelConfig, RiskConfig
@@ -43,7 +44,9 @@ from .regime_validation import validate_regime_returns
 from .robustness import block_bootstrap_returns
 from .runtime import PaperAutonomousRuntime
 from .scheduler import PaperScheduler, SchedulerConfig
+from .state_snapshot import AtomicSnapshotStore
 from .tuning import tune_walk_forward
+from .watchdog import HeartbeatStore, heartbeat_is_stale
 
 app = typer.Typer(help="Autonomous trading research CLI")
 console = Console()
@@ -981,6 +984,33 @@ def multiasset_loop(
         table.add_row("Last equity", f"{last.equity:,.2f}")
         table.add_row("Last cash", f"{last.cash:,.2f}")
         table.add_row("Risk approved", "YES" if last.risk_approved else "NO")
+    console.print(table)
+
+
+@app.command("watchdog-status")
+def watchdog_status() -> None:
+    heartbeat_store = HeartbeatStore("artifacts/multiasset_heartbeat.json")
+    heartbeat = heartbeat_store.load()
+    audit = verify_jsonl_audit("artifacts/multiasset_audit.jsonl")
+    snapshot = AtomicSnapshotStore().latest_valid()
+
+    table = Table(title="Paper watchdog status")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row(
+        "Heartbeat",
+        "MISSING" if heartbeat is None else heartbeat.status,
+    )
+    table.add_row(
+        "Heartbeat stale",
+        "YES" if heartbeat_is_stale(heartbeat) else "NO",
+    )
+    table.add_row("Audit valid", "YES" if audit.valid else "NO")
+    table.add_row("Audit lines", str(audit.lines))
+    table.add_row(
+        "Last valid snapshot",
+        "-" if snapshot is None else snapshot.name,
+    )
     console.print(table)
 
 
