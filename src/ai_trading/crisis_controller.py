@@ -108,3 +108,20 @@ def evaluate_crisis_state(
     if state.mode == "defensive":
         return CrisisDecision(state, 0.40, 3, 0.50, False, reason)
     return CrisisDecision(state, 0.10, 1, 0.25, False, reason)
+
+
+def limits_for_state(state: CrisisState) -> CrisisDecision:
+    if state.mode == "normal":
+        return CrisisDecision(state, 1.0, 8, 1.0, True, "persisted normal mode")
+    if state.mode == "cautious":
+        return CrisisDecision(state, 0.75, 5, 0.75, False, "persisted cautious mode")
+    if state.mode == "defensive":
+        return CrisisDecision(state, 0.40, 3, 0.50, False, "persisted defensive mode")
+    return CrisisDecision(
+        state,
+        0.10,
+        1,
+        0.25,
+        False,
+        "persisted capital-preservation mode",
+    )
