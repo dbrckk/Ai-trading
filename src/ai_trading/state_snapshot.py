@@ -12,6 +12,7 @@ from pathlib import Path
 class SnapshotManifest:
     created_at_utc: str
     files: dict[str, str]
+    source_paths: dict[str, str]
 
 
 class AtomicSnapshotStore:
@@ -36,23 +37,33 @@ class AtomicSnapshotStore:
         temp_dir.mkdir(parents=True, exist_ok=False)
 
         manifest: dict[str, str] = {}
+        source_paths: dict[str, str] = {}
+        used_names: set[str] = set()
         for item in files:
             source = Path(item)
             if not source.exists() or not source.is_file():
                 continue
-            destination = temp_dir / source.name
+            name = source.name
+            if name in used_names:
+                prefix = hashlib.sha256(str(source).encode("utf-8")).hexdigest()[:12]
+                name = f"{prefix}-{source.name}"
+            used_names.add(name)
+            destination = temp_dir / name
             shutil.copy2(source, destination)
-            manifest[source.name] = self._sha256(destination)
+            manifest[name] = self._sha256(destination)
+            source_paths[name] = str(source)
 
         payload = SnapshotManifest(
             created_at_utc=datetime.now(UTC).isoformat(),
             files=manifest,
+            source_paths=source_paths,
         )
         (temp_dir / "manifest.json").write_text(
             json.dumps(
                 {
                     "created_at_utc": payload.created_at_utc,
                     "files": payload.files,
+                    "source_paths": payload.source_paths,
                 },
                 sort_keys=True,
             ),
@@ -113,9 +124,12 @@ class AtomicSnapshotStore:
         destination_root.mkdir(parents=True, exist_ok=True)
 
         manifest = json.loads((snapshot / "manifest.json").read_text(encoding="utf-8"))
+        source_paths = manifest.get("source_paths", {})
         for name in manifest.get("files", {}):
             source = snapshot / name
-            destination = destination_root / name
+            original = source_paths.get(name)
+            destination = Path(original) if original else destination_root / name
+            destination.parent.mkdir(parents=True, exist_ok=True)
             temp = destination.with_suffix(destination.suffix + ".restore.tmp")
             shutil.copy2(source, temp)
             temp.replace(destination)
