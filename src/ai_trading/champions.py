@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from .model_quarantine import ModelQuarantineStore
 from .promotion_guard import PromotionDecision, PromotionPolicy, evaluate_promotion
 
 
@@ -76,7 +77,23 @@ class ChampionRegistry:
         metrics: dict[str, float],
         config: dict[str, Any],
         policy: PromotionPolicy | None = None,
+        quarantine_store: ModelQuarantineStore | None = None,
+        processed_bar: int = 0,
     ) -> tuple[PromotionDecision, ChampionRecord | None]:
+        if (
+            quarantine_store is not None
+            and not quarantine_store.eligible(version, processed_bar=processed_bar)
+        ):
+            return (
+                PromotionDecision(
+                    approved=False,
+                    reasons=("challenger version is quarantined or in backoff",),
+                    score_delta=0.0,
+                    metric_deltas={},
+                ),
+                None,
+            )
+
         current = self.active()
         if current is None:
             promoted = self.promote(
