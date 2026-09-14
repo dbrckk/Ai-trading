@@ -11,6 +11,7 @@ from .audit_integrity import verify_jsonl_audit
 from .control_plane import read_control_plane
 from .multiasset_runtime import MultiAssetPaperRuntime, MultiAssetStepResult
 from .recovery import recover_latest_consistent_state
+from .session_integrity import compute_session_fingerprint
 from .state_snapshot import AtomicSnapshotStore
 from .watchdog import HeartbeatStore
 
@@ -77,7 +78,20 @@ class MultiAssetPaperScheduler:
             )
 
     def _snapshot(self) -> None:
-        self.snapshot_store.create(self._state_files())
+        snapshot = self.snapshot_store.create(self._state_files())
+        fingerprint = compute_session_fingerprint(
+            self._state_files(),
+            self.runtime.audit.path,
+        )
+        self.runtime.audit.append(
+            "session_checkpoint",
+            {
+                "snapshot": str(snapshot),
+                "fingerprint": fingerprint.fingerprint,
+                "state_hashes": fingerprint.state_hashes,
+                "audit_tail_hash": fingerprint.audit_tail_hash,
+            },
+        )
 
     def run(self) -> list[MultiAssetStepResult]:
         results: list[MultiAssetStepResult] = []
