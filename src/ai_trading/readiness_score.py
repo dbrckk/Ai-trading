@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import hashlib
-import json
 from dataclasses import asdict, dataclass
+from hashlib import sha256
+from json import dumps, loads
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -63,8 +63,8 @@ def _evidence_hash(
         "components": asdict(components),
         "weights": asdict(weights),
     }
-    raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    return hashlib.sha256(raw).hexdigest()
+    raw = dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return sha256(raw).hexdigest()
 
 
 def evaluate_composite_readiness(
@@ -138,7 +138,7 @@ class ReadinessHistoryStore:
         }
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.path.open("a", encoding="utf-8") as handle:
-            handle.write(json.dumps(payload, sort_keys=True) + "\n")
+            handle.write(dumps(payload, sort_keys=True) + "\n")
         return record
 
     def list(self) -> list[ReadinessHistoryRecord]:
@@ -149,7 +149,7 @@ class ReadinessHistoryStore:
             for line in handle:
                 if not line.strip():
                     continue
-                payload = json.loads(line)
+                payload = loads(line)
                 result_payload = payload["result"]
                 result = CompositeReadiness(
                     version=result_payload["version"],
