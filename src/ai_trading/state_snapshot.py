@@ -74,9 +74,10 @@ class AtomicSnapshotStore:
         temp_dir.replace(final_dir)
         return final_dir
 
-    def latest_valid(self) -> Path | None:
+    def valid_snapshots(self) -> list[Path]:
         if not self.root.exists():
-            return None
+            return []
+        valid_snapshots: list[Path] = []
         for directory in sorted(
             (p for p in self.root.iterdir() if p.is_dir() and not p.name.startswith(".")),
             reverse=True,
@@ -84,7 +85,10 @@ class AtomicSnapshotStore:
             manifest_path = directory / "manifest.json"
             if not manifest_path.exists():
                 continue
-            payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+            try:
+                payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
             files = payload.get("files", {})
             valid = True
             for name, expected in files.items():
@@ -93,8 +97,12 @@ class AtomicSnapshotStore:
                     valid = False
                     break
             if valid:
-                return directory
-        return None
+                valid_snapshots.append(directory)
+        return valid_snapshots
+
+    def latest_valid(self) -> Path | None:
+        snapshots = self.valid_snapshots()
+        return snapshots[0] if snapshots else None
 
     def prune(self, keep_last: int = 20) -> int:
         if keep_last < 1:
@@ -116,10 +124,14 @@ class AtomicSnapshotStore:
             removed += 1
         return removed
 
-    def restore_latest(self, destination_root: str | Path = "artifacts") -> Path:
-        snapshot = self.latest_valid()
-        if snapshot is None:
-            raise RuntimeError("no valid snapshot available")
+    def restore_snapshot(
+        self,
+        snapshot: str | Path,
+        destination_root: str | Path = "artifacts",
+    ) -> Path:
+        snapshot = Path(snapshot)
+        if snapshot not in self.valid_snapshots():
+            raise RuntimeError("snapshot is not structurally valid")
         destination_root = Path(destination_root)
         destination_root.mkdir(parents=True, exist_ok=True)
 
@@ -134,3 +146,9 @@ class AtomicSnapshotStore:
             shutil.copy2(source, temp)
             temp.replace(destination)
         return snapshot
+
+    def restore_latest(self, destination_root: str | Path = "artifacts") -> Path:
+        snapshot = self.latest_valid()
+        if snapshot is None:
+            raise RuntimeError("no valid snapshot available")
+        return self.restore_snapshot(snapshot, destination_root)
