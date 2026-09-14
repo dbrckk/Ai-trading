@@ -5,6 +5,7 @@ from ai_trading.crisis_controller import CrisisState
 from ai_trading.crisis_state_store import CrisisStateStore
 from ai_trading.governor_state_store import GovernorState, GovernorStateStore
 from ai_trading.lifecycle_log import LifecycleEventLog
+from ai_trading.resilience import ResilienceState, ResilienceStateStore
 
 
 def test_control_plane_halts_scheduler_on_governor_halt(tmp_path: Path) -> None:
@@ -45,4 +46,25 @@ def test_control_plane_blocks_promotions_when_recovery_is_degraded(
     )
 
     assert status.scheduler_should_run
+    assert not status.promotions_allowed
+
+
+
+def test_control_plane_halts_scheduler_from_resilience_state(
+    tmp_path: Path,
+) -> None:
+    governor = GovernorStateStore(tmp_path / "governor.json")
+    crisis = CrisisStateStore(tmp_path / "crisis.json")
+    resilience = ResilienceStateStore(tmp_path / "resilience.json")
+    governor.save(GovernorState(verdict="TRADE", reason="ok"))
+    crisis.save(CrisisState(mode="normal"))
+    resilience.save(ResilienceState(mode="HALT", reason="critical"))
+
+    status = read_control_plane(
+        governor_store=governor,
+        crisis_store=crisis,
+        resilience_store=resilience,
+    )
+
+    assert not status.scheduler_should_run
     assert not status.promotions_allowed
