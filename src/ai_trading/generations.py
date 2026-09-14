@@ -59,11 +59,14 @@ class GenerationStore:
     def snapshots(self) -> list[GenerationSnapshot]:
         if not self.generations_path.exists():
             return []
-        return [
-            GenerationSnapshot(**json.loads(line))
-            for line in self.generations_path.read_text(encoding="utf-8").splitlines()
-            if line.strip()
-        ]
+        snapshots: list[GenerationSnapshot] = []
+        for line in self.generations_path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            payload = json.loads(line)
+            payload["active_experts"] = tuple(payload.get("active_experts", ()))
+            snapshots.append(GenerationSnapshot(**payload))
+        return snapshots
 
     def current_generation(self) -> int:
         snapshots = self.snapshots()
