@@ -6,6 +6,7 @@ from pathlib import Path
 import joblib
 import pandas as pd
 
+from .alpha_allocation import AlphaAllocationConfig, alpha_risk_weights
 from .audit import AuditLog
 from .config import ModelConfig, RiskConfig
 from .features import FEATURES, make_features, make_labels
@@ -52,6 +53,7 @@ class MultiAssetPaperRuntime:
         model_root: str | Path = "artifacts/models/multiasset",
         intelligence_config: PortfolioIntelligenceConfig | None = None,
         quality_store: QualityStore | None = None,
+        alpha_allocation_config: AlphaAllocationConfig | None = None,
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
@@ -63,6 +65,7 @@ class MultiAssetPaperRuntime:
         self.model_root = Path(model_root)
         self.intelligence_config = intelligence_config or PortfolioIntelligenceConfig()
         self.quality_store = quality_store or QualityStore()
+        self.alpha_allocation_config = alpha_allocation_config or AlphaAllocationConfig()
 
     def _model_path(self, symbol: str) -> Path:
         safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
@@ -186,6 +189,29 @@ class MultiAssetPaperRuntime:
                 signals[symbol] = side
                 confidences[symbol] = blended.confidence
                 signed_weights.loc[symbol] = base_weights.loc[symbol] * side
+
+            annualized_volatility = returns.std(ddof=1) * (252 ** 0.5)
+            expected_alpha = pd.Series(
+                {
+                    symbol: float(signals[symbol]) * max(0.0, confidences[symbol] - 0.5)
+                    for symbol in signed_weights.index
+                },
+                dtype=float,
+            )
+            quality_scores = pd.Series(
+                {
+                    symbol: max(0.05, confidences[symbol])
+                    for symbol in signed_weights.index
+                },
+                dtype=float,
+            )
+            alpha_weights = alpha_risk_weights(
+                expected_alpha,
+                annualized_volatility,
+                quality_scores,
+                self.alpha_allocation_config,
+            )
+            signed_weights = signed_weights * 0.5 + alpha_weights * 0.5
 
             equity = state.equity()
             previous_prices = {
