@@ -4,6 +4,7 @@ import os
 import sys
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import typer
 from rich.console import Console
@@ -79,6 +80,78 @@ from .watchdog_enforcer import enforce_watchdog
 
 app = typer.Typer(help="Autonomous trading research CLI")
 console = Console()
+
+
+@app.command("self-test")
+def self_test(
+    workspace: str = typer.Option("artifacts/self-test"),
+) -> None:
+    root = Path(workspace)
+    runtime = isolated_multiasset_runtime(root)
+
+    def synthetic_market(seed: int, n: int = 180) -> pd.DataFrame:
+        rng = np.random.default_rng(seed)
+        index = pd.date_range("2025-01-01", periods=n, freq="D")
+        returns = rng.normal(0.0003, 0.01, n)
+        close = 100.0 * np.cumprod(1.0 + returns)
+        open_ = close * (1.0 + rng.normal(0.0, 0.001, n))
+        return pd.DataFrame(
+            {
+                "Open": open_,
+                "High": np.maximum(open_, close) * 1.005,
+                "Low": np.minimum(open_, close) * 0.995,
+                "Close": close,
+                "Volume": 1000.0 + np.arange(n),
+            },
+            index=index,
+        )
+
+    markets = {
+        "GC=F": synthetic_market(1),
+        "SI=F": synthetic_market(2),
+        "CL=F": synthetic_market(3),
+    }
+    scheduler = MultiAssetPaperScheduler(
+        runtime=runtime,
+        data_loader=lambda: markets,
+        config=MultiAssetSchedulerConfig(
+            poll_seconds=0.0,
+            max_iterations=1,
+            max_consecutive_errors=1,
+            snapshot_every_iterations=1,
+            verify_audit_every_iterations=1,
+        ),
+        heartbeat_store=HeartbeatStore(root / "heartbeat.json"),
+        snapshot_store=AtomicSnapshotStore(root / "snapshots"),
+    )
+
+    try:
+        results = scheduler.run()
+    except Exception as exc:
+        console.print(f"SELF-TEST FAILED: {exc}")
+        raise typer.Exit(code=1) from exc
+
+    if len(results) != 1 or not results[0].processed:
+        console.print("SELF-TEST FAILED: runtime did not process the synthetic bar set")
+        raise typer.Exit(code=1)
+
+    snapshot = scheduler.snapshot_store.latest_valid()
+    if snapshot is None:
+        console.print("SELF-TEST FAILED: no valid snapshot created")
+        raise typer.Exit(code=1)
+
+    table = Table(title="Ai-trading self-test")
+    table.add_column("Check")
+    table.add_column("Result", justify="right")
+    table.add_row("Runtime step", "PASS")
+    table.add_row("Equity", f"{results[0].equity:,.2f}")
+    table.add_row("Governor", runtime.governor_state_store.load().verdict)
+    table.add_row("Resilience", runtime.resilience_state_store.load().mode)
+    table.add_row("Audit", "PASS" if runtime.audit.path.exists() else "FAIL")
+    table.add_row("Snapshot", "PASS")
+    table.add_row("Heartbeat", "PASS" if (root / "heartbeat.json").exists() else "FAIL")
+    console.print(table)
+    console.print(f"SELF-TEST PASS: workspace={root}")
 
 
 @app.command()
