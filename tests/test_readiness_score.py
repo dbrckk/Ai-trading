@@ -106,3 +106,65 @@ def test_readiness_history_round_trip(tmp_path: Path) -> None:
     assert len(loaded) == 1
     assert loaded[0].created_at_utc == saved.created_at_utc
     assert loaded[0].result == result
+
+
+
+def test_readiness_history_chain_detects_tampering(tmp_path: Path) -> None:
+    store = ReadinessHistoryStore(tmp_path / "readiness.jsonl")
+    first = evaluate_composite_readiness(
+        ReadinessComponents(
+            performance=95.0,
+            robustness=95.0,
+            reliability=95.0,
+            recovery=95.0,
+            data_quality=95.0,
+            model_stability=95.0,
+            execution_quality=95.0,
+        )
+    )
+    second = evaluate_composite_readiness(
+        ReadinessComponents(
+            performance=96.0,
+            robustness=96.0,
+            reliability=96.0,
+            recovery=96.0,
+            data_quality=96.0,
+            model_stability=96.0,
+            execution_quality=96.0,
+        )
+    )
+    store.append(first)
+    store.append(second)
+
+    assert store.verify_chain().valid
+
+    lines = store.path.read_text(encoding="utf-8").splitlines()
+    lines[0] = lines[0].replace('"score": 95.0', '"score": 99.0')
+    store.path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    report = store.verify_chain()
+
+    assert not report.valid
+    assert "hash mismatch" in report.reason
+
+
+def test_readiness_history_chain_links_records(tmp_path: Path) -> None:
+    store = ReadinessHistoryStore(tmp_path / "readiness.jsonl")
+    result = evaluate_composite_readiness(
+        ReadinessComponents(
+            performance=95.0,
+            robustness=95.0,
+            reliability=95.0,
+            recovery=95.0,
+            data_quality=95.0,
+            model_stability=95.0,
+            execution_quality=95.0,
+        )
+    )
+
+    first = store.append(result)
+    second = store.append(result)
+
+    assert first.prev_hash == ""
+    assert second.prev_hash == first.record_hash
+    assert store.verify_chain().valid
