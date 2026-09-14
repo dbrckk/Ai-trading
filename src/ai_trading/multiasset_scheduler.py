@@ -147,7 +147,28 @@ class MultiAssetPaperScheduler:
                     "reason": recovery.reason,
                     "verified": recovery.verified,
                     "mismatches": list(recovery.mismatches),
+                    "candidates_tested": recovery.candidates_tested,
+                    "fallback_depth": recovery.fallback_depth,
                     "initial_reasons": list(startup.reasons),
+                },
+            )
+            self.runtime.lifecycle_log.append(
+                event=(
+                    "recovery_succeeded"
+                    if recovery.restored
+                    else "recovery_failed"
+                ),
+                version="",
+                model_name="",
+                reason=recovery.reason,
+                failure_type="" if recovery.restored else "technical_failure",
+                metadata={
+                    "snapshot": recovery.snapshot,
+                    "verified": recovery.verified,
+                    "mismatches": list(recovery.mismatches),
+                    "candidates_tested": recovery.candidates_tested,
+                    "fallback_depth": recovery.fallback_depth,
+                    "phase": "startup",
                 },
             )
             if recovery.restored:
@@ -239,6 +260,28 @@ class MultiAssetPaperScheduler:
                             "reason": recovery.reason,
                             "verified": recovery.verified,
                             "mismatches": list(recovery.mismatches),
+                            "candidates_tested": recovery.candidates_tested,
+                            "fallback_depth": recovery.fallback_depth,
+                            "consecutive_errors": consecutive_errors,
+                        },
+                    )
+                    self.runtime.lifecycle_log.append(
+                        event=(
+                            "recovery_succeeded"
+                            if recovery.restored
+                            else "recovery_failed"
+                        ),
+                        version="",
+                        model_name="",
+                        reason=recovery.reason,
+                        failure_type="" if recovery.restored else "technical_failure",
+                        metadata={
+                            "snapshot": recovery.snapshot,
+                            "verified": recovery.verified,
+                            "mismatches": list(recovery.mismatches),
+                            "candidates_tested": recovery.candidates_tested,
+                            "fallback_depth": recovery.fallback_depth,
+                            "phase": "runtime",
                             "consecutive_errors": consecutive_errors,
                         },
                     )
