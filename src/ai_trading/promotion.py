@@ -10,6 +10,7 @@ class PromotionPolicy:
     min_sharpe_improvement: float = 0.10
     min_return_improvement: float = 0.00
     max_drawdown_increase: float = 0.02
+    min_period_win_rate: float = 0.60
 
 
 @dataclass(frozen=True)
@@ -37,3 +38,30 @@ def evaluate_challenger(
         return PromotionDecision(False, "drawdown deterioration too large")
 
     return PromotionDecision(True, "challenger passes promotion policy")
+
+
+def evaluate_multi_period_challenger(
+    champion_periods: list[PerformanceMetrics],
+    challenger_periods: list[PerformanceMetrics],
+    policy: PromotionPolicy | None = None,
+) -> PromotionDecision:
+    policy = policy or PromotionPolicy()
+    if len(champion_periods) != len(challenger_periods) or not champion_periods:
+        return PromotionDecision(False, "invalid or mismatched evaluation periods")
+
+    wins = 0
+    for champion, challenger in zip(champion_periods, challenger_periods, strict=True):
+        decision = evaluate_challenger(champion, challenger, policy)
+        if decision.promote:
+            wins += 1
+
+    win_rate = wins / len(champion_periods)
+    if win_rate < policy.min_period_win_rate:
+        return PromotionDecision(
+            False,
+            f"insufficient period win rate: {win_rate:.1%}",
+        )
+    return PromotionDecision(
+        True,
+        f"challenger passes multi-period policy: {win_rate:.1%} win rate",
+    )
