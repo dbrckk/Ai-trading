@@ -119,7 +119,7 @@ def run_multiasset_evolution_cycle(
 
     symbols = tuple(sorted(markets))
     baseline_records = pool.load()
-    baseline_returns, baseline_frame = _global_portfolio_returns(markets, baseline_records)
+    baseline_returns, _baseline_frame = _global_portfolio_returns(markets, baseline_records)
     baseline_score = _score(baseline_returns)
 
     baseline_active = [
