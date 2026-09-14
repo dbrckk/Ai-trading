@@ -9,6 +9,7 @@ from .config import ModelConfig, RiskConfig
 from .data import load_history
 from .engine import TradingEngine
 from .experiments import ExperimentRegistry
+from .promotion import evaluate_challenger
 
 app = typer.Typer(help="Autonomous trading research CLI")
 console = Console()
@@ -134,6 +135,80 @@ def walk_forward(
             },
         )
         console.print("Experiment saved to artifacts/experiments.jsonl")
+
+
+@app.command("compare-models")
+def compare_models(
+    symbol: str = typer.Option("GC=F", help="Yahoo Finance symbol"),
+    period: str = typer.Option("10y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+    min_train_bars: int = typer.Option(252, min=100),
+    test_window_bars: int = typer.Option(63, min=10),
+    max_train_bars: int = typer.Option(1000, min=150),
+) -> None:
+    df = load_history(symbol, period, interval)
+    risk_config = RiskConfig()
+    model_config = ModelConfig()
+
+    baseline_cfg = WalkForwardConfig(
+        min_train_bars=min_train_bars,
+        test_window_bars=test_window_bars,
+        max_train_bars=max_train_bars,
+        use_ensemble=False,
+    )
+    ensemble_cfg = WalkForwardConfig(
+        min_train_bars=min_train_bars,
+        test_window_bars=test_window_bars,
+        max_train_bars=max_train_bars,
+        use_ensemble=True,
+    )
+
+    baseline = WalkForwardBacktester(
+        risk_config=risk_config,
+        model_config=model_config,
+        config=baseline_cfg,
+    ).run(df)
+    ensemble = WalkForwardBacktester(
+        risk_config=risk_config,
+        model_config=model_config,
+        config=ensemble_cfg,
+    ).run(df)
+
+    decision = evaluate_challenger(baseline.metrics, ensemble.metrics)
+
+    table = Table(title=f"Champion vs challenger: {symbol}")
+    table.add_column("Metric")
+    table.add_column("Baseline", justify="right")
+    table.add_column("Ensemble", justify="right")
+    table.add_row(
+        "Total return",
+        f"{baseline.metrics.total_return:.2%}",
+        f"{ensemble.metrics.total_return:.2%}",
+    )
+    table.add_row(
+        "Sharpe",
+        f"{baseline.metrics.sharpe:.3f}",
+        f"{ensemble.metrics.sharpe:.3f}",
+    )
+    table.add_row(
+        "Sortino",
+        f"{baseline.metrics.sortino:.3f}",
+        f"{ensemble.metrics.sortino:.3f}",
+    )
+    table.add_row(
+        "Max drawdown",
+        f"{baseline.metrics.max_drawdown:.2%}",
+        f"{ensemble.metrics.max_drawdown:.2%}",
+    )
+    table.add_row(
+        "Calmar",
+        f"{baseline.metrics.calmar:.3f}",
+        f"{ensemble.metrics.calmar:.3f}",
+    )
+    console.print(table)
+    console.print(
+        f"Promotion: {'YES' if decision.promote else 'NO'} — {decision.reason}"
+    )
 
 
 if __name__ == "__main__":
