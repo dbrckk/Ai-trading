@@ -18,6 +18,7 @@ from .performance import PerformanceMetrics
 from .promotion import evaluate_challenger
 from .regime_validation import validate_regime_returns
 from .robustness import block_bootstrap_returns
+from .runtime import PaperAutonomousRuntime
 from .tuning import tune_walk_forward
 
 app = typer.Typer(help="Autonomous trading research CLI")
@@ -370,6 +371,34 @@ def learning_cycle(
     table.add_row("5th percentile return", f"{result.robustness.p05_return:.2%}")
     table.add_row("Promoted", "YES" if result.promoted else "NO")
     table.add_row("Champion version", result.champion_version or "-")
+    console.print(table)
+
+
+@app.command("runtime-step")
+def runtime_step(
+    symbol: str = typer.Option("GC=F", help="Yahoo Finance symbol"),
+    period: str = typer.Option("1y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+    learning_cycle_every_bars: int = typer.Option(63, min=1),
+) -> None:
+    df = load_history(symbol, period, interval)
+    result = PaperAutonomousRuntime(
+        learning_cycle_every_bars=learning_cycle_every_bars,
+    ).step(df)
+
+    table = Table(title=f"Autonomous paper runtime: {symbol}")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Processed", "YES" if result.processed else "NO")
+    table.add_row("Timestamp", result.timestamp or "-")
+    table.add_row("Side", str(result.side))
+    table.add_row("Confidence", f"{result.confidence:.3f}")
+    table.add_row("Risk approved", "YES" if result.approved else "NO")
+    table.add_row("Reason", result.reason)
+    table.add_row("Equity", f"{result.equity:,.2f}")
+    table.add_row("Units", f"{result.units:.6f}")
+    table.add_row("Processed bars", str(result.processed_bars))
+    table.add_row("Learning cycle due", "YES" if result.retrain_due else "NO")
     console.print(table)
 
 
