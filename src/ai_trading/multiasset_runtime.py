@@ -390,8 +390,11 @@ class MultiAssetPaperRuntime:
                 self.portfolio_risk_config,
             )
 
+            total_costs = 0.0
+            turnover_by_symbol = {symbol: 0.0 for symbol in intelligent_weights.index}
+            costs_by_symbol = {symbol: 0.0 for symbol in intelligent_weights.index}
+
             if risk.approved:
-                total_costs = 0.0
                 for symbol in intelligent_weights.index:
                     price = float(opens[symbol].iloc[-1])
                     position = state.positions.setdefault(symbol, AssetPosition())
@@ -399,7 +402,10 @@ class MultiAssetPaperRuntime:
                     delta_units = desired_units - position.units
                     gross = abs(delta_units) * price
                     bps = self.risk_config.transaction_cost_bps + self.risk_config.slippage_bps
-                    total_costs += gross * bps / 10_000.0
+                    symbol_costs = gross * bps / 10_000.0
+                    total_costs += symbol_costs
+                    turnover_by_symbol[symbol] = gross
+                    costs_by_symbol[symbol] = symbol_costs
                     state.cash -= delta_units * price
                     position.units = desired_units
                     position.last_price = float(closes[symbol].iloc[-1])
@@ -437,6 +443,28 @@ class MultiAssetPaperRuntime:
                         "pnl": contribution.pnl,
                         "return_contribution": contribution.return_contribution,
                     }
+
+            drawdown_now = (
+                0.0
+                if state.peak_equity <= 0
+                else max(0.0, 1.0 - current_equity / state.peak_equity)
+            )
+            for symbol, models in model_alpha_attribution.items():
+                for model_name, values in models.items():
+                    economic_key = (
+                        f"{symbol}|{model_name}|{values['regime']}|"
+                        f"{'high' if float(features_by_symbol[symbol].loc[features_by_symbol[symbol].dropna().index[-2], 'vol_10']) >= 0.02 else 'normal'}|"
+                        f"{'high' if drawdown_now >= 0.10 else 'medium' if drawdown_now >= 0.05 else 'low'}"
+                    )
+                    route_weight = route_weights_by_symbol.get(symbol, {}).get(model_name, 0.0)
+                    self.economic_meta_store.update(
+                        economic_key,
+                        pnl=float(values["pnl"]),
+                        turnover=float(turnover_by_symbol.get(symbol, 0.0)) * route_weight,
+                        costs=float(costs_by_symbol.get(symbol, 0.0)) * route_weight,
+                        drawdown=drawdown_now,
+                        equity=max(equity, 1e-12),
+                    )
 
             state.processed_bars += 1
             state.last_processed = execution_time
