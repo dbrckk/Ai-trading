@@ -74,6 +74,7 @@ def test_readiness_release_round_trip(tmp_path) -> None:
         resilience=res,
         trend=trend(),
         created_at_utc="2026-09-14T20:00:00+00:00",
+        signing_key="test-secret",
     )
     store = ReadinessReleaseStore(tmp_path / "release.json")
     store.save(release)
@@ -89,6 +90,7 @@ def test_readiness_release_round_trip(tmp_path) -> None:
         governor=gov,
         resilience=res,
         trend=trend(),
+        signing_key="test-secret",
     )
     assert verification.valid
 
@@ -107,6 +109,7 @@ def test_readiness_release_rejects_changed_governor() -> None:
         governor=gov,
         resilience=res,
         trend=trend(),
+        signing_key="test-secret",
     )
 
     verification = verify_readiness_release(
@@ -118,6 +121,7 @@ def test_readiness_release_rejects_changed_governor() -> None:
         governor=GovernorState(verdict="HALT", consecutive_halts=1),
         resilience=res,
         trend=trend(),
+        signing_key="test-secret",
     )
 
     assert not verification.valid
@@ -138,6 +142,7 @@ def test_readiness_release_rejects_changed_chain_head() -> None:
         governor=gov,
         resilience=res,
         trend=trend(),
+        signing_key="test-secret",
     )
 
     verification = verify_readiness_release(
@@ -149,6 +154,7 @@ def test_readiness_release_rejects_changed_chain_head() -> None:
         governor=gov,
         resilience=res,
         trend=trend(),
+        signing_key="test-secret",
     )
 
     assert not verification.valid
@@ -171,6 +177,7 @@ def test_readiness_release_is_content_addressed() -> None:
         resilience=res,
         trend=trend(),
         created_at_utc="2026-09-14T20:00:00+00:00",
+        signing_key="test-secret",
     )
     second = create_readiness_release(
         composite=comp,
@@ -181,6 +188,72 @@ def test_readiness_release_is_content_addressed() -> None:
         resilience=res,
         trend=trend(),
         created_at_utc="2026-09-14T20:00:00+00:00",
+        signing_key="test-secret",
     )
 
     assert first.release_hash == second.release_hash
+
+
+
+def test_readiness_release_rejects_wrong_signing_key() -> None:
+    comp = composite()
+    qual = qualification()
+    gov = GovernorState(verdict="TRADE")
+    res = ResilienceState(mode="NORMAL")
+    chain = ReadinessChainReport(valid=True, records=5, legacy_records=0)
+    release = create_readiness_release(
+        composite=comp,
+        chain_head="abc123",
+        chain=chain,
+        qualification=qual,
+        governor=gov,
+        resilience=res,
+        trend=trend(),
+        signing_key="correct-secret",
+    )
+
+    verification = verify_readiness_release(
+        release,
+        composite=comp,
+        chain_head="abc123",
+        chain=chain,
+        qualification=qual,
+        governor=gov,
+        resilience=res,
+        trend=trend(),
+        signing_key="wrong-secret",
+    )
+
+    assert not verification.valid
+    assert verification.reason == "readiness release signature invalid"
+
+
+def test_readiness_release_rejects_unsigned_manifest_by_default() -> None:
+    comp = composite()
+    qual = qualification()
+    gov = GovernorState(verdict="TRADE")
+    res = ResilienceState(mode="NORMAL")
+    chain = ReadinessChainReport(valid=True, records=5, legacy_records=0)
+    release = create_readiness_release(
+        composite=comp,
+        chain_head="abc123",
+        chain=chain,
+        qualification=qual,
+        governor=gov,
+        resilience=res,
+        trend=trend(),
+    )
+
+    verification = verify_readiness_release(
+        release,
+        composite=comp,
+        chain_head="abc123",
+        chain=chain,
+        qualification=qual,
+        governor=gov,
+        resilience=res,
+        trend=trend(),
+    )
+
+    assert not verification.valid
+    assert verification.reason == "readiness release signature missing"
