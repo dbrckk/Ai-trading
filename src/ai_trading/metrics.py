@@ -6,6 +6,7 @@ from .control_plane import read_control_plane
 from .governor_state_store import GovernorStateStore
 from .lifecycle_log import LifecycleEventLog
 from .model_quarantine import ModelQuarantineStore
+from .recovery_health import evaluate_recovery_health
 from .supervisor_state import SupervisorStateStore
 from .watchdog import HeartbeatStore, heartbeat_is_stale
 
@@ -30,6 +31,7 @@ class MetricsSnapshot:
     recovery_success_total: int
     recovery_failure_total: int
     recovery_fallback_depth: int
+    recovery_degraded: int
 
 
 def collect_metrics(
@@ -52,6 +54,7 @@ def collect_metrics(
     supervisor = supervisor_store.load()
     lifecycle_events = lifecycle_log.list()
     quarantine_records = quarantine_store.load()
+    recovery_health = evaluate_recovery_health(lifecycle_log)
 
     crisis_levels = {
         "normal": 0,
@@ -95,6 +98,7 @@ def collect_metrics(
             ),
             default=0,
         ),
+        recovery_degraded=int(recovery_health.status == "degraded"),
     )
 
 
@@ -137,6 +141,8 @@ def prometheus_text(snapshot: MetricsSnapshot) -> str:
             f"ai_trading_recovery_failure_total {snapshot.recovery_failure_total}",
             "# TYPE ai_trading_recovery_fallback_depth gauge",
             f"ai_trading_recovery_fallback_depth {snapshot.recovery_fallback_depth}",
+            "# TYPE ai_trading_recovery_degraded gauge",
+            f"ai_trading_recovery_degraded {snapshot.recovery_degraded}",
             "",
         ]
     )
