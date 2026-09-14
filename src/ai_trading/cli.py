@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import pandas as pd
 import typer
+
+from .allocator_config_store import AllocatorConfigStore
 from rich.console import Console
 from rich.table import Table
 
@@ -841,6 +843,45 @@ def global_allocation_check(
     )
     if report.reasons:
         console.print("; ".join(report.reasons))
+
+
+@app.command("global-allocation-tune")
+def global_allocation_tune(
+    symbols: str = typer.Option("GC=F,SI=F,CL=F", help="Comma-separated Yahoo symbols"),
+    period: str = typer.Option("5y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+    trials: int = typer.Option(25, min=1, max=200),
+    folds: int = typer.Option(3, min=2, max=6),
+) -> None:
+    names = [s.strip() for s in symbols.split(",") if s.strip()]
+    if len(names) < 2:
+        raise typer.BadParameter("Provide at least two symbols")
+
+    series = {}
+    for name in names:
+        df = load_history(name, period, interval)
+        series[f"{name}|baseline|all"] = df["Close"].astype(float).pct_change()
+
+    frame = pd.DataFrame(series).dropna()
+    result = tune_global_allocator(
+        frame,
+        trials=trials,
+        folds=folds,
+    )
+    AllocatorConfigStore().save(result.best_config)
+
+    table = Table(title="Global allocator tuning")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Best score", f"{result.best_score:.6f}")
+    table.add_row("Trials", str(result.trials))
+    table.add_row("CVaR alpha", f"{result.best_config.cvar_alpha:.4f}")
+    table.add_row("Max CVaR", f"{result.best_config.max_cvar:.4f}")
+    table.add_row("Max asset weight", f"{result.best_config.max_asset_weight:.4f}")
+    table.add_row("Max expert weight", f"{result.best_config.max_expert_weight:.4f}")
+    table.add_row("Max turnover", f"{result.best_config.max_turnover:.4f}")
+    table.add_row("Target gross", f"{result.best_config.target_gross_exposure:.4f}")
+    console.print(table)
 
 
 if __name__ == "__main__":
