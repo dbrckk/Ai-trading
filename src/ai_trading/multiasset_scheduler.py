@@ -9,6 +9,7 @@ import pandas as pd
 from .audit_integrity import verify_jsonl_audit
 from .control_plane import read_control_plane
 from .multiasset_runtime import MultiAssetPaperRuntime, MultiAssetStepResult
+from .recovery import recover_latest_consistent_state
 from .state_snapshot import AtomicSnapshotStore
 from .watchdog import HeartbeatStore
 
@@ -22,6 +23,7 @@ class MultiAssetSchedulerConfig:
     max_error_backoff_seconds: float = 300.0
     snapshot_every_iterations: int = 1
     verify_audit_every_iterations: int = 1
+    recover_after_errors: int = 2
 
 
 class MultiAssetPaperScheduler:
@@ -124,6 +126,24 @@ class MultiAssetPaperScheduler:
                     status="error",
                 )
                 self._audit_error(exc, consecutive_errors)
+
+                if (
+                    self.config.recover_after_errors > 0
+                    and consecutive_errors >= self.config.recover_after_errors
+                ):
+                    recovery = recover_latest_consistent_state(
+                        self.snapshot_store,
+                        destination_root="artifacts",
+                    )
+                    self.runtime.audit.append(
+                        "multiasset_recovery",
+                        {
+                            "restored": recovery.restored,
+                            "snapshot": recovery.snapshot,
+                            "reason": recovery.reason,
+                            "consecutive_errors": consecutive_errors,
+                        },
+                    )
 
                 if consecutive_errors >= self.config.max_consecutive_errors:
                     raise RuntimeError(
