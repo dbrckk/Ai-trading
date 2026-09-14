@@ -9,6 +9,8 @@ from .evolution import MutationConfig, mutate_expert, top_parents
 from .expert_factory import ExpertCandidate
 from .expert_pool import ExpertPoolStore, ExpertRecord, reconcile_pool
 from .expert_returns import equal_weight_pool_returns, specialist_return_series
+from .generation_progress import compare_generations
+from .generation_rollback import rollback_generation
 from .generations import GenerationStore
 from .marginal_alpha import evaluate_marginal_alpha
 from .performance import compute_metrics
@@ -22,6 +24,7 @@ class EvolutionCycleResult:
     accepted: int
     replaced: int
     generation: int
+    rolled_back: bool
     mutated: tuple[ExpertCandidate, ...]
 
 
@@ -190,10 +193,19 @@ def run_evolution_cycle(
         _portfolio_score(new_returns),
     )
 
+    rolled_back = False
+    snapshots = generation_store.snapshots()
+    if len(snapshots) >= 2:
+        progress = compare_generations(snapshots[-2], snapshots[-1])
+        if not progress.improved:
+            rollback_generation(store, generation_store)
+            rolled_back = True
+
     return EvolutionCycleResult(
         evaluated=len(mutations),
         accepted=accepted,
         replaced=replaced,
         generation=snapshot.generation,
+        rolled_back=rolled_back,
         mutated=tuple(mutations),
     )
