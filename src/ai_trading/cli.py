@@ -53,6 +53,7 @@ from .runtime import PaperAutonomousRuntime
 from .runtime_factory import isolated_multiasset_runtime
 from .scheduler import PaperScheduler, SchedulerConfig
 from .soak import run_multiasset_soak
+from .soak_gate import evaluate_soak_qualification
 from .state_snapshot import AtomicSnapshotStore
 from .supervisor import PaperSupervisor, SupervisorConfig
 from .supervisor_lease import SupervisorLeaseStore
@@ -1225,9 +1226,23 @@ def paper_soak(
         "Final equity",
         "-" if result.final_equity is None else f"{result.final_equity:,.2f}",
     )
+    qualification = evaluate_soak_qualification(result)
     table.add_row("Governor", result.governor_verdict)
     table.add_row("Crisis mode", result.crisis_mode)
+    table.add_row(
+        "Qualification",
+        "PASS" if qualification.passed else "FAIL",
+    )
+    table.add_row(
+        "Success ratio",
+        f"{qualification.success_ratio:.2%}",
+    )
     console.print(table)
+
+    if qualification.reasons:
+        console.print("Qualification reasons:")
+        for reason in qualification.reasons:
+            console.print(reason)
 
     if result.errors:
         console.print("Recent errors:")
