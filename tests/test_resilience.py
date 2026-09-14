@@ -137,3 +137,20 @@ def test_adaptive_policy_tightens_degraded_exposure() -> None:
 
     assert decision.state.mode == "DEGRADED"
     assert decision.exposure_cap < base.degraded_exposure_cap
+
+
+
+def test_resilience_store_loads_legacy_state_without_instability_field(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "resilience.json"
+    path.write_text(
+        '{"healthy_streak":2,"mode":"RECOVERY","mode_steps":3,"reason":"legacy"}',
+        encoding="utf-8",
+    )
+
+    state = ResilienceStateStore(path).load()
+
+    assert state.mode == "RECOVERY"
+    assert state.mode_steps == 3
+    assert state.instability_status == "stable"
