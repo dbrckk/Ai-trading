@@ -73,11 +73,10 @@ class WalkForwardBacktester:
         folds = 0
         previous_units = broker.state.units
 
-        start = self.config.min_train_bars
+        purge = max(1, self.model_config.horizon_bars)
+        start = self.config.min_train_bars + purge
         while start < len(usable) - 1:
             test_end = min(start + self.config.test_window_bars, len(usable) - 1)
-
-            purge = max(1, self.model_config.horizon_bars)
             train_end = max(0, start - purge)
             train_start = 0
             if self.config.max_train_bars is not None:
@@ -93,8 +92,8 @@ class WalkForwardBacktester:
             folds += 1
 
             for signal_idx in test_idx:
-                signal_pos = df.index.get_loc(signal_idx)
-                if not isinstance(signal_pos, int) or signal_pos + 1 >= len(df.index):
+                signal_pos = int(df.index.get_loc(signal_idx))
+                if signal_pos + 1 >= len(df.index):
                     continue
 
                 execution_idx = df.index[signal_pos + 1]
