@@ -1,10 +1,12 @@
 from pathlib import Path
 
 from ai_trading.resilience import (
+    ResilienceContext,
     ResiliencePolicy,
     ResilienceSignals,
     ResilienceState,
     ResilienceStateStore,
+    adapt_resilience_policy,
     evaluate_resilience,
 )
 
@@ -77,3 +79,61 @@ def test_resilience_store_persists_state(tmp_path: Path) -> None:
     store.save(state)
 
     assert store.load() == state
+
+
+
+def test_adaptive_policy_never_increases_nominal_exposure() -> None:
+    base = ResiliencePolicy()
+    adaptive = adapt_resilience_policy(
+        base,
+        ResilienceContext(
+            data_quality=0.80,
+            drawdown=0.13,
+            annualized_volatility=0.55,
+            recent_incidents=5,
+        ),
+    )
+
+    assert adaptive.cautious_exposure_cap <= base.cautious_exposure_cap
+    assert adaptive.degraded_exposure_cap <= base.degraded_exposure_cap
+    assert adaptive.recovery_exposure_cap <= base.recovery_exposure_cap
+    assert adaptive.cooldown_exposure_cap <= base.cooldown_exposure_cap
+    assert adaptive.halt_recovery_failures <= base.halt_recovery_failures
+    assert adaptive.halt_recovery_fallback_depth <= base.halt_recovery_fallback_depth
+    assert adaptive.recovery_confirmations >= base.recovery_confirmations
+
+
+def test_adaptive_policy_is_unchanged_in_healthy_conditions() -> None:
+    base = ResiliencePolicy()
+    adaptive = adapt_resilience_policy(
+        base,
+        ResilienceContext(
+            data_quality=1.0,
+            drawdown=0.01,
+            annualized_volatility=0.15,
+            recent_incidents=0,
+        ),
+    )
+
+    assert adaptive == base
+
+
+def test_adaptive_policy_tightens_degraded_exposure() -> None:
+    base = ResiliencePolicy()
+    adaptive = adapt_resilience_policy(
+        base,
+        ResilienceContext(
+            data_quality=0.90,
+            drawdown=0.09,
+            annualized_volatility=0.35,
+            recent_incidents=2,
+        ),
+    )
+    decision = evaluate_resilience(
+        ResilienceState(),
+        signals(recovery_degraded=True),
+        adaptive,
+    )
+
+    assert decision.state.mode == "DEGRADED"
+    assert decision.exposure_cap < base.degraded_exposure_cap
