@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from .governor_state_store import GovernorState
 from .qualification_guard import validate_qualification_record
 from .qualification_store import QualificationRecord
+from .readiness_score import CompositeReadiness
 from .reliability import ReliabilityReport
 from .resilience import ResilienceState
 
@@ -17,6 +18,8 @@ class DeploymentReadinessPolicy:
     max_mttr_seconds: float = 300.0
     min_observation_seconds: float = 604_800.0
     max_qualification_age_hours: float = 24.0
+    require_composite_score: bool = True
+    min_composite_score: float = 90.0
 
 
 @dataclass(frozen=True)
@@ -35,6 +38,7 @@ def evaluate_deployment_readiness(
     period: str,
     interval: str,
     policy: DeploymentReadinessPolicy | None = None,
+    composite: CompositeReadiness | None = None,
 ) -> DeploymentReadiness:
     policy = policy or DeploymentReadinessPolicy()
     reasons: list[str] = []
@@ -64,6 +68,14 @@ def evaluate_deployment_readiness(
         reasons.append("governor verdict is not TRADE")
     if governor.consecutive_halts != 0:
         reasons.append("governor halt streak is not cleared")
+    if policy.require_composite_score:
+        if composite is None:
+            reasons.append("composite readiness score missing")
+        else:
+            if not composite.passed:
+                reasons.append("composite readiness policy failed")
+            if composite.score < policy.min_composite_score:
+                reasons.append("composite readiness score below deployment threshold")
 
     return DeploymentReadiness(
         allowed=not reasons,
