@@ -85,6 +85,26 @@ class AtomicSnapshotStore:
                 return directory
         return None
 
+    def prune(self, keep_last: int = 20) -> int:
+        if keep_last < 1:
+            raise ValueError("keep_last must be at least 1")
+        if not self.root.exists():
+            return 0
+
+        snapshots = sorted(
+            (
+                p
+                for p in self.root.iterdir()
+                if p.is_dir() and not p.name.startswith(".")
+            ),
+            reverse=True,
+        )
+        removed = 0
+        for directory in snapshots[keep_last:]:
+            shutil.rmtree(directory)
+            removed += 1
+        return removed
+
     def restore_latest(self, destination_root: str | Path = "artifacts") -> Path:
         snapshot = self.latest_valid()
         if snapshot is None:
