@@ -60,7 +60,7 @@ def run_multiasset_soak(
             result = runtime.step(window)
             final_equity = result.equity
             successes += 1
-        except Exception as exc:
+        except (ValueError, RuntimeError, KeyError, IndexError, TypeError, OSError) as exc:
             failures += 1
             errors.append(f"cycle={offset}: {type(exc).__name__}: {exc}")
 
