@@ -741,6 +741,7 @@ def expert_evolve(
     table.add_row("Mutations evaluated", str(result.evaluated))
     table.add_row("Accepted", str(result.accepted))
     table.add_row("Portfolio replacements", str(result.replaced))
+    table.add_row("Generation rollback", "YES" if result.rolled_back else "NO")
     console.print(table)
 
 
