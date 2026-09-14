@@ -74,6 +74,8 @@ def test_recovery_skips_newer_logically_inconsistent_snapshot(
     assert result.restored
     assert result.verified
     assert result.snapshot == str(first)
+    assert result.candidates_tested == 2
+    assert result.fallback_depth == 1
     assert state.read_text(encoding="utf-8") == '{"value":1}'
 
 
@@ -112,4 +114,6 @@ def test_failed_multi_snapshot_recovery_restores_pre_attempt_state(
 
     assert not result.restored
     assert not result.verified
+    assert result.candidates_tested == 1
+    assert result.fallback_depth == 0
     assert state.read_text(encoding="utf-8") == '{"value":999}'
