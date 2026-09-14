@@ -47,13 +47,9 @@ class RoutedPrediction:
 
 
 def context_key(context: MetaContext) -> str:
-    return "|".join(
-        [
-            context.symbol,
-            context.regime,
-            context.volatility_bucket,
-            context.drawdown_bucket,
-        ]
+    return (
+        f"{context.symbol}|{context.regime}|"
+        f"{context.volatility_bucket}|{context.drawdown_bucket}"
     )
 
 
