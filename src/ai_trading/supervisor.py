@@ -8,6 +8,7 @@ from pathlib import Path
 
 from .governor_state_store import GovernorState, GovernorStateStore
 from .maintenance import MaintenanceStore
+from .process_watch import wait_with_timeout
 from .restart_log import RestartLog
 from .startup_check import run_startup_check
 from .state_snapshot import AtomicSnapshotStore
@@ -22,6 +23,7 @@ class SupervisorConfig:
     max_crashes_in_window: int = 3
     initial_backoff_seconds: float = 2.0
     max_backoff_seconds: float = 60.0
+    worker_timeout_seconds: float | None = None
 
 
 @dataclass(frozen=True)
@@ -107,7 +109,6 @@ class PaperSupervisor:
                         final_exit,
                     )
 
-                started = time.monotonic()
                 process = subprocess.Popen(self.command)
                 self.state_store.save(
                     status="running",
@@ -115,8 +116,12 @@ class PaperSupervisor:
                     restarts=restarts,
                     reason="worker running",
                 )
-                final_exit = process.wait()
-                runtime = time.monotonic() - started
+                watch = wait_with_timeout(
+                    process,
+                    timeout_seconds=self.config.worker_timeout_seconds,
+                )
+                final_exit = watch.exit_code
+                runtime = watch.runtime_seconds
 
                 if final_exit == 0:
                     self.restart_log.append(
@@ -149,7 +154,11 @@ class PaperSupervisor:
                     exit_code=final_exit,
                     runtime_seconds=runtime,
                     restart_index=restarts,
-                    reason="worker crashed",
+                    reason=(
+                        "worker timeout"
+                        if watch.timed_out
+                        else "worker crashed"
+                    ),
                 )
 
                 if len(crashes) >= self.config.max_crashes_in_window:
