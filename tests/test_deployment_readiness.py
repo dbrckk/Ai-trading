@@ -4,6 +4,7 @@ from ai_trading.deployment_readiness import evaluate_deployment_readiness
 from ai_trading.governor_state_store import GovernorState
 from ai_trading.qualification_store import QualificationRecord
 from ai_trading.readiness_score import ReadinessComponents, evaluate_composite_readiness
+from ai_trading.readiness_trend import ReadinessTrend
 from ai_trading.reliability import ReliabilityReport
 from ai_trading.resilience import ResilienceState
 
@@ -36,6 +37,17 @@ def composite_score():
             model_stability=95.0,
             execution_quality=94.0,
         )
+    )
+
+
+def stable_trend() -> ReadinessTrend:
+    return ReadinessTrend(
+        status="stable",
+        observations=5,
+        latest_score=95.0,
+        score_change=1.0,
+        pass_ratio=1.0,
+        reasons=(),
     )
 
 
@@ -73,6 +85,7 @@ def test_deployment_readiness_allows_only_fully_healthy_state() -> None:
         period="2y",
         interval="1d",
         composite=composite_score(),
+        trend=stable_trend(),
     )
 
     assert result.allowed
@@ -96,6 +109,7 @@ def test_deployment_readiness_fails_closed_on_resilience_or_governor() -> None:
         period="2y",
         interval="1d",
         composite=composite_score(),
+        trend=stable_trend(),
     )
 
     assert not result.allowed
@@ -123,6 +137,7 @@ def test_deployment_readiness_rejects_short_reliability_history() -> None:
         period="2y",
         interval="1d",
         composite=composite_score(),
+        trend=stable_trend(),
     )
 
     assert not result.allowed
@@ -139,7 +154,34 @@ def test_deployment_readiness_rejects_missing_composite_score() -> None:
         period="2y",
         interval="1d",
         composite=None,
+        trend=stable_trend(),
     )
 
     assert not result.allowed
     assert "composite readiness score missing" in result.reasons
+
+
+
+def test_deployment_readiness_rejects_unstable_trend() -> None:
+    trend = ReadinessTrend(
+        status="degraded",
+        observations=5,
+        latest_score=92.0,
+        score_change=-8.0,
+        pass_ratio=1.0,
+        reasons=("readiness score trend declining",),
+    )
+    result = evaluate_deployment_readiness(
+        qualified_record(),
+        reliability=reliable_report(),
+        resilience=ResilienceState(mode="NORMAL"),
+        governor=GovernorState(verdict="TRADE"),
+        symbols=("GC=F",),
+        period="2y",
+        interval="1d",
+        composite=composite_score(),
+        trend=trend,
+    )
+
+    assert not result.allowed
+    assert "readiness trend is not stable" in result.reasons
