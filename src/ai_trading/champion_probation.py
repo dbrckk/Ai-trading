@@ -5,6 +5,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from .champions import ChampionRecord, ChampionRegistry
+from .lifecycle_log import LifecycleEventLog
 from .model_quarantine import ModelQuarantineStore
 
 
@@ -59,11 +60,13 @@ class ChampionProbationManager:
         store: ChampionProbationStore | None = None,
         policy: ProbationPolicy | None = None,
         quarantine_store: ModelQuarantineStore | None = None,
+        lifecycle_log: LifecycleEventLog | None = None,
     ) -> None:
         self.registry = registry
         self.store = store or ChampionProbationStore()
         self.policy = policy or ProbationPolicy()
         self.quarantine_store = quarantine_store or ModelQuarantineStore()
+        self.lifecycle_log = lifecycle_log or LifecycleEventLog()
 
     def start(self, champion: ChampionRecord) -> ProbationState:
         state = ProbationState(
@@ -142,6 +145,12 @@ class ChampionProbationManager:
             )
             self.store.save(passed)
             self.quarantine_store.record_success(passed.version)
+            self.lifecycle_log.append(
+                event="probation_passed",
+                version=passed.version,
+                model_name=active.model_name,
+                processed_bar=processed_bar,
+            )
             return ProbationResult("pass", (), passed, active)
 
         return ProbationResult("continue", (), updated, active)
@@ -166,5 +175,15 @@ class ChampionProbationManager:
             failed.version,
             processed_bar=processed_bar,
             reason="; ".join(reasons),
+            failure_type="performance_failure",
+        )
+        self.lifecycle_log.append(
+            event="rollback",
+            version=failed.version,
+            model_name="",
+            reason="; ".join(reasons),
+            failure_type="performance_failure",
+            processed_bar=processed_bar,
+            metadata={"rolled_back_to": rolled_back.version},
         )
         return ProbationResult("rollback", reasons, failed, rolled_back)
