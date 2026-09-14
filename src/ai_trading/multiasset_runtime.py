@@ -14,6 +14,7 @@ from .economic_meta import economic_route_weight
 from .economic_meta_store import EconomicMetaStore
 from .ensemble import EnsembleDirectionModel
 from .expert_lifecycle import evaluate_expert_lifecycle
+from .expert_pool import ExpertPoolStore, compute_budget_weights
 from .features import FEATURES, make_features, make_labels
 from .meta_router import MetaContext, route_predictions
 from .meta_store import MetaRouterStore
@@ -31,6 +32,7 @@ from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
 from .quality_store import QualityStore
 from .regime import detect_regime
 from .runtime_lock import RuntimeLock
+from .specialist_experts import SpecialistDirectionModel
 
 
 @dataclass(frozen=True)
@@ -65,6 +67,8 @@ class MultiAssetPaperRuntime:
         alpha_allocation_config: AlphaAllocationConfig | None = None,
         meta_store: MetaRouterStore | None = None,
         economic_meta_store: EconomicMetaStore | None = None,
+        expert_pool_store: ExpertPoolStore | None = None,
+        specialist_model_root: str | Path = "artifacts/models/specialists",
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
@@ -80,6 +84,35 @@ class MultiAssetPaperRuntime:
         self.alpha_allocation_config = alpha_allocation_config or AlphaAllocationConfig()
         self.meta_store = meta_store or MetaRouterStore()
         self.economic_meta_store = economic_meta_store or EconomicMetaStore()
+        self.expert_pool_store = expert_pool_store or ExpertPoolStore()
+        self.specialist_model_root = Path(specialist_model_root)
+
+
+    def _specialist_path(self, symbol: str, kind: str) -> Path:
+        safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
+        return self.specialist_model_root / f"{safe}_{kind}.joblib"
+
+    def _load_or_train_specialist(
+        self,
+        symbol: str,
+        kind: str,
+        features: pd.DataFrame,
+        labels: pd.Series,
+        signal_idx,
+    ) -> SpecialistDirectionModel:
+        path = self._specialist_path(symbol, kind)
+        if path.exists():
+            return joblib.load(path)
+
+        train_idx = features.index[features.index < signal_idx]
+        train_idx = train_idx.intersection(labels.dropna().index)
+        model = SpecialistDirectionModel(kind, random_state=42)
+        model.fit(features.loc[train_idx], labels.loc[train_idx])
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temp = path.with_suffix(".tmp")
+        joblib.dump(model, temp)
+        temp.replace(path)
+        return model
 
     def _batch_model_path(self, symbol: str) -> Path:
         safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
@@ -269,7 +302,39 @@ class MultiAssetPaperRuntime:
 
                 base_blend = blend_predictions(blend_components)
                 route_candidates["quality_blend"] = base_blend
+
+                pool_records = self.expert_pool_store.load()
+                pool_budget = compute_budget_weights(pool_records)
+                for expert_name, budget in pool_budget.items():
+                    record = pool_records[expert_name]
+                    if not expert_name.startswith(f"{symbol}:"):
+                        continue
+                    if record.kind not in {"trend", "range", "high_vol"}:
+                        continue
+                    try:
+                        specialist = self._load_or_train_specialist(
+                            symbol,
+                            record.kind,
+                            features,
+                            labels,
+                            signal_idx,
+                        )
+                    except ValueError:
+                        continue
+                    if not specialist.supports(regime):
+                        continue
+                    specialist_prediction = specialist.predict_one(signal_row)
+                    candidate_name = f"specialist_{record.kind}"
+                    route_candidates[candidate_name] = specialist_prediction
+
                 contextual_scores = self.meta_store.scores(context)
+                for expert_name, budget in pool_budget.items():
+                    if expert_name.startswith(f"{symbol}:"):
+                        kind = pool_records[expert_name].kind
+                        contextual_scores[f"specialist_{kind}"] = max(
+                            contextual_scores.get(f"specialist_{kind}", 0.0),
+                            float(budget),
+                        )
                 economic_stats = self.economic_meta_store.load()
 
                 ensemble_economic_key = (
