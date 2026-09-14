@@ -6,6 +6,7 @@ from time import monotonic, sleep
 
 import pandas as pd
 
+from .audit_chain import verify_audit_chain
 from .audit_integrity import verify_jsonl_audit
 from .control_plane import read_control_plane
 from .multiasset_runtime import MultiAssetPaperRuntime, MultiAssetStepResult
@@ -67,6 +68,12 @@ class MultiAssetPaperScheduler:
         if self.runtime.audit.path.exists() and not report.valid:
             raise RuntimeError(
                 f"audit integrity failure at line {report.invalid_line}"
+            )
+
+        chain = verify_audit_chain(self.runtime.audit.path)
+        if self.runtime.audit.path.exists() and not chain.valid:
+            raise RuntimeError(
+                f"audit hash-chain failure at line {chain.invalid_line}: {chain.reason}"
             )
 
     def _snapshot(self) -> None:
