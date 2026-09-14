@@ -44,6 +44,7 @@ class SupervisorConfig:
     min_normal_ratio: float = 0.90
     max_halt_ratio: float = 0.01
     max_mttr_seconds: float | None = None
+    min_reliability_observation_seconds: float = 86_400.0
 
 
 @dataclass(frozen=True)
@@ -143,6 +144,11 @@ class PaperSupervisor:
                     min_normal_ratio=self.config.min_normal_ratio,
                     max_halt_ratio=self.config.max_halt_ratio,
                     max_mttr_seconds=self.config.max_mttr_seconds,
+                    min_observation_seconds=(
+                        self.config.min_reliability_observation_seconds
+                        if self.config.require_reliability_qualification
+                        else 0.0
+                    ),
                 )
                 if not guard.allowed:
                     reason = "paper qualification gate failed: " + "; ".join(
