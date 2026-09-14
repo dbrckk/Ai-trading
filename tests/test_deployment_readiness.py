@@ -3,6 +3,7 @@ from datetime import UTC, datetime
 from ai_trading.deployment_readiness import evaluate_deployment_readiness
 from ai_trading.governor_state_store import GovernorState
 from ai_trading.qualification_store import QualificationRecord
+from ai_trading.readiness_release import ReadinessReleaseVerification
 from ai_trading.readiness_score import (
     ReadinessChainReport,
     ReadinessComponents,
@@ -91,6 +92,7 @@ def test_deployment_readiness_allows_only_fully_healthy_state() -> None:
         composite=composite_score(),
         trend=stable_trend(),
         readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
+        release_verification=ReadinessReleaseVerification(valid=True),
     )
 
     assert result.allowed
@@ -116,6 +118,7 @@ def test_deployment_readiness_fails_closed_on_resilience_or_governor() -> None:
         composite=composite_score(),
         trend=stable_trend(),
         readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
+        release_verification=ReadinessReleaseVerification(valid=True),
     )
 
     assert not result.allowed
@@ -145,6 +148,7 @@ def test_deployment_readiness_rejects_short_reliability_history() -> None:
         composite=composite_score(),
         trend=stable_trend(),
         readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
+        release_verification=ReadinessReleaseVerification(valid=True),
     )
 
     assert not result.allowed
@@ -163,6 +167,7 @@ def test_deployment_readiness_rejects_missing_composite_score() -> None:
         composite=None,
         trend=stable_trend(),
         readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
+        release_verification=ReadinessReleaseVerification(valid=True),
     )
 
     assert not result.allowed
@@ -189,6 +194,7 @@ def test_deployment_readiness_rejects_unstable_trend() -> None:
         composite=composite_score(),
         trend=trend,
         readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
+        release_verification=ReadinessReleaseVerification(valid=True),
     )
 
     assert not result.allowed
@@ -216,3 +222,26 @@ def test_deployment_readiness_rejects_invalid_readiness_chain() -> None:
 
     assert not result.allowed
     assert "readiness history integrity check failed" in result.reasons
+
+
+
+def test_deployment_readiness_rejects_invalid_release_manifest() -> None:
+    result = evaluate_deployment_readiness(
+        qualified_record(),
+        reliability=reliable_report(),
+        resilience=ResilienceState(mode="NORMAL"),
+        governor=GovernorState(verdict="TRADE"),
+        symbols=("GC=F",),
+        period="2y",
+        interval="1d",
+        composite=composite_score(),
+        trend=stable_trend(),
+        readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
+        release_verification=ReadinessReleaseVerification(
+            valid=False,
+            reason="readiness release hash mismatch",
+        ),
+    )
+
+    assert not result.allowed
+    assert "readiness release verification failed" in result.reasons
