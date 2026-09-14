@@ -11,6 +11,7 @@ from .maintenance import MaintenanceStore
 from .qualification_guard import validate_qualification_record
 from .qualification_store import QualificationStore
 from .readiness_handshake import wait_for_worker_readiness
+from .resilience import ResilienceStateStore
 from .restart_log import RestartLog
 from .startup_check import run_startup_check
 from .state_snapshot import AtomicSnapshotStore
@@ -62,6 +63,7 @@ class PaperSupervisor:
         state_store: SupervisorStateStore | None = None,
         heartbeat_store: HeartbeatStore | None = None,
         qualification_store: QualificationStore | None = None,
+        resilience_store: ResilienceStateStore | None = None,
     ) -> None:
         self.command = command
         self.state_files = state_files
@@ -77,6 +79,7 @@ class PaperSupervisor:
             "artifacts/multiasset_heartbeat.json"
         )
         self.qualification_store = qualification_store or QualificationStore()
+        self.resilience_store = resilience_store or ResilienceStateStore()
 
     def _halt_governor(self, reason: str) -> None:
         previous = self.governor_store.load()
@@ -133,6 +136,34 @@ class PaperSupervisor:
                     return SupervisorResult(0, False, False, None)
 
             while restarts <= self.config.max_restarts:
+                resilience = self.resilience_store.load()
+                if resilience.mode == "HALT":
+                    self.state_store.save(
+                        status="halted",
+                        worker_pid=None,
+                        restarts=restarts,
+                        reason="resilience state is HALT",
+                    )
+                    return SupervisorResult(
+                        restarts,
+                        False,
+                        False,
+                        final_exit,
+                    )
+                if resilience.mode == "COOLDOWN":
+                    self.state_store.save(
+                        status="maintenance",
+                        worker_pid=None,
+                        restarts=restarts,
+                        reason="resilience cooldown active",
+                    )
+                    return SupervisorResult(
+                        restarts,
+                        True,
+                        False,
+                        final_exit,
+                    )
+
                 maintenance = self.maintenance_store.load()
                 if maintenance.enabled:
                     self.state_store.save(
