@@ -10,6 +10,7 @@ from .allocation_state import AllocationStateStore
 from .allocator_config_store import AllocatorConfigStore
 from .alpha_allocation import AlphaAllocationConfig, alpha_risk_weights
 from .alpha_attribution import build_alpha_contribution
+from .asset_classes import CrisisAssetPolicy, asset_allowed_in_mode
 from .audit import AuditLog
 from .config import ModelConfig, RiskConfig
 from .crisis_controller import CrisisPolicy, evaluate_crisis_state, limits_for_state
@@ -81,6 +82,7 @@ class MultiAssetPaperRuntime:
         stress_policy: StressPolicy | None = None,
         crisis_policy: CrisisPolicy | None = None,
         crisis_state_store: CrisisStateStore | None = None,
+        crisis_asset_policy: CrisisAssetPolicy | None = None,
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
@@ -108,6 +110,7 @@ class MultiAssetPaperRuntime:
         self.stress_policy = stress_policy or StressPolicy()
         self.crisis_policy = crisis_policy or CrisisPolicy()
         self.crisis_state_store = crisis_state_store or CrisisStateStore()
+        self.crisis_asset_policy = crisis_asset_policy or CrisisAssetPolicy()
 
 
     def _specialist_path(self, symbol: str, kind: str) -> Path:
@@ -239,6 +242,15 @@ class MultiAssetPaperRuntime:
             allowed_assets = set(
                 base_weights.abs().sort_values(ascending=False).head(allowed_asset_count).index
             )
+            allowed_assets = {
+                symbol
+                for symbol in allowed_assets
+                if asset_allowed_in_mode(
+                    symbol,
+                    persisted_crisis.mode,
+                    self.crisis_asset_policy,
+                )
+            }
             base_weights.loc[~base_weights.index.isin(allowed_assets)] = 0.0
 
             signals: dict[str, int] = {}
