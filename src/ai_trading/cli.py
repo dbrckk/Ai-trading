@@ -16,6 +16,9 @@ from .features import make_features
 from .guardrails import evaluate_health
 from .orchestrator import AutonomousPaperOrchestrator
 from .performance import PerformanceMetrics
+from .portfolio import AllocationConfig, inverse_volatility_weights, target_notionals
+from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
+from .readiness import evaluate_readiness
 from .promotion import evaluate_challenger
 from .regime_validation import validate_regime_returns
 from .robustness import block_bootstrap_returns
@@ -450,6 +453,90 @@ def paper_loop(
             last.learning_cycle.champion_version or "-",
         )
     console.print(table)
+
+
+@app.command("portfolio-analyze")
+def portfolio_analyze(
+    symbols: str = typer.Option("GC=F,SI=F,CL=F", help="Comma-separated Yahoo symbols"),
+    period: str = typer.Option("2y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+    equity: float = typer.Option(100_000.0, min=1.0),
+) -> None:
+    names = [s.strip() for s in symbols.split(",") if s.strip()]
+    if len(names) < 2:
+        raise typer.BadParameter("Provide at least two symbols")
+
+    closes = {}
+    for name in names:
+        df = load_history(name, period, interval)
+        closes[name] = df["Close"].astype(float)
+
+    close_frame = __import__("pandas").DataFrame(closes).dropna()
+    returns = close_frame.pct_change().dropna()
+    weights = inverse_volatility_weights(
+        returns,
+        AllocationConfig(max_asset_weight=0.35, target_gross_exposure=1.0),
+    )
+    notionals = target_notionals(equity, weights)
+    risk = evaluate_portfolio_risk(
+        notionals,
+        equity,
+        returns,
+        PortfolioRiskConfig(),
+    )
+
+    table = Table(title="Multi-asset portfolio analysis")
+    table.add_column("Asset")
+    table.add_column("Weight", justify="right")
+    table.add_column("Target notional", justify="right")
+    for name in weights.index:
+        table.add_row(name, f"{weights[name]:.2%}", f"{notionals[name]:,.2f}")
+    console.print(table)
+    console.print(
+        f"Portfolio risk: {'PASS' if risk.approved else 'FAIL'} | "
+        f"gross={risk.gross_exposure:.2f} net={risk.net_exposure:.2f} "
+        f"max_asset={risk.max_asset_exposure:.2f} max_corr={risk.max_pair_correlation:.2f}"
+    )
+    if risk.reasons:
+        console.print("; ".join(risk.reasons))
+
+
+@app.command("readiness-check")
+def readiness_check(
+    symbol: str = typer.Option("GC=F", help="Yahoo Finance symbol"),
+    period: str = typer.Option("10y", help="History period"),
+    interval: str = typer.Option("1d", help="Bar interval"),
+    burn_in_bars: int = typer.Option(126, min=1),
+    scheduler_errors: int = typer.Option(0, min=0),
+) -> None:
+    df = load_history(symbol, period, interval)
+    report = WalkForwardBacktester(
+        risk_config=RiskConfig(),
+        model_config=ModelConfig(),
+        config=WalkForwardConfig(use_ensemble=True),
+    ).run(df)
+    bootstrap = block_bootstrap_returns(report.equity_curve)
+    readiness = evaluate_readiness(
+        metrics=report.metrics,
+        burn_in_bars=burn_in_bars,
+        bootstrap_probability_positive=bootstrap.probability_positive,
+        regimes_covered=len(report.regime_returns),
+        scheduler_errors=scheduler_errors,
+    )
+
+    table = Table(title=f"Paper readiness: {symbol}")
+    table.add_column("Field")
+    table.add_column("Value", justify="right")
+    table.add_row("Ready", "YES" if readiness.ready else "NO")
+    table.add_row("Checks passed", f"{readiness.checks_passed}/{readiness.checks_total}")
+    table.add_row("Sharpe", f"{report.metrics.sharpe:.3f}")
+    table.add_row("Sortino", f"{report.metrics.sortino:.3f}")
+    table.add_row("Max drawdown", f"{report.metrics.max_drawdown:.2%}")
+    table.add_row("Bootstrap P(return > 0)", f"{bootstrap.probability_positive:.2%}")
+    table.add_row("Regimes covered", str(len(report.regime_returns)))
+    console.print(table)
+    if readiness.reasons:
+        console.print("; ".join(readiness.reasons))
 
 
 if __name__ == "__main__":
