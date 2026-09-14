@@ -9,6 +9,72 @@ from pathlib import Path
 class ResiliencePolicy:
     recovery_confirmations: int = 3
     cooldown_confirmations: int = 3
+    halt_recovery_failures: int = 4
+    halt_recovery_fallback_depth: int = 5
+    cautious_exposure_cap: float = 0.75
+    degraded_exposure_cap: float = 0.35
+    recovery_exposure_cap: float = 0.50
+    cooldown_exposure_cap: float = 0.25
+
+
+@dataclass(frozen=True)
+class ResilienceContext:
+    data_quality: float = 1.0
+    drawdown: float = 0.0
+    annualized_volatility: float = 0.0
+    recent_incidents: int = 0
+
+
+def adapt_resilience_policy(
+    base: ResiliencePolicy,
+    context: ResilienceContext,
+) -> ResiliencePolicy:
+    severity = 0
+    if context.data_quality < 0.95:
+        severity += 1
+    if context.data_quality < 0.85:
+        severity += 1
+    if context.drawdown >= 0.08:
+        severity += 1
+    if context.drawdown >= 0.12:
+        severity += 1
+    if context.annualized_volatility >= 0.30:
+        severity += 1
+    if context.annualized_volatility >= 0.50:
+        severity += 1
+    if context.recent_incidents >= 2:
+        severity += 1
+    if context.recent_incidents >= 4:
+        severity += 1
+
+    if severity == 0:
+        return base
+
+    return ResiliencePolicy(
+        recovery_confirmations=min(8, base.recovery_confirmations + severity // 2),
+        cooldown_confirmations=min(8, base.cooldown_confirmations + severity // 2),
+        halt_recovery_failures=max(2, base.halt_recovery_failures - severity // 3),
+        halt_recovery_fallback_depth=max(
+            3,
+            base.halt_recovery_fallback_depth - severity // 3,
+        ),
+        cautious_exposure_cap=max(
+            0.40,
+            base.cautious_exposure_cap - 0.05 * severity,
+        ),
+        degraded_exposure_cap=max(
+            0.15,
+            base.degraded_exposure_cap - 0.025 * severity,
+        ),
+        recovery_exposure_cap=max(
+            0.25,
+            base.recovery_exposure_cap - 0.04 * severity,
+        ),
+        cooldown_exposure_cap=max(
+            0.10,
+            base.cooldown_exposure_cap - 0.02 * severity,
+        ),
+    )
 
 
 @dataclass(frozen=True)
@@ -60,8 +126,8 @@ def evaluate_resilience(
 
     critical = (
         signals.governor_verdict == "HALT"
-        or signals.recovery_recent_failures >= 4
-        or signals.recovery_fallback_depth >= 5
+        or signals.recovery_recent_failures >= policy.halt_recovery_failures
+        or signals.recovery_fallback_depth >= policy.halt_recovery_fallback_depth
     )
     degraded = (
         signals.recovery_degraded
@@ -154,11 +220,11 @@ def evaluate_resilience(
 
     limits = {
         "NORMAL": (1.0, True, True),
-        "CAUTIOUS": (0.75, False, True),
-        "DEGRADED": (0.35, False, True),
-        "RECOVERY": (0.50, False, True),
+        "CAUTIOUS": (policy.cautious_exposure_cap, False, True),
+        "DEGRADED": (policy.degraded_exposure_cap, False, True),
+        "RECOVERY": (policy.recovery_exposure_cap, False, True),
         "HALT": (0.0, False, False),
-        "COOLDOWN": (0.25, False, True),
+        "COOLDOWN": (policy.cooldown_exposure_cap, False, True),
     }
     exposure_cap, promotions_allowed, scheduler_allowed = limits[state.mode]
     return ResilienceDecision(
