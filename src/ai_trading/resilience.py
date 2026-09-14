@@ -83,6 +83,7 @@ class ResilienceState:
     healthy_streak: int = 0
     reason: str = "initial state"
     mode_steps: int = 0
+    instability_status: str = "stable"
 
 
 @dataclass(frozen=True)
@@ -153,6 +154,7 @@ def evaluate_resilience(
             healthy_streak=0,
             reason="critical resilience threshold breached",
             mode_steps=current.mode_steps + 1 if current.mode == "HALT" else 1,
+            instability_status=current.instability_status,
         )
     elif current.mode == "HALT":
         if healthy:
@@ -161,6 +163,7 @@ def evaluate_resilience(
                 healthy_streak=1,
                 reason="critical condition cleared; cooldown started",
                 mode_steps=1,
+                instability_status=current.instability_status,
             )
         else:
             state = ResilienceState(
@@ -168,6 +171,7 @@ def evaluate_resilience(
                 healthy_streak=0,
                 reason="holding halt until conditions normalize",
                 mode_steps=current.mode_steps + 1,
+                instability_status=current.instability_status,
             )
     elif current.mode == "COOLDOWN":
         streak = current.healthy_streak + 1 if healthy else 0
@@ -178,6 +182,7 @@ def evaluate_resilience(
                 healthy_streak=0,
                 reason="cooldown interrupted by renewed risk",
                 mode_steps=1,
+                instability_status=current.instability_status,
             )
         elif streak >= policy.cooldown_confirmations:
             state = ResilienceState(
@@ -185,6 +190,7 @@ def evaluate_resilience(
                 healthy_streak=0,
                 reason="cooldown completed",
                 mode_steps=1,
+                instability_status=current.instability_status,
             )
         else:
             state = ResilienceState(
@@ -192,6 +198,7 @@ def evaluate_resilience(
                 healthy_streak=streak,
                 reason="cooldown confirmation in progress",
                 mode_steps=current.mode_steps + 1,
+                instability_status=current.instability_status,
             )
     elif degraded:
         state = ResilienceState(
@@ -199,6 +206,7 @@ def evaluate_resilience(
             healthy_streak=0,
             reason="aggregate resilience degraded",
             mode_steps=current.mode_steps + 1 if current.mode == "DEGRADED" else 1,
+            instability_status=current.instability_status,
         )
     elif cautious:
         state = ResilienceState(
@@ -206,6 +214,7 @@ def evaluate_resilience(
             healthy_streak=0,
             reason="elevated but non-critical resilience risk",
             mode_steps=current.mode_steps + 1 if current.mode == "CAUTIOUS" else 1,
+            instability_status=current.instability_status,
         )
     elif current.mode in {"DEGRADED", "CAUTIOUS", "RECOVERY"} and healthy:
         streak = current.healthy_streak + 1
@@ -215,6 +224,7 @@ def evaluate_resilience(
                 healthy_streak=0,
                 reason="recovery confirmed",
                 mode_steps=1,
+                instability_status=current.instability_status,
             )
         else:
             state = ResilienceState(
@@ -222,6 +232,7 @@ def evaluate_resilience(
                 healthy_streak=streak,
                 reason="healthy confirmation in progress",
                 mode_steps=current.mode_steps + 1 if current.mode == "RECOVERY" else 1,
+                instability_status=current.instability_status,
             )
     else:
         state = ResilienceState(
@@ -229,6 +240,7 @@ def evaluate_resilience(
             healthy_streak=0,
             reason="all resilience gates healthy",
             mode_steps=current.mode_steps + 1 if current.mode == "NORMAL" else 1,
+            instability_status=current.instability_status,
         )
 
     limits = {
