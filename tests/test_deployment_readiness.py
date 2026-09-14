@@ -22,7 +22,6 @@ def qualified_record() -> QualificationRecord:
         symbols=("GC=F",),
         period="2y",
         interval="1d",
-        composite=composite_score(),
     )
 
 
@@ -128,7 +127,6 @@ def test_deployment_readiness_rejects_short_reliability_history() -> None:
 
     assert not result.allowed
     assert "reliability observation window too short" in result.reasons
-
 
 
 def test_deployment_readiness_rejects_missing_composite_score() -> None:
