@@ -109,6 +109,7 @@ def run_learning_cycle(
                 "model": model_config.__dict__,
             },
         )
+        store.activate(version)
 
     return ContinuousCycleResult(
         tuning=tuning,
