@@ -63,7 +63,11 @@ def collect_metrics(
     quarantine_records = quarantine_store.load()
     recovery_health = evaluate_recovery_health(lifecycle_log)
     resilience = resilience_store.load()
-    resilience_stability = evaluate_resilience_stability(lifecycle_log)
+    resilience_stability = evaluate_resilience_stability(
+        lifecycle_log,
+        current_mode=resilience.mode,
+        current_mode_steps=resilience.mode_steps,
+    )
 
     crisis_levels = {
         "normal": 0,
