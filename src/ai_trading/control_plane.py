@@ -4,6 +4,8 @@ from dataclasses import dataclass
 
 from .crisis_state_store import CrisisStateStore
 from .governor_state_store import GovernorStateStore
+from .lifecycle_log import LifecycleEventLog
+from .recovery_health import evaluate_recovery_health
 
 
 @dataclass(frozen=True)
@@ -20,13 +22,20 @@ def read_control_plane(
     *,
     governor_store: GovernorStateStore | None = None,
     crisis_store: CrisisStateStore | None = None,
+    lifecycle_log: LifecycleEventLog | None = None,
 ) -> ControlPlaneStatus:
     governor_store = governor_store or GovernorStateStore()
     crisis_store = crisis_store or CrisisStateStore()
+    lifecycle_log = lifecycle_log or LifecycleEventLog()
     governor = governor_store.load()
     crisis = crisis_store.load()
 
-    promotions = crisis.mode == "normal" and governor.verdict == "TRADE"
+    recovery_health = evaluate_recovery_health(lifecycle_log)
+    promotions = (
+        crisis.mode == "normal"
+        and governor.verdict == "TRADE"
+        and recovery_health.status == "healthy"
+    )
     scheduler_should_run = governor.verdict != "HALT"
 
     return ControlPlaneStatus(
