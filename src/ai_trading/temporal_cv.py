@@ -31,6 +31,7 @@ def temporal_cross_validate_specialist(
     *,
     kind: str,
     return_threshold: float,
+    horizon_bars: int = 1,
     folds: int = 3,
     min_train_bars: int = 120,
     test_bars: int = 40,
@@ -38,7 +39,11 @@ def temporal_cross_validate_specialist(
     embargo_bars: int = 5,
 ) -> TemporalCVReport:
     features = make_features(df)
-    labels = make_labels(df, return_threshold=return_threshold)
+    labels = make_labels(
+        df,
+        horizon_bars=horizon_bars,
+        return_threshold=return_threshold,
+    )
     usable = features.dropna().index.intersection(labels.dropna().index)
 
     split_folds = purged_expanding_folds(
