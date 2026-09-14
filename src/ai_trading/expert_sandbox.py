@@ -23,9 +23,14 @@ def validate_specialist(
     kind: str,
     train_fraction: float = 0.70,
     return_threshold: float = 0.001,
+    horizon_bars: int = 1,
 ) -> SandboxResult:
     features = make_features(df)
-    labels = make_labels(df, return_threshold=return_threshold)
+    labels = make_labels(
+        df,
+        horizon_bars=horizon_bars,
+        return_threshold=return_threshold,
+    )
     usable = features.dropna().index.intersection(labels.dropna().index)
 
     if len(usable) < 120:
