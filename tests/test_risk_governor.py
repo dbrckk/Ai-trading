@@ -12,6 +12,9 @@ def base_signals(**overrides):
         "drawdown": 0.01,
         "crisis_mode": "normal",
         "liquidity_stressed": False,
+        "recovery_degraded": False,
+        "recovery_recent_failures": 0,
+        "recovery_fallback_depth": 0,
     }
     values.update(overrides)
     return GovernorSignals(**values)
@@ -55,3 +58,49 @@ def test_failed_stress_test_reduces_instead_of_freezing() -> None:
     )
     assert decision.verdict == "REDUCE"
     assert decision.allow_rebalance
+
+
+
+def test_governor_reduces_when_recovery_health_is_degraded() -> None:
+    decision = evaluate_governor(
+        base_signals(
+            recovery_degraded=True,
+            recovery_recent_failures=1,
+            recovery_fallback_depth=2,
+        )
+    )
+    assert decision.verdict == "REDUCE"
+    assert decision.exposure_scale == 0.35
+    assert decision.reason == "recovery health degraded"
+
+
+def test_governor_halts_after_repeated_recovery_failures() -> None:
+    decision = evaluate_governor(
+        base_signals(
+            recovery_degraded=True,
+            recovery_recent_failures=4,
+            recovery_fallback_depth=1,
+        )
+    )
+    assert decision.verdict == "HALT"
+    assert decision.halt
+
+
+def test_governor_halts_on_excessive_recovery_fallback_depth() -> None:
+    decision = evaluate_governor(
+        base_signals(
+            recovery_degraded=True,
+            recovery_recent_failures=0,
+            recovery_fallback_depth=5,
+        )
+    )
+    assert decision.verdict == "HALT"
+    assert decision.halt
+
+
+def test_governor_returns_to_trade_after_recovery_health_normalizes() -> None:
+    degraded = evaluate_governor(base_signals(recovery_degraded=True))
+    healthy = evaluate_governor(base_signals(recovery_degraded=False))
+
+    assert degraded.verdict == "REDUCE"
+    assert healthy.verdict == "TRADE"
