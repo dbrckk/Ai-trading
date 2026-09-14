@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from .governor_state_store import GovernorState
 from .qualification_guard import validate_qualification_record
 from .qualification_store import QualificationRecord
-from .readiness_score import CompositeReadiness
+from .readiness_score import CompositeReadiness, ReadinessChainReport
 from .readiness_trend import ReadinessTrend
 from .reliability import ReliabilityReport
 from .resilience import ResilienceState
@@ -42,6 +42,7 @@ def evaluate_deployment_readiness(
     policy: DeploymentReadinessPolicy | None = None,
     composite: CompositeReadiness | None = None,
     trend: ReadinessTrend | None = None,
+    readiness_chain: ReadinessChainReport | None = None,
 ) -> DeploymentReadiness:
     policy = policy or DeploymentReadinessPolicy()
     reasons: list[str] = []
@@ -84,6 +85,10 @@ def evaluate_deployment_readiness(
             reasons.append("readiness trend missing")
         elif trend.status != "stable":
             reasons.append("readiness trend is not stable")
+    if readiness_chain is None:
+        reasons.append("readiness history integrity report missing")
+    elif not readiness_chain.valid:
+        reasons.append("readiness history integrity check failed")
 
     return DeploymentReadiness(
         allowed=not reasons,
