@@ -37,6 +37,7 @@ class BacktestReport:
     folds: int
     equity_curve: pd.Series
     benchmark_curve: pd.Series
+    regime_returns: dict[str, float]
 
 
 class WalkForwardBacktester:
@@ -70,6 +71,7 @@ class WalkForwardBacktester:
         broker = PaperBroker(self.risk_config)
         curve: dict[pd.Timestamp, float] = {}
         benchmark_prices: dict[pd.Timestamp, float] = {}
+        regime_equities: dict[str, list[float]] = {}
         trades = 0
         decisions = 0
         rejected = 0
@@ -108,8 +110,9 @@ class WalkForwardBacktester:
 
                 broker.mark(execution_price)
                 feature_row = features.loc[signal_idx, FEATURES]
+                regime = detect_regime(feature_row)
                 if self.config.use_ensemble:
-                    prediction = model.predict_one(feature_row, detect_regime(feature_row))
+                    prediction = model.predict_one(feature_row, regime)
                 else:
                     prediction = model.predict_one(feature_row)
                 snapshot = PortfolioSnapshot(
@@ -132,6 +135,7 @@ class WalkForwardBacktester:
                 broker.mark(close_price)
                 curve[execution_idx] = broker.state.equity
                 benchmark_prices[execution_idx] = close_price
+                regime_equities.setdefault(regime.name, []).append(broker.state.equity)
 
             start = test_end
 
@@ -148,6 +152,11 @@ class WalkForwardBacktester:
         metrics = compute_metrics(equity, self.config.periods_per_year)
         benchmark_metrics = compute_metrics(benchmark, self.config.periods_per_year)
 
+        regime_returns = {}
+        for name, values in regime_equities.items():
+            if len(values) >= 2 and values[0] != 0:
+                regime_returns[name] = float(values[-1] / values[0] - 1.0)
+
         return BacktestReport(
             metrics=metrics,
             benchmark_metrics=benchmark_metrics,
@@ -158,4 +167,5 @@ class WalkForwardBacktester:
             folds=folds,
             equity_curve=equity,
             benchmark_curve=benchmark,
+            regime_returns=regime_returns,
         )
