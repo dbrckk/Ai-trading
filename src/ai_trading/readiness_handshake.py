@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import subprocess
 import time
 from dataclasses import dataclass
 
@@ -19,10 +20,18 @@ def wait_for_worker_readiness(
     timeout_seconds: float = 30.0,
     poll_seconds: float = 0.25,
     max_heartbeat_age_seconds: float = 5.0,
+    process: subprocess.Popen | None = None,
 ) -> ReadinessResult:
     started = time.monotonic()
 
     while True:
+        if process is not None and process.poll() is not None:
+            return ReadinessResult(
+                ready=False,
+                waited_seconds=time.monotonic() - started,
+                reason=f"worker exited before readiness with code {process.returncode}",
+            )
+
         heartbeat = heartbeat_store.load()
         if not heartbeat_is_stale(
             heartbeat,
