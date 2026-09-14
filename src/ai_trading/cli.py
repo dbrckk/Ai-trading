@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import pandas as pd
 import typer
-
-from .allocator_config_store import AllocatorConfigStore
 from rich.console import Console
 from rich.table import Table
 
+from .allocator_config_store import AllocatorConfigStore
+from .allocator_tuning import tune_global_allocator
 from .backtest import WalkForwardBacktester, WalkForwardConfig
 from .champions import ChampionRegistry
 from .config import ModelConfig, RiskConfig
