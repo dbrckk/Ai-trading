@@ -52,6 +52,7 @@ from .promotion import evaluate_challenger
 from .qualification_store import QualificationStore
 from .qualification_suite import run_qualification_suite
 from .readiness import evaluate_readiness
+from .readiness_score import ReadinessHistoryStore
 from .regime_validation import validate_regime_returns
 from .reliability import evaluate_reliability
 from .resilience import ResilienceStateStore
@@ -976,6 +977,7 @@ def deployment_readiness(
     lifecycle_path: str = typer.Option("artifacts/model_lifecycle.jsonl"),
     resilience_path: str = typer.Option("artifacts/resilience_state.json"),
     governor_path: str = typer.Option("artifacts/risk_governor_state.json"),
+    readiness_history_path: str = typer.Option("artifacts/readiness_history.jsonl"),
 ) -> None:
     names = tuple(s.strip() for s in symbols.split(",") if s.strip())
     if not names:
@@ -987,6 +989,8 @@ def deployment_readiness(
     lifecycle = LifecycleEventLog(lifecycle_path)
     reliability = evaluate_reliability(lifecycle, resilience)
     governor = GovernorStateStore(governor_path).load()
+    readiness_history = ReadinessHistoryStore(readiness_history_path).list()
+    composite = readiness_history[-1].result if readiness_history else None
 
     readiness = evaluate_deployment_readiness(
         qualification,
@@ -996,6 +1000,7 @@ def deployment_readiness(
         symbols=names,
         period=period,
         interval=interval,
+        composite=composite,
     )
 
     table = Table(title="Paper-to-live deployment readiness")
@@ -1017,6 +1022,18 @@ def deployment_readiness(
     table.add_row("Resilience", resilience.mode)
     table.add_row("Instability", resilience.instability_status)
     table.add_row("Governor", governor.verdict)
+    table.add_row(
+        "Composite readiness",
+        "-" if composite is None else f"{composite.score:.2f}",
+    )
+    table.add_row(
+        "Readiness formula",
+        "-" if composite is None else composite.version,
+    )
+    table.add_row(
+        "Evidence hash",
+        "-" if composite is None else composite.evidence_hash[:16],
+    )
     console.print(table)
 
     if readiness.reasons:
