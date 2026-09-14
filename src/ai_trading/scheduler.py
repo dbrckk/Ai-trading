@@ -55,6 +55,15 @@ class PaperScheduler:
         consecutive_errors = 0
 
         while self.config.max_iterations is None or iteration < self.config.max_iterations:
+            governor_state = self.governor_state_store.load()
+            if (
+                governor_state.verdict == "HALT"
+                and governor_state.consecutive_halts >= self.config.max_governor_halts
+            ):
+                raise RuntimeError(
+                    "scheduler stopped after repeated risk governor HALT verdicts"
+                )
+
             started = monotonic()
             try:
                 df = self.data_loader()
@@ -63,14 +72,6 @@ class PaperScheduler:
                 iteration += 1
                 consecutive_errors = 0
 
-                governor_state = self.governor_state_store.load()
-                if (
-                    governor_state.verdict == "HALT"
-                    and governor_state.consecutive_halts >= self.config.max_governor_halts
-                ):
-                    raise RuntimeError(
-                        "scheduler stopped after repeated risk governor HALT verdicts"
-                    )
             except Exception as exc:
                 consecutive_errors += 1
                 self._audit_error(exc, consecutive_errors)
