@@ -9,6 +9,7 @@ from .audit_integrity import verify_jsonl_audit
 from .champions import ChampionRegistry
 from .governor_state_store import GovernorState, GovernorStateStore
 from .lifecycle_log import LifecycleEventLog, sha256_file
+from .readiness_score import ReadinessHistoryStore
 from .state_snapshot import AtomicSnapshotStore
 
 
@@ -32,6 +33,7 @@ def run_startup_check(
     jsonl_files: list[str | Path] | None = None,
     champion_registry: ChampionRegistry | None = None,
     lifecycle_log: LifecycleEventLog | None = None,
+    readiness_history_store: ReadinessHistoryStore | None = None,
 ) -> StartupCheckReport:
     reasons: list[str] = []
 
@@ -69,6 +71,12 @@ def run_startup_check(
         except (OSError, json.JSONDecodeError):
             jsonl_files_valid = False
             reasons.append(f"invalid jsonl file: {path.name}")
+
+    if readiness_history_store is not None:
+        chain = readiness_history_store.verify_chain()
+        if not chain.valid:
+            jsonl_files_valid = False
+            reasons.append("readiness history integrity check failed")
 
     active_artifact_valid = True
     if champion_registry is not None and lifecycle_log is not None:
