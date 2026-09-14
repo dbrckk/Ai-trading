@@ -5,13 +5,17 @@ from pathlib import Path
 from .allocation_state import AllocationStateStore
 from .allocator_config_store import AllocatorConfigStore
 from .audit import AuditLog
+from .champion_probation import ChampionProbationStore
+from .champions import ChampionRegistry
 from .crisis_state_store import CrisisStateStore
 from .drift_retrain_store import DriftRetrainStore
 from .economic_meta_store import EconomicMetaStore
 from .expert_pool import ExpertPoolStore
 from .governor_state_store import GovernorStateStore
+from .lifecycle_log import LifecycleEventLog
 from .meta_store import MetaRouterStore
 from .multiasset_runtime import MultiAssetPaperRuntime
+from .model_quarantine import ModelQuarantineStore
 from .multiasset_state import MultiAssetStateStore
 from .quality_store import QualityStore
 
@@ -36,4 +40,10 @@ def isolated_multiasset_runtime(root: str | Path) -> MultiAssetPaperRuntime:
         crisis_state_store=CrisisStateStore(root / "crisis_state.json"),
         governor_state_store=GovernorStateStore(root / "risk_governor_state.json"),
         drift_retrain_store=DriftRetrainStore(root / "drift_retrain.json"),
+        champion_registry=ChampionRegistry(root / "champions.jsonl"),
+        champion_probation_store=ChampionProbationStore(
+            root / "champion_probation.json"
+        ),
+        model_quarantine_store=ModelQuarantineStore(root / "model_quarantine.json"),
+        lifecycle_log=LifecycleEventLog(root / "model_lifecycle.jsonl"),
     )
