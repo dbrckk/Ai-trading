@@ -13,6 +13,7 @@ from .config import ModelConfig, RiskConfig
 from .economic_meta import economic_route_weight
 from .economic_meta_store import EconomicMetaStore
 from .ensemble import EnsembleDirectionModel
+from .expert_lifecycle import evaluate_expert_lifecycle
 from .features import FEATURES, make_features, make_labels
 from .meta_router import MetaContext, route_predictions
 from .meta_store import MetaRouterStore
@@ -270,6 +271,20 @@ class MultiAssetPaperRuntime:
                 route_candidates["quality_blend"] = base_blend
                 contextual_scores = self.meta_store.scores(context)
                 economic_stats = self.economic_meta_store.load()
+
+                ensemble_economic_key = (
+                    f"{symbol}|ensemble|{regime.name}|"
+                    f"{volatility_bucket}|{drawdown_bucket}"
+                )
+                if "ensemble" in route_candidates and ensemble_economic_key in economic_stats:
+                    lifecycle = evaluate_expert_lifecycle(
+                        economic_stats[ensemble_economic_key]
+                    )
+                    if lifecycle.action == "retire":
+                        route_candidates.pop("ensemble", None)
+                    elif lifecycle.action == "retrain":
+                        self._batch_model_path(symbol).unlink(missing_ok=True)
+
                 for model_name in route_candidates:
                     economic_key = (
                         f"{symbol}|{model_name}|{regime.name}|"
