@@ -12,6 +12,8 @@ from .alpha_allocation import AlphaAllocationConfig, alpha_risk_weights
 from .alpha_attribution import build_alpha_contribution
 from .audit import AuditLog
 from .config import ModelConfig, RiskConfig
+from .crisis_controller import CrisisPolicy, evaluate_crisis_state, limits_for_state
+from .crisis_state_store import CrisisStateStore
 from .economic_meta import economic_route_weight
 from .economic_meta_store import EconomicMetaStore
 from .ensemble import EnsembleDirectionModel
@@ -77,6 +79,8 @@ class MultiAssetPaperRuntime:
         allocator_config_store: AllocatorConfigStore | None = None,
         global_allocator_config: GlobalAllocatorConfig | None = None,
         stress_policy: StressPolicy | None = None,
+        crisis_policy: CrisisPolicy | None = None,
+        crisis_state_store: CrisisStateStore | None = None,
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
@@ -102,6 +106,8 @@ class MultiAssetPaperRuntime:
             or GlobalAllocatorConfig()
         )
         self.stress_policy = stress_policy or StressPolicy()
+        self.crisis_policy = crisis_policy or CrisisPolicy()
+        self.crisis_state_store = crisis_state_store or CrisisStateStore()
 
 
     def _specialist_path(self, symbol: str, kind: str) -> Path:
@@ -204,6 +210,8 @@ class MultiAssetPaperRuntime:
             execution_time = next(iter(execution_times))
 
             state = self.state_store.load(self.risk_config.starting_cash)
+            persisted_crisis = self.crisis_state_store.load()
+            persisted_limits = limits_for_state(persisted_crisis)
             if state.last_processed == execution_time:
                 return MultiAssetStepResult(
                     processed=False,
@@ -224,6 +232,14 @@ class MultiAssetPaperRuntime:
                 raise ValueError("Insufficient aligned return history")
 
             base_weights = inverse_volatility_weights(returns, self.allocation_config)
+            allowed_asset_count = max(
+                1,
+                int(round(len(base_weights) * persisted_limits.asset_limit_fraction)),
+            )
+            allowed_assets = set(
+                base_weights.abs().sort_values(ascending=False).head(allowed_asset_count).index
+            )
+            base_weights.loc[~base_weights.index.isin(allowed_assets)] = 0.0
 
             signals: dict[str, int] = {}
             confidences: dict[str, float] = {}
@@ -324,6 +340,13 @@ class MultiAssetPaperRuntime:
 
                 pool_records = self.expert_pool_store.load()
                 pool_budget = compute_budget_weights(pool_records)
+                if pool_budget:
+                    ranked_budget = sorted(
+                        pool_budget.items(),
+                        key=lambda item: item[1],
+                        reverse=True,
+                    )[: persisted_limits.max_active_experts]
+                    pool_budget = dict(ranked_budget)
                 for expert_name, budget in pool_budget.items():
                     record = pool_records[expert_name]
                     if not expert_name.startswith(f"{symbol}:"):
@@ -528,7 +551,23 @@ class MultiAssetPaperRuntime:
                 intelligent_weights,
                 policy=self.stress_policy,
             )
-            intelligent_weights = intelligent_weights * stress_report.risk_scale
+            current_drawdown = (
+                0.0
+                if state.peak_equity <= 0
+                else max(0.0, 1.0 - equity / state.peak_equity)
+            )
+            crisis_decision = evaluate_crisis_state(
+                persisted_crisis,
+                stress_scale=stress_report.risk_scale,
+                drawdown=current_drawdown,
+                policy=self.crisis_policy,
+            )
+            self.crisis_state_store.save(crisis_decision.state)
+            intelligent_weights = (
+                intelligent_weights
+                * stress_report.risk_scale
+                * crisis_decision.exposure_scale
+            )
 
             notionals = target_notionals(equity, intelligent_weights)
 
@@ -673,6 +712,15 @@ class MultiAssetPaperRuntime:
                         "risk_scale": stress_report.risk_scale,
                         "worst_scenario": stress_report.worst_scenario,
                         "scenario_losses": stress_report.scenario_losses,
+                    },
+                    "crisis": {
+                        "mode": crisis_decision.state.mode,
+                        "recovery_streak": crisis_decision.state.recovery_streak,
+                        "exposure_scale": crisis_decision.exposure_scale,
+                        "max_active_experts": crisis_decision.max_active_experts,
+                        "asset_limit_fraction": crisis_decision.asset_limit_fraction,
+                        "allow_new_promotions": crisis_decision.allow_new_promotions,
+                        "reason": crisis_decision.reason,
                     },
                 },
             )
