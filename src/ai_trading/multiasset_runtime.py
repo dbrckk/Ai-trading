@@ -18,6 +18,7 @@ from .config import ModelConfig, RiskConfig
 from .crisis_controller import CrisisPolicy, evaluate_crisis_state, limits_for_state
 from .crisis_state_store import CrisisStateStore
 from .data_quality import evaluate_market_data_quality
+from .drift import detect_distribution_drift
 from .economic_meta import economic_route_weight
 from .economic_meta_store import EconomicMetaStore
 from .ensemble import EnsembleDirectionModel
@@ -269,6 +270,7 @@ class MultiAssetPaperRuntime:
             regimes_by_symbol: dict[str, str] = {}
             calibration_by_symbol: dict[str, dict[str, dict[str, float | int]]] = {}
             uncertainty_by_symbol: dict[str, dict[str, float | int]] = {}
+            drift_by_symbol: dict[str, dict[str, object]] = {}
             opportunity_keys: list[str] = []
             opportunity_alpha: dict[str, float] = {}
             opportunity_quality: dict[str, float] = {}
@@ -283,6 +285,37 @@ class MultiAssetPaperRuntime:
 
                 signal_idx = valid[-2]
                 learn_idx = valid[-3]
+
+                clean_features = features.loc[valid, FEATURES]
+                drift_risk_multiplier = 1.0
+                if len(clean_features) >= 120:
+                    recent_window = clean_features.iloc[-60:]
+                    reference_window = clean_features.iloc[:-60]
+                    distribution_drift = detect_distribution_drift(
+                        reference_window,
+                        recent_window,
+                    )
+                    drift_risk_multiplier = distribution_drift.risk_multiplier
+                    drift_by_symbol[symbol] = {
+                        "max_psi": distribution_drift.max_psi,
+                        "mean_psi": distribution_drift.mean_psi,
+                        "correlation_shift": distribution_drift.correlation_shift,
+                        "risk_multiplier": distribution_drift.risk_multiplier,
+                        "retrain_requested": distribution_drift.retrain_requested,
+                        "drifted_features": list(distribution_drift.drifted_features),
+                    }
+                    if distribution_drift.retrain_requested:
+                        self._batch_model_path(symbol).unlink(missing_ok=True)
+                else:
+                    drift_by_symbol[symbol] = {
+                        "max_psi": 0.0,
+                        "mean_psi": 0.0,
+                        "correlation_shift": 0.0,
+                        "risk_multiplier": 1.0,
+                        "retrain_requested": False,
+                        "drifted_features": [],
+                    }
+
                 model = self._load_model(symbol)
 
                 learn_label = labels.get(learn_idx)
@@ -477,7 +510,9 @@ class MultiAssetPaperRuntime:
                     routed.weights,
                 )
                 effective_confidence = (
-                    float(blended.confidence) * uncertainty.risk_multiplier
+                    float(blended.confidence)
+                    * uncertainty.risk_multiplier
+                    * drift_risk_multiplier
                 )
                 uncertainty_by_symbol[symbol] = {
                     "disagreement": uncertainty.disagreement,
@@ -832,6 +867,7 @@ class MultiAssetPaperRuntime:
                     "regimes": regimes_by_symbol,
                     "calibration": calibration_by_symbol,
                     "expert_uncertainty": uncertainty_by_symbol,
+                    "distribution_drift": drift_by_symbol,
                     "global_allocation": (
                         {
                             "approved": global_allocation_report.approved,
