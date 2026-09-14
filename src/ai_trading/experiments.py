@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import asdict, is_dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -25,7 +25,7 @@ class ExperimentRegistry:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         metric_payload = asdict(metrics) if is_dataclass(metrics) else dict(metrics)
         record = {
-            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "timestamp_utc": datetime.now(UTC).isoformat(),
             "name": name,
             "symbol": symbol,
             "config": config,
