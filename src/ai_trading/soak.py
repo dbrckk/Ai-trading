@@ -17,6 +17,8 @@ class SoakResult:
     governor_verdict: str
     crisis_mode: str
     errors: tuple[str, ...]
+    max_drawdown: float = 0.0
+    min_equity: float | None = None
 
 
 def run_multiasset_soak(
@@ -41,6 +43,9 @@ def run_multiasset_soak(
     failures = 0
     errors: list[str] = []
     final_equity: float | None = None
+    peak_equity: float | None = None
+    min_equity: float | None = None
+    max_drawdown = 0.0
 
     for offset in range(cycles):
         end = start_bars + offset + 1
@@ -59,6 +64,21 @@ def run_multiasset_soak(
         try:
             result = runtime.step(window)
             final_equity = result.equity
+            peak_equity = (
+                result.equity
+                if peak_equity is None
+                else max(peak_equity, result.equity)
+            )
+            min_equity = (
+                result.equity
+                if min_equity is None
+                else min(min_equity, result.equity)
+            )
+            if peak_equity > 0:
+                max_drawdown = max(
+                    max_drawdown,
+                    1.0 - result.equity / peak_equity,
+                )
             successes += 1
         except (ValueError, RuntimeError, KeyError, IndexError, TypeError, OSError) as exc:
             failures += 1
@@ -75,4 +95,6 @@ def run_multiasset_soak(
         governor_verdict=governor.verdict,
         crisis_mode=crisis.mode,
         errors=tuple(errors),
+        max_drawdown=float(max_drawdown),
+        min_equity=min_equity,
     )
