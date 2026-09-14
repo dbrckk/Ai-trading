@@ -7,6 +7,10 @@ import pandas as pd
 from .backtest import WalkForwardBacktester, WalkForwardConfig
 from .champions import ChampionRegistry
 from .config import ModelConfig, RiskConfig
+from .ensemble import EnsembleDirectionModel
+from .features import make_features, make_labels
+from .performance import PerformanceMetrics
+from .persistence import ModelStore
 from .promotion import PromotionDecision, evaluate_challenger
 from .regime_validation import RegimeValidation, validate_regime_returns
 from .robustness import BootstrapReport, block_bootstrap_returns
@@ -27,8 +31,9 @@ def run_learning_cycle(
     df: pd.DataFrame,
     *,
     symbol: str,
-    champion_metrics,
+    champion_metrics: PerformanceMetrics,
     registry: ChampionRegistry,
+    model_store: ModelStore | None = None,
     trials: int = 10,
 ) -> ContinuousCycleResult:
     tuning = tune_walk_forward(df, trials=trials, use_ensemble=True)
@@ -39,7 +44,7 @@ def run_learning_cycle(
         max_daily_loss_fraction=float(tuning.best_params["max_daily_loss_fraction"]),
         max_drawdown_fraction=float(tuning.best_params["max_drawdown_fraction"]),
     )
-    model = ModelConfig(
+    model_config = ModelConfig(
         horizon_bars=1,
         return_threshold=float(tuning.best_params["return_threshold"]),
     )
@@ -52,7 +57,7 @@ def run_learning_cycle(
 
     challenger = WalkForwardBacktester(
         risk_config=risk,
-        model_config=model,
+        model_config=model_config,
         config=wf,
     ).run(df)
 
@@ -77,9 +82,31 @@ def run_learning_cycle(
             metrics=challenger.metrics.as_dict(),
             config={
                 "risk": risk.__dict__,
-                "model": model.__dict__,
+                "model": model_config.__dict__,
                 "walk_forward": wf.as_dict(),
                 "tuning": tuning.best_params,
+            },
+        )
+
+        features = make_features(df)
+        labels = make_labels(
+            df,
+            horizon_bars=model_config.horizon_bars,
+            return_threshold=model_config.return_threshold,
+        )
+        final_model = EnsembleDirectionModel(random_state=42)
+        final_model.fit(features, labels)
+
+        store = model_store or ModelStore()
+        store.save(
+            version,
+            final_model,
+            {
+                "symbol": symbol,
+                "score": tuning.best_score,
+                "metrics": challenger.metrics.as_dict(),
+                "risk": risk.__dict__,
+                "model": model_config.__dict__,
             },
         )
 
