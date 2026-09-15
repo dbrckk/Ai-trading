@@ -9,6 +9,14 @@ def test_factory_uses_file_backend_without_database_url(monkeypatch, tmp_path) -
     assert isinstance(persistence, FilePaperPersistence)
 
 
+def test_factory_treats_blank_database_url_as_absent(monkeypatch, tmp_path) -> None:
+    from ai_trading.persistence_factory import build_paper_persistence
+
+    monkeypatch.setenv("AI_TRADING_DATABASE_URL", "   ")
+    persistence = build_paper_persistence(file_root=tmp_path)
+    assert isinstance(persistence, FilePaperPersistence)
+
+
 def test_factory_uses_postgres_and_initializes_schema(monkeypatch) -> None:
     import ai_trading.persistence_factory as factory
 
