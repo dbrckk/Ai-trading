@@ -1,7 +1,6 @@
 from dataclasses import replace
 
 import pytest
-
 from ai_trading.model_codec import deserialize_model, serialize_model
 from ai_trading.online import RiverDirectionModel
 
