@@ -27,6 +27,7 @@ class DeploymentReadinessPolicy:
     require_release_manifest: bool = True
     require_quantitative_reproducibility: bool = True
     max_quantitative_evidence_age_hours: float = 24.0
+    max_dataset_observation_age_hours: float = 72.0
 
 
 @dataclass(frozen=True)
@@ -53,6 +54,7 @@ def evaluate_deployment_readiness(
     revocation_store: ReadinessRevocationStore | None = None,
     quantitative_reproducible: bool | None = None,
     quantitative_evidence_age_hours: float | None = None,
+    dataset_observation_age_hours: float | None = None,
 ) -> DeploymentReadiness:
     policy = policy or DeploymentReadinessPolicy()
     reasons: list[str] = []
@@ -105,6 +107,10 @@ def evaluate_deployment_readiness(
         reasons.append("quantitative evidence age is unknown")
     elif quantitative_evidence_age_hours > policy.max_quantitative_evidence_age_hours:
         reasons.append("quantitative evidence is stale")
+    if dataset_observation_age_hours is None:
+        reasons.append("dataset observation age is unknown")
+    elif dataset_observation_age_hours > policy.max_dataset_observation_age_hours:
+        reasons.append("dataset observations are stale")
     if policy.require_release_manifest:
         if release_verification is None:
             reasons.append("readiness release manifest missing")

@@ -95,6 +95,7 @@ def test_deployment_readiness_allows_only_fully_healthy_state() -> None:
         release_verification=ReadinessReleaseVerification(valid=True),
         quantitative_reproducible=True,
         quantitative_evidence_age_hours=1.0,
+        dataset_observation_age_hours=1.0,
     )
 
     assert result.allowed
@@ -123,6 +124,7 @@ def test_deployment_readiness_fails_closed_on_resilience_or_governor() -> None:
         release_verification=ReadinessReleaseVerification(valid=True),
         quantitative_reproducible=True,
         quantitative_evidence_age_hours=1.0,
+        dataset_observation_age_hours=1.0,
     )
 
     assert not result.allowed
@@ -155,6 +157,7 @@ def test_deployment_readiness_rejects_short_reliability_history() -> None:
         release_verification=ReadinessReleaseVerification(valid=True),
         quantitative_reproducible=True,
         quantitative_evidence_age_hours=1.0,
+        dataset_observation_age_hours=1.0,
     )
 
     assert not result.allowed
@@ -176,6 +179,7 @@ def test_deployment_readiness_rejects_missing_composite_score() -> None:
         release_verification=ReadinessReleaseVerification(valid=True),
         quantitative_reproducible=True,
         quantitative_evidence_age_hours=1.0,
+        dataset_observation_age_hours=1.0,
     )
 
     assert not result.allowed
@@ -205,6 +209,7 @@ def test_deployment_readiness_rejects_unstable_trend() -> None:
         release_verification=ReadinessReleaseVerification(valid=True),
         quantitative_reproducible=True,
         quantitative_evidence_age_hours=1.0,
+        dataset_observation_age_hours=1.0,
     )
 
     assert not result.allowed
@@ -272,6 +277,7 @@ def test_deployment_readiness_rejects_non_reproducible_quantitative_evidence() -
         release_verification=ReadinessReleaseVerification(valid=True),
         quantitative_reproducible=False,
         quantitative_evidence_age_hours=1.0,
+        dataset_observation_age_hours=1.0,
     )
 
     assert not result.allowed
@@ -293,6 +299,7 @@ def test_deployment_readiness_rejects_stale_quantitative_evidence() -> None:
         release_verification=ReadinessReleaseVerification(valid=True),
         quantitative_reproducible=True,
         quantitative_evidence_age_hours=25.0,
+        dataset_observation_age_hours=1.0,
     )
 
     assert not result.allowed
@@ -314,7 +321,73 @@ def test_deployment_readiness_rejects_unknown_quantitative_evidence_age() -> Non
         release_verification=ReadinessReleaseVerification(valid=True),
         quantitative_reproducible=True,
         quantitative_evidence_age_hours=None,
+        dataset_observation_age_hours=1.0,
     )
 
     assert not result.allowed
     assert "quantitative evidence age is unknown" in result.reasons
+
+
+def test_deployment_readiness_accepts_dataset_observation_at_age_limit() -> None:
+    result = evaluate_deployment_readiness(
+        qualified_record(),
+        reliability=reliable_report(),
+        resilience=ResilienceState(mode="NORMAL"),
+        governor=GovernorState(verdict="TRADE"),
+        symbols=("GC=F",),
+        period="2y",
+        interval="1d",
+        composite=composite_score(),
+        trend=stable_trend(),
+        readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
+        release_verification=ReadinessReleaseVerification(valid=True),
+        quantitative_reproducible=True,
+        quantitative_evidence_age_hours=1.0,
+        dataset_observation_age_hours=72.0,
+    )
+
+    assert result.allowed
+
+
+def test_deployment_readiness_rejects_stale_dataset_observation() -> None:
+    result = evaluate_deployment_readiness(
+        qualified_record(),
+        reliability=reliable_report(),
+        resilience=ResilienceState(mode="NORMAL"),
+        governor=GovernorState(verdict="TRADE"),
+        symbols=("GC=F",),
+        period="2y",
+        interval="1d",
+        composite=composite_score(),
+        trend=stable_trend(),
+        readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
+        release_verification=ReadinessReleaseVerification(valid=True),
+        quantitative_reproducible=True,
+        quantitative_evidence_age_hours=1.0,
+        dataset_observation_age_hours=72.01,
+    )
+
+    assert not result.allowed
+    assert "dataset observations are stale" in result.reasons
+
+
+def test_deployment_readiness_rejects_unknown_dataset_observation_age() -> None:
+    result = evaluate_deployment_readiness(
+        qualified_record(),
+        reliability=reliable_report(),
+        resilience=ResilienceState(mode="NORMAL"),
+        governor=GovernorState(verdict="TRADE"),
+        symbols=("GC=F",),
+        period="2y",
+        interval="1d",
+        composite=composite_score(),
+        trend=stable_trend(),
+        readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
+        release_verification=ReadinessReleaseVerification(valid=True),
+        quantitative_reproducible=True,
+        quantitative_evidence_age_hours=1.0,
+        dataset_observation_age_hours=None,
+    )
+
+    assert not result.allowed
+    assert "dataset observation age is unknown" in result.reasons
