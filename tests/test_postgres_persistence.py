@@ -3,7 +3,7 @@ import os
 import psycopg
 import pytest
 
-from ai_trading.model_codec import serialize_model
+from ai_trading.model_codec import deserialize_model, serialize_model
 from ai_trading.online import RiverDirectionModel
 from ai_trading.persistence import CommitOutcome, RuntimeStepCommit
 from ai_trading.runtime_state import RuntimeState
@@ -52,13 +52,14 @@ def _commit(
     state: RuntimeState | None = None,
     trade: TradeSnapshot | None = None,
 ) -> RuntimeStepCommit:
+    commit_state = state or _state()
     return RuntimeStepCommit(
         expected_revision=expected_revision,
-        state=state or _state(),
+        state=commit_state,
         model=serialize_model(RiverDirectionModel()),
         trade=trade,
         audit_event="runtime_step",
-        audit_payload={"processed_bars": (state or _state()).processed_bars},
+        audit_payload={"processed_bars": commit_state.processed_bars},
     )
 
 
@@ -82,7 +83,6 @@ def test_schema_initialization_is_idempotent(backend) -> None:
 
 
 def test_runtime_state_and_model_survive_new_instance(backend) -> None:
-    from ai_trading.model_codec import deserialize_model
     from ai_trading.postgres_persistence import PostgresPaperPersistence
 
     fresh = backend.load_runtime(RUNTIME_KEY, 100_000.0)
