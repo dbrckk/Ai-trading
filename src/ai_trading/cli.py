@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import os
 import sys
+from dataclasses import asdict
+from hashlib import sha256
+import json
 from pathlib import Path
 
 import numpy as np
@@ -28,6 +31,7 @@ from .cost_stress_gate import evaluate_cost_stress_gate
 from .crisis_controller import limits_for_state
 from .crisis_state_store import CrisisStateStore
 from .data import load_history
+from .dataset_evidence import build_dataset_evidence
 from .deployment_readiness import DeploymentReadinessPolicy, evaluate_deployment_readiness
 from .drift import detect_drift
 from .engine import TradingEngine
@@ -365,10 +369,25 @@ def walk_forward(
         for reason in quantitative.reasons:
             console.print(f"- {reason}")
 
+    dataset = build_dataset_evidence(df)
+    config_payload = {
+        "risk": asdict(risk_config),
+        "model": asdict(model_config),
+        "walk_forward": asdict(wf_config),
+    }
+    config_hash = sha256(
+        json.dumps(
+            config_payload,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
     artifact = build_quantitative_artifact(
         symbol=symbol,
         period=period,
         interval=interval,
+        dataset=dataset,
+        config_hash=config_hash,
         qualification=quantitative,
         benchmark=gate,
         regime=regime_gate,
