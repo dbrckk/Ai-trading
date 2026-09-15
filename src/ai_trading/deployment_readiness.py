@@ -97,9 +97,8 @@ def evaluate_deployment_readiness(
         reasons.append("readiness history integrity report missing")
     elif not readiness_chain.valid:
         reasons.append("readiness history integrity check failed")
-    if policy.require_quantitative_reproducibility:
-        if quantitative_reproducible is not True:
-            reasons.append("quantitative evidence is not reproducible")
+    if policy.require_quantitative_reproducibility and quantitative_reproducible is not True:
+        reasons.append("quantitative evidence is not reproducible")
     if policy.require_release_manifest:
         if release_verification is None:
             reasons.append("readiness release manifest missing")
