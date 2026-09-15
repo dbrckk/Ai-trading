@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 
+import pandas as pd
+
 from .backtest import BacktestReport, WalkForwardBacktester
 from .config import RiskConfig
 
@@ -32,7 +34,7 @@ DEFAULT_COST_STRESS_SCENARIOS = (
 
 def run_cost_stress(
     backtester: WalkForwardBacktester,
-    df,
+    df: pd.DataFrame,
     *,
     scenarios: tuple[CostStressScenario, ...] = DEFAULT_COST_STRESS_SCENARIOS,
 ) -> tuple[CostStressResult, ...]:
