@@ -24,6 +24,7 @@ class ReadinessRelease:
     composite_version: str
     composite_score: float
     composite_evidence_hash: str
+    quantitative_evidence_hash: str
     readiness_chain_head: str
     readiness_chain_records: int
     qualification_hash: str
@@ -58,6 +59,7 @@ def _release_payload(
     governor: GovernorState,
     resilience: ResilienceState,
     trend: ReadinessTrend,
+    quantitative_evidence_hash: str,
 ) -> dict[str, object]:
     return {
         "format_version": RELEASE_FORMAT_VERSION,
@@ -65,6 +67,7 @@ def _release_payload(
         "composite_version": composite.version,
         "composite_score": composite.score,
         "composite_evidence_hash": composite.evidence_hash,
+        "quantitative_evidence_hash": quantitative_evidence_hash,
         "readiness_chain_head": chain_head,
         "readiness_chain_records": chain.records,
         "qualification_hash": _canonical_hash(asdict(qualification)),
@@ -87,6 +90,7 @@ def create_readiness_release(
     trend: ReadinessTrend,
     created_at_utc: str | None = None,
     signing_key: str | bytes | None = None,
+    quantitative_evidence_hash: str = "",
 ) -> ReadinessRelease:
     if not chain.valid:
         raise ValueError("cannot release from invalid readiness history chain")
@@ -107,6 +111,7 @@ def create_readiness_release(
         governor=governor,
         resilience=resilience,
         trend=trend,
+        quantitative_evidence_hash=quantitative_evidence_hash,
     )
     release_hash = _canonical_hash(payload)
     signature_algorithm = "HMAC-SHA256" if signing_key is not None else "NONE"
@@ -138,6 +143,7 @@ def verify_readiness_release(
     trend: ReadinessTrend,
     signing_key: str | bytes | None = None,
     require_signature: bool = True,
+    quantitative_evidence_hash: str = "",
 ) -> ReadinessReleaseVerification:
     if release.format_version != RELEASE_FORMAT_VERSION:
         return ReadinessReleaseVerification(False, "unsupported readiness release format")
@@ -157,6 +163,7 @@ def verify_readiness_release(
         governor=governor,
         resilience=resilience,
         trend=trend,
+        quantitative_evidence_hash=quantitative_evidence_hash,
     )
     expected = _canonical_hash(payload)
     if release.release_hash != expected:
