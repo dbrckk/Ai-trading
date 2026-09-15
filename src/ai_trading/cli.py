@@ -666,6 +666,7 @@ def runtime_step(
     df = load_history(symbol, period, interval)
     result = PaperAutonomousRuntime(
         learning_cycle_every_bars=learning_cycle_every_bars,
+        symbol=symbol,
     ).step(df)
 
     table = Table(title=f"Autonomous paper runtime: {symbol}")
@@ -694,6 +695,7 @@ def paper_loop(
     learning_trials: int = typer.Option(10, min=1, max=200),
 ) -> None:
     orchestrator = AutonomousPaperOrchestrator(
+        runtime=PaperAutonomousRuntime(symbol=symbol),
         learning_trials=learning_trials,
     )
     scheduler = PaperScheduler(
