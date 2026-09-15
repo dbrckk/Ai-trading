@@ -252,6 +252,15 @@ def walk_forward(
         f"excess_return={report.excess_return:.2%}"
     )
 
+    gate = evaluate_benchmark_gate(report)
+    console.print(
+        "Benchmark gate: "
+        + ("PASS" if gate.passed else "FAIL")
+    )
+    if gate.reasons:
+        for reason in gate.reasons:
+            console.print(f"- {reason}")
+
     if save_experiment:
         ExperimentRegistry().append(
             name="walk-forward",
