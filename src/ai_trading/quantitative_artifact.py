@@ -97,3 +97,19 @@ def save_quantitative_artifact(
         encoding="utf-8",
     )
     temp.replace(target)
+
+
+def load_quantitative_artifact(
+    path: str | Path,
+) -> QuantitativeQualificationArtifact | None:
+    target = Path(path)
+    if not target.exists():
+        return None
+    try:
+        payload = json.loads(target.read_text(encoding="utf-8"))
+        artifact = QuantitativeQualificationArtifact(**payload)
+    except (json.JSONDecodeError, TypeError):
+        return None
+    if artifact.evidence_hash != quantitative_artifact_hash(artifact):
+        return None
+    return artifact
