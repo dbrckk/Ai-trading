@@ -11,21 +11,41 @@ from ai_trading.regime_gate import RegimeGateResult
 from ai_trading.sensitivity_gate import SensitivityGateResult
 
 
-def test_quantitative_artifact_hash_matches_content() -> None:
-    qualification = QuantitativeQualification(True, 5, 5, ())
-    artifact = build_quantitative_artifact(
-        symbol="GC=F",
-        period="10y",
-        interval="1d",
-        dataset=DatasetEvidence(100, "2025-01-01", "2025-04-10", ("Close",), "a" * 64),
-        config_hash="b" * 64,
+def _dataset() -> DatasetEvidence:
+    return DatasetEvidence(
+        100,
+        "2025-01-01",
+        "2025-04-10",
+        ("Close",),
+        "a" * 64,
+    )
+
+
+def _common(qualification: QuantitativeQualification) -> dict[str, object]:
+    return {
+        "symbol": "GC=F",
+        "period": "10y",
+        "interval": "1d",
+        "dataset": _dataset(),
         "qualification": qualification,
         "benchmark": BenchmarkGateResult(True, ()),
         "regime": RegimeGateResult(True, 3, "range", -0.02, 0.10, ()),
         "bootstrap": BootstrapGateResult(True, ()),
-        "sensitivity": SensitivityGateResult(True, 6, 6, 1.0, 0.01, 0.5, 0.1, ()),
-        "cost_stress": CostStressGateResult(True, 3, 3, 1.0, 0.01, 0.5, 0.1, ()),
+        "sensitivity": SensitivityGateResult(
+            True, 6, 6, 1.0, 0.01, 0.5, 0.1, ()
+        ),
+        "cost_stress": CostStressGateResult(
+            True, 3, 3, 1.0, 0.01, 0.5, 0.1, ()
+        ),
     }
+
+
+def test_quantitative_artifact_hash_matches_content() -> None:
+    qualification = QuantitativeQualification(True, 5, 5, ())
+    artifact = build_quantitative_artifact(
+        config_hash="b" * 64,
+        **_common(qualification),
+    )
 
     assert artifact.verdict == "QUALIFIED"
     assert len(artifact.evidence_hash) == 64
@@ -34,24 +54,7 @@ def test_quantitative_artifact_hash_matches_content() -> None:
 
 def test_artifact_identity_changes_with_config_hash() -> None:
     qualification = QuantitativeQualification(True, 5, 5, ())
-    common = {
-        "symbol": "GC=F",
-        "period": "10y",
-        "interval": "1d",
-        "dataset": DatasetEvidence(
-            100,
-            "2025-01-01",
-            "2025-04-10",
-            ("Close",),
-            "a" * 64,
-        ),
-        qualification=qualification,
-        benchmark=BenchmarkGateResult(True, ()),
-        regime=RegimeGateResult(True, 3, "range", -0.02, 0.10, ()),
-        bootstrap=BootstrapGateResult(True, ()),
-        sensitivity=SensitivityGateResult(True, 6, 6, 1.0, 0.01, 0.5, 0.1, ()),
-        cost_stress=CostStressGateResult(True, 3, 3, 1.0, 0.01, 0.5, 0.1, ()),
-    )
+    common = _common(qualification)
 
     first = build_quantitative_artifact(config_hash="1" * 64, **common)
     second = build_quantitative_artifact(config_hash="2" * 64, **common)
