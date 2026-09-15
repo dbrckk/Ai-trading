@@ -63,6 +63,7 @@ from .readiness_release import (
 from .readiness_revocation import ReadinessRevocationStore
 from .readiness_score import ReadinessHistoryStore
 from .readiness_trend import evaluate_readiness_trend
+from .regime_gate import evaluate_regime_gate
 from .regime_validation import validate_regime_returns
 from .reliability import evaluate_reliability
 from .resilience import ResilienceStateStore
@@ -260,6 +261,24 @@ def walk_forward(
     )
     if gate.reasons:
         for reason in gate.reasons:
+            console.print(f"- {reason}")
+
+    regime_gate = evaluate_regime_gate(report)
+    console.print(
+        "Regime gate: "
+        + ("PASS" if regime_gate.passed else "FAIL")
+    )
+    console.print(
+        f"regimes={regime_gate.observed_regimes} "
+        f"spread={regime_gate.return_spread:.2%}"
+    )
+    if regime_gate.worst_regime is not None:
+        console.print(
+            f"worst_regime={regime_gate.worst_regime} "
+            f"return={regime_gate.worst_return:.2%}"
+        )
+    if regime_gate.reasons:
+        for reason in regime_gate.reasons:
             console.print(f"- {reason}")
 
     if save_experiment:
