@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import UTC, datetime
+
 from ai_trading.dashboard import render_dashboard
 from ai_trading.runtime_state import RuntimeStateStore
 from ai_trading.runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore
@@ -15,7 +17,7 @@ def test_dashboard_shows_engine_and_latest_decision(tmp_path) -> None:
             engine_status="RUNNING",
             symbol="GC=F",
             interval="5m",
-            updated_at_utc="2026-09-15T16:00:00+00:00",
+            updated_at_utc=datetime.now(UTC).isoformat(),
             last_cycle_timestamp="2026-09-15 15:55:00+00:00",
             processed=True,
             side=1,
