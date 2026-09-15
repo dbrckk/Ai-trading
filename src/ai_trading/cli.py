@@ -21,6 +21,8 @@ from .bootstrap_robustness import bootstrap_equity_curve
 from .champions import ChampionRegistry
 from .chaos import ChaosScenario
 from .config import ModelConfig, RiskConfig
+from .cost_stress import run_cost_stress
+from .cost_stress_gate import evaluate_cost_stress_gate
 from .continuous import run_learning_cycle
 from .control_plane import read_control_plane
 from .crisis_controller import limits_for_state
@@ -321,11 +323,30 @@ def walk_forward(
         for reason in sensitivity_gate.reasons:
             console.print(f"- {reason}")
 
+    cost_stress = run_cost_stress(backtester, df)
+    cost_stress_gate = evaluate_cost_stress_gate(cost_stress)
+    console.print(
+        "Cost stress gate: "
+        + ("PASS" if cost_stress_gate.passed else "FAIL")
+    )
+    console.print(
+        f"passing={cost_stress_gate.passing_scenarios}/"
+        f"{cost_stress_gate.scenarios} "
+        f"ratio={cost_stress_gate.pass_ratio:.0%} "
+        f"worst_excess={cost_stress_gate.worst_excess_return:.2%} "
+        f"worst_sharpe={cost_stress_gate.worst_sharpe:.2f} "
+        f"worst_drawdown={cost_stress_gate.worst_drawdown:.2%}"
+    )
+    if cost_stress_gate.reasons:
+        for reason in cost_stress_gate.reasons:
+            console.print(f"- {reason}")
+
     quantitative = evaluate_quantitative_qualification(
         benchmark=gate,
         regime=regime_gate,
         bootstrap=bootstrap_gate,
         sensitivity=sensitivity_gate,
+        cost_stress=cost_stress_gate,
     )
     console.print(
         "Quantitative qualification: "
