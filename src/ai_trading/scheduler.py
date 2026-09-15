@@ -29,12 +29,14 @@ class PaperScheduler:
         symbol: str,
         config: SchedulerConfig | None = None,
         governor_state_store: GovernorStateStore | None = None,
+        on_iteration: Callable[[OrchestrationResult], None] | None = None,
     ) -> None:
         self.orchestrator = orchestrator
         self.data_loader = data_loader
         self.symbol = symbol
         self.config = config or SchedulerConfig()
         self.governor_state_store = governor_state_store or GovernorStateStore()
+        self.on_iteration = on_iteration
 
     def _audit_error(self, exc: Exception, consecutive_errors: int) -> None:
         runtime = getattr(self.orchestrator, "runtime", None)
@@ -69,6 +71,8 @@ class PaperScheduler:
                 df = self.data_loader()
                 result = self.orchestrator.step(df, symbol=self.symbol)
                 results.append(result)
+                if self.on_iteration is not None:
+                    self.on_iteration(result)
                 iteration += 1
                 consecutive_errors = 0
 

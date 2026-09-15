@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import os
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
+from datetime import UTC, datetime
 from threading import Thread
 
 from .data import load_history
-from .orchestrator import AutonomousPaperOrchestrator
+from .orchestrator import AutonomousPaperOrchestrator, OrchestrationResult
 from .runtime import PaperAutonomousRuntime
+from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore
 from .scheduler import PaperScheduler, SchedulerConfig
 
 
@@ -42,9 +44,44 @@ class HostedPaperSettings:
         )
 
 
+def _now_utc() -> str:
+    return datetime.now(UTC).isoformat()
+
+
 def run_hosted_paper_loop(settings: HostedPaperSettings) -> None:
     runtime = PaperAutonomousRuntime(symbol=settings.symbol)
+    status_store = HostedRuntimeStatusStore()
+    status_store.save(
+        HostedRuntimeStatus(
+            engine_status="STARTING",
+            symbol=settings.symbol,
+            interval=settings.interval,
+            updated_at_utc=_now_utc(),
+            equity=runtime.risk_config.starting_cash,
+        )
+    )
     orchestrator = AutonomousPaperOrchestrator(runtime=runtime)
+
+    def report_iteration(result: OrchestrationResult) -> None:
+        step = result.runtime
+        status_store.save(
+            HostedRuntimeStatus(
+                engine_status="RUNNING",
+                symbol=settings.symbol,
+                interval=settings.interval,
+                updated_at_utc=_now_utc(),
+                last_cycle_timestamp=step.timestamp,
+                processed=step.processed,
+                side=step.side,
+                confidence=step.confidence,
+                approved=step.approved,
+                reason=step.reason,
+                equity=step.equity,
+                units=step.units,
+                processed_bars=step.processed_bars,
+            )
+        )
+
     scheduler = PaperScheduler(
         orchestrator=orchestrator,
         data_loader=lambda: load_history(
@@ -57,8 +94,26 @@ def run_hosted_paper_loop(settings: HostedPaperSettings) -> None:
             poll_seconds=settings.poll_seconds,
             max_iterations=None,
         ),
+        on_iteration=report_iteration,
     )
-    scheduler.run()
+    try:
+        scheduler.run()
+    except Exception as exc:
+        current = status_store.load() or HostedRuntimeStatus(
+            engine_status="STARTING",
+            symbol=settings.symbol,
+            interval=settings.interval,
+            updated_at_utc=_now_utc(),
+        )
+        status_store.save(
+            replace(
+                current,
+                engine_status="ERROR",
+                updated_at_utc=_now_utc(),
+                error=repr(exc),
+            )
+        )
+        raise
 
 
 def start_hosted_paper_runtime(
