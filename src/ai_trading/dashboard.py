@@ -8,7 +8,14 @@ from .trade_journal import TradeJournal
 
 
 def render_dashboard(journal: TradeJournal) -> str:
-    trades = reversed(journal.list(limit=200))
+    recent = journal.list(limit=200)
+    trades = reversed(recent)
+    realized_pnl = sum(trade.pnl for trade in recent)
+    trade_count = len(recent)
+    wins = sum(1 for trade in recent if trade.pnl > 0)
+    losses = sum(1 for trade in recent if trade.pnl < 0)
+    win_rate = (wins / (wins + losses)) if wins + losses else 0.0
+    active_symbols = len({trade.symbol for trade in recent})
     rows = "".join(
         "<tr>"
         f"<td>{html.escape(t.timestamp_utc)}</td>"
@@ -33,6 +40,9 @@ def render_dashboard(journal: TradeJournal) -> str:
 body{{font-family:system-ui;margin:0;background:#0b1020;color:#e8edf7}}
 main{{max-width:1400px;margin:auto;padding:24px}} h1{{margin:0 0 8px}}
 small{{color:#9aa7bd}} table{{width:100%;border-collapse:collapse;margin-top:24px}}
+.metrics{{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:18px}}
+.metric{{background:#0b1020;border:1px solid #26324a;border-radius:10px;padding:14px}}
+.metric strong{{display:block;font-size:1.4rem;margin-top:4px}}
 th,td{{padding:10px;border-bottom:1px solid #26324a;text-align:right}}
 th:first-child,td:first-child,th:nth-child(2),td:nth-child(2),
 th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
@@ -40,6 +50,13 @@ th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
 </style></head><body><main>
 <div class="card"><h1>AI Trading — Live trades</h1>
 <small>Read-only dashboard · auto refresh 2s · paper/live status comes from journal events</small>
+<div class="metrics">
+<div class="metric"><small>Trades</small><strong>{trade_count}</strong></div>
+<div class="metric"><small>Realized PnL</small><strong>{realized_pnl:.2f}</strong></div>
+<div class="metric"><small>Win rate</small><strong>{win_rate:.1%}</strong></div>
+<div class="metric"><small>Wins / Losses</small><strong>{wins} / {losses}</strong></div>
+<div class="metric"><small>Active symbols</small><strong>{active_symbols}</strong></div>
+</div>
 <table><thead><tr><th>UTC</th><th>Symbol</th><th>Side</th><th>Qty</th><th>Price</th>
 <th>Status</th><th>PnL</th><th>Confidence</th><th>Strategy</th></tr></thead>
 <tbody>{rows}</tbody></table></div></main></body></html>"""
