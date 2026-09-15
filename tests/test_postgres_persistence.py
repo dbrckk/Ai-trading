@@ -14,6 +14,12 @@ DATABASE_URL = os.environ["TEST_DATABASE_URL"]
 RUNTIME_KEY = "paper:GC=F:5m:online-river:v1"
 
 
+def test_postgres_16_is_reachable() -> None:
+    with psycopg.connect(DATABASE_URL) as connection, connection.cursor() as cursor:
+        cursor.execute("SHOW server_version_num")
+        assert int(cursor.fetchone()[0]) >= 160000
+
+
 def _state(*, cash: float = 99_900.0, processed_bars: int = 1) -> RuntimeState:
     return RuntimeState(
         cash=cash,
