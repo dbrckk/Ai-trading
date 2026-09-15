@@ -14,6 +14,7 @@ from .online import RiverDirectionModel
 from .risk import PortfolioSnapshot, RiskEngine
 from .runtime_lock import RuntimeLock
 from .runtime_state import RuntimeState, RuntimeStateStore
+from .trade_journal import TradeJournal, TradeSnapshot
 
 
 @dataclass(frozen=True)
@@ -47,6 +48,8 @@ class PaperAutonomousRuntime:
         online_model_path: str | Path = "artifacts/models/online-river.joblib",
         lock_path: str | Path = "artifacts/runtime.lock",
         learning_cycle_every_bars: int = 63,
+        trade_journal: TradeJournal | None = None,
+        symbol: str = "UNKNOWN",
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
@@ -55,6 +58,8 @@ class PaperAutonomousRuntime:
         self.online_model_path = Path(online_model_path)
         self.lock_path = Path(lock_path)
         self.learning_cycle_every_bars = learning_cycle_every_bars
+        self.trade_journal = trade_journal or TradeJournal()
+        self.symbol = symbol
         self.risk = RiskEngine(self.risk_config)
 
     def _load_online(self) -> RiverDirectionModel:
@@ -163,8 +168,23 @@ class PaperAutonomousRuntime:
             )
             decision = self.risk.evaluate(prediction, snapshot)
 
+            previous_units = broker.state.units
             if decision.approved:
                 broker.rebalance(decision.side, decision.target_notional, execution_price)
+                delta_units = broker.state.units - previous_units
+                if abs(delta_units) > 1e-12:
+                    self.trade_journal.append(
+                        TradeSnapshot(
+                            timestamp_utc=execution_time,
+                            symbol=self.symbol,
+                            side="BUY" if delta_units > 0 else "SELL",
+                            quantity=abs(delta_units),
+                            price=execution_price,
+                            status="PAPER_FILLED",
+                            confidence=prediction.confidence,
+                            strategy="online-river",
+                        )
+                    )
 
             broker.mark(close_price)
 
