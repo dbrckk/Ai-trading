@@ -8,6 +8,8 @@ from threading import Thread
 
 from .data import load_history
 from .orchestrator import AutonomousPaperOrchestrator, OrchestrationResult
+from .persistence import PaperPersistence, build_runtime_key
+from .persistence_factory import build_paper_persistence
 from .runtime import PaperAutonomousRuntime
 from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore
 from .scheduler import PaperScheduler, SchedulerConfig
@@ -20,6 +22,10 @@ class HostedPaperSettings:
     period: str = "1y"
     interval: str = "1d"
     poll_seconds: float = 60.0
+
+    @property
+    def runtime_key(self) -> str:
+        return build_runtime_key(self.symbol, self.interval)
 
     @classmethod
     def from_env(cls) -> HostedPaperSettings:
@@ -48,16 +54,25 @@ def _now_utc() -> str:
     return datetime.now(UTC).isoformat()
 
 
-def run_hosted_paper_loop(settings: HostedPaperSettings) -> None:
+def run_hosted_paper_loop(
+    settings: HostedPaperSettings,
+    *,
+    persistence: PaperPersistence | None = None,
+) -> None:
     print(
         "Hosted paper worker: boot "
         f"symbol={settings.symbol} interval={settings.interval} ",
         f"period={settings.period} poll={settings.poll_seconds:g}s",
         flush=True,
     )
-    runtime = PaperAutonomousRuntime(symbol=settings.symbol)
-    status_store = HostedRuntimeStatusStore()
-    status_store.save(
+    backend = persistence or build_paper_persistence()
+    runtime = PaperAutonomousRuntime(
+        symbol=settings.symbol,
+        persistence=backend,
+        runtime_key=settings.runtime_key,
+    )
+    backend.save_runtime_status(
+        settings.runtime_key,
         HostedRuntimeStatus(
             engine_status="STARTING",
             symbol=settings.symbol,
@@ -65,14 +80,15 @@ def run_hosted_paper_loop(settings: HostedPaperSettings) -> None:
             updated_at_utc=_now_utc(),
             equity=runtime.risk_config.starting_cash,
             poll_seconds=settings.poll_seconds,
-        )
+        ),
     )
     print("Hosted paper worker: STARTING status persisted", flush=True)
     orchestrator = AutonomousPaperOrchestrator(runtime=runtime)
 
     def report_iteration(result: OrchestrationResult) -> None:
         step = result.runtime
-        status_store.save(
+        backend.save_runtime_status(
+            settings.runtime_key,
             HostedRuntimeStatus(
                 engine_status="RUNNING",
                 symbol=settings.symbol,
@@ -88,7 +104,7 @@ def run_hosted_paper_loop(settings: HostedPaperSettings) -> None:
                 units=step.units,
                 processed_bars=step.processed_bars,
                 poll_seconds=settings.poll_seconds,
-            )
+            ),
         )
         print(
             "Hosted paper worker: cycle complete "
@@ -116,41 +132,56 @@ def run_hosted_paper_loop(settings: HostedPaperSettings) -> None:
     try:
         scheduler.run()
     except Exception as exc:
-        current = status_store.load() or HostedRuntimeStatus(
+        current = backend.load_runtime_status(settings.runtime_key) or HostedRuntimeStatus(
             engine_status="STARTING",
             symbol=settings.symbol,
             interval=settings.interval,
             updated_at_utc=_now_utc(),
             poll_seconds=settings.poll_seconds,
         )
-        status_store.save(
+        backend.save_runtime_status(
+            settings.runtime_key,
             replace(
                 current,
                 engine_status="ERROR",
                 updated_at_utc=_now_utc(),
-                error=repr(exc),
-            )
+                error=f"{type(exc).__name__}: worker failure",
+            ),
         )
-        print(f"Hosted paper worker: ERROR {exc!r}", flush=True)
+        print(
+            f"Hosted paper worker: ERROR {type(exc).__name__}",
+            flush=True,
+        )
         raise
 
 
 def start_hosted_paper_runtime(
     *,
-    runner: Callable[[HostedPaperSettings], None] = run_hosted_paper_loop,
+    settings: HostedPaperSettings | None = None,
+    persistence: PaperPersistence | None = None,
+    runner: Callable[..., None] = run_hosted_paper_loop,
 ) -> Thread | None:
-    settings = HostedPaperSettings.from_env()
-    if not settings.enabled:
+    effective_settings = settings or HostedPaperSettings.from_env()
+    if not effective_settings.enabled:
         print("Hosted paper worker: disabled", flush=True)
         return None
 
     print("Hosted paper worker: starting daemon thread", flush=True)
-    thread = Thread(
-        target=runner,
-        args=(settings,),
-        name="ai-trading-hosted-paper",
-        daemon=True,
-    )
+    if persistence is None:
+        thread = Thread(
+            target=runner,
+            args=(effective_settings,),
+            name="ai-trading-hosted-paper",
+            daemon=True,
+        )
+    else:
+        thread = Thread(
+            target=runner,
+            args=(effective_settings,),
+            kwargs={"persistence": persistence},
+            name="ai-trading-hosted-paper",
+            daemon=True,
+        )
     thread.start()
     print("Hosted paper worker: daemon thread started", flush=True)
     return thread
