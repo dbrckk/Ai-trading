@@ -83,6 +83,7 @@ from .regime_gate import evaluate_regime_gate
 from .regime_validation import validate_regime_returns
 from .reliability import evaluate_reliability
 from .resilience import ResilienceStateStore
+from .reproducibility import verify_quantitative_reproducibility
 from .robustness import block_bootstrap_returns
 from .runtime import PaperAutonomousRuntime
 from .runtime_factory import isolated_multiasset_runtime
@@ -1216,6 +1217,9 @@ def create_readiness_release_command(
         "artifacts/quantitative_qualification.json"
     ),
     signing_key_env: str = typer.Option("AI_TRADING_RELEASE_SIGNING_KEY"),
+    verify_reproducibility: bool = typer.Option(
+        True, "--verify-reproducibility/--no-verify-reproducibility"
+    ),
 ) -> None:
     names = tuple(s.strip() for s in symbols.split(",") if s.strip())
     if not names:
@@ -1273,6 +1277,23 @@ def create_readiness_release_command(
     if quantitative_artifact.verdict != "QUALIFIED":
         console.print("Quantitative qualification is not QUALIFIED")
         raise typer.Exit(code=2)
+
+    if verify_reproducibility:
+        benchmark_data = load_history(
+            quantitative_artifact.symbol,
+            quantitative_artifact.period,
+            quantitative_artifact.interval,
+        )
+        reproducibility = verify_quantitative_reproducibility(
+            quantitative_artifact,
+            benchmark_data,
+            provider=quantitative_artifact.dataset.provider,
+        )
+        if not reproducibility.valid:
+            console.print("Quantitative evidence is not reproducible:")
+            for reason in reproducibility.reasons:
+                console.print(f"- {reason}")
+            raise typer.Exit(code=2)
 
     signing_key = os.getenv(signing_key_env)
     if not signing_key:
