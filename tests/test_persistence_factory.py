@@ -1,5 +1,7 @@
+from ai_trading.file_persistence import FilePaperPersistence
+
+
 def test_factory_uses_file_backend_without_database_url(monkeypatch, tmp_path) -> None:
-    from ai_trading.file_persistence import FilePaperPersistence
     from ai_trading.persistence_factory import build_paper_persistence
 
     monkeypatch.delenv("AI_TRADING_DATABASE_URL", raising=False)
@@ -8,8 +10,7 @@ def test_factory_uses_file_backend_without_database_url(monkeypatch, tmp_path) -
 
 
 def test_factory_uses_postgres_and_initializes_schema(monkeypatch) -> None:
-    from ai_trading.persistence_factory import build_paper_persistence
-    from ai_trading.postgres_persistence import PostgresPaperPersistence
+    import ai_trading.persistence_factory as factory
 
     monkeypatch.setenv("AI_TRADING_DATABASE_URL", "postgresql://example.invalid/db")
 
@@ -18,8 +19,8 @@ def test_factory_uses_postgres_and_initializes_schema(monkeypatch) -> None:
     def fake_initialize(self) -> None:
         calls.append(self.database_url)
 
-    monkeypatch.setattr(PostgresPaperPersistence, "initialize_schema", fake_initialize)
-    persistence = build_paper_persistence()
+    monkeypatch.setattr(factory.PostgresPaperPersistence, "initialize_schema", fake_initialize)
+    persistence = factory.build_paper_persistence()
 
-    assert isinstance(persistence, PostgresPaperPersistence)
+    assert isinstance(persistence, factory.PostgresPaperPersistence)
     assert calls == ["postgresql://example.invalid/db"]
