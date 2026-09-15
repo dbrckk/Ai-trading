@@ -21,10 +21,10 @@ from .bootstrap_robustness import bootstrap_equity_curve
 from .champions import ChampionRegistry
 from .chaos import ChaosScenario
 from .config import ModelConfig, RiskConfig
-from .cost_stress import run_cost_stress
-from .cost_stress_gate import evaluate_cost_stress_gate
 from .continuous import run_learning_cycle
 from .control_plane import read_control_plane
+from .cost_stress import run_cost_stress
+from .cost_stress_gate import evaluate_cost_stress_gate
 from .crisis_controller import limits_for_state
 from .crisis_state_store import CrisisStateStore
 from .data import load_history
@@ -59,6 +59,7 @@ from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
 from .promotion import evaluate_challenger
 from .qualification_store import QualificationStore
 from .qualification_suite import run_qualification_suite
+from .quantitative_artifact import build_quantitative_artifact, save_quantitative_artifact
 from .quantitative_qualification import evaluate_quantitative_qualification
 from .readiness import evaluate_readiness
 from .readiness_release import (
@@ -205,6 +206,9 @@ def walk_forward(
     test_window_bars: int = typer.Option(63, min=5),
     max_train_bars: int = typer.Option(1000, min=100),
     save_experiment: bool = typer.Option(True, "--save/--no-save"),
+    qualification_artifact: str = typer.Option(
+        "artifacts/quantitative_qualification.json"
+    ),
 ) -> None:
     df = load_history(symbol, period, interval)
     risk_config = RiskConfig()
@@ -356,6 +360,20 @@ def walk_forward(
     if quantitative.reasons:
         for reason in quantitative.reasons:
             console.print(f"- {reason}")
+
+    artifact = build_quantitative_artifact(
+        symbol=symbol,
+        period=period,
+        interval=interval,
+        qualification=quantitative,
+        benchmark=gate,
+        regime=regime_gate,
+        bootstrap=bootstrap_gate,
+        sensitivity=sensitivity_gate,
+        cost_stress=cost_stress_gate,
+    )
+    save_quantitative_artifact(artifact, qualification_artifact)
+    console.print(f"Qualification artifact: {qualification_artifact}")
 
     if save_experiment:
         ExperimentRegistry().append(
