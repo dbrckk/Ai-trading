@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import UTC, datetime
 
 import pandas as pd
 
@@ -19,6 +20,9 @@ class SoakResult:
     errors: tuple[str, ...]
     max_drawdown: float = 0.0
     min_equity: float | None = None
+    started_at_utc: str | None = None
+    completed_at_utc: str | None = None
+    duration_seconds: float = 0.0
 
 
 def run_multiasset_soak(
@@ -39,6 +43,7 @@ def run_multiasset_soak(
     total_possible = min_length - start_bars
     cycles = total_possible if max_cycles is None else min(total_possible, max_cycles)
 
+    started_at = datetime.now(UTC)
     successes = 0
     failures = 0
     errors: list[str] = []
@@ -87,6 +92,7 @@ def run_multiasset_soak(
     governor = runtime.governor_state_store.load()
     crisis = runtime.crisis_state_store.load()
 
+    completed_at = datetime.now(UTC)
     return SoakResult(
         cycles=cycles,
         successes=successes,
@@ -97,4 +103,7 @@ def run_multiasset_soak(
         errors=tuple(errors),
         max_drawdown=float(max_drawdown),
         min_equity=min_equity,
+        started_at_utc=started_at.isoformat(),
+        completed_at_utc=completed_at.isoformat(),
+        duration_seconds=(completed_at - started_at).total_seconds(),
     )
