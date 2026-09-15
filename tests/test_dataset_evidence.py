@@ -46,3 +46,20 @@ def test_timestamp_change_changes_dataset_hash() -> None:
         build_dataset_evidence(original).data_hash
         != build_dataset_evidence(modified).data_hash
     )
+
+
+def test_provenance_changes_evidence_identity() -> None:
+    frame = market()
+    first = build_dataset_evidence(
+        frame,
+        provider="yfinance",
+        acquired_at_utc="2026-09-15T00:00:00+00:00",
+    )
+    second = build_dataset_evidence(
+        frame,
+        provider="alternate",
+        acquired_at_utc="2026-09-15T00:00:00+00:00",
+    )
+
+    assert first.data_hash == second.data_hash
+    assert first != second
