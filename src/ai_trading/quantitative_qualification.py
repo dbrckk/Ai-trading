@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from .benchmark_gate import BenchmarkGateResult
 from .bootstrap_gate import BootstrapGateResult
+from .cost_stress_gate import CostStressGateResult
 from .regime_gate import RegimeGateResult
 from .sensitivity_gate import SensitivityGateResult
 from .soak_gate import SoakQualification
@@ -23,6 +24,7 @@ def evaluate_quantitative_qualification(
     regime: RegimeGateResult,
     bootstrap: BootstrapGateResult,
     sensitivity: SensitivityGateResult,
+    cost_stress: CostStressGateResult | None = None,
     soak: SoakQualification | None = None,
 ) -> QuantitativeQualification:
     gates = [
@@ -31,6 +33,8 @@ def evaluate_quantitative_qualification(
         ("bootstrap", bootstrap.passed, bootstrap.reasons),
         ("sensitivity", sensitivity.passed, sensitivity.reasons),
     ]
+    if cost_stress is not None:
+        gates.append(("cost_stress", cost_stress.passed, cost_stress.reasons))
     if soak is not None:
         gates.append(("soak", soak.passed, soak.reasons))
 
