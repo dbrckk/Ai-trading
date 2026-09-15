@@ -20,7 +20,7 @@ class HostedPaperSettings:
     poll_seconds: float = 60.0
 
     @classmethod
-    def from_env(cls) -> "HostedPaperSettings":
+    def from_env(cls) -> HostedPaperSettings:
         enabled = os.getenv("AI_TRADING_HOSTED_PAPER", "0").strip().lower() in {
             "1",
             "true",
