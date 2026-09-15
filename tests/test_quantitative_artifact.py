@@ -13,6 +13,9 @@ from ai_trading.sensitivity_gate import SensitivityGateResult
 
 def _dataset() -> DatasetEvidence:
     return DatasetEvidence(
+        1,
+        "yfinance",
+        "2026-09-15T00:00:00+00:00",
         100,
         "2025-01-01",
         "2025-04-10",
