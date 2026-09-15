@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: ai-trading-dashboard
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 8765
+    disk:
+      name: trading-artifacts
+      mountPath: /app/artifacts
+      sizeGB: 1
