@@ -18,6 +18,7 @@ class SchedulerConfig:
     error_backoff_seconds: float = 5.0
     max_error_backoff_seconds: float = 300.0
     max_governor_halts: int = 3
+    run_health_check: bool = True
 
 
 class PaperScheduler:
@@ -69,7 +70,14 @@ class PaperScheduler:
             started = monotonic()
             try:
                 df = self.data_loader()
-                result = self.orchestrator.step(df, symbol=self.symbol)
+                if self.config.run_health_check:
+                    result = self.orchestrator.step(df, symbol=self.symbol)
+                else:
+                    result = self.orchestrator.step(
+                        df,
+                        symbol=self.symbol,
+                        run_health_check=False,
+                    )
                 results.append(result)
                 if self.on_iteration is not None:
                     self.on_iteration(result)
