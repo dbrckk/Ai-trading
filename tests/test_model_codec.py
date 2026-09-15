@@ -1,11 +1,13 @@
 from dataclasses import replace
 
 import pytest
-from ai_trading.model_codec import deserialize_model, serialize_model
+
 from ai_trading.online import RiverDirectionModel
 
 
 def test_model_codec_round_trip() -> None:
+    from ai_trading.model_codec import deserialize_model, serialize_model
+
     blob = serialize_model(RiverDirectionModel())
     restored = deserialize_model(blob)
     assert blob.format == "joblib-river-v1"
@@ -15,12 +17,16 @@ def test_model_codec_round_trip() -> None:
 
 
 def test_model_codec_rejects_corrupt_payload() -> None:
+    from ai_trading.model_codec import deserialize_model, serialize_model
+
     blob = serialize_model(RiverDirectionModel())
     with pytest.raises(ValueError, match="checksum"):
         deserialize_model(replace(blob, payload=blob.payload + b"x"))
 
 
 def test_model_codec_rejects_unknown_version() -> None:
+    from ai_trading.model_codec import deserialize_model, serialize_model
+
     blob = serialize_model(RiverDirectionModel())
     with pytest.raises(ValueError, match="format/version"):
         deserialize_model(replace(blob, version=99))
