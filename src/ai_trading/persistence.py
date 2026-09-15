@@ -2,10 +2,69 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
+from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol
 
 import joblib
+
+from .runtime_state import RuntimeState
+from .runtime_status import HostedRuntimeStatus
+from .trade_journal import TradeSnapshot
+
+
+class CommitOutcome(str, Enum):
+    COMMITTED = "committed"
+    CONFLICT = "conflict"
+
+
+@dataclass(frozen=True)
+class ModelBlob:
+    format: str
+    version: int
+    payload: bytes
+    sha256: str
+
+
+@dataclass(frozen=True)
+class PersistedRuntime:
+    state: RuntimeState
+    model: ModelBlob | None
+    revision: int
+    is_new: bool
+
+
+@dataclass(frozen=True)
+class RuntimeStepCommit:
+    expected_revision: int
+    state: RuntimeState
+    model: ModelBlob
+    trade: TradeSnapshot | None
+    audit_event: str
+    audit_payload: dict[str, Any]
+
+
+class PaperPersistence(Protocol):
+    def initialize_schema(self) -> None: ...
+
+    def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime: ...
+
+    def commit_step(self, runtime_key: str, commit: RuntimeStepCommit) -> CommitOutcome: ...
+
+    def list_trades(
+        self,
+        runtime_key: str | None = None,
+        *,
+        limit: int | None = None,
+    ) -> tuple[TradeSnapshot, ...]: ...
+
+    def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None: ...
+
+    def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None: ...
+
+
+def build_runtime_key(symbol: str, interval: str) -> str:
+    return f"paper:{symbol}:{interval}:online-river:v1"
 
 
 @dataclass(frozen=True)

@@ -9,8 +9,11 @@ from .audit import AuditLog
 from .broker import PaperBroker
 from .config import ModelConfig, RiskConfig
 from .features import FEATURES, make_features, make_labels
+from .file_persistence import FilePaperPersistence
 from .model import Prediction
+from .model_codec import deserialize_model, serialize_model
 from .online import RiverDirectionModel
+from .persistence import CommitOutcome, PaperPersistence, RuntimeStepCommit
 from .risk import PortfolioSnapshot, RiskEngine
 from .runtime_lock import RuntimeLock
 from .runtime_state import RuntimeState, RuntimeStateStore
@@ -50,6 +53,8 @@ class PaperAutonomousRuntime:
         learning_cycle_every_bars: int = 63,
         trade_journal: TradeJournal | None = None,
         symbol: str = "UNKNOWN",
+        persistence: PaperPersistence | None = None,
+        runtime_key: str | None = None,
     ) -> None:
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
@@ -61,21 +66,13 @@ class PaperAutonomousRuntime:
         self.trade_journal = trade_journal or TradeJournal()
         self.symbol = symbol
         self.risk = RiskEngine(self.risk_config)
-
-    def _load_online(self) -> RiverDirectionModel:
-        import joblib
-
-        if self.online_model_path.exists():
-            return joblib.load(self.online_model_path)
-        return RiverDirectionModel()
-
-    def _save_online(self, model: RiverDirectionModel) -> None:
-        import joblib
-
-        self.online_model_path.parent.mkdir(parents=True, exist_ok=True)
-        temp = self.online_model_path.with_suffix(".tmp")
-        joblib.dump(model, temp)
-        temp.replace(self.online_model_path)
+        self.persistence = persistence or FilePaperPersistence(
+            state_store=self.state_store,
+            trade_journal=self.trade_journal,
+            audit_log=self.audit,
+            model_path=self.online_model_path,
+        )
+        self.runtime_key = runtime_key or f"paper:{symbol}:legacy:online-river:v1"
 
     def _broker_from_state(self, state: RuntimeState) -> PaperBroker:
         broker = PaperBroker(self.risk_config)
@@ -126,7 +123,11 @@ class PaperAutonomousRuntime:
                 raise ValueError("No execution bar available after signal bar")
             execution_idx = df.index[signal_pos + 1]
             execution_time = str(execution_idx)
-            state = self.state_store.load(self.risk_config.starting_cash)
+            persisted = self.persistence.load_runtime(
+                self.runtime_key,
+                self.risk_config.starting_cash,
+            )
+            state = persisted.state
 
             if state.last_processed == execution_time:
                 broker = self._broker_from_state(state)
@@ -143,7 +144,13 @@ class PaperAutonomousRuntime:
                     retrain_due=False,
                 )
 
-            model = self._load_online()
+            if persisted.model is None:
+                if not persisted.is_new and state.processed_bars > 0:
+                    raise ValueError("persisted runtime is missing its online model")
+                model = RiverDirectionModel()
+            else:
+                model = deserialize_model(persisted.model)
+
             learn_idx = valid[-3]
             learn_label = labels.get(learn_idx)
             if pd.notna(learn_label):
@@ -168,22 +175,21 @@ class PaperAutonomousRuntime:
             )
             decision = self.risk.evaluate(prediction, snapshot)
 
+            trade: TradeSnapshot | None = None
             previous_units = broker.state.units
             if decision.approved:
                 broker.rebalance(decision.side, decision.target_notional, execution_price)
                 delta_units = broker.state.units - previous_units
                 if abs(delta_units) > 1e-12:
-                    self.trade_journal.append(
-                        TradeSnapshot(
-                            timestamp_utc=execution_time,
-                            symbol=self.symbol,
-                            side="BUY" if delta_units > 0 else "SELL",
-                            quantity=abs(delta_units),
-                            price=execution_price,
-                            status="PAPER_FILLED",
-                            confidence=prediction.confidence,
-                            strategy="online-river",
-                        )
+                    trade = TradeSnapshot(
+                        timestamp_utc=execution_time,
+                        symbol=self.symbol,
+                        side="BUY" if delta_units > 0 else "SELL",
+                        quantity=abs(delta_units),
+                        price=execution_price,
+                        status="PAPER_FILLED",
+                        confidence=prediction.confidence,
+                        strategy="online-river",
                     )
 
             broker.mark(close_price)
@@ -198,22 +204,40 @@ class PaperAutonomousRuntime:
                 processed_bars=processed_bars,
                 last_learning_cycle_bar=state.last_learning_cycle_bar,
             )
-            self.state_store.save(new_state)
-            self._save_online(model)
-
-            self.audit.append(
-                "runtime_step",
-                {
-                    "signal_time": str(signal_idx),
-                    "execution_time": execution_time,
-                    "prediction": asdict(prediction),
-                    "risk_decision": asdict(decision),
-                    "equity": broker.state.equity,
-                    "units": broker.state.units,
-                    "processed_bars": processed_bars,
-                    "retrain_due": retrain_due,
-                },
+            audit_payload = {
+                "signal_time": str(signal_idx),
+                "execution_time": execution_time,
+                "prediction": asdict(prediction),
+                "risk_decision": asdict(decision),
+                "equity": broker.state.equity,
+                "units": broker.state.units,
+                "processed_bars": processed_bars,
+                "retrain_due": retrain_due,
+            }
+            outcome = self.persistence.commit_step(
+                self.runtime_key,
+                RuntimeStepCommit(
+                    expected_revision=persisted.revision,
+                    state=new_state,
+                    model=serialize_model(model),
+                    trade=trade,
+                    audit_event="runtime_step",
+                    audit_payload=audit_payload,
+                ),
             )
+            if outcome is CommitOutcome.CONFLICT:
+                return RuntimeStepResult(
+                    processed=False,
+                    timestamp=execution_time,
+                    side=0,
+                    confidence=0.0,
+                    approved=False,
+                    reason="persistence revision conflict",
+                    equity=broker.state.equity,
+                    units=broker.state.units,
+                    processed_bars=state.processed_bars,
+                    retrain_due=False,
+                )
 
             return RuntimeStepResult(
                 processed=True,

@@ -2,14 +2,40 @@ from __future__ import annotations
 
 import html
 import json
+import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from .hosted_runtime import start_hosted_paper_runtime
+from .file_persistence import FilePaperPersistence
+from .hosted_runtime import HostedPaperSettings, start_hosted_paper_runtime
+from .persistence import PaperPersistence
+from .persistence_factory import build_paper_persistence
 from .runtime_state import RuntimeStateStore
-from .runtime_status import HostedRuntimeStatusStore, runtime_status_snapshot
+from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore, runtime_status_snapshot
 from .trade_journal import TradeJournal
+
+_STORAGE_ERROR_STATUS: dict[str, object] = {
+    "engine_status": "ERROR",
+    "engine_healthy": False,
+    "storage_healthy": False,
+    "error": "storage unavailable",
+}
+
+
+def _public_runtime_snapshot(status: HostedRuntimeStatus | None) -> dict[str, object]:
+    snapshot = runtime_status_snapshot(status)
+    if snapshot.get("error"):
+        snapshot["error"] = "worker failure"
+    return snapshot
+
+
+def _display_money(value: float | None) -> str:
+    return "-" if value is None else f"{value:,.2f}"
+
+
+def _display_units(value: float | None) -> str:
+    return "-" if value is None else f"{value:g}"
 
 
 def render_dashboard(
@@ -18,50 +44,84 @@ def render_dashboard(
     starting_cash: float = 100_000.0,
     *,
     runtime_status_store: HostedRuntimeStatusStore | None = None,
+    persistence: PaperPersistence | None = None,
+    runtime_key: str | None = None,
 ) -> str:
-    recent = journal.list(limit=200)
-    trades = reversed(recent)
-    realized_pnl = sum(trade.pnl for trade in recent)
-    trade_count = len(recent)
-    wins = sum(1 for trade in recent if trade.pnl > 0)
-    losses = sum(1 for trade in recent if trade.pnl < 0)
-    win_rate = (wins / (wins + losses)) if wins + losses else 0.0
-    active_symbols = len({trade.symbol for trade in recent})
-    state = state_store.load(starting_cash) if state_store is not None else None
-    cash = state.cash if state is not None else starting_cash
-    units = state.units if state is not None else 0.0
-    last_price = state.last_price if state is not None else 0.0
-    equity = state.cash + state.units * state.last_price if state is not None else starting_cash
-    position_value = units * last_price
+    storage_error = False
+    if persistence is not None and runtime_key is not None:
+        try:
+            recent = persistence.list_trades(runtime_key, limit=200)
+            persisted = persistence.load_runtime(runtime_key, starting_cash)
+            state = persisted.state
+            runtime_status = persistence.load_runtime_status(runtime_key)
+        except Exception:
+            recent = ()
+            state = None
+            runtime_status = None
+            storage_error = True
+    else:
+        recent = journal.list(limit=200)
+        state = state_store.load(starting_cash) if state_store is not None else None
+        runtime_status = (
+            runtime_status_store.load() if runtime_status_store is not None else None
+        )
 
-    runtime_status = (
-        runtime_status_store.load() if runtime_status_store is not None else None
-    )
-    runtime_snapshot = runtime_status_snapshot(runtime_status)
-    engine_status = str(runtime_snapshot["engine_status"])
+    trades = reversed(recent)
+    if storage_error:
+        realized_pnl: float | None = None
+        trade_count: int | None = None
+        wins: int | None = None
+        losses: int | None = None
+        win_rate: float | None = None
+        active_symbols: int | None = None
+        cash: float | None = None
+        units: float | None = None
+        equity: float | None = None
+        position_value: float | None = None
+    else:
+        realized_pnl = sum(trade.pnl for trade in recent)
+        trade_count = len(recent)
+        wins = sum(1 for trade in recent if trade.pnl > 0)
+        losses = sum(1 for trade in recent if trade.pnl < 0)
+        win_rate = (wins / (wins + losses)) if wins + losses else 0.0
+        active_symbols = len({trade.symbol for trade in recent})
+        cash = state.cash if state is not None else starting_cash
+        units = state.units if state is not None else 0.0
+        last_price = state.last_price if state is not None else 0.0
+        equity = state.cash + state.units * state.last_price if state is not None else starting_cash
+        position_value = units * last_price
+
+    runtime_snapshot = _public_runtime_snapshot(runtime_status)
+    engine_status = "ERROR" if storage_error else str(runtime_snapshot["engine_status"])
     market = (
         f"{runtime_status.symbol} · {runtime_status.interval}"
-        if runtime_status is not None
+        if runtime_status is not None and not storage_error
         else "-"
     )
     last_cycle = (
         runtime_status.last_cycle_timestamp
-        if runtime_status is not None and runtime_status.last_cycle_timestamp
+        if runtime_status is not None
+        and runtime_status.last_cycle_timestamp
+        and not storage_error
         else "-"
     )
-    last_heartbeat = runtime_status.updated_at_utc if runtime_status is not None else "-"
-    heartbeat_age_value = runtime_snapshot["heartbeat_age_seconds"]
+    last_heartbeat = (
+        runtime_status.updated_at_utc
+        if runtime_status is not None and not storage_error
+        else "-"
+    )
+    heartbeat_age_value = None if storage_error else runtime_snapshot["heartbeat_age_seconds"]
     heartbeat_age = (
-        "-"
-        if heartbeat_age_value is None
-        else f"{float(heartbeat_age_value):.0f}s"
+        "-" if heartbeat_age_value is None else f"{float(heartbeat_age_value):.0f}s"
     )
     signal = "-"
     confidence = "-"
     risk_decision = "-"
-    decision_reason = "-"
-    if runtime_status is not None:
-        decision_reason = runtime_status.error or runtime_status.reason or "-"
+    decision_reason = "storage unavailable" if storage_error else "-"
+    if runtime_status is not None and not storage_error:
+        decision_reason = (
+            "worker failure" if runtime_status.error else runtime_status.reason or "-"
+        )
         if engine_status == "STALE" and decision_reason == "-":
             decision_reason = "worker heartbeat expired"
         if runtime_status.last_cycle_timestamp is not None:
@@ -75,22 +135,32 @@ def render_dashboard(
             else:
                 risk_decision = "SKIPPED"
 
-    rows = "".join(
-        "<tr>"
-        f"<td>{html.escape(t.timestamp_utc)}</td>"
-        f"<td>{html.escape(t.symbol)}</td>"
-        f"<td>{html.escape(t.side)}</td>"
-        f"<td>{t.quantity:g}</td>"
-        f"<td>{t.price:.4f}</td>"
-        f"<td>{html.escape(t.status)}</td>"
-        f"<td>{t.pnl:.2f}</td>"
-        f"<td>{'-' if t.confidence is None else f'{t.confidence:.1%}'}</td>"
-        f"<td>{html.escape(t.strategy)}</td>"
-        "</tr>"
-        for t in trades
-    )
-    if not rows:
-        rows = '<tr><td colspan="9">No trades recorded yet.</td></tr>'
+    if storage_error:
+        rows = '<tr><td colspan="9">Storage unavailable.</td></tr>'
+    else:
+        rows = "".join(
+            "<tr>"
+            f"<td>{html.escape(t.timestamp_utc)}</td>"
+            f"<td>{html.escape(t.symbol)}</td>"
+            f"<td>{html.escape(t.side)}</td>"
+            f"<td>{t.quantity:g}</td>"
+            f"<td>{t.price:.4f}</td>"
+            f"<td>{html.escape(t.status)}</td>"
+            f"<td>{t.pnl:.2f}</td>"
+            f"<td>{'-' if t.confidence is None else f'{t.confidence:.1%}'}</td>"
+            f"<td>{html.escape(t.strategy)}</td>"
+            "</tr>"
+            for t in trades
+        )
+        if not rows:
+            rows = '<tr><td colspan="9">No trades recorded yet.</td></tr>'
+
+    trade_count_display = "-" if trade_count is None else str(trade_count)
+    pnl_display = _display_money(realized_pnl)
+    win_rate_display = "-" if win_rate is None else f"{win_rate:.1%}"
+    wins_losses_display = "-" if wins is None or losses is None else f"{wins} / {losses}"
+    active_symbols_display = "-" if active_symbols is None else str(active_symbols)
+
     return f"""<!doctype html>
 <html><head><meta charset="utf-8"><meta http-equiv="refresh" content="2">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -119,15 +189,15 @@ th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
 <div class="metric"><small>Signal</small><strong>{html.escape(signal)}</strong></div>
 <div class="metric"><small>AI confidence</small><strong>{html.escape(confidence)}</strong></div>
 <div class="metric"><small>Risk decision</small><strong>{html.escape(risk_decision)}</strong></div>
-<div class="metric"><small>Equity</small><strong>{equity:,.2f}</strong></div>
-<div class="metric"><small>Cash</small><strong>{cash:,.2f}</strong></div>
-<div class="metric"><small>Open units</small><strong>{units:g}</strong></div>
-<div class="metric"><small>Position value</small><strong>{position_value:,.2f}</strong></div>
-<div class="metric"><small>Trades</small><strong>{trade_count}</strong></div>
-<div class="metric"><small>Realized PnL</small><strong>{realized_pnl:.2f}</strong></div>
-<div class="metric"><small>Win rate</small><strong>{win_rate:.1%}</strong></div>
-<div class="metric"><small>Wins / Losses</small><strong>{wins} / {losses}</strong></div>
-<div class="metric"><small>Active symbols</small><strong>{active_symbols}</strong></div>
+<div class="metric"><small>Equity</small><strong>{_display_money(equity)}</strong></div>
+<div class="metric"><small>Cash</small><strong>{_display_money(cash)}</strong></div>
+<div class="metric"><small>Open units</small><strong>{_display_units(units)}</strong></div>
+<div class="metric"><small>Position value</small><strong>{_display_money(position_value)}</strong></div>
+<div class="metric"><small>Trades</small><strong>{trade_count_display}</strong></div>
+<div class="metric"><small>Realized PnL</small><strong>{pnl_display}</strong></div>
+<div class="metric"><small>Win rate</small><strong>{win_rate_display}</strong></div>
+<div class="metric"><small>Wins / Losses</small><strong>{wins_losses_display}</strong></div>
+<div class="metric"><small>Active symbols</small><strong>{active_symbols_display}</strong></div>
 </div>
 <small class="runtime-reason">Last engine reason: {html.escape(decision_reason)}</small>
 <table><thead><tr><th>UTC</th><th>Symbol</th><th>Side</th><th>Qty</th><th>Price</th>
@@ -143,11 +213,39 @@ def serve_dashboard(
     state_path: str | Path = "artifacts/runtime_state.json",
     status_path: str | Path = "artifacts/runtime_status.json",
     starting_cash: float = 100_000.0,
+    persistence: PaperPersistence | None = None,
+    settings: HostedPaperSettings | None = None,
 ) -> None:
-    start_hosted_paper_runtime()
+    effective_settings = settings or HostedPaperSettings.from_env()
     journal = TradeJournal(journal_path)
     state_store = RuntimeStateStore(state_path)
     runtime_status_store = HostedRuntimeStatusStore(status_path)
+
+    backend = persistence
+    if backend is None:
+        if os.getenv("AI_TRADING_DATABASE_URL", "").strip():
+            backend = build_paper_persistence()
+        else:
+            root = Path(state_path).parent
+            backend = FilePaperPersistence(
+                root=root,
+                state_store=state_store,
+                trade_journal=journal,
+                status_store=runtime_status_store,
+                model_path=root / "models" / "online-river.joblib",
+            )
+
+    runtime_key = effective_settings.runtime_key
+    start_hosted_paper_runtime(
+        settings=effective_settings,
+        persistence=backend,
+    )
+
+    def load_status_snapshot() -> dict[str, object]:
+        try:
+            return _public_runtime_snapshot(backend.load_runtime_status(runtime_key))
+        except Exception:
+            return dict(_STORAGE_ERROR_STATUS)
 
     class Handler(BaseHTTPRequestHandler):
         def _send_json(self, payload: dict[str, object]) -> None:
@@ -162,17 +260,28 @@ def serve_dashboard(
         def do_GET(self) -> None:
             path = urlsplit(self.path).path.rstrip("/")
             if path == "/api/status":
-                self._send_json(runtime_status_snapshot(runtime_status_store.load()))
+                self._send_json(load_status_snapshot())
                 return
             if path == "/healthz":
-                snapshot = runtime_status_snapshot(runtime_status_store.load())
-                self._send_json(
-                    {
-                        "web_healthy": True,
-                        "engine_healthy": bool(snapshot["engine_healthy"]),
-                        "engine_status": str(snapshot["engine_status"]),
-                    }
-                )
+                snapshot = load_status_snapshot()
+                if snapshot.get("storage_healthy") is False:
+                    self._send_json(
+                        {
+                            "web_healthy": True,
+                            "engine_healthy": False,
+                            "engine_status": "ERROR",
+                            "storage_healthy": False,
+                            "error": "storage unavailable",
+                        }
+                    )
+                else:
+                    self._send_json(
+                        {
+                            "web_healthy": True,
+                            "engine_healthy": bool(snapshot["engine_healthy"]),
+                            "engine_status": str(snapshot["engine_status"]),
+                        }
+                    )
                 return
             if path not in {"", "/index.html"}:
                 self.send_error(404)
@@ -182,6 +291,8 @@ def serve_dashboard(
                 state_store,
                 starting_cash,
                 runtime_status_store=runtime_status_store,
+                persistence=backend,
+                runtime_key=runtime_key,
             ).encode()
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")

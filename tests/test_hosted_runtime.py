@@ -47,12 +47,17 @@ def test_enabled_hosted_runtime_starts_daemon_worker(monkeypatch) -> None:
 def test_hosted_loop_disables_expensive_health_check(monkeypatch) -> None:
     captured: dict[str, object] = {}
 
-    class FakeStatusStore:
-        def save(self, status) -> None:
-            captured["status"] = status
+    class FakePersistence:
+        def __init__(self) -> None:
+            self.status = None
 
-        def load(self):
-            return captured.get("status")
+        def save_runtime_status(self, runtime_key, status) -> None:
+            del runtime_key
+            self.status = status
+
+        def load_runtime_status(self, runtime_key):
+            del runtime_key
+            return self.status
 
     class FakeScheduler:
         def __init__(self, **kwargs) -> None:
@@ -67,12 +72,7 @@ def test_hosted_loop_disables_expensive_health_check(monkeypatch) -> None:
     monkeypatch.setattr(
         hosted_runtime,
         "PaperAutonomousRuntime",
-        lambda symbol: fake_runtime,
-    )
-    monkeypatch.setattr(
-        hosted_runtime,
-        "HostedRuntimeStatusStore",
-        FakeStatusStore,
+        lambda **kwargs: fake_runtime,
     )
     monkeypatch.setattr(
         hosted_runtime,
@@ -88,7 +88,8 @@ def test_hosted_loop_disables_expensive_health_check(monkeypatch) -> None:
             period="5d",
             interval="5m",
             poll_seconds=120.0,
-        )
+        ),
+        persistence=FakePersistence(),
     )
 
     config = captured["config"]
