@@ -1,7 +1,8 @@
 from pathlib import Path
 
-from ai_trading.cli import app
 from typer.testing import CliRunner
+
+from ai_trading.cli import app
 
 
 runner = CliRunner()
