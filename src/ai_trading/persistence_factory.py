@@ -12,7 +12,7 @@ def build_paper_persistence(
     *,
     file_root: str | Path = "artifacts",
 ) -> PaperPersistence:
-    database_url = os.environ.get("AI_TRADING_DATABASE_URL")
+    database_url = os.getenv("AI_TRADING_DATABASE_URL", "").strip()
     if not database_url:
         return FilePaperPersistence(root=file_root)
 
