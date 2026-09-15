@@ -35,6 +35,26 @@ def _settings() -> HostedPaperSettings:
     )
 
 
+def _raising_scheduler(monkeypatch) -> None:
+    class RaisingScheduler:
+        def __init__(self, **kwargs) -> None:
+            return None
+
+        def run(self) -> None:
+            raise RuntimeError("forced worker failure")
+
+    monkeypatch.setattr(hosted_runtime, "PaperScheduler", RaisingScheduler)
+
+
+def _fake_runtime(monkeypatch) -> None:
+    monkeypatch.setattr(
+        hosted_runtime,
+        "PaperAutonomousRuntime",
+        lambda **kwargs: SimpleNamespace(risk_config=SimpleNamespace(starting_cash=100_000.0)),
+    )
+    monkeypatch.setattr(hosted_runtime, "AutonomousPaperOrchestrator", lambda runtime: object())
+
+
 def test_hosted_settings_exposes_stable_runtime_key() -> None:
     assert _settings().runtime_key == RUNTIME_KEY
 
@@ -87,28 +107,28 @@ def test_hosted_loop_shares_backend_and_runtime_key(monkeypatch) -> None:
 
 def test_hosted_loop_persists_error_status(monkeypatch) -> None:
     persistence = RecordingPersistence()
-
-    monkeypatch.setattr(
-        hosted_runtime,
-        "PaperAutonomousRuntime",
-        lambda **kwargs: SimpleNamespace(risk_config=SimpleNamespace(starting_cash=100_000.0)),
-    )
-    monkeypatch.setattr(hosted_runtime, "AutonomousPaperOrchestrator", lambda runtime: object())
-
-    class RaisingScheduler:
-        def __init__(self, **kwargs) -> None:
-            return None
-
-        def run(self) -> None:
-            raise RuntimeError("forced worker failure")
-
-    monkeypatch.setattr(hosted_runtime, "PaperScheduler", RaisingScheduler)
+    _fake_runtime(monkeypatch)
+    _raising_scheduler(monkeypatch)
 
     with pytest.raises(RuntimeError, match="forced worker failure"):
         hosted_runtime.run_hosted_paper_loop(_settings(), persistence=persistence)
 
     assert persistence.statuses[-1][0] == RUNTIME_KEY
     assert persistence.statuses[-1][1].engine_status == "ERROR"
+
+
+def test_worker_error_is_not_masked_when_status_storage_is_unavailable(monkeypatch) -> None:
+    class FailingStatusPersistence(RecordingPersistence):
+        def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:
+            del runtime_key
+            raise RuntimeError("storage failure")
+
+    persistence = FailingStatusPersistence()
+    _fake_runtime(monkeypatch)
+    _raising_scheduler(monkeypatch)
+
+    with pytest.raises(RuntimeError, match="forced worker failure"):
+        hosted_runtime.run_hosted_paper_loop(_settings(), persistence=persistence)
 
 
 def test_start_worker_can_reuse_injected_backend() -> None:
