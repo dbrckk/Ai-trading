@@ -4,7 +4,7 @@ from ai_trading.benchmark_gate import BenchmarkGatePolicy, evaluate_benchmark_ga
 from ai_trading.performance import PerformanceMetrics
 
 
-def report(
+def _report(
     *,
     sharpe: float = 1.0,
     sortino: float = 1.2,
@@ -13,7 +13,7 @@ def report(
     excess: float = 0.05,
     folds: int = 6,
     trades: int = 40,
-):
+) -> SimpleNamespace:
     metrics = PerformanceMetrics(
         total_return=0.20,
         annualized_return=0.10,
@@ -32,7 +32,7 @@ def report(
 
 
 def test_benchmark_gate_accepts_qualified_report() -> None:
-    result = evaluate_benchmark_gate(report())
+    result = evaluate_benchmark_gate(_report())
 
     assert result.passed
     assert result.reasons == ()
@@ -40,7 +40,7 @@ def test_benchmark_gate_accepts_qualified_report() -> None:
 
 def test_benchmark_gate_rejects_weak_out_of_sample_result() -> None:
     result = evaluate_benchmark_gate(
-        report(sharpe=0.1, drawdown=0.35, excess=-0.03, trades=5),
+        _report(sharpe=0.1, drawdown=0.35, excess=-0.03, trades=5),
         BenchmarkGatePolicy(),
     )
 
