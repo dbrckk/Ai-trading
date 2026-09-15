@@ -9,6 +9,9 @@ import pandas as pd
 
 @dataclass(frozen=True)
 class DatasetEvidence:
+    schema_version: int
+    provider: str
+    acquired_at_utc: str
     rows: int
     first_timestamp: str
     last_timestamp: str
@@ -16,7 +19,12 @@ class DatasetEvidence:
     data_hash: str
 
 
-def build_dataset_evidence(df: pd.DataFrame) -> DatasetEvidence:
+def build_dataset_evidence(
+    df: pd.DataFrame,
+    *,
+    provider: str = "unknown",
+    acquired_at_utc: str = "",
+) -> DatasetEvidence:
     if df.empty:
         raise ValueError("cannot fingerprint an empty dataset")
     normalized = df.copy()
@@ -48,6 +56,9 @@ def build_dataset_evidence(df: pd.DataFrame) -> DatasetEvidence:
         allow_nan=False,
     ).encode("utf-8")
     return DatasetEvidence(
+        schema_version=1,
+        provider=provider,
+        acquired_at_utc=acquired_at_utc,
         rows=len(normalized),
         first_timestamp=normalized.index[0].isoformat(),
         last_timestamp=normalized.index[-1].isoformat(),
