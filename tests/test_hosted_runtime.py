@@ -3,7 +3,7 @@ from __future__ import annotations
 from threading import Event
 from types import SimpleNamespace
 
-import ai_trading.hosted_runtime as hosted_runtime
+from ai_trading import hosted_runtime
 from ai_trading.hosted_runtime import HostedPaperSettings, start_hosted_paper_runtime
 
 
