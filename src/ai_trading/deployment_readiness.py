@@ -26,6 +26,7 @@ class DeploymentReadinessPolicy:
     require_stable_trend: bool = True
     require_release_manifest: bool = True
     require_quantitative_reproducibility: bool = True
+    max_quantitative_evidence_age_hours: float = 24.0
 
 
 @dataclass(frozen=True)
@@ -51,6 +52,7 @@ def evaluate_deployment_readiness(
     release_hash: str | None = None,
     revocation_store: ReadinessRevocationStore | None = None,
     quantitative_reproducible: bool | None = None,
+    quantitative_evidence_age_hours: float | None = None,
 ) -> DeploymentReadiness:
     policy = policy or DeploymentReadinessPolicy()
     reasons: list[str] = []
@@ -99,6 +101,10 @@ def evaluate_deployment_readiness(
         reasons.append("readiness history integrity check failed")
     if policy.require_quantitative_reproducibility and quantitative_reproducible is not True:
         reasons.append("quantitative evidence is not reproducible")
+    if quantitative_evidence_age_hours is None:
+        reasons.append("quantitative evidence age is unknown")
+    elif quantitative_evidence_age_hours > policy.max_quantitative_evidence_age_hours:
+        reasons.append("quantitative evidence is stale")
     if policy.require_release_manifest:
         if release_verification is None:
             reasons.append("readiness release manifest missing")
