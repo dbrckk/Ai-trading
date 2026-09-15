@@ -4,7 +4,6 @@ from typer.testing import CliRunner
 
 from ai_trading.cli import app
 
-
 runner = CliRunner()
 
 
