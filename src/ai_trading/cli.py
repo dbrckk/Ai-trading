@@ -16,6 +16,8 @@ from .audit_chain import verify_audit_chain
 from .audit_integrity import verify_jsonl_audit
 from .backtest import WalkForwardBacktester, WalkForwardConfig
 from .benchmark_gate import evaluate_benchmark_gate
+from .bootstrap_gate import evaluate_bootstrap_gate
+from .bootstrap_robustness import bootstrap_equity_curve
 from .champions import ChampionRegistry
 from .chaos import ChaosScenario
 from .config import ModelConfig, RiskConfig
@@ -279,6 +281,22 @@ def walk_forward(
         )
     if regime_gate.reasons:
         for reason in regime_gate.reasons:
+            console.print(f"- {reason}")
+
+    bootstrap = bootstrap_equity_curve(report.equity_curve)
+    bootstrap_gate = evaluate_bootstrap_gate(bootstrap)
+    console.print(
+        "Bootstrap gate: "
+        + ("PASS" if bootstrap_gate.passed else "FAIL")
+    )
+    console.print(
+        f"p_positive={bootstrap.probability_positive:.1%} "
+        f"p_loss={bootstrap.probability_loss:.1%} "
+        f"lower_return={bootstrap.lower_return:.2%} "
+        f"tail_drawdown={bootstrap.upper_max_drawdown:.2%}"
+    )
+    if bootstrap_gate.reasons:
+        for reason in bootstrap_gate.reasons:
             console.print(f"- {reason}")
 
     if save_experiment:
