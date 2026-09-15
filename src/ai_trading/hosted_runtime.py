@@ -64,6 +64,7 @@ def run_hosted_paper_loop(settings: HostedPaperSettings) -> None:
             interval=settings.interval,
             updated_at_utc=_now_utc(),
             equity=runtime.risk_config.starting_cash,
+            poll_seconds=settings.poll_seconds,
         )
     )
     print("Hosted paper worker: STARTING status persisted", flush=True)
@@ -86,6 +87,7 @@ def run_hosted_paper_loop(settings: HostedPaperSettings) -> None:
                 equity=step.equity,
                 units=step.units,
                 processed_bars=step.processed_bars,
+                poll_seconds=settings.poll_seconds,
             )
         )
         print(
@@ -119,6 +121,7 @@ def run_hosted_paper_loop(settings: HostedPaperSettings) -> None:
             symbol=settings.symbol,
             interval=settings.interval,
             updated_at_utc=_now_utc(),
+            poll_seconds=settings.poll_seconds,
         )
         status_store.save(
             replace(
