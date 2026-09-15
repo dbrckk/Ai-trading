@@ -5,6 +5,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
 
+from .hosted_runtime import start_hosted_paper_runtime
 from .runtime_state import RuntimeStateStore
 from .trade_journal import TradeJournal
 
@@ -86,6 +87,7 @@ def serve_dashboard(
     state_path: str | Path = "artifacts/runtime_state.json",
     starting_cash: float = 100_000.0,
 ) -> None:
+    start_hosted_paper_runtime()
     journal = TradeJournal(journal_path)
     state_store = RuntimeStateStore(state_path)
 
