@@ -57,6 +57,7 @@ from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
 from .promotion import evaluate_challenger
 from .qualification_store import QualificationStore
 from .qualification_suite import run_qualification_suite
+from .quantitative_qualification import evaluate_quantitative_qualification
 from .readiness import evaluate_readiness
 from .readiness_release import (
     ReadinessReleaseStore,
@@ -318,6 +319,21 @@ def walk_forward(
     )
     if sensitivity_gate.reasons:
         for reason in sensitivity_gate.reasons:
+            console.print(f"- {reason}")
+
+    quantitative = evaluate_quantitative_qualification(
+        benchmark=gate,
+        regime=regime_gate,
+        bootstrap=bootstrap_gate,
+        sensitivity=sensitivity_gate,
+    )
+    console.print(
+        "Quantitative qualification: "
+        + ("QUALIFIED" if quantitative.qualified else "REJECTED")
+        + f" ({quantitative.passed_gates}/{quantitative.total_gates})"
+    )
+    if quantitative.reasons:
+        for reason in quantitative.reasons:
             console.print(f"- {reason}")
 
     if save_experiment:
