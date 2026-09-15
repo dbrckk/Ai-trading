@@ -99,6 +99,36 @@ def test_runtime_state_and_model_survive_new_instance(backend) -> None:
     assert isinstance(deserialize_model(restored.model), RiverDirectionModel)
 
 
+def test_fresh_instances_continue_from_persisted_revision(backend) -> None:
+    from ai_trading.postgres_persistence import PostgresPaperPersistence
+
+    backend.load_runtime(RUNTIME_KEY, 100_000.0)
+    assert backend.commit_step(RUNTIME_KEY, _commit()) is CommitOutcome.COMMITTED
+
+    restarted = PostgresPaperPersistence(DATABASE_URL)
+    after_restart = restarted.load_runtime(RUNTIME_KEY, 100_000.0)
+    assert after_restart.revision == 1
+    assert after_restart.state.processed_bars == 1
+
+    second_state = _state(cash=99_800.0, processed_bars=2)
+    assert (
+        restarted.commit_step(
+            RUNTIME_KEY,
+            _commit(expected_revision=after_restart.revision, state=second_state),
+        )
+        is CommitOutcome.COMMITTED
+    )
+
+    restored_again = PostgresPaperPersistence(DATABASE_URL).load_runtime(
+        RUNTIME_KEY,
+        100_000.0,
+    )
+    assert restored_again.revision == 2
+    assert restored_again.state.cash == 99_800.0
+    assert restored_again.state.processed_bars == 2
+    assert restored_again.model is not None
+
+
 def test_same_revision_has_exactly_one_winner(backend) -> None:
     backend.load_runtime(RUNTIME_KEY, 100_000.0)
     first = _commit(trade=_trade(side="BUY"))
