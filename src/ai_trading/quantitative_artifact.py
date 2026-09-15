@@ -85,10 +85,22 @@ def build_quantitative_artifact(
         evidence_hash="",
     )
     return QuantitativeQualificationArtifact(
-        **{
-            **asdict(artifact),
-            "evidence_hash": quantitative_artifact_hash(artifact),
-        }
+        created_at_utc=artifact.created_at_utc,
+        symbol=artifact.symbol,
+        period=artifact.period,
+        interval=artifact.interval,
+        dataset=artifact.dataset,
+        config_hash=artifact.config_hash,
+        verdict=artifact.verdict,
+        passed_gates=artifact.passed_gates,
+        total_gates=artifact.total_gates,
+        reasons=artifact.reasons,
+        benchmark=artifact.benchmark,
+        regime=artifact.regime,
+        bootstrap=artifact.bootstrap,
+        sensitivity=artifact.sensitivity,
+        cost_stress=artifact.cost_stress,
+        evidence_hash=quantitative_artifact_hash(artifact),
     )
 
 
