@@ -1381,6 +1381,20 @@ def deployment_readiness(
         and quantitative_artifact.verdict == "QUALIFIED"
         else ""
     )
+    quantitative_reproducible = False
+    if quantitative_artifact is not None and quantitative_artifact.verdict == "QUALIFIED":
+        benchmark_data = load_history(
+            quantitative_artifact.symbol,
+            quantitative_artifact.period,
+            quantitative_artifact.interval,
+        )
+        quantitative_reproducible = verify_quantitative_reproducibility(
+            quantitative_artifact,
+            benchmark_data,
+            provider=quantitative_artifact.dataset.provider,
+        ).valid
+        if not quantitative_reproducible:
+            quantitative_evidence_hash = ""
     if release is not None and composite is not None and qualification is not None:
         release_verification = verify_readiness_release(
             release,
@@ -1455,6 +1469,10 @@ def deployment_readiness(
         "VALID"
         if release_verification is not None and release_verification.valid
         else "MISSING/INVALID",
+    )
+    table.add_row(
+        "Quantitative reproducibility",
+        "VALID" if quantitative_reproducible else "MISSING/INVALID",
     )
     console.print(table)
 
