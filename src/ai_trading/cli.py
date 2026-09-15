@@ -59,7 +59,11 @@ from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
 from .promotion import evaluate_challenger
 from .qualification_store import QualificationStore
 from .qualification_suite import run_qualification_suite
-from .quantitative_artifact import build_quantitative_artifact, save_quantitative_artifact
+from .quantitative_artifact import (
+    build_quantitative_artifact,
+    load_quantitative_artifact,
+    save_quantitative_artifact,
+)
 from .quantitative_qualification import evaluate_quantitative_qualification
 from .readiness import evaluate_readiness
 from .readiness_release import (
@@ -1184,6 +1188,9 @@ def create_readiness_release_command(
     readiness_history_path: str = typer.Option("artifacts/readiness_history.jsonl"),
     release_path: str = typer.Option("artifacts/readiness_release.json"),
     revocations_path: str = typer.Option("artifacts/readiness_revocations.jsonl"),
+    quantitative_artifact_path: str = typer.Option(
+        "artifacts/quantitative_qualification.json"
+    ),
     signing_key_env: str = typer.Option("AI_TRADING_RELEASE_SIGNING_KEY"),
 ) -> None:
     names = tuple(s.strip() for s in symbols.split(",") if s.strip())
@@ -1233,6 +1240,16 @@ def create_readiness_release_command(
             console.print(f"- {reason}")
         raise typer.Exit(code=2)
 
+    quantitative_artifact = load_quantitative_artifact(
+        quantitative_artifact_path
+    )
+    if quantitative_artifact is None:
+        console.print("Quantitative qualification artifact missing or invalid")
+        raise typer.Exit(code=2)
+    if quantitative_artifact.verdict != "QUALIFIED":
+        console.print("Quantitative qualification is not QUALIFIED")
+        raise typer.Exit(code=2)
+
     signing_key = os.getenv(signing_key_env)
     if not signing_key:
         console.print(f"Missing signing key environment variable: {signing_key_env}")
@@ -1247,6 +1264,7 @@ def create_readiness_release_command(
         resilience=resilience,
         trend=trend,
         signing_key=signing_key,
+        quantitative_evidence_hash=quantitative_artifact.evidence_hash,
     )
     ReadinessReleaseStore(release_path).save(release)
     console.print(f"Readiness release created: {release.release_hash}")
@@ -1284,6 +1302,9 @@ def deployment_readiness(
     readiness_history_path: str = typer.Option("artifacts/readiness_history.jsonl"),
     release_path: str = typer.Option("artifacts/readiness_release.json"),
     revocations_path: str = typer.Option("artifacts/readiness_revocations.jsonl"),
+    quantitative_artifact_path: str = typer.Option(
+        "artifacts/quantitative_qualification.json"
+    ),
     signing_key_env: str = typer.Option("AI_TRADING_RELEASE_SIGNING_KEY"),
 ) -> None:
     names = tuple(s.strip() for s in symbols.split(",") if s.strip())
@@ -1306,6 +1327,15 @@ def deployment_readiness(
     revocation_store = ReadinessRevocationStore(revocations_path)
     release_verification = None
     signing_key = os.getenv(signing_key_env)
+    quantitative_artifact = load_quantitative_artifact(
+        quantitative_artifact_path
+    )
+    quantitative_evidence_hash = (
+        quantitative_artifact.evidence_hash
+        if quantitative_artifact is not None
+        and quantitative_artifact.verdict == "QUALIFIED"
+        else ""
+    )
     if release is not None and composite is not None and qualification is not None:
         release_verification = verify_readiness_release(
             release,
@@ -1317,6 +1347,7 @@ def deployment_readiness(
             resilience=resilience,
             trend=trend,
             signing_key=signing_key,
+            quantitative_evidence_hash=quantitative_evidence_hash,
         )
 
     readiness = evaluate_deployment_readiness(
