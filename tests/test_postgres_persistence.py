@@ -114,6 +114,29 @@ def test_same_revision_has_exactly_one_winner(backend) -> None:
     assert trades[0].side == "BUY"
 
 
+def test_duplicate_logical_trade_is_idempotent_across_revisions(backend) -> None:
+    backend.load_runtime(RUNTIME_KEY, 100_000.0)
+    trade = _trade()
+
+    assert backend.commit_step(RUNTIME_KEY, _commit(trade=trade)) is CommitOutcome.COMMITTED
+    assert (
+        backend.commit_step(
+            RUNTIME_KEY,
+            _commit(
+                expected_revision=1,
+                state=_state(cash=99_800.0, processed_bars=2),
+                trade=trade,
+            ),
+        )
+        is CommitOutcome.COMMITTED
+    )
+
+    restored = backend.load_runtime(RUNTIME_KEY, 100_000.0)
+    assert restored.revision == 2
+    assert restored.state.cash == 99_800.0
+    assert backend.list_trades(RUNTIME_KEY) == (trade,)
+
+
 def test_failure_before_state_commit_rolls_back_everything(backend) -> None:
     from ai_trading.postgres_persistence import PostgresPaperPersistence
 
