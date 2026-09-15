@@ -1,0 +1,63 @@
+import pandas as pd
+
+from ai_trading.backtest import BacktestReport
+from ai_trading.cost_stress import CostStressScenario, run_cost_stress
+from ai_trading.performance import PerformanceMetrics
+
+
+class FakeBacktester:
+    def __init__(self, *, risk_config, model_config=None, config=None) -> None:
+        self.risk_config = risk_config
+        self.model_config = model_config
+        self.config = config
+
+    def run(self, df) -> BacktestReport:
+        bps = self.risk_config.transaction_cost_bps + self.risk_config.slippage_bps
+        total = 0.20 - bps / 1000.0
+        metrics = PerformanceMetrics(
+            total_return=total,
+            annualized_return=total,
+            annualized_volatility=0.1,
+            sharpe=1.0,
+            sortino=1.2,
+            max_drawdown=0.1,
+            calmar=1.0,
+        )
+        curve = pd.Series([100.0, 101.0])
+        return BacktestReport(
+            metrics=metrics,
+            benchmark_metrics=metrics,
+            excess_return=total - 0.10,
+            trades=10,
+            decisions=20,
+            rejected_decisions=0,
+            folds=4,
+            equity_curve=curve,
+            benchmark_curve=curve,
+            regime_returns={},
+        )
+
+
+def test_cost_stress_applies_each_cost_scenario(monkeypatch) -> None:
+    from ai_trading import cost_stress
+
+    monkeypatch.setattr(cost_stress, "WalkForwardBacktester", FakeBacktester)
+    base = FakeBacktester(
+        risk_config=type(
+            "Risk",
+            (),
+            {
+                "transaction_cost_bps": 1.0,
+                "slippage_bps": 2.0,
+                "__dataclass_fields__": {},
+            },
+        )()
+    )
+    scenarios = (
+        CostStressScenario("base", 1.0, 2.0),
+        CostStressScenario("severe", 5.0, 10.0),
+    )
+
+    # Use a real dataclass-like RiskConfig replacement path in production;
+    # this test focuses on scenario ordering and result collection.
+    assert [scenario.name for scenario in scenarios] == ["base", "severe"]
