@@ -15,6 +15,7 @@ from .allocator_tuning import tune_global_allocator
 from .audit_chain import verify_audit_chain
 from .audit_integrity import verify_jsonl_audit
 from .backtest import WalkForwardBacktester, WalkForwardConfig
+from .benchmark_gate import evaluate_benchmark_gate
 from .champions import ChampionRegistry
 from .chaos import ChaosScenario
 from .config import ModelConfig, RiskConfig
