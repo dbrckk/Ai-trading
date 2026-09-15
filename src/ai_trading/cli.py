@@ -1382,7 +1382,14 @@ def deployment_readiness(
         else ""
     )
     quantitative_reproducible = False
+    quantitative_evidence_age_hours = None
     if quantitative_artifact is not None and quantitative_artifact.verdict == "QUALIFIED":
+        created_at = datetime.fromisoformat(quantitative_artifact.created_at_utc)
+        if created_at.tzinfo is None:
+            created_at = created_at.replace(tzinfo=UTC)
+        quantitative_evidence_age_hours = max(
+            0.0, (datetime.now(UTC) - created_at).total_seconds() / 3600.0
+        )
         benchmark_data = load_history(
             quantitative_artifact.symbol,
             quantitative_artifact.period,
@@ -1424,6 +1431,7 @@ def deployment_readiness(
         release_hash=(release.release_hash if release is not None else None),
         revocation_store=revocation_store,
         quantitative_reproducible=quantitative_reproducible,
+        quantitative_evidence_age_hours=quantitative_evidence_age_hours,
     )
 
     table = Table(title="Paper-to-live deployment readiness")
@@ -1470,6 +1478,10 @@ def deployment_readiness(
         "VALID"
         if release_verification is not None and release_verification.valid
         else "MISSING/INVALID",
+    )
+    table.add_row(
+        "Quantitative evidence age",
+        "-" if quantitative_evidence_age_hours is None else f"{quantitative_evidence_age_hours:.2f}h",
     )
     table.add_row(
         "Quantitative reproducibility",
