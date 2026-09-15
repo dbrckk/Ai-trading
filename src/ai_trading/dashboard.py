@@ -4,10 +4,15 @@ import html
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
+from .runtime_state import RuntimeStateStore
 from .trade_journal import TradeJournal
 
 
-def render_dashboard(journal: TradeJournal) -> str:
+def render_dashboard(
+    journal: TradeJournal,
+    state_store: RuntimeStateStore | None = None,
+    starting_cash: float = 100_000.0,
+) -> str:
     recent = journal.list(limit=200)
     trades = reversed(recent)
     realized_pnl = sum(trade.pnl for trade in recent)
@@ -16,6 +21,12 @@ def render_dashboard(journal: TradeJournal) -> str:
     losses = sum(1 for trade in recent if trade.pnl < 0)
     win_rate = (wins / (wins + losses)) if wins + losses else 0.0
     active_symbols = len({trade.symbol for trade in recent})
+    state = state_store.load(starting_cash) if state_store is not None else None
+    cash = state.cash if state is not None else starting_cash
+    units = state.units if state is not None else 0.0
+    last_price = state.last_price if state is not None else 0.0
+    equity = state.cash + state.units * state.last_price if state is not None else starting_cash
+    unrealized_pnl = units * last_price
     rows = "".join(
         "<tr>"
         f"<td>{html.escape(t.timestamp_utc)}</td>"
@@ -51,6 +62,10 @@ th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
 <div class="card"><h1>AI Trading — Live trades</h1>
 <small>Read-only dashboard · auto refresh 2s · paper/live status comes from journal events</small>
 <div class="metrics">
+<div class="metric"><small>Equity</small><strong>{equity:,.2f}</strong></div>
+<div class="metric"><small>Cash</small><strong>{cash:,.2f}</strong></div>
+<div class="metric"><small>Open units</small><strong>{units:g}</strong></div>
+<div class="metric"><small>Mark value</small><strong>{unrealized_pnl:,.2f}</strong></div>
 <div class="metric"><small>Trades</small><strong>{trade_count}</strong></div>
 <div class="metric"><small>Realized PnL</small><strong>{realized_pnl:.2f}</strong></div>
 <div class="metric"><small>Win rate</small><strong>{win_rate:.1%}</strong></div>
@@ -67,15 +82,18 @@ def serve_dashboard(
     *,
     host: str = "127.0.0.1",
     port: int = 8765,
+    state_path: str | Path = "artifacts/runtime_state.json",
+    starting_cash: float = 100_000.0,
 ) -> None:
     journal = TradeJournal(journal_path)
+    state_store = RuntimeStateStore(state_path)
 
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self) -> None:
             if self.path not in {"/", "/index.html"}:
                 self.send_error(404)
                 return
-            payload = render_dashboard(journal).encode()
+            payload = render_dashboard(journal, state_store, starting_cash).encode()
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.send_header("Content-Length", str(len(payload)))
