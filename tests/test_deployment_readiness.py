@@ -93,6 +93,7 @@ def test_deployment_readiness_allows_only_fully_healthy_state() -> None:
         trend=stable_trend(),
         readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
         release_verification=ReadinessReleaseVerification(valid=True),
+        quantitative_reproducible=True,
     )
 
     assert result.allowed
@@ -119,6 +120,7 @@ def test_deployment_readiness_fails_closed_on_resilience_or_governor() -> None:
         trend=stable_trend(),
         readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
         release_verification=ReadinessReleaseVerification(valid=True),
+        quantitative_reproducible=True,
     )
 
     assert not result.allowed
@@ -149,6 +151,7 @@ def test_deployment_readiness_rejects_short_reliability_history() -> None:
         trend=stable_trend(),
         readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
         release_verification=ReadinessReleaseVerification(valid=True),
+        quantitative_reproducible=True,
     )
 
     assert not result.allowed
@@ -168,6 +171,7 @@ def test_deployment_readiness_rejects_missing_composite_score() -> None:
         trend=stable_trend(),
         readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
         release_verification=ReadinessReleaseVerification(valid=True),
+        quantitative_reproducible=True,
     )
 
     assert not result.allowed
@@ -195,6 +199,7 @@ def test_deployment_readiness_rejects_unstable_trend() -> None:
         trend=trend,
         readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
         release_verification=ReadinessReleaseVerification(valid=True),
+        quantitative_reproducible=True,
     )
 
     assert not result.allowed
@@ -245,3 +250,23 @@ def test_deployment_readiness_rejects_invalid_release_manifest() -> None:
 
     assert not result.allowed
     assert "readiness release verification failed" in result.reasons
+
+
+def test_deployment_readiness_rejects_non_reproducible_quantitative_evidence() -> None:
+    result = evaluate_deployment_readiness(
+        qualified_record(),
+        reliability=reliable_report(),
+        resilience=ResilienceState(mode="NORMAL"),
+        governor=GovernorState(verdict="TRADE"),
+        symbols=("GC=F",),
+        period="2y",
+        interval="1d",
+        composite=composite_score(),
+        trend=stable_trend(),
+        readiness_chain=ReadinessChainReport(valid=True, records=5, legacy_records=0),
+        release_verification=ReadinessReleaseVerification(valid=True),
+        quantitative_reproducible=False,
+    )
+
+    assert not result.allowed
+    assert "quantitative evidence is not reproducible" in result.reasons
