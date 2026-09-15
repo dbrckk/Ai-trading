@@ -106,6 +106,7 @@ def run_hosted_paper_loop(settings: HostedPaperSettings) -> None:
         config=SchedulerConfig(
             poll_seconds=settings.poll_seconds,
             max_iterations=None,
+            run_health_check=False,
         ),
         on_iteration=report_iteration,
     )
