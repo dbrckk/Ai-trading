@@ -50,6 +50,7 @@ from .multiasset_evolution import run_multiasset_evolution_cycle
 from .multiasset_runtime import MultiAssetPaperRuntime
 from .multiasset_scheduler import MultiAssetPaperScheduler, MultiAssetSchedulerConfig
 from .orchestrator import AutonomousPaperOrchestrator
+from .parameter_sensitivity import run_parameter_sensitivity
 from .performance import PerformanceMetrics
 from .portfolio import AllocationConfig, inverse_volatility_weights, target_notionals
 from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
@@ -72,8 +73,8 @@ from .resilience import ResilienceStateStore
 from .robustness import block_bootstrap_returns
 from .runtime import PaperAutonomousRuntime
 from .runtime_factory import isolated_multiasset_runtime
-from .sensitivity_gate import evaluate_sensitivity_gate
 from .scheduler import PaperScheduler, SchedulerConfig
+from .sensitivity_gate import evaluate_sensitivity_gate
 from .soak import run_multiasset_soak
 from .soak_gate import evaluate_soak_qualification
 from .state_snapshot import AtomicSnapshotStore
