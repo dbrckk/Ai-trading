@@ -11,7 +11,7 @@ from .orchestrator import AutonomousPaperOrchestrator, OrchestrationResult
 from .persistence import PaperPersistence, build_runtime_key
 from .persistence_factory import build_paper_persistence
 from .runtime import PaperAutonomousRuntime
-from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore
+from .runtime_status import HostedRuntimeStatus
 from .scheduler import PaperScheduler, SchedulerConfig
 
 
