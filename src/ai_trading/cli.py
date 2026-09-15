@@ -31,6 +31,7 @@ from .cost_stress import run_cost_stress
 from .cost_stress_gate import evaluate_cost_stress_gate
 from .crisis_controller import limits_for_state
 from .crisis_state_store import CrisisStateStore
+from .dashboard import serve_dashboard
 from .data import load_history
 from .dataset_evidence import build_dataset_evidence
 from .deployment_readiness import DeploymentReadinessPolicy, evaluate_deployment_readiness
@@ -1873,3 +1874,13 @@ def paper_qualification_suite(
 
 if __name__ == "__main__":
     app()
+
+
+@app.command("dashboard")
+def dashboard(
+    journal_path: str = typer.Option("artifacts/trades.jsonl"),
+    host: str = typer.Option("127.0.0.1"),
+    port: int = typer.Option(8765),
+) -> None:
+    console.print(f"Live trade dashboard: http://{host}:{port}")
+    serve_dashboard(journal_path, host=host, port=port)
