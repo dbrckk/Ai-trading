@@ -1879,8 +1879,16 @@ if __name__ == "__main__":
 @app.command("dashboard")
 def dashboard(
     journal_path: str = typer.Option("artifacts/trades.jsonl"),
+    state_path: str = typer.Option("artifacts/runtime_state.json"),
+    starting_cash: float = typer.Option(100_000.0, min=0.0),
     host: str = typer.Option("127.0.0.1"),
     port: int = typer.Option(8765),
 ) -> None:
     console.print(f"Live trade dashboard: http://{host}:{port}")
-    serve_dashboard(journal_path, host=host, port=port)
+    serve_dashboard(
+        journal_path,
+        host=host,
+        port=port,
+        state_path=state_path,
+        starting_cash=starting_cash,
+    )
