@@ -666,6 +666,7 @@ def runtime_step(
     df = load_history(symbol, period, interval)
     result = PaperAutonomousRuntime(
         learning_cycle_every_bars=learning_cycle_every_bars,
+        symbol=symbol,
     ).step(df)
 
     table = Table(title=f"Autonomous paper runtime: {symbol}")
@@ -690,10 +691,11 @@ def paper_loop(
     period: str = typer.Option("1y", help="History period"),
     interval: str = typer.Option("1d", help="Bar interval"),
     poll_seconds: float = typer.Option(60.0, min=0.0),
-    iterations: int = typer.Option(1, min=1, help="Number of scheduler iterations"),
+    iterations: int = typer.Option(1, min=0, help="Iterations; 0 runs continuously"),
     learning_trials: int = typer.Option(10, min=1, max=200),
 ) -> None:
     orchestrator = AutonomousPaperOrchestrator(
+        runtime=PaperAutonomousRuntime(symbol=symbol),
         learning_trials=learning_trials,
     )
     scheduler = PaperScheduler(
@@ -702,7 +704,7 @@ def paper_loop(
         symbol=symbol,
         config=SchedulerConfig(
             poll_seconds=poll_seconds,
-            max_iterations=iterations,
+            max_iterations=None if iterations == 0 else iterations,
         ),
     )
     results = scheduler.run()
