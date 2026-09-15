@@ -211,11 +211,12 @@ def walk_forward(
         test_window_bars=test_window_bars,
         max_train_bars=max_train_bars,
     )
-    report = WalkForwardBacktester(
+    backtester = WalkForwardBacktester(
         risk_config=risk_config,
         model_config=model_config,
         config=wf_config,
-    ).run(df)
+    )
+    report = backtester.run(df)
 
     table = Table(title=f"Walk-forward: {symbol}")
     table.add_column("Metric")
