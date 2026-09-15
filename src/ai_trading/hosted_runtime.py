@@ -132,22 +132,29 @@ def run_hosted_paper_loop(
     try:
         scheduler.run()
     except Exception as exc:
-        current = backend.load_runtime_status(settings.runtime_key) or HostedRuntimeStatus(
-            engine_status="STARTING",
-            symbol=settings.symbol,
-            interval=settings.interval,
-            updated_at_utc=_now_utc(),
-            poll_seconds=settings.poll_seconds,
-        )
-        backend.save_runtime_status(
-            settings.runtime_key,
-            replace(
-                current,
-                engine_status="ERROR",
+        try:
+            current = backend.load_runtime_status(settings.runtime_key) or HostedRuntimeStatus(
+                engine_status="STARTING",
+                symbol=settings.symbol,
+                interval=settings.interval,
                 updated_at_utc=_now_utc(),
-                error=f"{type(exc).__name__}: worker failure",
-            ),
-        )
+                poll_seconds=settings.poll_seconds,
+            )
+            backend.save_runtime_status(
+                settings.runtime_key,
+                replace(
+                    current,
+                    engine_status="ERROR",
+                    updated_at_utc=_now_utc(),
+                    error=f"{type(exc).__name__}: worker failure",
+                ),
+            )
+        except Exception as status_exc:  # noqa: BLE001 - best-effort failure reporting boundary
+            print(
+                "Hosted paper worker: ERROR status persistence failed "
+                f"({type(status_exc).__name__})",
+                flush=True,
+            )
         print(
             f"Hosted paper worker: ERROR {type(exc).__name__}",
             flush=True,
