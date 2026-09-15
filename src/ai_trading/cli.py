@@ -72,6 +72,7 @@ from .resilience import ResilienceStateStore
 from .robustness import block_bootstrap_returns
 from .runtime import PaperAutonomousRuntime
 from .runtime_factory import isolated_multiasset_runtime
+from .sensitivity_gate import evaluate_sensitivity_gate
 from .scheduler import PaperScheduler, SchedulerConfig
 from .soak import run_multiasset_soak
 from .soak_gate import evaluate_soak_qualification
@@ -297,6 +298,24 @@ def walk_forward(
     )
     if bootstrap_gate.reasons:
         for reason in bootstrap_gate.reasons:
+            console.print(f"- {reason}")
+
+    sensitivity = run_parameter_sensitivity(backtester, df)
+    sensitivity_gate = evaluate_sensitivity_gate(sensitivity)
+    console.print(
+        "Sensitivity gate: "
+        + ("PASS" if sensitivity_gate.passed else "FAIL")
+    )
+    console.print(
+        f"passing={sensitivity_gate.passing_scenarios}/"
+        f"{sensitivity_gate.scenarios} "
+        f"ratio={sensitivity_gate.pass_ratio:.0%} "
+        f"worst_excess={sensitivity_gate.worst_excess_return:.2%} "
+        f"worst_sharpe={sensitivity_gate.worst_sharpe:.2f} "
+        f"worst_drawdown={sensitivity_gate.worst_drawdown:.2%}"
+    )
+    if sensitivity_gate.reasons:
+        for reason in sensitivity_gate.reasons:
             console.print(f"- {reason}")
 
     if save_experiment:
