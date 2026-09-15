@@ -15,7 +15,8 @@ Autonomous trading research platform focused on reproducible, risk-aware, out-of
 - buy-and-hold benchmark
 - Sharpe, Sortino, Calmar, annualized return/volatility and max drawdown
 - append-only experiment registry
-- CI with Ruff + Pytest
+- durable PostgreSQL persistence for hosted paper runtime state
+- CI with Ruff + Pytest + PostgreSQL 16 integration tests
 
 The optimization target is **risk-adjusted net performance after costs**, not raw backtest profit or win rate.
 
@@ -71,7 +72,6 @@ Windows PowerShell:
 .venv\Scripts\Activate.ps1
 ```
 
-
 ## Validation path
 
 Run the local validation stack before using real market data:
@@ -111,6 +111,24 @@ A readiness release can be invalidated explicitly:
 ```bash
 ai-trading revoke-readiness-release --reason "superseded or invalidated"
 ```
+
+## Durable hosted paper persistence
+
+Local development uses the existing `artifacts/` files by default. A hosted deployment can make PostgreSQL authoritative by setting:
+
+```text
+AI_TRADING_DATABASE_URL=<PostgreSQL connection string with TLS enabled>
+```
+
+When this variable is present, the paper runtime stores its portfolio state, River online model, trade history, append-only audit chain, revision counter, and hosted worker status in PostgreSQL. The dashboard and hosted worker share the same persistence backend and runtime key, so state can be restored after a process restart or service sleep.
+
+The PostgreSQL path is intentionally fail-closed. If `AI_TRADING_DATABASE_URL` is present but invalid, unavailable, or cannot initialize its schema, the service does **not** silently fall back to local files. If the variable is absent, the application keeps the backward-compatible local file mode.
+
+Treat the database connection string as a secret. Do not commit it, print it, expose it through the dashboard, or include it in exception payloads. Production deployments should use a TLS-enabled provider connection string.
+
+Persistence commits use revision-based overlap protection and one database transaction for state, online model, optional paper trade, and audit event. A conflicting worker receives a persistence conflict instead of overwriting a newer revision.
+
+This persistence layer does not enable live trading. Broker routing remains paper-only.
 
 ## Walk-forward methodology
 
