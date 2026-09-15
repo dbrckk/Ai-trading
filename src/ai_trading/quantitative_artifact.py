@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
+from hashlib import sha256
 from pathlib import Path
 
 from .benchmark_gate import BenchmarkGateResult
@@ -28,6 +29,24 @@ class QuantitativeQualificationArtifact:
     bootstrap: BootstrapGateResult
     sensitivity: SensitivityGateResult
     cost_stress: CostStressGateResult
+    evidence_hash: str
+
+
+def _evidence_payload(artifact: QuantitativeQualificationArtifact) -> dict:
+    payload = asdict(artifact)
+    payload.pop("evidence_hash", None)
+    return payload
+
+
+def quantitative_artifact_hash(
+    artifact: QuantitativeQualificationArtifact,
+) -> str:
+    canonical = json.dumps(
+        _evidence_payload(artifact),
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return sha256(canonical).hexdigest()
 
 
 def build_quantitative_artifact(
@@ -42,7 +61,7 @@ def build_quantitative_artifact(
     sensitivity: SensitivityGateResult,
     cost_stress: CostStressGateResult,
 ) -> QuantitativeQualificationArtifact:
-    return QuantitativeQualificationArtifact(
+    artifact = QuantitativeQualificationArtifact(
         created_at_utc=datetime.now(UTC).isoformat(),
         symbol=symbol,
         period=period,
@@ -56,6 +75,13 @@ def build_quantitative_artifact(
         bootstrap=bootstrap,
         sensitivity=sensitivity,
         cost_stress=cost_stress,
+        evidence_hash="",
+    )
+    return QuantitativeQualificationArtifact(
+        **{
+            **asdict(artifact),
+            "evidence_hash": quantitative_artifact_hash(artifact),
+        }
     )
 
 
