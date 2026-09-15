@@ -1,6 +1,8 @@
 import pandas as pd
 
+from ai_trading import cost_stress
 from ai_trading.backtest import BacktestReport
+from ai_trading.config import RiskConfig
 from ai_trading.cost_stress import CostStressScenario, run_cost_stress
 from ai_trading.performance import PerformanceMetrics
 
@@ -39,25 +41,15 @@ class FakeBacktester:
 
 
 def test_cost_stress_applies_each_cost_scenario(monkeypatch) -> None:
-    from ai_trading import cost_stress
-
     monkeypatch.setattr(cost_stress, "WalkForwardBacktester", FakeBacktester)
-    base = FakeBacktester(
-        risk_config=type(
-            "Risk",
-            (),
-            {
-                "transaction_cost_bps": 1.0,
-                "slippage_bps": 2.0,
-                "__dataclass_fields__": {},
-            },
-        )()
-    )
+    base = FakeBacktester(risk_config=RiskConfig())
     scenarios = (
         CostStressScenario("base", 1.0, 2.0),
         CostStressScenario("severe", 5.0, 10.0),
     )
 
-    # Use a real dataclass-like RiskConfig replacement path in production;
-    # this test focuses on scenario ordering and result collection.
-    assert [scenario.name for scenario in scenarios] == ["base", "severe"]
+    results = run_cost_stress(base, pd.DataFrame(), scenarios=scenarios)
+
+    assert [result.scenario.name for result in results] == ["base", "severe"]
+    assert results[1].total_return < results[0].total_return
+    assert results[1].excess_return < results[0].excess_return
