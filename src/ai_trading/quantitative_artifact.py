@@ -9,6 +9,7 @@ from pathlib import Path
 from .benchmark_gate import BenchmarkGateResult
 from .bootstrap_gate import BootstrapGateResult
 from .cost_stress_gate import CostStressGateResult
+from .dataset_evidence import DatasetEvidence
 from .quantitative_qualification import QuantitativeQualification
 from .regime_gate import RegimeGateResult
 from .sensitivity_gate import SensitivityGateResult
@@ -20,6 +21,8 @@ class QuantitativeQualificationArtifact:
     symbol: str
     period: str
     interval: str
+    dataset: DatasetEvidence
+    config_hash: str
     verdict: str
     passed_gates: int
     total_gates: int
@@ -54,6 +57,8 @@ def build_quantitative_artifact(
     symbol: str,
     period: str,
     interval: str,
+    dataset: DatasetEvidence,
+    config_hash: str,
     qualification: QuantitativeQualification,
     benchmark: BenchmarkGateResult,
     regime: RegimeGateResult,
@@ -66,6 +71,8 @@ def build_quantitative_artifact(
         symbol=symbol,
         period=period,
         interval=interval,
+        dataset=dataset,
+        config_hash=config_hash,
         verdict="QUALIFIED" if qualification.qualified else "REJECTED",
         passed_gates=qualification.passed_gates,
         total_gates=qualification.total_gates,
