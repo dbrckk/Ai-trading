@@ -31,5 +31,5 @@ def deserialize_model(blob: ModelBlob) -> RiverDirectionModel:
         raise ValueError("model checksum mismatch")
     model = joblib.load(BytesIO(blob.payload))
     if not isinstance(model, RiverDirectionModel):
-        raise ValueError("persisted model has unexpected type")
+        raise TypeError("persisted model has unexpected type")
     return model
