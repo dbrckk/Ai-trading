@@ -5,6 +5,7 @@ import os
 import sys
 from dataclasses import asdict
 from hashlib import sha256
+from datetime import UTC, datetime
 from pathlib import Path
 
 import numpy as np
@@ -369,7 +370,11 @@ def walk_forward(
         for reason in quantitative.reasons:
             console.print(f"- {reason}")
 
-    dataset = build_dataset_evidence(df)
+    dataset = build_dataset_evidence(
+        df,
+        provider="yfinance",
+        acquired_at_utc=datetime.now(UTC).isoformat(),
+    )
     config_payload = {
         "risk": asdict(risk_config),
         "model": asdict(model_config),
