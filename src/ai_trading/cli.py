@@ -1423,6 +1423,7 @@ def deployment_readiness(
         release_verification=release_verification,
         release_hash=(release.release_hash if release is not None else None),
         revocation_store=revocation_store,
+        quantitative_reproducible=quantitative_reproducible,
     )
 
     table = Table(title="Paper-to-live deployment readiness")

@@ -25,6 +25,7 @@ class DeploymentReadinessPolicy:
     min_composite_score: float = 90.0
     require_stable_trend: bool = True
     require_release_manifest: bool = True
+    require_quantitative_reproducibility: bool = True
 
 
 @dataclass(frozen=True)
@@ -49,6 +50,7 @@ def evaluate_deployment_readiness(
     release_verification: ReadinessReleaseVerification | None = None,
     release_hash: str | None = None,
     revocation_store: ReadinessRevocationStore | None = None,
+    quantitative_reproducible: bool | None = None,
 ) -> DeploymentReadiness:
     policy = policy or DeploymentReadinessPolicy()
     reasons: list[str] = []
@@ -95,6 +97,8 @@ def evaluate_deployment_readiness(
         reasons.append("readiness history integrity report missing")
     elif not readiness_chain.valid:
         reasons.append("readiness history integrity check failed")
+    if policy.require_quantitative_reproducibility and quantitative_reproducible is not True:
+        reasons.append("quantitative evidence is not reproducible")
     if policy.require_release_manifest:
         if release_verification is None:
             reasons.append("readiness release manifest missing")
