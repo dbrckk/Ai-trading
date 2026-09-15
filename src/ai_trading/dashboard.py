@@ -3,6 +3,7 @@ from __future__ import annotations
 import html
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from .runtime_state import RuntimeStateStore
 from .trade_journal import TradeJournal
@@ -90,7 +91,8 @@ def serve_dashboard(
 
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self) -> None:
-            if self.path not in {"/", "/index.html"}:
+            path = urlsplit(self.path).path.rstrip("/")
+            if path not in {"", "/index.html"}:
                 self.send_error(404)
                 return
             payload = render_dashboard(journal, state_store, starting_cash).encode()
