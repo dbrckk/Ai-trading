@@ -49,6 +49,12 @@ def _now_utc() -> str:
 
 
 def run_hosted_paper_loop(settings: HostedPaperSettings) -> None:
+    print(
+        "Hosted paper worker: boot "
+        f"symbol={settings.symbol} interval={settings.interval} ",
+        f"period={settings.period} poll={settings.poll_seconds:g}s",
+        flush=True,
+    )
     runtime = PaperAutonomousRuntime(symbol=settings.symbol)
     status_store = HostedRuntimeStatusStore()
     status_store.save(
@@ -60,6 +66,7 @@ def run_hosted_paper_loop(settings: HostedPaperSettings) -> None:
             equity=runtime.risk_config.starting_cash,
         )
     )
+    print("Hosted paper worker: STARTING status persisted", flush=True)
     orchestrator = AutonomousPaperOrchestrator(runtime=runtime)
 
     def report_iteration(result: OrchestrationResult) -> None:
@@ -81,6 +88,12 @@ def run_hosted_paper_loop(settings: HostedPaperSettings) -> None:
                 processed_bars=step.processed_bars,
             )
         )
+        print(
+            "Hosted paper worker: cycle complete "
+            f"processed={step.processed} side={step.side} "
+            f"confidence={step.confidence:.3f} approved={step.approved}",
+            flush=True,
+        )
 
     scheduler = PaperScheduler(
         orchestrator=orchestrator,
@@ -96,6 +109,7 @@ def run_hosted_paper_loop(settings: HostedPaperSettings) -> None:
         ),
         on_iteration=report_iteration,
     )
+    print("Hosted paper worker: entering scheduler loop", flush=True)
     try:
         scheduler.run()
     except Exception as exc:
@@ -113,6 +127,7 @@ def run_hosted_paper_loop(settings: HostedPaperSettings) -> None:
                 error=repr(exc),
             )
         )
+        print(f"Hosted paper worker: ERROR {exc!r}", flush=True)
         raise
 
 
@@ -122,8 +137,10 @@ def start_hosted_paper_runtime(
 ) -> Thread | None:
     settings = HostedPaperSettings.from_env()
     if not settings.enabled:
+        print("Hosted paper worker: disabled", flush=True)
         return None
 
+    print("Hosted paper worker: starting daemon thread", flush=True)
     thread = Thread(
         target=runner,
         args=(settings,),
@@ -131,4 +148,5 @@ def start_hosted_paper_runtime(
         daemon=True,
     )
     thread.start()
+    print("Hosted paper worker: daemon thread started", flush=True)
     return thread
