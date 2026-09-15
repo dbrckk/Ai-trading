@@ -19,13 +19,13 @@ def test_quantitative_artifact_hash_matches_content() -> None:
         interval="1d",
         dataset=DatasetEvidence(100, "2025-01-01", "2025-04-10", ("Close",), "a" * 64),
         config_hash="b" * 64,
-        qualification=qualification,
-        benchmark=BenchmarkGateResult(True, ()),
-        regime=RegimeGateResult(True, 3, "range", -0.02, 0.10, ()),
-        bootstrap=BootstrapGateResult(True, ()),
-        sensitivity=SensitivityGateResult(True, 6, 6, 1.0, 0.01, 0.5, 0.1, ()),
-        cost_stress=CostStressGateResult(True, 3, 3, 1.0, 0.01, 0.5, 0.1, ()),
-    )
+        "qualification": qualification,
+        "benchmark": BenchmarkGateResult(True, ()),
+        "regime": RegimeGateResult(True, 3, "range", -0.02, 0.10, ()),
+        "bootstrap": BootstrapGateResult(True, ()),
+        "sensitivity": SensitivityGateResult(True, 6, 6, 1.0, 0.01, 0.5, 0.1, ()),
+        "cost_stress": CostStressGateResult(True, 3, 3, 1.0, 0.01, 0.5, 0.1, ()),
+    }
 
     assert artifact.verdict == "QUALIFIED"
     assert len(artifact.evidence_hash) == 64
@@ -34,11 +34,11 @@ def test_quantitative_artifact_hash_matches_content() -> None:
 
 def test_artifact_identity_changes_with_config_hash() -> None:
     qualification = QuantitativeQualification(True, 5, 5, ())
-    common = dict(
-        symbol="GC=F",
-        period="10y",
-        interval="1d",
-        dataset=DatasetEvidence(
+    common = {
+        "symbol": "GC=F",
+        "period": "10y",
+        "interval": "1d",
+        "dataset": DatasetEvidence(
             100,
             "2025-01-01",
             "2025-04-10",
