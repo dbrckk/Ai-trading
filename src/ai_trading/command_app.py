@@ -93,6 +93,9 @@ def paper_cycle(
                     poll_seconds=PAPER_CYCLE_POLL_SECONDS,
                 ),
             )
-        except Exception:  # noqa: BLE001 - best-effort status persistence only
-            pass
+        except Exception as status_exc:  # noqa: BLE001 - best-effort failure reporting
+            console.print(
+                "Paper cycle: ERROR status persistence failed "
+                f"({type(status_exc).__name__})"
+            )
         raise typer.Exit(code=1) from exc
