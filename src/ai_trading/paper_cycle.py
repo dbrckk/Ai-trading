@@ -1,0 +1,124 @@
+from __future__ import annotations
+
+from collections.abc import Callable
+from dataclasses import dataclass
+
+import pandas as pd
+
+from .data import load_history
+from .persistence import PaperPersistence, PersistedRuntime, build_runtime_key
+from .runtime import PaperAutonomousRuntime
+
+
+@dataclass(frozen=True)
+class PaperCycleResult:
+    processed: int
+    remaining_backlog: bool
+    last_processed: str | None
+    processed_bars: int
+    reason: str
+
+
+class PaperCycleRunner:
+    """Run a bounded one-shot paper cycle against durable runtime state."""
+
+    def __init__(
+        self,
+        *,
+        persistence: PaperPersistence,
+        data_loader: Callable[[str, str, str], pd.DataFrame] = load_history,
+        runtime_factory: Callable[..., PaperAutonomousRuntime] = PaperAutonomousRuntime,
+    ) -> None:
+        self.persistence = persistence
+        self.data_loader = data_loader
+        self.runtime_factory = runtime_factory
+
+    @staticmethod
+    def _pending_targets(
+        snapshot: PersistedRuntime,
+        eligible: tuple[object, ...],
+    ) -> list[object]:
+        if snapshot.is_new:
+            return list(eligible[-1:])
+
+        last_processed = snapshot.state.last_processed
+        if last_processed is None:
+            raise RuntimeError("persisted runtime is missing last_processed")
+
+        positions = {str(value): index for index, value in enumerate(eligible)}
+        position = positions.get(last_processed)
+        if position is None:
+            raise RuntimeError("persisted last_processed is outside loaded history")
+        return list(eligible[position + 1 :])
+
+    def run_once(
+        self,
+        *,
+        symbol: str,
+        period: str,
+        interval: str,
+        max_catchup_bars: int = 12,
+    ) -> PaperCycleResult:
+        if max_catchup_bars < 1:
+            raise ValueError("max_catchup_bars must be at least 1")
+
+        runtime_key = build_runtime_key(symbol, interval)
+        runtime = self.runtime_factory(
+            symbol=symbol,
+            persistence=self.persistence,
+            runtime_key=runtime_key,
+        )
+        market = self.data_loader(symbol, period, interval)
+        eligible = runtime._eligible_execution_indices(market)
+        if not eligible:
+            raise RuntimeError("market history contains no eligible execution bar")
+
+        snapshot = self.persistence.load_runtime(
+            runtime_key,
+            runtime.risk_config.starting_cash,
+        )
+        pending = self._pending_targets(snapshot, eligible)
+        if not pending:
+            return PaperCycleResult(
+                processed=0,
+                remaining_backlog=False,
+                last_processed=snapshot.state.last_processed,
+                processed_bars=snapshot.state.processed_bars,
+                reason="no new eligible bar",
+            )
+
+        processed = 0
+        attempts = 0
+        while pending and attempts < max_catchup_bars:
+            target = pending[0]
+            result = runtime.step_at(market, target)
+            attempts += 1
+            if result.processed:
+                processed += 1
+            elif result.reason not in {
+                "persistence revision conflict",
+                "bar already processed",
+            }:
+                raise RuntimeError(f"paper cycle did not process target: {result.reason}")
+
+            snapshot = self.persistence.load_runtime(
+                runtime_key,
+                runtime.risk_config.starting_cash,
+            )
+            pending = self._pending_targets(snapshot, eligible)
+
+        remaining_backlog = bool(pending)
+        if remaining_backlog:
+            reason = "catch-up pending"
+        elif processed:
+            reason = f"processed {processed} bar(s)"
+        else:
+            reason = "concurrent progress observed"
+
+        return PaperCycleResult(
+            processed=processed,
+            remaining_backlog=remaining_backlog,
+            last_processed=snapshot.state.last_processed,
+            processed_bars=snapshot.state.processed_bars,
+            reason=reason,
+        )

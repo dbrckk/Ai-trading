@@ -102,152 +102,194 @@ class PaperAutonomousRuntime:
             last_learning_cycle_bar=last_learning_cycle_bar,
         )
 
-    def step(self, df: pd.DataFrame) -> RuntimeStepResult:
+    def _eligible_execution_indices(self, df: pd.DataFrame) -> tuple[object, ...]:
         if len(df) < 40:
             raise ValueError("Need at least 40 bars for runtime features")
 
-        with RuntimeLock(self.lock_path):
-            features = make_features(df)
-            labels = make_labels(
-                df,
-                horizon_bars=self.model_config.horizon_bars,
-                return_threshold=self.model_config.return_threshold,
-            )
-            valid = features.dropna().index
-            if len(valid) < 3:
-                raise ValueError("Insufficient valid feature rows")
+        features = make_features(df)
+        valid = features.dropna().index
+        if len(valid) < 3:
+            raise ValueError("Insufficient valid feature rows")
 
-            signal_idx = valid[-2]
+        execution: list[object] = []
+        # Keep one valid row in reserve exactly as the legacy latest-bar path did.
+        # A targeted signal also needs one prior valid row for online learning.
+        for signal_idx in valid[1:-1]:
             signal_pos = int(df.index.get_loc(signal_idx))
-            if signal_pos + 1 >= len(df.index):
-                raise ValueError("No execution bar available after signal bar")
-            execution_idx = df.index[signal_pos + 1]
-            execution_time = str(execution_idx)
-            persisted = self.persistence.load_runtime(
-                self.runtime_key,
-                self.risk_config.starting_cash,
-            )
-            state = persisted.state
+            if signal_pos + 1 < len(df.index):
+                execution.append(df.index[signal_pos + 1])
+        return tuple(dict.fromkeys(execution))
 
-            if state.last_processed == execution_time:
-                broker = self._broker_from_state(state)
-                return RuntimeStepResult(
-                    processed=False,
-                    timestamp=execution_time,
-                    side=0,
-                    confidence=0.0,
-                    approved=False,
-                    reason="bar already processed",
-                    equity=broker.state.equity,
-                    units=broker.state.units,
-                    processed_bars=state.processed_bars,
-                    retrain_due=False,
-                )
+    def step(self, df: pd.DataFrame) -> RuntimeStepResult:
+        eligible = self._eligible_execution_indices(df)
+        if not eligible:
+            raise ValueError("No eligible execution bar available")
+        return self.step_at(df, eligible[-1])
 
-            if persisted.model is None:
-                if not persisted.is_new and state.processed_bars > 0:
-                    raise ValueError("persisted runtime is missing its online model")
-                model = RiverDirectionModel()
-            else:
-                model = deserialize_model(persisted.model)
+    def step_at(self, df: pd.DataFrame, execution_idx: object) -> RuntimeStepResult:
+        eligible = self._eligible_execution_indices(df)
+        if execution_idx not in eligible:
+            raise ValueError("Requested index is not an eligible execution bar")
 
-            learn_idx = valid[-3]
-            learn_label = labels.get(learn_idx)
-            if pd.notna(learn_label):
-                model.learn_one(
-                    features.loc[learn_idx, FEATURES],
-                    int(learn_label),
-                )
+        with RuntimeLock(self.lock_path):
+            return self._step_at_locked(df, execution_idx, eligible)
 
-            row = features.loc[signal_idx, FEATURES]
-            prediction: Prediction = model.predict_one(row)
+    def _step_at_locked(
+        self,
+        df: pd.DataFrame,
+        execution_idx: object,
+        eligible: tuple[object, ...],
+    ) -> RuntimeStepResult:
+        features = make_features(df)
+        labels = make_labels(
+            df,
+            horizon_bars=self.model_config.horizon_bars,
+            return_threshold=self.model_config.return_threshold,
+        )
+        valid = features.dropna().index
 
-            execution_price = float(df.at[execution_idx, "Open"])
-            close_price = float(df.at[execution_idx, "Close"])
+        execution_pos = int(df.index.get_loc(execution_idx))
+        if execution_pos < 1:
+            raise ValueError("Requested index is not an eligible execution bar")
+        signal_idx = df.index[execution_pos - 1]
+        valid_positions = {value: index for index, value in enumerate(valid)}
+        signal_valid_pos = valid_positions.get(signal_idx)
+        if signal_valid_pos is None or signal_valid_pos < 1:
+            raise ValueError("Requested index is not an eligible execution bar")
+        learn_idx = valid[signal_valid_pos - 1]
+
+        execution_time = str(execution_idx)
+        persisted = self.persistence.load_runtime(
+            self.runtime_key,
+            self.risk_config.starting_cash,
+        )
+        state = persisted.state
+
+        eligible_positions = {str(value): index for index, value in enumerate(eligible)}
+        target_position = eligible_positions[execution_time]
+        persisted_position = (
+            eligible_positions.get(state.last_processed)
+            if state.last_processed is not None
+            else None
+        )
+        if persisted_position is not None and target_position <= persisted_position:
             broker = self._broker_from_state(state)
-            broker.mark(execution_price)
-            broker.state.day_start_equity = broker.state.equity
-            snapshot = PortfolioSnapshot(
-                equity=broker.state.equity,
-                peak_equity=broker.state.peak_equity,
-                day_start_equity=broker.state.day_start_equity,
-                current_position_value=broker.state.units * execution_price,
-            )
-            decision = self.risk.evaluate(prediction, snapshot)
-
-            trade: TradeSnapshot | None = None
-            previous_units = broker.state.units
-            if decision.approved:
-                broker.rebalance(decision.side, decision.target_notional, execution_price)
-                delta_units = broker.state.units - previous_units
-                if abs(delta_units) > 1e-12:
-                    trade = TradeSnapshot(
-                        timestamp_utc=execution_time,
-                        symbol=self.symbol,
-                        side="BUY" if delta_units > 0 else "SELL",
-                        quantity=abs(delta_units),
-                        price=execution_price,
-                        status="PAPER_FILLED",
-                        confidence=prediction.confidence,
-                        strategy="online-river",
-                    )
-
-            broker.mark(close_price)
-
-            processed_bars = state.processed_bars + 1
-            bars_since_cycle = processed_bars - state.last_learning_cycle_bar
-            retrain_due = bars_since_cycle >= self.learning_cycle_every_bars
-
-            new_state = self._state_from_broker(
-                broker,
-                last_processed=execution_time,
-                processed_bars=processed_bars,
-                last_learning_cycle_bar=state.last_learning_cycle_bar,
-            )
-            audit_payload = {
-                "signal_time": str(signal_idx),
-                "execution_time": execution_time,
-                "prediction": asdict(prediction),
-                "risk_decision": asdict(decision),
-                "equity": broker.state.equity,
-                "units": broker.state.units,
-                "processed_bars": processed_bars,
-                "retrain_due": retrain_due,
-            }
-            outcome = self.persistence.commit_step(
-                self.runtime_key,
-                RuntimeStepCommit(
-                    expected_revision=persisted.revision,
-                    state=new_state,
-                    model=serialize_model(model),
-                    trade=trade,
-                    audit_event="runtime_step",
-                    audit_payload=audit_payload,
-                ),
-            )
-            if outcome is CommitOutcome.CONFLICT:
-                return RuntimeStepResult(
-                    processed=False,
-                    timestamp=execution_time,
-                    side=0,
-                    confidence=0.0,
-                    approved=False,
-                    reason="persistence revision conflict",
-                    equity=broker.state.equity,
-                    units=broker.state.units,
-                    processed_bars=state.processed_bars,
-                    retrain_due=False,
-                )
-
             return RuntimeStepResult(
-                processed=True,
+                processed=False,
                 timestamp=execution_time,
-                side=prediction.side,
-                confidence=prediction.confidence,
-                approved=decision.approved,
-                reason=decision.reason,
+                side=0,
+                confidence=0.0,
+                approved=False,
+                reason="bar already processed",
                 equity=broker.state.equity,
                 units=broker.state.units,
-                processed_bars=processed_bars,
-                retrain_due=retrain_due,
+                processed_bars=state.processed_bars,
+                retrain_due=False,
             )
+
+        if persisted.model is None:
+            if not persisted.is_new and state.processed_bars > 0:
+                raise ValueError("persisted runtime is missing its online model")
+            model = RiverDirectionModel()
+        else:
+            model = deserialize_model(persisted.model)
+
+        learn_label = labels.get(learn_idx)
+        if pd.notna(learn_label):
+            model.learn_one(
+                features.loc[learn_idx, FEATURES],
+                int(learn_label),
+            )
+
+        row = features.loc[signal_idx, FEATURES]
+        prediction: Prediction = model.predict_one(row)
+
+        execution_price = float(df.at[execution_idx, "Open"])
+        close_price = float(df.at[execution_idx, "Close"])
+        broker = self._broker_from_state(state)
+        broker.mark(execution_price)
+        broker.state.day_start_equity = broker.state.equity
+        snapshot = PortfolioSnapshot(
+            equity=broker.state.equity,
+            peak_equity=broker.state.peak_equity,
+            day_start_equity=broker.state.day_start_equity,
+            current_position_value=broker.state.units * execution_price,
+        )
+        decision = self.risk.evaluate(prediction, snapshot)
+
+        trade: TradeSnapshot | None = None
+        previous_units = broker.state.units
+        if decision.approved:
+            broker.rebalance(decision.side, decision.target_notional, execution_price)
+            delta_units = broker.state.units - previous_units
+            if abs(delta_units) > 1e-12:
+                trade = TradeSnapshot(
+                    timestamp_utc=execution_time,
+                    symbol=self.symbol,
+                    side="BUY" if delta_units > 0 else "SELL",
+                    quantity=abs(delta_units),
+                    price=execution_price,
+                    status="PAPER_FILLED",
+                    confidence=prediction.confidence,
+                    strategy="online-river",
+                )
+
+        broker.mark(close_price)
+
+        processed_bars = state.processed_bars + 1
+        bars_since_cycle = processed_bars - state.last_learning_cycle_bar
+        retrain_due = bars_since_cycle >= self.learning_cycle_every_bars
+
+        new_state = self._state_from_broker(
+            broker,
+            last_processed=execution_time,
+            processed_bars=processed_bars,
+            last_learning_cycle_bar=state.last_learning_cycle_bar,
+        )
+        audit_payload = {
+            "signal_time": str(signal_idx),
+            "execution_time": execution_time,
+            "prediction": asdict(prediction),
+            "risk_decision": asdict(decision),
+            "equity": broker.state.equity,
+            "units": broker.state.units,
+            "processed_bars": processed_bars,
+            "retrain_due": retrain_due,
+        }
+        outcome = self.persistence.commit_step(
+            self.runtime_key,
+            RuntimeStepCommit(
+                expected_revision=persisted.revision,
+                state=new_state,
+                model=serialize_model(model),
+                trade=trade,
+                audit_event="runtime_step",
+                audit_payload=audit_payload,
+            ),
+        )
+        if outcome is CommitOutcome.CONFLICT:
+            return RuntimeStepResult(
+                processed=False,
+                timestamp=execution_time,
+                side=0,
+                confidence=0.0,
+                approved=False,
+                reason="persistence revision conflict",
+                equity=broker.state.equity,
+                units=broker.state.units,
+                processed_bars=state.processed_bars,
+                retrain_due=False,
+            )
+
+        return RuntimeStepResult(
+            processed=True,
+            timestamp=execution_time,
+            side=prediction.side,
+            confidence=prediction.confidence,
+            approved=decision.approved,
+            reason=decision.reason,
+            equity=broker.state.equity,
+            units=broker.state.units,
+            processed_bars=processed_bars,
+            retrain_due=retrain_due,
+        )

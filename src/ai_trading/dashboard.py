@@ -91,6 +91,15 @@ def render_dashboard(
         equity = state.cash + state.units * state.last_price if state is not None else starting_cash
         position_value = units * last_price
 
+    last_processed = (
+        state.last_processed
+        if state is not None and state.last_processed and not storage_error
+        else "-"
+    )
+    processed_bars_display = (
+        str(state.processed_bars) if state is not None and not storage_error else "-"
+    )
+
     runtime_snapshot = _public_runtime_snapshot(runtime_status)
     engine_status = "ERROR" if storage_error else str(runtime_snapshot["engine_status"])
     market = (
@@ -186,6 +195,8 @@ th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
 <div class="metric"><small>Last heartbeat</small><strong>{html.escape(last_heartbeat)}</strong></div>
 <div class="metric"><small>Heartbeat age</small><strong>{html.escape(heartbeat_age)}</strong></div>
 <div class="metric"><small>Last cycle</small><strong>{html.escape(last_cycle)}</strong></div>
+<div class="metric"><small>Last processed</small><strong>{html.escape(last_processed)}</strong></div>
+<div class="metric"><small>Processed bars</small><strong>{processed_bars_display}</strong></div>
 <div class="metric"><small>Signal</small><strong>{html.escape(signal)}</strong></div>
 <div class="metric"><small>AI confidence</small><strong>{html.escape(confidence)}</strong></div>
 <div class="metric"><small>Risk decision</small><strong>{html.escape(risk_decision)}</strong></div>

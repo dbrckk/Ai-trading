@@ -16,6 +16,8 @@ Autonomous trading research platform focused on reproducible, risk-aware, out-of
 - Sharpe, Sortino, Calmar, annualized return/volatility and max drawdown
 - append-only experiment registry
 - durable PostgreSQL persistence for hosted paper runtime state
+- bounded external paper-cycle scheduling with catch-up support
+- read-only hosted dashboard backed by the same durable runtime state
 - CI with Ruff + Pytest + PostgreSQL 16 integration tests
 
 The optimization target is **risk-adjusted net performance after costs**, not raw backtest profit or win rate.
@@ -129,6 +131,53 @@ Treat the database connection string as a secret. Do not commit it, print it, ex
 Persistence commits use revision-based overlap protection and one database transaction for state, online model, optional paper trade, and audit event. A conflicting worker receives a persistence conflict instead of overwriting a newer revision.
 
 This persistence layer does not enable live trading. Broker routing remains paper-only.
+
+### Continuous paper production mode
+
+The production paper architecture separates execution from the hosted web process:
+
+```text
+GitHub Actions (every 5 minutes)
+        |
+        v
+ai-trading paper-cycle
+        |
+        v
+Shared PostgreSQL durable state
+        |
+        +----------------------+
+        |                      |
+        v                      v
+paper state/model/trades     Render dashboard
+```
+
+The scheduled executor is defined in `.github/workflows/paper-cycle.yml`. It runs every five minutes and can also be invoked through `workflow_dispatch`. The database connection string is supplied only through the GitHub Actions secret named `AI_TRADING_DATABASE_URL`.
+
+The production cycle is:
+
+```bash
+ai-trading paper-cycle --symbol GC=F --period 5d --interval 5m --max-catchup-bars 12
+```
+
+Its durable runtime key is:
+
+```text
+paper:GC=F:5m:online-river:v1
+```
+
+A fresh durable runtime processes only the latest eligible execution bar. An existing runtime catches up missed eligible bars oldest-first, with at most 12 attempted bars per invocation. If the durable `last_processed` marker is outside the loaded history window, the cycle fails closed instead of guessing where to resume. Revision conflicts cause state to be reloaded so overlapping executors cannot overwrite newer durable progress.
+
+The Render web service should use the same `AI_TRADING_DATABASE_URL` and run with:
+
+```text
+AI_TRADING_HOSTED_PAPER=1
+AI_TRADING_EXTERNAL_SCHEDULER=1
+AI_TRADING_HOSTED_SYMBOL=GC=F
+AI_TRADING_HOSTED_PERIOD=5d
+AI_TRADING_HOSTED_INTERVAL=5m
+```
+
+`AI_TRADING_EXTERNAL_SCHEDULER=1` explicitly suppresses the legacy in-process daemon worker. Render then serves the dashboard only, while GitHub Actions owns paper-cycle execution. The dashboard reads the shared durable state and exposes the last processed bar and processed-bar count without exposing storage connection details.
 
 ## Walk-forward methodology
 
