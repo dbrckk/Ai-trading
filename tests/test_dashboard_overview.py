@@ -7,11 +7,12 @@ from threading import Thread
 from urllib.error import URLError
 from urllib.request import urlopen
 
-from ai_trading.dashboard import serve_dashboard
+from ai_trading.dashboard import render_dashboard, serve_dashboard
 from ai_trading.hosted_runtime import HostedPaperSettings
 from ai_trading.persistence import ModelBlob, PersistedRuntime
 from ai_trading.runtime_state import RuntimeState
 from ai_trading.runtime_status import HostedRuntimeStatus
+from ai_trading.trade_journal import TradeJournal
 
 RUNTIME_KEY = "paper:GC=F:5m:online-river:v1"
 
@@ -131,3 +132,19 @@ def test_overview_endpoint_exposes_model_and_runtime_sync_state() -> None:
         "lag_detected": False,
     }
     assert payload["alerts"] == []
+
+
+def test_dashboard_shows_operational_overview(tmp_path) -> None:
+    page = render_dashboard(
+        TradeJournal(tmp_path / "empty.jsonl"),
+        persistence=OverviewPersistence(),
+        runtime_key=RUNTIME_KEY,
+    )
+
+    assert "Runtime revision" in page
+    assert ">17<" in page
+    assert "Persisted model" in page
+    assert "joblib v3 · 1234567890ab" in page
+    assert "Runtime sync" in page
+    assert ">IN SYNC<" in page
+    assert "Operational alerts: None" in page
