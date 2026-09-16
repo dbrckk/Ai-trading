@@ -151,19 +151,20 @@ Successful response:
 }
 ```
 
-`processed` is the number of execution bars committed during that invocation. It may be zero when there is no unseen eligible execution bar.
+`processed` is the number of execution bars committed during that invocation. It may be zero when there is no unseen eligible execution bar or when another authorized executor has already advanced the same durable revision.
 
 The response must remain deliberately small and must not expose model data, database metadata, secret values, raw provider errors, or detailed trade internals.
 
 Expected status codes:
 
-- `200`: request authenticated and cycle completed or safely no-op'd.
+- `200`: request authenticated and cycle completed, safely no-op'd, or lost a benign persistence race to an executor that already advanced the same runtime.
 - `401`: invalid/missing scheduler token.
-- `409`: safe persistence revision conflict after another executor advanced the same runtime.
 - `503`: scheduler endpoint unavailable because required configuration/storage initialization failed.
 - `500`: sanitized unexpected execution failure.
 
-Every execution failure must still update durable runtime status to `ERROR` on a best-effort basis, following the same error-sanitization rules as the CLI.
+A benign revision conflict is not exposed as an HTTP failure because logical progress has already occurred elsewhere. It returns `200` with no duplicate commit.
+
+Every actual execution failure must still update durable runtime status to `ERROR` on a best-effort basis, following the same error-sanitization rules as the CLI.
 
 ## Shared execution service
 
@@ -205,7 +206,7 @@ Existing protections remain authoritative:
 2. The persisted `last_processed` prevents already-committed execution bars from being replayed.
 3. PostgreSQL revision CAS is the final concurrency guard.
 4. If two scheduler calls race, only one may commit a particular revision.
-5. A loser returns a safe conflict/no-op result and must not create a duplicate trade or model update.
+5. A loser returns a safe no-op result and must not create a duplicate trade or model update.
 
 The Cloudflare Worker does not implement distributed locking.
 
@@ -401,7 +402,7 @@ The endpoint returns a sanitized failure. Runtime state is not advanced for data
 
 ### Concurrent Cloudflare and manual GitHub invocation
 
-PostgreSQL revision CAS resolves the race. No duplicate logical commit is permitted.
+PostgreSQL revision CAS resolves the race. If one executor commits first, the other returns a successful safe no-op. No duplicate logical commit is permitted.
 
 ## Testing strategy
 
@@ -422,7 +423,7 @@ Implementation follows TDD.
 - HTTP path and CLI call the same shared production-cycle service;
 - successful no-op returns `200` and `processed=0`;
 - successful catch-up returns committed count;
-- persistence conflict returns safe behavior without duplicate commit;
+- persistence conflict returns a successful safe no-op without duplicate commit;
 - internal exception becomes sanitized public error and durable `ERROR` status when possible.
 
 ### Cloudflare Worker tests
