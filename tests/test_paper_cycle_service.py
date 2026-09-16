@@ -6,6 +6,7 @@ from ai_trading.paper_cycle_service import (
     ProductionPaperCycleSettings,
     run_production_paper_cycle,
 )
+
 from ai_trading.paper_cycle import PaperCycleResult
 from ai_trading.persistence import PersistedRuntime
 from ai_trading.runtime_state import RuntimeState
@@ -40,8 +41,20 @@ class FakeRunner:
     def __init__(self, persistence: FakePersistence) -> None:
         self.persistence = persistence
 
-    def run_once(self, *, symbol: str, period: str, interval: str, max_catchup_bars: int) -> PaperCycleResult:
-        assert (symbol, period, interval, max_catchup_bars) == ("GC=F", "5d", "5m", 12)
+    def run_once(
+        self,
+        *,
+        symbol: str,
+        period: str,
+        interval: str,
+        max_catchup_bars: int,
+    ) -> PaperCycleResult:
+        assert (symbol, period, interval, max_catchup_bars) == (
+            "GC=F",
+            "5d",
+            "5m",
+            12,
+        )
         return PaperCycleResult(
             processed=2,
             remaining_backlog=False,
@@ -53,7 +66,12 @@ class FakeRunner:
 
 def test_service_persists_starting_and_running_status() -> None:
     backend = FakePersistence()
-    result = run_production_paper_cycle(ProductionPaperCycleSettings(), persistence=backend, runner_factory=lambda persistence: FakeRunner(persistence))
+    result = run_production_paper_cycle(
+        ProductionPaperCycleSettings(),
+        persistence=backend,
+        runner_factory=lambda persistence: FakeRunner(persistence),
+    )
+
     assert result.processed == 2
     assert [status.engine_status for status in backend.statuses] == ["STARTING", "RUNNING"]
     final = backend.statuses[-1]
@@ -70,8 +88,13 @@ def test_service_persists_starting_and_running_status() -> None:
 def test_persistence_factory_failure_is_sanitized() -> None:
     def broken_factory():
         raise RuntimeError("postgresql://user:secret@example.invalid/private")
+
     with pytest.raises(PaperCycleServiceError) as caught:
-        run_production_paper_cycle(ProductionPaperCycleSettings(), persistence_factory=broken_factory)
+        run_production_paper_cycle(
+            ProductionPaperCycleSettings(),
+            persistence_factory=broken_factory,
+        )
+
     error = caught.value
     assert error.code == "storage_unavailable"
     assert error.error_type == "RuntimeError"
@@ -84,17 +107,26 @@ def test_persistence_factory_failure_is_sanitized() -> None:
 def test_starting_status_failure_never_runs_worker() -> None:
     backend = FakePersistence()
     calls = 0
+
     def broken_save(runtime_key, status):
         del runtime_key, status
         raise RuntimeError("storage down")
+
     backend.save_runtime_status = broken_save
+
     def runner_factory(persistence):
         nonlocal calls
         del persistence
         calls += 1
         return FakeRunner(backend)
+
     with pytest.raises(PaperCycleServiceError) as caught:
-        run_production_paper_cycle(ProductionPaperCycleSettings(), persistence=backend, runner_factory=runner_factory)
+        run_production_paper_cycle(
+            ProductionPaperCycleSettings(),
+            persistence=backend,
+            runner_factory=runner_factory,
+        )
+
     assert calls == 0
     assert caught.value.code == "storage_unavailable"
     assert caught.value.__cause__ is None
@@ -102,12 +134,19 @@ def test_starting_status_failure_never_runs_worker() -> None:
 
 def test_worker_failure_writes_sanitized_error_status() -> None:
     backend = FakePersistence()
+
     class BrokenRunner:
         def run_once(self, **kwargs):
             del kwargs
             raise RuntimeError("postgresql://user:secret@example.invalid/private")
+
     with pytest.raises(PaperCycleServiceError) as caught:
-        run_production_paper_cycle(ProductionPaperCycleSettings(), persistence=backend, runner_factory=lambda persistence: BrokenRunner())
+        run_production_paper_cycle(
+            ProductionPaperCycleSettings(),
+            persistence=backend,
+            runner_factory=lambda persistence: BrokenRunner(),
+        )
+
     assert [status.engine_status for status in backend.statuses] == ["STARTING", "ERROR"]
     assert backend.statuses[-1].error == "RuntimeError: worker failure"
     assert caught.value.code == "execution_failed"
@@ -120,19 +159,28 @@ def test_error_status_failure_does_not_mask_worker_failure() -> None:
     backend = FakePersistence()
     original_save = backend.save_runtime_status
     writes = 0
+
     def flaky_save(runtime_key, status):
         nonlocal writes
         writes += 1
         if writes >= 2:
             raise RuntimeError("status write failed with secret")
         original_save(runtime_key, status)
+
     backend.save_runtime_status = flaky_save
+
     class BrokenRunner:
         def run_once(self, **kwargs):
             del kwargs
             raise ValueError("provider secret")
+
     with pytest.raises(PaperCycleServiceError) as caught:
-        run_production_paper_cycle(ProductionPaperCycleSettings(), persistence=backend, runner_factory=lambda persistence: BrokenRunner())
+        run_production_paper_cycle(
+            ProductionPaperCycleSettings(),
+            persistence=backend,
+            runner_factory=lambda persistence: BrokenRunner(),
+        )
+
     assert caught.value.code == "execution_failed"
     assert caught.value.error_type == "ValueError"
     assert caught.value.__cause__ is None
