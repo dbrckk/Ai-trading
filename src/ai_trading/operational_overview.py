@@ -19,9 +19,7 @@ def _runtime_consistent(runtime: PersistedRuntime) -> bool:
         return False
     if state.processed_bars > 0 and not state.last_processed:
         return False
-    if state.units != 0.0 and state.last_price <= 0.0:
-        return False
-    return True
+    return state.units == 0.0 or state.last_price > 0.0
 
 
 def build_operational_overview(
