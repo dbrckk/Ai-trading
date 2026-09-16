@@ -4,10 +4,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
-from ai_trading.paper_cycle import PaperCycleRunner
 
 from ai_trading.config import RiskConfig
 from ai_trading.file_persistence import FilePaperPersistence
+from ai_trading.paper_cycle import PaperCycleRunner
 from ai_trading.persistence import build_runtime_key
 from ai_trading.runtime import PaperAutonomousRuntime, RuntimeStepResult
 from ai_trading.runtime_state import RuntimeState
