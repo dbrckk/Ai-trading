@@ -9,6 +9,7 @@ from ai_trading.hosted_runtime import HostedPaperSettings, start_hosted_paper_ru
 
 def test_hosted_paper_settings_disabled_by_default(monkeypatch) -> None:
     monkeypatch.delenv("AI_TRADING_HOSTED_PAPER", raising=False)
+    monkeypatch.delenv("AI_TRADING_EXTERNAL_SCHEDULER", raising=False)
     monkeypatch.delenv("AI_TRADING_HOSTED_SYMBOL", raising=False)
     monkeypatch.delenv("AI_TRADING_HOSTED_PERIOD", raising=False)
     monkeypatch.delenv("AI_TRADING_HOSTED_INTERVAL", raising=False)
@@ -17,6 +18,7 @@ def test_hosted_paper_settings_disabled_by_default(monkeypatch) -> None:
     settings = HostedPaperSettings.from_env()
 
     assert settings.enabled is False
+    assert settings.external_scheduler is False
     assert settings.symbol == "GC=F"
     assert settings.period == "1y"
     assert settings.interval == "1d"
@@ -25,6 +27,7 @@ def test_hosted_paper_settings_disabled_by_default(monkeypatch) -> None:
 
 def test_enabled_hosted_runtime_starts_daemon_worker(monkeypatch) -> None:
     monkeypatch.setenv("AI_TRADING_HOSTED_PAPER", "1")
+    monkeypatch.delenv("AI_TRADING_EXTERNAL_SCHEDULER", raising=False)
     monkeypatch.setenv("AI_TRADING_HOSTED_SYMBOL", "SI=F")
     monkeypatch.setenv("AI_TRADING_HOSTED_POLL_SECONDS", "15")
     called = Event()
@@ -42,6 +45,17 @@ def test_enabled_hosted_runtime_starts_daemon_worker(monkeypatch) -> None:
     assert thread.daemon is True
     assert seen[0].symbol == "SI=F"
     assert seen[0].poll_seconds == 15.0
+
+
+def test_external_scheduler_suppresses_daemon(monkeypatch) -> None:
+    monkeypatch.setenv("AI_TRADING_HOSTED_PAPER", "1")
+    monkeypatch.setenv("AI_TRADING_EXTERNAL_SCHEDULER", "1")
+    settings = HostedPaperSettings.from_env()
+
+    thread = start_hosted_paper_runtime(settings=settings, runner=lambda _: None)
+
+    assert settings.external_scheduler is True
+    assert thread is None
 
 
 def test_hosted_loop_disables_expensive_health_check(monkeypatch) -> None:
