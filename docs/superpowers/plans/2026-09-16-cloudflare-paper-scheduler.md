@@ -2,57 +2,115 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Replace the unreliable automatic GitHub Actions trigger with a free Cloudflare Cron Trigger that securely wakes Render every five minutes, while keeping the existing paper-only execution path, Neon durability, catch-up semantics, and GitHub manual fallback.
+**Goal:** Replace the unreliable automatic GitHub Actions trigger with a free Cloudflare Cron Trigger that securely wakes Render every five minutes, while preserving the existing paper-only execution path, Neon durability, bounded catch-up, and GitHub manual fallback.
 
-**Architecture:** Extract the existing CLI paper-cycle orchestration into one shared Python service, expose that service through an authenticated `POST /internal/paper-cycle` endpoint on Render, and add a minimal scheduled Cloudflare Worker that only sends an authenticated POST. Neon remains the only durable state store. The first implementation PR deliberately leaves the GitHub `schedule:` block in place. Only after a real Cloudflare scheduled invocation is proven in production does a second PR remove GitHub automatic scheduling and retain `workflow_dispatch` only.
+**Architecture:** Move the existing CLI orchestration into one shared Python service. Both the CLI and a new authenticated `POST /internal/paper-cycle` Render endpoint call that service. A minimal Cloudflare Worker sends only an authenticated POST every five minutes. Neon remains the only durable runtime store. The first implementation PR keeps the existing GitHub `schedule:` block. Only after a real Cloudflare scheduled heartbeat is proven does a second PR remove GitHub automatic scheduling and retain `workflow_dispatch` only.
 
-**Tech Stack:** Python 3.11+, stdlib `http.server`, Typer, psycopg 3, River/joblib, PostgreSQL 16-compatible Neon, Render Free web service, Cloudflare Workers Cron, Node.js built-in test runner, GitHub Actions, pytest, Ruff.
+**Tech Stack:** Python 3.11+, stdlib `http.server`, Typer, psycopg 3, River/joblib, PostgreSQL 16-compatible Neon, Render Free, Cloudflare Workers Cron, Node.js 22 built-in test runner, GitHub Actions, pytest, Ruff.
 
 **Spec:** `docs/superpowers/specs/2026-09-16-cloudflare-paper-scheduler-design.md`
 
 ## Global Constraints
 
-- Paper trading only. Do not add a live broker adapter, live broker credential, or real-order route.
-- Stable production runtime key remains `paper:GC=F:5m:online-river:v1` through `build_runtime_key()`.
-- Production symbol, period, interval, catch-up limit, and risk settings are server-side only. The HTTP request must not override them.
-- Production values remain symbol `GC=F`, period `5d`, interval `5m`, maximum 12 catch-up bars, and status poll/freshness cadence 300 seconds.
-- `AI_TRADING_DATABASE_URL` remains the only production database selector. If configured and unusable, execution fails closed with no file fallback.
-- `AI_TRADING_EXTERNAL_SCHEDULER=1` remains enabled on Render; the embedded daemon must stay disabled.
-- The scheduler credential is separate from every database, GitHub, Render, and Cloudflare credential.
-- Never commit, print, return, or put in issue/PR text the scheduler token, database URL, database host, or raw provider exception.
-- Cloudflare contains no model state, market data logic, trading logic, or Neon credential.
-- At-least-once delivery is expected. Existing durable `last_processed` and PostgreSQL revision CAS remain the correctness boundary.
-- A benign persistence race is a successful logical no-op, not an HTTP failure.
-- Do not remove the GitHub Actions `schedule:` block in the first implementation PR. Remove it only after one real Cloudflare scheduled invocation is observed in production.
-- Do not close issue #19 until a second Cloudflare scheduled invocation is observed after GitHub automatic scheduling has been removed.
+- Paper trading only. Never add live broker routing, live broker credentials, or a real-order path.
+- Production runtime key remains `paper:GC=F:5m:online-river:v1` via `build_runtime_key()`.
+- HTTP callers cannot select symbol, period, interval, catch-up limit, strategy, or risk settings.
+- Production settings remain `GC=F`, `5d`, `5m`, maximum 12 catch-up bars, status poll interval 300 seconds.
+- `AI_TRADING_DATABASE_URL` remains the production DB selector; configured DB failure is fail-closed with no file fallback.
+- Render remains `AI_TRADING_EXTERNAL_SCHEDULER=1`; its embedded daemon stays disabled.
+- Scheduler token is independent of DB/GitHub/Render/Cloudflare account credentials.
+- Never commit, log, return, or place in issue/PR text any scheduler token, DB URL, DB host, or raw provider exception.
+- Cloudflare contains no trading/model/data logic and no Neon credential.
+- Delivery is at-least-once. Durable `last_processed` and PostgreSQL revision CAS remain the correctness boundary.
+- Benign CAS loss is a successful logical no-op, not an HTTP error.
+- First implementation PR must not remove GitHub `schedule:`.
+- Remove GitHub automatic scheduling only after a real Cloudflare scheduled heartbeat is observed.
+- Close issue #19 only after another Cloudflare scheduled heartbeat is observed after GitHub cutover.
 - Do not delete the temporary Render PostgreSQL instance without explicit user approval.
 
 ---
 
-### Task 1: Extract One Shared Production Paper-Cycle Service
+## Task 1: Shared Production Paper-Cycle Service
 
-**Files:**
+**Files**
 - Create: `src/ai_trading/paper_cycle_service.py`
 - Create: `tests/test_paper_cycle_service.py`
 - Modify: `src/ai_trading/command_app.py`
 - Modify: `tests/test_paper_cycle_cli.py`
 
-**Interfaces:**
-- Consumes: `PaperCycleRunner`, `PaperPersistence`, `build_paper_persistence()`, `build_runtime_key()`, `RiskConfig`, and `HostedRuntimeStatus`.
-- Produces: `ProductionPaperCycleSettings`, `PaperCycleServiceError`, and `run_production_paper_cycle()`.
-- `run_production_paper_cycle()` returns the existing `PaperCycleResult` so CLI and HTTP use exactly the same execution result type.
+### Step 1.1 — RED: write the service tests
 
-- [ ] **Step 1: Write RED tests for the shared service**
+Create `tests/test_paper_cycle_service.py` with these concrete helpers:
 
-Create `tests/test_paper_cycle_service.py` with a fake persistence containing a deterministic `RuntimeState`, plus a fake runner factory. Cover these cases:
+```python
+from __future__ import annotations
+
+import pytest
+
+from ai_trading.paper_cycle import PaperCycleResult
+from ai_trading.paper_cycle_service import (
+    PaperCycleServiceError,
+    ProductionPaperCycleSettings,
+    run_production_paper_cycle,
+)
+from ai_trading.persistence import PersistedRuntime
+from ai_trading.runtime_state import RuntimeState
+from ai_trading.runtime_status import HostedRuntimeStatus
+
+
+class FakePersistence:
+    def __init__(self) -> None:
+        self.statuses: list[HostedRuntimeStatus] = []
+        self.state = RuntimeState(
+            cash=99_500.0,
+            units=2.0,
+            last_price=101.0,
+            peak_equity=100_000.0,
+            day_start_equity=100_000.0,
+            last_processed="2026-09-16 08:00:00+00:00",
+            processed_bars=4,
+            last_learning_cycle_bar=0,
+        )
+
+    def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:
+        assert runtime_key == "paper:GC=F:5m:online-river:v1"
+        self.statuses.append(status)
+
+    def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:
+        assert runtime_key == "paper:GC=F:5m:online-river:v1"
+        assert starting_cash == 100_000.0
+        return PersistedRuntime(state=self.state, model=None, revision=4, is_new=False)
+
+
+class FakeRunner:
+    def __init__(self, persistence: FakePersistence) -> None:
+        self.persistence = persistence
+
+    def run_once(
+        self,
+        *,
+        symbol: str,
+        period: str,
+        interval: str,
+        max_catchup_bars: int,
+    ) -> PaperCycleResult:
+        assert (symbol, period, interval, max_catchup_bars) == ("GC=F", "5d", "5m", 12)
+        return PaperCycleResult(
+            processed=2,
+            remaining_backlog=False,
+            last_processed="2026-09-16 08:00:00+00:00",
+            processed_bars=4,
+            reason="processed 2 bar(s)",
+        )
+```
+
+Add these tests:
 
 ```python
 def test_service_persists_starting_and_running_status() -> None:
     backend = FakePersistence()
-    settings = ProductionPaperCycleSettings()
-
     result = run_production_paper_cycle(
-        settings,
+        ProductionPaperCycleSettings(),
         persistence=backend,
         runner_factory=lambda persistence: FakeRunner(persistence),
     )
@@ -68,27 +126,120 @@ def test_service_persists_starting_and_running_status() -> None:
     assert final.units == 2.0
     assert final.equity == 99_702.0
     assert final.reason == "processed 2 bar(s)"
+
+
+def test_persistence_factory_failure_is_sanitized() -> None:
+    def broken_factory():
+        raise RuntimeError("postgresql://user:secret@example.invalid/private")
+
+    with pytest.raises(PaperCycleServiceError) as caught:
+        run_production_paper_cycle(
+            ProductionPaperCycleSettings(),
+            persistence_factory=broken_factory,
+        )
+
+    error = caught.value
+    assert error.code == "storage_unavailable"
+    assert error.error_type == "RuntimeError"
+    assert error.__cause__ is None
+    assert "postgresql://" not in str(error)
+    assert "secret" not in repr(error)
+    assert "example.invalid" not in repr(error)
+
+
+def test_starting_status_failure_never_runs_worker() -> None:
+    backend = FakePersistence()
+    calls = 0
+
+    def broken_save(runtime_key, status):
+        del runtime_key, status
+        raise RuntimeError("storage down")
+
+    backend.save_runtime_status = broken_save
+
+    def runner_factory(persistence):
+        nonlocal calls
+        del persistence
+        calls += 1
+        return FakeRunner(backend)
+
+    with pytest.raises(PaperCycleServiceError) as caught:
+        run_production_paper_cycle(
+            ProductionPaperCycleSettings(),
+            persistence=backend,
+            runner_factory=runner_factory,
+        )
+
+    assert calls == 0
+    assert caught.value.code == "storage_unavailable"
+    assert caught.value.__cause__ is None
+
+
+def test_worker_failure_writes_sanitized_error_status() -> None:
+    backend = FakePersistence()
+
+    class BrokenRunner:
+        def run_once(self, **kwargs):
+            del kwargs
+            raise RuntimeError("postgresql://user:secret@example.invalid/private")
+
+    with pytest.raises(PaperCycleServiceError) as caught:
+        run_production_paper_cycle(
+            ProductionPaperCycleSettings(),
+            persistence=backend,
+            runner_factory=lambda persistence: BrokenRunner(),
+        )
+
+    assert [status.engine_status for status in backend.statuses] == ["STARTING", "ERROR"]
+    assert backend.statuses[-1].error == "RuntimeError: worker failure"
+    assert caught.value.code == "execution_failed"
+    assert caught.value.error_type == "RuntimeError"
+    assert caught.value.__cause__ is None
+    assert "secret" not in repr(caught.value)
+
+
+def test_error_status_failure_does_not_mask_worker_failure() -> None:
+    backend = FakePersistence()
+    original_save = backend.save_runtime_status
+    writes = 0
+
+    def flaky_save(runtime_key, status):
+        nonlocal writes
+        writes += 1
+        if writes >= 2:
+            raise RuntimeError("status write failed with secret")
+        original_save(runtime_key, status)
+
+    backend.save_runtime_status = flaky_save
+
+    class BrokenRunner:
+        def run_once(self, **kwargs):
+            del kwargs
+            raise ValueError("provider secret")
+
+    with pytest.raises(PaperCycleServiceError) as caught:
+        run_production_paper_cycle(
+            ProductionPaperCycleSettings(),
+            persistence=backend,
+            runner_factory=lambda persistence: BrokenRunner(),
+        )
+
+    assert caught.value.code == "execution_failed"
+    assert caught.value.error_type == "ValueError"
+    assert caught.value.__cause__ is None
 ```
 
-Add a backend-construction failure test that passes a `persistence_factory` raising an exception whose message contains a fake PostgreSQL URL and secret. Assert the raised `PaperCycleServiceError` has `code == "storage_unavailable"`, exposes only the exception type through `error_type`, and neither `str(error)` nor `repr(error)` contains the fake URL, host, or password.
-
-Add a `STARTING` status-write failure test. Assert the runner factory is never called and the raised service error is `storage_unavailable`.
-
-Add a runner-failure test. Assert best-effort durable `ERROR` is written with `error == "RuntimeError: worker failure"`, then `PaperCycleServiceError.code == "execution_failed"` is raised without the original message or chained secret-bearing exception.
-
-Add a failure test where saving `ERROR` itself raises. Assert the service still raises only the sanitized `PaperCycleServiceError` and does not replace it with the status-store exception.
-
-- [ ] **Step 2: Verify RED**
+Run:
 
 ```bash
 pytest tests/test_paper_cycle_service.py -q
 ```
 
-Expected: collection fails because `ai_trading.paper_cycle_service` does not exist.
+Expected RED: collection fails because `ai_trading.paper_cycle_service` does not exist.
 
-- [ ] **Step 3: Implement the shared service**
+### Step 1.2 — GREEN: implement the service
 
-Create `src/ai_trading/paper_cycle_service.py` around these concrete types:
+Create `src/ai_trading/paper_cycle_service.py`:
 
 ```python
 from __future__ import annotations
@@ -128,7 +279,7 @@ def _default_runner_factory(persistence: PaperPersistence) -> PaperCycleRunner:
     return PaperCycleRunner(persistence=persistence)
 ```
 
-Implement:
+Implement this signature:
 
 ```python
 def run_production_paper_cycle(
@@ -140,62 +291,107 @@ def run_production_paper_cycle(
 ) -> PaperCycleResult:
 ```
 
-The function must follow this exact failure boundary:
+Behavior, in this exact order:
 
-1. reject `max_catchup_bars < 1` before state mutation;
-2. construct the backend only when `persistence is None`; backend-construction failure -> `PaperCycleServiceError(code="storage_unavailable", error_type=type(exc).__name__) from None`;
-3. write `STARTING` in its own guarded block; failure -> the same `storage_unavailable` service error and no runner call;
-4. run the remaining cycle work in a second guarded block;
-5. call `runner_factory(backend).run_once()` with exactly `symbol`, `period`, `interval`, and `max_catchup_bars`;
-6. load durable state after the runner finishes;
-7. calculate equity as `state.cash + state.units * state.last_price`;
-8. write `RUNNING` using `result.last_processed`, `result.processed > 0`, `result.reason`, durable units, durable processed-bar count, and `settings.poll_seconds`;
-9. return the unchanged `PaperCycleResult`;
-10. if the second guarded block fails, make one best-effort `ERROR` status write with sanitized `error=f"{type(exc).__name__}: worker failure"`, then raise `PaperCycleServiceError(code="execution_failed", error_type=type(exc).__name__) from None`.
+1. `settings.max_catchup_bars < 1` -> `ValueError` before state mutation.
+2. Build backend only when `persistence is None`. Construction failure -> `PaperCycleServiceError(code="storage_unavailable", error_type=type(exc).__name__) from None`.
+3. Compute `runtime_key = build_runtime_key(settings.symbol, settings.interval)` and `starting_cash = RiskConfig().starting_cash`.
+4. Write STARTING in its own `try`. Failure -> `storage_unavailable` from None and no runner call.
+5. In a second `try`, call:
 
-- [ ] **Step 4: Verify the service GREEN**
+```python
+result = runner_factory(backend).run_once(
+    symbol=settings.symbol,
+    period=settings.period,
+    interval=settings.interval,
+    max_catchup_bars=settings.max_catchup_bars,
+)
+```
+
+6. Load durable state, compute `equity = state.cash + state.units * state.last_price`, and write RUNNING with `last_cycle_timestamp=result.last_processed`, `processed=result.processed > 0`, `reason=result.reason`, durable units/processed bars, and `poll_seconds=settings.poll_seconds`.
+7. Return the unchanged `PaperCycleResult`.
+8. If step 5–6 raises, best-effort write ERROR with `error=f"{type(exc).__name__}: worker failure"`, then raise `PaperCycleServiceError(code="execution_failed", error_type=type(exc).__name__) from None`. Failure of the ERROR write must not replace the service error.
+
+Run:
 
 ```bash
 pytest tests/test_paper_cycle_service.py tests/test_paper_cycle.py -q
 ruff check src/ai_trading/paper_cycle_service.py tests/test_paper_cycle_service.py
 ```
 
-Expected: PASS.
+Expected GREEN.
 
-- [ ] **Step 5: Refactor the CLI into a thin adapter**
+### Step 1.3 — RED/GREEN: make CLI a thin adapter
 
-First update `tests/test_paper_cycle_cli.py` so it monkeypatches `command_app.run_production_paper_cycle`. The success test must assert the adapter builds:
-
-```python
-ProductionPaperCycleSettings(
-    symbol="GC=F",
-    period="5d",
-    interval="5m",
-    max_catchup_bars=12,
-    poll_seconds=300.0,
-)
-```
-
-The failure test must raise:
+Replace `tests/test_paper_cycle_cli.py` orchestration mocks with these two core tests (keep any existing CLI help/smoke tests that still apply):
 
 ```python
-PaperCycleServiceError(code="execution_failed", error_type="RuntimeError")
+from typer.testing import CliRunner
+
+from ai_trading import command_app
+from ai_trading.paper_cycle import PaperCycleResult
+from ai_trading.paper_cycle_service import PaperCycleServiceError, ProductionPaperCycleSettings
+
+
+runner = CliRunner()
+
+
+def test_cli_calls_shared_production_service(monkeypatch) -> None:
+    seen = []
+
+    def fake_service(settings):
+        seen.append(settings)
+        return PaperCycleResult(
+            processed=1,
+            remaining_backlog=False,
+            last_processed="2026-09-16 08:00:00+00:00",
+            processed_bars=4,
+            reason="processed 1 bar(s)",
+        )
+
+    monkeypatch.setattr(command_app, "run_production_paper_cycle", fake_service)
+    result = runner.invoke(
+        command_app.app,
+        ["paper-cycle", "--symbol", "GC=F", "--period", "5d", "--interval", "5m", "--max-catchup-bars", "12"],
+    )
+
+    assert result.exit_code == 0
+    assert seen == [
+        ProductionPaperCycleSettings(
+            symbol="GC=F",
+            period="5d",
+            interval="5m",
+            max_catchup_bars=12,
+            poll_seconds=300.0,
+        )
+    ]
+    assert "processed 1 bar(s)" in result.output
+
+
+def test_cli_sanitizes_shared_service_failure(monkeypatch) -> None:
+    def fail(settings):
+        del settings
+        raise PaperCycleServiceError(code="execution_failed", error_type="RuntimeError")
+
+    monkeypatch.setattr(command_app, "run_production_paper_cycle", fail)
+    result = runner.invoke(command_app.app, ["paper-cycle"])
+
+    assert result.exit_code != 0
+    assert "execution_failed" in result.output
+    assert "RuntimeError" in result.output
+    assert "postgresql://" not in result.output
 ```
 
-and assert non-zero CLI exit with no provider detail. Run the updated test before production code and confirm RED.
+Run the updated CLI tests first and verify RED because `command_app.py` still owns orchestration. Then refactor `paper_cycle()` to construct `ProductionPaperCycleSettings`, call `run_production_paper_cycle(settings)`, print only result summary, and catch only `PaperCycleServiceError`; raise `typer.Exit(code=1) from None`.
 
-Then replace `command_app.paper_cycle()` orchestration with one `run_production_paper_cycle(settings)` call. Catch only `PaperCycleServiceError`, print a generic message containing `code` and `error_type`, and raise `typer.Exit(code=1) from None`.
-
-- [ ] **Step 6: Verify CLI and service GREEN**
+Verify:
 
 ```bash
 pytest tests/test_paper_cycle_service.py tests/test_paper_cycle_cli.py tests/test_paper_cycle.py -q
 ruff check src/ai_trading/command_app.py src/ai_trading/paper_cycle_service.py tests/test_paper_cycle_cli.py tests/test_paper_cycle_service.py
 ```
 
-Expected: PASS.
-
-- [ ] **Step 7: Commit Task 1**
+Commit:
 
 ```bash
 git add src/ai_trading/paper_cycle_service.py src/ai_trading/command_app.py tests/test_paper_cycle_service.py tests/test_paper_cycle_cli.py
@@ -204,23 +400,39 @@ git commit -m "refactor: share production paper cycle service"
 
 ---
 
-### Task 2: Add the Authenticated Render Scheduler Endpoint
+## Task 2: Authenticated Render Scheduler Endpoint
 
-**Files:**
+**Files**
 - Create: `src/ai_trading/scheduler_endpoint.py`
 - Create: `tests/test_scheduler_endpoint.py`
 - Modify: `src/ai_trading/dashboard.py`
 - Modify: `tests/test_dashboard_health.py`
 
-**Interfaces:**
-- `handle_scheduler_request()` maps authorization and service result to a sanitized HTTP response.
-- Route: `POST /internal/paper-cycle`.
-- Credential: `AI_TRADING_SCHEDULER_TOKEN` on Render.
-- Executor: shared `run_production_paper_cycle()` using the dashboard's already-constructed persistence backend.
+### Step 2.1 — RED: pure endpoint adapter tests
 
-- [ ] **Step 1: Write RED pure endpoint tests**
+Use this concrete helper in `tests/test_scheduler_endpoint.py`:
 
-Create `tests/test_scheduler_endpoint.py` covering:
+```python
+from ai_trading.paper_cycle import PaperCycleResult
+from ai_trading.paper_cycle_service import PaperCycleServiceError
+from ai_trading.scheduler_endpoint import handle_scheduler_request
+
+
+def successful_result(
+    *,
+    processed: int = 0,
+    reason: str = "no new eligible bar",
+) -> PaperCycleResult:
+    return PaperCycleResult(
+        processed=processed,
+        remaining_backlog=False,
+        last_processed="2026-09-16 08:00:00+00:00",
+        processed_bars=max(1, processed),
+        reason=reason,
+    )
+```
+
+Add these tests:
 
 ```python
 def test_missing_server_token_fails_closed() -> None:
@@ -243,13 +455,14 @@ def test_missing_authorization_is_unauthorized() -> None:
     assert response.payload == {"ok": False, "error": "unauthorized"}
 
 
-def test_wrong_scheme_is_unauthorized() -> None:
-    response = handle_scheduler_request(
-        authorization="Basic expected-token",
-        configured_token="expected-token",
-        run_cycle=lambda: successful_result(),
-    )
-    assert response.status_code == 401
+def test_wrong_scheme_or_token_is_unauthorized() -> None:
+    for authorization in ("Basic expected-token", "Bearer wrong-token"):
+        response = handle_scheduler_request(
+            authorization=authorization,
+            configured_token="expected-token",
+            run_cycle=lambda: successful_result(),
+        )
+        assert response.status_code == 401
 
 
 def test_valid_token_runs_exactly_one_cycle() -> None:
@@ -258,7 +471,7 @@ def test_valid_token_runs_exactly_one_cycle() -> None:
     def run_cycle() -> PaperCycleResult:
         nonlocal calls
         calls += 1
-        return successful_result(processed=2)
+        return successful_result(processed=2, reason="processed 2 bar(s)")
 
     response = handle_scheduler_request(
         authorization="Bearer expected-token",
@@ -269,21 +482,53 @@ def test_valid_token_runs_exactly_one_cycle() -> None:
     assert calls == 1
     assert response.status_code == 200
     assert response.payload == {"ok": True, "processed": 2, "status": "RUNNING"}
+
+
+def test_concurrent_progress_is_successful_noop() -> None:
+    response = handle_scheduler_request(
+        authorization="Bearer expected-token",
+        configured_token="expected-token",
+        run_cycle=lambda: successful_result(reason="concurrent progress observed"),
+    )
+    assert response.status_code == 200
+    assert response.payload["processed"] == 0
+
+
+def test_service_failures_are_sanitized() -> None:
+    for code, expected_status, expected_error in (
+        ("storage_unavailable", 503, "storage unavailable"),
+        ("execution_failed", 500, "worker failure"),
+    ):
+        def fail(code=code):
+            raise PaperCycleServiceError(
+                code=code,
+                error_type="postgresql://user:secret@example.invalid/private",
+            )
+
+        response = handle_scheduler_request(
+            authorization="Bearer expected-token",
+            configured_token="expected-token",
+            run_cycle=fail,
+        )
+        assert response.status_code == expected_status
+        assert response.payload == {"ok": False, "error": expected_error}
+        text = repr(response.payload)
+        assert "secret" not in text
+        assert "example.invalid" not in text
+        assert "postgresql://" not in text
 ```
 
-Also cover wrong Bearer token, concurrent-progress result with `processed=0` returning 200, `storage_unavailable` mapping to 503, and `execution_failed` mapping to 500. Assert failure payloads contain no token, database URL, host, original provider message, or `error_type`.
-
-- [ ] **Step 2: Verify RED**
+Run:
 
 ```bash
 pytest tests/test_scheduler_endpoint.py -q
 ```
 
-Expected: collection fails because `ai_trading.scheduler_endpoint` does not exist.
+Expected RED: module does not exist.
 
-- [ ] **Step 3: Implement the pure adapter**
+### Step 2.2 — GREEN: pure adapter implementation
 
-Create:
+Create `src/ai_trading/scheduler_endpoint.py`:
 
 ```python
 from __future__ import annotations
@@ -309,67 +554,166 @@ def _authorized(authorization: str | None, configured_token: str) -> bool:
     if not provided:
         return False
     return hmac.compare_digest(provided.encode(), configured_token.encode())
+
+
+def handle_scheduler_request(
+    *,
+    authorization: str | None,
+    configured_token: str,
+    run_cycle: Callable[[], PaperCycleResult],
+) -> SchedulerHttpResponse:
+    if not configured_token:
+        return SchedulerHttpResponse(503, {"ok": False, "error": "scheduler unavailable"})
+    if not _authorized(authorization, configured_token):
+        return SchedulerHttpResponse(401, {"ok": False, "error": "unauthorized"})
+    try:
+        result = run_cycle()
+    except PaperCycleServiceError as exc:
+        if exc.code == "storage_unavailable":
+            return SchedulerHttpResponse(503, {"ok": False, "error": "storage unavailable"})
+        return SchedulerHttpResponse(500, {"ok": False, "error": "worker failure"})
+    return SchedulerHttpResponse(
+        200,
+        {"ok": True, "processed": int(result.processed), "status": "RUNNING"},
+    )
 ```
 
-`handle_scheduler_request()` order:
+Do not catch arbitrary exceptions here; the shared service owns runtime-error sanitization and durable ERROR reporting.
 
-1. empty configured token -> 503 and no executor call;
-2. missing/wrong Authorization -> 401 and no executor call;
-3. valid token -> executor exactly once;
-4. success -> 200 with only `ok`, integer `processed`, and `status="RUNNING"`;
-5. service `storage_unavailable` -> 503 `{"ok": False, "error": "storage unavailable"}`;
-6. other `PaperCycleServiceError` -> 500 `{"ok": False, "error": "worker failure"}`.
-
-Do not catch arbitrary exceptions here; the shared service owns runtime-error sanitization and durable `ERROR` reporting.
-
-- [ ] **Step 4: Verify pure adapter GREEN**
+Verify:
 
 ```bash
 pytest tests/test_scheduler_endpoint.py -q
 ruff check src/ai_trading/scheduler_endpoint.py tests/test_scheduler_endpoint.py
 ```
 
-Expected: PASS.
+### Step 2.3 — RED/GREEN: HTTP server integration
 
-- [ ] **Step 5: Write RED HTTP integration tests**
-
-Use `serve_dashboard()` test injection arguments:
+Append concrete helpers to `tests/test_scheduler_endpoint.py`:
 
 ```python
-scheduler_token="server-secret"
-paper_cycle_executor=fake_cycle
+import json
+import socket
+import time
+from threading import Thread
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
+
+from ai_trading.file_persistence import FilePaperPersistence
+from ai_trading.hosted_runtime import HostedPaperSettings
+from ai_trading.dashboard import serve_dashboard
+
+
+def _free_port() -> int:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.bind(("127.0.0.1", 0))
+        return int(sock.getsockname()[1])
+
+
+def _post(url: str, *, authorization: str | None = None, body: bytes | None = None):
+    headers = {"Content-Type": "application/json"}
+    if authorization is not None:
+        headers["Authorization"] = authorization
+    request = Request(url, data=body or b"", headers=headers, method="POST")
+    try:
+        with urlopen(request, timeout=2) as response:
+            return response.status, response.read().decode()
+    except HTTPError as exc:
+        return exc.code, exc.read().decode()
+
+
+def _start_scheduler_server(tmp_path, executor, *, token="server-secret") -> int:
+    port = _free_port()
+    thread = Thread(
+        target=serve_dashboard,
+        kwargs={
+            "host": "127.0.0.1",
+            "port": port,
+            "persistence": FilePaperPersistence(root=tmp_path),
+            "settings": HostedPaperSettings(
+                enabled=False,
+                external_scheduler=True,
+                symbol="GC=F",
+                period="5d",
+                interval="5m",
+            ),
+            "scheduler_token": token,
+            "paper_cycle_executor": executor,
+        },
+        daemon=True,
+    )
+    thread.start()
+    deadline = time.time() + 3
+    while time.time() < deadline:
+        try:
+            with urlopen(f"http://127.0.0.1:{port}/healthz", timeout=1):
+                return port
+        except URLError:
+            time.sleep(0.02)
+    raise AssertionError("scheduler test server did not start")
 ```
 
-Use `urllib.request.Request` with method POST. Assert missing auth 401, wrong token 401, valid token 200 and one executor call, JSON body with `symbol=SI=F` and `interval=1m` cannot alter executor inputs, `POST /api/status` returns 404, and secret-looking service failures never enter responses.
+Add tests:
 
-- [ ] **Step 6: Verify HTTP integration RED**
+```python
+def test_http_scheduler_auth_and_body_cannot_override_settings(tmp_path) -> None:
+    calls = 0
 
-```bash
-pytest tests/test_scheduler_endpoint.py tests/test_dashboard_health.py -q
+    def executor():
+        nonlocal calls
+        calls += 1
+        return successful_result(processed=1, reason="processed 1 bar(s)")
+
+    port = _start_scheduler_server(tmp_path, executor)
+    url = f"http://127.0.0.1:{port}/internal/paper-cycle"
+
+    assert _post(url)[0] == 401
+    assert _post(url, authorization="Bearer wrong")[0] == 401
+    status, body = _post(
+        url + "?symbol=SI%3DF&interval=1m",
+        authorization="Bearer server-secret",
+        body=json.dumps({"symbol": "SI=F", "interval": "1m"}).encode(),
+    )
+    assert status == 200
+    assert calls == 1
+    assert json.loads(body) == {"ok": True, "processed": 1, "status": "RUNNING"}
+
+
+def test_http_scheduler_rejects_other_post_paths(tmp_path) -> None:
+    port = _start_scheduler_server(tmp_path, lambda: successful_result())
+    assert _post(f"http://127.0.0.1:{port}/api/status", authorization="Bearer server-secret")[0] == 404
+
+
+def test_http_scheduler_error_payload_never_exposes_internal_details(tmp_path) -> None:
+    def fail():
+        raise PaperCycleServiceError(
+            code="execution_failed",
+            error_type="postgresql://user:secret@example.invalid/private",
+        )
+
+    port = _start_scheduler_server(tmp_path, fail)
+    status, body = _post(
+        f"http://127.0.0.1:{port}/internal/paper-cycle",
+        authorization="Bearer server-secret",
+    )
+    assert status == 500
+    assert json.loads(body) == {"ok": False, "error": "worker failure"}
+    assert "secret" not in body
+    assert "example.invalid" not in body
 ```
 
-Expected: FAIL because `serve_dashboard()` has no scheduler POST path/injection yet.
+Run before production edit and verify RED because `serve_dashboard()` lacks these arguments/POST route.
 
-- [ ] **Step 7: Wire `dashboard.py`**
-
-Extend `serve_dashboard()` with:
+Then modify `dashboard.py`:
 
 ```python
 scheduler_token: str | None = None,
 paper_cycle_executor: Callable[[], PaperCycleResult] | None = None,
 ```
 
-Resolve:
+Resolve token once at startup from injected value or `os.getenv("AI_TRADING_SCHEDULER_TOKEN", "").strip()`.
 
-```python
-effective_scheduler_token = (
-    scheduler_token
-    if scheduler_token is not None
-    else os.getenv("AI_TRADING_SCHEDULER_TOKEN", "").strip()
-)
-```
-
-If no injected executor exists, create a closure calling `run_production_paper_cycle()` with the existing `backend` and:
+If no injected executor exists, define a zero-arg closure calling `run_production_paper_cycle()` with the existing `backend` and:
 
 ```python
 ProductionPaperCycleSettings(
@@ -381,18 +725,16 @@ ProductionPaperCycleSettings(
 )
 ```
 
-Change `_send_json` to accept `status_code: int = 200`. Add `do_POST()` that uses only `urlsplit(self.path).path.rstrip("/")`; exact path `/internal/paper-cycle` calls `handle_scheduler_request()`. Do not parse request body/query for trading configuration. Other POST paths return 404. Keep `log_message()` suppressed.
+Change `_send_json` to accept `status_code: int = 200`. Add `do_POST()` using only `urlsplit(self.path).path.rstrip("/")`; only `/internal/paper-cycle` calls `handle_scheduler_request()`. Do not parse request body/query for trading configuration. Other POST paths return 404. Keep `log_message()` suppressed.
 
-- [ ] **Step 8: Verify endpoint GREEN**
+Verify:
 
 ```bash
 pytest tests/test_scheduler_endpoint.py tests/test_dashboard_health.py tests/test_dashboard_persistence.py tests/test_dashboard.py -q
 ruff check src/ai_trading/dashboard.py src/ai_trading/scheduler_endpoint.py tests/test_scheduler_endpoint.py
 ```
 
-Expected: PASS.
-
-- [ ] **Step 9: Commit Task 2**
+Commit:
 
 ```bash
 git add src/ai_trading/scheduler_endpoint.py src/ai_trading/dashboard.py tests/test_scheduler_endpoint.py tests/test_dashboard_health.py
@@ -401,9 +743,9 @@ git commit -m "feat: add authenticated paper cycle endpoint"
 
 ---
 
-### Task 3: Add the Minimal Cloudflare Cron Worker and CI Coverage
+## Task 3: Minimal Cloudflare Cron Worker + CI
 
-**Files:**
+**Files**
 - Create: `infra/cloudflare-paper-scheduler/package.json`
 - Create: `infra/cloudflare-paper-scheduler/src/index.js`
 - Create: `infra/cloudflare-paper-scheduler/test/index.test.js`
@@ -411,45 +753,107 @@ git commit -m "feat: add authenticated paper cycle endpoint"
 - Create: `infra/cloudflare-paper-scheduler/README.md`
 - Modify: `.github/workflows/ci.yml`
 
-**Interfaces:**
-- Public Cloudflare variable `TARGET_URL`.
-- Cloudflare secret `SCHEDULER_TOKEN`.
-- UTC cron `*/5 * * * *`.
-- Target `https://ai-trading-dashboard-qyr2.onrender.com/internal/paper-cycle`.
+### Step 3.1 — RED: Worker tests
 
-- [ ] **Step 1: Write Worker tests first**
-
-Create package metadata:
+Create `infra/cloudflare-paper-scheduler/package.json`:
 
 ```json
 {
   "name": "ai-trading-paper-scheduler",
   "private": true,
   "type": "module",
-  "scripts": {
-    "test": "node --test test/index.test.js"
-  }
+  "scripts": {"test": "node --test test/index.test.js"}
 }
 ```
 
-Create `test/index.test.js` to assert a fake fetch receives target URL, POST, Bearer header, fixed User-Agent, and no body. Add missing `TARGET_URL` and missing `SCHEDULER_TOKEN` tests that assert no fetch occurs and error is exactly `scheduler configuration missing`. Add non-2xx HTTP 503 test asserting exact error `paper cycle failed with HTTP 503` without token or response-body content. Add a scheduled-handler test that captures and awaits `ctx.waitUntil()` while restoring `globalThis.fetch` in `finally`.
+Create `infra/cloudflare-paper-scheduler/test/index.test.js`:
 
-- [ ] **Step 2: Verify Worker RED**
+```javascript
+import assert from "node:assert/strict";
+import test from "node:test";
+import worker, { invokePaperCycle } from "../src/index.js";
+
+const env = {
+  TARGET_URL: "https://example.test/internal/paper-cycle",
+  SCHEDULER_TOKEN: "scheduler-secret",
+};
+
+test("invokePaperCycle sends only the authenticated POST", async () => {
+  let seen;
+  await invokePaperCycle(env, async (url, options) => {
+    seen = { url, options };
+    return { ok: true, status: 200 };
+  });
+  assert.equal(seen.url, env.TARGET_URL);
+  assert.equal(seen.options.method, "POST");
+  assert.equal(seen.options.headers.Authorization, "Bearer scheduler-secret");
+  assert.equal(seen.options.headers["User-Agent"], "ai-trading-cloudflare-scheduler/1");
+  assert.equal("body" in seen.options, false);
+});
+
+test("missing bindings fail before fetch", async () => {
+  for (const missing of ["TARGET_URL", "SCHEDULER_TOKEN"]) {
+    const broken = { ...env };
+    delete broken[missing];
+    let calls = 0;
+    await assert.rejects(
+      invokePaperCycle(broken, async () => {
+        calls += 1;
+        return { ok: true, status: 200 };
+      }),
+      { message: "scheduler configuration missing" },
+    );
+    assert.equal(calls, 0);
+  }
+});
+
+test("non-2xx error leaks neither token nor response body", async () => {
+  await assert.rejects(
+    invokePaperCycle(env, async () => ({
+      ok: false,
+      status: 503,
+      text: async () => "private-response-secret",
+    })),
+    (error) => {
+      assert.equal(error.message, "paper cycle failed with HTTP 503");
+      assert.equal(error.message.includes("scheduler-secret"), false);
+      assert.equal(error.message.includes("private-response-secret"), false);
+      return true;
+    },
+  );
+});
+
+test("scheduled handler registers the invocation with waitUntil", async () => {
+  const originalFetch = globalThis.fetch;
+  let pending;
+  globalThis.fetch = async () => ({ ok: true, status: 200 });
+  try {
+    worker.scheduled({}, env, { waitUntil(promise) { pending = promise; } });
+    assert.ok(pending);
+    await pending;
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+```
+
+Run:
 
 ```bash
 npm test --prefix infra/cloudflare-paper-scheduler
 ```
 
-Expected: FAIL because `src/index.js` does not exist.
+Expected RED: `src/index.js` is missing.
 
-- [ ] **Step 3: Implement Worker**
+### Step 3.2 — GREEN: Worker implementation/config/docs
+
+Create `src/index.js`:
 
 ```javascript
 export async function invokePaperCycle(env, fetchImpl = fetch) {
   if (!env.TARGET_URL || !env.SCHEDULER_TOKEN) {
     throw new Error("scheduler configuration missing");
   }
-
   const response = await fetchImpl(env.TARGET_URL, {
     method: "POST",
     headers: {
@@ -457,7 +861,6 @@ export async function invokePaperCycle(env, fetchImpl = fetch) {
       "User-Agent": "ai-trading-cloudflare-scheduler/1",
     },
   });
-
   if (!response.ok) {
     throw new Error(`paper cycle failed with HTTP ${response.status}`);
   }
@@ -470,9 +873,7 @@ export default {
 };
 ```
 
-Do not read response body or log secrets.
-
-- [ ] **Step 4: Add Wrangler config**
+Create `wrangler.toml`:
 
 ```toml
 name = "ai-trading-paper-scheduler"
@@ -486,23 +887,19 @@ crons = ["*/5 * * * *"]
 TARGET_URL = "https://ai-trading-dashboard-qyr2.onrender.com/internal/paper-cycle"
 ```
 
-Never put `SCHEDULER_TOKEN` in this file.
+Do not put `SCHEDULER_TOKEN` in Wrangler.
 
-- [ ] **Step 5: Document deployment**
+Create README documenting exactly: Worker name `ai-trading-paper-scheduler`; root directory `infra/cloudflare-paper-scheduler`; `TARGET_URL` is non-secret; `SCHEDULER_TOKEN` is a Cloudflare Secret; cron is Wrangler-managed; Worker has no DB credential/trading settings; rollback disables cron while GitHub manual fallback remains.
 
-`infra/cloudflare-paper-scheduler/README.md` must document exact Worker name, root directory `infra/cloudflare-paper-scheduler`, non-secret `TARGET_URL`, secret binding name `SCHEDULER_TOKEN`, Wrangler-owned cron, no database credential, no trading parameters, and rollback by disabling cron while retaining GitHub manual fallback.
-
-- [ ] **Step 6: Verify Worker GREEN**
+Verify:
 
 ```bash
 npm test --prefix infra/cloudflare-paper-scheduler
 ```
 
-Expected: PASS.
+### Step 3.3 — CI
 
-- [ ] **Step 7: Add Worker tests to CI**
-
-Add:
+Add Node setup after Python setup:
 
 ```yaml
       - uses: actions/setup-node@v4
@@ -510,16 +907,16 @@ Add:
           node-version: "22"
 ```
 
-and after Pytest:
+Add after Pytest:
 
 ```yaml
       - name: Cloudflare Worker tests
         run: npm test --prefix infra/cloudflare-paper-scheduler
 ```
 
-No npm install step is needed because tests use Node built-ins only.
+No `npm install` is required.
 
-- [ ] **Step 8: Full verification and secret scan**
+Run:
 
 ```bash
 npm test --prefix infra/cloudflare-paper-scheduler
@@ -527,9 +924,9 @@ ruff check src tests
 pytest -q
 ```
 
-Search committed content for `postgresql://`, plaintext scheduler-token assignments, and secret-looking authorization literals. `Authorization: Bearer` may exist only as source code constructing the header, never followed by a real token value.
+Secret scan committed content for `postgresql://`, plaintext scheduler-token assignments, and secret-looking auth literals. `Authorization: Bearer` may appear only as source code constructing the header, never with a real token value.
 
-- [ ] **Step 9: Commit Task 3**
+Commit:
 
 ```bash
 git add infra/cloudflare-paper-scheduler .github/workflows/ci.yml
@@ -538,19 +935,10 @@ git commit -m "feat: add Cloudflare paper scheduler worker"
 
 ---
 
-### Task 4: First PR, Review, Merge, and Render Endpoint Deployment
+## Task 4: First PR and Render Deployment (GitHub Schedule Still Present)
 
-Do not modify `.github/workflows/paper-cycle.yml` yet and do not claim Cloudflare is live in the main README.
-
-- [ ] **Step 1: Prove GitHub fallback is still intact**
-
-```bash
-pytest tests/test_paper_cycle_workflow.py -q
-```
-
-Inspect workflow and confirm current `schedule:` plus `workflow_dispatch:` are both still present.
-
-- [ ] **Step 2: Fresh full verification**
+1. Verify `pytest tests/test_paper_cycle_workflow.py -q` stays green and `.github/workflows/paper-cycle.yml` still has both `schedule:` and `workflow_dispatch:`.
+2. Fresh full checks:
 
 ```bash
 ruff check src tests
@@ -558,51 +946,22 @@ pytest -q
 npm test --prefix infra/cloudflare-paper-scheduler
 ```
 
-Expected: all pass on one exact head SHA.
-
-- [ ] **Step 3: Review against spec**
-
-Confirm endpoint has no request-controlled trading settings, timing-safe token comparison, missing-token fail-closed behavior, shared CLI/HTTP service, sanitized errors, Worker no response-body logging, Worker no Neon credential, GitHub schedule unchanged, and no live trading route.
-
-- [ ] **Step 4: Open draft PR**
-
-Title `feat: add Cloudflare paper scheduler path`. Body states GitHub automatic scheduling remains during transition. Do not include secrets.
-
-- [ ] **Step 5: Require PR CI GREEN, review, then merge with expected head SHA**
-
-Require Python install, Ruff, full Pytest/PostgreSQL 16, and Worker tests. Resolve material review findings first. After merge, require `main` CI GREEN and Render auto-deploy `live`.
-
-- [ ] **Step 6: Verify pre-secret fail-closed endpoint**
-
-Unauthenticated POST to `https://ai-trading-dashboard-qyr2.onrender.com/internal/paper-cycle` must return sanitized 503 while `AI_TRADING_SCHEDULER_TOKEN` is absent. Verify Neon state is unchanged by the rejected request and Render remains dashboard-only.
+3. Review diff against spec: no request-controlled trading settings; timing-safe compare; missing token fail-closed; shared CLI/HTTP service; sanitized failures; Worker never reads failure body; no Neon credential; GitHub schedule unchanged; live trading disabled.
+4. Open draft PR titled `feat: add Cloudflare paper scheduler path`, explicitly stating GitHub automatic scheduling remains during transition.
+5. Require exact-head CI green for Python install, Ruff, full Pytest/PostgreSQL 16, and Worker tests. Resolve material findings, mark Ready, merge with expected head SHA.
+6. Require main CI green and Render auto-deploy live.
+7. Before token configuration, unauthenticated POST to `https://ai-trading-dashboard-qyr2.onrender.com/internal/paper-cycle` must return sanitized 503 `scheduler unavailable`; verify rejected request did not mutate Neon and Render remains dashboard-only.
 
 ---
 
-### Task 5: Manual Cloudflare Boundary and First Production Schedule Proof
+## Task 5: Manual Cloudflare Boundary + First Production Proof
 
-This is the user-operated boundary because no Cloudflare connector exists in this environment.
+No Cloudflare connector exists, so only this account setup is manual.
 
-- [ ] **Step 1: User privately creates one scheduler token**
-
-Instruct the user to generate at least 32 random bytes as URL-safe text in a password manager or trusted local generator. Tell them explicitly not to paste it into ChatGPT.
-
-- [ ] **Step 2: User configures Render**
-
-Path:
-
-```text
-ai-trading-dashboard -> Environment -> Add Environment Variable
-```
-
-Name `AI_TRADING_SCHEDULER_TOKEN`; value is the private generated token. Save and redeploy.
-
-- [ ] **Step 3: Assistant verifies Render and unauthenticated rejection**
-
-Require new deploy `live`, `Hosted paper worker: external scheduler enabled` in logs, unauthenticated POST now 401, and intact Neon state.
-
-- [ ] **Step 4: User verifies one authorized endpoint call without revealing token**
-
-If a local shell is available, use:
+1. Tell user to generate at least 32 random bytes as URL-safe text using a password manager/trusted local generator. **Never paste the token into ChatGPT.**
+2. User: Render `ai-trading-dashboard -> Environment -> Add Environment Variable`; name `AI_TRADING_SCHEDULER_TOKEN`, value private token; save/redeploy.
+3. Assistant: verify Render live, log still says `Hosted paper worker: external scheduler enabled`, unauthenticated POST is now 401, Neon unchanged.
+4. User validates one authorized request without revealing token. Preferred local shell:
 
 ```bash
 export SCHEDULER_TOKEN='value stored in your password manager'
@@ -612,62 +971,28 @@ curl -i -X POST \
 unset SCHEDULER_TOKEN
 ```
 
-Expected HTTP status is 200 with a small JSON payload containing `ok`, `processed`, and `status`. The user reports only the HTTP status and non-secret JSON fields, never the token. If no local shell is available, use a trusted local HTTP client on the user's device with the same method, URL, and Authorization header; do not use a public request-sharing website.
-
-After the user's report, verify Neon heartbeat/state changed or safely no-op'd with a fresh heartbeat.
-
-- [ ] **Step 5: User imports Worker from GitHub into Cloudflare**
-
-Current dashboard path:
-
-```text
-Workers & Pages -> Create application -> Import a repository
-```
-
-Connect GitHub if required, choose `dbrckk/Ai-trading`, root directory `infra/cloudflare-paper-scheduler`, Worker name exactly `ai-trading-paper-scheduler`, then Save and Deploy.
-
-- [ ] **Step 6: User adds Cloudflare secret**
-
-Path:
-
-```text
-Workers & Pages -> ai-trading-paper-scheduler -> Settings -> Variables and Secrets -> Add
-```
-
-Type `Secret`, name `SCHEDULER_TOKEN`, value the same private token used on Render. Deploy the secret change. Do not send the token to ChatGPT.
-
-- [ ] **Step 7: User confirms Cron Trigger**
-
-Path:
-
-```text
-Workers & Pages -> ai-trading-paper-scheduler -> Settings -> Triggers -> Cron Triggers
-```
-
-Expected `*/5 * * * *`. Since Wrangler owns it, do not add a duplicate cron if already present.
-
-- [ ] **Step 8: Observe one real Cloudflare scheduled execution**
-
-Use Neon before/after evidence: runtime key, revision, last_processed, processed_bars, model metadata/checksum, `paper_runtime_status.updated_at_utc`, engine status. A fresh scheduled heartbeat is sufficient even when there is no new market bar and revision does not advance. Verify Render still logs external scheduler mode.
-
-- [ ] **Step 9: Update issue #19 but keep it open**
-
-Record first Cloudflare scheduled proof and state continuity. Remaining item is GitHub automatic-schedule removal plus a second Cloudflare proof.
+Expected: HTTP 200 and JSON containing only `ok`, `processed`, `status`. User reports only status/non-secret fields. If no shell, use a trusted local HTTP client; never a public request-sharing service.
+5. Assistant verifies fresh Neon heartbeat/state after authorized call.
+6. User: Cloudflare `Workers & Pages -> Create application -> Import a repository`; choose `dbrckk/Ai-trading`; root `infra/cloudflare-paper-scheduler`; Worker name `ai-trading-paper-scheduler`; Save and Deploy.
+7. User: Worker `Settings -> Variables and Secrets -> Add`; type `Secret`; name `SCHEDULER_TOKEN`; same private token; deploy.
+8. User: Worker `Settings -> Triggers -> Cron Triggers`; confirm `*/5 * * * *`. Do not add a duplicate if Wrangler already created it.
+9. Assistant records Neon before/after runtime key, revision, `last_processed`, `processed_bars`, model metadata/checksum, status heartbeat, engine status. A refreshed scheduled heartbeat is sufficient when there is no new eligible bar.
+10. Update issue #19 with first Cloudflare scheduled proof; keep it open pending cutover and second proof.
 
 ---
 
-### Task 6: Cut Over GitHub Actions to Manual Fallback Only
+## Task 6: Second PR — GitHub Manual Fallback Only
 
-**Files:**
-- Modify: `.github/workflows/paper-cycle.yml`
-- Modify: `tests/test_paper_cycle_workflow.py`
-- Modify: `README.md`
+Do not start until Task 5 has real Cloudflare scheduled-heartbeat evidence.
 
-Do not start before Task 5 has real Cloudflare scheduled-heartbeat evidence.
+**Files**
+- Modify `.github/workflows/paper-cycle.yml`
+- Modify `tests/test_paper_cycle_workflow.py`
+- Modify `README.md`
 
-- [ ] **Step 1: Write RED workflow test**
+### Step 6.1 — RED
 
-Change forbidden strings to include:
+Change workflow test required strings to keep `workflow_dispatch:`, DB secret reference/preflight, concurrency guard, and exact manual command. Add forbidden strings:
 
 ```python
 for forbidden in (
@@ -680,28 +1005,26 @@ for forbidden in (
     assert forbidden not in text
 ```
 
-Required content remains `workflow_dispatch:`, DB secret reference, DB preflight, concurrency guard, and exact manual paper-cycle command.
+Run:
 
 ```bash
 pytest tests/test_paper_cycle_workflow.py -q
 ```
 
-Expected: FAIL because current workflow still has automatic schedule.
+Expected RED because current workflow still has schedule/cron.
 
-- [ ] **Step 2: Remove only GitHub automatic schedule**
+### Step 6.2 — GREEN
 
-Use:
+Workflow trigger becomes:
 
 ```yaml
 on:
   workflow_dispatch:
 ```
 
-Keep all job behavior unchanged.
+Keep job permissions, concurrency, DB secret/preflight, Python setup, install, and exact `ai-trading paper-cycle --symbol GC=F --period 5d --interval 5m --max-catchup-bars 12` unchanged.
 
-- [ ] **Step 3: Update README to final architecture**
-
-Use diagram:
+README production diagram becomes:
 
 ```text
 Cloudflare Cron (every 5 minutes)
@@ -721,9 +1044,9 @@ Neon PostgreSQL durable state
 paper state/model/trades     Render dashboard
 ```
 
-Document GitHub `workflow_dispatch` as manual fallback and mention `AI_TRADING_SCHEDULER_TOKEN` by name only.
+Document GitHub `workflow_dispatch` as manual fallback and `AI_TRADING_SCHEDULER_TOKEN` by variable name only.
 
-- [ ] **Step 4: Verify cutover GREEN**
+Verify:
 
 ```bash
 pytest tests/test_paper_cycle_workflow.py tests/test_scheduler_endpoint.py tests/test_paper_cycle_service.py tests/test_paper_cycle_cli.py -q
@@ -732,37 +1055,17 @@ pytest -q
 npm test --prefix infra/cloudflare-paper-scheduler
 ```
 
-Expected: PASS.
-
-- [ ] **Step 5: Open/review/merge second PR**
-
-Title `ops: make Cloudflare the paper scheduler`. PR body includes first Cloudflare scheduled evidence. Merge only after exact-head CI GREEN.
-
-- [ ] **Step 6: Verify `main` and Render after cutover**
-
-Require main CI GREEN, Render live, external scheduler mode still enabled, and confirm GitHub workflow now intentionally has no automatic schedule.
+Open PR `ops: make Cloudflare the paper scheduler`, include first Cloudflare heartbeat evidence, require exact-head CI green, merge, then verify main CI and Render live.
 
 ---
 
-### Task 7: Second Cloudflare Proof and Production Closure
+## Task 7: Second Cloudflare Proof + Closure
 
-- [ ] **Step 1: Observe another Cloudflare heartbeat after GitHub schedule removal**
-
-Use Neon `paper_runtime_status.updated_at_utc` and durable state to prove another scheduled invocation reached the same runtime.
-
-- [ ] **Step 2: Verify continuity and safety**
-
-Confirm stable runtime key, nondecreasing revision and processed_bars, model present, no duplicate logical trade/audit commit for one execution bar, dashboard fresh RUNNING status, Render external scheduler log, and no live broker route/credential.
-
-- [ ] **Step 3: Verify GitHub manual fallback structurally**
-
-Confirm `workflow_dispatch` and durable DB preflight remain. Do not run a redundant production cycle merely for ceremony.
-
-- [ ] **Step 4: Update and close issue #19**
-
-Record Worker name, cron expression, two observed Cloudflare scheduled heartbeats separated by GitHub cutover, Render dashboard-only state, Neon continuity, and GitHub manual fallback. Close as completed.
-
-- [ ] **Step 5: Fresh final verification before completion claim**
+1. Observe a new Cloudflare-scheduled heartbeat after GitHub schedule removal using Neon `paper_runtime_status.updated_at_utc`.
+2. Confirm runtime key unchanged, revision/processed_bars nondecreasing, model present, no duplicate logical trade/audit event for one execution bar, dashboard fresh RUNNING, Render still external-scheduler mode, and no live broker route/credential.
+3. Verify GitHub workflow still contains `workflow_dispatch` and durable DB preflight; do not trigger a redundant cycle merely for ceremony.
+4. Update issue #19 with Worker name, cron, both observed scheduled heartbeats separated by cutover, Render dashboard-only status, Neon continuity, GitHub manual fallback; close as completed.
+5. Fresh final evidence before completion claim:
 
 ```bash
 ruff check src tests
@@ -770,33 +1073,25 @@ pytest -q
 npm test --prefix infra/cloudflare-paper-scheduler
 ```
 
-Also require current main CI success, current Render live status, and current Neon continuity evidence before reporting stable production scheduling.
+Also require current main CI success, current Render live status, and current Neon continuity evidence.
 
----
+## Rollback
 
-## Rollback Procedure
-
-If Cloudflare scheduling fails after cutover:
-
-1. user disables the Cloudflare Cron Trigger;
-2. Render remains `AI_TRADING_EXTERNAL_SCHEDULER=1`;
-3. GitHub `workflow_dispatch` provides manual one-shot execution;
-4. restoring GitHub automatic scheduling requires a reviewed RED/GREEN code change;
-5. Neon runtime/model/trade/audit state is not rolled back because scheduler replacement owns no durable trading state.
+If Cloudflare scheduling fails after cutover: user disables Cloudflare cron; Render remains `AI_TRADING_EXTERNAL_SCHEDULER=1`; GitHub `workflow_dispatch` provides manual one-shot execution; restoring GitHub automatic schedule requires reviewed RED/GREEN change; Neon runtime/model/trade/audit state is not rolled back because scheduler replacement owns no durable trading state.
 
 ## Definition of Done
 
 - CLI and HTTP share one durable production-cycle service.
-- Unauthorized or misconfigured scheduler endpoint fails closed.
+- Unauthorized or misconfigured endpoint fails closed.
 - Scheduler token never appears in Git, logs, responses, issue text, or chat.
-- Cloudflare Worker contains no trading logic or DB credential and fails closed on missing bindings.
+- Worker has no trading logic/DB credential and fails closed on missing bindings.
 - Worker tests run in CI.
-- One real Cloudflare cron invocation is proven before GitHub automatic scheduling is removed.
+- One real Cloudflare cron heartbeat is proven before GitHub schedule removal.
 - GitHub retains `workflow_dispatch` but no automatic schedule after cutover.
-- A second Cloudflare cron invocation is proven after cutover.
+- A second Cloudflare heartbeat is proven after cutover.
 - Neon state/model continuity remains intact.
 - Render remains dashboard-only.
-- Dashboard freshness reflects scheduler heartbeat failures.
-- Python and Worker test suites are green.
-- Issue #19 closes only after production evidence is complete.
+- Dashboard freshness reflects scheduler failures.
+- Python and Worker suites are green.
+- Issue #19 closes only after production evidence.
 - Live trading remains disabled.
