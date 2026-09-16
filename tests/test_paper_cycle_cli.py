@@ -89,6 +89,20 @@ def test_paper_cycle_cli_runs_once_and_persists_status(monkeypatch) -> None:
     assert final.reason == "processed 2 bar(s)"
 
 
+def test_paper_cycle_cli_persistence_initialization_failure_is_sanitized(monkeypatch) -> None:
+    def fail_to_build():
+        raise RuntimeError("postgresql://user:supersecret@db.internal.example/private")
+
+    monkeypatch.setattr(cli, "build_paper_persistence", fail_to_build)
+
+    result = runner.invoke(cli.app, ["paper-cycle"])
+
+    assert result.exit_code != 0
+    assert "supersecret" not in result.output
+    assert "db.internal.example" not in result.output
+    assert "postgresql://" not in result.output
+
+
 def test_paper_cycle_cli_failure_is_sanitized_and_nonzero(monkeypatch) -> None:
     backend = FakePersistence()
 
