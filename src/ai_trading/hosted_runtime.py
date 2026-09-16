@@ -18,6 +18,7 @@ from .scheduler import PaperScheduler, SchedulerConfig
 @dataclass(frozen=True)
 class HostedPaperSettings:
     enabled: bool = False
+    external_scheduler: bool = False
     symbol: str = "GC=F"
     period: str = "1y"
     interval: str = "1d"
@@ -35,6 +36,15 @@ class HostedPaperSettings:
             "yes",
             "on",
         }
+        external_scheduler = os.getenv(
+            "AI_TRADING_EXTERNAL_SCHEDULER",
+            "0",
+        ).strip().lower() in {
+            "1",
+            "true",
+            "yes",
+            "on",
+        }
         symbol = os.getenv("AI_TRADING_HOSTED_SYMBOL", "GC=F").strip() or "GC=F"
         period = os.getenv("AI_TRADING_HOSTED_PERIOD", "1y").strip() or "1y"
         interval = os.getenv("AI_TRADING_HOSTED_INTERVAL", "1d").strip() or "1d"
@@ -43,6 +53,7 @@ class HostedPaperSettings:
             raise ValueError("AI_TRADING_HOSTED_POLL_SECONDS must be >= 0")
         return cls(
             enabled=enabled,
+            external_scheduler=external_scheduler,
             symbol=symbol,
             period=period,
             interval=interval,
@@ -171,6 +182,9 @@ def start_hosted_paper_runtime(
     effective_settings = settings or HostedPaperSettings.from_env()
     if not effective_settings.enabled:
         print("Hosted paper worker: disabled", flush=True)
+        return None
+    if effective_settings.external_scheduler:
+        print("Hosted paper worker: external scheduler enabled", flush=True)
         return None
 
     print("Hosted paper worker: starting daemon thread", flush=True)
