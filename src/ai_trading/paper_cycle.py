@@ -34,11 +34,25 @@ class PaperCycleRunner:
         self.runtime_factory = runtime_factory
 
     @staticmethod
+    def _is_logically_fresh(snapshot: PersistedRuntime) -> bool:
+        state = snapshot.state
+        return snapshot.is_new or (
+            snapshot.revision == 0
+            and snapshot.model is None
+            and state.last_processed is None
+            and state.processed_bars == 0
+            and state.last_learning_cycle_bar == 0
+            and state.units == 0.0
+            and state.last_price == 0.0
+        )
+
+    @classmethod
     def _pending_targets(
+        cls,
         snapshot: PersistedRuntime,
         eligible: tuple[object, ...],
     ) -> list[object]:
-        if snapshot.is_new:
+        if cls._is_logically_fresh(snapshot):
             return list(eligible[-1:])
 
         last_processed = snapshot.state.last_processed
