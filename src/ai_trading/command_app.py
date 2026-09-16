@@ -37,7 +37,7 @@ def paper_cycle(
     starting_cash = RiskConfig().starting_cash
     try:
         backend = build_paper_persistence()
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 - sanitize provider errors at CLI boundary
         console.print(
             "Paper cycle: persistence initialization failed "
             f"({type(exc).__name__})"
