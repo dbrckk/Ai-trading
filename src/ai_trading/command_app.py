@@ -33,9 +33,16 @@ def paper_cycle(
     interval: str = typer.Option("5m", help="Bar interval"),
     max_catchup_bars: int = typer.Option(12, min=1),
 ) -> None:
-    backend = build_paper_persistence()
     runtime_key = build_runtime_key(symbol, interval)
     starting_cash = RiskConfig().starting_cash
+    try:
+        backend = build_paper_persistence()
+    except Exception as exc:
+        console.print(
+            "Paper cycle: persistence initialization failed "
+            f"({type(exc).__name__})"
+        )
+        raise typer.Exit(code=1) from None
 
     try:
         backend.save_runtime_status(
