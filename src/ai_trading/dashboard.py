@@ -3,16 +3,23 @@ from __future__ import annotations
 import html
 import json
 import os
+from collections.abc import Callable
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
 
 from .file_persistence import FilePaperPersistence
 from .hosted_runtime import HostedPaperSettings, start_hosted_paper_runtime
+from .paper_cycle import PaperCycleResult
+from .paper_cycle_service import (
+    ProductionPaperCycleSettings,
+    run_production_paper_cycle,
+)
 from .persistence import PaperPersistence
 from .persistence_factory import build_paper_persistence
 from .runtime_state import RuntimeStateStore
 from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore, runtime_status_snapshot
+from .scheduler_endpoint import handle_scheduler_request
 from .trade_journal import TradeJournal
 
 _STORAGE_ERROR_STATUS: dict[str, object] = {
@@ -226,6 +233,8 @@ def serve_dashboard(
     starting_cash: float = 100_000.0,
     persistence: PaperPersistence | None = None,
     settings: HostedPaperSettings | None = None,
+    scheduler_token: str | None = None,
+    paper_cycle_executor: Callable[[], PaperCycleResult] | None = None,
 ) -> None:
     effective_settings = settings or HostedPaperSettings.from_env()
     journal = TradeJournal(journal_path)
@@ -247,6 +256,29 @@ def serve_dashboard(
             )
 
     runtime_key = effective_settings.runtime_key
+    effective_scheduler_token = (
+        scheduler_token
+        if scheduler_token is not None
+        else os.getenv("AI_TRADING_SCHEDULER_TOKEN", "").strip()
+    )
+    effective_cycle_executor = paper_cycle_executor
+    if effective_cycle_executor is None:
+        cycle_settings = ProductionPaperCycleSettings(
+            symbol=effective_settings.symbol,
+            period=effective_settings.period,
+            interval=effective_settings.interval,
+            max_catchup_bars=12,
+            poll_seconds=300.0,
+        )
+
+        def execute_paper_cycle() -> PaperCycleResult:
+            return run_production_paper_cycle(
+                cycle_settings,
+                persistence=backend,
+            )
+
+        effective_cycle_executor = execute_paper_cycle
+
     start_hosted_paper_runtime(
         settings=effective_settings,
         persistence=backend,
@@ -259,9 +291,14 @@ def serve_dashboard(
             return dict(_STORAGE_ERROR_STATUS)
 
     class Handler(BaseHTTPRequestHandler):
-        def _send_json(self, payload: dict[str, object]) -> None:
+        def _send_json(
+            self,
+            payload: dict[str, object],
+            *,
+            status_code: int = 200,
+        ) -> None:
             body = json.dumps(payload, sort_keys=True).encode()
-            self.send_response(200)
+            self.send_response(status_code)
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.send_header("Cache-Control", "no-store")
             self.send_header("Content-Length", str(len(body)))
@@ -311,6 +348,21 @@ def serve_dashboard(
             self.send_header("Content-Length", str(len(payload)))
             self.end_headers()
             self.wfile.write(payload)
+
+        def do_POST(self) -> None:
+            path = urlsplit(self.path).path.rstrip("/")
+            if path != "/internal/paper-cycle":
+                self.send_error(404)
+                return
+            response = handle_scheduler_request(
+                authorization=self.headers.get("Authorization"),
+                configured_token=effective_scheduler_token,
+                run_cycle=effective_cycle_executor,
+            )
+            self._send_json(
+                response.payload,
+                status_code=response.status_code,
+            )
 
         def log_message(self, format: str, *args: object) -> None:
             return
