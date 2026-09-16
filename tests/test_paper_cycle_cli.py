@@ -101,6 +101,9 @@ def test_paper_cycle_cli_persistence_initialization_failure_is_sanitized(monkeyp
     assert "supersecret" not in result.output
     assert "db.internal.example" not in result.output
     assert "postgresql://" not in result.output
+    assert "supersecret" not in str(result.exception)
+    assert "db.internal.example" not in str(result.exception)
+    assert "postgresql://" not in str(result.exception)
 
 
 def test_paper_cycle_cli_failure_is_sanitized_and_nonzero(monkeypatch) -> None:
