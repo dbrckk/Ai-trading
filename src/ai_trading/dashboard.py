@@ -77,6 +77,7 @@ def render_dashboard(
     runtime_key: str | None = None,
 ) -> str:
     storage_error = False
+    persisted = None
     if persistence is not None and runtime_key is not None:
         try:
             recent = persistence.list_trades(runtime_key, limit=200)
@@ -173,6 +174,34 @@ def render_dashboard(
             else:
                 risk_decision = "SKIPPED"
 
+    runtime_revision = "-"
+    persisted_model = "-"
+    runtime_sync = "-"
+    operational_alerts = "storage unavailable" if storage_error else "None"
+    if persisted is not None and not storage_error:
+        overview = build_operational_overview(persisted, runtime_status)
+        runtime_overview = overview["runtime"]
+        model_overview = overview["model"]
+        sync_overview = overview["sync"]
+        alerts_overview = overview["alerts"]
+        if isinstance(runtime_overview, dict):
+            revision = runtime_overview.get("revision")
+            runtime_revision = "-" if revision is None else str(revision)
+            is_new = bool(runtime_overview.get("is_new"))
+        else:
+            is_new = False
+        if isinstance(model_overview, dict) and model_overview.get("present"):
+            persisted_model = (
+                f"{model_overview.get('format')} v{model_overview.get('version')}"
+                f" · {model_overview.get('sha256_short')}"
+            )
+        elif isinstance(model_overview, dict):
+            persisted_model = "Not initialized" if is_new else "MISSING"
+        if isinstance(sync_overview, dict):
+            runtime_sync = "LAGGING" if sync_overview.get("lag_detected") else "IN SYNC"
+        if isinstance(alerts_overview, list) and alerts_overview:
+            operational_alerts = " · ".join(str(alert) for alert in alerts_overview)
+
     if storage_error:
         rows = '<tr><td colspan="9">Storage unavailable.</td></tr>'
     else:
@@ -226,6 +255,9 @@ th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
 <div class="metric"><small>Last cycle</small><strong>{html.escape(last_cycle)}</strong></div>
 <div class="metric"><small>Last processed</small><strong>{html.escape(last_processed)}</strong></div>
 <div class="metric"><small>Processed bars</small><strong>{processed_bars_display}</strong></div>
+<div class="metric"><small>Runtime revision</small><strong>{html.escape(runtime_revision)}</strong></div>
+<div class="metric"><small>Persisted model</small><strong>{html.escape(persisted_model)}</strong></div>
+<div class="metric"><small>Runtime sync</small><strong>{html.escape(runtime_sync)}</strong></div>
 <div class="metric"><small>Signal</small><strong>{html.escape(signal)}</strong></div>
 <div class="metric"><small>AI confidence</small><strong>{html.escape(confidence)}</strong></div>
 <div class="metric"><small>Risk decision</small><strong>{html.escape(risk_decision)}</strong></div>
@@ -240,6 +272,7 @@ th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
 <div class="metric"><small>Active symbols</small><strong>{active_symbols_display}</strong></div>
 </div>
 <small class="runtime-reason">Last engine reason: {html.escape(decision_reason)}</small>
+<small class="runtime-reason">Operational alerts: {html.escape(operational_alerts)}</small>
 <table><thead><tr><th>UTC</th><th>Symbol</th><th>Side</th><th>Qty</th><th>Price</th>
 <th>Status</th><th>PnL</th><th>Confidence</th><th>Strategy</th></tr></thead>
 <tbody>{rows}</tbody></table></div></main></body></html>"""
