@@ -12,6 +12,8 @@ def test_paper_cycle_workflow_structure() -> None:
         "group: paper-cycle-production",
         "cancel-in-progress: false",
         "AI_TRADING_DATABASE_URL: ${{ secrets.AI_TRADING_DATABASE_URL }}",
+        'if [ -z "${AI_TRADING_DATABASE_URL:-}" ]; then',
+        "AI_TRADING_DATABASE_URL repository secret is required",
         "ai-trading paper-cycle --symbol GC=F --period 5d --interval 5m --max-catchup-bars 12",
     )
     for expected in required:
