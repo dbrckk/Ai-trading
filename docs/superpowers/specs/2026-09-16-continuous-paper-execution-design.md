@@ -1,7 +1,7 @@
 # Continuous Paper Execution Design
 
 Date: 2026-09-16
-Status: design approved in chat; written spec pending user review
+Status: written spec self-reviewed; pending user review
 Scope: paper trading only
 Tracking issue: #19
 
@@ -124,6 +124,14 @@ For an existing persisted runtime:
 
 Sequential processing is required because the River model learns online and each bar changes the state used by the next bar.
 
+### History-gap protection
+
+An existing runtime must never jump from an old durable `last_processed` value directly to the newest available history merely because the requested market-data window no longer contains the missing bars.
+
+If the runtime has durable history but the loader cannot establish a continuous eligible sequence after `last_processed`, the cycle must fail with an explicit history-gap error. It must not advance state, model, audit, or trades beyond the unknown gap.
+
+Recovery then requires a wider supported history window or an explicit operator decision; silent loss of scheduled bars is not allowed.
+
 ### Fresh runtime initialization
 
 A completely new runtime must **not replay the whole downloaded history**.
@@ -223,7 +231,7 @@ Behavior:
 
 This makes the operating mode explicit instead of inferring it from the presence of a database URL.
 
-Production Render configuration will set the flag true.
+Production Render configuration will set the flag true **before Neon becomes the production source of truth**, so the legacy resident worker cannot initialize or mutate the new production runtime row.
 
 ## Durable Engine Status
 
@@ -296,6 +304,12 @@ The current GitHub connector does not expose repository secret mutation. If no a
 - executor exits non-zero after best-effort durable ERROR status
 - no state/model/trade commit occurs for an incomplete bar
 
+### History gap
+
+- executor exits non-zero
+- durable `last_processed` is not advanced across the gap
+- the dashboard reports stale/error status through the durable status channel when possible
+
 ### Revision conflict
 
 - treat as a safe concurrent loser, not data corruption
@@ -316,6 +330,7 @@ All implementation follows TDD.
 - shared runtime-key builder returns identical key for dashboard/executor
 - fresh cycle processes only latest eligible bar
 - existing runtime returns missed bars oldest-first
+- history gap fails closed instead of jumping to newest data
 - catch-up cap is enforced without discarding remaining backlog
 - latest-only `step()` and targeted step share trading behavior
 - no-new-bar cycle is healthy and idempotent
@@ -347,18 +362,18 @@ Tests or static assertions should verify the workflow includes:
 
 After implementation and CI are green:
 
-1. Create Neon production project.
-2. Initialize schema using the application backend.
-3. Configure Neon URL in Render.
-4. Keep embedded worker enabled temporarily and verify dashboard can read Neon-backed fresh paper state.
-5. Configure the GitHub Actions database secret.
-6. Manually run `paper-cycle` once with `workflow_dispatch`.
-7. Verify Neon tables contain runtime state, model, status, audit and any trade rows produced.
-8. Record state fields needed for continuity proof: `runtime_key`, `revision`, `last_processed`, `processed_bars`, model checksum, latest status timestamp.
-9. Set `AI_TRADING_EXTERNAL_SCHEDULER=1` on Render and redeploy.
-10. Verify Render starts dashboard without resident daemon.
-11. Trigger another one-shot cycle.
-12. Verify the same runtime row continues from the prior revision rather than resetting.
+1. Create the Neon production project and retrieve its connection string through the authorized integration.
+2. Initialize/verify the schema using the application PostgreSQL backend without processing a market bar.
+3. Set `AI_TRADING_EXTERNAL_SCHEDULER=1` on Render first, so the next Render process is dashboard-only.
+4. Set the Neon URL as `AI_TRADING_DATABASE_URL` on Render and redeploy.
+5. Verify Render starts the dashboard without the resident daemon and reads the empty/new Neon runtime state safely.
+6. Configure the same Neon URL as the GitHub Actions `AI_TRADING_DATABASE_URL` repository secret.
+7. Manually run `paper-cycle` once with `workflow_dispatch`; this executor owns initialization of the production paper runtime.
+8. Verify Neon tables contain runtime state, model, status, audit and any trade rows produced.
+9. Record state fields needed for continuity proof: `runtime_key`, `revision`, `last_processed`, `processed_bars`, model checksum, latest status timestamp.
+10. Redeploy/restart the Render dashboard and verify it reads the same persisted runtime without mutation or reset.
+11. Trigger a second one-shot cycle.
+12. Verify the same runtime row advances from the prior revision rather than resetting.
 13. Verify dashboard `/api/status` and `/healthz` reflect the externally updated durable status.
 14. Observe at least one scheduled invocation path after manual validation.
 15. Retire the temporary Render Free PostgreSQL instance only after continuity is proven and only with explicit user approval, because deletion is destructive.
@@ -397,13 +412,14 @@ The work is complete only when all of the following are demonstrated:
 2. A one-shot scheduled command processes eligible 5-minute bars idempotently.
 3. Delayed executions catch up missed bars chronologically and with a bounded per-run cap.
 4. A fresh runtime processes only the latest eligible bar instead of replaying history.
-5. GitHub Actions schedules the one-shot executor every 5 minutes and prevents normal overlapping runs.
-6. PostgreSQL revision CAS still prevents double commits under forced overlap.
-7. Neon is the shared durable source of truth for executor and dashboard.
-8. Render runs dashboard-only when external scheduling is enabled.
-9. State, model, trades, audit history, and heartbeat survive Render redeploys and separate executor processes.
-10. Dashboard freshness reflects the external executor heartbeat rather than dashboard process uptime.
-11. PostgreSQL or market-data failures fail closed and never reset the paper account silently.
-12. All CI tests, including PostgreSQL integration and workflow checks, pass.
-13. A production continuity proof records the same runtime key advancing across at least one executor restart/redeploy boundary.
-14. Live trading remains disabled.
+5. A missing history segment fails closed instead of silently skipping bars.
+6. GitHub Actions schedules the one-shot executor every 5 minutes and prevents normal overlapping runs.
+7. PostgreSQL revision CAS still prevents double commits under forced overlap.
+8. Neon is the shared durable source of truth for executor and dashboard.
+9. Render runs dashboard-only when external scheduling is enabled.
+10. State, model, trades, audit history, and heartbeat survive Render redeploys and separate executor processes.
+11. Dashboard freshness reflects the external executor heartbeat rather than dashboard process uptime.
+12. PostgreSQL, market-data, or history-gap failures fail closed and never reset/advance the paper account silently.
+13. All CI tests, including PostgreSQL integration and workflow checks, pass.
+14. A production continuity proof records the same runtime key advancing across at least one executor restart/redeploy boundary.
+15. Live trading remains disabled.
