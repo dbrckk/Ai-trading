@@ -115,7 +115,7 @@ def run_production_paper_cycle(
                     poll_seconds=settings.poll_seconds,
                 ),
             )
-        except Exception:  # noqa: BLE001 - best-effort failure reporting
+        except Exception:  # noqa: BLE001, S110 - best-effort failure reporting
             pass
         raise PaperCycleServiceError(
             code="execution_failed",
