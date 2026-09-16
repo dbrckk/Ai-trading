@@ -2,7 +2,7 @@ from types import SimpleNamespace
 
 from typer.testing import CliRunner
 
-from ai_trading import cli
+from ai_trading import command_app as cli
 from ai_trading.paper_cycle import PaperCycleResult
 from ai_trading.runtime_state import RuntimeState
 
@@ -53,8 +53,8 @@ def test_paper_cycle_cli_runs_once_and_persists_status(monkeypatch) -> None:
                 reason="processed 2 bar(s)",
             )
 
-    monkeypatch.setattr(cli, "build_paper_persistence", lambda: backend, raising=False)
-    monkeypatch.setattr(cli, "PaperCycleRunner", FakeRunner, raising=False)
+    monkeypatch.setattr(cli, "build_paper_persistence", lambda: backend)
+    monkeypatch.setattr(cli, "PaperCycleRunner", FakeRunner)
 
     result = runner.invoke(
         cli.app,
@@ -100,8 +100,8 @@ def test_paper_cycle_cli_failure_is_sanitized_and_nonzero(monkeypatch) -> None:
             del kwargs
             raise RuntimeError("database-url-password=supersecret")
 
-    monkeypatch.setattr(cli, "build_paper_persistence", lambda: backend, raising=False)
-    monkeypatch.setattr(cli, "PaperCycleRunner", FailingRunner, raising=False)
+    monkeypatch.setattr(cli, "build_paper_persistence", lambda: backend)
+    monkeypatch.setattr(cli, "PaperCycleRunner", FailingRunner)
 
     result = runner.invoke(cli.app, ["paper-cycle"])
 
@@ -122,8 +122,8 @@ def test_error_status_failure_does_not_leak_or_replace_executor_failure(monkeypa
             del kwargs
             raise RuntimeError("executor-secret-message")
 
-    monkeypatch.setattr(cli, "build_paper_persistence", lambda: backend, raising=False)
-    monkeypatch.setattr(cli, "PaperCycleRunner", FailingRunner, raising=False)
+    monkeypatch.setattr(cli, "build_paper_persistence", lambda: backend)
+    monkeypatch.setattr(cli, "PaperCycleRunner", FailingRunner)
 
     result = runner.invoke(cli.app, ["paper-cycle"])
 
