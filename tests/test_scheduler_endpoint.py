@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from ai_trading.scheduler_endpoint import handle_scheduler_request
-
 from ai_trading.paper_cycle import PaperCycleResult
 from ai_trading.paper_cycle_service import PaperCycleServiceError
+from ai_trading.scheduler_endpoint import handle_scheduler_request
 
 
 def successful_result(
