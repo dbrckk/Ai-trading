@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 import pytest
+
+from ai_trading.paper_cycle import PaperCycleResult
 from ai_trading.paper_cycle_service import (
     PaperCycleServiceError,
     ProductionPaperCycleSettings,
     run_production_paper_cycle,
 )
-
-from ai_trading.paper_cycle import PaperCycleResult
 from ai_trading.persistence import PersistedRuntime
 from ai_trading.runtime_state import RuntimeState
 from ai_trading.runtime_status import HostedRuntimeStatus
