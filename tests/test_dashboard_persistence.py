@@ -25,6 +25,7 @@ class DurablePersistence:
             last_price=250.0,
             peak_equity=13_000.0,
             day_start_equity=12_500.0,
+            last_processed="2026-09-16 05:20:00+00:00",
             processed_bars=7,
         )
         self.trade = TradeSnapshot(
@@ -139,6 +140,10 @@ def test_dashboard_uses_durable_state_trades_and_status(tmp_path) -> None:
     assert "PAPER_FILLED" in page
     assert "80.0%" in page
     assert ">RUNNING<" in page
+    assert "Last processed" in page
+    assert "2026-09-16 05:20:00+00:00" in page
+    assert "Processed bars" in page
+    assert ">7<" in page
 
 
 def test_dashboard_storage_failure_is_sanitized(tmp_path) -> None:
@@ -151,6 +156,7 @@ def test_dashboard_storage_failure_is_sanitized(tmp_path) -> None:
     assert "storage unavailable" in page
     assert "100,000.00" not in page
     assert "secret" not in page
+    assert "example.invalid" not in page
 
 
 def test_status_endpoints_fail_closed_without_leaking_storage_details() -> None:
@@ -169,6 +175,7 @@ def test_status_endpoints_fail_closed_without_leaking_storage_details() -> None:
         "error": "storage unavailable",
     }
     assert "secret" not in status_body
+    assert "example.invalid" not in status_body
     assert health_code == 200
     assert health_payload == {
         "web_healthy": True,
@@ -178,3 +185,4 @@ def test_status_endpoints_fail_closed_without_leaking_storage_details() -> None:
         "error": "storage unavailable",
     }
     assert "secret" not in health_body
+    assert "example.invalid" not in health_body
