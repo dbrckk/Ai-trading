@@ -10,6 +10,7 @@ from urllib.parse import urlsplit
 
 from .file_persistence import FilePaperPersistence
 from .hosted_runtime import HostedPaperSettings, start_hosted_paper_runtime
+from .operational_overview import build_operational_overview
 from .paper_cycle import PaperCycleResult
 from .paper_cycle_service import (
     ProductionPaperCycleSettings,
@@ -27,6 +28,27 @@ _STORAGE_ERROR_STATUS: dict[str, object] = {
     "engine_healthy": False,
     "storage_healthy": False,
     "error": "storage unavailable",
+}
+
+_STORAGE_ERROR_OVERVIEW: dict[str, object] = {
+    "runtime": {
+        "revision": None,
+        "is_new": None,
+        "processed_bars": None,
+        "last_processed": None,
+        "consistent": False,
+    },
+    "model": {
+        "present": False,
+        "format": None,
+        "version": None,
+        "sha256_short": None,
+    },
+    "sync": {
+        "engine_status": "ERROR",
+        "lag_detected": True,
+    },
+    "alerts": ["storage unavailable"],
 }
 
 
@@ -290,6 +312,14 @@ def serve_dashboard(
         except Exception:
             return dict(_STORAGE_ERROR_STATUS)
 
+    def load_operational_overview() -> dict[str, object]:
+        try:
+            persisted = backend.load_runtime(runtime_key, starting_cash)
+            status = backend.load_runtime_status(runtime_key)
+            return build_operational_overview(persisted, status)
+        except Exception:
+            return dict(_STORAGE_ERROR_OVERVIEW)
+
     class Handler(BaseHTTPRequestHandler):
         def _send_json(
             self,
@@ -309,6 +339,9 @@ def serve_dashboard(
             path = urlsplit(self.path).path.rstrip("/")
             if path == "/api/status":
                 self._send_json(load_status_snapshot())
+                return
+            if path == "/api/overview":
+                self._send_json(load_operational_overview())
                 return
             if path == "/healthz":
                 snapshot = load_status_snapshot()
