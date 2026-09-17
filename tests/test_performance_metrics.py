@@ -1,5 +1,4 @@
 from ai_trading.performance_metrics import calculate_performance_metrics
-
 from ai_trading.trade_journal import TradeSnapshot
 
 
