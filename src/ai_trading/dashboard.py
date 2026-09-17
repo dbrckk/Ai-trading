@@ -10,6 +10,7 @@ from urllib.parse import urlsplit
 
 from .file_persistence import FilePaperPersistence
 from .hosted_runtime import HostedPaperSettings, start_hosted_paper_runtime
+from .operational_overview import build_operational_overview
 from .paper_cycle import PaperCycleResult
 from .paper_cycle_service import (
     ProductionPaperCycleSettings,
@@ -307,6 +308,15 @@ def serve_dashboard(
 
         def do_GET(self) -> None:
             path = urlsplit(self.path).path.rstrip("/")
+            if path == "/api/overview":
+                self._send_json(
+                    build_operational_overview(
+                        backend,
+                        runtime_key,
+                        starting_cash,
+                    )
+                )
+                return
             if path == "/api/status":
                 self._send_json(load_status_snapshot())
                 return
