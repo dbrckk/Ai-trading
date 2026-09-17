@@ -16,6 +16,7 @@ from .paper_cycle_service import (
     ProductionPaperCycleSettings,
     run_production_paper_cycle,
 )
+from .performance_metrics import calculate_performance_metrics
 from .persistence import PaperPersistence
 from .persistence_factory import build_paper_persistence
 from .runtime_state import RuntimeStateStore
@@ -44,6 +45,14 @@ def _display_money(value: float | None) -> str:
 
 def _display_units(value: float | None) -> str:
     return "-" if value is None else f"{value:g}"
+
+
+def _display_ratio(value: float | None) -> str:
+    if value is None:
+        return "-"
+    if value == float("inf"):
+        return "∞"
+    return f"{value:.2f}"
 
 
 def render_dashboard(
@@ -82,6 +91,7 @@ def render_dashboard(
         )
 
     trades = reversed(recent)
+    trade_performance = None if storage_error else calculate_performance_metrics(recent)
     if storage_error:
         realized_pnl: float | None = None
         trade_count: int | None = None
@@ -94,7 +104,7 @@ def render_dashboard(
         equity: float | None = None
         position_value: float | None = None
     else:
-        realized_pnl = sum(trade.pnl for trade in recent)
+        realized_pnl = trade_performance.realized_pnl
         trade_count = len(recent)
         wins = sum(1 for trade in recent if trade.pnl > 0)
         losses = sum(1 for trade in recent if trade.pnl < 0)
@@ -213,6 +223,15 @@ def render_dashboard(
     win_rate_display = "-" if win_rate is None else f"{win_rate:.1%}"
     wins_losses_display = "-" if wins is None or losses is None else f"{wins} / {losses}"
     active_symbols_display = "-" if active_symbols is None else str(active_symbols)
+    average_pnl_display = _display_money(
+        None if trade_performance is None else trade_performance.average_pnl
+    )
+    profit_factor_display = _display_ratio(
+        None if trade_performance is None else trade_performance.profit_factor
+    )
+    max_drawdown_display = _display_money(
+        None if trade_performance is None else trade_performance.max_drawdown
+    )
 
     return f"""<!doctype html>
 <html><head><meta charset="utf-8"><meta http-equiv="refresh" content="2">
@@ -253,12 +272,16 @@ th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
 <div class="metric"><small>Position value</small><strong>{_display_money(position_value)}</strong></div>
 <div class="metric"><small>Trades</small><strong>{trade_count_display}</strong></div>
 <div class="metric"><small>Realized PnL</small><strong>{pnl_display}</strong></div>
+<div class="metric"><small>Avg PnL / trade</small><strong>{average_pnl_display}</strong></div>
+<div class="metric"><small>Profit factor</small><strong>{profit_factor_display}</strong></div>
+<div class="metric"><small>Max realized DD</small><strong>{max_drawdown_display}</strong></div>
 <div class="metric"><small>Win rate</small><strong>{win_rate_display}</strong></div>
 <div class="metric"><small>Wins / Losses</small><strong>{wins_losses_display}</strong></div>
 <div class="metric"><small>Active symbols</small><strong>{active_symbols_display}</strong></div>
 </div>
 <small class="runtime-reason">Last engine reason: {html.escape(decision_reason)}</small>
 <small class="runtime-reason">Operational alerts: {html.escape(operational_alerts_display)}</small>
+<small class="runtime-reason">Performance window: latest 200 trade events</small>
 <table><thead><tr><th>UTC</th><th>Symbol</th><th>Side</th><th>Qty</th><th>Price</th>
 <th>Status</th><th>PnL</th><th>Confidence</th><th>Strategy</th></tr></thead>
 <tbody>{rows}</tbody></table></div></main></body></html>"""
