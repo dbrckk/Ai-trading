@@ -13,7 +13,7 @@ def _empty_model_snapshot() -> dict[str, object]:
     }
 
 
-def _runtime_consistent(persisted: PersistedRuntime) -> bool:
+def runtime_is_consistent(persisted: PersistedRuntime) -> bool:
     state = persisted.state
     if persisted.is_new:
         return (
@@ -62,7 +62,7 @@ def build_operational_overview(
         alerts.append("worker heartbeat expired")
     if model is None and state.processed_bars > 0:
         alerts.append("model missing for initialized runtime")
-    if not _runtime_consistent(persisted):
+    if not runtime_is_consistent(persisted):
         alerts.append("runtime inconsistent")
 
     model_snapshot: dict[str, object]
