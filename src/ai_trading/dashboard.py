@@ -10,6 +10,7 @@ from urllib.parse import urlsplit
 
 from .file_persistence import FilePaperPersistence
 from .hosted_runtime import HostedPaperSettings, start_hosted_paper_runtime
+from .operational_overview import build_operational_overview, runtime_is_consistent
 from .paper_cycle import PaperCycleResult
 from .paper_cycle_service import (
     ProductionPaperCycleSettings,
@@ -55,11 +56,18 @@ def render_dashboard(
     runtime_key: str | None = None,
 ) -> str:
     storage_error = False
-    if persistence is not None and runtime_key is not None:
+    runtime_revision: int | None = None
+    runtime_model = None
+    persisted_runtime = None
+    durable_runtime = persistence is not None and runtime_key is not None
+    if durable_runtime:
         try:
             recent = persistence.list_trades(runtime_key, limit=200)
             persisted = persistence.load_runtime(runtime_key, starting_cash)
+            persisted_runtime = persisted
             state = persisted.state
+            runtime_revision = persisted.revision
+            runtime_model = persisted.model
             runtime_status = persistence.load_runtime_status(runtime_key)
         except Exception:
             recent = ()
@@ -130,6 +138,35 @@ def render_dashboard(
     heartbeat_age = (
         "-" if heartbeat_age_value is None else f"{float(heartbeat_age_value):.0f}s"
     )
+    runtime_revision_display = (
+        "-" if runtime_revision is None or storage_error else str(runtime_revision)
+    )
+    if runtime_model is None or storage_error:
+        model_display = "-"
+        model_checksum = "-"
+    else:
+        model_display = f"{runtime_model.format} v{runtime_model.version}"
+        model_checksum = runtime_model.sha256[:12]
+
+    operational_alerts: list[str] = []
+    if storage_error:
+        operational_alerts.append("storage unavailable")
+    else:
+        if engine_status == "STALE":
+            operational_alerts.append("worker heartbeat expired")
+        if (
+            durable_runtime
+            and runtime_model is None
+            and state is not None
+            and state.processed_bars > 0
+        ):
+            operational_alerts.append("model missing for initialized runtime")
+        if persisted_runtime is not None and not runtime_is_consistent(persisted_runtime):
+            operational_alerts.append("runtime inconsistent")
+    operational_alerts_display = (
+        "none" if not operational_alerts else " · ".join(operational_alerts)
+    )
+
     signal = "-"
     confidence = "-"
     risk_decision = "-"
@@ -204,6 +241,9 @@ th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
 <div class="metric"><small>Last cycle</small><strong>{html.escape(last_cycle)}</strong></div>
 <div class="metric"><small>Last processed</small><strong>{html.escape(last_processed)}</strong></div>
 <div class="metric"><small>Processed bars</small><strong>{processed_bars_display}</strong></div>
+<div class="metric"><small>Runtime revision</small><strong>{runtime_revision_display}</strong></div>
+<div class="metric"><small>Model</small><strong>{html.escape(model_display)}</strong></div>
+<div class="metric"><small>Model checksum</small><strong>{html.escape(model_checksum)}</strong></div>
 <div class="metric"><small>Signal</small><strong>{html.escape(signal)}</strong></div>
 <div class="metric"><small>AI confidence</small><strong>{html.escape(confidence)}</strong></div>
 <div class="metric"><small>Risk decision</small><strong>{html.escape(risk_decision)}</strong></div>
@@ -218,6 +258,7 @@ th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
 <div class="metric"><small>Active symbols</small><strong>{active_symbols_display}</strong></div>
 </div>
 <small class="runtime-reason">Last engine reason: {html.escape(decision_reason)}</small>
+<small class="runtime-reason">Operational alerts: {html.escape(operational_alerts_display)}</small>
 <table><thead><tr><th>UTC</th><th>Symbol</th><th>Side</th><th>Qty</th><th>Price</th>
 <th>Status</th><th>PnL</th><th>Confidence</th><th>Strategy</th></tr></thead>
 <tbody>{rows}</tbody></table></div></main></body></html>"""
@@ -307,6 +348,15 @@ def serve_dashboard(
 
         def do_GET(self) -> None:
             path = urlsplit(self.path).path.rstrip("/")
+            if path == "/api/overview":
+                self._send_json(
+                    build_operational_overview(
+                        backend,
+                        runtime_key,
+                        starting_cash,
+                    )
+                )
+                return
             if path == "/api/status":
                 self._send_json(load_status_snapshot())
                 return
