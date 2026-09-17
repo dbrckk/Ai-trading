@@ -7,7 +7,7 @@ from .trade_journal import TradeSnapshot
 
 
 @dataclass(frozen=True)
-class PerformanceMetrics:
+class TradePerformanceMetrics:
     realized_pnl: float
     average_pnl: float
     gross_profit: float
@@ -16,7 +16,9 @@ class PerformanceMetrics:
     max_drawdown: float
 
 
-def calculate_performance_metrics(trades: Iterable[TradeSnapshot]) -> PerformanceMetrics:
+def calculate_performance_metrics(
+    trades: Iterable[TradeSnapshot],
+) -> TradePerformanceMetrics:
     pnls = tuple(trade.pnl for trade in trades)
     realized_pnl = sum(pnls)
     average_pnl = realized_pnl / len(pnls) if pnls else 0.0
@@ -38,7 +40,7 @@ def calculate_performance_metrics(trades: Iterable[TradeSnapshot]) -> Performanc
         peak_pnl = max(peak_pnl, cumulative_pnl)
         max_drawdown = max(max_drawdown, peak_pnl - cumulative_pnl)
 
-    return PerformanceMetrics(
+    return TradePerformanceMetrics(
         realized_pnl=realized_pnl,
         average_pnl=average_pnl,
         gross_profit=gross_profit,
