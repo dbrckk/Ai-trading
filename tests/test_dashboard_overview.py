@@ -238,3 +238,29 @@ def test_dashboard_renders_operational_alerts(tmp_path) -> None:
     )
 
     assert "Operational alerts: worker heartbeat expired · model missing for initialized runtime" in page
+
+
+def test_dashboard_renders_inconsistent_runtime_alert(tmp_path) -> None:
+    persistence = OverviewPersistence()
+    persistence.runtime = PersistedRuntime(
+        state=RuntimeState(
+            cash=12_345.0,
+            units=2.0,
+            last_price=250.0,
+            peak_equity=13_000.0,
+            day_start_equity=12_500.0,
+            last_processed=None,
+            processed_bars=7,
+        ),
+        model=persistence.runtime.model,
+        revision=7,
+        is_new=False,
+    )
+
+    page = render_dashboard(
+        TradeJournal(tmp_path / "empty.jsonl"),
+        persistence=persistence,
+        runtime_key=RUNTIME_KEY,
+    )
+
+    assert "Operational alerts: runtime inconsistent" in page
