@@ -80,3 +80,26 @@ def test_dashboard_renders_portfolio_summary(tmp_path) -> None:
     assert "<strong>12.00</strong>" in page
     assert "<strong>66.7%</strong>" in page
     assert "<strong>2 / 1</strong>" in page
+
+
+def test_dashboard_renders_recent_trade_performance_metrics(tmp_path) -> None:
+    journal = TradeJournal(tmp_path / "trades.jsonl")
+    for pnl in (20.0, -5.0, -30.0, 10.0):
+        journal.append(
+            TradeSnapshot(
+                timestamp_utc="2026-09-15T10:00:00+00:00",
+                symbol="GC=F",
+                side="BUY",
+                quantity=0.25,
+                price=3650.0,
+                status="PAPER_FILLED",
+                pnl=pnl,
+            )
+        )
+
+    page = render_dashboard(journal)
+
+    assert '<small>Avg PnL / trade</small><strong>-1.25</strong>' in page
+    assert '<small>Profit factor</small><strong>0.86</strong>' in page
+    assert '<small>Max realized DD</small><strong>35.00</strong>' in page
+    assert "Performance window: latest 200 trade events" in page
