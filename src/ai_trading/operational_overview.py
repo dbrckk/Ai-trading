@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .persistence import PaperPersistence
+from .persistence import PaperPersistence, PersistedRuntime
 from .runtime_status import runtime_status_snapshot
 
 
@@ -11,6 +11,24 @@ def _empty_model_snapshot() -> dict[str, object]:
         "version": None,
         "checksum": None,
     }
+
+
+def _runtime_consistent(persisted: PersistedRuntime) -> bool:
+    state = persisted.state
+    if persisted.is_new:
+        return (
+            persisted.revision == 0
+            and persisted.model is None
+            and state.processed_bars == 0
+            and not state.last_processed
+            and state.units == 0.0
+            and state.last_price == 0.0
+        )
+    if persisted.revision < 0 or state.processed_bars < 0:
+        return False
+    if state.processed_bars > 0 and not state.last_processed:
+        return False
+    return state.units == 0.0 or state.last_price > 0.0
 
 
 def build_operational_overview(
@@ -44,6 +62,8 @@ def build_operational_overview(
         alerts.append("worker heartbeat expired")
     if model is None and state.processed_bars > 0:
         alerts.append("model missing for initialized runtime")
+    if not _runtime_consistent(persisted):
+        alerts.append("runtime inconsistent")
 
     model_snapshot: dict[str, object]
     if model is None:
