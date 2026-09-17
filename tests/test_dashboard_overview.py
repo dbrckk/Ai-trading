@@ -160,6 +160,28 @@ def test_operational_overview_flags_missing_model_after_processing() -> None:
     assert payload["alerts"] == ["model missing for initialized runtime"]
 
 
+def test_operational_overview_flags_inconsistent_runtime() -> None:
+    persistence = OverviewPersistence()
+    persistence.runtime = PersistedRuntime(
+        state=RuntimeState(
+            cash=12_345.0,
+            units=2.0,
+            last_price=250.0,
+            peak_equity=13_000.0,
+            day_start_equity=12_500.0,
+            last_processed=None,
+            processed_bars=7,
+        ),
+        model=persistence.runtime.model,
+        revision=7,
+        is_new=False,
+    )
+
+    payload = build_operational_overview(persistence, RUNTIME_KEY)
+
+    assert payload["alerts"] == ["runtime inconsistent"]
+
+
 def test_operational_overview_storage_failure_is_sanitized() -> None:
     payload = build_operational_overview(FailingOverviewPersistence(), RUNTIME_KEY)
 
