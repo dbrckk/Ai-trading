@@ -7,12 +7,13 @@ from threading import Thread
 from urllib.error import URLError
 from urllib.request import urlopen
 
-from ai_trading.dashboard import serve_dashboard
+from ai_trading.dashboard import render_dashboard, serve_dashboard
 from ai_trading.hosted_runtime import HostedPaperSettings
 from ai_trading.operational_overview import build_operational_overview
 from ai_trading.persistence import ModelBlob, PersistedRuntime
 from ai_trading.runtime_state import RuntimeState
 from ai_trading.runtime_status import HostedRuntimeStatus
+from ai_trading.trade_journal import TradeJournal
 
 RUNTIME_KEY = "paper:GC=F:5m:online-river:v1"
 
@@ -62,6 +63,11 @@ class OverviewPersistence:
         assert runtime_key == RUNTIME_KEY
         assert starting_cash == 100_000.0
         return self.runtime
+
+    def list_trades(self, runtime_key: str | None = None, *, limit: int | None = None):
+        assert runtime_key == RUNTIME_KEY
+        assert limit == 200
+        return ()
 
     def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:
         assert runtime_key == RUNTIME_KEY
@@ -187,3 +193,26 @@ def test_dashboard_exposes_operational_overview_endpoint() -> None:
     assert payload["model"]["present"] is True
     assert payload["model"]["checksum"] == "1234567890ab"
     assert payload["alerts"] == []
+
+
+def test_dashboard_renders_model_and_revision_metadata(tmp_path) -> None:
+    page = render_dashboard(
+        TradeJournal(tmp_path / "empty.jsonl"),
+        persistence=OverviewPersistence(),
+        runtime_key=RUNTIME_KEY,
+    )
+
+    assert '<small>Runtime revision</small><strong>7</strong>' in page
+    assert '<small>Model</small><strong>joblib v1</strong>' in page
+    assert '<small>Model checksum</small><strong>1234567890ab</strong>' in page
+    assert "Operational alerts: none" in page
+
+
+def test_dashboard_renders_operational_alerts(tmp_path) -> None:
+    page = render_dashboard(
+        TradeJournal(tmp_path / "empty.jsonl"),
+        persistence=OverviewPersistence(with_model=False, stale=True),
+        runtime_key=RUNTIME_KEY,
+    )
+
+    assert "Operational alerts: worker heartbeat expired · model missing for initialized runtime" in page
