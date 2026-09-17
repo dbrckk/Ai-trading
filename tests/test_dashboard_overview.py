@@ -1,5 +1,14 @@
 from __future__ import annotations
 
+import json
+import socket
+import time
+from threading import Thread
+from urllib.error import URLError
+from urllib.request import urlopen
+
+from ai_trading.dashboard import serve_dashboard
+from ai_trading.hosted_runtime import HostedPaperSettings
 from ai_trading.operational_overview import build_operational_overview
 from ai_trading.persistence import ModelBlob, PersistedRuntime
 from ai_trading.runtime_state import RuntimeState
@@ -69,6 +78,40 @@ class FailingOverviewPersistence:
         raise RuntimeError("postgresql://user:secret@example.invalid/private")
 
 
+def _free_port() -> int:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.bind(("127.0.0.1", 0))
+        return int(sock.getsockname()[1])
+
+
+def _start_overview_dashboard(persistence: OverviewPersistence) -> int:
+    port = _free_port()
+    thread = Thread(
+        target=serve_dashboard,
+        kwargs={
+            "host": "127.0.0.1",
+            "port": port,
+            "persistence": persistence,
+            "settings": HostedPaperSettings(
+                enabled=False,
+                symbol="GC=F",
+                interval="5m",
+            ),
+        },
+        daemon=True,
+    )
+    thread.start()
+    deadline = time.time() + 3
+    while time.time() < deadline:
+        try:
+            with urlopen(f"http://127.0.0.1:{port}/healthz", timeout=2) as response:
+                if response.status == 200:
+                    return port
+        except URLError:
+            time.sleep(0.02)
+    raise AssertionError("dashboard server did not start")
+
+
 def test_operational_overview_exposes_model_and_runtime_metadata() -> None:
     payload = build_operational_overview(OverviewPersistence(), RUNTIME_KEY)
 
@@ -131,3 +174,16 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
     }
     assert "secret" not in repr(payload)
     assert "example.invalid" not in repr(payload)
+
+
+def test_dashboard_exposes_operational_overview_endpoint() -> None:
+    port = _start_overview_dashboard(OverviewPersistence())
+
+    with urlopen(f"http://127.0.0.1:{port}/api/overview", timeout=2) as response:
+        payload = json.loads(response.read().decode())
+
+    assert response.status == 200
+    assert payload["runtime_revision"] == 7
+    assert payload["model"]["present"] is True
+    assert payload["model"]["checksum"] == "1234567890ab"
+    assert payload["alerts"] == []
