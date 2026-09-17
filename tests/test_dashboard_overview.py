@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from ai_trading.dashboard import build_operational_overview
+from ai_trading.operational_overview import build_operational_overview
 from ai_trading.persistence import ModelBlob, PersistedRuntime
 from ai_trading.runtime_state import RuntimeState
 from ai_trading.runtime_status import HostedRuntimeStatus
