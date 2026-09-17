@@ -10,7 +10,7 @@ from urllib.parse import urlsplit
 
 from .file_persistence import FilePaperPersistence
 from .hosted_runtime import HostedPaperSettings, start_hosted_paper_runtime
-from .operational_overview import build_operational_overview
+from .operational_overview import build_operational_overview, runtime_is_consistent
 from .paper_cycle import PaperCycleResult
 from .paper_cycle_service import (
     ProductionPaperCycleSettings,
@@ -58,11 +58,13 @@ def render_dashboard(
     storage_error = False
     runtime_revision: int | None = None
     runtime_model = None
+    persisted_runtime = None
     durable_runtime = persistence is not None and runtime_key is not None
     if durable_runtime:
         try:
             recent = persistence.list_trades(runtime_key, limit=200)
             persisted = persistence.load_runtime(runtime_key, starting_cash)
+            persisted_runtime = persisted
             state = persisted.state
             runtime_revision = persisted.revision
             runtime_model = persisted.model
@@ -159,6 +161,8 @@ def render_dashboard(
             and state.processed_bars > 0
         ):
             operational_alerts.append("model missing for initialized runtime")
+        if persisted_runtime is not None and not runtime_is_consistent(persisted_runtime):
+            operational_alerts.append("runtime inconsistent")
     operational_alerts_display = (
         "none" if not operational_alerts else " · ".join(operational_alerts)
     )
