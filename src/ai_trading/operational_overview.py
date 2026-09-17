@@ -21,7 +21,7 @@ def build_operational_overview(
     try:
         persisted = persistence.load_runtime(runtime_key, starting_cash)
         status = persistence.load_runtime_status(runtime_key)
-    except Exception:
+    except Exception:  # noqa: BLE001 - observability boundary must sanitize backend failures
         return {
             "storage_healthy": False,
             "engine_status": "ERROR",
