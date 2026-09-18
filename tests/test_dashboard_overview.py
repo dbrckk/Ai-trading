@@ -20,7 +20,13 @@ RUNTIME_KEY = "paper:GC=F:5m:online-river:v1"
 
 
 class OverviewPersistence:
-    def __init__(self, *, with_model: bool = True, stale: bool = False) -> None:
+    def __init__(
+        self,
+        *,
+        with_model: bool = True,
+        stale: bool = False,
+        cycle_errors: int = 0,
+    ) -> None:
         self.runtime = PersistedRuntime(
             state=RuntimeState(
                 cash=12_345.0,
@@ -58,6 +64,7 @@ class OverviewPersistence:
             units=2.0,
             processed_bars=7,
             poll_seconds=300.0,
+            consecutive_cycle_errors=cycle_errors,
         )
 
     def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:
@@ -154,6 +161,7 @@ def test_operational_overview_exposes_model_and_runtime_metadata() -> None:
         "checksum": "1234567890ab",
     }
     assert payload["lag_detected"] is False
+    assert payload["consecutive_cycle_errors"] == 0
     assert payload["burnin"]["samples"] == 2
     assert payload["burnin"]["processed_bars"] == 7
     assert payload["burnin"]["total_return"] > 0.0
@@ -218,6 +226,7 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
         "processed_bars": None,
         "last_processed": None,
         "lag_detected": False,
+        "consecutive_cycle_errors": None,
         "model": {
             "present": False,
             "format": None,
@@ -259,6 +268,7 @@ def test_dashboard_renders_model_and_revision_metadata(tmp_path) -> None:
     )
 
     assert '<small>Runtime revision</small><strong>7</strong>' in page
+    assert '<small>Consecutive cycle errors</small><strong>0</strong>' in page
     assert '<small>Model</small><strong>joblib v1</strong>' in page
     assert '<small>Model checksum</small><strong>1234567890ab</strong>' in page
     assert "Operational alerts: none" in page
@@ -298,3 +308,24 @@ def test_dashboard_renders_inconsistent_runtime_alert(tmp_path) -> None:
     )
 
     assert "Operational alerts: runtime inconsistent" in page
+
+
+def test_operational_overview_flags_cycle_reliability_degradation() -> None:
+    payload = build_operational_overview(
+        OverviewPersistence(cycle_errors=2),
+        RUNTIME_KEY,
+    )
+
+    assert payload["consecutive_cycle_errors"] == 2
+    assert payload["alerts"] == ["paper cycle reliability degraded"]
+
+
+def test_dashboard_renders_cycle_reliability_alert(tmp_path) -> None:
+    page = render_dashboard(
+        TradeJournal(tmp_path / "empty.jsonl"),
+        persistence=OverviewPersistence(cycle_errors=2),
+        runtime_key=RUNTIME_KEY,
+    )
+
+    assert '<small>Consecutive cycle errors</small><strong>2</strong>' in page
+    assert "Operational alerts: paper cycle reliability degraded" in page
