@@ -27,16 +27,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T18:41:55Z
+Generated: 2026-09-18T19:08:00Z
 
 ### Git
 - Branch: `main`
-- Head: `33f5e76ddd92`
-- Commit date: 2026-09-18T20:41:40+02:00
-- Commit: Merge PR #36: detailed readiness criteria
+- Head: `9b87977fe84c`
+- Commit date: 2026-09-18T21:07:28+02:00
+- Commit: chore(ai): adopt bounded v6 context routing
 - Tracked files: 396
 
 ### Recently changed files
+- `AGENTS.md`
 - `src/ai_trading/dashboard.py`
 - `tests/test_dashboard_persistence.py`
 - `tests/test_readiness.py`

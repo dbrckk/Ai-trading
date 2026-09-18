@@ -1,21 +1,16 @@
 # Change impact
 
-Base: f63e6402d8c68d4939d843699b1af7976aa17cc9
-Head: 33f5e76ddd9217fa93b2545cb7a0911564f0f7af
+Base: 24a85e767ea4521ee1861d3a866df5b2f4a8dfc5
+Head: 9b87977fe84c96d314a6bfab01417ee2c0503a92
 
 ## Changed files
-- M src/ai_trading/dashboard.py
-- M src/ai_trading/readiness.py
-- M tests/test_dashboard_persistence.py
-- M tests/test_readiness.py
+- M AGENTS.md
 
 ## Affected areas
-- src
-- tests
+- (root)
 
 ## Related test candidates
-- tests/test_dashboard.py
-- tests/test_readiness.py
+- No direct filename-based test match detected.
 
 ## Agent guidance
 - Read this file before broad repository exploration.
