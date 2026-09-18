@@ -183,7 +183,8 @@ def test_dashboard_uses_durable_state_trades_and_status(tmp_path) -> None:
     assert '<small>Profit factor</small><strong>4.00</strong>' in page
     assert '<small>Max realized DD</small><strong>80.00</strong>' in page
     assert "Performance window: full persisted history" in page
-    assert '<small>Burn-in bars</small><strong>7</strong>' in page
+    assert '<small>Burn-in bars</small><strong>7 / 126</strong>' in page
+    assert '<small>Burn-in progress</small><strong>6%</strong>' in page
     assert '<small>Equity return</small><strong>2.76%</strong>' in page
     assert '<small>Equity max DD</small><strong>0.00%</strong>' in page
 
@@ -228,3 +229,21 @@ def test_status_endpoints_fail_closed_without_leaking_storage_details() -> None:
     }
     assert "secret" not in health_body
     assert "example.invalid" not in health_body
+
+
+def test_dashboard_v2_groups_critical_sections_and_renders_equity_chart(tmp_path) -> None:
+    page = render_dashboard(
+        TradeJournal(tmp_path / "empty.jsonl"),
+        persistence=DurablePersistence(),
+        runtime_key=RUNTIME_KEY,
+    )
+
+    assert "System health" in page
+    assert "Trading state" in page
+    assert "Performance" in page
+    assert "Burn-in evidence" in page
+    assert 'class="status-badge status-warn"' in page
+    assert 'class="equity-chart"' in page
+    assert "<svg" in page
+    assert "<polyline" in page
+    assert 'class="table-scroll"' in page
