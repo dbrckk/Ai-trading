@@ -56,6 +56,46 @@ def _display_ratio(value: float | None) -> str:
     return f"{value:.2f}"
 
 
+
+
+def _equity_chart_svg(snapshots: tuple[object, ...]) -> str:
+    if len(snapshots) < 2:
+        return '<div class="chart-empty">Need at least two burn-in points.</div>'
+    values = [float(getattr(snapshot, "equity")) for snapshot in snapshots]
+    width = 900.0
+    height = 240.0
+    padding = 18.0
+    low = min(values)
+    high = max(values)
+    span = high - low
+    if span <= 0:
+        span = max(abs(high), 1.0) * 0.01
+        low -= span / 2
+        high += span / 2
+    usable_width = width - 2 * padding
+    usable_height = height - 2 * padding
+    points: list[str] = []
+    for index, value in enumerate(values):
+        x = padding + usable_width * index / (len(values) - 1)
+        y = padding + usable_height * (high - value) / (high - low)
+        points.append(f"{x:.1f},{y:.1f}")
+    change = values[-1] - values[0]
+    direction_class = "positive" if change >= 0 else "negative"
+    return (
+        '<div class="equity-chart">'
+        f'<svg viewBox="0 0 {width:.0f} {height:.0f}" role="img" '
+        'aria-label="Burn-in equity curve" preserveAspectRatio="none">'
+        '<line class="chart-grid" x1="18" y1="18" x2="18" y2="222"></line>'
+        '<line class="chart-grid" x1="18" y1="222" x2="882" y2="222"></line>'
+        f'<polyline class="chart-line {direction_class}" points="{" ".join(points)}"></polyline>'
+        '</svg>'
+        '<div class="chart-scale">'
+        f'<span>{_display_money(values[0])}</span>'
+        f'<span>{_display_money(values[-1])}</span>'
+        '</div></div>'
+    )
+
+
 def render_dashboard(
     journal: TradeJournal,
     state_store: RuntimeStateStore | None = None,
@@ -273,62 +313,141 @@ def render_dashboard(
     burnin_drawdown_display = (
         "-" if burnin_metrics is None else f"{burnin_metrics.max_drawdown:.2%}"
     )
+    equity_chart = _equity_chart_svg(burnin_snapshots)
+    status_class = (
+        "status-ok"
+        if engine_status == "RUNNING" and not operational_alerts
+        else ("status-warn" if not storage_error else "status-error")
+    )
     return f"""<!doctype html>
 <html><head><meta charset="utf-8"><meta http-equiv="refresh" content="2">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AI Trading — Live</title>
 <style>
-body{{font-family:system-ui;margin:0;background:#0b1020;color:#e8edf7}}
-main{{max-width:1400px;margin:auto;padding:24px}} h1{{margin:0 0 8px}}
-small{{color:#9aa7bd}} table{{width:100%;border-collapse:collapse;margin-top:24px}}
-.metrics{{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:18px}}
-.metric{{background:#0b1020;border:1px solid #26324a;border-radius:10px;padding:14px}}
-.metric strong{{display:block;font-size:1.4rem;margin-top:4px}}
-.runtime-reason{{display:block;margin-top:14px}}
-th,td{{padding:10px;border-bottom:1px solid #26324a;text-align:right}}
-th:first-child,td:first-child,th:nth-child(2),td:nth-child(2),
-th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
-.card{{background:#121a2d;border:1px solid #26324a;border-radius:12px;padding:18px}}
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;background:#08111f;color:#eef4ff}
+main{max-width:1480px;margin:auto;padding:20px}
+h1,h2{margin:0}
+h1{font-size:clamp(1.45rem,4vw,2rem)}
+h2{font-size:1rem;color:#d8e4f5}
+small,.muted{color:#94a3b8}
+.card{background:#0f1a2b;border:1px solid #22304a;border-radius:18px;padding:18px;box-shadow:0 12px 40px rgba(0,0,0,.22)}
+.header{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.status-badge{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:7px 11px;font-size:.82rem;font-weight:700;border:1px solid}
+.status-ok{color:#b7f7d0;background:#0d2a1d;border-color:#245c40}
+.status-warn{color:#ffe6a6;background:#30250a;border-color:#6b571b}
+.status-error{color:#ffc0c0;background:#351313;border-color:#6c2d2d}
+.section{margin-top:18px;padding-top:4px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:10px}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.metric{background:#0a1423;border:1px solid #1d2a40;border-radius:12px;padding:13px;min-width:0}
+.metric strong{display:block;font-size:1.24rem;margin-top:5px;overflow-wrap:anywhere}
+.metric.primary strong{font-size:1.48rem}
+.alert-box{margin-top:14px;padding:12px 14px;border-radius:12px;background:#0a1423;border:1px solid #1d2a40}
+.alert-box.warn{border-color:#6b571b;background:#2a220b}
+.runtime-reason{display:block;margin-top:8px;line-height:1.45}
+.equity-chart{margin-top:12px;background:#08111f;border:1px solid #1d2a40;border-radius:14px;padding:10px}
+.equity-chart svg{display:block;width:100%;height:220px}
+.chart-line{fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.chart-line.positive{stroke:#59d98e}
+.chart-line.negative{stroke:#ff7b7b}
+.chart-grid{stroke:#24334d;stroke-width:1}
+.chart-scale{display:flex;justify-content:space-between;font-size:.8rem;color:#94a3b8;margin-top:4px}
+.chart-empty{margin-top:12px;padding:16px;border:1px dashed #31425f;border-radius:12px;color:#94a3b8;text-align:center}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:12px;border:1px solid #1d2a40;border-radius:12px}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th,td{padding:10px 12px;border-bottom:1px solid #1d2a40;text-align:right;white-space:nowrap}
+th{position:sticky;top:0;background:#101b2d;color:#b9c7d9;font-size:.8rem}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2),th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{text-align:left}
+tbody tr:hover{background:#101b2d}
+@media (max-width:700px){
+  main{padding:10px}
+  .card{padding:14px;border-radius:14px}
+  .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .metric{padding:11px}
+  .metric strong{font-size:1.05rem}
+  .metric.primary strong{font-size:1.2rem}
+  .equity-chart svg{height:170px}
+}
+@media (max-width:420px){
+  .metrics{grid-template-columns:1fr}
+}
 </style></head><body><main>
-<div class="card"><h1>AI Trading — Live trades</h1>
-<small>Read-only dashboard · auto refresh 2s · hosted paper runtime</small>
+<div class="card">
+<div class="header">
+<div>
+<h1>AI Trading — Paper Control Center</h1>
+<small>Read-only · auto refresh 2s · hosted paper runtime</small>
+</div>
+<span class="status-badge {status_class}">{html.escape(engine_status)}</span>
+</div>
+
+<section class="section">
+<div class="section-head"><h2>System health</h2><small>{html.escape(market)}</small></div>
 <div class="metrics">
-<div class="metric"><small>Engine</small><strong>{html.escape(engine_status)}</strong></div>
-<div class="metric"><small>Market</small><strong>{html.escape(market)}</strong></div>
-<div class="metric"><small>Last heartbeat</small><strong>{html.escape(last_heartbeat)}</strong></div>
+<div class="metric primary"><small>Engine</small><strong>{html.escape(engine_status)}</strong></div>
 <div class="metric"><small>Heartbeat age</small><strong>{html.escape(heartbeat_age)}</strong></div>
-<div class="metric"><small>Last cycle</small><strong>{html.escape(last_cycle)}</strong></div>
-<div class="metric"><small>Last processed</small><strong>{html.escape(last_processed)}</strong></div>
+<div class="metric"><small>Cycle errors</small><strong>{cycle_errors_display}</strong></div>
 <div class="metric"><small>Processed bars</small><strong>{processed_bars_display}</strong></div>
 <div class="metric"><small>Runtime revision</small><strong>{runtime_revision_display}</strong></div>
-<div class="metric"><small>Consecutive cycle errors</small><strong>{cycle_errors_display}</strong></div>
 <div class="metric"><small>Model</small><strong>{html.escape(model_display)}</strong></div>
-<div class="metric"><small>Model checksum</small><strong>{html.escape(model_checksum)}</strong></div>
-<div class="metric"><small>Signal</small><strong>{html.escape(signal)}</strong></div>
+</div>
+<div class="alert-box {'warn' if operational_alerts else ''}">
+<small>Operational alerts</small>
+<strong>{html.escape(operational_alerts_display)}</strong>
+</div>
+<small class="runtime-reason">Last heartbeat: {html.escape(last_heartbeat)} · Last cycle: {html.escape(last_cycle)}</small>
+<small class="runtime-reason">Last processed: {html.escape(last_processed)} · Model checksum: {html.escape(model_checksum)}</small>
+</section>
+
+<section class="section">
+<div class="section-head"><h2>Trading state</h2><small>paper only</small></div>
+<div class="metrics">
+<div class="metric primary"><small>Signal</small><strong>{html.escape(signal)}</strong></div>
+<div class="metric primary"><small>Risk decision</small><strong>{html.escape(risk_decision)}</strong></div>
 <div class="metric"><small>AI confidence</small><strong>{html.escape(confidence)}</strong></div>
-<div class="metric"><small>Risk decision</small><strong>{html.escape(risk_decision)}</strong></div>
 <div class="metric"><small>Equity</small><strong>{_display_money(equity)}</strong></div>
 <div class="metric"><small>Cash</small><strong>{_display_money(cash)}</strong></div>
 <div class="metric"><small>Open units</small><strong>{_display_units(units)}</strong></div>
 <div class="metric"><small>Position value</small><strong>{_display_money(position_value)}</strong></div>
+</div>
+<small class="runtime-reason">Last engine reason: {html.escape(decision_reason)}</small>
+</section>
+
+<section class="section">
+<div class="section-head"><h2>Performance</h2><small>{html.escape(performance_scope)}</small></div>
+<div class="metrics">
+<div class="metric primary"><small>Realized PnL</small><strong>{pnl_display}</strong></div>
 <div class="metric"><small>Trades</small><strong>{trade_count_display}</strong></div>
-<div class="metric"><small>Realized PnL</small><strong>{pnl_display}</strong></div>
 <div class="metric"><small>Avg PnL / trade</small><strong>{average_pnl_display}</strong></div>
 <div class="metric"><small>Profit factor</small><strong>{profit_factor_display}</strong></div>
 <div class="metric"><small>Max realized DD</small><strong>{max_drawdown_display}</strong></div>
 <div class="metric"><small>Recent win rate</small><strong>{win_rate_display}</strong></div>
-<div class="metric"><small>Recent wins / Losses</small><strong>{wins_losses_display}</strong></div>
-<div class="metric"><small>Recent active symbols</small><strong>{active_symbols_display}</strong></div>
-<div class="metric"><small>Burn-in bars</small><strong>{burnin_bars_display}</strong></div>
+<div class="metric"><small>Wins / losses</small><strong>{wins_losses_display}</strong></div>
+<div class="metric"><small>Active symbols</small><strong>{active_symbols_display}</strong></div>
+</div>
+</section>
+
+<section class="section">
+<div class="section-head"><h2>Burn-in evidence</h2><small>durable equity history</small></div>
+<div class="metrics">
+<div class="metric primary"><small>Burn-in bars</small><strong>{burnin_bars_display}</strong></div>
 <div class="metric"><small>Equity return</small><strong>{burnin_return_display}</strong></div>
 <div class="metric"><small>Equity max DD</small><strong>{burnin_drawdown_display}</strong></div>
 </div>
-<small class="runtime-reason">Last engine reason: {html.escape(decision_reason)}</small>
-<small class="runtime-reason">Operational alerts: {html.escape(operational_alerts_display)}</small>
-<small class="runtime-reason">Performance window: {html.escape(performance_scope)} · recent table/stats: latest 200 trade events</small>
+{equity_chart}
+</section>
+
+<section class="section">
+<div class="section-head"><h2>Recent trades</h2><small>latest 200 events</small></div>
+<div class="table-scroll">
 <table><thead><tr><th>UTC</th><th>Symbol</th><th>Side</th><th>Qty</th><th>Price</th>
 <th>Status</th><th>PnL</th><th>Confidence</th><th>Strategy</th></tr></thead>
-<tbody>{rows}</tbody></table></div></main></body></html>"""
+<tbody>{rows}</tbody></table>
+</div>
+</section>
+</div></main></body></html>"""
 
 
 def serve_dashboard(
