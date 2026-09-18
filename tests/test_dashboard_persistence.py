@@ -264,5 +264,5 @@ def test_dashboard_premium_shell_and_navigation(tmp_path) -> None:
     assert 'href="#trades"' in page
     assert 'class="hero-kpis"' in page
     assert 'class="live-dot"' in page
-    assert 'class="chart-area"' in page
+    assert 'class="chart-area ' in page
     assert "AI Trading Terminal" in page
