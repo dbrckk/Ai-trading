@@ -266,3 +266,19 @@ def test_dashboard_premium_shell_and_navigation(tmp_path) -> None:
     assert 'class="live-dot"' in page
     assert 'class="chart-area ' in page
     assert "AI Trading Terminal" in page
+
+
+def test_dashboard_quant_evidence_is_explicit_and_non_misleading(tmp_path) -> None:
+    page = render_dashboard(
+        TradeJournal(tmp_path / "empty.jsonl"),
+        persistence=DurablePersistence(),
+        runtime_key=RUNTIME_KEY,
+    )
+
+    assert "Quant evidence" in page
+    assert "Bootstrap positive probability" in page
+    assert "Scheduler reliability" in page
+    assert "Regime coverage" in page
+    assert "not yet persisted" in page
+    assert "Full readiness" in page
+    assert "pending interval-aware annualization" in page

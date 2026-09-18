@@ -4,10 +4,14 @@ import html
 import json
 import os
 from collections.abc import Callable
+from functools import lru_cache
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
 
+import pandas as pd
+
+from .bootstrap_robustness import bootstrap_equity_curve
 from .burnin import BurnInSnapshot, calculate_burnin_metrics
 from .file_persistence import FilePaperPersistence
 from .hosted_runtime import HostedPaperSettings, start_hosted_paper_runtime
@@ -94,6 +98,15 @@ def _equity_chart_svg(snapshots: tuple[BurnInSnapshot, ...]) -> str:
         f'<span>{_display_money(values[-1])}</span>'
         '</div></div>'
     )
+
+
+
+@lru_cache(maxsize=16)
+def _bootstrap_positive_probability(equities: tuple[float, ...]) -> float | None:
+    if len(equities) < 3:
+        return None
+    report = bootstrap_equity_curve(pd.Series(equities, dtype=float))
+    return report.probability_positive
 
 
 def render_dashboard(
@@ -321,6 +334,25 @@ def render_dashboard(
         "-" if burnin_metrics is None else f"{burnin_metrics.max_drawdown:.2%}"
     )
     equity_chart = _equity_chart_svg(burnin_snapshots)
+    bootstrap_probability = _bootstrap_positive_probability(
+        tuple(float(snapshot.equity) for snapshot in burnin_snapshots)
+    )
+    bootstrap_probability_display = (
+        "-"
+        if bootstrap_probability is None
+        else f"{bootstrap_probability:.1%}"
+    )
+    bootstrap_threshold = ReadinessPolicy().min_positive_bootstrap_probability
+    scheduler_reliable = (
+        runtime_status is not None
+        and not storage_error
+        and runtime_status.consecutive_cycle_errors == 0
+    )
+    scheduler_reliability_display = (
+        "-"
+        if runtime_status is None or storage_error
+        else ("PASS" if scheduler_reliable else "DEGRADED")
+    )
     status_class = (
         "status-ok"
         if engine_status == "RUNNING" and not operational_alerts
@@ -434,6 +466,7 @@ tbody tr:hover{{background:rgba(113,167,255,.045)}}
 <a href="#overview">Overview</a>
 <a href="#performance">Performance</a>
 <a href="#burnin">Burn-in</a>
+<a href="#evidence">Evidence</a>
 <a href="#trades">Trades</a>
 </div>
 </nav>
@@ -514,6 +547,18 @@ tbody tr:hover{{background:rgba(113,167,255,.045)}}
 <div class="metric"><small>Equity max DD</small><strong>{burnin_drawdown_display}</strong></div>
 </div>
 {equity_chart}
+</section>
+
+<section class="section" id="evidence">
+<div class="section-head"><h2>Quant evidence</h2><small>readiness inputs without false precision</small></div>
+<div class="metrics">
+<div class="metric primary"><small>Bootstrap positive probability</small><strong>{bootstrap_probability_display}</strong></div>
+<div class="metric"><small>Bootstrap threshold</small><strong>{bootstrap_threshold:.0%}</strong></div>
+<div class="metric"><small>Scheduler reliability</small><strong>{scheduler_reliability_display}</strong></div>
+<div class="metric"><small>Regime coverage</small><strong>not yet persisted</strong></div>
+<div class="metric"><small>Full readiness</small><strong>pending interval-aware annualization</strong></div>
+</div>
+<small class="runtime-reason">Bootstrap is calculated from durable equity snapshots and cached by equity history. Full readiness remains intentionally withheld until regime coverage and interval-aware Sharpe/Sortino are scientifically valid.</small>
 </section>
 
 <section class="section" id="trades">
