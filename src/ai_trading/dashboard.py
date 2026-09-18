@@ -396,14 +396,13 @@ tbody tr:hover{{background:#101b2d}}
 <div class="metrics">
 <div class="metric primary"><small>Engine</small><strong>{html.escape(engine_status)}</strong></div>
 <div class="metric"><small>Heartbeat age</small><strong>{html.escape(heartbeat_age)}</strong></div>
-<div class="metric"><small>Cycle errors</small><strong>{cycle_errors_display}</strong></div>
+<div class="metric"><small>Consecutive cycle errors</small><strong>{cycle_errors_display}</strong></div>
 <div class="metric"><small>Processed bars</small><strong>{processed_bars_display}</strong></div>
 <div class="metric"><small>Runtime revision</small><strong>{runtime_revision_display}</strong></div>
 <div class="metric"><small>Model</small><strong>{html.escape(model_display)}</strong></div>
 </div>
 <div class="alert-box {'warn' if operational_alerts else ''}">
-<small>Operational alerts</small>
-<strong>{html.escape(operational_alerts_display)}</strong>
+<strong>Operational alerts: {html.escape(operational_alerts_display)}</strong>
 </div>
 <small class="runtime-reason">Last heartbeat: {html.escape(last_heartbeat)} · Last cycle: {html.escape(last_cycle)}</small>
 <small class="runtime-reason">Last processed: {html.escape(last_processed)} · Model checksum: {html.escape(model_checksum)}</small>
