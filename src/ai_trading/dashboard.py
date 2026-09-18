@@ -24,7 +24,7 @@ from .paper_cycle_service import (
 from .performance_metrics import calculate_performance_metrics
 from .persistence import PaperPersistence
 from .persistence_factory import build_paper_persistence
-from .readiness import ReadinessCheck, ReadinessPolicy, evaluate_readiness
+from .readiness import ReadinessCheck, ReadinessPolicy, ReadinessReport, evaluate_readiness
 from .runtime_state import RuntimeStateStore
 from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore, runtime_status_snapshot
 from .scheduler_endpoint import handle_scheduler_request
@@ -109,7 +109,7 @@ def _readiness_number(check: ReadinessCheck, value: float | int) -> str:
     return f"{float(value):.2f}"
 
 
-def _readiness_panel(report) -> str:
+def _readiness_panel(report: ReadinessReport | None) -> str:
     if report is None:
         return '<div class="readiness-empty">Readiness evidence is not complete yet.</div>'
     rows = []
