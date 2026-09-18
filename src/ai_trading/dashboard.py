@@ -57,8 +57,6 @@ def _display_ratio(value: float | None) -> str:
     return f"{value:.2f}"
 
 
-
-
 def _equity_chart_svg(snapshots: tuple[object, ...]) -> str:
     if len(snapshots) < 2:
         return '<div class="chart-empty">Need at least two burn-in points.</div>'
@@ -426,7 +424,7 @@ tbody tr:hover{{background:#101b2d}}
 </section>
 
 <section class="section">
-<div class="section-head"><h2>Performance</h2><small>{html.escape(performance_scope)}</small></div>
+<div class="section-head"><h2>Performance</h2><small>Performance window: {html.escape(performance_scope)}</small></div>
 <div class="metrics">
 <div class="metric primary"><small>Realized PnL</small><strong>{pnl_display}</strong></div>
 <div class="metric"><small>Trades</small><strong>{trade_count_display}</strong></div>
