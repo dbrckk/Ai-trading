@@ -101,7 +101,7 @@ def _equity_chart_svg(snapshots: tuple[BurnInSnapshot, ...]) -> str:
 
 
 
-def _readiness_number(check: ReadinessCheck, value: float | int) -> str:
+def _readiness_number(check: ReadinessCheck, value: float) -> str:
     if check.name in {"Max drawdown", "Total return", "Bootstrap confidence"}:
         return f"{float(value):.1%}"
     if check.name in {"Burn-in bars", "Regime coverage", "Scheduler errors"}:
