@@ -1030,7 +1030,9 @@ processed_bars: int = 0
 ⋮----
 values = tuple(snapshots)
 ⋮----
-equity = pd.Series([snapshot.equity for snapshot in values], dtype=float)
+timestamps = pd.to_datetime(
+equity = pd.Series(
+periods_per_year = infer_periods_per_year(equity.index)
 ⋮----
 class BurnInTracker
 ⋮----
@@ -2039,13 +2041,21 @@ burnin_drawdown_display = (
 equity_chart = _equity_chart_svg(burnin_snapshots)
 bootstrap_probability = _bootstrap_positive_probability(
 bootstrap_probability_display = (
-bootstrap_threshold = ReadinessPolicy().min_positive_bootstrap_probability
+readiness_policy = ReadinessPolicy()
+bootstrap_threshold = readiness_policy.min_positive_bootstrap_probability
 scheduler_reliable = (
 scheduler_reliability_display = (
 regimes_covered = len(regimes)
 regimes_covered_display = "-" if storage_error else str(regimes_covered)
-regimes_threshold = ReadinessPolicy().min_regimes_covered
+regimes_threshold = readiness_policy.min_regimes_covered
 regime_names_display = "none" if not regimes else " · ".join(regimes)
+readiness_report = None
+⋮----
+readiness_report = evaluate_readiness(
+readiness_display = (
+readiness_checks_display = (
+sharpe_display = "-" if burnin_metrics is None else f"{burnin_metrics.sharpe:.2f}"
+sortino_display = "-" if burnin_metrics is None else f"{burnin_metrics.sortino:.2f}"
 status_class = (
 ⋮----
 effective_settings = settings or HostedPaperSettings.from_env()
@@ -4345,7 +4355,16 @@ def as_dict(self) -> dict[str, float]
 ⋮----
 def _safe_ratio(numerator: float, denominator: float) -> float
 ⋮----
-def compute_metrics(equity: pd.Series, periods_per_year: int = 252) -> PerformanceMetrics
+def infer_periods_per_year(index: pd.Index) -> float
+⋮----
+timestamps = pd.to_datetime(index, utc=True, errors="coerce")
+timestamps = timestamps[~timestamps.isna()]
+⋮----
+elapsed_seconds = float((timestamps[-1] - timestamps[0]).total_seconds())
+⋮----
+elapsed_years = elapsed_seconds / (365.25 * 24 * 60 * 60)
+⋮----
+def compute_metrics(equity: pd.Series, periods_per_year: float = 252.0) -> PerformanceMetrics
 ⋮----
 clean = equity.astype(float).dropna()
 ⋮----
@@ -8429,6 +8448,11 @@ def test_buy_and_hold_is_normalized_to_starting_equity() -> None
 ⋮----
 prices = pd.Series([100.0, 110.0, 120.0])
 curve = buy_and_hold_equity(prices, 100_000.0)
+⋮----
+def test_infer_periods_per_year_from_elapsed_timestamps() -> None
+⋮----
+index = pd.date_range("2026-01-01", periods=13, freq="30D", tz="UTC")
+periods = infer_periods_per_year(index)
 ````
 
 ## File: tests/test_persistence_contract.py
