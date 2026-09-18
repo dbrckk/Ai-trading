@@ -37,6 +37,7 @@ class FilePaperPersistence(PaperPersistence):
         self.audit_log = audit_log or AuditLog(root_path / "audit.jsonl")
         self.status_store = status_store or HostedRuntimeStatusStore(root_path / "runtime_status.json")
         self.burnin_tracker = BurnInTracker(root_path / "burnin.jsonl")
+        self.regimes_path = root_path / "regimes.txt"
         self.model_path = Path(model_path) if model_path is not None else root_path / "models" / "online-river.joblib"
 
     def initialize_schema(self) -> None:
@@ -77,8 +78,17 @@ class FilePaperPersistence(PaperPersistence):
         temp.write_bytes(commit.model.payload)
         temp.replace(self.model_path)
         state = commit.state
+        if commit.observed_regime:
+            regimes = set(self.list_regimes(""))
+            regimes.add(commit.observed_regime)
+            self.regimes_path.parent.mkdir(parents=True, exist_ok=True)
+            self.regimes_path.write_text(
+                "\n".join(sorted(regimes)) + "\n",
+                encoding="utf-8",
+            )
         self.burnin_tracker.append(
             equity=state.cash + state.units * state.last_price,
+            regimes_covered=len(self.list_regimes("")),
             processed_bars=state.processed_bars,
         )
         return CommitOutcome.COMMITTED
@@ -99,6 +109,16 @@ class FilePaperPersistence(PaperPersistence):
     def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]:
         del runtime_key
         return tuple(self.burnin_tracker.read())
+
+    def list_regimes(self, runtime_key: str) -> tuple[str, ...]:
+        del runtime_key
+        if not self.regimes_path.exists():
+            return ()
+        return tuple(
+            line.strip()
+            for line in self.regimes_path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        )
 
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:
         del runtime_key

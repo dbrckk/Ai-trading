@@ -14,6 +14,7 @@ from .model import Prediction
 from .model_codec import deserialize_model, serialize_model
 from .online import RiverDirectionModel
 from .persistence import CommitOutcome, PaperPersistence, RuntimeStepCommit
+from .regime import detect_regime
 from .risk import PortfolioSnapshot, RiskEngine
 from .runtime_lock import RuntimeLock
 from .runtime_state import RuntimeState, RuntimeStateStore
@@ -202,6 +203,7 @@ class PaperAutonomousRuntime:
             )
 
         row = features.loc[signal_idx, FEATURES]
+        observed_regime = detect_regime(row).name
         prediction: Prediction = model.predict_one(row)
 
         execution_price = float(df.at[execution_idx, "Open"])
@@ -255,6 +257,7 @@ class PaperAutonomousRuntime:
             "units": broker.state.units,
             "processed_bars": processed_bars,
             "retrain_due": retrain_due,
+            "observed_regime": observed_regime,
         }
         outcome = self.persistence.commit_step(
             self.runtime_key,
@@ -265,6 +268,7 @@ class PaperAutonomousRuntime:
                 trade=trade,
                 audit_event="runtime_step",
                 audit_payload=audit_payload,
+                observed_regime=observed_regime,
             ),
         )
         if outcome is CommitOutcome.CONFLICT:

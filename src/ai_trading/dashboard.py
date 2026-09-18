@@ -141,6 +141,8 @@ def render_dashboard(
                 performance_scope = "latest 200 trade events"
             load_burnin = getattr(persistence, "list_burnin_snapshots", None)
             burnin_snapshots = tuple(load_burnin(runtime_key)) if callable(load_burnin) else ()
+            load_regimes = getattr(persistence, "list_regimes", None)
+            regimes = tuple(load_regimes(runtime_key)) if callable(load_regimes) else ()
             burnin_metrics = (
                 calculate_burnin_metrics(burnin_snapshots)
                 if len(burnin_snapshots) >= 2
@@ -152,6 +154,7 @@ def render_dashboard(
             runtime_status = None
             trade_performance = None
             burnin_snapshots = ()
+            regimes = ()
             burnin_metrics = None
             performance_scope = "unavailable"
             storage_error = True
@@ -163,6 +166,7 @@ def render_dashboard(
         )
         trade_performance = calculate_performance_metrics(recent)
         burnin_snapshots = ()
+        regimes = ()
         burnin_metrics = None
         performance_scope = "latest 200 trade events"
 
@@ -353,6 +357,10 @@ def render_dashboard(
         if runtime_status is None or storage_error
         else ("PASS" if scheduler_reliable else "DEGRADED")
     )
+    regimes_covered = len(regimes)
+    regimes_covered_display = "-" if storage_error else str(regimes_covered)
+    regimes_threshold = ReadinessPolicy().min_regimes_covered
+    regime_names_display = "none" if not regimes else " · ".join(regimes)
     status_class = (
         "status-ok"
         if engine_status == "RUNNING" and not operational_alerts
@@ -555,10 +563,11 @@ tbody tr:hover{{background:rgba(113,167,255,.045)}}
 <div class="metric primary"><small>Bootstrap positive probability</small><strong>{bootstrap_probability_display}</strong></div>
 <div class="metric"><small>Bootstrap threshold</small><strong>{bootstrap_threshold:.0%}</strong></div>
 <div class="metric"><small>Scheduler reliability</small><strong>{scheduler_reliability_display}</strong></div>
-<div class="metric"><small>Regime coverage</small><strong>not yet persisted</strong></div>
+<div class="metric"><small>Regime coverage</small><strong>{regimes_covered_display} / {regimes_threshold}</strong></div>
 <div class="metric"><small>Full readiness</small><strong>pending interval-aware annualization</strong></div>
 </div>
-<small class="runtime-reason">Bootstrap is calculated from durable equity snapshots and cached by equity history. Full readiness remains intentionally withheld until regime coverage and interval-aware Sharpe/Sortino are scientifically valid.</small>
+<small class="runtime-reason">Observed regimes: {html.escape(regime_names_display)}.</small>
+<small class="runtime-reason">Bootstrap is calculated from durable equity snapshots and cached by equity history. Full readiness remains intentionally withheld until interval-aware Sharpe/Sortino are scientifically valid.</small>
 </section>
 
 <section class="section" id="trades">

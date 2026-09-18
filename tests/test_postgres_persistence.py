@@ -51,6 +51,7 @@ def _commit(
     expected_revision: int = 0,
     state: RuntimeState | None = None,
     trade: TradeSnapshot | None = None,
+    observed_regime: str | None = None,
 ) -> RuntimeStepCommit:
     commit_state = state or _state()
     return RuntimeStepCommit(
@@ -60,6 +61,7 @@ def _commit(
         trade=trade,
         audit_event="runtime_step",
         audit_payload={"processed_bars": commit_state.processed_bars},
+        observed_regime=observed_regime,
     )
 
 
@@ -207,3 +209,44 @@ def test_runtime_status_survives_new_instance(backend) -> None:
 
     restored = PostgresPaperPersistence(DATABASE_URL).load_runtime_status(RUNTIME_KEY)
     assert restored == status
+
+
+def test_regime_coverage_is_deduplicated_and_persisted(backend) -> None:
+    backend.load_runtime(RUNTIME_KEY, 100_000.0)
+
+    assert (
+        backend.commit_step(
+            RUNTIME_KEY,
+            _commit(observed_regime="bull_normal_vol"),
+        )
+        is CommitOutcome.COMMITTED
+    )
+    assert (
+        backend.commit_step(
+            RUNTIME_KEY,
+            _commit(
+                expected_revision=1,
+                state=_state(cash=99_800.0, processed_bars=2),
+                observed_regime="bull_normal_vol",
+            ),
+        )
+        is CommitOutcome.COMMITTED
+    )
+    assert (
+        backend.commit_step(
+            RUNTIME_KEY,
+            _commit(
+                expected_revision=2,
+                state=_state(cash=99_700.0, processed_bars=3),
+                observed_regime="sideways_normal_vol",
+            ),
+        )
+        is CommitOutcome.COMMITTED
+    )
+
+    assert backend.list_regimes(RUNTIME_KEY) == (
+        "bull_normal_vol",
+        "sideways_normal_vol",
+    )
+    snapshots = backend.list_burnin_snapshots(RUNTIME_KEY)
+    assert snapshots[-1].regimes_covered == 2
