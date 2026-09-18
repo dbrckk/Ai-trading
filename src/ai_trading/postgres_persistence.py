@@ -10,6 +10,7 @@ from psycopg.rows import dict_row
 from psycopg.types.json import Jsonb
 
 from .audit import build_audit_record
+from .burnin import BurnInSnapshot
 from .performance_metrics import (
     TradePerformanceMetrics,
     performance_metrics_from_totals,
@@ -85,6 +86,20 @@ _SCHEMA_STATEMENTS = (
     )
     """,
     """
+    CREATE TABLE IF NOT EXISTS paper_burnin_snapshots (
+        runtime_key text NOT NULL
+            REFERENCES paper_runtime_state(runtime_key) ON DELETE CASCADE,
+        processed_bars bigint NOT NULL,
+        timestamp_utc text NOT NULL,
+        equity double precision NOT NULL,
+        scheduler_errors integer NOT NULL DEFAULT 0,
+        regimes_covered integer NOT NULL DEFAULT 0,
+        bootstrap_probability_positive double precision NOT NULL DEFAULT 0,
+        created_at timestamptz NOT NULL DEFAULT now(),
+        PRIMARY KEY (runtime_key, processed_bars)
+    )
+    """,
+    """
     CREATE TABLE IF NOT EXISTS paper_audit_events (
         id bigserial PRIMARY KEY,
         runtime_key text NOT NULL
@@ -114,6 +129,26 @@ _SCHEMA_STATEMENTS = (
     """
     CREATE INDEX IF NOT EXISTS paper_audit_runtime_id_idx
         ON paper_audit_events (runtime_key, id DESC)
+    """,
+    """
+    CREATE INDEX IF NOT EXISTS paper_burnin_runtime_bars_idx
+        ON paper_burnin_snapshots (runtime_key, processed_bars)
+    """,
+    """
+    INSERT INTO paper_burnin_snapshots (
+        runtime_key,
+        processed_bars,
+        timestamp_utc,
+        equity
+    )
+    SELECT
+        runtime_key,
+        processed_bars,
+        COALESCE(last_processed, updated_at::text),
+        cash + units * last_price
+    FROM paper_runtime_state
+    WHERE processed_bars > 0
+    ON CONFLICT (runtime_key, processed_bars) DO NOTHING
     """,
     """
     WITH source AS (
@@ -468,6 +503,25 @@ class PostgresPaperPersistence(PaperPersistence):
             if cursor.fetchone() is None:
                 raise RuntimeError("runtime revision changed during commit")
 
+            cursor.execute(
+                """
+                INSERT INTO paper_burnin_snapshots (
+                    runtime_key,
+                    processed_bars,
+                    timestamp_utc,
+                    equity
+                )
+                VALUES (%s, %s, %s, %s)
+                ON CONFLICT (runtime_key, processed_bars) DO NOTHING
+                """,
+                (
+                    runtime_key,
+                    state.processed_bars,
+                    str(state.last_processed or audit["timestamp_utc"]),
+                    state.cash + state.units * state.last_price,
+                ),
+            )
+
         return CommitOutcome.COMMITTED
 
     def list_trades(
@@ -543,6 +597,38 @@ class PostgresPaperPersistence(PaperPersistence):
             gross_profit=float(row["gross_profit"]),
             gross_loss=float(row["gross_loss"]),
             max_drawdown=float(row["max_drawdown"]),
+        )
+
+    def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]:
+        with self._connect() as connection, connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT
+                    timestamp_utc,
+                    equity,
+                    scheduler_errors,
+                    regimes_covered,
+                    bootstrap_probability_positive,
+                    processed_bars
+                FROM paper_burnin_snapshots
+                WHERE runtime_key = %s
+                ORDER BY processed_bars ASC
+                """,
+                (runtime_key,),
+            )
+            rows = cursor.fetchall()
+        return tuple(
+            BurnInSnapshot(
+                timestamp_utc=str(row["timestamp_utc"]),
+                equity=float(row["equity"]),
+                scheduler_errors=int(row["scheduler_errors"]),
+                regimes_covered=int(row["regimes_covered"]),
+                bootstrap_probability_positive=float(
+                    row["bootstrap_probability_positive"]
+                ),
+                processed_bars=int(row["processed_bars"]),
+            )
+            for row in rows
         )
 
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:
