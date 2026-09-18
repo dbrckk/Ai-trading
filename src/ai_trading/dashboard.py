@@ -3,11 +3,13 @@ from __future__ import annotations
 import html
 import json
 import os
-from functools import lru_cache
 from collections.abc import Callable
+from functools import lru_cache
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
+
+import pandas as pd
 
 from .bootstrap_robustness import bootstrap_equity_curve
 from .burnin import BurnInSnapshot, calculate_burnin_metrics
@@ -27,8 +29,6 @@ from .runtime_state import RuntimeStateStore
 from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore, runtime_status_snapshot
 from .scheduler_endpoint import handle_scheduler_request
 from .trade_journal import TradeJournal
-
-import pandas as pd
 
 _STORAGE_ERROR_STATUS: dict[str, object] = {
     "engine_status": "ERROR",
