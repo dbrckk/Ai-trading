@@ -107,6 +107,15 @@ def test_runtime_commits_one_durable_step() -> None:
     assert commit.state.processed_bars == 4
     assert commit.audit_event == "runtime_step"
     assert commit.audit_payload["processed_bars"] == 4
+    assert commit.observed_regime in {
+        "bull_high_vol",
+        "bull_normal_vol",
+        "bear_high_vol",
+        "bear_normal_vol",
+        "sideways_high_vol",
+        "sideways_normal_vol",
+    }
+    assert commit.audit_payload["observed_regime"] == commit.observed_regime
     assert isinstance(deserialize_model(commit.model), RiverDirectionModel)
 
 
