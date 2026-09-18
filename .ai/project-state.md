@@ -7,13 +7,14 @@ Status: active
 - Repository agent instructions are present.
 - Hosted paper runtime uses durable persistence and scheduled paper cycles.
 - Paper performance metrics are persisted cumulatively per runtime and exposed in the read-only dashboard.
+- Paper burn-in equity snapshots are persisted per committed bar and exposed through dashboard/API observability.
 
 ## Broken / blockers
 - None documented here yet.
 
 ## Current priority
-- Validate and merge cumulative full-history paper performance metrics.
-- Then continue paper-trading burn-in and evaluate runtime/performance evidence before changing trading logic.
+- Validate and merge durable per-bar paper burn-in equity snapshots and observability.
+- Then enrich burn-in evidence with scheduler reliability, regime coverage, bootstrap confidence, and interval-aware annualization before evaluating full readiness or changing trading logic.
 
 ## Validation
 - Standards workflow: configured.

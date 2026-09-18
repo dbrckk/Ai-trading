@@ -8,6 +8,7 @@ from typing import Any, Protocol
 
 import joblib
 
+from .burnin import BurnInSnapshot
 from .performance_metrics import TradePerformanceMetrics
 from .runtime_state import RuntimeState
 from .runtime_status import HostedRuntimeStatus
@@ -60,6 +61,8 @@ class PaperPersistence(Protocol):
     ) -> tuple[TradeSnapshot, ...]: ...
 
     def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics: ...
+
+    def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]: ...
 
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None: ...
 

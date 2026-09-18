@@ -4,6 +4,7 @@ import hashlib
 from pathlib import Path
 
 from .audit import AuditLog
+from .burnin import BurnInSnapshot, BurnInTracker
 from .performance_metrics import TradePerformanceMetrics, calculate_performance_metrics
 from .persistence import (
     CommitOutcome,
@@ -35,6 +36,7 @@ class FilePaperPersistence(PaperPersistence):
         self.trade_journal = trade_journal or TradeJournal(root_path / "trades.jsonl")
         self.audit_log = audit_log or AuditLog(root_path / "audit.jsonl")
         self.status_store = status_store or HostedRuntimeStatusStore(root_path / "runtime_status.json")
+        self.burnin_tracker = BurnInTracker(root_path / "burnin.jsonl")
         self.model_path = Path(model_path) if model_path is not None else root_path / "models" / "online-river.joblib"
 
     def initialize_schema(self) -> None:
@@ -74,6 +76,11 @@ class FilePaperPersistence(PaperPersistence):
         temp = self.model_path.with_suffix(".tmp")
         temp.write_bytes(commit.model.payload)
         temp.replace(self.model_path)
+        state = commit.state
+        self.burnin_tracker.append(
+            equity=state.cash + state.units * state.last_price,
+            processed_bars=state.processed_bars,
+        )
         return CommitOutcome.COMMITTED
 
     def list_trades(
@@ -88,6 +95,10 @@ class FilePaperPersistence(PaperPersistence):
     def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics:
         del runtime_key
         return calculate_performance_metrics(self.trade_journal.list())
+
+    def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]:
+        del runtime_key
+        return tuple(self.burnin_tracker.read())
 
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:
         del runtime_key

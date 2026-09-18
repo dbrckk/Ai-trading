@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from .burnin import calculate_burnin_metrics
 from .persistence import PaperPersistence, PersistedRuntime
 from .runtime_status import runtime_status_snapshot
 
@@ -31,6 +32,33 @@ def runtime_is_consistent(persisted: PersistedRuntime) -> bool:
     return state.units == 0.0 or state.last_price > 0.0
 
 
+def _burnin_snapshot(persistence: PaperPersistence, runtime_key: str) -> dict[str, object]:
+    loader = getattr(persistence, "list_burnin_snapshots", None)
+    if not callable(loader):
+        return {
+            "samples": 0,
+            "processed_bars": 0,
+            "total_return": None,
+            "max_drawdown": None,
+        }
+    snapshots = loader(runtime_key)
+    latest_bars = snapshots[-1].processed_bars if snapshots else 0
+    if len(snapshots) < 2:
+        return {
+            "samples": len(snapshots),
+            "processed_bars": latest_bars,
+            "total_return": None,
+            "max_drawdown": None,
+        }
+    metrics = calculate_burnin_metrics(snapshots)
+    return {
+        "samples": len(snapshots),
+        "processed_bars": latest_bars,
+        "total_return": metrics.total_return,
+        "max_drawdown": metrics.max_drawdown,
+    }
+
+
 def build_operational_overview(
     persistence: PaperPersistence,
     runtime_key: str,
@@ -39,6 +67,7 @@ def build_operational_overview(
     try:
         persisted = persistence.load_runtime(runtime_key, starting_cash)
         status = persistence.load_runtime_status(runtime_key)
+        burnin = _burnin_snapshot(persistence, runtime_key)
     except Exception:  # noqa: BLE001 - observability boundary must sanitize backend failures
         return {
             "storage_healthy": False,
@@ -48,6 +77,12 @@ def build_operational_overview(
             "last_processed": None,
             "lag_detected": False,
             "model": _empty_model_snapshot(),
+            "burnin": {
+                "samples": 0,
+                "processed_bars": 0,
+                "total_return": None,
+                "max_drawdown": None,
+            },
             "alerts": ["storage unavailable"],
         }
 
@@ -84,5 +119,6 @@ def build_operational_overview(
         "last_processed": state.last_processed,
         "lag_detected": lag_detected,
         "model": model_snapshot,
+        "burnin": burnin,
         "alerts": alerts,
     }
