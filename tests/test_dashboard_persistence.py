@@ -183,7 +183,8 @@ def test_dashboard_uses_durable_state_trades_and_status(tmp_path) -> None:
     assert '<small>Profit factor</small><strong>4.00</strong>' in page
     assert '<small>Max realized DD</small><strong>80.00</strong>' in page
     assert "Performance window: full persisted history" in page
-    assert '<small>Burn-in bars</small><strong>7</strong>' in page
+    assert '<small>Burn-in bars</small><strong>7 / 126</strong>' in page
+    assert '<small>Burn-in progress</small><strong>6%</strong>' in page
     assert '<small>Equity return</small><strong>2.76%</strong>' in page
     assert '<small>Equity max DD</small><strong>0.00%</strong>' in page
 
