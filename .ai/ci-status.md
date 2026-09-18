@@ -1,12 +1,12 @@
 # CI status
 
-Summary: 4 success / 0 failure / 2 active
+Summary: 5 success / 0 failure / 1 active
 
-- CI: queued / pending (341daac4)
-- CI: queued / pending (fbccc48f)
+- CI: in_progress / pending (c7444223)
+- CI: completed / success (28590ec7)
+- CI: completed / success (341daac4)
+- CI: completed / success (fbccc48f)
 - Paper Cycle: completed / success (19a8da6e)
 - CI: completed / success (19a8da6e)
-- CI: completed / success (71005f69)
-- CI: completed / success (3a963345)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
