@@ -8,6 +8,7 @@ from typing import Any, Protocol
 
 import joblib
 
+from .performance_metrics import TradePerformanceMetrics
 from .runtime_state import RuntimeState
 from .runtime_status import HostedRuntimeStatus
 from .trade_journal import TradeSnapshot
@@ -57,6 +58,8 @@ class PaperPersistence(Protocol):
         *,
         limit: int | None = None,
     ) -> tuple[TradeSnapshot, ...]: ...
+
+    def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics: ...
 
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None: ...
 
