@@ -229,8 +229,6 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
             "processed_bars": 0,
             "total_return": None,
             "max_drawdown": None,
-            "sharpe": None,
-            "sortino": None,
         },
         "alerts": ["storage unavailable"],
     }
