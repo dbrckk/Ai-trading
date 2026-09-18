@@ -266,13 +266,6 @@ def render_dashboard(
     burnin_drawdown_display = (
         "-" if burnin_metrics is None else f"{burnin_metrics.max_drawdown:.2%}"
     )
-    burnin_sharpe_display = _display_ratio(
-        None if burnin_metrics is None else burnin_metrics.sharpe
-    )
-    burnin_sortino_display = _display_ratio(
-        None if burnin_metrics is None else burnin_metrics.sortino
-    )
-
     return f"""<!doctype html>
 <html><head><meta charset="utf-8"><meta http-equiv="refresh" content="2">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -321,8 +314,6 @@ th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
 <div class="metric"><small>Burn-in bars</small><strong>{burnin_bars_display}</strong></div>
 <div class="metric"><small>Equity return</small><strong>{burnin_return_display}</strong></div>
 <div class="metric"><small>Equity max DD</small><strong>{burnin_drawdown_display}</strong></div>
-<div class="metric"><small>Equity Sharpe</small><strong>{burnin_sharpe_display}</strong></div>
-<div class="metric"><small>Equity Sortino</small><strong>{burnin_sortino_display}</strong></div>
 </div>
 <small class="runtime-reason">Last engine reason: {html.escape(decision_reason)}</small>
 <small class="runtime-reason">Operational alerts: {html.escape(operational_alerts_display)}</small>
