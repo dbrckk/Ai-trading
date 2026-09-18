@@ -247,3 +247,22 @@ def test_dashboard_v2_groups_critical_sections_and_renders_equity_chart(tmp_path
     assert "<svg" in page
     assert "<polyline" in page
     assert 'class="table-scroll"' in page
+
+
+def test_dashboard_premium_shell_and_navigation(tmp_path) -> None:
+    page = render_dashboard(
+        TradeJournal(tmp_path / "empty.jsonl"),
+        persistence=DurablePersistence(),
+        runtime_key=RUNTIME_KEY,
+    )
+
+    assert 'class="premium-shell"' in page
+    assert 'class="top-nav"' in page
+    assert 'href="#overview"' in page
+    assert 'href="#performance"' in page
+    assert 'href="#burnin"' in page
+    assert 'href="#trades"' in page
+    assert 'class="hero-kpis"' in page
+    assert 'class="live-dot"' in page
+    assert 'class="chart-area"' in page
+    assert "AI Trading Terminal" in page
