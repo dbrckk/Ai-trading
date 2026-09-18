@@ -5,11 +5,365 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
+    "BurnInSnapshot": {
+      "source": {
+        "file": "src/ai_trading/burnin.py",
+        "start": 16,
+        "end": 22
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "calculate_burnin_metrics": {
+      "source": {
+        "file": "src/ai_trading/burnin.py",
+        "start": 25,
+        "end": 32
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BurnInSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 16,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "PerformanceMetrics",
+          "definitions": [
+            {
+              "file": "src/ai_trading/performance.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "compute_metrics",
+          "definitions": [
+            {
+              "file": "src/ai_trading/performance.py",
+              "line": 29,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "BurnInTracker": {
+      "source": {
+        "file": "src/ai_trading/burnin.py",
+        "start": 35,
+        "end": 88
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BurnInSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 16,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "PerformanceMetrics",
+          "definitions": [
+            {
+              "file": "src/ai_trading/performance.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ReadinessReport",
+          "definitions": [
+            {
+              "file": "src/ai_trading/readiness.py",
+              "line": 21,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "__init__",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "append",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "calculate_burnin_metrics",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_readiness",
+          "definitions": [
+            {
+              "file": "src/ai_trading/readiness.py",
+              "line": 28,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "metrics",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 74,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 63,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "readiness",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 77,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 10
+    },
+    "__init__": {
+      "source": {
+        "file": "src/ai_trading/burnin.py",
+        "start": 36,
+        "end": 37
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "append": {
+      "source": {
+        "file": "src/ai_trading/burnin.py",
+        "start": 39,
+        "end": 61
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BurnInSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 16,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "read": {
+      "source": {
+        "file": "src/ai_trading/burnin.py",
+        "start": 63,
+        "end": 72
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BurnInSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 16,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "append",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "metrics": {
+      "source": {
+        "file": "src/ai_trading/burnin.py",
+        "start": 74,
+        "end": 75
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PerformanceMetrics",
+          "definitions": [
+            {
+              "file": "src/ai_trading/performance.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "calculate_burnin_metrics",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 63,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "readiness": {
+      "source": {
+        "file": "src/ai_trading/burnin.py",
+        "start": 77,
+        "end": 88
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "ReadinessReport",
+          "definitions": [
+            {
+              "file": "src/ai_trading/readiness.py",
+              "line": 21,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate_readiness",
+          "definitions": [
+            {
+              "file": "src/ai_trading/readiness.py",
+              "line": 28,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "metrics",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 74,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 63,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
     "_public_runtime_snapshot": {
       "source": {
         "file": "src/ai_trading/dashboard.py",
-        "start": 35,
-        "end": 39
+        "start": 36,
+        "end": 40
       },
       "symbol_dependencies": [
         {
@@ -42,8 +396,8 @@
     "_display_money": {
       "source": {
         "file": "src/ai_trading/dashboard.py",
-        "start": 42,
-        "end": 43
+        "start": 43,
+        "end": 44
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -51,8 +405,8 @@
     "_display_units": {
       "source": {
         "file": "src/ai_trading/dashboard.py",
-        "start": 46,
-        "end": 47
+        "start": 47,
+        "end": 48
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -60,8 +414,8 @@
     "_display_ratio": {
       "source": {
         "file": "src/ai_trading/dashboard.py",
-        "start": 50,
-        "end": 55
+        "start": 51,
+        "end": 56
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -69,8 +423,8 @@
     "render_dashboard": {
       "source": {
         "file": "src/ai_trading/dashboard.py",
-        "start": 58,
-        "end": 297
+        "start": 59,
+        "end": 323
       },
       "symbol_dependencies": [
         {
@@ -102,7 +456,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 48,
+              "line": 49,
               "kind": "class",
               "language": "python"
             }
@@ -138,7 +492,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 42,
+              "line": 43,
               "kind": "function",
               "language": "python"
             }
@@ -150,7 +504,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 50,
+              "line": 51,
               "kind": "function",
               "language": "python"
             }
@@ -162,7 +516,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 46,
+              "line": 47,
               "kind": "function",
               "language": "python"
             }
@@ -174,7 +528,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 35,
+              "line": 36,
               "kind": "function",
               "language": "python"
             }
@@ -185,8 +539,26 @@
           "symbol": "append",
           "definitions": [
             {
+              "file": "src/ai_trading/burnin.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            },
+            {
               "file": "src/ai_trading/trade_journal.py",
               "line": 27,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "calculate_burnin_metrics",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 25,
               "kind": "function",
               "language": "python"
             }
@@ -218,17 +590,35 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "list_trades",
+          "symbol": "list_burnin_snapshots",
           "definitions": [
             {
               "file": "src/ai_trading/file_persistence.py",
-              "line": 79,
+              "line": 99,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 55,
+              "line": 65,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "list_trades",
+          "definitions": [
+            {
+              "file": "src/ai_trading/file_persistence.py",
+              "line": 86,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 56,
               "kind": "function",
               "language": "python"
             }
@@ -240,7 +630,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 91,
+              "line": 94,
               "kind": "function",
               "language": "python"
             },
@@ -264,13 +654,13 @@
           "definitions": [
             {
               "file": "src/ai_trading/file_persistence.py",
-              "line": 43,
+              "line": 45,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 51,
+              "line": 52,
               "kind": "function",
               "language": "python"
             }
@@ -282,13 +672,13 @@
           "definitions": [
             {
               "file": "src/ai_trading/file_persistence.py",
-              "line": 96,
+              "line": 107,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 66,
+              "line": 69,
               "kind": "function",
               "language": "python"
             }
@@ -300,13 +690,25 @@
           "definitions": [
             {
               "file": "src/ai_trading/file_persistence.py",
-              "line": 88,
+              "line": 95,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 62,
+              "line": 63,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "metrics",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 74,
               "kind": "function",
               "language": "python"
             }
@@ -318,7 +720,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/operational_overview.py",
-              "line": 16,
+              "line": 17,
               "kind": "function",
               "language": "python"
             }
@@ -338,13 +740,13 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 19
+      "dependency_count": 22
     },
     "serve_dashboard": {
       "source": {
         "file": "src/ai_trading/dashboard.py",
-        "start": 300,
-        "end": 453
+        "start": 326,
+        "end": 479
       },
       "symbol_dependencies": [
         {
@@ -352,7 +754,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/file_persistence.py",
-              "line": 20,
+              "line": 21,
               "kind": "class",
               "language": "python"
             }
@@ -364,7 +766,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 367,
+              "line": 393,
               "kind": "class",
               "language": "python"
             }
@@ -412,7 +814,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 48,
+              "line": 49,
               "kind": "class",
               "language": "python"
             }
@@ -460,7 +862,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 35,
+              "line": 36,
               "kind": "function",
               "language": "python"
             }
@@ -472,7 +874,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 368,
+              "line": 394,
               "kind": "function",
               "language": "python"
             }
@@ -484,7 +886,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/operational_overview.py",
-              "line": 34,
+              "line": 62,
               "kind": "function",
               "language": "python"
             }
@@ -508,7 +910,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 382,
+              "line": 408,
               "kind": "function",
               "language": "python"
             }
@@ -520,7 +922,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 435,
+              "line": 461,
               "kind": "function",
               "language": "python"
             }
@@ -532,7 +934,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 348,
+              "line": 374,
               "kind": "function",
               "language": "python"
             }
@@ -568,13 +970,13 @@
           "definitions": [
             {
               "file": "src/ai_trading/file_persistence.py",
-              "line": 96,
+              "line": 107,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 66,
+              "line": 69,
               "kind": "function",
               "language": "python"
             }
@@ -586,7 +988,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 361,
+              "line": 387,
               "kind": "function",
               "language": "python"
             }
@@ -598,7 +1000,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 450,
+              "line": 476,
               "kind": "function",
               "language": "python"
             }
@@ -610,7 +1012,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 58,
+              "line": 59,
               "kind": "function",
               "language": "python"
             }
@@ -659,8 +1061,8 @@
     "execute_paper_cycle": {
       "source": {
         "file": "src/ai_trading/dashboard.py",
-        "start": 348,
-        "end": 468
+        "start": 374,
+        "end": 494
       },
       "symbol_dependencies": [
         {
@@ -668,7 +1070,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 367,
+              "line": 393,
               "kind": "class",
               "language": "python"
             }
@@ -692,7 +1094,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 35,
+              "line": 36,
               "kind": "function",
               "language": "python"
             }
@@ -704,7 +1106,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 368,
+              "line": 394,
               "kind": "function",
               "language": "python"
             }
@@ -716,7 +1118,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/operational_overview.py",
-              "line": 34,
+              "line": 62,
               "kind": "function",
               "language": "python"
             }
@@ -728,7 +1130,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 382,
+              "line": 408,
               "kind": "function",
               "language": "python"
             }
@@ -740,7 +1142,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 435,
+              "line": 461,
               "kind": "function",
               "language": "python"
             }
@@ -764,13 +1166,13 @@
           "definitions": [
             {
               "file": "src/ai_trading/file_persistence.py",
-              "line": 96,
+              "line": 107,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 66,
+              "line": 69,
               "kind": "function",
               "language": "python"
             }
@@ -782,7 +1184,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 361,
+              "line": 387,
               "kind": "function",
               "language": "python"
             }
@@ -794,7 +1196,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 450,
+              "line": 476,
               "kind": "function",
               "language": "python"
             }
@@ -806,7 +1208,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 58,
+              "line": 59,
               "kind": "function",
               "language": "python"
             }
@@ -855,8 +1257,8 @@
     "load_status_snapshot": {
       "source": {
         "file": "src/ai_trading/dashboard.py",
-        "start": 361,
-        "end": 481
+        "start": 387,
+        "end": 507
       },
       "symbol_dependencies": [
         {
@@ -864,7 +1266,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 367,
+              "line": 393,
               "kind": "class",
               "language": "python"
             }
@@ -876,7 +1278,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 35,
+              "line": 36,
               "kind": "function",
               "language": "python"
             }
@@ -888,7 +1290,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 368,
+              "line": 394,
               "kind": "function",
               "language": "python"
             }
@@ -900,7 +1302,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/operational_overview.py",
-              "line": 34,
+              "line": 62,
               "kind": "function",
               "language": "python"
             }
@@ -912,7 +1314,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 382,
+              "line": 408,
               "kind": "function",
               "language": "python"
             }
@@ -924,7 +1326,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 435,
+              "line": 461,
               "kind": "function",
               "language": "python"
             }
@@ -948,13 +1350,13 @@
           "definitions": [
             {
               "file": "src/ai_trading/file_persistence.py",
-              "line": 96,
+              "line": 107,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 66,
+              "line": 69,
               "kind": "function",
               "language": "python"
             }
@@ -966,7 +1368,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 450,
+              "line": 476,
               "kind": "function",
               "language": "python"
             }
@@ -978,7 +1380,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 58,
+              "line": 59,
               "kind": "function",
               "language": "python"
             }
@@ -1003,8 +1405,8 @@
     "Handler": {
       "source": {
         "file": "src/ai_trading/dashboard.py",
-        "start": 367,
-        "end": 487
+        "start": 393,
+        "end": 513
       },
       "symbol_dependencies": [
         {
@@ -1012,7 +1414,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 368,
+              "line": 394,
               "kind": "function",
               "language": "python"
             }
@@ -1024,7 +1426,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/operational_overview.py",
-              "line": 34,
+              "line": 62,
               "kind": "function",
               "language": "python"
             }
@@ -1036,7 +1438,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 382,
+              "line": 408,
               "kind": "function",
               "language": "python"
             }
@@ -1048,7 +1450,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 435,
+              "line": 461,
               "kind": "function",
               "language": "python"
             }
@@ -1072,7 +1474,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 361,
+              "line": 387,
               "kind": "function",
               "language": "python"
             }
@@ -1084,7 +1486,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 450,
+              "line": 476,
               "kind": "function",
               "language": "python"
             }
@@ -1096,7 +1498,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 58,
+              "line": 59,
               "kind": "function",
               "language": "python"
             }
@@ -1121,8 +1523,8 @@
     "_send_json": {
       "source": {
         "file": "src/ai_trading/dashboard.py",
-        "start": 368,
-        "end": 488
+        "start": 394,
+        "end": 514
       },
       "symbol_dependencies": [
         {
@@ -1130,7 +1532,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 367,
+              "line": 393,
               "kind": "class",
               "language": "python"
             }
@@ -1142,7 +1544,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/operational_overview.py",
-              "line": 34,
+              "line": 62,
               "kind": "function",
               "language": "python"
             }
@@ -1154,7 +1556,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 382,
+              "line": 408,
               "kind": "function",
               "language": "python"
             }
@@ -1166,7 +1568,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 435,
+              "line": 461,
               "kind": "function",
               "language": "python"
             }
@@ -1190,7 +1592,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 361,
+              "line": 387,
               "kind": "function",
               "language": "python"
             }
@@ -1202,7 +1604,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 450,
+              "line": 476,
               "kind": "function",
               "language": "python"
             }
@@ -1214,7 +1616,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 58,
+              "line": 59,
               "kind": "function",
               "language": "python"
             }
@@ -1239,8 +1641,8 @@
     "do_GET": {
       "source": {
         "file": "src/ai_trading/dashboard.py",
-        "start": 382,
-        "end": 502
+        "start": 408,
+        "end": 528
       },
       "symbol_dependencies": [
         {
@@ -1248,7 +1650,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 367,
+              "line": 393,
               "kind": "class",
               "language": "python"
             }
@@ -1260,7 +1662,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 368,
+              "line": 394,
               "kind": "function",
               "language": "python"
             }
@@ -1272,7 +1674,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/operational_overview.py",
-              "line": 34,
+              "line": 62,
               "kind": "function",
               "language": "python"
             }
@@ -1284,7 +1686,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 435,
+              "line": 461,
               "kind": "function",
               "language": "python"
             }
@@ -1308,7 +1710,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 361,
+              "line": 387,
               "kind": "function",
               "language": "python"
             }
@@ -1320,7 +1722,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 450,
+              "line": 476,
               "kind": "function",
               "language": "python"
             }
@@ -1332,7 +1734,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 58,
+              "line": 59,
               "kind": "function",
               "language": "python"
             }
@@ -1357,8 +1759,8 @@
     "do_POST": {
       "source": {
         "file": "src/ai_trading/dashboard.py",
-        "start": 435,
-        "end": 555
+        "start": 461,
+        "end": 581
       },
       "symbol_dependencies": [
         {
@@ -1366,7 +1768,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 367,
+              "line": 393,
               "kind": "class",
               "language": "python"
             }
@@ -1378,7 +1780,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 368,
+              "line": 394,
               "kind": "function",
               "language": "python"
             }
@@ -1402,7 +1804,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 450,
+              "line": 476,
               "kind": "function",
               "language": "python"
             }
@@ -1415,8 +1817,8 @@
     "log_message": {
       "source": {
         "file": "src/ai_trading/dashboard.py",
-        "start": 450,
-        "end": 570
+        "start": 476,
+        "end": 596
       },
       "symbol_dependencies": [
         {
@@ -1424,7 +1826,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/dashboard.py",
-              "line": 367,
+              "line": 393,
               "kind": "class",
               "language": "python"
             }
@@ -1437,8 +1839,8 @@
     "FilePaperPersistence": {
       "source": {
         "file": "src/ai_trading/file_persistence.py",
-        "start": 20,
-        "end": 98
+        "start": 21,
+        "end": 109
       },
       "symbol_dependencies": [
         {
@@ -1454,11 +1856,35 @@
           "relation": "imported_module"
         },
         {
+          "symbol": "BurnInSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 16,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "BurnInTracker",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 35,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
           "symbol": "CommitOutcome",
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 17,
+              "line": 18,
               "kind": "class",
               "language": "python"
             }
@@ -1494,7 +1920,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 23,
+              "line": 24,
               "kind": "class",
               "language": "python"
             }
@@ -1506,7 +1932,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 48,
+              "line": 49,
               "kind": "class",
               "language": "python"
             }
@@ -1518,7 +1944,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 31,
+              "line": 32,
               "kind": "class",
               "language": "python"
             }
@@ -1542,7 +1968,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 39,
+              "line": 40,
               "kind": "class",
               "language": "python"
             }
@@ -1590,7 +2016,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/file_persistence.py",
-              "line": 23,
+              "line": 24,
               "kind": "function",
               "language": "python"
             }
@@ -1603,6 +2029,12 @@
             {
               "file": "src/ai_trading/audit.py",
               "line": 51,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 39,
               "kind": "function",
               "language": "python"
             },
@@ -1632,7 +2064,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/file_persistence.py",
-              "line": 63,
+              "line": 65,
               "kind": "function",
               "language": "python"
             }
@@ -1644,7 +2076,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/file_persistence.py",
-              "line": 40,
+              "line": 42,
               "kind": "function",
               "language": "python"
             }
@@ -1664,11 +2096,23 @@
           "relation": "imported_module"
         },
         {
+          "symbol": "list_burnin_snapshots",
+          "definitions": [
+            {
+              "file": "src/ai_trading/file_persistence.py",
+              "line": 99,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
           "symbol": "list_trades",
           "definitions": [
             {
               "file": "src/ai_trading/file_persistence.py",
-              "line": 79,
+              "line": 86,
               "kind": "function",
               "language": "python"
             }
@@ -1680,7 +2124,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 91,
+              "line": 94,
               "kind": "function",
               "language": "python"
             },
@@ -1704,7 +2148,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/file_persistence.py",
-              "line": 43,
+              "line": 45,
               "kind": "function",
               "language": "python"
             }
@@ -1716,7 +2160,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/file_persistence.py",
-              "line": 96,
+              "line": 107,
               "kind": "function",
               "language": "python"
             }
@@ -1728,7 +2172,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/file_persistence.py",
-              "line": 88,
+              "line": 95,
               "kind": "function",
               "language": "python"
             }
@@ -1736,11 +2180,23 @@
           "relation": "same_file"
         },
         {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 63,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
           "symbol": "save",
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 84,
+              "line": 87,
               "kind": "function",
               "language": "python"
             },
@@ -1764,7 +2220,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/file_persistence.py",
-              "line": 92,
+              "line": 103,
               "kind": "function",
               "language": "python"
             }
@@ -1772,71 +2228,13 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 25
-    },
-    "__init__": {
-      "source": {
-        "file": "src/ai_trading/file_persistence.py",
-        "start": 23,
-        "end": 38
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AuditLog",
-          "definitions": [
-            {
-              "file": "src/ai_trading/audit.py",
-              "line": 31,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "HostedRuntimeStatusStore",
-          "definitions": [
-            {
-              "file": "src/ai_trading/runtime_status.py",
-              "line": 82,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RuntimeStateStore",
-          "definitions": [
-            {
-              "file": "src/ai_trading/runtime_state.py",
-              "line": 20,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "TradeJournal",
-          "definitions": [
-            {
-              "file": "src/ai_trading/trade_journal.py",
-              "line": 21,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 4
+      "dependency_count": 29
     },
     "initialize_schema": {
       "source": {
         "file": "src/ai_trading/file_persistence.py",
-        "start": 40,
-        "end": 41
+        "start": 42,
+        "end": 43
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -1844,8 +2242,8 @@
     "load_runtime": {
       "source": {
         "file": "src/ai_trading/file_persistence.py",
-        "start": 43,
-        "end": 61
+        "start": 45,
+        "end": 63
       },
       "symbol_dependencies": [
         {
@@ -1853,7 +2251,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 23,
+              "line": 24,
               "kind": "class",
               "language": "python"
             }
@@ -1865,7 +2263,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 31,
+              "line": 32,
               "kind": "class",
               "language": "python"
             }
@@ -1877,7 +2275,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 91,
+              "line": 94,
               "kind": "function",
               "language": "python"
             },
@@ -1902,8 +2300,8 @@
     "commit_step": {
       "source": {
         "file": "src/ai_trading/file_persistence.py",
-        "start": 63,
-        "end": 77
+        "start": 65,
+        "end": 84
       },
       "symbol_dependencies": [
         {
@@ -1911,7 +2309,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 17,
+              "line": 18,
               "kind": "class",
               "language": "python"
             }
@@ -1923,7 +2321,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 39,
+              "line": 40,
               "kind": "class",
               "language": "python"
             }
@@ -1936,6 +2334,12 @@
             {
               "file": "src/ai_trading/audit.py",
               "line": 51,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 39,
               "kind": "function",
               "language": "python"
             },
@@ -1953,7 +2357,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 91,
+              "line": 94,
               "kind": "function",
               "language": "python"
             },
@@ -1977,7 +2381,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 84,
+              "line": 87,
               "kind": "function",
               "language": "python"
             },
@@ -2002,8 +2406,8 @@
     "list_trades": {
       "source": {
         "file": "src/ai_trading/file_persistence.py",
-        "start": 79,
-        "end": 86
+        "start": 86,
+        "end": 93
       },
       "symbol_dependencies": [
         {
@@ -2036,8 +2440,8 @@
     "load_trade_performance": {
       "source": {
         "file": "src/ai_trading/file_persistence.py",
-        "start": 88,
-        "end": 90
+        "start": 95,
+        "end": 97
       },
       "symbol_dependencies": [
         {
@@ -2079,11 +2483,45 @@
       ],
       "dependency_count": 3
     },
+    "list_burnin_snapshots": {
+      "source": {
+        "file": "src/ai_trading/file_persistence.py",
+        "start": 99,
+        "end": 101
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BurnInSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 16,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 63,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
     "save_runtime_status": {
       "source": {
         "file": "src/ai_trading/file_persistence.py",
-        "start": 92,
-        "end": 94
+        "start": 103,
+        "end": 105
       },
       "symbol_dependencies": [
         {
@@ -2103,7 +2541,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 84,
+              "line": 87,
               "kind": "function",
               "language": "python"
             },
@@ -2128,8 +2566,8 @@
     "load_runtime_status": {
       "source": {
         "file": "src/ai_trading/file_persistence.py",
-        "start": 96,
-        "end": 98
+        "start": 107,
+        "end": 109
       },
       "symbol_dependencies": [
         {
@@ -2149,7 +2587,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 91,
+              "line": 94,
               "kind": "function",
               "language": "python"
             },
@@ -2171,62 +2609,50 @@
       ],
       "dependency_count": 2
     },
-    "TradePerformanceMetrics": {
+    "_empty_model_snapshot": {
       "source": {
-        "file": "src/ai_trading/performance_metrics.py",
-        "start": 10,
-        "end": 17
+        "file": "src/ai_trading/operational_overview.py",
+        "start": 8,
+        "end": 14
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "performance_metrics_from_totals": {
+    "runtime_is_consistent": {
       "source": {
-        "file": "src/ai_trading/performance_metrics.py",
-        "start": 20,
-        "end": 43
+        "file": "src/ai_trading/operational_overview.py",
+        "start": 17,
+        "end": 32
       },
       "symbol_dependencies": [
         {
-          "symbol": "TradePerformanceMetrics",
+          "symbol": "PersistedRuntime",
           "definitions": [
             {
-              "file": "src/ai_trading/performance_metrics.py",
-              "line": 10,
+              "file": "src/ai_trading/persistence.py",
+              "line": 32,
               "kind": "class",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         }
       ],
       "dependency_count": 1
     },
-    "calculate_performance_metrics": {
+    "_burnin_snapshot": {
       "source": {
-        "file": "src/ai_trading/performance_metrics.py",
-        "start": 46,
-        "end": 68
+        "file": "src/ai_trading/operational_overview.py",
+        "start": 35,
+        "end": 59
       },
       "symbol_dependencies": [
         {
-          "symbol": "TradePerformanceMetrics",
+          "symbol": "PaperPersistence",
           "definitions": [
             {
-              "file": "src/ai_trading/performance_metrics.py",
-              "line": 10,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "TradeSnapshot",
-          "definitions": [
-            {
-              "file": "src/ai_trading/trade_journal.py",
-              "line": 9,
+              "file": "src/ai_trading/persistence.py",
+              "line": 49,
               "kind": "class",
               "language": "python"
             }
@@ -2234,25 +2660,155 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "performance_metrics_from_totals",
+          "symbol": "calculate_burnin_metrics",
           "definitions": [
             {
-              "file": "src/ai_trading/performance_metrics.py",
-              "line": 20,
+              "file": "src/ai_trading/burnin.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "list_burnin_snapshots",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 65,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "metrics",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 74,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "build_operational_overview": {
+      "source": {
+        "file": "src/ai_trading/operational_overview.py",
+        "start": 62,
+        "end": 124
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PaperPersistence",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 49,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_burnin_snapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/operational_overview.py",
+              "line": 35,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
+        },
+        {
+          "symbol": "_empty_model_snapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/operational_overview.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "append",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_runtime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 52,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_runtime_status",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 69,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runtime_is_consistent",
+          "definitions": [
+            {
+              "file": "src/ai_trading/operational_overview.py",
+              "line": 17,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "runtime_status_snapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 28,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
         }
       ],
-      "dependency_count": 3
+      "dependency_count": 8
     },
     "CommitOutcome": {
       "source": {
         "file": "src/ai_trading/persistence.py",
-        "start": 17,
-        "end": 19
+        "start": 18,
+        "end": 20
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -2260,8 +2816,8 @@
     "ModelBlob": {
       "source": {
         "file": "src/ai_trading/persistence.py",
-        "start": 23,
-        "end": 27
+        "start": 24,
+        "end": 28
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -2269,8 +2825,8 @@
     "PersistedRuntime": {
       "source": {
         "file": "src/ai_trading/persistence.py",
-        "start": 31,
-        "end": 35
+        "start": 32,
+        "end": 36
       },
       "symbol_dependencies": [
         {
@@ -2278,7 +2834,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 23,
+              "line": 24,
               "kind": "class",
               "language": "python"
             }
@@ -2303,8 +2859,8 @@
     "RuntimeStepCommit": {
       "source": {
         "file": "src/ai_trading/persistence.py",
-        "start": 39,
-        "end": 45
+        "start": 40,
+        "end": 46
       },
       "symbol_dependencies": [
         {
@@ -2312,7 +2868,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 23,
+              "line": 24,
               "kind": "class",
               "language": "python"
             }
@@ -2349,16 +2905,28 @@
     "PaperPersistence": {
       "source": {
         "file": "src/ai_trading/persistence.py",
-        "start": 48,
-        "end": 66
+        "start": 49,
+        "end": 69
       },
       "symbol_dependencies": [
+        {
+          "symbol": "BurnInSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 16,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
         {
           "symbol": "CommitOutcome",
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 17,
+              "line": 18,
               "kind": "class",
               "language": "python"
             }
@@ -2382,7 +2950,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 31,
+              "line": 32,
               "kind": "class",
               "language": "python"
             }
@@ -2394,7 +2962,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 39,
+              "line": 40,
               "kind": "class",
               "language": "python"
             }
@@ -2430,7 +2998,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 53,
+              "line": 54,
               "kind": "function",
               "language": "python"
             }
@@ -2442,7 +3010,19 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 49,
+              "line": 50,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "list_burnin_snapshots",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 65,
               "kind": "function",
               "language": "python"
             }
@@ -2454,7 +3034,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 55,
+              "line": 56,
               "kind": "function",
               "language": "python"
             }
@@ -2466,7 +3046,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 51,
+              "line": 52,
               "kind": "function",
               "language": "python"
             }
@@ -2478,7 +3058,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 66,
+              "line": 69,
               "kind": "function",
               "language": "python"
             }
@@ -2490,7 +3070,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 62,
+              "line": 63,
               "kind": "function",
               "language": "python"
             }
@@ -2502,7 +3082,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 64,
+              "line": 67,
               "kind": "function",
               "language": "python"
             }
@@ -2510,13 +3090,13 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 13
+      "dependency_count": 15
     },
     "build_runtime_key": {
       "source": {
         "file": "src/ai_trading/persistence.py",
-        "start": 69,
-        "end": 70
+        "start": 72,
+        "end": 73
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -2524,8 +3104,8 @@
     "ModelArtifact": {
       "source": {
         "file": "src/ai_trading/persistence.py",
-        "start": 74,
-        "end": 76
+        "start": 77,
+        "end": 79
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -2533,8 +3113,8 @@
     "ModelStore": {
       "source": {
         "file": "src/ai_trading/persistence.py",
-        "start": 79,
-        "end": 124
+        "start": 82,
+        "end": 127
       },
       "symbol_dependencies": [
         {
@@ -2542,7 +3122,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 74,
+              "line": 77,
               "kind": "class",
               "language": "python"
             }
@@ -2550,11 +3130,23 @@
           "relation": "same_file"
         },
         {
+          "symbol": "__init__",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
           "symbol": "activate",
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 105,
+              "line": 108,
               "kind": "function",
               "language": "python"
             }
@@ -2566,7 +3158,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 113,
+              "line": 116,
               "kind": "function",
               "language": "python"
             }
@@ -2578,7 +3170,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 91,
+              "line": 94,
               "kind": "function",
               "language": "python"
             }
@@ -2590,7 +3182,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 120,
+              "line": 123,
               "kind": "function",
               "language": "python"
             }
@@ -2602,7 +3194,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 98,
+              "line": 101,
               "kind": "function",
               "language": "python"
             }
@@ -2614,7 +3206,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 84,
+              "line": 87,
               "kind": "function",
               "language": "python"
             }
@@ -2622,13 +3214,13 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 7
+      "dependency_count": 8
     },
     "save": {
       "source": {
         "file": "src/ai_trading/persistence.py",
-        "start": 84,
-        "end": 89
+        "start": 87,
+        "end": 92
       },
       "symbol_dependencies": [
         {
@@ -2636,7 +3228,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 74,
+              "line": 77,
               "kind": "class",
               "language": "python"
             }
@@ -2649,8 +3241,8 @@
     "load": {
       "source": {
         "file": "src/ai_trading/persistence.py",
-        "start": 91,
-        "end": 96
+        "start": 94,
+        "end": 99
       },
       "symbol_dependencies": [
         {
@@ -2658,7 +3250,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 74,
+              "line": 77,
               "kind": "class",
               "language": "python"
             }
@@ -2671,8 +3263,8 @@
     "load_model": {
       "source": {
         "file": "src/ai_trading/persistence.py",
-        "start": 98,
-        "end": 103
+        "start": 101,
+        "end": 106
       },
       "symbol_dependencies": [
         {
@@ -2680,7 +3272,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 91,
+              "line": 94,
               "kind": "function",
               "language": "python"
             }
@@ -2693,8 +3285,8 @@
     "activate": {
       "source": {
         "file": "src/ai_trading/persistence.py",
-        "start": 105,
-        "end": 111
+        "start": 108,
+        "end": 114
       },
       "symbol_dependencies": [
         {
@@ -2702,7 +3294,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 74,
+              "line": 77,
               "kind": "class",
               "language": "python"
             }
@@ -2714,7 +3306,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 91,
+              "line": 94,
               "kind": "function",
               "language": "python"
             }
@@ -2727,8 +3319,8 @@
     "active_name": {
       "source": {
         "file": "src/ai_trading/persistence.py",
-        "start": 113,
-        "end": 118
+        "start": 116,
+        "end": 121
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -2736,8 +3328,8 @@
     "load_active_model": {
       "source": {
         "file": "src/ai_trading/persistence.py",
-        "start": 120,
-        "end": 124
+        "start": 123,
+        "end": 127
       },
       "symbol_dependencies": [
         {
@@ -2745,7 +3337,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 113,
+              "line": 116,
               "kind": "function",
               "language": "python"
             }
@@ -2757,7 +3349,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 98,
+              "line": 101,
               "kind": "function",
               "language": "python"
             }
@@ -2770,8 +3362,8 @@
     "_trade_event_key": {
       "source": {
         "file": "src/ai_trading/postgres_persistence.py",
-        "start": 188,
-        "end": 195
+        "start": 223,
+        "end": 230
       },
       "symbol_dependencies": [
         {
@@ -2792,16 +3384,28 @@
     "PostgresPaperPersistence": {
       "source": {
         "file": "src/ai_trading/postgres_persistence.py",
-        "start": 198,
-        "end": 586
+        "start": 233,
+        "end": 672
       },
       "symbol_dependencies": [
+        {
+          "symbol": "BurnInSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 16,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
         {
           "symbol": "CommitOutcome",
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 17,
+              "line": 18,
               "kind": "class",
               "language": "python"
             }
@@ -2825,7 +3429,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 23,
+              "line": 24,
               "kind": "class",
               "language": "python"
             }
@@ -2837,7 +3441,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 48,
+              "line": 49,
               "kind": "class",
               "language": "python"
             }
@@ -2849,7 +3453,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 31,
+              "line": 32,
               "kind": "class",
               "language": "python"
             }
@@ -2873,7 +3477,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 39,
+              "line": 40,
               "kind": "class",
               "language": "python"
             }
@@ -2912,6 +3516,12 @@
               "line": 32,
               "kind": "function",
               "language": "python"
+            },
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
             }
           ],
           "relation": "imported_module"
@@ -2921,7 +3531,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/postgres_persistence.py",
-              "line": 208,
+              "line": 243,
               "kind": "function",
               "language": "python"
             }
@@ -2933,7 +3543,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/postgres_persistence.py",
-              "line": 188,
+              "line": 223,
               "kind": "function",
               "language": "python"
             }
@@ -2946,6 +3556,12 @@
             {
               "file": "src/ai_trading/audit.py",
               "line": 51,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 39,
               "kind": "function",
               "language": "python"
             },
@@ -2975,7 +3591,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/postgres_persistence.py",
-              "line": 281,
+              "line": 316,
               "kind": "function",
               "language": "python"
             }
@@ -2987,7 +3603,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/postgres_persistence.py",
-              "line": 211,
+              "line": 246,
               "kind": "function",
               "language": "python"
             }
@@ -3007,11 +3623,23 @@
           "relation": "imported_module"
         },
         {
+          "symbol": "list_burnin_snapshots",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 602,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
           "symbol": "list_trades",
           "definitions": [
             {
               "file": "src/ai_trading/postgres_persistence.py",
-              "line": 473,
+              "line": 527,
               "kind": "function",
               "language": "python"
             }
@@ -3023,7 +3651,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/postgres_persistence.py",
-              "line": 216,
+              "line": 251,
               "kind": "function",
               "language": "python"
             }
@@ -3035,7 +3663,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/postgres_persistence.py",
-              "line": 574,
+              "line": 660,
               "kind": "function",
               "language": "python"
             }
@@ -3047,7 +3675,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/postgres_persistence.py",
-              "line": 516,
+              "line": 570,
               "kind": "function",
               "language": "python"
             }
@@ -3071,7 +3699,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/postgres_persistence.py",
-              "line": 548,
+              "line": 634,
               "kind": "function",
               "language": "python"
             }
@@ -3079,24 +3707,345 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 23
+      "dependency_count": 25
     },
     "_connect": {
       "source": {
         "file": "src/ai_trading/postgres_persistence.py",
-        "start": 208,
-        "end": 209
+        "start": 243,
+        "end": 244
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "_state": {
+    "OverviewPersistence": {
       "source": {
-        "file": "tests/test_cumulative_performance_persistence.py",
-        "start": 17,
-        "end": 27
+        "file": "tests/test_dashboard_overview.py",
+        "start": 22,
+        "end": 96
       },
       "symbol_dependencies": [
+        {
+          "symbol": "BurnInSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 16,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "HostedRuntimeStatus",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "ModelBlob",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 24,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PersistedRuntime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 32,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "RuntimeState",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_state.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "list_burnin_snapshots",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 73,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "list_trades",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 68,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load_runtime",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 63,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 100,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load_runtime_status",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 94,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 104,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 9
+    },
+    "FailingOverviewPersistence": {
+      "source": {
+        "file": "tests/test_dashboard_overview.py",
+        "start": 99,
+        "end": 106
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "load_runtime",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 63,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 100,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load_runtime_status",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 94,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 104,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "_free_port": {
+      "source": {
+        "file": "tests/test_dashboard_overview.py",
+        "start": 109,
+        "end": 112
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "_start_overview_dashboard": {
+      "source": {
+        "file": "tests/test_dashboard_overview.py",
+        "start": 115,
+        "end": 140
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "HostedPaperSettings",
+          "definitions": [
+            {
+              "file": "src/ai_trading/hosted_runtime.py",
+              "line": 19,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "OverviewPersistence",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 22,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_free_port",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 109,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_operational_overview_exposes_model_and_runtime_metadata": {
+      "source": {
+        "file": "tests/test_dashboard_overview.py",
+        "start": 143,
+        "end": 161
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "OverviewPersistence",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 22,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_operational_overview_flags_stale_runtime": {
+      "source": {
+        "file": "tests/test_dashboard_overview.py",
+        "start": 164,
+        "end": 171
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "OverviewPersistence",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 22,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_operational_overview_flags_missing_model_after_processing": {
+      "source": {
+        "file": "tests/test_dashboard_overview.py",
+        "start": 174,
+        "end": 186
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "OverviewPersistence",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 22,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_operational_overview_flags_inconsistent_runtime": {
+      "source": {
+        "file": "tests/test_dashboard_overview.py",
+        "start": 189,
+        "end": 208
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "OverviewPersistence",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 22,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "PersistedRuntime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 32,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
         {
           "symbol": "RuntimeState",
           "definitions": [
@@ -3110,348 +4059,209 @@
           "relation": "class_like"
         }
       ],
-      "dependency_count": 1
-    },
-    "_trade": {
-      "source": {
-        "file": "tests/test_cumulative_performance_persistence.py",
-        "start": 30,
-        "end": 41
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "TradeSnapshot",
-          "definitions": [
-            {
-              "file": "src/ai_trading/trade_journal.py",
-              "line": 9,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "_commit": {
-      "source": {
-        "file": "tests/test_cumulative_performance_persistence.py",
-        "start": 44,
-        "end": 52
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "RiverDirectionModel",
-          "definitions": [
-            {
-              "file": "src/ai_trading/online.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "RuntimeStepCommit",
-          "definitions": [
-            {
-              "file": "src/ai_trading/persistence.py",
-              "line": 39,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "TradeSnapshot",
-          "definitions": [
-            {
-              "file": "src/ai_trading/trade_journal.py",
-              "line": 9,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_state",
-          "definitions": [
-            {
-              "file": "tests/test_cumulative_performance_persistence.py",
-              "line": 17,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "_assert_metrics": {
-      "source": {
-        "file": "tests/test_cumulative_performance_persistence.py",
-        "start": 55,
-        "end": 62
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "test_postgres_persists_cumulative_trade_performance": {
-      "source": {
-        "file": "tests/test_cumulative_performance_persistence.py",
-        "start": 65,
-        "end": 83
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "CommitOutcome",
-          "definitions": [
-            {
-              "file": "src/ai_trading/persistence.py",
-              "line": 17,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "PostgresPaperPersistence",
-          "definitions": [
-            {
-              "file": "src/ai_trading/postgres_persistence.py",
-              "line": 198,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_assert_metrics",
-          "definitions": [
-            {
-              "file": "tests/test_cumulative_performance_persistence.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_commit",
-          "definitions": [
-            {
-              "file": "tests/test_cumulative_performance_persistence.py",
-              "line": 44,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_trade",
-          "definitions": [
-            {
-              "file": "tests/test_cumulative_performance_persistence.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 5
-    },
-    "test_postgres_duplicate_trade_does_not_double_count_performance": {
-      "source": {
-        "file": "tests/test_cumulative_performance_persistence.py",
-        "start": 86,
-        "end": 104
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "CommitOutcome",
-          "definitions": [
-            {
-              "file": "src/ai_trading/persistence.py",
-              "line": 17,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "PostgresPaperPersistence",
-          "definitions": [
-            {
-              "file": "src/ai_trading/postgres_persistence.py",
-              "line": 198,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_commit",
-          "definitions": [
-            {
-              "file": "tests/test_cumulative_performance_persistence.py",
-              "line": 44,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_trade",
-          "definitions": [
-            {
-              "file": "tests/test_cumulative_performance_persistence.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "test_postgres_schema_initialization_backfills_missing_performance_summary": {
-      "source": {
-        "file": "tests/test_cumulative_performance_persistence.py",
-        "start": 107,
-        "end": 132
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "CommitOutcome",
-          "definitions": [
-            {
-              "file": "src/ai_trading/persistence.py",
-              "line": 17,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "PostgresPaperPersistence",
-          "definitions": [
-            {
-              "file": "src/ai_trading/postgres_persistence.py",
-              "line": 198,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_assert_metrics",
-          "definitions": [
-            {
-              "file": "tests/test_cumulative_performance_persistence.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_commit",
-          "definitions": [
-            {
-              "file": "tests/test_cumulative_performance_persistence.py",
-              "line": 44,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_trade",
-          "definitions": [
-            {
-              "file": "tests/test_cumulative_performance_persistence.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 5
-    },
-    "test_file_backend_reports_full_journal_performance": {
-      "source": {
-        "file": "tests/test_cumulative_performance_persistence.py",
-        "start": 135,
-        "end": 140
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "FilePaperPersistence",
-          "definitions": [
-            {
-              "file": "src/ai_trading/file_persistence.py",
-              "line": 20,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_assert_metrics",
-          "definitions": [
-            {
-              "file": "tests/test_cumulative_performance_persistence.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_trade",
-          "definitions": [
-            {
-              "file": "tests/test_cumulative_performance_persistence.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
       "dependency_count": 3
+    },
+    "test_operational_overview_storage_failure_is_sanitized": {
+      "source": {
+        "file": "tests/test_dashboard_overview.py",
+        "start": 211,
+        "end": 236
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "FailingOverviewPersistence",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 99,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_dashboard_exposes_operational_overview_endpoint": {
+      "source": {
+        "file": "tests/test_dashboard_overview.py",
+        "start": 239,
+        "end": 251
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "OverviewPersistence",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 22,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_start_overview_dashboard",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 115,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_dashboard_renders_model_and_revision_metadata": {
+      "source": {
+        "file": "tests/test_dashboard_overview.py",
+        "start": 254,
+        "end": 264
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "OverviewPersistence",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 22,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "TradeJournal",
+          "definitions": [
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 21,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_dashboard_renders_operational_alerts": {
+      "source": {
+        "file": "tests/test_dashboard_overview.py",
+        "start": 267,
+        "end": 274
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "OverviewPersistence",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 22,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "TradeJournal",
+          "definitions": [
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 21,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_dashboard_renders_inconsistent_runtime_alert": {
+      "source": {
+        "file": "tests/test_dashboard_overview.py",
+        "start": 277,
+        "end": 300
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "OverviewPersistence",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_overview.py",
+              "line": 22,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "PersistedRuntime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 32,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "RuntimeState",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_state.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "TradeJournal",
+          "definitions": [
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 21,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 4
     },
     "DurablePersistence": {
       "source": {
         "file": "tests/test_dashboard_persistence.py",
-        "start": 21,
-        "end": 81
+        "start": 22,
+        "end": 103
       },
       "symbol_dependencies": [
+        {
+          "symbol": "BurnInSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 16,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
         {
           "symbol": "HostedRuntimeStatus",
           "definitions": [
@@ -3469,7 +4279,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/persistence.py",
-              "line": 31,
+              "line": 32,
               "kind": "class",
               "language": "python"
             }
@@ -3501,17 +4311,29 @@
           "relation": "class_like"
         },
         {
+          "symbol": "list_burnin_snapshots",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_persistence.py",
+              "line": 80,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
           "symbol": "list_trades",
           "definitions": [
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 64,
+              "line": 65,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 92,
+              "line": 114,
               "kind": "function",
               "language": "python"
             }
@@ -3523,13 +4345,13 @@
           "definitions": [
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 59,
+              "line": 60,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 88,
+              "line": 110,
               "kind": "function",
               "language": "python"
             }
@@ -3541,13 +4363,13 @@
           "definitions": [
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 79,
+              "line": 101,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 96,
+              "line": 118,
               "kind": "function",
               "language": "python"
             }
@@ -3559,7 +4381,7 @@
           "definitions": [
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 69,
+              "line": 70,
               "kind": "function",
               "language": "python"
             }
@@ -3567,13 +4389,13 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 8
+      "dependency_count": 10
     },
     "FailingPersistence": {
       "source": {
         "file": "tests/test_dashboard_persistence.py",
-        "start": 84,
-        "end": 98
+        "start": 106,
+        "end": 120
       },
       "symbol_dependencies": [
         {
@@ -3581,7 +4403,7 @@
           "definitions": [
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 85,
+              "line": 107,
               "kind": "function",
               "language": "python"
             }
@@ -3593,13 +4415,13 @@
           "definitions": [
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 64,
+              "line": 65,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 92,
+              "line": 114,
               "kind": "function",
               "language": "python"
             }
@@ -3611,13 +4433,13 @@
           "definitions": [
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 59,
+              "line": 60,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 88,
+              "line": 110,
               "kind": "function",
               "language": "python"
             }
@@ -3629,13 +4451,13 @@
           "definitions": [
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 79,
+              "line": 101,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 96,
+              "line": 118,
               "kind": "function",
               "language": "python"
             }
@@ -3648,17 +4470,8 @@
     "_fail": {
       "source": {
         "file": "tests/test_dashboard_persistence.py",
-        "start": 85,
-        "end": 86
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "_free_port": {
-      "source": {
-        "file": "tests/test_dashboard_persistence.py",
-        "start": 101,
-        "end": 104
+        "start": 107,
+        "end": 108
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -3666,8 +4479,8 @@
     "_get": {
       "source": {
         "file": "tests/test_dashboard_persistence.py",
-        "start": 107,
-        "end": 109
+        "start": 129,
+        "end": 131
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -3675,8 +4488,8 @@
     "_start_failure_dashboard": {
       "source": {
         "file": "tests/test_dashboard_persistence.py",
-        "start": 112,
-        "end": 137
+        "start": 134,
+        "end": 159
       },
       "symbol_dependencies": [
         {
@@ -3684,7 +4497,7 @@
           "definitions": [
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 84,
+              "line": 106,
               "kind": "class",
               "language": "python"
             }
@@ -3708,7 +4521,7 @@
           "definitions": [
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 101,
+              "line": 123,
               "kind": "function",
               "language": "python"
             }
@@ -3720,7 +4533,7 @@
           "definitions": [
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 107,
+              "line": 129,
               "kind": "function",
               "language": "python"
             }
@@ -3733,8 +4546,8 @@
     "test_dashboard_uses_durable_state_trades_and_status": {
       "source": {
         "file": "tests/test_dashboard_persistence.py",
-        "start": 140,
-        "end": 163
+        "start": 162,
+        "end": 188
       },
       "symbol_dependencies": [
         {
@@ -3742,7 +4555,7 @@
           "definitions": [
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 21,
+              "line": 22,
               "kind": "class",
               "language": "python"
             }
@@ -3767,8 +4580,8 @@
     "test_dashboard_storage_failure_is_sanitized": {
       "source": {
         "file": "tests/test_dashboard_persistence.py",
-        "start": 166,
-        "end": 176
+        "start": 191,
+        "end": 201
       },
       "symbol_dependencies": [
         {
@@ -3776,7 +4589,7 @@
           "definitions": [
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 84,
+              "line": 106,
               "kind": "class",
               "language": "python"
             }
@@ -3801,8 +4614,8 @@
     "test_status_endpoints_fail_closed_without_leaking_storage_details": {
       "source": {
         "file": "tests/test_dashboard_persistence.py",
-        "start": 179,
-        "end": 205
+        "start": 204,
+        "end": 230
       },
       "symbol_dependencies": [
         {
@@ -3810,7 +4623,7 @@
           "definitions": [
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 107,
+              "line": 129,
               "kind": "function",
               "language": "python"
             }
@@ -3822,7 +4635,7 @@
           "definitions": [
             {
               "file": "tests/test_dashboard_persistence.py",
-              "line": 112,
+              "line": 134,
               "kind": "function",
               "language": "python"
             }
@@ -3831,6 +4644,245 @@
         }
       ],
       "dependency_count": 2
+    },
+    "_commit": {
+      "source": {
+        "file": "tests/test_durable_burnin_persistence.py",
+        "start": 15,
+        "end": 34
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "RiverDirectionModel",
+          "definitions": [
+            {
+              "file": "src/ai_trading/online.py",
+              "line": 24,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "RuntimeState",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_state.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "RuntimeStepCommit",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 40,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "_assert_snapshots": {
+      "source": {
+        "file": "tests/test_durable_burnin_persistence.py",
+        "start": 37,
+        "end": 40
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "test_postgres_records_one_equity_snapshot_per_committed_bar": {
+      "source": {
+        "file": "tests/test_durable_burnin_persistence.py",
+        "start": 43,
+        "end": 63
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "CommitOutcome",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 18,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PostgresPaperPersistence",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 233,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_assert_snapshots",
+          "definitions": [
+            {
+              "file": "tests/test_durable_burnin_persistence.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_commit",
+          "definitions": [
+            {
+              "file": "tests/test_durable_burnin_persistence.py",
+              "line": 15,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "test_postgres_conflict_does_not_append_burnin_snapshot": {
+      "source": {
+        "file": "tests/test_durable_burnin_persistence.py",
+        "start": 66,
+        "end": 95
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "CommitOutcome",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 18,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PostgresPaperPersistence",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 233,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_commit",
+          "definitions": [
+            {
+              "file": "tests/test_durable_burnin_persistence.py",
+              "line": 15,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_file_backend_records_equity_snapshots_per_commit": {
+      "source": {
+        "file": "tests/test_durable_burnin_persistence.py",
+        "start": 98,
+        "end": 110
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "CommitOutcome",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 18,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "FilePaperPersistence",
+          "definitions": [
+            {
+              "file": "src/ai_trading/file_persistence.py",
+              "line": 21,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_assert_snapshots",
+          "definitions": [
+            {
+              "file": "tests/test_durable_burnin_persistence.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_commit",
+          "definitions": [
+            {
+              "file": "tests/test_durable_burnin_persistence.py",
+              "line": 15,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "test_burnin_tracker_uses_processed_bars_for_readiness_duration": {
+      "source": {
+        "file": "tests/test_durable_burnin_persistence.py",
+        "start": 113,
+        "end": 121
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BurnInTracker",
+          "definitions": [
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 35,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 1
     }
   }
 }

@@ -252,6 +252,7 @@ tests/
   test_distribution_drift.py
   test_drift_retrain_store.py
   test_drift.py
+  test_durable_burnin_persistence.py
   test_economic_meta_store.py
   test_economic_meta.py
   test_ensemble.py
@@ -1025,6 +1026,11 @@ equity: float
 scheduler_errors: int
 regimes_covered: int
 bootstrap_probability_positive: float
+processed_bars: int = 0
+⋮----
+values = tuple(snapshots)
+⋮----
+equity = pd.Series([snapshot.equity for snapshot in values], dtype=float)
 ⋮----
 class BurnInTracker
 ⋮----
@@ -1036,13 +1042,13 @@ def read(self) -> list[BurnInSnapshot]
 ⋮----
 snapshots: list[BurnInSnapshot] = []
 ⋮----
+payload = json.loads(line)
+⋮----
 def metrics(self) -> PerformanceMetrics
 ⋮----
-snapshots = self.read()
-⋮----
-equity = pd.Series([s.equity for s in snapshots], dtype=float)
-⋮----
 def readiness(self) -> ReadinessReport
+⋮----
+snapshots = self.read()
 ⋮----
 latest = snapshots[-1]
 ````
@@ -1899,11 +1905,16 @@ performance_scope = "full persisted history"
 ⋮----
 trade_performance = calculate_performance_metrics(recent)
 performance_scope = "latest 200 trade events"
+load_burnin = getattr(persistence, "list_burnin_snapshots", None)
+burnin_snapshots = tuple(load_burnin(runtime_key)) if callable(load_burnin) else ()
+burnin_metrics = (
 ⋮----
 recent = ()
 state = None
 runtime_status = None
 trade_performance = None
+burnin_snapshots = ()
+burnin_metrics = None
 performance_scope = "unavailable"
 storage_error = True
 ⋮----
@@ -1987,6 +1998,10 @@ active_symbols_display = "-" if active_symbols is None else str(active_symbols)
 average_pnl_display = _display_money(
 profit_factor_display = _display_ratio(
 max_drawdown_display = _display_money(
+burnin_bars = (
+burnin_bars_display = "-" if burnin_bars is None else str(burnin_bars)
+burnin_return_display = (
+burnin_drawdown_display = (
 ⋮----
 effective_settings = settings or HostedPaperSettings.from_env()
 journal = TradeJournal(journal_path)
@@ -2806,7 +2821,11 @@ current = self.state_store.load(commit.state.cash)
 ⋮----
 temp = self.model_path.with_suffix(".tmp")
 ⋮----
+state = commit.state
+⋮----
 def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics
+⋮----
+def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]
 ⋮----
 def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None
 ⋮----
@@ -4020,8 +4039,18 @@ def runtime_is_consistent(persisted: PersistedRuntime) -> bool
 ⋮----
 state = persisted.state
 ⋮----
+def _burnin_snapshot(persistence: PaperPersistence, runtime_key: str) -> dict[str, object]
+⋮----
+loader = getattr(persistence, "list_burnin_snapshots", None)
+⋮----
+snapshots = loader(runtime_key)
+latest_bars = snapshots[-1].processed_bars if snapshots else 0
+⋮----
+metrics = calculate_burnin_metrics(snapshots)
+⋮----
 persisted = persistence.load_runtime(runtime_key, starting_cash)
 status = persistence.load_runtime_status(runtime_key)
+burnin = _burnin_snapshot(persistence, runtime_key)
 except Exception:  # noqa: BLE001 - observability boundary must sanitize backend failures
 ⋮----
 status_snapshot = runtime_status_snapshot(status)
@@ -4342,6 +4371,8 @@ def commit_step(self, runtime_key: str, commit: RuntimeStepCommit) -> CommitOutc
 ⋮----
 def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics: ...
 ⋮----
+def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]: ...
+⋮----
 def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None: ...
 ⋮----
 def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None: ...
@@ -4635,6 +4666,8 @@ query = f"""
 rows = cursor.fetchall()
 ⋮----
 def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics
+⋮----
+def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]
 ⋮----
 def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None
 ⋮----
@@ -7135,6 +7168,8 @@ def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRunti
 ⋮----
 def list_trades(self, runtime_key: str | None = None, *, limit: int | None = None)
 ⋮----
+def list_burnin_snapshots(self, runtime_key: str)
+⋮----
 def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None
 ⋮----
 class FailingOverviewPersistence
@@ -7200,6 +7235,8 @@ def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRunti
 def list_trades(self, runtime_key: str | None = None, *, limit: int | None = None)
 ⋮----
 def load_trade_performance(self, runtime_key: str)
+⋮----
+def list_burnin_snapshots(self, runtime_key: str)
 ⋮----
 def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None
 ⋮----
@@ -7389,6 +7426,39 @@ def test_no_drift_for_similar_distributions() -> None
 rng = np.random.default_rng(11)
 reference = pd.DataFrame({name: rng.normal(0, 1, 200) for name in FEATURES})
 recent = pd.DataFrame({name: rng.normal(0, 1, 80) for name in FEATURES})
+````
+
+## File: tests/test_durable_burnin_persistence.py
+````python
+DATABASE_URL = os.environ["TEST_DATABASE_URL"]
+RUNTIME_KEY = "paper:GC=F:5m:online-river:v1"
+⋮----
+def _commit(*, revision: int, cash: float, units: float, price: float) -> RuntimeStepCommit
+⋮----
+processed_bars = revision + 1
+state = RuntimeState(
+⋮----
+def _assert_snapshots(snapshots) -> None
+⋮----
+def test_postgres_records_one_equity_snapshot_per_committed_bar() -> None
+⋮----
+backend = PostgresPaperPersistence(DATABASE_URL)
+⋮----
+commits = (
+⋮----
+def test_postgres_conflict_does_not_append_burnin_snapshot() -> None
+⋮----
+snapshots = backend.list_burnin_snapshots(RUNTIME_KEY)
+⋮----
+def test_file_backend_records_equity_snapshots_per_commit(tmp_path) -> None
+⋮----
+backend = FilePaperPersistence(root=tmp_path)
+⋮----
+def test_burnin_tracker_uses_processed_bars_for_readiness_duration(tmp_path) -> None
+⋮----
+tracker = BurnInTracker(tmp_path / "burnin.jsonl")
+⋮----
+report = tracker.readiness()
 ````
 
 ## File: tests/test_economic_meta_store.py

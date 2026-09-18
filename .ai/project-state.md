@@ -27,21 +27,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T16:08:19Z
+Generated: 2026-09-18T16:27:52Z
 
 ### Git
 - Branch: `main`
-- Head: `ebf7c36fb7c2`
-- Commit date: 2026-09-18T18:08:06+02:00
-- Commit: Merge PR #28: persist cumulative paper performance
-- Tracked files: 395
+- Head: `9d450b886fb3`
+- Commit date: 2026-09-18T18:27:39+02:00
+- Commit: Merge PR #29: persist durable paper burn-in equity
+- Tracked files: 396
 
 ### Recently changed files
-- `tests/test_dashboard_persistence.py`
+- `tests/test_dashboard_overview.py`
 - `src/ai_trading/dashboard.py`
-- `src/ai_trading/postgres_persistence.py`
-- `src/ai_trading/file_persistence.py`
-- `src/ai_trading/persistence.py`
+- `src/ai_trading/operational_overview.py`
+- `src/ai_trading/burnin.py`
 
 ### Project signals
 - `pyproject.toml`
