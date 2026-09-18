@@ -8,6 +8,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
 
+from .burnin import calculate_burnin_metrics
 from .file_persistence import FilePaperPersistence
 from .hosted_runtime import HostedPaperSettings, start_hosted_paper_runtime
 from .operational_overview import build_operational_overview, runtime_is_consistent
@@ -85,11 +86,20 @@ def render_dashboard(
             else:
                 trade_performance = calculate_performance_metrics(recent)
                 performance_scope = "latest 200 trade events"
+            load_burnin = getattr(persistence, "list_burnin_snapshots", None)
+            burnin_snapshots = tuple(load_burnin(runtime_key)) if callable(load_burnin) else ()
+            burnin_metrics = (
+                calculate_burnin_metrics(burnin_snapshots)
+                if len(burnin_snapshots) >= 2
+                else None
+            )
         except Exception:
             recent = ()
             state = None
             runtime_status = None
             trade_performance = None
+            burnin_snapshots = ()
+            burnin_metrics = None
             performance_scope = "unavailable"
             storage_error = True
     else:
@@ -99,6 +109,8 @@ def render_dashboard(
             runtime_status_store.load() if runtime_status_store is not None else None
         )
         trade_performance = calculate_performance_metrics(recent)
+        burnin_snapshots = ()
+        burnin_metrics = None
         performance_scope = "latest 200 trade events"
 
     trades = reversed(recent)
@@ -242,6 +254,24 @@ def render_dashboard(
     max_drawdown_display = _display_money(
         None if trade_performance is None else trade_performance.max_drawdown
     )
+    burnin_bars = (
+        burnin_snapshots[-1].processed_bars
+        if burnin_snapshots
+        else (state.processed_bars if state is not None and not storage_error else None)
+    )
+    burnin_bars_display = "-" if burnin_bars is None else str(burnin_bars)
+    burnin_return_display = (
+        "-" if burnin_metrics is None else f"{burnin_metrics.total_return:.2%}"
+    )
+    burnin_drawdown_display = (
+        "-" if burnin_metrics is None else f"{burnin_metrics.max_drawdown:.2%}"
+    )
+    burnin_sharpe_display = _display_ratio(
+        None if burnin_metrics is None else burnin_metrics.sharpe
+    )
+    burnin_sortino_display = _display_ratio(
+        None if burnin_metrics is None else burnin_metrics.sortino
+    )
 
     return f"""<!doctype html>
 <html><head><meta charset="utf-8"><meta http-equiv="refresh" content="2">
@@ -288,6 +318,11 @@ th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
 <div class="metric"><small>Recent win rate</small><strong>{win_rate_display}</strong></div>
 <div class="metric"><small>Recent wins / Losses</small><strong>{wins_losses_display}</strong></div>
 <div class="metric"><small>Recent active symbols</small><strong>{active_symbols_display}</strong></div>
+<div class="metric"><small>Burn-in bars</small><strong>{burnin_bars_display}</strong></div>
+<div class="metric"><small>Equity return</small><strong>{burnin_return_display}</strong></div>
+<div class="metric"><small>Equity max DD</small><strong>{burnin_drawdown_display}</strong></div>
+<div class="metric"><small>Equity Sharpe</small><strong>{burnin_sharpe_display}</strong></div>
+<div class="metric"><small>Equity Sortino</small><strong>{burnin_sortino_display}</strong></div>
 </div>
 <small class="runtime-reason">Last engine reason: {html.escape(decision_reason)}</small>
 <small class="runtime-reason">Operational alerts: {html.escape(operational_alerts_display)}</small>
