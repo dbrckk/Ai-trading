@@ -5,16 +5,20 @@ Status: active
 ## Working
 - Central AI repo-map generation is configured through dbrckk/repo-standards.
 - Repository agent instructions are present.
+- Hosted paper runtime uses durable persistence and scheduled paper cycles.
+- Paper performance metrics are persisted cumulatively per runtime and exposed in the read-only dashboard.
 
 ## Broken / blockers
 - None documented here yet.
 
 ## Current priority
-- Restore task-specific state here when substantial work resumes.
+- Validate and merge cumulative full-history paper performance metrics.
+- Then continue paper-trading burn-in and evaluate runtime/performance evidence before changing trading logic.
 
 ## Validation
 - Standards workflow: configured.
-- Tests/build: use this repository's existing validation commands.
+- Canonical validation: `ruff check .` and `pytest`.
+- Paper runtime changes must keep Cloudflare Worker tests green.
 
 ## Last verified
 - 2026-09-18

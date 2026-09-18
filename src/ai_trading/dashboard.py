@@ -78,10 +78,19 @@ def render_dashboard(
             runtime_revision = persisted.revision
             runtime_model = persisted.model
             runtime_status = persistence.load_runtime_status(runtime_key)
+            load_performance = getattr(persistence, "load_trade_performance", None)
+            if callable(load_performance):
+                trade_performance = load_performance(runtime_key)
+                performance_scope = "full persisted history"
+            else:
+                trade_performance = calculate_performance_metrics(recent)
+                performance_scope = "latest 200 trade events"
         except Exception:
             recent = ()
             state = None
             runtime_status = None
+            trade_performance = None
+            performance_scope = "unavailable"
             storage_error = True
     else:
         recent = journal.list(limit=200)
@@ -89,9 +98,10 @@ def render_dashboard(
         runtime_status = (
             runtime_status_store.load() if runtime_status_store is not None else None
         )
+        trade_performance = calculate_performance_metrics(recent)
+        performance_scope = "latest 200 trade events"
 
     trades = reversed(recent)
-    trade_performance = None if storage_error else calculate_performance_metrics(recent)
     if storage_error:
         realized_pnl: float | None = None
         trade_count: int | None = None
@@ -105,7 +115,7 @@ def render_dashboard(
         position_value: float | None = None
     else:
         realized_pnl = trade_performance.realized_pnl
-        trade_count = len(recent)
+        trade_count = trade_performance.trade_count
         wins = sum(1 for trade in recent if trade.pnl > 0)
         losses = sum(1 for trade in recent if trade.pnl < 0)
         win_rate = (wins / (wins + losses)) if wins + losses else 0.0
@@ -275,13 +285,13 @@ th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
 <div class="metric"><small>Avg PnL / trade</small><strong>{average_pnl_display}</strong></div>
 <div class="metric"><small>Profit factor</small><strong>{profit_factor_display}</strong></div>
 <div class="metric"><small>Max realized DD</small><strong>{max_drawdown_display}</strong></div>
-<div class="metric"><small>Win rate</small><strong>{win_rate_display}</strong></div>
-<div class="metric"><small>Wins / Losses</small><strong>{wins_losses_display}</strong></div>
-<div class="metric"><small>Active symbols</small><strong>{active_symbols_display}</strong></div>
+<div class="metric"><small>Recent win rate</small><strong>{win_rate_display}</strong></div>
+<div class="metric"><small>Recent wins / Losses</small><strong>{wins_losses_display}</strong></div>
+<div class="metric"><small>Recent active symbols</small><strong>{active_symbols_display}</strong></div>
 </div>
 <small class="runtime-reason">Last engine reason: {html.escape(decision_reason)}</small>
 <small class="runtime-reason">Operational alerts: {html.escape(operational_alerts_display)}</small>
-<small class="runtime-reason">Performance window: latest 200 trade events</small>
+<small class="runtime-reason">Performance window: {html.escape(performance_scope)} · recent table/stats: latest 200 trade events</small>
 <table><thead><tr><th>UTC</th><th>Symbol</th><th>Side</th><th>Qty</th><th>Price</th>
 <th>Status</th><th>PnL</th><th>Confidence</th><th>Strategy</th></tr></thead>
 <tbody>{rows}</tbody></table></div></main></body></html>"""
