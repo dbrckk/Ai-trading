@@ -76,6 +76,7 @@ def build_operational_overview(
             "processed_bars": None,
             "last_processed": None,
             "lag_detected": False,
+            "consecutive_cycle_errors": None,
             "model": _empty_model_snapshot(),
             "burnin": {
                 "samples": 0,
@@ -89,12 +90,17 @@ def build_operational_overview(
     status_snapshot = runtime_status_snapshot(status)
     engine_status = str(status_snapshot["engine_status"])
     lag_detected = engine_status == "STALE"
+    consecutive_cycle_errors = (
+        status.consecutive_cycle_errors if status is not None else 0
+    )
     state = persisted.state
     model = persisted.model
 
     alerts: list[str] = []
     if lag_detected:
         alerts.append("worker heartbeat expired")
+    if consecutive_cycle_errors > 0:
+        alerts.append("paper cycle reliability degraded")
     if model is None and state.processed_bars > 0:
         alerts.append("model missing for initialized runtime")
     if not runtime_is_consistent(persisted):
@@ -118,6 +124,7 @@ def build_operational_overview(
         "processed_bars": state.processed_bars,
         "last_processed": state.last_processed,
         "lag_detected": lag_detected,
+        "consecutive_cycle_errors": consecutive_cycle_errors,
         "model": model_snapshot,
         "burnin": burnin,
         "alerts": alerts,

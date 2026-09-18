@@ -23,6 +23,7 @@ class HostedRuntimeStatus:
     processed_bars: int = 0
     error: str | None = None
     poll_seconds: float = 60.0
+    consecutive_cycle_errors: int = 0
 
 
 def runtime_status_snapshot(

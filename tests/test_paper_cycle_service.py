@@ -14,8 +14,9 @@ from ai_trading.runtime_status import HostedRuntimeStatus
 
 
 class FakePersistence:
-    def __init__(self) -> None:
+    def __init__(self, *, initial_status: HostedRuntimeStatus | None = None) -> None:
         self.statuses: list[HostedRuntimeStatus] = []
+        self.initial_status = initial_status
         self.state = RuntimeState(
             cash=99_500.0,
             units=2.0,
@@ -30,6 +31,10 @@ class FakePersistence:
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:
         assert runtime_key == "paper:GC=F:5m:online-river:v1"
         self.statuses.append(status)
+
+    def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:
+        assert runtime_key == "paper:GC=F:5m:online-river:v1"
+        return self.statuses[-1] if self.statuses else self.initial_status
 
     def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:
         assert runtime_key == "paper:GC=F:5m:online-river:v1"
@@ -184,3 +189,59 @@ def test_error_status_failure_does_not_mask_worker_failure() -> None:
     assert caught.value.code == "execution_failed"
     assert caught.value.error_type == "ValueError"
     assert caught.value.__cause__ is None
+
+
+def test_success_resets_consecutive_cycle_errors() -> None:
+    backend = FakePersistence(
+        initial_status=HostedRuntimeStatus(
+            engine_status="ERROR",
+            symbol="GC=F",
+            interval="5m",
+            updated_at_utc="2026-09-18T15:00:00+00:00",
+            consecutive_cycle_errors=2,
+            error="RuntimeError: worker failure",
+            poll_seconds=300.0,
+        )
+    )
+
+    run_production_paper_cycle(
+        ProductionPaperCycleSettings(),
+        persistence=backend,
+        runner_factory=lambda persistence: FakeRunner(persistence),
+    )
+
+    assert backend.statuses[0].engine_status == "STARTING"
+    assert backend.statuses[0].consecutive_cycle_errors == 2
+    assert backend.statuses[-1].engine_status == "RUNNING"
+    assert backend.statuses[-1].consecutive_cycle_errors == 0
+
+
+def test_failure_increments_consecutive_cycle_errors() -> None:
+    backend = FakePersistence(
+        initial_status=HostedRuntimeStatus(
+            engine_status="ERROR",
+            symbol="GC=F",
+            interval="5m",
+            updated_at_utc="2026-09-18T15:00:00+00:00",
+            consecutive_cycle_errors=2,
+            error="RuntimeError: worker failure",
+            poll_seconds=300.0,
+        )
+    )
+
+    class BrokenRunner:
+        def run_once(self, **kwargs):
+            del kwargs
+            raise RuntimeError("provider failure")
+
+    with pytest.raises(PaperCycleServiceError):
+        run_production_paper_cycle(
+            ProductionPaperCycleSettings(),
+            persistence=backend,
+            runner_factory=lambda persistence: BrokenRunner(),
+        )
+
+    assert backend.statuses[0].engine_status == "STARTING"
+    assert backend.statuses[0].consecutive_cycle_errors == 2
+    assert backend.statuses[-1].engine_status == "ERROR"
+    assert backend.statuses[-1].consecutive_cycle_errors == 3

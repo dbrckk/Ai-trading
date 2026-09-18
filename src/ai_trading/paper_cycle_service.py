@@ -59,6 +59,12 @@ def run_production_paper_cycle(
             ) from None
 
     try:
+        previous_status = backend.load_runtime_status(runtime_key)
+        previous_cycle_errors = (
+            previous_status.consecutive_cycle_errors
+            if previous_status is not None
+            else 0
+        )
         backend.save_runtime_status(
             runtime_key,
             HostedRuntimeStatus(
@@ -68,6 +74,7 @@ def run_production_paper_cycle(
                 updated_at_utc=_now_utc(),
                 equity=starting_cash,
                 poll_seconds=settings.poll_seconds,
+                consecutive_cycle_errors=previous_cycle_errors,
             ),
         )
     except Exception as exc:  # noqa: BLE001 - storage boundary is fail-closed
@@ -99,6 +106,7 @@ def run_production_paper_cycle(
                 units=state.units,
                 processed_bars=state.processed_bars,
                 poll_seconds=settings.poll_seconds,
+                consecutive_cycle_errors=0,
             ),
         )
         return result
@@ -113,6 +121,7 @@ def run_production_paper_cycle(
                     updated_at_utc=_now_utc(),
                     error=f"{type(exc).__name__}: worker failure",
                     poll_seconds=settings.poll_seconds,
+                    consecutive_cycle_errors=previous_cycle_errors + 1,
                 ),
             )
         except Exception:  # noqa: BLE001, S110 - best-effort failure reporting
