@@ -400,6 +400,7 @@ tbody tr:hover{{background:#101b2d}}
 <div class="metric"><small>Processed bars</small><strong>{processed_bars_display}</strong></div>
 <div class="metric"><small>Runtime revision</small><strong>{runtime_revision_display}</strong></div>
 <div class="metric"><small>Model</small><strong>{html.escape(model_display)}</strong></div>
+<div class="metric"><small>Model checksum</small><strong>{html.escape(model_checksum)}</strong></div>
 </div>
 <div class="alert-box {'warn' if operational_alerts else ''}">
 <strong>Operational alerts: {html.escape(operational_alerts_display)}</strong>
