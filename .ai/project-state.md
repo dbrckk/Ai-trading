@@ -27,21 +27,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T16:51:25Z
+Generated: 2026-09-18T17:13:29Z
 
 ### Git
 - Branch: `main`
-- Head: `496ab3afbd97`
-- Commit date: 2026-09-18T18:51:06+02:00
-- Commit: Merge PR #30: persist paper cycle reliability
+- Head: `c08813c5437e`
+- Commit date: 2026-09-18T19:13:18+02:00
+- Commit: Merge PR #31: redesign hosted paper dashboard
 - Tracked files: 396
 
 ### Recently changed files
-- `README.md`
-- `tests/test_dashboard_overview.py`
 - `src/ai_trading/dashboard.py`
-- `src/ai_trading/operational_overview.py`
-- `src/ai_trading/paper_cycle_service.py`
 
 ### Project signals
 - `pyproject.toml`

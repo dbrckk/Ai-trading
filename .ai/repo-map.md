@@ -1885,6 +1885,28 @@ def _display_units(value: float | None) -> str
 ⋮----
 def _display_ratio(value: float | None) -> str
 ⋮----
+def _equity_chart_svg(snapshots: tuple[BurnInSnapshot, ...]) -> str
+⋮----
+values = [float(snapshot.equity) for snapshot in snapshots]
+width = 900.0
+height = 240.0
+padding = 18.0
+low = min(values)
+high = max(values)
+span = high - low
+⋮----
+span = max(abs(high), 1.0) * 0.01
+⋮----
+usable_width = width - 2 * padding
+usable_height = height - 2 * padding
+points: list[str] = []
+⋮----
+x = padding + usable_width * index / (len(values) - 1)
+y = padding + usable_height * (high - value) / (high - low)
+⋮----
+change = values[-1] - values[0]
+direction_class = "positive" if change >= 0 else "negative"
+⋮----
 storage_error = False
 runtime_revision: int | None = None
 runtime_model = None
@@ -2001,8 +2023,13 @@ profit_factor_display = _display_ratio(
 max_drawdown_display = _display_money(
 burnin_bars = (
 burnin_bars_display = "-" if burnin_bars is None else str(burnin_bars)
+burnin_target = ReadinessPolicy().min_burn_in_bars
+burnin_progress = (
+burnin_progress_display = f"{burnin_progress:.0%}"
 burnin_return_display = (
 burnin_drawdown_display = (
+equity_chart = _equity_chart_svg(burnin_snapshots)
+status_class = (
 ⋮----
 effective_settings = settings or HostedPaperSettings.from_env()
 journal = TradeJournal(journal_path)
@@ -7281,6 +7308,8 @@ port = _start_failure_dashboard()
 ⋮----
 status_payload = json.loads(status_body)
 health_payload = json.loads(health_body)
+⋮----
+def test_dashboard_v2_groups_critical_sections_and_renders_equity_chart(tmp_path) -> None
 ````
 
 ## File: tests/test_dashboard.py

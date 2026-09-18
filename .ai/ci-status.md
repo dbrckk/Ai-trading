@@ -1,15 +1,15 @@
 # CI status
 
-Summary: 4 success / 3 failure / 1 active
+Summary: 2 success / 5 failure / 1 active
 
-- CI: in_progress / pending (496ab3af)
-- CI: completed / success (38905de1)
-- CI: completed / success (46945b5b)
-- CI: completed / failure (dfd96740)
-- CI: completed / failure (7d29ad20)
-- CI: completed / success (8e1b65db)
-- CI: completed / failure (5608bb06)
-- CI: completed / success (9d450b88)
+- CI: in_progress / pending (c08813c5)
+- CI: completed / success (efbade4f)
+- Paper Cycle: completed / success (f8041d59)
+- CI: completed / failure (3c727886)
+- CI: completed / failure (1e8b2226)
+- CI: completed / failure (83663ef7)
+- CI: completed / failure (596fa290)
+- CI: completed / failure (912a2823)
 
 ## Latest failed run structure
 - Job: test

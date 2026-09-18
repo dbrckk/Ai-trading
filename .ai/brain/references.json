@@ -8,26 +8,26 @@
     "_public_runtime_snapshot": {
       "definition": {
         "file": "src/ai_trading/dashboard.py",
-        "line": 36,
+        "line": 37,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 36,
+          "line": 37,
           "preview": "def _public_runtime_snapshot(status: HostedRuntimeStatus | None) -> dict[str, object]:",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 150,
+          "line": 189,
           "preview": "runtime_snapshot = _public_runtime_snapshot(runtime_status)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 397,
+          "line": 526,
           "preview": "return _public_runtime_snapshot(backend.load_runtime_status(runtime_key))",
           "definition_candidate": false
         }
@@ -37,73 +37,85 @@
     "_display_money": {
       "definition": {
         "file": "src/ai_trading/dashboard.py",
-        "line": 43,
+        "line": 44,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 43,
+          "line": 44,
           "preview": "def _display_money(value: float | None) -> str:",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 251,
+          "line": 92,
+          "preview": "f'<span>{_display_money(values[0])}</span>'",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 93,
+          "preview": "f'<span>{_display_money(values[-1])}</span>'",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 290,
           "preview": "pnl_display = _display_money(realized_pnl)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 255,
+          "line": 294,
           "preview": "average_pnl_display = _display_money(",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 261,
+          "line": 300,
           "preview": "max_drawdown_display = _display_money(",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 310,
+          "line": 418,
           "preview": "<div class=\"metric\"><small>Equity</small><strong>{_display_money(equity)}</strong></div>",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 311,
+          "line": 419,
           "preview": "<div class=\"metric\"><small>Cash</small><strong>{_display_money(cash)}</strong></div>",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 313,
+          "line": 421,
           "preview": "<div class=\"metric\"><small>Position value</small><strong>{_display_money(position_value)}</strong></div>",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 7
+      "occurrence_count": 9
     },
     "_display_units": {
       "definition": {
         "file": "src/ai_trading/dashboard.py",
-        "line": 47,
+        "line": 48,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 47,
+          "line": 48,
           "preview": "def _display_units(value: float | None) -> str:",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 312,
+          "line": 420,
           "preview": "<div class=\"metric\"><small>Open units</small><strong>{_display_units(units)}</strong></div>",
           "definition_candidate": false
         }
@@ -113,21 +125,44 @@
     "_display_ratio": {
       "definition": {
         "file": "src/ai_trading/dashboard.py",
-        "line": 51,
+        "line": 52,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 51,
+          "line": 52,
           "preview": "def _display_ratio(value: float | None) -> str:",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 258,
+          "line": 297,
           "preview": "profit_factor_display = _display_ratio(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_equity_chart_svg": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 60,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 60,
+          "preview": "def _equity_chart_svg(snapshots: tuple[BurnInSnapshot, ...]) -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 322,
+          "preview": "equity_chart = _equity_chart_svg(burnin_snapshots)",
           "definition_candidate": false
         }
       ],
@@ -136,20 +171,20 @@
     "render_dashboard": {
       "definition": {
         "file": "src/ai_trading/dashboard.py",
-        "line": 59,
+        "line": 98,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 59,
+          "line": 98,
           "preview": "def render_dashboard(",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 454,
+          "line": 583,
           "preview": "payload = render_dashboard(",
           "definition_candidate": false
         },
@@ -245,17 +280,23 @@
         },
         {
           "file": "tests/test_dashboard_persistence.py",
-          "line": 192,
+          "line": 193,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 235,
           "preview": "page = render_dashboard(",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 18
+      "occurrence_count": 19
     },
     "serve_dashboard": {
       "definition": {
         "file": "src/ai_trading/dashboard.py",
-        "line": 334,
+        "line": 463,
         "kind": "function",
         "language": "python"
       },
@@ -274,7 +315,7 @@
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 334,
+          "line": 463,
           "preview": "def serve_dashboard(",
           "definition_candidate": true
         },
@@ -332,20 +373,20 @@
     "execute_paper_cycle": {
       "definition": {
         "file": "src/ai_trading/dashboard.py",
-        "line": 382,
+        "line": 511,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 382,
+          "line": 511,
           "preview": "def execute_paper_cycle() -> PaperCycleResult:",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 388,
+          "line": 517,
           "preview": "effective_cycle_executor = execute_paper_cycle",
           "definition_candidate": false
         }
@@ -355,26 +396,26 @@
     "load_status_snapshot": {
       "definition": {
         "file": "src/ai_trading/dashboard.py",
-        "line": 395,
+        "line": 524,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 395,
+          "line": 524,
           "preview": "def load_status_snapshot() -> dict[str, object]:",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 428,
+          "line": 557,
           "preview": "self._send_json(load_status_snapshot())",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 431,
+          "line": 560,
           "preview": "snapshot = load_status_snapshot()",
           "definition_candidate": false
         }
@@ -384,20 +425,20 @@
     "Handler": {
       "definition": {
         "file": "src/ai_trading/dashboard.py",
-        "line": 401,
+        "line": 530,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 401,
+          "line": 530,
           "preview": "class Handler(BaseHTTPRequestHandler):",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 487,
+          "line": 616,
           "preview": "ThreadingHTTPServer((host, port), Handler).serve_forever()",
           "definition_candidate": false
         }
@@ -407,44 +448,44 @@
     "_send_json": {
       "definition": {
         "file": "src/ai_trading/dashboard.py",
-        "line": 402,
+        "line": 531,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 402,
+          "line": 531,
           "preview": "def _send_json(",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 419,
+          "line": 548,
           "preview": "self._send_json(",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 428,
+          "line": 557,
           "preview": "self._send_json(load_status_snapshot())",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 433,
+          "line": 562,
           "preview": "self._send_json(",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 443,
+          "line": 572,
           "preview": "self._send_json(",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 479,
+          "line": 608,
           "preview": "self._send_json(",
           "definition_candidate": false
         }
@@ -454,14 +495,14 @@
     "do_GET": {
       "definition": {
         "file": "src/ai_trading/dashboard.py",
-        "line": 416,
+        "line": 545,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 416,
+          "line": 545,
           "preview": "def do_GET(self) -> None:",
           "definition_candidate": true
         },
@@ -477,14 +518,14 @@
     "do_POST": {
       "definition": {
         "file": "src/ai_trading/dashboard.py",
-        "line": 469,
+        "line": 598,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 469,
+          "line": 598,
           "preview": "def do_POST(self) -> None:",
           "definition_candidate": true
         }
@@ -494,14 +535,14 @@
     "log_message": {
       "definition": {
         "file": "src/ai_trading/dashboard.py",
-        "line": 484,
+        "line": 613,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 484,
+          "line": 613,
           "preview": "def log_message(self, format: str, *args: object) -> None:",
           "definition_candidate": true
         },
@@ -514,424 +555,39 @@
       ],
       "occurrence_count": 2
     },
-    "_empty_model_snapshot": {
+    "DurablePersistence": {
       "definition": {
-        "file": "src/ai_trading/operational_overview.py",
-        "line": 8,
-        "kind": "function",
+        "file": "tests/test_dashboard_persistence.py",
+        "line": 22,
+        "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 8,
-          "preview": "def _empty_model_snapshot() -> dict[str, object]:",
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 22,
+          "preview": "class DurablePersistence:",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 80,
-          "preview": "\"model\": _empty_model_snapshot(),",
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 167,
+          "preview": "persistence=DurablePersistence(),",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 111,
-          "preview": "model_snapshot = _empty_model_snapshot()",
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 237,
+          "preview": "persistence=DurablePersistence(),",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 3
     },
-    "runtime_is_consistent": {
-      "definition": {
-        "file": "src/ai_trading/operational_overview.py",
-        "line": 17,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 14,
-          "preview": "from .operational_overview import build_operational_overview, runtime_is_consistent",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 203,
-          "preview": "if persisted_runtime is not None and not runtime_is_consistent(persisted_runtime):",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 17,
-          "preview": "def runtime_is_consistent(persisted: PersistedRuntime) -> bool:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 106,
-          "preview": "if not runtime_is_consistent(persisted):",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "_burnin_snapshot": {
-      "definition": {
-        "file": "src/ai_trading/operational_overview.py",
-        "line": 35,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 35,
-          "preview": "def _burnin_snapshot(persistence: PaperPersistence, runtime_key: str) -> dict[str, object]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 70,
-          "preview": "burnin = _burnin_snapshot(persistence, runtime_key)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "build_operational_overview": {
-      "definition": {
-        "file": "src/ai_trading/operational_overview.py",
-        "line": 62,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 14,
-          "preview": "from .operational_overview import build_operational_overview, runtime_is_consistent",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 420,
-          "preview": "build_operational_overview(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 62,
-          "preview": "def build_operational_overview(",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 13,
-          "preview": "from ai_trading.operational_overview import build_operational_overview",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 151,
-          "preview": "payload = build_operational_overview(OverviewPersistence(), RUNTIME_KEY)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 173,
-          "preview": "payload = build_operational_overview(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 183,
-          "preview": "payload = build_operational_overview(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 214,
-          "preview": "payload = build_operational_overview(persistence, RUNTIME_KEY)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 220,
-          "preview": "payload = build_operational_overview(FailingOverviewPersistence(), RUNTIME_KEY)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 314,
-          "preview": "payload = build_operational_overview(",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 10
-    },
-    "ProductionPaperCycleSettings": {
-      "definition": {
-        "file": "src/ai_trading/paper_cycle_service.py",
-        "line": 15,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/command_app.py",
-          "line": 8,
-          "preview": "ProductionPaperCycleSettings,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/command_app.py",
-          "line": 22,
-          "preview": "settings = ProductionPaperCycleSettings(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 17,
-          "preview": "ProductionPaperCycleSettings,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 374,
-          "preview": "cycle_settings = ProductionPaperCycleSettings(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 15,
-          "preview": "class ProductionPaperCycleSettings:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 39,
-          "preview": "settings: ProductionPaperCycleSettings,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_cli.py",
-          "line": 7,
-          "preview": "ProductionPaperCycleSettings,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_cli.py",
-          "line": 14,
-          "preview": "seen: list[ProductionPaperCycleSettings] = []",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_cli.py",
-          "line": 16,
-          "preview": "def fake_service(settings: ProductionPaperCycleSettings) -> PaperCycleResult:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_cli.py",
-          "line": 44,
-          "preview": "ProductionPaperCycleSettings(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_cli.py",
-          "line": 57,
-          "preview": "def fail(settings: ProductionPaperCycleSettings) -> PaperCycleResult:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 8,
-          "preview": "ProductionPaperCycleSettings,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 75,
-          "preview": "ProductionPaperCycleSettings(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 99,
-          "preview": "ProductionPaperCycleSettings(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 130,
-          "preview": "ProductionPaperCycleSettings(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 150,
-          "preview": "ProductionPaperCycleSettings(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 184,
-          "preview": "ProductionPaperCycleSettings(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 208,
-          "preview": "ProductionPaperCycleSettings(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 239,
-          "preview": "ProductionPaperCycleSettings(),",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 19
-    },
-    "PaperCycleServiceError": {
-      "definition": {
-        "file": "src/ai_trading/paper_cycle_service.py",
-        "line": 23,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/command_app.py",
-          "line": 7,
-          "preview": "PaperCycleServiceError,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/command_app.py",
-          "line": 31,
-          "preview": "except PaperCycleServiceError as exc:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 23,
-          "preview": "class PaperCycleServiceError(RuntimeError):",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 56,
-          "preview": "raise PaperCycleServiceError(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 81,
-          "preview": "raise PaperCycleServiceError(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 129,
-          "preview": "raise PaperCycleServiceError(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler_endpoint.py",
-          "line": 8,
-          "preview": "from .paper_cycle_service import PaperCycleServiceError",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler_endpoint.py",
-          "line": 45,
-          "preview": "except PaperCycleServiceError as exc:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_cli.py",
-          "line": 6,
-          "preview": "PaperCycleServiceError,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_cli.py",
-          "line": 59,
-          "preview": "raise PaperCycleServiceError(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 7,
-          "preview": "PaperCycleServiceError,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 97,
-          "preview": "with pytest.raises(PaperCycleServiceError) as caught:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 128,
-          "preview": "with pytest.raises(PaperCycleServiceError) as caught:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 148,
-          "preview": "with pytest.raises(PaperCycleServiceError) as caught:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 182,
-          "preview": "with pytest.raises(PaperCycleServiceError) as caught:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 237,
-          "preview": "with pytest.raises(PaperCycleServiceError):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_endpoint.py",
-          "line": 12,
-          "preview": "from ai_trading.paper_cycle_service import PaperCycleServiceError",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_endpoint.py",
-          "line": 170,
-          "preview": "raise PaperCycleServiceError(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_endpoint.py",
-          "line": 191,
-          "preview": "raise PaperCycleServiceError(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_endpoint.py",
-          "line": 277,
-          "preview": "raise PaperCycleServiceError(",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 20
-    },
     "__init__": {
       "definition": {
-        "file": "src/ai_trading/paper_cycle_service.py",
-        "line": 24,
+        "file": "tests/test_dashboard_persistence.py",
+        "line": 23,
         "kind": "function",
         "language": "python"
       },
@@ -1132,7 +788,7 @@
           "file": "src/ai_trading/paper_cycle_service.py",
           "line": 24,
           "preview": "def __init__(self, *, code: str, error_type: str) -> None:",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "src/ai_trading/paper_cycle_service.py",
@@ -1288,7 +944,7 @@
           "file": "tests/test_dashboard_persistence.py",
           "line": 23,
           "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "tests/test_hosted_persistence.py",
@@ -1353,2168 +1009,17 @@
       ],
       "occurrence_count": 69
     },
-    "_now_utc": {
-      "definition": {
-        "file": "src/ai_trading/paper_cycle_service.py",
-        "line": 30,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/hosted_runtime.py",
-          "line": 64,
-          "preview": "def _now_utc() -> str:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/hosted_runtime.py",
-          "line": 91,
-          "preview": "updated_at_utc=_now_utc(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/hosted_runtime.py",
-          "line": 107,
-          "preview": "updated_at_utc=_now_utc(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/hosted_runtime.py",
-          "line": 151,
-          "preview": "updated_at_utc=_now_utc(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/hosted_runtime.py",
-          "line": 159,
-          "preview": "updated_at_utc=_now_utc(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 30,
-          "preview": "def _now_utc() -> str:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 74,
-          "preview": "updated_at_utc=_now_utc(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 101,
-          "preview": "updated_at_utc=_now_utc(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 121,
-          "preview": "updated_at_utc=_now_utc(),",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 9
-    },
-    "_default_runner_factory": {
-      "definition": {
-        "file": "src/ai_trading/paper_cycle_service.py",
-        "line": 34,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 34,
-          "preview": "def _default_runner_factory(persistence: PaperPersistence) -> PaperCycleRunner:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 43,
-          "preview": "runner_factory: Callable[[PaperPersistence], PaperCycleRunner] = _default_runner_factory,",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "run_production_paper_cycle": {
-      "definition": {
-        "file": "src/ai_trading/paper_cycle_service.py",
-        "line": 38,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/command_app.py",
-          "line": 9,
-          "preview": "run_production_paper_cycle,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/command_app.py",
-          "line": 30,
-          "preview": "result = run_production_paper_cycle(settings)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 18,
-          "preview": "run_production_paper_cycle,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 383,
-          "preview": "return run_production_paper_cycle(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 38,
-          "preview": "def run_production_paper_cycle(",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_paper_cycle_cli.py",
-          "line": 26,
-          "preview": "monkeypatch.setattr(command_app, \"run_production_paper_cycle\", fake_service)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_cli.py",
-          "line": 64,
-          "preview": "monkeypatch.setattr(command_app, \"run_production_paper_cycle\", fail)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 9,
-          "preview": "run_production_paper_cycle,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 74,
-          "preview": "result = run_production_paper_cycle(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 98,
-          "preview": "run_production_paper_cycle(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 129,
-          "preview": "run_production_paper_cycle(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 149,
-          "preview": "run_production_paper_cycle(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 183,
-          "preview": "run_production_paper_cycle(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 207,
-          "preview": "run_production_paper_cycle(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 238,
-          "preview": "run_production_paper_cycle(",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 15
-    },
-    "HostedRuntimeStatus": {
-      "definition": {
-        "file": "src/ai_trading/runtime_status.py",
-        "line": 10,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 24,
-          "preview": "from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore, runtime_status_snapshot",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 36,
-          "preview": "def _public_runtime_snapshot(status: HostedRuntimeStatus | None) -> dict[str, object]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 17,
-          "preview": "from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 103,
-          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 107,
-          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/hosted_runtime.py",
-          "line": 14,
-          "preview": "from .runtime_status import HostedRuntimeStatus",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/hosted_runtime.py",
-          "line": 87,
-          "preview": "HostedRuntimeStatus(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/hosted_runtime.py",
-          "line": 103,
-          "preview": "HostedRuntimeStatus(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/hosted_runtime.py",
-          "line": 147,
-          "preview": "current = backend.load_runtime_status(settings.runtime_key) or HostedRuntimeStatus(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 11,
-          "preview": "from .runtime_status import HostedRuntimeStatus",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 70,
-          "preview": "HostedRuntimeStatus(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 97,
-          "preview": "HostedRuntimeStatus(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 117,
-          "preview": "HostedRuntimeStatus(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/persistence.py",
-          "line": 14,
-          "preview": "from .runtime_status import HostedRuntimeStatus",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/persistence.py",
-          "line": 67,
-          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None: ...",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/persistence.py",
-          "line": 69,
-          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None: ...",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/postgres_persistence.py",
-          "line": 26,
-          "preview": "from .runtime_status import HostedRuntimeStatus",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/postgres_persistence.py",
-          "line": 634,
-          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/postgres_persistence.py",
-          "line": 660,
-          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/postgres_persistence.py",
-          "line": 672,
-          "preview": "return HostedRuntimeStatus(**payload)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_status.py",
-          "line": 10,
-          "preview": "class HostedRuntimeStatus:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/runtime_status.py",
-          "line": 30,
-          "preview": "status: HostedRuntimeStatus | None,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_status.py",
-          "line": 87,
-          "preview": "def load(self) -> HostedRuntimeStatus | None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_status.py",
-          "line": 90,
-          "preview": "return HostedRuntimeStatus(**json.loads(self.path.read_text(encoding=\"utf-8\")))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_status.py",
-          "line": 92,
-          "preview": "def save(self, status: HostedRuntimeStatus) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_engine_status.py",
-          "line": 7,
-          "preview": "from ai_trading.runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_engine_status.py",
-          "line": 16,
-          "preview": "HostedRuntimeStatus(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 12,
-          "preview": "from ai_trading.runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 64,
-          "preview": "HostedRuntimeStatus(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 88,
-          "preview": "HostedRuntimeStatus(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 110,
-          "preview": "HostedRuntimeStatus(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 16,
-          "preview": "from ai_trading.runtime_status import HostedRuntimeStatus",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 53,
-          "preview": "self.status = HostedRuntimeStatus(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 101,
-          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 16,
-          "preview": "from ai_trading.runtime_status import HostedRuntimeStatus",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 44,
-          "preview": "self.status = HostedRuntimeStatus(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 101,
-          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_persistence.py",
-          "line": 9,
-          "preview": "from ai_trading.runtime_status import HostedRuntimeStatus",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_persistence.py",
-          "line": 16,
-          "preview": "self.statuses: list[tuple[str, HostedRuntimeStatus]] = []",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_persistence.py",
-          "line": 18,
-          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_persistence.py",
-          "line": 21,
-          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_persistence.py",
-          "line": 122,
-          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 13,
-          "preview": "from ai_trading.runtime_status import HostedRuntimeStatus",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 17,
-          "preview": "def __init__(self, *, initial_status: HostedRuntimeStatus | None = None) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 18,
-          "preview": "self.statuses: list[HostedRuntimeStatus] = []",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 31,
-          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 35,
-          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 196,
-          "preview": "initial_status=HostedRuntimeStatus(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 221,
-          "preview": "initial_status=HostedRuntimeStatus(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_postgres_persistence.py",
-          "line": 10,
-          "preview": "from ai_trading.runtime_status import HostedRuntimeStatus",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_postgres_persistence.py",
-          "line": 197,
-          "preview": "status = HostedRuntimeStatus(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_persistence.py",
-          "line": 13,
-          "preview": "from ai_trading.runtime_status import HostedRuntimeStatus",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_persistence.py",
-          "line": 68,
-          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_persistence.py",
-          "line": 71,
-          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_status.py",
-          "line": 3,
-          "preview": "from ai_trading.runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_status.py",
-          "line": 8,
-          "preview": "status = HostedRuntimeStatus(",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 56
-    },
-    "runtime_status_snapshot": {
-      "definition": {
-        "file": "src/ai_trading/runtime_status.py",
-        "line": 29,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 24,
-          "preview": "from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore, runtime_status_snapshot",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 37,
-          "preview": "snapshot = runtime_status_snapshot(status)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 5,
-          "preview": "from .runtime_status import runtime_status_snapshot",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 90,
-          "preview": "status_snapshot = runtime_status_snapshot(status)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_status.py",
-          "line": 29,
-          "preview": "def runtime_status_snapshot(",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 5
-    },
-    "HostedRuntimeStatusStore": {
-      "definition": {
-        "file": "src/ai_trading/runtime_status.py",
-        "line": 83,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 24,
-          "preview": "from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore, runtime_status_snapshot",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 64,
-          "preview": "runtime_status_store: HostedRuntimeStatusStore | None = None,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 350,
-          "preview": "runtime_status_store = HostedRuntimeStatusStore(status_path)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 17,
-          "preview": "from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 31,
-          "preview": "status_store: HostedRuntimeStatusStore | None = None,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 38,
-          "preview": "self.status_store = status_store or HostedRuntimeStatusStore(root_path / \"runtime_status.json\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_status.py",
-          "line": 83,
-          "preview": "class HostedRuntimeStatusStore:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_dashboard_engine_status.py",
-          "line": 7,
-          "preview": "from ai_trading.runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_engine_status.py",
-          "line": 14,
-          "preview": "status_store = HostedRuntimeStatusStore(tmp_path / \"runtime_status.json\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 12,
-          "preview": "from ai_trading.runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 62,
-          "preview": "status_store = HostedRuntimeStatusStore(tmp_path / \"runtime_status.json\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 86,
-          "preview": "status_store = HostedRuntimeStatusStore(tmp_path / \"runtime_status.json\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 108,
-          "preview": "status_store = HostedRuntimeStatusStore(tmp_path / \"runtime_status.json\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_status.py",
-          "line": 3,
-          "preview": "from ai_trading.runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_status.py",
-          "line": 7,
-          "preview": "store = HostedRuntimeStatusStore(tmp_path / \"runtime_status.json\")",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 15
-    },
-    "load": {
-      "definition": {
-        "file": "src/ai_trading/runtime_status.py",
-        "line": 87,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/allocation_state.py",
-          "line": 19,
-          "preview": "def load(self) -> pd.Series:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/allocator_config_store.py",
-          "line": 14,
-          "preview": "def load(self) -> GlobalAllocatorConfig | None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 43,
-          "preview": "def load(self) -> ProbationState | None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 85,
-          "preview": "state = self.store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 169,
-          "preview": "table.add_row(\"Governor\", runtime.governor_state_store.load().verdict)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 170,
-          "preview": "table.add_row(\"Resilience\", runtime.resilience_state_store.load().mode)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 919,
-          "preview": "reconciled = reconcile_pool(pool.load())",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1154,
-          "preview": "state = CrisisStateStore().load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1174,
-          "preview": "state = GovernorStateStore().load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1231,
-          "preview": "qualification = QualificationStore(qualification_path).load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1236,
-          "preview": "resilience = ResilienceStateStore(resilience_path).load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1237,
-          "preview": "governor = GovernorStateStore(governor_path).load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1327,
-          "preview": "release = ReadinessReleaseStore(release_path).load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1362,
-          "preview": "qualification = QualificationStore(qualification_path).load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1364,
-          "preview": "resilience = resilience_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1367,
-          "preview": "governor = GovernorStateStore(governor_path).load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1374,
-          "preview": "release = release_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1561,
-          "preview": "heartbeat = heartbeat_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1629,
-          "preview": "lease = SupervisorLeaseStore().load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1630,
-          "preview": "maintenance_state = MaintenanceStore().load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/control_plane.py",
-          "line": 33,
-          "preview": "governor = governor_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/control_plane.py",
-          "line": 34,
-          "preview": "crisis = crisis_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/control_plane.py",
-          "line": 37,
-          "preview": "resilience = resilience_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_gate.py",
-          "line": 14,
-          "preview": "crisis_store.load().mode == \"normal\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_gate.py",
-          "line": 15,
-          "preview": "and governor_store.load().verdict == \"TRADE\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_state_store.py",
-          "line": 14,
-          "preview": "def load(self) -> CrisisState:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 107,
-          "preview": "state = state_store.load(starting_cash) if state_store is not None else None",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 109,
-          "preview": "runtime_status_store.load() if runtime_status_store is not None else None",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/drift_retrain_store.py",
-          "line": 22,
-          "preview": "def load(self) -> dict[str, DriftRetrainRecord]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/drift_retrain_store.py",
-          "line": 38,
-          "preview": "record = self.load().get(symbol)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/drift_retrain_store.py",
-          "line": 51,
-          "preview": "records = self.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/economic_meta_store.py",
-          "line": 14,
-          "preview": "def load(self) -> dict[str, EconomicMetaStats]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/economic_meta_store.py",
-          "line": 40,
-          "preview": "data = self.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/evolution_manager.py",
-          "line": 97,
-          "preview": "records = store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_factory.py",
-          "line": 79,
-          "preview": "records = store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_pool.py",
-          "line": 32,
-          "preview": "def load(self) -> dict[str, ExpertRecord]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_pool.py",
-          "line": 48,
-          "preview": "records = self.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_pool_manager.py",
-          "line": 34,
-          "preview": "records = store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 48,
-          "preview": "state = self.state_store.load(starting_cash)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 67,
-          "preview": "current = self.state_store.load(commit.state.cash)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 109,
-          "preview": "return self.status_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/generation_rollback.py",
-          "line": 20,
-          "preview": "records = pool.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/governor_state_store.py",
-          "line": 19,
-          "preview": "def load(self) -> GovernorState:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/health_server.py",
-          "line": 31,
-          "preview": "heartbeat = self.heartbeat_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/maintenance.py",
-          "line": 18,
-          "preview": "def load(self) -> MaintenanceState:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/meta_store.py",
-          "line": 14,
-          "preview": "def load(self) -> dict[str, dict[str, ModelContextStats]]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/meta_store.py",
-          "line": 49,
-          "preview": "data = self.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/meta_store.py",
-          "line": 63,
-          "preview": "data = self.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/metrics.py",
-          "line": 64,
-          "preview": "governor = governor_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/metrics.py",
-          "line": 65,
-          "preview": "supervisor = supervisor_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/metrics.py",
-          "line": 67,
-          "preview": "quarantine_records = quarantine_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/metrics.py",
-          "line": 69,
-          "preview": "resilience = resilience_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/metrics.py",
-          "line": 95,
-          "preview": "heartbeat_stale=int(heartbeat_is_stale(heartbeat_store.load())),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/model_codec.py",
-          "line": 32,
-          "preview": "model = joblib.load(BytesIO(blob.payload))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/model_quarantine.py",
-          "line": 29,
-          "preview": "def load(self) -> dict[str, QuarantineRecord]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/model_quarantine.py",
-          "line": 60,
-          "preview": "records = self.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/model_quarantine.py",
-          "line": 81,
-          "preview": "records = self.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/model_quarantine.py",
-          "line": 88,
-          "preview": "record = self.load().get(version)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/model_quarantine.py",
-          "line": 96,
-          "preview": "records = self.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_evolution.py",
-          "line": 127,
-          "preview": "baseline_records = pool.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_evolution.py",
-          "line": 152,
-          "preview": "candidate_records = pool.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_evolution.py",
-          "line": 171,
-          "preview": "final_records = pool.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 141,
-          "preview": "or self.allocator_config_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 175,
-          "preview": "return joblib.load(path)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 200,
-          "preview": "return joblib.load(path)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 222,
-          "preview": "return joblib.load(path)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 260,
-          "preview": "state = self.state_store.load(self.risk_config.starting_cash)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 261,
-          "preview": "persisted_crisis = self.crisis_state_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 421,
-          "preview": "records = self.quality_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 479,
-          "preview": "pool_records = self.expert_pool_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 532,
-          "preview": "economic_stats = self.economic_meta_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 697,
-          "preview": "current_weights=self.allocation_state_store.load(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 799,
-          "preview": "previous_resilience_state = self.resilience_state_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 883,
-          "preview": "previous_governor = self.governor_state_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_state.py",
-          "line": 31,
-          "preview": "def load(self, starting_cash: float) -> MultiAssetState:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
-          "line": 95,
-          "preview": "governor_state = self.governor_state_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
-          "line": 120,
-          "preview": "state = self.runtime.state_store.load(self.runtime.risk_config.starting_cash)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/persistence.py",
-          "line": 94,
-          "preview": "def load(self, name: str) -> ModelArtifact:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/persistence.py",
-          "line": 98,
-          "preview": "payload = joblib.load(path)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/persistence.py",
-          "line": 105,
-          "preview": "payload = joblib.load(path)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/persistence.py",
-          "line": 109,
-          "preview": "artifact = self.load(name)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/qualification_store.py",
-          "line": 42,
-          "preview": "def load(self) -> QualificationRecord | None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/quality_store.py",
-          "line": 19,
-          "preview": "def load(self) -> dict[str, QualityRecord]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/quality_store.py",
-          "line": 43,
-          "preview": "records = self.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_handshake.py",
-          "line": 35,
-          "preview": "heartbeat = heartbeat_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 199,
-          "preview": "existing = self.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 207,
-          "preview": "def load(self) -> ReadinessRelease | None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/resilience.py",
-          "line": 110,
-          "preview": "def load(self) -> ResilienceState:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_state.py",
-          "line": 24,
-          "preview": "def load(self, starting_cash: float) -> RuntimeState:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_status.py",
-          "line": 87,
-          "preview": "def load(self) -> HostedRuntimeStatus | None:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/scheduler.py",
-          "line": 61,
-          "preview": "governor_state = self.governor_state_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/soak.py",
-          "line": 92,
-          "preview": "governor = runtime.governor_state_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/soak.py",
-          "line": 93,
-          "preview": "crisis = runtime.crisis_state_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 95,
-          "preview": "previous = self.governor_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 131,
-          "preview": "self.resilience_store.load(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 137,
-          "preview": "self.qualification_store.load(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 167,
-          "preview": "resilience = self.resilience_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 195,
-          "preview": "maintenance = self.maintenance_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor_lease.py",
-          "line": 21,
-          "preview": "def load(self) -> SupervisorLease | None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor_lease.py",
-          "line": 37,
-          "preview": "current = self.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor_lease.py",
-          "line": 55,
-          "preview": "current = self.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor_state.py",
-          "line": 22,
-          "preview": "def load(self) -> SupervisorState:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/watchdog.py",
-          "line": 39,
-          "preview": "def load(self) -> Heartbeat | None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/watchdog_enforcer.py",
-          "line": 27,
-          "preview": "heartbeat = heartbeat_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/watchdog_enforcer.py",
-          "line": 42,
-          "preview": "previous = governor_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/worker_monitor.py",
-          "line": 55,
-          "preview": "heartbeat = heartbeat_store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_allocation_state.py",
-          "line": 12,
-          "preview": "loaded = store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_allocator_config_store.py",
-          "line": 20,
-          "preview": "assert store.load() == config",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_champion_probation.py",
-          "line": 53,
-          "preview": "assert store.load() is not None",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_champion_probation.py",
-          "line": 54,
-          "preview": "assert store.load().status == \"passed\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_champion_probation.py",
-          "line": 145,
-          "preview": "record = quarantine.load()[\"v2\"]",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_champion_probation.py",
-          "line": 166,
-          "preview": "assert quarantine.load()[\"v2\"].failures == 0",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_crisis_controller.py",
-          "line": 45,
-          "preview": "assert store.load() == state",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_economic_meta_store.py",
-          "line": 16,
-          "preview": "loaded = store.load()[\"GC=F|river|bull\"]",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_expert_factory.py",
-          "line": 49,
-          "preview": "assert len(store.load()) > 0",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_generation_rollback.py",
-          "line": 24,
-          "preview": "records = pool.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_governor_state_store.py",
-          "line": 10,
-          "preview": "assert store.load() == state",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_maintenance.py",
-          "line": 10,
-          "preview": "assert store.load() == state",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_runtime.py",
-          "line": 106,
-          "preview": "assert drift_store.load() == {}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_state.py",
-          "line": 20,
-          "preview": "loaded = store.load(100_000.0)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 120
-    },
-    "save": {
-      "definition": {
-        "file": "src/ai_trading/runtime_status.py",
-        "line": 92,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/allocation_state.py",
-          "line": 25,
-          "preview": "def save(self, weights: pd.Series) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/allocator_config_store.py",
-          "line": 20,
-          "preview": "def save(self, config: GlobalAllocatorConfig) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 48,
-          "preview": "def save(self, state: ProbationState) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 76,
-          "preview": "self.store.save(state)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 129,
-          "preview": "self.store.save(updated)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 146,
-          "preview": "self.store.save(passed)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 173,
-          "preview": "self.store.save(failed)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 219,
-          "preview": "save_experiment: bool = typer.Option(True, \"--save/--no-save\"),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 920,
-          "preview": "pool.save(reconciled)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1136,
-          "preview": "AllocatorConfigStore().save(result.best_config)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1317,
-          "preview": "ReadinessReleaseStore(release_path).save(release)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1620,
-          "preview": "store.save(MaintenanceState(enabled=enabled, reason=reason))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1800,
-          "preview": "QualificationStore(Path(workspace) / \"qualification.json\").save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/continuous.py",
-          "line": 101,
-          "preview": "store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_state_store.py",
-          "line": 20,
-          "preview": "def save(self, state: CrisisState) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/economic_meta_store.py",
-          "line": 20,
-          "preview": "def save(self, data: dict[str, EconomicMetaStats]) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/economic_meta_store.py",
-          "line": 52,
-          "preview": "self.save(data)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/evolution_manager.py",
-          "line": 197,
-          "preview": "store.save(reconciled)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_factory.py",
-          "line": 170,
-          "preview": "store.save(reconciled)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_pool.py",
-          "line": 38,
-          "preview": "def save(self, records: dict[str, ExpertRecord]) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_pool.py",
-          "line": 50,
-          "preview": "self.save(records)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_pool_manager.py",
-          "line": 91,
-          "preview": "store.save(reconciled)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 74,
-          "preview": "self.state_store.save(commit.state)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 105,
-          "preview": "self.status_store.save(status)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/generation_rollback.py",
-          "line": 39,
-          "preview": "pool.save(updated)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/governor_state_store.py",
-          "line": 25,
-          "preview": "def save(self, state: GovernorState) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/maintenance.py",
-          "line": 23,
-          "preview": "def save(self, state: MaintenanceState) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/meta_store.py",
-          "line": 26,
-          "preview": "def save(self, data: dict[str, dict[str, ModelContextStats]]) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/meta_store.py",
-          "line": 59,
-          "preview": "self.save(data)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/model_quarantine.py",
-          "line": 38,
-          "preview": "def save(self, records: dict[str, QuarantineRecord]) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/model_quarantine.py",
-          "line": 77,
-          "preview": "self.save(records)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/model_quarantine.py",
-          "line": 84,
-          "preview": "self.save(records)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/model_quarantine.py",
-          "line": 99,
-          "preview": "self.save(records)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 717,
-          "preview": "self.allocation_state_store.save(global_allocation_report.weights)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 739,
-          "preview": "self.crisis_state_store.save(crisis_decision.state)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 837,
-          "preview": "self.resilience_state_store.save(persisted_resilience_state)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 889,
-          "preview": "self.governor_state_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 990,
-          "preview": "self.state_store.save(state)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_state.py",
-          "line": 45,
-          "preview": "def save(self, state: MultiAssetState) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
-          "line": 122,
-          "preview": "self.runtime.state_store.save(state)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/persistence.py",
-          "line": 87,
-          "preview": "def save(self, name: str, model: object, metadata: dict[str, Any] | None = None) -> ModelArtifact:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/qualification_store.py",
-          "line": 50,
-          "preview": "def save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/quality_store.py",
-          "line": 25,
-          "preview": "def save(self, records: dict[str, QualityRecord]) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/quality_store.py",
-          "line": 51,
-          "preview": "self.save(records)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 196,
-          "preview": "def save(self, release: ReadinessRelease) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/resilience.py",
-          "line": 115,
-          "preview": "def save(self, state: ResilienceState) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_state.py",
-          "line": 35,
-          "preview": "def save(self, state: RuntimeState) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_status.py",
-          "line": 92,
-          "preview": "def save(self, status: HostedRuntimeStatus) -> None:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/startup_check.py",
-          "line": 114,
-          "preview": "governor_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 96,
-          "preview": "self.governor_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 119,
-          "preview": "self.state_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 158,
-          "preview": "self.state_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 169,
-          "preview": "self.state_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 182,
-          "preview": "self.state_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 197,
-          "preview": "self.state_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 212,
-          "preview": "self.state_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 236,
-          "preview": "self.state_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 262,
-          "preview": "self.state_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 291,
-          "preview": "self.state_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 312,
-          "preview": "self.state_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 321,
-          "preview": "self.state_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor_state.py",
-          "line": 27,
-          "preview": "def save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/watchdog_enforcer.py",
-          "line": 43,
-          "preview": "governor_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_active_model.py",
-          "line": 8,
-          "preview": "store.save(\"v1\", {\"id\": 1})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_active_model.py",
-          "line": 9,
-          "preview": "store.save(\"v2\", {\"id\": 2})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_allocation_state.py",
-          "line": 11,
-          "preview": "store.save(weights)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_allocator_config_store.py",
-          "line": 19,
-          "preview": "store.save(config)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_control_plane.py",
-          "line": 14,
-          "preview": "governor.save(GovernorState(verdict=\"HALT\", reason=\"bad data\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_control_plane.py",
-          "line": 15,
-          "preview": "crisis.save(CrisisState(mode=\"defensive\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_control_plane.py",
-          "line": 32,
-          "preview": "governor.save(GovernorState(verdict=\"TRADE\", reason=\"ok\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_control_plane.py",
-          "line": 33,
-          "preview": "crisis.save(CrisisState(mode=\"normal\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_control_plane.py",
-          "line": 59,
-          "preview": "governor.save(GovernorState(verdict=\"TRADE\", reason=\"ok\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_control_plane.py",
-          "line": 60,
-          "preview": "crisis.save(CrisisState(mode=\"normal\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_control_plane.py",
-          "line": 61,
-          "preview": "resilience.save(ResilienceState(mode=\"HALT\", reason=\"critical\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_crisis_controller.py",
-          "line": 44,
-          "preview": "store.save(state)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_crisis_gate.py",
-          "line": 14,
-          "preview": "crisis.save(CrisisState(mode=\"defensive\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_crisis_gate.py",
-          "line": 21,
-          "preview": "governor.save(GovernorState(verdict=\"FREEZE\", reason=\"risk gate failed\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_engine_status.py",
-          "line": 15,
-          "preview": "status_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 63,
-          "preview": "status_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 87,
-          "preview": "status_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 109,
-          "preview": "status_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_generation_rollback.py",
-          "line": 14,
-          "preview": "pool.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_governor_state_store.py",
-          "line": 9,
-          "preview": "store.save(state)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_maintenance.py",
-          "line": 9,
-          "preview": "store.save(state)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_metrics.py",
-          "line": 14,
-          "preview": "governor.save(GovernorState(verdict=\"HALT\", reason=\"x\", consecutive_halts=2))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_metrics.py",
-          "line": 16,
-          "preview": "crisis.save(CrisisState(mode=\"defensive\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_evolution.py",
-          "line": 34,
-          "preview": "pool.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_scheduler.py",
-          "line": 34,
-          "preview": "governor.save(GovernorState(verdict=\"HALT\", reason=\"critical\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_state.py",
-          "line": 19,
-          "preview": "store.save(state)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle.py",
-          "line": 140,
-          "preview": "backend.state_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_materialized_fresh.py",
-          "line": 32,
-          "preview": "backend.state_store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_persistence.py",
-          "line": 9,
-          "preview": "saved = store.save(\"champion\", model, {\"version\": \"v1\"})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_qualification_store.py",
-          "line": 23,
-          "preview": "saved = store.save(result, qualification)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_qualification_store.py",
-          "line": 61,
-          "preview": "saved = store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness_release.py",
-          "line": 80,
-          "preview": "store.save(release)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness_release.py",
-          "line": 293,
-          "preview": "store.save(first)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness_release.py",
-          "line": 294,
-          "preview": "store.save(first)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness_release.py",
-          "line": 297,
-          "preview": "store.save(second)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_resilience.py",
-          "line": 79,
-          "preview": "store.save(state)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_rollback_model.py",
-          "line": 27,
-          "preview": "store.save(version, {\"id\": model_id})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_state.py",
-          "line": 18,
-          "preview": "store.save(state)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_status.py",
-          "line": 24,
-          "preview": "store.save(status)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_governor.py",
-          "line": 17,
-          "preview": "store.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_supervisor.py",
-          "line": 16,
-          "preview": "maintenance.save(MaintenanceState(enabled=True, reason=\"upgrade\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_supervisor.py",
-          "line": 37,
-          "preview": "resilience.save(ResilienceState(mode=\"HALT\", reason=\"critical\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_supervisor.py",
-          "line": 58,
-          "preview": "resilience.save(ResilienceState(mode=\"COOLDOWN\", reason=\"stabilizing\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_supervisor.py",
-          "line": 99,
-          "preview": "resilience.save(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_supervisor_state.py",
-          "line": 8,
-          "preview": "state = store.save(",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 108
-    },
-    "OverviewPersistence": {
-      "definition": {
-        "file": "tests/test_dashboard_overview.py",
-        "line": 22,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 22,
-          "preview": "class OverviewPersistence:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 122,
-          "preview": "def _start_overview_dashboard(persistence: OverviewPersistence) -> int:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 151,
-          "preview": "payload = build_operational_overview(OverviewPersistence(), RUNTIME_KEY)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 174,
-          "preview": "OverviewPersistence(stale=True),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 184,
-          "preview": "OverviewPersistence(with_model=False),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 198,
-          "preview": "persistence = OverviewPersistence()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 249,
-          "preview": "port = _start_overview_dashboard(OverviewPersistence())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 266,
-          "preview": "persistence=OverviewPersistence(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 280,
-          "preview": "persistence=OverviewPersistence(with_model=False, stale=True),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 288,
-          "preview": "persistence = OverviewPersistence()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 315,
-          "preview": "OverviewPersistence(cycle_errors=2),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 326,
-          "preview": "persistence=OverviewPersistence(cycle_errors=2),",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 12
-    },
     "load_runtime": {
       "definition": {
-        "file": "tests/test_dashboard_overview.py",
-        "line": 70,
+        "file": "tests/test_dashboard_persistence.py",
+        "line": 60,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 76,
+          "line": 115,
           "preview": "persisted = persistence.load_runtime(runtime_key, starting_cash)",
           "definition_candidate": false
         },
@@ -3588,7 +1093,7 @@
           "file": "tests/test_dashboard_overview.py",
           "line": 70,
           "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tests/test_dashboard_overview.py",
@@ -3600,7 +1105,7 @@
           "file": "tests/test_dashboard_persistence.py",
           "line": 60,
           "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "tests/test_dashboard_persistence.py",
@@ -3757,15 +1262,15 @@
     },
     "list_trades": {
       "definition": {
-        "file": "tests/test_dashboard_overview.py",
-        "line": 75,
+        "file": "tests/test_dashboard_persistence.py",
+        "line": 65,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 75,
+          "line": 114,
           "preview": "recent = persistence.list_trades(runtime_key, limit=200)",
           "definition_candidate": false
         },
@@ -3791,13 +1296,13 @@
           "file": "tests/test_dashboard_overview.py",
           "line": 75,
           "preview": "def list_trades(self, runtime_key: str | None = None, *, limit: int | None = None):",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tests/test_dashboard_persistence.py",
           "line": 65,
           "preview": "def list_trades(self, runtime_key: str | None = None, *, limit: int | None = None):",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "tests/test_dashboard_persistence.py",
@@ -3832,9 +1337,74 @@
       ],
       "occurrence_count": 11
     },
+    "load_trade_performance": {
+      "definition": {
+        "file": "tests/test_dashboard_persistence.py",
+        "line": 70,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 121,
+          "preview": "load_performance = getattr(persistence, \"load_trade_performance\", None)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 95,
+          "preview": "def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/persistence.py",
+          "line": 63,
+          "preview": "def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics: ...",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 570,
+          "preview": "def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 83,
+          "preview": "_assert_metrics(backend.load_trade_performance(RUNTIME_KEY))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 102,
+          "preview": "metrics = backend.load_trade_performance(RUNTIME_KEY)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 132,
+          "preview": "_assert_metrics(backend.load_trade_performance(RUNTIME_KEY))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 140,
+          "preview": "_assert_metrics(backend.load_trade_performance(RUNTIME_KEY))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 70,
+          "preview": "def load_trade_performance(self, runtime_key: str):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 9
+    },
     "list_burnin_snapshots": {
       "definition": {
-        "file": "tests/test_dashboard_overview.py",
+        "file": "tests/test_dashboard_persistence.py",
         "line": 80,
         "kind": "function",
         "language": "python"
@@ -3842,7 +1412,7 @@
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 89,
+          "line": 128,
           "preview": "load_burnin = getattr(persistence, \"list_burnin_snapshots\", None)",
           "definition_candidate": false
         },
@@ -3874,13 +1444,13 @@
           "file": "tests/test_dashboard_overview.py",
           "line": 80,
           "preview": "def list_burnin_snapshots(self, runtime_key: str):",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tests/test_dashboard_persistence.py",
           "line": 80,
           "preview": "def list_burnin_snapshots(self, runtime_key: str):",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "tests/test_durable_burnin_persistence.py",
@@ -3905,7 +1475,7 @@
     },
     "load_runtime_status": {
       "definition": {
-        "file": "tests/test_dashboard_overview.py",
+        "file": "tests/test_dashboard_persistence.py",
         "line": 101,
         "kind": "function",
         "language": "python"
@@ -3913,13 +1483,13 @@
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 81,
+          "line": 120,
           "preview": "runtime_status = persistence.load_runtime_status(runtime_key)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 397,
+          "line": 526,
           "preview": "return _public_runtime_snapshot(backend.load_runtime_status(runtime_key))",
           "definition_candidate": false
         },
@@ -3963,7 +1533,7 @@
           "file": "tests/test_dashboard_overview.py",
           "line": 101,
           "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tests/test_dashboard_overview.py",
@@ -3975,7 +1545,7 @@
           "file": "tests/test_dashboard_persistence.py",
           "line": 101,
           "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "tests/test_dashboard_persistence.py",
@@ -4022,33 +1592,74 @@
       ],
       "occurrence_count": 18
     },
-    "FailingOverviewPersistence": {
+    "FailingPersistence": {
       "definition": {
-        "file": "tests/test_dashboard_overview.py",
+        "file": "tests/test_dashboard_persistence.py",
         "line": 106,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_dashboard_overview.py",
+          "file": "tests/test_dashboard_persistence.py",
           "line": 106,
-          "preview": "class FailingOverviewPersistence:",
+          "preview": "class FailingPersistence:",
           "definition_candidate": true
         },
         {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 220,
-          "preview": "payload = build_operational_overview(FailingOverviewPersistence(), RUNTIME_KEY)",
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 141,
+          "preview": "\"persistence\": FailingPersistence(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 195,
+          "preview": "persistence=FailingPersistence(),",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 2
+      "occurrence_count": 3
+    },
+    "_fail": {
+      "definition": {
+        "file": "tests/test_dashboard_persistence.py",
+        "line": 107,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 107,
+          "preview": "def _fail(self):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 112,
+          "preview": "return self._fail()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 116,
+          "preview": "return self._fail()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 120,
+          "preview": "return self._fail()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
     },
     "_free_port": {
       "definition": {
-        "file": "tests/test_dashboard_overview.py",
-        "line": 116,
+        "file": "tests/test_dashboard_persistence.py",
+        "line": 123,
         "kind": "function",
         "language": "python"
       },
@@ -4069,7 +1680,7 @@
           "file": "tests/test_dashboard_overview.py",
           "line": 116,
           "preview": "def _free_port() -> int:",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tests/test_dashboard_overview.py",
@@ -4081,7 +1692,7 @@
           "file": "tests/test_dashboard_persistence.py",
           "line": 123,
           "preview": "def _free_port() -> int:",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "tests/test_dashboard_persistence.py",
@@ -4104,837 +1715,151 @@
       ],
       "occurrence_count": 8
     },
-    "_start_overview_dashboard": {
+    "_get": {
       "definition": {
-        "file": "tests/test_dashboard_overview.py",
-        "line": 122,
+        "file": "tests/test_dashboard_persistence.py",
+        "line": 129,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 122,
-          "preview": "def _start_overview_dashboard(persistence: OverviewPersistence) -> int:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 249,
-          "preview": "port = _start_overview_dashboard(OverviewPersistence())",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "test_operational_overview_exposes_model_and_runtime_metadata": {
-      "definition": {
-        "file": "tests/test_dashboard_overview.py",
-        "line": 150,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 150,
-          "preview": "def test_operational_overview_exposes_model_and_runtime_metadata() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_operational_overview_flags_stale_runtime": {
-      "definition": {
-        "file": "tests/test_dashboard_overview.py",
-        "line": 172,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 172,
-          "preview": "def test_operational_overview_flags_stale_runtime() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_operational_overview_flags_missing_model_after_processing": {
-      "definition": {
-        "file": "tests/test_dashboard_overview.py",
-        "line": 182,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 182,
-          "preview": "def test_operational_overview_flags_missing_model_after_processing() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_operational_overview_flags_inconsistent_runtime": {
-      "definition": {
-        "file": "tests/test_dashboard_overview.py",
-        "line": 197,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 197,
-          "preview": "def test_operational_overview_flags_inconsistent_runtime() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_operational_overview_storage_failure_is_sanitized": {
-      "definition": {
-        "file": "tests/test_dashboard_overview.py",
-        "line": 219,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 219,
-          "preview": "def test_operational_overview_storage_failure_is_sanitized() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_dashboard_exposes_operational_overview_endpoint": {
-      "definition": {
-        "file": "tests/test_dashboard_overview.py",
-        "line": 248,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 248,
-          "preview": "def test_dashboard_exposes_operational_overview_endpoint() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_dashboard_renders_model_and_revision_metadata": {
-      "definition": {
-        "file": "tests/test_dashboard_overview.py",
-        "line": 263,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 263,
-          "preview": "def test_dashboard_renders_model_and_revision_metadata(tmp_path) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_dashboard_renders_operational_alerts": {
-      "definition": {
-        "file": "tests/test_dashboard_overview.py",
-        "line": 277,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 277,
-          "preview": "def test_dashboard_renders_operational_alerts(tmp_path) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_dashboard_renders_inconsistent_runtime_alert": {
-      "definition": {
-        "file": "tests/test_dashboard_overview.py",
-        "line": 287,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 287,
-          "preview": "def test_dashboard_renders_inconsistent_runtime_alert(tmp_path) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_operational_overview_flags_cycle_reliability_degradation": {
-      "definition": {
-        "file": "tests/test_dashboard_overview.py",
-        "line": 313,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 313,
-          "preview": "def test_operational_overview_flags_cycle_reliability_degradation() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_dashboard_renders_cycle_reliability_alert": {
-      "definition": {
-        "file": "tests/test_dashboard_overview.py",
-        "line": 323,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 323,
-          "preview": "def test_dashboard_renders_cycle_reliability_alert(tmp_path) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "FakePersistence": {
-      "definition": {
-        "file": "tests/test_paper_cycle_service.py",
-        "line": 16,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_hosted_runtime.py",
-          "line": 64,
-          "preview": "class FakePersistence:",
+          "file": "tests/test_dashboard_health.py",
+          "line": 22,
+          "preview": "def _get(url: str) -> tuple[int, str, str]:",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_hosted_runtime.py",
-          "line": 106,
-          "preview": "persistence=FakePersistence(),",
+          "file": "tests/test_dashboard_health.py",
+          "line": 51,
+          "preview": "status, _, _ = _get(f\"http://127.0.0.1:{port}/\")",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 16,
-          "preview": "class FakePersistence:",
+          "file": "tests/test_dashboard_health.py",
+          "line": 97,
+          "preview": "status, content_type, body = _get(f\"http://127.0.0.1:{port}/api/status\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 119,
+          "preview": "status, content_type, body = _get(f\"http://127.0.0.1:{port}/healthz\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 129,
+          "preview": "def _get(url: str) -> tuple[int, str]:",
           "definition_candidate": true
         },
         {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 46,
-          "preview": "def __init__(self, persistence: FakePersistence) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 73,
-          "preview": "backend = FakePersistence()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 113,
-          "preview": "backend = FakePersistence()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 141,
-          "preview": "backend = FakePersistence()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 164,
-          "preview": "backend = FakePersistence()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 195,
-          "preview": "backend = FakePersistence(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 220,
-          "preview": "backend = FakePersistence(",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 10
-    },
-    "save_runtime_status": {
-      "definition": {
-        "file": "tests/test_paper_cycle_service.py",
-        "line": 31,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 103,
-          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/hosted_runtime.py",
-          "line": 85,
-          "preview": "backend.save_runtime_status(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/hosted_runtime.py",
-          "line": 101,
-          "preview": "backend.save_runtime_status(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/hosted_runtime.py",
+          "file": "tests/test_dashboard_persistence.py",
           "line": 154,
-          "preview": "backend.save_runtime_status(",
+          "preview": "status, _ = _get(f\"http://127.0.0.1:{port}/healthz\")",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 68,
-          "preview": "backend.save_runtime_status(",
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 208,
+          "preview": "status_code, status_body = _get(f\"http://127.0.0.1:{port}/api/status\")",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 95,
-          "preview": "backend.save_runtime_status(",
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 209,
+          "preview": "health_code, health_body = _get(f\"http://127.0.0.1:{port}/healthz\")",
           "definition_candidate": false
-        },
+        }
+      ],
+      "occurrence_count": 8
+    },
+    "_start_failure_dashboard": {
+      "definition": {
+        "file": "tests/test_dashboard_persistence.py",
+        "line": 134,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
         {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 115,
-          "preview": "backend.save_runtime_status(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/persistence.py",
-          "line": 67,
-          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None: ...",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/postgres_persistence.py",
-          "line": 634,
-          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_persistence.py",
-          "line": 18,
-          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_runtime.py",
-          "line": 68,
-          "preview": "def save_runtime_status(self, runtime_key, status) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 31,
-          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 134,
+          "preview": "def _start_failure_dashboard() -> int:",
           "definition_candidate": true
         },
         {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 120,
-          "preview": "backend.save_runtime_status = broken_save",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 165,
-          "preview": "original_save = backend.save_runtime_status",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 175,
-          "preview": "backend.save_runtime_status = flaky_save",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_postgres_persistence.py",
+          "file": "tests/test_dashboard_persistence.py",
           "line": 206,
-          "preview": "backend.save_runtime_status(RUNTIME_KEY, status)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_persistence.py",
-          "line": 68,
-          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
+          "preview": "port = _start_failure_dashboard()",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 17
+      "occurrence_count": 2
     },
-    "FakeRunner": {
+    "test_dashboard_uses_durable_state_trades_and_status": {
       "definition": {
-        "file": "tests/test_paper_cycle_service.py",
-        "line": 45,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 45,
-          "preview": "class FakeRunner:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 77,
-          "preview": "runner_factory=lambda persistence: FakeRunner(persistence),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 126,
-          "preview": "return FakeRunner(backend)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 210,
-          "preview": "runner_factory=lambda persistence: FakeRunner(persistence),",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "run_once": {
-      "definition": {
-        "file": "tests/test_paper_cycle_service.py",
-        "line": 49,
+        "file": "tests/test_dashboard_persistence.py",
+        "line": 162,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/paper_cycle.py",
-          "line": 68,
-          "preview": "def run_once(",
-          "definition_candidate": false
-        },
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 162,
+          "preview": "def test_dashboard_uses_durable_state_trades_and_status(tmp_path) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_dashboard_storage_failure_is_sanitized": {
+      "definition": {
+        "file": "tests/test_dashboard_persistence.py",
+        "line": 192,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
         {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 87,
-          "preview": "result = runner_factory(backend).run_once(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle.py",
-          "line": 77,
-          "preview": "result = runner.run_once(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle.py",
-          "line": 99,
-          "preview": "result = runner.run_once(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle.py",
-          "line": 125,
-          "preview": "result = runner.run_once(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle.py",
-          "line": 158,
-          "preview": "runner.run_once(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle.py",
-          "line": 173,
-          "preview": "result = runner.run_once(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle.py",
+          "file": "tests/test_dashboard_persistence.py",
           "line": 192,
-          "preview": "runner.run_once(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle.py",
-          "line": 250,
-          "preview": "result = runner.run_once(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_materialized_fresh.py",
-          "line": 65,
-          "preview": "result = runner.run_once(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_postgres.py",
-          "line": 64,
-          "preview": "first_result = first_runner.run_once(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_postgres.py",
-          "line": 86,
-          "preview": "second_result = second_runner.run_once(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 49,
-          "preview": "def run_once(",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 144,
-          "preview": "def run_once(self, **kwargs):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 178,
-          "preview": "def run_once(self, **kwargs):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 233,
-          "preview": "def run_once(self, **kwargs):",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 16
-    },
-    "test_service_persists_starting_and_running_status": {
-      "definition": {
-        "file": "tests/test_paper_cycle_service.py",
-        "line": 72,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 72,
-          "preview": "def test_service_persists_starting_and_running_status() -> None:",
+          "preview": "def test_dashboard_storage_failure_is_sanitized(tmp_path) -> None:",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_persistence_factory_failure_is_sanitized": {
+    "test_status_endpoints_fail_closed_without_leaking_storage_details": {
       "definition": {
-        "file": "tests/test_paper_cycle_service.py",
-        "line": 93,
+        "file": "tests/test_dashboard_persistence.py",
+        "line": 205,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 93,
-          "preview": "def test_persistence_factory_failure_is_sanitized() -> None:",
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 205,
+          "preview": "def test_status_endpoints_fail_closed_without_leaking_storage_details() -> None:",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "broken_factory": {
+    "test_dashboard_v2_groups_critical_sections_and_renders_equity_chart": {
       "definition": {
-        "file": "tests/test_paper_cycle_service.py",
-        "line": 94,
+        "file": "tests/test_dashboard_persistence.py",
+        "line": 234,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 94,
-          "preview": "def broken_factory():",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 100,
-          "preview": "persistence_factory=broken_factory,",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "test_starting_status_failure_never_runs_worker": {
-      "definition": {
-        "file": "tests/test_paper_cycle_service.py",
-        "line": 112,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 112,
-          "preview": "def test_starting_status_failure_never_runs_worker() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "broken_save": {
-      "definition": {
-        "file": "tests/test_paper_cycle_service.py",
-        "line": 116,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 116,
-          "preview": "def broken_save(runtime_key, status):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 120,
-          "preview": "backend.save_runtime_status = broken_save",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "runner_factory": {
-      "definition": {
-        "file": "tests/test_paper_cycle_service.py",
-        "line": 122,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 43,
-          "preview": "runner_factory: Callable[[PaperPersistence], PaperCycleRunner] = _default_runner_factory,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 87,
-          "preview": "result = runner_factory(backend).run_once(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 77,
-          "preview": "runner_factory=lambda persistence: FakeRunner(persistence),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 122,
-          "preview": "def runner_factory(persistence):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 132,
-          "preview": "runner_factory=runner_factory,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 152,
-          "preview": "runner_factory=lambda persistence: BrokenRunner(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 186,
-          "preview": "runner_factory=lambda persistence: BrokenRunner(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 210,
-          "preview": "runner_factory=lambda persistence: FakeRunner(persistence),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 241,
-          "preview": "runner_factory=lambda persistence: BrokenRunner(),",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 9
-    },
-    "test_worker_failure_writes_sanitized_error_status": {
-      "definition": {
-        "file": "tests/test_paper_cycle_service.py",
-        "line": 140,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 140,
-          "preview": "def test_worker_failure_writes_sanitized_error_status() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "BrokenRunner": {
-      "definition": {
-        "file": "tests/test_paper_cycle_service.py",
-        "line": 143,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 143,
-          "preview": "class BrokenRunner:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 152,
-          "preview": "runner_factory=lambda persistence: BrokenRunner(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 177,
-          "preview": "class BrokenRunner:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 186,
-          "preview": "runner_factory=lambda persistence: BrokenRunner(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 232,
-          "preview": "class BrokenRunner:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 241,
-          "preview": "runner_factory=lambda persistence: BrokenRunner(),",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 6
-    },
-    "test_error_status_failure_does_not_mask_worker_failure": {
-      "definition": {
-        "file": "tests/test_paper_cycle_service.py",
-        "line": 163,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 163,
-          "preview": "def test_error_status_failure_does_not_mask_worker_failure() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "flaky_save": {
-      "definition": {
-        "file": "tests/test_paper_cycle_service.py",
-        "line": 168,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 168,
-          "preview": "def flaky_save(runtime_key, status):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 175,
-          "preview": "backend.save_runtime_status = flaky_save",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "test_success_resets_consecutive_cycle_errors": {
-      "definition": {
-        "file": "tests/test_paper_cycle_service.py",
-        "line": 194,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 194,
-          "preview": "def test_success_resets_consecutive_cycle_errors() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_failure_increments_consecutive_cycle_errors": {
-      "definition": {
-        "file": "tests/test_paper_cycle_service.py",
-        "line": 219,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 219,
-          "preview": "def test_failure_increments_consecutive_cycle_errors() -> None:",
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 234,
+          "preview": "def test_dashboard_v2_groups_critical_sections_and_renders_equity_chart(tmp_path) -> None:",
           "definition_candidate": true
         }
       ],
