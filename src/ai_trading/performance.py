@@ -26,7 +26,19 @@ def _safe_ratio(numerator: float, denominator: float) -> float:
     return float(numerator / denominator)
 
 
-def compute_metrics(equity: pd.Series, periods_per_year: int = 252) -> PerformanceMetrics:
+def infer_periods_per_year(index: pd.Index) -> float:
+    timestamps = pd.to_datetime(index, utc=True, errors="coerce")
+    timestamps = timestamps[~timestamps.isna()]
+    if len(timestamps) < 2:
+        raise ValueError("Need at least two valid timestamps")
+    elapsed_seconds = float((timestamps[-1] - timestamps[0]).total_seconds())
+    if elapsed_seconds <= 0:
+        raise ValueError("Timestamps must span positive time")
+    elapsed_years = elapsed_seconds / (365.25 * 24 * 60 * 60)
+    return float((len(timestamps) - 1) / elapsed_years)
+
+
+def compute_metrics(equity: pd.Series, periods_per_year: float = 252.0) -> PerformanceMetrics:
     clean = equity.astype(float).dropna()
     if len(clean) < 2:
         raise ValueError("Need at least two equity observations")
@@ -34,6 +46,8 @@ def compute_metrics(equity: pd.Series, periods_per_year: int = 252) -> Performan
     returns = clean.pct_change().dropna()
     total_return = float(clean.iloc[-1] / clean.iloc[0] - 1.0)
 
+    if periods_per_year <= 0 or not np.isfinite(periods_per_year):
+        raise ValueError("periods_per_year must be positive and finite")
     years = max((len(returns) / periods_per_year), 1.0 / periods_per_year)
     if clean.iloc[0] > 0 and clean.iloc[-1] > 0:
         annualized_return = float((clean.iloc[-1] / clean.iloc[0]) ** (1.0 / years) - 1.0)

@@ -286,5 +286,8 @@ def test_dashboard_quant_evidence_is_explicit_and_non_misleading(tmp_path) -> No
     assert '<small>Regime coverage</small><strong>2 / 2</strong>' in page
     assert "Observed regimes: bull_normal_vol · sideways_normal_vol." in page
     assert "not yet persisted" not in page
+    assert "Sharpe" in page
+    assert "Sortino" in page
     assert "Full readiness" in page
-    assert "pending interval-aware annualization" in page
+    assert "Readiness checks" in page
+    assert "pending interval-aware annualization" not in page

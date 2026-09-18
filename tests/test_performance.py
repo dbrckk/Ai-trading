@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from ai_trading.performance import buy_and_hold_equity, compute_metrics
+from ai_trading.performance import buy_and_hold_equity, compute_metrics, infer_periods_per_year
 
 
 def test_metrics_for_monotonic_equity() -> None:
@@ -20,3 +20,9 @@ def test_buy_and_hold_is_normalized_to_starting_equity() -> None:
 
 
 import pytest
+
+
+def test_infer_periods_per_year_from_elapsed_timestamps() -> None:
+    index = pd.date_range("2026-01-01", periods=13, freq="30D", tz="UTC")
+    periods = infer_periods_per_year(index)
+    assert periods == pytest.approx(12.175, rel=0.02)

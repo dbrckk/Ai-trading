@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from .performance import PerformanceMetrics, compute_metrics
+from .performance import PerformanceMetrics, compute_metrics, infer_periods_per_year
 from .readiness import ReadinessReport, evaluate_readiness
 
 
@@ -28,8 +28,18 @@ def calculate_burnin_metrics(
     values = tuple(snapshots)
     if len(values) < 2:
         raise ValueError("Need at least two burn-in snapshots")
-    equity = pd.Series([snapshot.equity for snapshot in values], dtype=float)
-    return compute_metrics(equity)
+    timestamps = pd.to_datetime(
+        [snapshot.timestamp_utc for snapshot in values],
+        utc=True,
+        errors="raise",
+    )
+    equity = pd.Series(
+        [snapshot.equity for snapshot in values],
+        index=timestamps,
+        dtype=float,
+    )
+    periods_per_year = infer_periods_per_year(equity.index)
+    return compute_metrics(equity, periods_per_year=periods_per_year)
 
 
 class BurnInTracker:

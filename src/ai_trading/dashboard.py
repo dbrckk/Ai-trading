@@ -24,7 +24,7 @@ from .paper_cycle_service import (
 from .performance_metrics import calculate_performance_metrics
 from .persistence import PaperPersistence
 from .persistence_factory import build_paper_persistence
-from .readiness import ReadinessPolicy
+from .readiness import ReadinessPolicy, evaluate_readiness
 from .runtime_state import RuntimeStateStore
 from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore, runtime_status_snapshot
 from .scheduler_endpoint import handle_scheduler_request
@@ -346,7 +346,8 @@ def render_dashboard(
         if bootstrap_probability is None
         else f"{bootstrap_probability:.1%}"
     )
-    bootstrap_threshold = ReadinessPolicy().min_positive_bootstrap_probability
+    readiness_policy = ReadinessPolicy()
+    bootstrap_threshold = readiness_policy.min_positive_bootstrap_probability
     scheduler_reliable = (
         runtime_status is not None
         and not storage_error
@@ -359,8 +360,36 @@ def render_dashboard(
     )
     regimes_covered = len(regimes)
     regimes_covered_display = "-" if storage_error else str(regimes_covered)
-    regimes_threshold = ReadinessPolicy().min_regimes_covered
+    regimes_threshold = readiness_policy.min_regimes_covered
     regime_names_display = "none" if not regimes else " · ".join(regimes)
+    readiness_report = None
+    if (
+        burnin_metrics is not None
+        and bootstrap_probability is not None
+        and burnin_bars is not None
+        and runtime_status is not None
+        and not storage_error
+    ):
+        readiness_report = evaluate_readiness(
+            metrics=burnin_metrics,
+            burn_in_bars=burnin_bars,
+            bootstrap_probability_positive=bootstrap_probability,
+            regimes_covered=regimes_covered,
+            scheduler_errors=runtime_status.consecutive_cycle_errors,
+            policy=readiness_policy,
+        )
+    readiness_display = (
+        "-"
+        if readiness_report is None
+        else ("READY" if readiness_report.ready else "NOT READY")
+    )
+    readiness_checks_display = (
+        "-"
+        if readiness_report is None
+        else f"{readiness_report.checks_passed} / {readiness_report.checks_total}"
+    )
+    sharpe_display = "-" if burnin_metrics is None else f"{burnin_metrics.sharpe:.2f}"
+    sortino_display = "-" if burnin_metrics is None else f"{burnin_metrics.sortino:.2f}"
     status_class = (
         "status-ok"
         if engine_status == "RUNNING" and not operational_alerts
@@ -564,10 +593,13 @@ tbody tr:hover{{background:rgba(113,167,255,.045)}}
 <div class="metric"><small>Bootstrap threshold</small><strong>{bootstrap_threshold:.0%}</strong></div>
 <div class="metric"><small>Scheduler reliability</small><strong>{scheduler_reliability_display}</strong></div>
 <div class="metric"><small>Regime coverage</small><strong>{regimes_covered_display} / {regimes_threshold}</strong></div>
-<div class="metric"><small>Full readiness</small><strong>pending interval-aware annualization</strong></div>
+<div class="metric"><small>Sharpe</small><strong>{sharpe_display}</strong></div>
+<div class="metric"><small>Sortino</small><strong>{sortino_display}</strong></div>
+<div class="metric primary"><small>Full readiness</small><strong>{readiness_display}</strong></div>
+<div class="metric"><small>Readiness checks</small><strong>{readiness_checks_display}</strong></div>
 </div>
 <small class="runtime-reason">Observed regimes: {html.escape(regime_names_display)}.</small>
-<small class="runtime-reason">Bootstrap is calculated from durable equity snapshots and cached by equity history. Full readiness remains intentionally withheld until interval-aware Sharpe/Sortino are scientifically valid.</small>
+<small class="runtime-reason">Sharpe and Sortino are annualized from the actual elapsed time covered by durable burn-in timestamps, not a fixed 252-period assumption.</small>
 </section>
 
 <section class="section" id="trades">
