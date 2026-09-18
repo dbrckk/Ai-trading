@@ -240,6 +240,7 @@ tests/
   test_cost_stress.py
   test_crisis_controller.py
   test_crisis_gate.py
+  test_cumulative_performance_persistence.py
   test_dashboard_engine_status.py
   test_dashboard_health.py
   test_dashboard_overview.py
@@ -1891,10 +1892,19 @@ state = persisted.state
 runtime_revision = persisted.revision
 runtime_model = persisted.model
 runtime_status = persistence.load_runtime_status(runtime_key)
+load_performance = getattr(persistence, "load_trade_performance", None)
+⋮----
+trade_performance = load_performance(runtime_key)
+performance_scope = "full persisted history"
+⋮----
+trade_performance = calculate_performance_metrics(recent)
+performance_scope = "latest 200 trade events"
 ⋮----
 recent = ()
 state = None
 runtime_status = None
+trade_performance = None
+performance_scope = "unavailable"
 storage_error = True
 ⋮----
 recent = journal.list(limit=200)
@@ -1902,7 +1912,6 @@ state = state_store.load(starting_cash) if state_store is not None else None
 runtime_status = (
 ⋮----
 trades = reversed(recent)
-trade_performance = None if storage_error else calculate_performance_metrics(recent)
 ⋮----
 realized_pnl: float | None = None
 trade_count: int | None = None
@@ -1916,7 +1925,7 @@ equity: float | None = None
 position_value: float | None = None
 ⋮----
 realized_pnl = trade_performance.realized_pnl
-trade_count = len(recent)
+trade_count = trade_performance.trade_count
 wins = sum(1 for trade in recent if trade.pnl > 0)
 losses = sum(1 for trade in recent if trade.pnl < 0)
 win_rate = (wins / (wins + losses)) if wins + losses else 0.0
@@ -2796,6 +2805,8 @@ def commit_step(self, runtime_key: str, commit: RuntimeStepCommit) -> CommitOutc
 current = self.state_store.load(commit.state.cash)
 ⋮----
 temp = self.model_path.with_suffix(".tmp")
+⋮----
+def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics
 ⋮----
 def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None
 ⋮----
@@ -4206,6 +4217,7 @@ def _bounded(value: float, lower: float, upper: float) -> float
 @dataclass(frozen=True)
 class TradePerformanceMetrics
 ⋮----
+trade_count: int
 realized_pnl: float
 average_pnl: float
 gross_profit: float
@@ -4213,17 +4225,18 @@ gross_loss: float
 profit_factor: float | None
 max_drawdown: float
 ⋮----
-pnls = tuple(trade.pnl for trade in trades)
-realized_pnl = sum(pnls)
-average_pnl = realized_pnl / len(pnls) if pnls else 0.0
-gross_profit = sum(pnl for pnl in pnls if pnl > 0.0)
-gross_loss = -sum(pnl for pnl in pnls if pnl < 0.0)
+average_pnl = realized_pnl / trade_count if trade_count else 0.0
 ⋮----
 profit_factor: float | None = gross_profit / gross_loss
 ⋮----
 profit_factor = float("inf")
 ⋮----
 profit_factor = None
+⋮----
+pnls = tuple(trade.pnl for trade in trades)
+realized_pnl = sum(pnls)
+gross_profit = sum(pnl for pnl in pnls if pnl > 0.0)
+gross_loss = -sum(pnl for pnl in pnls if pnl < 0.0)
 ⋮----
 cumulative_pnl = 0.0
 peak_pnl = 0.0
@@ -4326,6 +4339,8 @@ def initialize_schema(self) -> None: ...
 def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime: ...
 ⋮----
 def commit_step(self, runtime_key: str, commit: RuntimeStepCommit) -> CommitOutcome: ...
+⋮----
+def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics: ...
 ⋮----
 def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None: ...
 ⋮----
@@ -4599,6 +4614,10 @@ current = cursor.fetchone()
 ⋮----
 trade = commit.trade
 ⋮----
+trade_inserted = cursor.fetchone() is not None
+⋮----
+pnl = float(trade.pnl)
+⋮----
 previous = cursor.fetchone()
 previous_hash = "GENESIS" if previous is None else str(previous["hash"])
 audit = build_audit_record(
@@ -4614,6 +4633,8 @@ order = "ORDER BY id DESC LIMIT %s"
 query = f"""
 ⋮----
 rows = cursor.fetchall()
+⋮----
+def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics
 ⋮----
 def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None
 ⋮----
@@ -7031,6 +7052,36 @@ governor = GovernorStateStore(tmp_path / "governor.json")
 def test_governor_freeze_blocks_promotions(tmp_path: Path) -> None
 ````
 
+## File: tests/test_cumulative_performance_persistence.py
+````python
+DATABASE_URL = os.environ["TEST_DATABASE_URL"]
+RUNTIME_KEY = "paper:GC=F:5m:online-river:v1"
+⋮----
+def _state(processed_bars: int) -> RuntimeState
+⋮----
+def _trade(pnl: float, index: int) -> TradeSnapshot
+⋮----
+def _commit(revision: int, trade: TradeSnapshot) -> RuntimeStepCommit
+⋮----
+def _assert_metrics(metrics) -> None
+⋮----
+def test_postgres_persists_cumulative_trade_performance() -> None
+⋮----
+backend = PostgresPaperPersistence(DATABASE_URL)
+⋮----
+def test_postgres_duplicate_trade_does_not_double_count_performance() -> None
+⋮----
+trade = _trade(12.5, 0)
+⋮----
+metrics = backend.load_trade_performance(RUNTIME_KEY)
+⋮----
+def test_postgres_schema_initialization_backfills_missing_performance_summary() -> None
+⋮----
+def test_file_backend_reports_full_journal_performance(tmp_path) -> None
+⋮----
+backend = FilePaperPersistence(root=tmp_path)
+````
+
 ## File: tests/test_dashboard_engine_status.py
 ````python
 def test_dashboard_shows_engine_and_latest_decision(tmp_path) -> None
@@ -7147,6 +7198,8 @@ def __init__(self) -> None
 def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime
 ⋮----
 def list_trades(self, runtime_key: str | None = None, *, limit: int | None = None)
+⋮----
+def load_trade_performance(self, runtime_key: str)
 ⋮----
 def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None
 ⋮----

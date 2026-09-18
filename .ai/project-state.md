@@ -26,19 +26,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T14:50:57Z
+Generated: 2026-09-18T16:08:19Z
 
 ### Git
 - Branch: `main`
-- Head: `3e499debb40a`
-- Commit date: 2026-09-18T16:50:36+02:00
-- Commit: chore(ai): adopt v10 reference routing
-- Tracked files: 392
+- Head: `ebf7c36fb7c2`
+- Commit date: 2026-09-18T18:08:06+02:00
+- Commit: Merge PR #28: persist cumulative paper performance
+- Tracked files: 395
 
 ### Recently changed files
-- `AGENTS.md`
-- `.repo-standards.yml`
-- `.github/workflows/ai-repo-map.yml`
+- `tests/test_dashboard_persistence.py`
+- `src/ai_trading/dashboard.py`
+- `src/ai_trading/postgres_persistence.py`
+- `src/ai_trading/file_persistence.py`
+- `src/ai_trading/persistence.py`
 
 ### Project signals
 - `pyproject.toml`
