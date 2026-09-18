@@ -98,6 +98,10 @@ class DurablePersistence:
             ),
         )
 
+    def list_regimes(self, runtime_key: str) -> tuple[str, ...]:
+        assert runtime_key == RUNTIME_KEY
+        return ("bull_normal_vol", "sideways_normal_vol")
+
     def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:
         assert runtime_key == RUNTIME_KEY
         return self.status
@@ -279,6 +283,8 @@ def test_dashboard_quant_evidence_is_explicit_and_non_misleading(tmp_path) -> No
     assert "Bootstrap positive probability" in page
     assert "Scheduler reliability" in page
     assert "Regime coverage" in page
-    assert "not yet persisted" in page
+    assert '<small>Regime coverage</small><strong>2 / 2</strong>' in page
+    assert "Observed regimes: bull_normal_vol · sideways_normal_vol." in page
+    assert "not yet persisted" not in page
     assert "Full readiness" in page
     assert "pending interval-aware annualization" in page
