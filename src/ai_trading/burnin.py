@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
+from collections.abc import Iterable
 from pathlib import Path
 
 import pandas as pd
@@ -19,6 +20,16 @@ class BurnInSnapshot:
     regimes_covered: int
     bootstrap_probability_positive: float
     processed_bars: int = 0
+
+
+def calculate_burnin_metrics(
+    snapshots: Iterable[BurnInSnapshot],
+) -> PerformanceMetrics:
+    values = tuple(snapshots)
+    if len(values) < 2:
+        raise ValueError("Need at least two burn-in snapshots")
+    equity = pd.Series([snapshot.equity for snapshot in values], dtype=float)
+    return compute_metrics(equity)
 
 
 class BurnInTracker:
@@ -61,11 +72,7 @@ class BurnInTracker:
         return snapshots
 
     def metrics(self) -> PerformanceMetrics:
-        snapshots = self.read()
-        if len(snapshots) < 2:
-            raise ValueError("Need at least two burn-in snapshots")
-        equity = pd.Series([s.equity for s in snapshots], dtype=float)
-        return compute_metrics(equity)
+        return calculate_burnin_metrics(self.read())
 
     def readiness(self) -> ReadinessReport:
         snapshots = self.read()
