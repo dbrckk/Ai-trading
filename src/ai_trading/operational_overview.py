@@ -40,8 +40,6 @@ def _burnin_snapshot(persistence: PaperPersistence, runtime_key: str) -> dict[st
             "processed_bars": 0,
             "total_return": None,
             "max_drawdown": None,
-            "sharpe": None,
-            "sortino": None,
         }
     snapshots = loader(runtime_key)
     latest_bars = snapshots[-1].processed_bars if snapshots else 0
@@ -51,8 +49,6 @@ def _burnin_snapshot(persistence: PaperPersistence, runtime_key: str) -> dict[st
             "processed_bars": latest_bars,
             "total_return": None,
             "max_drawdown": None,
-            "sharpe": None,
-            "sortino": None,
         }
     metrics = calculate_burnin_metrics(snapshots)
     return {
@@ -60,8 +56,6 @@ def _burnin_snapshot(persistence: PaperPersistence, runtime_key: str) -> dict[st
         "processed_bars": latest_bars,
         "total_return": metrics.total_return,
         "max_drawdown": metrics.max_drawdown,
-        "sharpe": metrics.sharpe,
-        "sortino": metrics.sortino,
     }
 
 
@@ -88,8 +82,6 @@ def build_operational_overview(
                 "processed_bars": 0,
                 "total_return": None,
                 "max_drawdown": None,
-                "sharpe": None,
-                "sortino": None,
             },
             "alerts": ["storage unavailable"],
         }
