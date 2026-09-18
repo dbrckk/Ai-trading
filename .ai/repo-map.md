@@ -7310,6 +7310,8 @@ status_payload = json.loads(status_body)
 health_payload = json.loads(health_body)
 ⋮----
 def test_dashboard_v2_groups_critical_sections_and_renders_equity_chart(tmp_path) -> None
+⋮----
+def test_dashboard_premium_shell_and_navigation(tmp_path) -> None
 ````
 
 ## File: tests/test_dashboard.py
