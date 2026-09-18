@@ -44,6 +44,7 @@ class RuntimeStepCommit:
     trade: TradeSnapshot | None
     audit_event: str
     audit_payload: dict[str, Any]
+    observed_regime: str | None = None
 
 
 class PaperPersistence(Protocol):
@@ -63,6 +64,8 @@ class PaperPersistence(Protocol):
     def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics: ...
 
     def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]: ...
+
+    def list_regimes(self, runtime_key: str) -> tuple[str, ...]: ...
 
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None: ...
 
