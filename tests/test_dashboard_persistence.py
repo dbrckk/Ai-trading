@@ -9,6 +9,7 @@ from urllib.request import urlopen
 
 from ai_trading.dashboard import render_dashboard, serve_dashboard
 from ai_trading.hosted_runtime import HostedPaperSettings
+from ai_trading.performance_metrics import performance_metrics_from_totals
 from ai_trading.persistence import PersistedRuntime
 from ai_trading.runtime_state import RuntimeState
 from ai_trading.runtime_status import HostedRuntimeStatus
@@ -64,6 +65,16 @@ class DurablePersistence:
         assert runtime_key == RUNTIME_KEY
         assert limit == 200
         return (self.trade,)
+
+    def load_trade_performance(self, runtime_key: str):
+        assert runtime_key == RUNTIME_KEY
+        return performance_metrics_from_totals(
+            trade_count=250,
+            realized_pnl=375.0,
+            gross_profit=500.0,
+            gross_loss=125.0,
+            max_drawdown=80.0,
+        )
 
     def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:
         assert runtime_key == RUNTIME_KEY
@@ -144,6 +155,12 @@ def test_dashboard_uses_durable_state_trades_and_status(tmp_path) -> None:
     assert "2026-09-16 05:20:00+00:00" in page
     assert "Processed bars" in page
     assert ">7<" in page
+    assert '<small>Trades</small><strong>250</strong>' in page
+    assert '<small>Realized PnL</small><strong>375.00</strong>' in page
+    assert '<small>Avg PnL / trade</small><strong>1.50</strong>' in page
+    assert '<small>Profit factor</small><strong>4.00</strong>' in page
+    assert '<small>Max realized DD</small><strong>80.00</strong>' in page
+    assert "Performance window: full persisted history" in page
 
 
 def test_dashboard_storage_failure_is_sanitized(tmp_path) -> None:
