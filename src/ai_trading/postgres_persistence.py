@@ -100,6 +100,15 @@ _SCHEMA_STATEMENTS = (
     )
     """,
     """
+    CREATE TABLE IF NOT EXISTS paper_runtime_regimes (
+        runtime_key text NOT NULL
+            REFERENCES paper_runtime_state(runtime_key) ON DELETE CASCADE,
+        regime_name text NOT NULL,
+        first_seen_at timestamptz NOT NULL DEFAULT now(),
+        PRIMARY KEY (runtime_key, regime_name)
+    )
+    """,
+    """
     CREATE TABLE IF NOT EXISTS paper_audit_events (
         id bigserial PRIMARY KEY,
         runtime_key text NOT NULL
@@ -503,15 +512,35 @@ class PostgresPaperPersistence(PaperPersistence):
             if cursor.fetchone() is None:
                 raise RuntimeError("runtime revision changed during commit")
 
+            if commit.observed_regime:
+                cursor.execute(
+                    """
+                    INSERT INTO paper_runtime_regimes (
+                        runtime_key,
+                        regime_name
+                    )
+                    VALUES (%s, %s)
+                    ON CONFLICT (runtime_key, regime_name) DO NOTHING
+                    """,
+                    (runtime_key, commit.observed_regime),
+                )
+
             cursor.execute(
                 """
                 INSERT INTO paper_burnin_snapshots (
                     runtime_key,
                     processed_bars,
                     timestamp_utc,
-                    equity
+                    equity,
+                    regimes_covered
                 )
-                VALUES (%s, %s, %s, %s)
+                VALUES (
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    (SELECT count(*) FROM paper_runtime_regimes WHERE runtime_key = %s)
+                )
                 ON CONFLICT (runtime_key, processed_bars) DO NOTHING
                 """,
                 (
@@ -519,6 +548,7 @@ class PostgresPaperPersistence(PaperPersistence):
                     state.processed_bars,
                     str(state.last_processed or audit["timestamp_utc"]),
                     state.cash + state.units * state.last_price,
+                    runtime_key,
                 ),
             )
 
@@ -630,6 +660,20 @@ class PostgresPaperPersistence(PaperPersistence):
             )
             for row in rows
         )
+
+    def list_regimes(self, runtime_key: str) -> tuple[str, ...]:
+        with self._connect() as connection, connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT regime_name
+                FROM paper_runtime_regimes
+                WHERE runtime_key = %s
+                ORDER BY regime_name ASC
+                """,
+                (runtime_key,),
+            )
+            rows = cursor.fetchall()
+        return tuple(str(row["regime_name"]) for row in rows)
 
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:
         payload = asdict(status)
