@@ -86,6 +86,7 @@ def _equity_chart_svg(snapshots: tuple[BurnInSnapshot, ...]) -> str:
         'aria-label="Burn-in equity curve" preserveAspectRatio="none">'
         '<line class="chart-grid" x1="18" y1="18" x2="18" y2="222"></line>'
         '<line class="chart-grid" x1="18" y1="222" x2="882" y2="222"></line>'
+        f'<polygon class="chart-area {direction_class}" points="18,222 {" ".join(points)} 882,222"></polygon>'
         f'<polyline class="chart-line {direction_class}" points="{" ".join(points)}"></polyline>'
         '</svg>'
         '<div class="chart-scale">'
@@ -330,69 +331,135 @@ def render_dashboard(
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AI Trading — Live</title>
 <style>
-:root{{color-scheme:dark}}
+:root{{color-scheme:dark;--bg:#050914;--surface:rgba(13,22,39,.86);--surface-2:rgba(8,16,31,.86);--border:rgba(148,163,184,.14);--text:#f5f8ff;--muted:#8998af;--blue:#71a7ff;--cyan:#56d9e8;--green:#63e6a3;--amber:#ffd27a;--red:#ff8a8a}}
 *{{box-sizing:border-box}}
-body{{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;background:#08111f;color:#eef4ff}}
-main{{max-width:1480px;margin:auto;padding:20px}}
-h1,h2{{margin:0}}
-h1{{font-size:clamp(1.45rem,4vw,2rem)}}
-h2{{font-size:1rem;color:#d8e4f5}}
-small,.muted{{color:#94a3b8}}
-.card{{background:#0f1a2b;border:1px solid #22304a;border-radius:18px;padding:18px;box-shadow:0 12px 40px rgba(0,0,0,.22)}}
-.header{{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}}
-.status-badge{{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:7px 11px;font-size:.82rem;font-weight:700;border:1px solid}}
-.status-ok{{color:#b7f7d0;background:#0d2a1d;border-color:#245c40}}
-.status-warn{{color:#ffe6a6;background:#30250a;border-color:#6b571b}}
-.status-error{{color:#ffc0c0;background:#351313;border-color:#6c2d2d}}
-.section{{margin-top:18px;padding-top:4px}}
-.section-head{{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:10px}}
-.metrics{{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}}
-.metric{{background:#0a1423;border:1px solid #1d2a40;border-radius:12px;padding:13px;min-width:0}}
-.metric strong{{display:block;font-size:1.24rem;margin-top:5px;overflow-wrap:anywhere}}
-.metric.primary strong{{font-size:1.48rem}}
-.alert-box{{margin-top:14px;padding:12px 14px;border-radius:12px;background:#0a1423;border:1px solid #1d2a40}}
-.alert-box.warn{{border-color:#6b571b;background:#2a220b}}
-.runtime-reason{{display:block;margin-top:8px;line-height:1.45}}
-.equity-chart{{margin-top:12px;background:#08111f;border:1px solid #1d2a40;border-radius:14px;padding:10px}}
-.equity-chart svg{{display:block;width:100%;height:220px}}
-.chart-line{{fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}}
-.chart-line.positive{{stroke:#59d98e}}
-.chart-line.negative{{stroke:#ff7b7b}}
-.chart-grid{{stroke:#24334d;stroke-width:1}}
-.chart-scale{{display:flex;justify-content:space-between;font-size:.8rem;color:#94a3b8;margin-top:4px}}
-.chart-empty{{margin-top:12px;padding:16px;border:1px dashed #31425f;border-radius:12px;color:#94a3b8;text-align:center}}
-.progress-track{{height:10px;background:#08111f;border:1px solid #24334d;border-radius:999px;overflow:hidden;margin-top:9px}}
-.progress-fill{{height:100%;background:linear-gradient(90deg,#4f8cff,#59d98e);border-radius:999px}}
-.table-scroll{{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:12px;border:1px solid #1d2a40;border-radius:12px}}
+html{{scroll-behavior:smooth}}
+body{{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;background:radial-gradient(circle at 15% -10%,rgba(70,113,255,.18),transparent 32%),radial-gradient(circle at 85% 0%,rgba(55,211,211,.10),transparent 27%),var(--bg);color:var(--text);min-height:100vh}}
+body:before{{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,black,transparent 78%)}}
+main{{max-width:1540px;margin:auto;padding:18px 20px 40px;position:relative}}
+h1,h2,h3{{margin:0}}
+h1{{font-size:clamp(1.65rem,4vw,2.45rem);letter-spacing:-.035em}}
+h2{{font-size:1.02rem;letter-spacing:-.01em}}
+small,.muted{{color:var(--muted)}}
+.premium-shell{{position:relative}}
+.top-nav{{position:sticky;top:10px;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px;padding:10px 12px;background:rgba(7,13,25,.78);border:1px solid var(--border);border-radius:16px;backdrop-filter:blur(18px);box-shadow:0 12px 36px rgba(0,0,0,.28)}}
+.brand{{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.02em}}
+.brand-mark{{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,#6ea8ff,#58e0cf);color:#04101d;box-shadow:0 0 26px rgba(91,189,255,.28)}}
+.nav-links{{display:flex;gap:6px;overflow:auto;scrollbar-width:none}}
+.nav-links::-webkit-scrollbar{{display:none}}
+.nav-links a{{color:#afbdd0;text-decoration:none;font-size:.8rem;font-weight:650;padding:7px 9px;border-radius:9px;white-space:nowrap}}
+.nav-links a:hover{{background:rgba(255,255,255,.06);color:#fff}}
+.card{{background:linear-gradient(180deg,rgba(18,29,49,.86),rgba(10,18,33,.88));border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:0 28px 80px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.035);backdrop-filter:blur(16px)}}
+.header{{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap;padding-bottom:16px}}
+.header-copy{{max-width:760px}}
+.eyebrow{{display:flex;align-items:center;gap:7px;color:#9cafca;text-transform:uppercase;letter-spacing:.13em;font-size:.69rem;font-weight:800;margin-bottom:7px}}
+.live-dot{{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px rgba(99,230,163,.08),0 0 18px rgba(99,230,163,.7)}}
+.header-subtitle{{display:block;margin-top:7px;font-size:.86rem}}
+.header-meta{{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}}
+.pill{{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.045);border:1px solid var(--border);font-size:.78rem;color:#c7d2e3}}
+.status-badge{{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:7px 11px;font-size:.78rem;font-weight:800;border:1px solid}}
+.status-ok{{color:#bdf7d6;background:rgba(20,94,60,.28);border-color:rgba(99,230,163,.24)}}
+.status-warn{{color:#ffe2a3;background:rgba(130,91,12,.22);border-color:rgba(255,210,122,.24)}}
+.status-error{{color:#ffc0c0;background:rgba(115,29,29,.26);border-color:rgba(255,138,138,.25)}}
+.hero-kpis{{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:2px 0 18px}}
+.hero-kpi{{position:relative;overflow:hidden;padding:15px 16px;border-radius:15px;background:linear-gradient(145deg,rgba(22,35,58,.9),rgba(9,18,34,.92));border:1px solid var(--border)}}
+.hero-kpi:after{{content:"";position:absolute;width:120px;height:120px;right:-55px;top:-65px;border-radius:50%;background:rgba(101,160,255,.08)}}
+.hero-kpi small{{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;font-weight:750}}
+.hero-kpi strong{{display:block;margin-top:6px;font-size:clamp(1.28rem,3vw,1.72rem);letter-spacing:-.03em;overflow-wrap:anywhere}}
+.section{{scroll-margin-top:76px;margin-top:12px;padding:16px;border:1px solid var(--border);border-radius:17px;background:rgba(7,14,28,.58)}}
+.section-head{{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:11px}}
+.section-head h2{{display:flex;align-items:center;gap:8px}}
+.section-head h2:before{{content:"";display:inline-block;width:5px;height:18px;border-radius:999px;background:linear-gradient(var(--blue),var(--cyan));box-shadow:0 0 16px rgba(96,176,255,.28)}}
+.metrics{{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:9px}}
+.metric{{background:linear-gradient(145deg,rgba(12,23,42,.78),rgba(7,15,29,.82));border:1px solid rgba(148,163,184,.11);border-radius:13px;padding:13px;min-width:0;transition:transform .18s ease,border-color .18s ease}}
+.metric:hover{{transform:translateY(-1px);border-color:rgba(113,167,255,.24)}}
+.metric small{{display:block;font-size:.72rem}}
+.metric strong{{display:block;font-size:1.15rem;margin-top:5px;letter-spacing:-.025em;overflow-wrap:anywhere}}
+.metric.primary{{background:linear-gradient(145deg,rgba(27,52,86,.62),rgba(9,22,42,.85));border-color:rgba(113,167,255,.19)}}
+.metric.primary strong{{font-size:1.42rem}}
+.alert-box{{margin-top:12px;padding:11px 13px;border-radius:11px;background:rgba(11,22,39,.72);border:1px solid var(--border);font-size:.84rem}}
+.alert-box.warn{{border-color:rgba(255,210,122,.28);background:rgba(87,62,9,.19);color:#ffe0a0}}
+.runtime-reason{{display:block;margin-top:7px;line-height:1.45;font-size:.77rem}}
+.equity-chart{{margin-top:11px;background:linear-gradient(180deg,rgba(5,11,22,.88),rgba(8,16,30,.74));border:1px solid var(--border);border-radius:15px;padding:11px;overflow:hidden}}
+.equity-chart svg{{display:block;width:100%;height:240px;filter:drop-shadow(0 12px 24px rgba(0,0,0,.22))}}
+.chart-line{{fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}}
+.chart-line.positive{{stroke:var(--green)}}
+.chart-line.negative{{stroke:var(--red)}}
+.chart-area{{opacity:.12}}
+.chart-area.positive{{fill:var(--green)}}
+.chart-area.negative{{fill:var(--red)}}
+.chart-grid{{stroke:#293853;stroke-width:1}}
+.chart-scale{{display:flex;justify-content:space-between;font-size:.74rem;color:var(--muted);margin-top:4px}}
+.chart-empty{{margin-top:11px;padding:18px;border:1px dashed #31425f;border-radius:13px;color:var(--muted);text-align:center}}
+.progress-track{{height:8px;background:#07101e;border:1px solid #24334d;border-radius:999px;overflow:hidden;margin-top:9px}}
+.progress-fill{{height:100%;background:linear-gradient(90deg,#6d9eff,#60e1cd);border-radius:999px;box-shadow:0 0 16px rgba(96,225,205,.24)}}
+.table-scroll{{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:10px;border:1px solid var(--border);border-radius:13px;background:rgba(6,13,25,.68)}}
 table{{width:100%;border-collapse:collapse;min-width:900px}}
-th,td{{padding:10px 12px;border-bottom:1px solid #1d2a40;text-align:right;white-space:nowrap}}
-th{{position:sticky;top:0;background:#101b2d;color:#b9c7d9;font-size:.8rem}}
+th,td{{padding:11px 12px;border-bottom:1px solid rgba(148,163,184,.10);text-align:right;white-space:nowrap}}
+th{{position:sticky;top:0;background:#0d1829;color:#aebdd0;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em}}
+td{{font-size:.83rem}}
 th:first-child,td:first-child,th:nth-child(2),td:nth-child(2),th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
-tbody tr:hover{{background:#101b2d}}
+tbody tr:hover{{background:rgba(113,167,255,.045)}}
+.footer-note{{text-align:center;color:#687891;font-size:.72rem;padding:16px 4px 0}}
+@media (max-width:900px){{
+  .hero-kpis{{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .nav-links{{max-width:58vw}}
+}}
 @media (max-width:700px){{
-  main{{padding:10px}}
-  .card{{padding:14px;border-radius:14px}}
+  main{{padding:10px 9px 24px}}
+  .top-nav{{top:6px;border-radius:13px;padding:8px 9px}}
+  .brand span:last-child{{display:none}}
+  .nav-links{{max-width:72vw}}
+  .card{{padding:13px;border-radius:17px}}
+  .header{{padding-bottom:13px}}
   .metrics{{grid-template-columns:repeat(2,minmax(0,1fr))}}
   .metric{{padding:11px}}
-  .metric strong{{font-size:1.05rem}}
-  .metric.primary strong{{font-size:1.2rem}}
-  .equity-chart svg{{height:170px}}
+  .metric strong{{font-size:1.02rem}}
+  .metric.primary strong{{font-size:1.18rem}}
+  .section{{padding:12px;border-radius:14px}}
+  .equity-chart svg{{height:180px}}
 }}
-@media (max-width:420px){{
-  .metrics{{grid-template-columns:1fr}}
+@media (max-width:430px){{
+  .hero-kpis{{grid-template-columns:1fr 1fr}}
+  .hero-kpi{{padding:12px}}
+  .hero-kpi strong{{font-size:1.15rem}}
+  .metrics{{grid-template-columns:1fr 1fr}}
+  .section-head{{align-items:flex-start;flex-direction:column;gap:4px}}
 }}
 </style></head><body><main>
+<div class="premium-shell">
+<nav class="top-nav" aria-label="Dashboard sections">
+<div class="brand"><span class="brand-mark">AI</span><span>Trading Terminal</span></div>
+<div class="nav-links">
+<a href="#overview">Overview</a>
+<a href="#performance">Performance</a>
+<a href="#burnin">Burn-in</a>
+<a href="#trades">Trades</a>
+</div>
+</nav>
+
 <div class="card">
 <div class="header">
-<div>
-<h1>AI Trading — Paper Control Center</h1>
-<small>Read-only · auto refresh 2s · hosted paper runtime</small>
+<div class="header-copy">
+<div class="eyebrow"><span class="live-dot"></span> Paper trading · live telemetry</div>
+<h1>AI Trading Terminal</h1>
+<small class="header-subtitle">Premium read-only control center · auto refresh 2s · durable hosted runtime</small>
 </div>
+<div class="header-meta">
+<span class="pill">{html.escape(market)}</span>
 <span class="status-badge {status_class}">{html.escape(engine_status)}</span>
 </div>
+</div>
 
-<section class="section">
-<div class="section-head"><h2>System health</h2><small>{html.escape(market)}</small></div>
+<div class="hero-kpis">
+<div class="hero-kpi"><small>Equity</small><strong>{_display_money(equity)}</strong></div>
+<div class="hero-kpi"><small>Realized PnL</small><strong>{pnl_display}</strong></div>
+<div class="hero-kpi"><small>Signal</small><strong>{html.escape(signal)}</strong></div>
+<div class="hero-kpi"><small>Burn-in</small><strong>{burnin_progress_display}</strong></div>
+</div>
+
+<section class="section" id="overview">
+<div class="section-head"><h2>System health</h2><small>runtime observability</small></div>
 <div class="metrics">
 <div class="metric primary"><small>Engine</small><strong>{html.escape(engine_status)}</strong></div>
 <div class="metric"><small>Heartbeat age</small><strong>{html.escape(heartbeat_age)}</strong></div>
@@ -410,7 +477,7 @@ tbody tr:hover{{background:#101b2d}}
 </section>
 
 <section class="section">
-<div class="section-head"><h2>Trading state</h2><small>paper only</small></div>
+<div class="section-head"><h2>Trading state</h2><small>paper execution state</small></div>
 <div class="metrics">
 <div class="metric primary"><small>Signal</small><strong>{html.escape(signal)}</strong></div>
 <div class="metric primary"><small>Risk decision</small><strong>{html.escape(risk_decision)}</strong></div>
@@ -423,7 +490,7 @@ tbody tr:hover{{background:#101b2d}}
 <small class="runtime-reason">Last engine reason: {html.escape(decision_reason)}</small>
 </section>
 
-<section class="section">
+<section class="section" id="performance">
 <div class="section-head"><h2>Performance</h2><small>Performance window: {html.escape(performance_scope)}</small></div>
 <div class="metrics">
 <div class="metric primary"><small>Realized PnL</small><strong>{pnl_display}</strong></div>
@@ -437,7 +504,7 @@ tbody tr:hover{{background:#101b2d}}
 </div>
 </section>
 
-<section class="section">
+<section class="section" id="burnin">
 <div class="section-head"><h2>Burn-in evidence</h2><small>durable equity history</small></div>
 <div class="metrics">
 <div class="metric primary"><small>Burn-in bars</small><strong>{burnin_bars_display} / {burnin_target}</strong></div>
@@ -449,7 +516,7 @@ tbody tr:hover{{background:#101b2d}}
 {equity_chart}
 </section>
 
-<section class="section">
+<section class="section" id="trades">
 <div class="section-head"><h2>Recent trades</h2><small>latest 200 events</small></div>
 <div class="table-scroll">
 <table><thead><tr><th>UTC</th><th>Symbol</th><th>Side</th><th>Qty</th><th>Price</th>
@@ -457,6 +524,8 @@ tbody tr:hover{{background:#101b2d}}
 <tbody>{rows}</tbody></table>
 </div>
 </section>
+<div class="footer-note">AI Trading · paper runtime · read-only observability</div>
+</div>
 </div></main></body></html>"""
 
 
