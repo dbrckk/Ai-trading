@@ -27,20 +27,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T16:27:52Z
+Generated: 2026-09-18T16:51:25Z
 
 ### Git
 - Branch: `main`
-- Head: `9d450b886fb3`
-- Commit date: 2026-09-18T18:27:39+02:00
-- Commit: Merge PR #29: persist durable paper burn-in equity
+- Head: `496ab3afbd97`
+- Commit date: 2026-09-18T18:51:06+02:00
+- Commit: Merge PR #30: persist paper cycle reliability
 - Tracked files: 396
 
 ### Recently changed files
+- `README.md`
 - `tests/test_dashboard_overview.py`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/operational_overview.py`
-- `src/ai_trading/burnin.py`
+- `src/ai_trading/paper_cycle_service.py`
 
 ### Project signals
 - `pyproject.toml`

@@ -1,29 +1,26 @@
 # Change impact
 
-Base: d1d4c4d5ae2b0ca11c66fabadd62828a5f8fc4da
-Head: 9d450b886fb39efda0b341ede3fc8e444653954a
+Base: 916bb68f11721a565f968da247cca1e90ebc843f
+Head: 496ab3afbd97c293a6f6c5a054c13acce66ac699
 
 ## Changed files
-- M src/ai_trading/burnin.py
+- M README.md
 - M src/ai_trading/dashboard.py
-- M src/ai_trading/file_persistence.py
 - M src/ai_trading/operational_overview.py
-- M src/ai_trading/persistence.py
-- M src/ai_trading/postgres_persistence.py
+- M src/ai_trading/paper_cycle_service.py
+- M src/ai_trading/runtime_status.py
 - M tests/test_dashboard_overview.py
-- M tests/test_dashboard_persistence.py
-- A tests/test_durable_burnin_persistence.py
+- M tests/test_paper_cycle_service.py
 
 ## Affected areas
+- (root)
 - src
 - tests
 
 ## Related test candidates
-- tests/test_burnin.py
 - tests/test_dashboard.py
-- tests/test_file_persistence.py
-- tests/test_persistence.py
-- tests/test_postgres_persistence.py
+- tests/test_paper_cycle_service.py
+- tests/test_runtime_status.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

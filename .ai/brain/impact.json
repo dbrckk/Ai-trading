@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "ebf7c36fb7c2923482c6aef0437cad5d12b77c03",
-  "head": "9d450b886fb39efda0b341ede3fc8e444653954a",
+  "base": "9d450b886fb39efda0b341ede3fc8e444653954a",
+  "head": "496ab3afbd97c293a6f6c5a054c13acce66ac699",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "src/ai_trading/burnin.py",
+      "path": "README.md",
       "status": "M"
     },
     {
@@ -14,19 +14,15 @@
       "status": "M"
     },
     {
-      "path": "src/ai_trading/file_persistence.py",
-      "status": "M"
-    },
-    {
       "path": "src/ai_trading/operational_overview.py",
       "status": "M"
     },
     {
-      "path": "src/ai_trading/persistence.py",
+      "path": "src/ai_trading/paper_cycle_service.py",
       "status": "M"
     },
     {
-      "path": "src/ai_trading/postgres_persistence.py",
+      "path": "src/ai_trading/runtime_status.py",
       "status": "M"
     },
     {
@@ -34,94 +30,34 @@
       "status": "M"
     },
     {
-      "path": "tests/test_dashboard_persistence.py",
+      "path": "tests/test_paper_cycle_service.py",
       "status": "M"
-    },
-    {
-      "path": "tests/test_durable_burnin_persistence.py",
-      "status": "A"
     }
   ],
   "changed_source_files": [
-    "src/ai_trading/burnin.py",
     "src/ai_trading/dashboard.py",
-    "src/ai_trading/file_persistence.py",
     "src/ai_trading/operational_overview.py",
-    "src/ai_trading/persistence.py",
-    "src/ai_trading/postgres_persistence.py",
+    "src/ai_trading/paper_cycle_service.py",
+    "src/ai_trading/runtime_status.py",
     "tests/test_dashboard_overview.py",
-    "tests/test_dashboard_persistence.py",
-    "tests/test_durable_burnin_persistence.py"
+    "tests/test_paper_cycle_service.py"
   ],
   "impacted_files": [
-    "src/ai_trading/burnin.py",
     "src/ai_trading/cli.py",
-    "src/ai_trading/continuous.py",
+    "src/ai_trading/command_app.py",
     "src/ai_trading/dashboard.py",
     "src/ai_trading/file_persistence.py",
-    "src/ai_trading/guardrails.py",
     "src/ai_trading/hosted_runtime.py",
-    "src/ai_trading/model_codec.py",
     "src/ai_trading/operational_overview.py",
-    "src/ai_trading/paper_cycle.py",
     "src/ai_trading/paper_cycle_service.py",
     "src/ai_trading/persistence.py",
-    "src/ai_trading/persistence_factory.py",
     "src/ai_trading/postgres_persistence.py",
-    "src/ai_trading/runtime.py",
+    "src/ai_trading/runtime_status.py",
+    "src/ai_trading/scheduler_endpoint.py",
     "tests/test_dashboard_overview.py",
-    "tests/test_dashboard_persistence.py",
-    "tests/test_durable_burnin_persistence.py"
+    "tests/test_paper_cycle_service.py"
   ],
   "impacted_symbols": [
-    {
-      "name": "BurnInSnapshot",
-      "kind": "class",
-      "file": "src/ai_trading/burnin.py",
-      "line": 16
-    },
-    {
-      "name": "calculate_burnin_metrics",
-      "kind": "function",
-      "file": "src/ai_trading/burnin.py",
-      "line": 25
-    },
-    {
-      "name": "BurnInTracker",
-      "kind": "class",
-      "file": "src/ai_trading/burnin.py",
-      "line": 35
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "src/ai_trading/burnin.py",
-      "line": 36
-    },
-    {
-      "name": "append",
-      "kind": "function",
-      "file": "src/ai_trading/burnin.py",
-      "line": 39
-    },
-    {
-      "name": "read",
-      "kind": "function",
-      "file": "src/ai_trading/burnin.py",
-      "line": 63
-    },
-    {
-      "name": "metrics",
-      "kind": "function",
-      "file": "src/ai_trading/burnin.py",
-      "line": 74
-    },
-    {
-      "name": "readiness",
-      "kind": "function",
-      "file": "src/ai_trading/burnin.py",
-      "line": 77
-    },
     {
       "name": "self_test",
       "kind": "function",
@@ -375,16 +311,10 @@
       "line": 1882
     },
     {
-      "name": "ContinuousCycleResult",
-      "kind": "class",
-      "file": "src/ai_trading/continuous.py",
-      "line": 21
-    },
-    {
-      "name": "run_learning_cycle",
+      "name": "paper_cycle",
       "kind": "function",
-      "file": "src/ai_trading/continuous.py",
-      "line": 30
+      "file": "src/ai_trading/command_app.py",
+      "line": 16
     },
     {
       "name": "_public_runtime_snapshot",
@@ -420,49 +350,49 @@
       "name": "serve_dashboard",
       "kind": "function",
       "file": "src/ai_trading/dashboard.py",
-      "line": 326
+      "line": 334
     },
     {
       "name": "execute_paper_cycle",
       "kind": "function",
       "file": "src/ai_trading/dashboard.py",
-      "line": 374
+      "line": 382
     },
     {
       "name": "load_status_snapshot",
       "kind": "function",
       "file": "src/ai_trading/dashboard.py",
-      "line": 387
+      "line": 395
     },
     {
       "name": "Handler",
       "kind": "class",
       "file": "src/ai_trading/dashboard.py",
-      "line": 393
+      "line": 401
     },
     {
       "name": "_send_json",
       "kind": "function",
       "file": "src/ai_trading/dashboard.py",
-      "line": 394
+      "line": 402
     },
     {
       "name": "do_GET",
       "kind": "function",
       "file": "src/ai_trading/dashboard.py",
-      "line": 408
+      "line": 416
     },
     {
       "name": "do_POST",
       "kind": "function",
       "file": "src/ai_trading/dashboard.py",
-      "line": 461
+      "line": 469
     },
     {
       "name": "log_message",
       "kind": "function",
       "file": "src/ai_trading/dashboard.py",
-      "line": 476
+      "line": 484
     },
     {
       "name": "FilePaperPersistence",
@@ -525,30 +455,6 @@
       "line": 107
     },
     {
-      "name": "HealthPolicy",
-      "kind": "class",
-      "file": "src/ai_trading/guardrails.py",
-      "line": 12
-    },
-    {
-      "name": "HealthDecision",
-      "kind": "class",
-      "file": "src/ai_trading/guardrails.py",
-      "line": 19
-    },
-    {
-      "name": "evaluate_health",
-      "kind": "function",
-      "file": "src/ai_trading/guardrails.py",
-      "line": 25
-    },
-    {
-      "name": "rollback_if_needed",
-      "kind": "function",
-      "file": "src/ai_trading/guardrails.py",
-      "line": 41
-    },
-    {
       "name": "HostedPaperSettings",
       "kind": "class",
       "file": "src/ai_trading/hosted_runtime.py",
@@ -591,18 +497,6 @@
       "line": 176
     },
     {
-      "name": "serialize_model",
-      "kind": "function",
-      "file": "src/ai_trading/model_codec.py",
-      "line": 15
-    },
-    {
-      "name": "deserialize_model",
-      "kind": "function",
-      "file": "src/ai_trading/model_codec.py",
-      "line": 27
-    },
-    {
       "name": "_empty_model_snapshot",
       "kind": "function",
       "file": "src/ai_trading/operational_overview.py",
@@ -625,42 +519,6 @@
       "kind": "function",
       "file": "src/ai_trading/operational_overview.py",
       "line": 62
-    },
-    {
-      "name": "PaperCycleResult",
-      "kind": "class",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 14
-    },
-    {
-      "name": "PaperCycleRunner",
-      "kind": "class",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 22
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 25
-    },
-    {
-      "name": "_is_logically_fresh",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 37
-    },
-    {
-      "name": "_pending_targets",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 50
-    },
-    {
-      "name": "run_once",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 68
     },
     {
       "name": "ProductionPaperCycleSettings",
@@ -837,12 +695,6 @@
       "line": 123
     },
     {
-      "name": "build_paper_persistence",
-      "kind": "function",
-      "file": "src/ai_trading/persistence_factory.py",
-      "line": 11
-    },
-    {
       "name": "_trade_event_key",
       "kind": "function",
       "file": "src/ai_trading/postgres_persistence.py",
@@ -915,58 +767,58 @@
       "line": 660
     },
     {
-      "name": "RuntimeStepResult",
+      "name": "HostedRuntimeStatus",
       "kind": "class",
-      "file": "src/ai_trading/runtime.py",
-      "line": 24
+      "file": "src/ai_trading/runtime_status.py",
+      "line": 10
     },
     {
-      "name": "PaperAutonomousRuntime",
+      "name": "runtime_status_snapshot",
+      "kind": "function",
+      "file": "src/ai_trading/runtime_status.py",
+      "line": 29
+    },
+    {
+      "name": "HostedRuntimeStatusStore",
       "kind": "class",
-      "file": "src/ai_trading/runtime.py",
-      "line": 37
+      "file": "src/ai_trading/runtime_status.py",
+      "line": 83
     },
     {
       "name": "__init__",
       "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 44
+      "file": "src/ai_trading/runtime_status.py",
+      "line": 84
     },
     {
-      "name": "_broker_from_state",
+      "name": "load",
       "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 77
-    },
-    {
-      "name": "_state_from_broker",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
+      "file": "src/ai_trading/runtime_status.py",
       "line": 87
     },
     {
-      "name": "_eligible_execution_indices",
+      "name": "save",
       "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 105
+      "file": "src/ai_trading/runtime_status.py",
+      "line": 92
     },
     {
-      "name": "step",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 123
+      "name": "SchedulerHttpResponse",
+      "kind": "class",
+      "file": "src/ai_trading/scheduler_endpoint.py",
+      "line": 12
     },
     {
-      "name": "step_at",
+      "name": "_authorized",
       "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 129
+      "file": "src/ai_trading/scheduler_endpoint.py",
+      "line": 17
     },
     {
-      "name": "_step_at_locked",
+      "name": "handle_scheduler_request",
       "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 137
+      "file": "src/ai_trading/scheduler_endpoint.py",
+      "line": 26
     },
     {
       "name": "OverviewPersistence",
@@ -984,270 +836,282 @@
       "name": "load_runtime",
       "kind": "function",
       "file": "tests/test_dashboard_overview.py",
-      "line": 63
-    },
-    {
-      "name": "list_trades",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 68
-    },
-    {
-      "name": "list_burnin_snapshots",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 73
-    },
-    {
-      "name": "load_runtime_status",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 94
-    },
-    {
-      "name": "FailingOverviewPersistence",
-      "kind": "class",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 99
-    },
-    {
-      "name": "load_runtime",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 100
-    },
-    {
-      "name": "load_runtime_status",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 104
-    },
-    {
-      "name": "_free_port",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 109
-    },
-    {
-      "name": "_start_overview_dashboard",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 115
-    },
-    {
-      "name": "test_operational_overview_exposes_model_and_runtime_metadata",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 143
-    },
-    {
-      "name": "test_operational_overview_flags_stale_runtime",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 164
-    },
-    {
-      "name": "test_operational_overview_flags_missing_model_after_processing",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 174
-    },
-    {
-      "name": "test_operational_overview_flags_inconsistent_runtime",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 189
-    },
-    {
-      "name": "test_operational_overview_storage_failure_is_sanitized",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 211
-    },
-    {
-      "name": "test_dashboard_exposes_operational_overview_endpoint",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 239
-    },
-    {
-      "name": "test_dashboard_renders_model_and_revision_metadata",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 254
-    },
-    {
-      "name": "test_dashboard_renders_operational_alerts",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 267
-    },
-    {
-      "name": "test_dashboard_renders_inconsistent_runtime_alert",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 277
-    },
-    {
-      "name": "DurablePersistence",
-      "kind": "class",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 22
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 23
-    },
-    {
-      "name": "load_runtime",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 60
-    },
-    {
-      "name": "list_trades",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 65
-    },
-    {
-      "name": "load_trade_performance",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
       "line": 70
     },
     {
+      "name": "list_trades",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 75
+    },
+    {
       "name": "list_burnin_snapshots",
       "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
+      "file": "tests/test_dashboard_overview.py",
       "line": 80
     },
     {
       "name": "load_runtime_status",
       "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
+      "file": "tests/test_dashboard_overview.py",
       "line": 101
     },
     {
-      "name": "FailingPersistence",
+      "name": "FailingOverviewPersistence",
       "kind": "class",
-      "file": "tests/test_dashboard_persistence.py",
+      "file": "tests/test_dashboard_overview.py",
       "line": 106
-    },
-    {
-      "name": "_fail",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 107
     },
     {
       "name": "load_runtime",
       "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 110
-    },
-    {
-      "name": "list_trades",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 114
+      "file": "tests/test_dashboard_overview.py",
+      "line": 107
     },
     {
       "name": "load_runtime_status",
       "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 118
+      "file": "tests/test_dashboard_overview.py",
+      "line": 111
     },
     {
       "name": "_free_port",
       "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 123
+      "file": "tests/test_dashboard_overview.py",
+      "line": 116
     },
     {
-      "name": "_get",
+      "name": "_start_overview_dashboard",
       "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 129
+      "file": "tests/test_dashboard_overview.py",
+      "line": 122
     },
     {
-      "name": "_start_failure_dashboard",
+      "name": "test_operational_overview_exposes_model_and_runtime_metadata",
       "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 134
+      "file": "tests/test_dashboard_overview.py",
+      "line": 150
     },
     {
-      "name": "test_dashboard_uses_durable_state_trades_and_status",
+      "name": "test_operational_overview_flags_stale_runtime",
       "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 162
+      "file": "tests/test_dashboard_overview.py",
+      "line": 172
     },
     {
-      "name": "test_dashboard_storage_failure_is_sanitized",
+      "name": "test_operational_overview_flags_missing_model_after_processing",
       "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 191
+      "file": "tests/test_dashboard_overview.py",
+      "line": 182
     },
     {
-      "name": "test_status_endpoints_fail_closed_without_leaking_storage_details",
+      "name": "test_operational_overview_flags_inconsistent_runtime",
       "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 204
+      "file": "tests/test_dashboard_overview.py",
+      "line": 197
     },
     {
-      "name": "_commit",
+      "name": "test_operational_overview_storage_failure_is_sanitized",
       "kind": "function",
-      "file": "tests/test_durable_burnin_persistence.py",
-      "line": 15
+      "file": "tests/test_dashboard_overview.py",
+      "line": 219
     },
     {
-      "name": "_assert_snapshots",
+      "name": "test_dashboard_exposes_operational_overview_endpoint",
       "kind": "function",
-      "file": "tests/test_durable_burnin_persistence.py",
-      "line": 37
+      "file": "tests/test_dashboard_overview.py",
+      "line": 248
     },
     {
-      "name": "test_postgres_records_one_equity_snapshot_per_committed_bar",
+      "name": "test_dashboard_renders_model_and_revision_metadata",
       "kind": "function",
-      "file": "tests/test_durable_burnin_persistence.py",
-      "line": 43
+      "file": "tests/test_dashboard_overview.py",
+      "line": 263
     },
     {
-      "name": "test_postgres_conflict_does_not_append_burnin_snapshot",
+      "name": "test_dashboard_renders_operational_alerts",
       "kind": "function",
-      "file": "tests/test_durable_burnin_persistence.py",
-      "line": 66
+      "file": "tests/test_dashboard_overview.py",
+      "line": 277
     },
     {
-      "name": "test_file_backend_records_equity_snapshots_per_commit",
+      "name": "test_dashboard_renders_inconsistent_runtime_alert",
       "kind": "function",
-      "file": "tests/test_durable_burnin_persistence.py",
-      "line": 98
+      "file": "tests/test_dashboard_overview.py",
+      "line": 287
     },
     {
-      "name": "test_burnin_tracker_uses_processed_bars_for_readiness_duration",
+      "name": "test_operational_overview_flags_cycle_reliability_degradation",
       "kind": "function",
-      "file": "tests/test_durable_burnin_persistence.py",
-      "line": 113
+      "file": "tests/test_dashboard_overview.py",
+      "line": 313
+    },
+    {
+      "name": "test_dashboard_renders_cycle_reliability_alert",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 323
+    },
+    {
+      "name": "FakePersistence",
+      "kind": "class",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 16
+    },
+    {
+      "name": "__init__",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 17
+    },
+    {
+      "name": "save_runtime_status",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 31
+    },
+    {
+      "name": "load_runtime_status",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 35
+    },
+    {
+      "name": "load_runtime",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 39
+    },
+    {
+      "name": "FakeRunner",
+      "kind": "class",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 45
+    },
+    {
+      "name": "__init__",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 46
+    },
+    {
+      "name": "run_once",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 49
+    },
+    {
+      "name": "test_service_persists_starting_and_running_status",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 72
+    },
+    {
+      "name": "test_persistence_factory_failure_is_sanitized",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 93
+    },
+    {
+      "name": "broken_factory",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 94
+    },
+    {
+      "name": "test_starting_status_failure_never_runs_worker",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 112
+    },
+    {
+      "name": "broken_save",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 116
+    },
+    {
+      "name": "runner_factory",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 122
+    },
+    {
+      "name": "test_worker_failure_writes_sanitized_error_status",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 140
+    },
+    {
+      "name": "BrokenRunner",
+      "kind": "class",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 143
+    },
+    {
+      "name": "run_once",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 144
+    },
+    {
+      "name": "test_error_status_failure_does_not_mask_worker_failure",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 163
+    },
+    {
+      "name": "flaky_save",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 168
+    },
+    {
+      "name": "BrokenRunner",
+      "kind": "class",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 177
+    },
+    {
+      "name": "run_once",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 178
+    },
+    {
+      "name": "test_success_resets_consecutive_cycle_errors",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 194
+    },
+    {
+      "name": "test_failure_increments_consecutive_cycle_errors",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 219
+    },
+    {
+      "name": "BrokenRunner",
+      "kind": "class",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 232
+    },
+    {
+      "name": "run_once",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 233
     }
   ],
   "selected_tests": [
-    "tests/test_burnin.py",
-    "tests/test_cumulative_performance_persistence.py",
     "tests/test_dashboard.py",
     "tests/test_dashboard_engine_status.py",
     "tests/test_dashboard_health.py",
     "tests/test_dashboard_overview.py",
     "tests/test_dashboard_persistence.py",
-    "tests/test_durable_burnin_persistence.py",
-    "tests/test_file_persistence.py",
-    "tests/test_hosted_persistence.py",
-    "tests/test_persistence.py",
-    "tests/test_persistence_contract.py",
-    "tests/test_persistence_factory.py",
-    "tests/test_postgres_persistence.py",
-    "tests/test_runtime_persistence.py"
+    "tests/test_paper_cycle.py",
+    "tests/test_paper_cycle_service.py",
+    "tests/test_runtime.py",
+    "tests/test_runtime_status.py"
   ]
 }

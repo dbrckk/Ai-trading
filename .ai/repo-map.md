@@ -1958,6 +1958,7 @@ last_heartbeat = (
 heartbeat_age_value = None if storage_error else runtime_snapshot["heartbeat_age_seconds"]
 heartbeat_age = (
 runtime_revision_display = (
+cycle_errors_display = (
 ⋮----
 model_display = "-"
 model_checksum = "-"
@@ -4056,6 +4057,7 @@ except Exception:  # noqa: BLE001 - observability boundary must sanitize backend
 status_snapshot = runtime_status_snapshot(status)
 engine_status = str(status_snapshot["engine_status"])
 lag_detected = engine_status == "STALE"
+consecutive_cycle_errors = (
 ⋮----
 model = persisted.model
 ⋮----
@@ -4150,6 +4152,9 @@ backend = persistence
 ⋮----
 backend = persistence_factory()
 except Exception as exc:  # noqa: BLE001 - sanitize provider errors here
+⋮----
+previous_status = backend.load_runtime_status(runtime_key)
+previous_cycle_errors = (
 ⋮----
 except Exception as exc:  # noqa: BLE001 - storage boundary is fail-closed
 ⋮----
@@ -5807,6 +5812,7 @@ units: float = 0.0
 processed_bars: int = 0
 error: str | None = None
 poll_seconds: float = 60.0
+consecutive_cycle_errors: int = 0
 ⋮----
 current_time = now or datetime.now(UTC)
 ⋮----
@@ -7162,8 +7168,6 @@ RUNTIME_KEY = "paper:GC=F:5m:online-river:v1"
 ⋮----
 class OverviewPersistence
 ⋮----
-def __init__(self, *, with_model: bool = True, stale: bool = False) -> None
-⋮----
 def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime
 ⋮----
 def list_trades(self, runtime_key: str | None = None, *, limit: int | None = None)
@@ -7220,6 +7224,10 @@ page = render_dashboard(
 def test_dashboard_renders_operational_alerts(tmp_path) -> None
 ⋮----
 def test_dashboard_renders_inconsistent_runtime_alert(tmp_path) -> None
+⋮----
+def test_operational_overview_flags_cycle_reliability_degradation() -> None
+⋮----
+def test_dashboard_renders_cycle_reliability_alert(tmp_path) -> None
 ````
 
 ## File: tests/test_dashboard_persistence.py
@@ -8197,9 +8205,11 @@ final = second_persistence.load_runtime(runtime_key, 100_000.0)
 ````python
 class FakePersistence
 ⋮----
-def __init__(self) -> None
+def __init__(self, *, initial_status: HostedRuntimeStatus | None = None) -> None
 ⋮----
 def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None
+⋮----
+def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None
 ⋮----
 def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime
 ⋮----
@@ -8240,6 +8250,12 @@ original_save = backend.save_runtime_status
 writes = 0
 ⋮----
 def flaky_save(runtime_key, status)
+⋮----
+def test_success_resets_consecutive_cycle_errors() -> None
+⋮----
+backend = FakePersistence(
+⋮----
+def test_failure_increments_consecutive_cycle_errors() -> None
 ````
 
 ## File: tests/test_paper_cycle_workflow.py
@@ -9893,6 +9909,22 @@ paper:GC=F:5m:online-river:v1
 ```
 
 A fresh durable runtime processes only the latest eligible execution bar. An existing runtime catches up missed eligible bars oldest-first, with at most 12 attempted bars per invocation. If the durable `last_processed` marker is outside the loaded history window, the cycle fails closed instead of guessing where to resume. Revision conflicts cause state to be reloaded so overlapping executors cannot overwrite newer durable progress.
+
+### Hosted dashboard
+
+The read-only production paper dashboard is available at:
+
+```text
+https://ai-trading-dashboard-qyr2.onrender.com
+```
+
+Operational endpoints:
+
+```text
+https://ai-trading-dashboard-qyr2.onrender.com/api/overview
+https://ai-trading-dashboard-qyr2.onrender.com/api/status
+https://ai-trading-dashboard-qyr2.onrender.com/healthz
+```
 
 The Render web service should use the same `AI_TRADING_DATABASE_URL` and run with:
 
