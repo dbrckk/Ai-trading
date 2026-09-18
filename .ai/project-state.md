@@ -27,21 +27,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T18:29:45Z
+Generated: 2026-09-18T18:41:55Z
 
 ### Git
 - Branch: `main`
-- Head: `d4c80117bc5f`
-- Commit date: 2026-09-18T20:29:33+02:00
-- Commit: Merge PR #35: interval-aware readiness
+- Head: `33f5e76ddd92`
+- Commit date: 2026-09-18T20:41:40+02:00
+- Commit: Merge PR #36: detailed readiness criteria
 - Tracked files: 396
 
 ### Recently changed files
-- `tests/test_dashboard_persistence.py`
-- `tests/test_performance.py`
 - `src/ai_trading/dashboard.py`
-- `src/ai_trading/burnin.py`
-- `src/ai_trading/performance.py`
+- `tests/test_dashboard_persistence.py`
+- `tests/test_readiness.py`
 
 ### Project signals
 - `pyproject.toml`

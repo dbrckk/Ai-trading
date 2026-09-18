@@ -1909,6 +1909,17 @@ y = padding + usable_height * (high - value) / (high - low)
 change = values[-1] - values[0]
 direction_class = "positive" if change >= 0 else "negative"
 ⋮----
+def _readiness_number(check: ReadinessCheck, value: float) -> str
+⋮----
+def _readiness_panel(report: ReadinessReport | None) -> str
+⋮----
+rows = []
+⋮----
+state = "pass" if check.passed else "fail"
+label = "PASS" if check.passed else "FAIL"
+value = _readiness_number(check, check.value)
+threshold = _readiness_number(check, check.threshold)
+⋮----
 @lru_cache(maxsize=16)
 def _bootstrap_positive_probability(equities: tuple[float, ...]) -> float | None
 ⋮----
@@ -2056,6 +2067,7 @@ readiness_display = (
 readiness_checks_display = (
 sharpe_display = "-" if burnin_metrics is None else f"{burnin_metrics.sharpe:.2f}"
 sortino_display = "-" if burnin_metrics is None else f"{burnin_metrics.sortino:.2f}"
+readiness_panel = _readiness_panel(readiness_report)
 status_class = (
 ⋮----
 effective_settings = settings or HostedPaperSettings.from_env()
@@ -5339,17 +5351,29 @@ min_regimes_covered: int = 2
 max_consecutive_scheduler_errors: int = 0
 ⋮----
 @dataclass(frozen=True)
+class ReadinessCheck
+⋮----
+name: str
+passed: bool
+value: float | int
+threshold: float | int
+comparison: str
+⋮----
+@dataclass(frozen=True)
 class ReadinessReport
 ⋮----
 ready: bool
 checks_passed: int
 checks_total: int
 reasons: tuple[str, ...]
+checks: tuple[ReadinessCheck, ...] = ()
 ⋮----
 policy = policy or ReadinessPolicy()
-failures: list[str] = []
+checks = (
 ⋮----
-total = 8
+reason_by_name = {
+failures = [reason_by_name[check.name] for check in checks if not check.passed]
+passed = sum(check.passed for check in checks)
 ````
 
 ## File: src/ai_trading/recovery_health.py
@@ -7362,6 +7386,10 @@ def test_dashboard_v2_groups_critical_sections_and_renders_equity_chart(tmp_path
 def test_dashboard_premium_shell_and_navigation(tmp_path) -> None
 ⋮----
 def test_dashboard_quant_evidence_is_explicit_and_non_misleading(tmp_path) -> None
+⋮----
+class ReadinessPersistence(DurablePersistence)
+⋮----
+def test_dashboard_readiness_panel_shows_eight_criteria_with_thresholds(tmp_path) -> None
 ````
 
 ## File: tests/test_dashboard.py
@@ -8891,6 +8919,10 @@ def test_readiness_passes_strong_burn_in() -> None
 report = evaluate_readiness(
 ⋮----
 def test_readiness_rejects_short_burn_in() -> None
+⋮----
+def test_readiness_report_exposes_all_structured_checks() -> None
+⋮----
+by_name = {check.name: check for check in report.checks}
 ````
 
 ## File: tests/test_recovery_health.py

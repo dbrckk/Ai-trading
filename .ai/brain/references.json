@@ -5,253 +5,1008 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "BurnInSnapshot": {
+    "_public_runtime_snapshot": {
       "definition": {
-        "file": "src/ai_trading/burnin.py",
-        "line": 16,
+        "file": "src/ai_trading/dashboard.py",
+        "line": 41,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 41,
+          "preview": "def _public_runtime_snapshot(status: HostedRuntimeStatus | None) -> dict[str, object]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 236,
+          "preview": "runtime_snapshot = _public_runtime_snapshot(runtime_status)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 724,
+          "preview": "return _public_runtime_snapshot(backend.load_runtime_status(runtime_key))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_display_money": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 48,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 48,
+          "preview": "def _display_money(value: float | None) -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 97,
+          "preview": "f'<span>{_display_money(values[0])}</span>'",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 98,
+          "preview": "f'<span>{_display_money(values[-1])}</span>'",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 337,
+          "preview": "pnl_display = _display_money(realized_pnl)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 341,
+          "preview": "average_pnl_display = _display_money(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 347,
+          "preview": "max_drawdown_display = _display_money(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 567,
+          "preview": "<div class=\"hero-kpi\"><small>Equity</small><strong>{_display_money(equity)}</strong></div>",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 597,
+          "preview": "<div class=\"metric\"><small>Equity</small><strong>{_display_money(equity)}</strong></div>",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 598,
+          "preview": "<div class=\"metric\"><small>Cash</small><strong>{_display_money(cash)}</strong></div>",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 600,
+          "preview": "<div class=\"metric\"><small>Position value</small><strong>{_display_money(position_value)}</strong></div>",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 10
+    },
+    "_display_units": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 52,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 52,
+          "preview": "def _display_units(value: float | None) -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 599,
+          "preview": "<div class=\"metric\"><small>Open units</small><strong>{_display_units(units)}</strong></div>",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_display_ratio": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 56,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 56,
+          "preview": "def _display_ratio(value: float | None) -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 344,
+          "preview": "profit_factor_display = _display_ratio(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_equity_chart_svg": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 64,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 64,
+          "preview": "def _equity_chart_svg(snapshots: tuple[BurnInSnapshot, ...]) -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 369,
+          "preview": "equity_chart = _equity_chart_svg(burnin_snapshots)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_readiness_number": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 104,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 104,
+          "preview": "def _readiness_number(check: ReadinessCheck, value: float) -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 119,
+          "preview": "value = _readiness_number(check, check.value)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 120,
+          "preview": "threshold = _readiness_number(check, check.threshold)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_readiness_panel": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 112,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 112,
+          "preview": "def _readiness_panel(report: ReadinessReport | None) -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 422,
+          "preview": "readiness_panel = _readiness_panel(readiness_report)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_bootstrap_positive_probability": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 134,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 134,
+          "preview": "def _bootstrap_positive_probability(equities: tuple[float, ...]) -> float | None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 370,
+          "preview": "bootstrap_probability = _bootstrap_positive_probability(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "render_dashboard": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 141,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 141,
+          "preview": "def render_dashboard(",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 781,
+          "preview": "payload = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard.py",
+          "line": 1,
+          "preview": "from ai_trading.dashboard import render_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard.py",
+          "line": 37,
+          "preview": "page = render_dashboard(journal)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard.py",
+          "line": 77,
+          "preview": "page = render_dashboard(journal)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard.py",
+          "line": 100,
+          "preview": "page = render_dashboard(journal)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_engine_status.py",
+          "line": 5,
+          "preview": "from ai_trading.dashboard import render_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_engine_status.py",
+          "line": 33,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 10,
+          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 75,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 11,
+          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 264,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 278,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 304,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 324,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 11,
+          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 169,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 197,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 239,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 257,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 276,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 328,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 22
+    },
+    "serve_dashboard": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 661,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 34,
+          "preview": "from .dashboard import serve_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 1890,
+          "preview": "serve_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 661,
+          "preview": "def serve_dashboard(",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 10,
+          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 37,
+          "preview": "target=serve_dashboard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 11,
+          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 125,
+          "preview": "target=serve_dashboard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 11,
+          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 141,
+          "preview": "target=serve_dashboard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_scheduler_endpoint.py",
+          "line": 10,
+          "preview": "from ai_trading.dashboard import serve_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_scheduler_endpoint.py",
+          "line": 59,
+          "preview": "target=serve_dashboard,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 11
+    },
+    "execute_paper_cycle": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 709,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 709,
+          "preview": "def execute_paper_cycle() -> PaperCycleResult:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 715,
+          "preview": "effective_cycle_executor = execute_paper_cycle",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "load_status_snapshot": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 722,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 722,
+          "preview": "def load_status_snapshot() -> dict[str, object]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 755,
+          "preview": "self._send_json(load_status_snapshot())",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 758,
+          "preview": "snapshot = load_status_snapshot()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "Handler": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 728,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 728,
+          "preview": "class Handler(BaseHTTPRequestHandler):",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 814,
+          "preview": "ThreadingHTTPServer((host, port), Handler).serve_forever()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_send_json": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 729,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 729,
+          "preview": "def _send_json(",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 746,
+          "preview": "self._send_json(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 755,
+          "preview": "self._send_json(load_status_snapshot())",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 760,
+          "preview": "self._send_json(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 770,
+          "preview": "self._send_json(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 806,
+          "preview": "self._send_json(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "do_GET": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 743,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 743,
+          "preview": "def do_GET(self) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/health_server.py",
+          "line": 15,
+          "preview": "def do_GET(self) -> None:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "do_POST": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 796,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 796,
+          "preview": "def do_POST(self) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "log_message": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 811,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 811,
+          "preview": "def log_message(self, format: str, *args: object) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/health_server.py",
+          "line": 51,
+          "preview": "def log_message(self, format: str, *args) -> None:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "ReadinessPolicy": {
+      "definition": {
+        "file": "src/ai_trading/readiness.py",
+        "line": 9,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 27,
+          "preview": "from .readiness import ReadinessCheck, ReadinessPolicy, ReadinessReport, evaluate_readiness",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 356,
+          "preview": "burnin_target = ReadinessPolicy().min_burn_in_bars",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 378,
+          "preview": "readiness_policy = ReadinessPolicy()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness.py",
+          "line": 9,
+          "preview": "class ReadinessPolicy:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/readiness.py",
+          "line": 45,
+          "preview": "policy: ReadinessPolicy | None = None,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness.py",
+          "line": 47,
+          "preview": "policy = policy or ReadinessPolicy()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness_score.py",
+          "line": 46,
+          "preview": "class ReadinessPolicy:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness_score.py",
+          "line": 73,
+          "preview": "policy: ReadinessPolicy | None = None,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness_score.py",
+          "line": 77,
+          "preview": "policy = policy or ReadinessPolicy()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_readiness.py",
+          "line": 2,
+          "preview": "from ai_trading.readiness import ReadinessPolicy, evaluate_readiness",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_readiness.py",
+          "line": 36,
+          "preview": "policy=ReadinessPolicy(min_burn_in_bars=126),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_readiness_score.py",
+          "line": 6,
+          "preview": "ReadinessPolicy,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_readiness_score.py",
+          "line": 83,
+          "preview": "policy=ReadinessPolicy(min_score=0.0, min_component=0.0),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 13
+    },
+    "ReadinessCheck": {
+      "definition": {
+        "file": "src/ai_trading/readiness.py",
+        "line": 21,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 27,
+          "preview": "from .readiness import ReadinessCheck, ReadinessPolicy, ReadinessReport, evaluate_readiness",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 104,
+          "preview": "def _readiness_number(check: ReadinessCheck, value: float) -> str:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness.py",
+          "line": 21,
+          "preview": "class ReadinessCheck:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/readiness.py",
+          "line": 35,
+          "preview": "checks: tuple[ReadinessCheck, ...] = ()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness.py",
+          "line": 49,
+          "preview": "ReadinessCheck(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness.py",
+          "line": 56,
+          "preview": "ReadinessCheck(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness.py",
+          "line": 63,
+          "preview": "ReadinessCheck(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness.py",
+          "line": 70,
+          "preview": "ReadinessCheck(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness.py",
+          "line": 77,
+          "preview": "ReadinessCheck(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness.py",
+          "line": 84,
+          "preview": "ReadinessCheck(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness.py",
+          "line": 92,
+          "preview": "ReadinessCheck(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness.py",
+          "line": 99,
+          "preview": "ReadinessCheck(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 12
+    },
+    "ReadinessReport": {
+      "definition": {
+        "file": "src/ai_trading/readiness.py",
+        "line": 30,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/burnin.py",
-          "line": 16,
-          "preview": "class BurnInSnapshot:",
+          "line": 12,
+          "preview": "from .readiness import ReadinessReport, evaluate_readiness",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/burnin.py",
+          "line": 87,
+          "preview": "def readiness(self) -> ReadinessReport:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 27,
+          "preview": "from .readiness import ReadinessCheck, ReadinessPolicy, ReadinessReport, evaluate_readiness",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 112,
+          "preview": "def _readiness_panel(report: ReadinessReport | None) -> str:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness.py",
+          "line": 30,
+          "preview": "class ReadinessReport:",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/burnin.py",
-          "line": 26,
-          "preview": "snapshots: Iterable[BurnInSnapshot],",
+          "file": "src/ai_trading/readiness.py",
+          "line": 46,
+          "preview": ") -> ReadinessReport:",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/burnin.py",
-          "line": 57,
-          "preview": ") -> BurnInSnapshot:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 60,
-          "preview": "snapshot = BurnInSnapshot(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 73,
-          "preview": "def read(self) -> list[BurnInSnapshot]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 76,
-          "preview": "snapshots: list[BurnInSnapshot] = []",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 81,
-          "preview": "snapshots.append(BurnInSnapshot(**payload))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 15,
-          "preview": "from .burnin import BurnInSnapshot, calculate_burnin_metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 64,
-          "preview": "def _equity_chart_svg(snapshots: tuple[BurnInSnapshot, ...]) -> str:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 7,
-          "preview": "from .burnin import BurnInSnapshot, BurnInTracker",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 109,
-          "preview": "def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/persistence.py",
-          "line": 11,
-          "preview": "from .burnin import BurnInSnapshot",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/persistence.py",
-          "line": 66,
-          "preview": "def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]: ...",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/postgres_persistence.py",
-          "line": 13,
-          "preview": "from .burnin import BurnInSnapshot",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/postgres_persistence.py",
-          "line": 632,
-          "preview": "def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/postgres_persistence.py",
-          "line": 651,
-          "preview": "BurnInSnapshot(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 10,
-          "preview": "from ai_trading.burnin import BurnInSnapshot",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 83,
-          "preview": "BurnInSnapshot(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 91,
-          "preview": "BurnInSnapshot(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 10,
-          "preview": "from ai_trading.burnin import BurnInSnapshot",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 83,
-          "preview": "BurnInSnapshot(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 91,
-          "preview": "BurnInSnapshot(",
+          "file": "src/ai_trading/readiness.py",
+          "line": 120,
+          "preview": "return ReadinessReport(",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 22
+      "occurrence_count": 7
     },
-    "calculate_burnin_metrics": {
+    "evaluate_readiness": {
       "definition": {
-        "file": "src/ai_trading/burnin.py",
-        "line": 25,
+        "file": "src/ai_trading/readiness.py",
+        "line": 38,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/burnin.py",
-          "line": 25,
-          "preview": "def calculate_burnin_metrics(",
-          "definition_candidate": true
+          "line": 12,
+          "preview": "from .readiness import ReadinessReport, evaluate_readiness",
+          "definition_candidate": false
         },
         {
           "file": "src/ai_trading/burnin.py",
-          "line": 85,
-          "preview": "return calculate_burnin_metrics(self.read())",
+          "line": 92,
+          "preview": "return evaluate_readiness(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 74,
+          "preview": "from .readiness import evaluate_readiness",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 798,
+          "preview": "readiness = evaluate_readiness(",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 15,
-          "preview": "from .burnin import BurnInSnapshot, calculate_burnin_metrics",
+          "line": 27,
+          "preview": "from .readiness import ReadinessCheck, ReadinessPolicy, ReadinessReport, evaluate_readiness",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 147,
-          "preview": "calculate_burnin_metrics(burnin_snapshots)",
+          "line": 402,
+          "preview": "readiness_report = evaluate_readiness(",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 3,
-          "preview": "from .burnin import calculate_burnin_metrics",
+          "file": "src/ai_trading/readiness.py",
+          "line": 38,
+          "preview": "def evaluate_readiness(",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_readiness.py",
+          "line": 2,
+          "preview": "from ai_trading.readiness import ReadinessPolicy, evaluate_readiness",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 53,
-          "preview": "metrics = calculate_burnin_metrics(snapshots)",
+          "file": "tests/test_readiness.py",
+          "line": 18,
+          "preview": "report = evaluate_readiness(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_readiness.py",
+          "line": 30,
+          "preview": "report = evaluate_readiness(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_readiness.py",
+          "line": 43,
+          "preview": "report = evaluate_readiness(",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 6
+      "occurrence_count": 11
     },
-    "BurnInTracker": {
+    "DurablePersistence": {
       "definition": {
-        "file": "src/ai_trading/burnin.py",
-        "line": 45,
+        "file": "tests/test_dashboard_persistence.py",
+        "line": 22,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/burnin.py",
-          "line": 45,
-          "preview": "class BurnInTracker:",
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 22,
+          "preview": "class DurablePersistence:",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 7,
-          "preview": "from .burnin import BurnInSnapshot, BurnInTracker",
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 171,
+          "preview": "persistence=DurablePersistence(),",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 39,
-          "preview": "self.burnin_tracker = BurnInTracker(root_path / \"burnin.jsonl\")",
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 241,
+          "preview": "persistence=DurablePersistence(),",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_burnin.py",
-          "line": 3,
-          "preview": "from ai_trading.burnin import BurnInTracker",
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 259,
+          "preview": "persistence=DurablePersistence(),",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_burnin.py",
-          "line": 7,
-          "preview": "tracker = BurnInTracker(tmp_path / \"burnin.jsonl\")",
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 278,
+          "preview": "persistence=DurablePersistence(),",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_durable_burnin_persistence.py",
-          "line": 114,
-          "preview": "from ai_trading.burnin import BurnInTracker",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_durable_burnin_persistence.py",
-          "line": 116,
-          "preview": "tracker = BurnInTracker(tmp_path / \"burnin.jsonl\")",
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 296,
+          "preview": "class ReadinessPersistence(DurablePersistence):",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 7
+      "occurrence_count": 6
     },
     "__init__": {
       "definition": {
-        "file": "src/ai_trading/burnin.py",
-        "line": 46,
+        "file": "tests/test_dashboard_persistence.py",
+        "line": 23,
         "kind": "function",
         "language": "python"
       },
@@ -290,7 +1045,7 @@
           "file": "src/ai_trading/burnin.py",
           "line": 46,
           "preview": "def __init__(self, path: str | Path = \"artifacts/burnin.jsonl\") -> None:",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "src/ai_trading/champion_probation.py",
@@ -608,7 +1363,7 @@
           "file": "tests/test_dashboard_persistence.py",
           "line": 23,
           "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "tests/test_hosted_persistence.py",
@@ -673,3514 +1428,6 @@
       ],
       "occurrence_count": 69
     },
-    "append": {
-      "definition": {
-        "file": "src/ai_trading/burnin.py",
-        "line": 49,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/allocator_tuning.py",
-          "line": 95,
-          "preview": "scores.append(_fold_score(train, test, config))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/audit.py",
-          "line": 51,
-          "preview": "def append(self, event: str, payload: dict[str, Any]) -> dict[str, Any]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 138,
-          "preview": "regime_equities.setdefault(regime.name, []).append(broker.state.equity)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/benchmark_gate.py",
-          "line": 33,
-          "preview": "reasons.append(\"insufficient walk-forward folds\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/benchmark_gate.py",
-          "line": 35,
-          "preview": "reasons.append(\"insufficient out-of-sample trades\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/benchmark_gate.py",
-          "line": 37,
-          "preview": "reasons.append(\"Sharpe below threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/benchmark_gate.py",
-          "line": 39,
-          "preview": "reasons.append(\"Sortino below threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/benchmark_gate.py",
-          "line": 41,
-          "preview": "reasons.append(\"Calmar below threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/benchmark_gate.py",
-          "line": 43,
-          "preview": "reasons.append(\"maximum drawdown above threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/benchmark_gate.py",
-          "line": 45,
-          "preview": "reasons.append(\"strategy underperformed buy-and-hold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/bootstrap_gate.py",
-          "line": 30,
-          "preview": "reasons.append(\"bootstrap positive-return probability below threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/bootstrap_gate.py",
-          "line": 32,
-          "preview": "reasons.append(\"bootstrap loss probability above threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/bootstrap_gate.py",
-          "line": 34,
-          "preview": "reasons.append(\"bootstrap lower-tail return below threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/bootstrap_gate.py",
-          "line": 36,
-          "preview": "reasons.append(\"bootstrap drawdown tail above threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 49,
-          "preview": "def append(",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 81,
-          "preview": "snapshots.append(BurnInSnapshot(**payload))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 111,
-          "preview": "reasons.append(\"hard drawdown probation limit breached\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 114,
-          "preview": "reasons.append(\"drawdown degraded during probation\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 116,
-          "preview": "reasons.append(\"Sharpe degraded during probation\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 118,
-          "preview": "reasons.append(\"Sortino degraded during probation\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 120,
-          "preview": "reasons.append(\"Calmar degraded during probation\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 148,
-          "preview": "self.lifecycle_log.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 180,
-          "preview": "self.lifecycle_log.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champions.py",
-          "line": 36,
-          "preview": "records.append(ChampionRecord(**json.loads(line)))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champions.py",
-          "line": 68,
-          "preview": "updated.append(promoted)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champions.py",
-          "line": 91,
-          "preview": "lifecycle_log.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champions.py",
-          "line": 120,
-          "preview": "lifecycle_log.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champions.py",
-          "line": 147,
-          "preview": "lifecycle_log.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champions.py",
-          "line": 167,
-          "preview": "lifecycle_log.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/checkpoint_verification.py",
-          "line": 61,
-          "preview": "mismatches.append(name)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 409,
-          "preview": "ExperimentRegistry().append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cost_stress.py",
-          "line": 53,
-          "preview": "results.append(_result(scenario, stressed))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cost_stress_gate.py",
-          "line": 55,
-          "preview": "reasons.append(\"cost stress pass ratio below threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 84,
-          "preview": "points.append(f\"{x:.1f},{y:.1f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 247,
-          "preview": "operational_alerts.append(\"storage unavailable\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 250,
-          "preview": "operational_alerts.append(\"worker heartbeat expired\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 252,
-          "preview": "operational_alerts.append(\"paper cycle reliability degraded\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 259,
-          "preview": "operational_alerts.append(\"model missing for initialized runtime\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 261,
-          "preview": "operational_alerts.append(\"runtime inconsistent\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/data_quality.py",
-          "line": 85,
-          "preview": "reasons.append(\"incomplete OHLC data\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/data_quality.py",
-          "line": 87,
-          "preview": "reasons.append(\"duplicate timestamps\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/data_quality.py",
-          "line": 89,
-          "preview": "reasons.append(\"non-positive prices\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/data_quality.py",
-          "line": 91,
-          "preview": "reasons.append(\"OHLC consistency violations\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/data_quality.py",
-          "line": 93,
-          "preview": "reasons.append(\"excessive stale closes\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 63,
-          "preview": "reasons.append(\"reliability report missing\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 80,
-          "preview": "reasons.append(\"resilience mode is not NORMAL\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 82,
-          "preview": "reasons.append(\"resilience instability is not stable\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 84,
-          "preview": "reasons.append(\"governor verdict is not TRADE\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 86,
-          "preview": "reasons.append(\"governor halt streak is not cleared\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 89,
-          "preview": "reasons.append(\"composite readiness score missing\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 92,
-          "preview": "reasons.append(\"composite readiness policy failed\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 94,
-          "preview": "reasons.append(\"composite readiness score below deployment threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 97,
-          "preview": "reasons.append(\"readiness trend missing\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 99,
-          "preview": "reasons.append(\"readiness trend is not stable\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 101,
-          "preview": "reasons.append(\"readiness history integrity report missing\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 103,
-          "preview": "reasons.append(\"readiness history integrity check failed\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 105,
-          "preview": "reasons.append(\"quantitative evidence is not reproducible\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 107,
-          "preview": "reasons.append(\"quantitative evidence age is unknown\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 109,
-          "preview": "reasons.append(\"quantitative evidence is stale\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 111,
-          "preview": "reasons.append(\"dataset observation age is unknown\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 113,
-          "preview": "reasons.append(\"dataset observations are stale\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 116,
-          "preview": "reasons.append(\"readiness release manifest missing\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 118,
-          "preview": "reasons.append(\"readiness release verification failed\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 124,
-          "preview": "reasons.append(\"readiness release revoked\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/drift.py",
-          "line": 50,
-          "preview": "reasons.append(\"feature distribution drift\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/drift.py",
-          "line": 52,
-          "preview": "reasons.append(\"return distribution drift\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/evolution.py",
-          "line": 28,
-          "preview": "mutations.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/evolution.py",
-          "line": 40,
-          "preview": "mutations.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/experiments.py",
-          "line": 16,
-          "preview": "def append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_diversity.py",
-          "line": 30,
-          "preview": "pairs.append(float(value))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_factory.py",
-          "line": 57,
-          "preview": "candidates.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_factory.py",
-          "line": 114,
-          "preview": "evaluated.append(candidate)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_sandbox.py",
-          "line": 63,
-          "preview": "equity.append(equity[-1] * (1.0 + pred.side * ret))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 73,
-          "preview": "self.trade_journal.append(commit.trade)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 74,
-          "preview": "self.audit_log.append(commit.audit_event, commit.audit_payload)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 89,
-          "preview": "self.burnin_tracker.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/generations.py",
-          "line": 68,
-          "preview": "snapshots.append(GenerationSnapshot(**payload))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/global_allocator.py",
-          "line": 138,
-          "preview": "reasons.append(\"CVaR limit exceeded\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/global_allocator.py",
-          "line": 140,
-          "preview": "reasons.append(\"turnover limit exceeded\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/global_allocator.py",
-          "line": 142,
-          "preview": "reasons.append(\"cost exceeds expected return\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/lifecycle_log.py",
-          "line": 29,
-          "preview": "def append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/lifecycle_log.py",
-          "line": 72,
-          "preview": "records.append(LifecycleEvent(**payload))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 467,
-          "preview": "blend_components.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 585,
-          "preview": "opportunity_keys.append(opportunity_key)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 601,
-          "preview": "self.quality_store.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 616,
-          "preview": "self.quality_store.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 622,
-          "preview": "evaluations.append((\"ensemble\", batch_eval_prediction))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 839,
-          "preview": "self.lifecycle_log.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 860,
-          "preview": "self.lifecycle_log.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 992,
-          "preview": "self.audit.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_scheduler.py",
-          "line": 89,
-          "preview": "self.runtime.audit.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_scheduler.py",
-          "line": 116,
-          "preview": "self.runtime.audit.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_scheduler.py",
-          "line": 145,
-          "preview": "self.runtime.audit.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_scheduler.py",
-          "line": 158,
-          "preview": "self.runtime.lifecycle_log.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_scheduler.py",
-          "line": 227,
-          "preview": "results.append(result)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_scheduler.py",
-          "line": 261,
-          "preview": "self.runtime.audit.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_scheduler.py",
-          "line": 274,
-          "preview": "self.runtime.lifecycle_log.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 101,
-          "preview": "alerts.append(\"worker heartbeat expired\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 103,
-          "preview": "alerts.append(\"paper cycle reliability degraded\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 105,
-          "preview": "alerts.append(\"model missing for initialized runtime\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 107,
-          "preview": "alerts.append(\"runtime inconsistent\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
-          "line": 124,
-          "preview": "self.runtime.audit.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/parameter_sensitivity.py",
-          "line": 76,
-          "preview": "results.append(_result(scenario, report))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/portfolio_risk.py",
-          "line": 52,
-          "preview": "reasons.append(\"gross exposure limit exceeded\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/portfolio_risk.py",
-          "line": 54,
-          "preview": "reasons.append(\"net exposure limit exceeded\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/portfolio_risk.py",
-          "line": 56,
-          "preview": "reasons.append(\"single-asset exposure limit exceeded\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/portfolio_risk.py",
-          "line": 58,
-          "preview": "reasons.append(\"pair correlation limit exceeded\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/postgres_persistence.py",
-          "line": 568,
-          "preview": "params.append(limit)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/promotion_guard.py",
-          "line": 72,
-          "preview": "reasons.append(\"composite score did not improve enough\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/promotion_guard.py",
-          "line": 74,
-          "preview": "reasons.append(\"Sharpe degradation exceeds policy\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/promotion_guard.py",
-          "line": 76,
-          "preview": "reasons.append(\"Sortino degradation exceeds policy\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/promotion_guard.py",
-          "line": 78,
-          "preview": "reasons.append(\"Calmar degradation exceeds policy\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/promotion_guard.py",
-          "line": 80,
-          "preview": "reasons.append(\"max drawdown degradation exceeds policy\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/purged_cv.py",
-          "line": 55,
-          "preview": "result.append(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/qualification_guard.py",
-          "line": 36,
-          "preview": "reasons.append(\"qualification report is not PASS\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/qualification_guard.py",
-          "line": 44,
-          "preview": "reasons.append(\"qualification report is stale\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/qualification_guard.py",
-          "line": 46,
-          "preview": "reasons.append(\"qualification timestamp is invalid\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/qualification_guard.py",
-          "line": 49,
-          "preview": "reasons.append(\"qualification symbols do not match\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/qualification_guard.py",
-          "line": 51,
-          "preview": "reasons.append(\"qualification period does not match\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/qualification_guard.py",
-          "line": 53,
-          "preview": "reasons.append(\"qualification interval does not match\")",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 120
-    },
-    "read": {
-      "definition": {
-        "file": "src/ai_trading/burnin.py",
-        "line": 73,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 73,
-          "preview": "def read(self) -> list[BurnInSnapshot]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 85,
-          "preview": "return calculate_burnin_metrics(self.read())",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 88,
-          "preview": "snapshots = self.read()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 516,
-          "preview": "<small class=\"header-subtitle\">Premium read-only control center \u00b7 auto refresh 2s \u00b7 durable hosted runtime</small>",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 613,
-          "preview": "<div class=\"footer-note\">AI Trading \u00b7 paper runtime \u00b7 read-only observability</div>",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 111,
-          "preview": "return tuple(self.burnin_tracker.read())",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/lifecycle_log.py",
-          "line": 79,
-          "preview": "for chunk in iter(lambda: handle.read(1024 * 1024), b\"\"):",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/state_snapshot.py",
-          "line": 29,
-          "preview": "for chunk in iter(lambda: handle.read(65536), b\"\"):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_burnin.py",
-          "line": 24,
-          "preview": "snapshots = tracker.read()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 28,
-          "preview": "response.read().decode(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 31,
-          "preview": "return exc.code, exc.headers.get(\"Content-Type\", \"\"), exc.read().decode()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 252,
-          "preview": "payload = json.loads(response.read().decode())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 135,
-          "preview": "return response.status, response.read().decode()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_health_server.py",
-          "line": 16,
-          "preview": "body = response.read().decode(\"utf-8\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_endpoint.py",
-          "line": 46,
-          "preview": "return response.status, response.read().decode()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_endpoint.py",
-          "line": 48,
-          "preview": "return exc.code, exc.read().decode()",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 16
-    },
-    "metrics": {
-      "definition": {
-        "file": "src/ai_trading/burnin.py",
-        "line": 84,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/allocator_tuning.py",
-          "line": 41,
-          "preview": "metrics = compute_metrics(equity)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/allocator_tuning.py",
-          "line": 44,
-          "preview": "metrics.total_return",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/allocator_tuning.py",
-          "line": 45,
-          "preview": "+ 0.35 * metrics.sharpe",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/allocator_tuning.py",
-          "line": 46,
-          "preview": "+ 0.15 * metrics.sortino",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/allocator_tuning.py",
-          "line": 47,
-          "preview": "- 1.25 * metrics.max_drawdown",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 31,
-          "preview": "metrics: PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 152,
-          "preview": "metrics = compute_metrics(equity, self.config.periods_per_year)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 161,
-          "preview": "metrics=metrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 163,
-          "preview": "excess_return=metrics.total_return - benchmark_metrics.total_return,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/benchmark_gate.py",
-          "line": 36,
-          "preview": "if report.metrics.sharpe < policy.min_sharpe:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/benchmark_gate.py",
-          "line": 38,
-          "preview": "if report.metrics.sortino < policy.min_sortino:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/benchmark_gate.py",
-          "line": 40,
-          "preview": "if report.metrics.calmar < policy.min_calmar:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/benchmark_gate.py",
-          "line": 42,
-          "preview": "if report.metrics.max_drawdown > policy.max_drawdown:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 84,
-          "preview": "def metrics(self) -> PerformanceMetrics:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 93,
-          "preview": "metrics=self.metrics(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 74,
-          "preview": "baseline_metrics=dict(champion.metrics),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 81,
-          "preview": "metrics: dict[str, float],",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 96,
-          "preview": "if name not in state.baseline_metrics or name not in metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 99,
-          "preview": "reasons = (f\"missing probation metrics: {', '.join(sorted(missing))}\",)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 104,
-          "preview": "drawdown_increase = float(metrics[\"max_drawdown\"] - baseline[\"max_drawdown\"])",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 105,
-          "preview": "sharpe_drop = float(baseline[\"sharpe\"] - metrics[\"sharpe\"])",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 106,
-          "preview": "sortino_drop = float(baseline[\"sortino\"] - metrics[\"sortino\"])",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 107,
-          "preview": "calmar_drop = float(baseline[\"calmar\"] - metrics[\"calmar\"])",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champions.py",
-          "line": 19,
-          "preview": "metrics: dict[str, float]",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champions.py",
-          "line": 54,
-          "preview": "metrics: dict[str, float],",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champions.py",
-          "line": 63,
-          "preview": "metrics={k: float(v) for k, v in metrics.items()},",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champions.py",
-          "line": 78,
-          "preview": "metrics: dict[str, float],",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champions.py",
-          "line": 116,
-          "preview": "metrics=metrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champions.py",
-          "line": 140,
-          "preview": "champion_metrics=current.metrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champions.py",
-          "line": 142,
-          "preview": "challenger_metrics=metrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champions.py",
-          "line": 163,
-          "preview": "metrics=metrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 55,
-          "preview": "from .metrics import collect_metrics, prometheus_text",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 245,
-          "preview": "f\"{report.metrics.total_return:.2%}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 250,
-          "preview": "f\"{report.metrics.annualized_return:.2%}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 255,
-          "preview": "f\"{report.metrics.sharpe:.3f}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 260,
-          "preview": "f\"{report.metrics.sortino:.3f}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 265,
-          "preview": "f\"{report.metrics.max_drawdown:.2%}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 270,
-          "preview": "f\"{report.metrics.calmar:.3f}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 419,
-          "preview": "metrics=report.metrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 469,
-          "preview": "decision = evaluate_challenger(baseline.metrics, ensemble.metrics)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 477,
-          "preview": "f\"{baseline.metrics.total_return:.2%}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 478,
-          "preview": "f\"{ensemble.metrics.total_return:.2%}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 482,
-          "preview": "f\"{baseline.metrics.sharpe:.3f}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 483,
-          "preview": "f\"{ensemble.metrics.sharpe:.3f}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 487,
-          "preview": "f\"{baseline.metrics.sortino:.3f}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 488,
-          "preview": "f\"{ensemble.metrics.sortino:.3f}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 492,
-          "preview": "f\"{baseline.metrics.max_drawdown:.2%}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 493,
-          "preview": "f\"{ensemble.metrics.max_drawdown:.2%}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 497,
-          "preview": "f\"{baseline.metrics.calmar:.3f}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 498,
-          "preview": "f\"{ensemble.metrics.calmar:.3f}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 585,
-          "preview": "health = evaluate_health(report.metrics, drift)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 631,
-          "preview": "champion_metrics = baseline.metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 633,
-          "preview": "champion_metrics = PerformanceMetrics(**active.metrics)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 799,
-          "preview": "metrics=report.metrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 811,
-          "preview": "table.add_row(\"Sharpe\", f\"{report.metrics.sharpe:.3f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 812,
-          "preview": "table.add_row(\"Sortino\", f\"{report.metrics.sortino:.3f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 813,
-          "preview": "table.add_row(\"Max drawdown\", f\"{report.metrics.max_drawdown:.2%}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 881,
-          "preview": "table.add_row(\"Total return\", f\"{report.metrics.total_return:.2%}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 882,
-          "preview": "table.add_row(\"Annualized return\", f\"{report.metrics.annualized_return:.2%}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 883,
-          "preview": "table.add_row(\"Sharpe\", f\"{report.metrics.sharpe:.3f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 884,
-          "preview": "table.add_row(\"Sortino\", f\"{report.metrics.sortino:.3f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 885,
-          "preview": "table.add_row(\"Max drawdown\", f\"{report.metrics.max_drawdown:.2%}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 886,
-          "preview": "table.add_row(\"Calmar\", f\"{report.metrics.calmar:.3f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 929,
-          "preview": "table.add_row(\"Sharpe\", f\"{result.metrics.sharpe:.3f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 930,
-          "preview": "table.add_row(\"Sortino\", f\"{result.metrics.sortino:.3f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 931,
-          "preview": "table.add_row(\"Max drawdown\", f\"{result.metrics.max_drawdown:.2%}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1650,
-          "preview": "@app.command(\"metrics\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1651,
-          "preview": "def metrics() -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/continuous.py",
-          "line": 64,
-          "preview": "promotion = evaluate_challenger(champion_metrics, challenger.metrics)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/continuous.py",
-          "line": 82,
-          "preview": "metrics=challenger.metrics.as_dict(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/continuous.py",
-          "line": 107,
-          "preview": "\"metrics\": challenger.metrics.as_dict(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cost_stress.py",
-          "line": 60,
-          "preview": "total_return=report.metrics.total_return,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cost_stress.py",
-          "line": 62,
-          "preview": "sharpe=report.metrics.sharpe,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cost_stress.py",
-          "line": 63,
-          "preview": "max_drawdown=report.metrics.max_drawdown,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 374,
-          "preview": "metrics=burnin_metrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 442,
-          "preview": ".metrics{{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:9px}}",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 484,
-          "preview": ".metrics{{grid-template-columns:repeat(2,minmax(0,1fr))}}",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 495,
-          "preview": ".metrics{{grid-template-columns:1fr 1fr}}",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 533,
-          "preview": "<div class=\"metrics\">",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 551,
-          "preview": "<div class=\"metrics\">",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 565,
-          "preview": "<div class=\"metrics\">",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 579,
-          "preview": "<div class=\"metrics\">",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 591,
-          "preview": "<div class=\"metrics\">",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/experiments.py",
-          "line": 22,
-          "preview": "metrics: Any,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/experiments.py",
-          "line": 26,
-          "preview": "metric_payload = asdict(metrics) if is_dataclass(metrics) else dict(metrics)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/experiments.py",
-          "line": 32,
-          "preview": "\"metrics\": metric_payload,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_sandbox.py",
-          "line": 14,
-          "preview": "metrics: PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_sandbox.py",
-          "line": 66,
-          "preview": "metrics = compute_metrics(curve)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_sandbox.py",
-          "line": 74,
-          "preview": "+ 0.35 * max(0.0, min(1.0, (metrics.sharpe + 1.0) / 3.0))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_sandbox.py",
-          "line": 75,
-          "preview": "+ 0.20 * max(0.0, 1.0 - metrics.max_drawdown),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_sandbox.py",
-          "line": 79,
-          "preview": "metrics=metrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/guardrails.py",
-          "line": 26,
-          "preview": "metrics: PerformanceMetrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/guardrails.py",
-          "line": 34,
-          "preview": "if metrics.sharpe < policy.min_sharpe:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/guardrails.py",
-          "line": 36,
-          "preview": "if metrics.max_drawdown > policy.max_drawdown:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/health_server.py",
-          "line": 8,
-          "preview": "from .metrics import collect_metrics, prometheus_text",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/health_server.py",
-          "line": 16,
-          "preview": "if self.path == \"/metrics\":",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 19,
-          "preview": "metrics: PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 166,
-          "preview": "metrics=compute_metrics(equity_curve),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 53,
-          "preview": "metrics = calculate_burnin_metrics(snapshots)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 57,
-          "preview": "\"total_return\": metrics.total_return,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 58,
-          "preview": "\"max_drawdown\": metrics.max_drawdown,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
-          "line": 66,
-          "preview": "evaluate_health(report.metrics, drift),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
-          "line": 68,
-          "preview": "report.metrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
-          "line": 106,
-          "preview": "champion_metrics = PerformanceMetrics(**active.metrics)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/parameter_sensitivity.py",
-          "line": 90,
-          "preview": "total_return=report.metrics.total_return,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/parameter_sensitivity.py",
-          "line": 92,
-          "preview": "sharpe=report.metrics.sharpe,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/parameter_sensitivity.py",
-          "line": 93,
-          "preview": "max_drawdown=report.metrics.max_drawdown,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/promotion_guard.py",
-          "line": 60,
-          "preview": "reasons=(f\"missing required metrics: {', '.join(sorted(missing))}\",),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness.py",
-          "line": 30,
-          "preview": "metrics: PerformanceMetrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness.py",
-          "line": 42,
-          "preview": "if metrics.sharpe < policy.min_sharpe:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness.py",
-          "line": 44,
-          "preview": "if metrics.sortino < policy.min_sortino:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness.py",
-          "line": 46,
-          "preview": "if metrics.max_drawdown > policy.max_drawdown:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness.py",
-          "line": 48,
-          "preview": "if metrics.total_return < policy.min_total_return:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_evidence.py",
-          "line": 30,
-          "preview": "def performance_component(metrics: PerformanceMetrics) -> float:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_evidence.py",
-          "line": 31,
-          "preview": "sharpe = _clamp_score((metrics.sharpe / 2.0) * 100.0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_evidence.py",
-          "line": 32,
-          "preview": "sortino = _clamp_score((metrics.sortino / 2.5) * 100.0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_evidence.py",
-          "line": 33,
-          "preview": "calmar = _clamp_score((metrics.calmar / 2.0) * 100.0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_evidence.py",
-          "line": 34,
-          "preview": "drawdown = _clamp_score((1.0 - metrics.max_drawdown / 0.20) * 100.0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/temporal_cv.py",
-          "line": 15,
-          "preview": "metrics: PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/temporal_cv.py",
-          "line": 83,
-          "preview": "metrics = compute_metrics(pd.Series(equity, dtype=float))",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 120
-    },
-    "readiness": {
-      "definition": {
-        "file": "src/ai_trading/burnin.py",
-        "line": 87,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 12,
-          "preview": "from .readiness import ReadinessReport, evaluate_readiness",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 87,
-          "preview": "def readiness(self) -> ReadinessReport:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 74,
-          "preview": "from .readiness import evaluate_readiness",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 783,
-          "preview": "@app.command(\"readiness-check\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 798,
-          "preview": "readiness = evaluate_readiness(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 806,
-          "preview": "table = Table(title=f\"Paper readiness: {symbol}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 809,
-          "preview": "table.add_row(\"Ready\", \"YES\" if readiness.ready else \"NO\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 810,
-          "preview": "table.add_row(\"Checks passed\", f\"{readiness.checks_passed}/{readiness.checks_total}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 817,
-          "preview": "if readiness.reasons:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 818,
-          "preview": "console.print(\"; \".join(readiness.reasons))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1207,
-          "preview": "@app.command(\"create-readiness-release\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1250,
-          "preview": "readiness = evaluate_deployment_readiness(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1265,
-          "preview": "for reason in readiness.reasons",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1266,
-          "preview": "if reason != \"readiness release manifest missing\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1269,
-          "preview": "console.print(\"Cannot create readiness release:\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1321,
-          "preview": "@app.command(\"revoke-readiness-release\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1337,
-          "preview": "f\"Revoked readiness release {record.release_hash}: {record.reason}\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1341,
-          "preview": "@app.command(\"deployment-readiness\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1431,
-          "preview": "readiness = evaluate_deployment_readiness(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1450,
-          "preview": "table = Table(title=\"Paper-to-live deployment readiness\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1453,
-          "preview": "table.add_row(\"Decision\", \"READY\" if readiness.allowed else \"BLOCKED\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1470,
-          "preview": "\"Composite readiness\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1509,
-          "preview": "if readiness.reasons:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1511,
-          "preview": "for reason in readiness.reasons:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1514,
-          "preview": "if not readiness.allowed:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 27,
-          "preview": "from .readiness import ReadinessPolicy, evaluate_readiness",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 590,
-          "preview": "<div class=\"section-head\"><h2>Quant evidence</h2><small>readiness inputs without false precision</small></div>",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 598,
-          "preview": "<div class=\"metric primary\"><small>Full readiness</small><strong>{readiness_display}</strong></div>",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 89,
-          "preview": "reasons.append(\"composite readiness score missing\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 92,
-          "preview": "reasons.append(\"composite readiness policy failed\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 94,
-          "preview": "reasons.append(\"composite readiness score below deployment threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 97,
-          "preview": "reasons.append(\"readiness trend missing\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 99,
-          "preview": "reasons.append(\"readiness trend is not stable\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 101,
-          "preview": "reasons.append(\"readiness history integrity report missing\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 103,
-          "preview": "reasons.append(\"readiness history integrity check failed\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 116,
-          "preview": "reasons.append(\"readiness release manifest missing\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 118,
-          "preview": "reasons.append(\"readiness release verification failed\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_readiness.py",
-          "line": 124,
-          "preview": "reasons.append(\"readiness release revoked\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness.py",
-          "line": 43,
-          "preview": "failures.append(\"Sharpe below readiness threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness.py",
-          "line": 45,
-          "preview": "failures.append(\"Sortino below readiness threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness.py",
-          "line": 47,
-          "preview": "failures.append(\"drawdown above readiness threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness.py",
-          "line": 49,
-          "preview": "failures.append(\"total return below readiness threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness.py",
-          "line": 51,
-          "preview": "failures.append(\"bootstrap confidence below readiness threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness.py",
-          "line": 55,
-          "preview": "failures.append(\"scheduler reliability below readiness threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_handshake.py",
-          "line": 32,
-          "preview": "reason=f\"worker exited before readiness with code {process.returncode}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_handshake.py",
-          "line": 53,
-          "preview": "reason=\"worker readiness heartbeat timeout\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 96,
-          "preview": "raise ValueError(\"cannot release from invalid readiness history chain\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 98,
-          "preview": "raise ValueError(\"cannot release without readiness chain head\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 100,
-          "preview": "raise ValueError(\"cannot release failing composite readiness\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 102,
-          "preview": "raise ValueError(\"cannot release unstable readiness trend\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 149,
-          "preview": "return ReadinessReleaseVerification(False, \"unsupported readiness release format\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 151,
-          "preview": "return ReadinessReleaseVerification(False, \"readiness chain is invalid\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 153,
-          "preview": "return ReadinessReleaseVerification(False, \"readiness chain head changed\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 155,
-          "preview": "return ReadinessReleaseVerification(False, \"readiness chain length changed\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 170,
-          "preview": "return ReadinessReleaseVerification(False, \"readiness release hash mismatch\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 174,
-          "preview": "return ReadinessReleaseVerification(False, \"readiness release signature missing\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 176,
-          "preview": "return ReadinessReleaseVerification(False, \"readiness release signing key missing\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 184,
-          "preview": "return ReadinessReleaseVerification(False, \"readiness release signature invalid\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 202,
-          "preview": "raise FileExistsError(\"readiness release is immutable once created\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_score.py",
-          "line": 86,
-          "preview": "raise ValueError(\"readiness weights must sum to a positive value\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_score.py",
-          "line": 99,
-          "preview": "reasons.append(\"composite readiness score below threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_score.py",
-          "line": 211,
-          "preview": "reason=\"invalid readiness history JSON\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_score.py",
-          "line": 226,
-          "preview": "reason=\"readiness history previous hash mismatch\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_score.py",
-          "line": 242,
-          "preview": "reason=\"readiness history record hash mismatch\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_trend.py",
-          "line": 38,
-          "preview": "reasons=(\"readiness history missing\",),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_trend.py",
-          "line": 47,
-          "preview": "reasons.append(\"readiness trend window incomplete\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_trend.py",
-          "line": 49,
-          "preview": "reasons.append(\"readiness score trend declining\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_trend.py",
-          "line": 51,
-          "preview": "reasons.append(\"readiness pass ratio below trend threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/startup_check.py",
-          "line": 79,
-          "preview": "reasons.append(\"readiness history integrity check failed\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 216,
-          "preview": "reason=\"waiting for worker readiness\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 219,
-          "preview": "readiness = wait_for_worker_readiness(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 224,
-          "preview": "if not readiness.ready:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 232,
-          "preview": "watch_reason = readiness.reason",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 234,
-          "preview": "runtime = readiness.waited_seconds",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 291,
-          "preview": "assert \"Full readiness\" in page",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_deployment_readiness.py",
-          "line": 186,
-          "preview": "assert \"composite readiness score missing\" in result.reasons",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_deployment_readiness.py",
-          "line": 196,
-          "preview": "reasons=(\"readiness score trend declining\",),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_deployment_readiness.py",
-          "line": 216,
-          "preview": "assert \"readiness trend is not stable\" in result.reasons",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_deployment_readiness.py",
-          "line": 239,
-          "preview": "assert \"readiness history integrity check failed\" in result.reasons",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_deployment_readiness.py",
-          "line": 257,
-          "preview": "reason=\"readiness release hash mismatch\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_deployment_readiness.py",
-          "line": 262,
-          "preview": "assert \"readiness release verification failed\" in result.reasons",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_durable_burnin_persistence.py",
-          "line": 120,
-          "preview": "report = tracker.readiness()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness.py",
-          "line": 2,
-          "preview": "from ai_trading.readiness import ReadinessPolicy, evaluate_readiness",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness_release.py",
-          "line": 128,
-          "preview": "assert verification.reason == \"readiness release hash mismatch\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness_release.py",
-          "line": 161,
-          "preview": "assert verification.reason == \"readiness chain head changed\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness_release.py",
-          "line": 227,
-          "preview": "assert verification.reason == \"readiness release signature invalid\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness_release.py",
-          "line": 258,
-          "preview": "assert verification.reason == \"readiness release signature missing\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness_score.py",
-          "line": 90,
-          "preview": "store = ReadinessHistoryStore(tmp_path / \"readiness.jsonl\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness_score.py",
-          "line": 113,
-          "preview": "store = ReadinessHistoryStore(tmp_path / \"readiness.jsonl\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness_score.py",
-          "line": 152,
-          "preview": "store = ReadinessHistoryStore(tmp_path / \"readiness.jsonl\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness_trend.py",
-          "line": 59,
-          "preview": "assert \"readiness score trend declining\" in trend.reasons",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness_trend.py",
-          "line": 66,
-          "preview": "assert \"readiness trend window incomplete\" in trend.reasons",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_startup_check.py",
-          "line": 102,
-          "preview": "readiness = ReadinessHistoryStore(tmp_path / \"readiness.jsonl\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_startup_check.py",
-          "line": 114,
-          "preview": "readiness.append(result)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_startup_check.py",
-          "line": 115,
-          "preview": "readiness.path.write_text(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_startup_check.py",
-          "line": 116,
-          "preview": "readiness.path.read_text(encoding=\"utf-8\").replace(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_startup_check.py",
-          "line": 126,
-          "preview": "jsonl_files=[readiness.path],",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_startup_check.py",
-          "line": 129,
-          "preview": "readiness_history_store=readiness,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_startup_check.py",
-          "line": 134,
-          "preview": "assert \"readiness history integrity check failed\" in report.reasons",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 99
-    },
-    "_public_runtime_snapshot": {
-      "definition": {
-        "file": "src/ai_trading/dashboard.py",
-        "line": 41,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 41,
-          "preview": "def _public_runtime_snapshot(status: HostedRuntimeStatus | None) -> dict[str, object]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 207,
-          "preview": "runtime_snapshot = _public_runtime_snapshot(runtime_status)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 681,
-          "preview": "return _public_runtime_snapshot(backend.load_runtime_status(runtime_key))",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "_display_money": {
-      "definition": {
-        "file": "src/ai_trading/dashboard.py",
-        "line": 48,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 48,
-          "preview": "def _display_money(value: float | None) -> str:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 97,
-          "preview": "f'<span>{_display_money(values[0])}</span>'",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 98,
-          "preview": "f'<span>{_display_money(values[-1])}</span>'",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 308,
-          "preview": "pnl_display = _display_money(realized_pnl)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 312,
-          "preview": "average_pnl_display = _display_money(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 318,
-          "preview": "max_drawdown_display = _display_money(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 525,
-          "preview": "<div class=\"hero-kpi\"><small>Equity</small><strong>{_display_money(equity)}</strong></div>",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 555,
-          "preview": "<div class=\"metric\"><small>Equity</small><strong>{_display_money(equity)}</strong></div>",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 556,
-          "preview": "<div class=\"metric\"><small>Cash</small><strong>{_display_money(cash)}</strong></div>",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 558,
-          "preview": "<div class=\"metric\"><small>Position value</small><strong>{_display_money(position_value)}</strong></div>",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 10
-    },
-    "_display_units": {
-      "definition": {
-        "file": "src/ai_trading/dashboard.py",
-        "line": 52,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 52,
-          "preview": "def _display_units(value: float | None) -> str:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 557,
-          "preview": "<div class=\"metric\"><small>Open units</small><strong>{_display_units(units)}</strong></div>",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "_display_ratio": {
-      "definition": {
-        "file": "src/ai_trading/dashboard.py",
-        "line": 56,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 56,
-          "preview": "def _display_ratio(value: float | None) -> str:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 315,
-          "preview": "profit_factor_display = _display_ratio(",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "_equity_chart_svg": {
-      "definition": {
-        "file": "src/ai_trading/dashboard.py",
-        "line": 64,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 64,
-          "preview": "def _equity_chart_svg(snapshots: tuple[BurnInSnapshot, ...]) -> str:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 340,
-          "preview": "equity_chart = _equity_chart_svg(burnin_snapshots)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "_bootstrap_positive_probability": {
-      "definition": {
-        "file": "src/ai_trading/dashboard.py",
-        "line": 105,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 105,
-          "preview": "def _bootstrap_positive_probability(equities: tuple[float, ...]) -> float | None:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 341,
-          "preview": "bootstrap_probability = _bootstrap_positive_probability(",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "render_dashboard": {
-      "definition": {
-        "file": "src/ai_trading/dashboard.py",
-        "line": 112,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 112,
-          "preview": "def render_dashboard(",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 738,
-          "preview": "payload = render_dashboard(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard.py",
-          "line": 1,
-          "preview": "from ai_trading.dashboard import render_dashboard",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard.py",
-          "line": 37,
-          "preview": "page = render_dashboard(journal)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard.py",
-          "line": 77,
-          "preview": "page = render_dashboard(journal)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard.py",
-          "line": 100,
-          "preview": "page = render_dashboard(journal)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_engine_status.py",
-          "line": 5,
-          "preview": "from ai_trading.dashboard import render_dashboard",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_engine_status.py",
-          "line": 33,
-          "preview": "page = render_dashboard(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 10,
-          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 75,
-          "preview": "page = render_dashboard(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 11,
-          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 264,
-          "preview": "page = render_dashboard(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 278,
-          "preview": "page = render_dashboard(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 304,
-          "preview": "page = render_dashboard(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 324,
-          "preview": "page = render_dashboard(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 11,
-          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 169,
-          "preview": "page = render_dashboard(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 197,
-          "preview": "page = render_dashboard(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 239,
-          "preview": "page = render_dashboard(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 257,
-          "preview": "page = render_dashboard(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 276,
-          "preview": "page = render_dashboard(",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 21
-    },
-    "serve_dashboard": {
-      "definition": {
-        "file": "src/ai_trading/dashboard.py",
-        "line": 618,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 34,
-          "preview": "from .dashboard import serve_dashboard",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1890,
-          "preview": "serve_dashboard(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 618,
-          "preview": "def serve_dashboard(",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 10,
-          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 37,
-          "preview": "target=serve_dashboard,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 11,
-          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 125,
-          "preview": "target=serve_dashboard,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 11,
-          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 141,
-          "preview": "target=serve_dashboard,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_endpoint.py",
-          "line": 10,
-          "preview": "from ai_trading.dashboard import serve_dashboard",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_endpoint.py",
-          "line": 59,
-          "preview": "target=serve_dashboard,",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 11
-    },
-    "execute_paper_cycle": {
-      "definition": {
-        "file": "src/ai_trading/dashboard.py",
-        "line": 666,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 666,
-          "preview": "def execute_paper_cycle() -> PaperCycleResult:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 672,
-          "preview": "effective_cycle_executor = execute_paper_cycle",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "load_status_snapshot": {
-      "definition": {
-        "file": "src/ai_trading/dashboard.py",
-        "line": 679,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 679,
-          "preview": "def load_status_snapshot() -> dict[str, object]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 712,
-          "preview": "self._send_json(load_status_snapshot())",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 715,
-          "preview": "snapshot = load_status_snapshot()",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "Handler": {
-      "definition": {
-        "file": "src/ai_trading/dashboard.py",
-        "line": 685,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 685,
-          "preview": "class Handler(BaseHTTPRequestHandler):",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 771,
-          "preview": "ThreadingHTTPServer((host, port), Handler).serve_forever()",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "_send_json": {
-      "definition": {
-        "file": "src/ai_trading/dashboard.py",
-        "line": 686,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 686,
-          "preview": "def _send_json(",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 703,
-          "preview": "self._send_json(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 712,
-          "preview": "self._send_json(load_status_snapshot())",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 717,
-          "preview": "self._send_json(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 727,
-          "preview": "self._send_json(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 763,
-          "preview": "self._send_json(",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 6
-    },
-    "do_GET": {
-      "definition": {
-        "file": "src/ai_trading/dashboard.py",
-        "line": 700,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 700,
-          "preview": "def do_GET(self) -> None:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/health_server.py",
-          "line": 15,
-          "preview": "def do_GET(self) -> None:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "do_POST": {
-      "definition": {
-        "file": "src/ai_trading/dashboard.py",
-        "line": 753,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 753,
-          "preview": "def do_POST(self) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "log_message": {
-      "definition": {
-        "file": "src/ai_trading/dashboard.py",
-        "line": 768,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 768,
-          "preview": "def log_message(self, format: str, *args: object) -> None:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/health_server.py",
-          "line": 51,
-          "preview": "def log_message(self, format: str, *args) -> None:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "PerformanceMetrics": {
-      "definition": {
-        "file": "src/ai_trading/performance.py",
-        "line": 10,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 12,
-          "preview": "from .performance import PerformanceMetrics, buy_and_hold_equity, compute_metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 31,
-          "preview": "metrics: PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 32,
-          "preview": "benchmark_metrics: PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 11,
-          "preview": "from .performance import PerformanceMetrics, compute_metrics, infer_periods_per_year",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 27,
-          "preview": ") -> PerformanceMetrics:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 84,
-          "preview": "def metrics(self) -> PerformanceMetrics:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 62,
-          "preview": "from .performance import PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 633,
-          "preview": "champion_metrics = PerformanceMetrics(**active.metrics)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/continuous.py",
-          "line": 12,
-          "preview": "from .performance import PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/continuous.py",
-          "line": 34,
-          "preview": "champion_metrics: PerformanceMetrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_sandbox.py",
-          "line": 8,
-          "preview": "from .performance import PerformanceMetrics, compute_metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_sandbox.py",
-          "line": 14,
-          "preview": "metrics: PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/guardrails.py",
-          "line": 7,
-          "preview": "from .performance import PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/guardrails.py",
-          "line": 26,
-          "preview": "metrics: PerformanceMetrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 10,
-          "preview": "from .performance import PerformanceMetrics, compute_metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 19,
-          "preview": "metrics: PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
-          "line": 15,
-          "preview": "from .performance import PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
-          "line": 47,
-          "preview": ") -> tuple[HealthDecision, RegimeValidation, PerformanceMetrics]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
-          "line": 82,
-          "preview": "current_metrics: PerformanceMetrics | None = None",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
-          "line": 106,
-          "preview": "champion_metrics = PerformanceMetrics(**active.metrics)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/performance.py",
-          "line": 10,
-          "preview": "class PerformanceMetrics:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/performance.py",
-          "line": 41,
-          "preview": "def compute_metrics(equity: pd.Series, periods_per_year: float = 252.0) -> PerformanceMetrics:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/performance.py",
-          "line": 74,
-          "preview": "return PerformanceMetrics(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/promotion.py",
-          "line": 5,
-          "preview": "from .performance import PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/promotion.py",
-          "line": 23,
-          "preview": "champion: PerformanceMetrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/promotion.py",
-          "line": 24,
-          "preview": "challenger: PerformanceMetrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/promotion.py",
-          "line": 44,
-          "preview": "champion_periods: list[PerformanceMetrics],",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/promotion.py",
-          "line": 45,
-          "preview": "challenger_periods: list[PerformanceMetrics],",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness.py",
-          "line": 5,
-          "preview": "from .performance import PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness.py",
-          "line": 30,
-          "preview": "metrics: PerformanceMetrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_evidence.py",
-          "line": 8,
-          "preview": "from .performance import PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_evidence.py",
-          "line": 17,
-          "preview": "performance: PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_evidence.py",
-          "line": 30,
-          "preview": "def performance_component(metrics: PerformanceMetrics) -> float:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/temporal_cv.py",
-          "line": 8,
-          "preview": "from .performance import PerformanceMetrics, compute_metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/temporal_cv.py",
-          "line": 15,
-          "preview": "metrics: PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/tuning.py",
-          "line": 10,
-          "preview": "from .performance import PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/tuning.py",
-          "line": 29,
-          "preview": "metrics: PerformanceMetrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_benchmark_gate.py",
-          "line": 4,
-          "preview": "from ai_trading.performance import PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_benchmark_gate.py",
-          "line": 17,
-          "preview": "metrics = PerformanceMetrics(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_cost_stress.py",
-          "line": 7,
-          "preview": "from ai_trading.performance import PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_cost_stress.py",
-          "line": 19,
-          "preview": "metrics = PerformanceMetrics(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_guardrails.py",
-          "line": 3,
-          "preview": "from ai_trading.performance import PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_guardrails.py",
-          "line": 6,
-          "preview": "def metrics(sharpe: float = 1.0, drawdown: float = 0.08) -> PerformanceMetrics:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_guardrails.py",
-          "line": 7,
-          "preview": "return PerformanceMetrics(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multi_period_promotion.py",
-          "line": 1,
-          "preview": "from ai_trading.performance import PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multi_period_promotion.py",
-          "line": 5,
-          "preview": "def metric(total_return: float, sharpe: float, drawdown: float) -> PerformanceMetrics:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multi_period_promotion.py",
-          "line": 6,
-          "preview": "return PerformanceMetrics(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_promotion.py",
-          "line": 1,
-          "preview": "from ai_trading.performance import PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_promotion.py",
-          "line": 5,
-          "preview": "def metrics(total_return: float, sharpe: float, max_drawdown: float) -> PerformanceMetrics:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_promotion.py",
-          "line": 6,
-          "preview": "return PerformanceMetrics(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness.py",
-          "line": 1,
-          "preview": "from ai_trading.performance import PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness.py",
-          "line": 5,
-          "preview": "def good_metrics() -> PerformanceMetrics:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness.py",
-          "line": 6,
-          "preview": "return PerformanceMetrics(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness_evidence.py",
-          "line": 6,
-          "preview": "from ai_trading.performance import PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_readiness_evidence.py",
-          "line": 20,
-          "preview": "performance=PerformanceMetrics(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_rollback_model.py",
-          "line": 6,
-          "preview": "from ai_trading.performance import PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_rollback_model.py",
-          "line": 10,
-          "preview": "def metrics() -> PerformanceMetrics:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_rollback_model.py",
-          "line": 11,
-          "preview": "return PerformanceMetrics(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_tuning.py",
-          "line": 1,
-          "preview": "from ai_trading.performance import PerformanceMetrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_tuning.py",
-          "line": 5,
-          "preview": "def metric(total_return: float, sharpe: float, sortino: float, drawdown: float) -> PerformanceMetrics:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_tuning.py",
-          "line": 6,
-          "preview": "return PerformanceMetrics(",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 61
-    },
-    "as_dict": {
-      "definition": {
-        "file": "src/ai_trading/performance.py",
-        "line": 19,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 25,
-          "preview": "def as_dict(self) -> dict[str, int | None]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 415,
-          "preview": "\"walk_forward\": wf_config.as_dict(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 421,
-          "preview": "\"benchmark\": report.benchmark_metrics.as_dict(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/continuous.py",
-          "line": 82,
-          "preview": "metrics=challenger.metrics.as_dict(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/continuous.py",
-          "line": 86,
-          "preview": "\"walk_forward\": wf.as_dict(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/continuous.py",
-          "line": 107,
-          "preview": "\"metrics\": challenger.metrics.as_dict(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/performance.py",
-          "line": 19,
-          "preview": "def as_dict(self) -> dict[str, float]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_rollback_model.py",
-          "line": 32,
-          "preview": "metrics=metrics().as_dict(),",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 8
-    },
-    "_safe_ratio": {
-      "definition": {
-        "file": "src/ai_trading/performance.py",
-        "line": 23,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/performance.py",
-          "line": 23,
-          "preview": "def _safe_ratio(numerator: float, denominator: float) -> float:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/performance.py",
-          "line": 59,
-          "preview": "sharpe = _safe_ratio(mean_ann, volatility)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/performance.py",
-          "line": 67,
-          "preview": "sortino = _safe_ratio(mean_ann, downside_dev)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/performance.py",
-          "line": 72,
-          "preview": "calmar = _safe_ratio(annualized_return, max_drawdown)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "infer_periods_per_year": {
-      "definition": {
-        "file": "src/ai_trading/performance.py",
-        "line": 29,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 11,
-          "preview": "from .performance import PerformanceMetrics, compute_metrics, infer_periods_per_year",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 41,
-          "preview": "periods_per_year = infer_periods_per_year(equity.index)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/performance.py",
-          "line": 29,
-          "preview": "def infer_periods_per_year(index: pd.Index) -> float:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_performance.py",
-          "line": 4,
-          "preview": "from ai_trading.performance import buy_and_hold_equity, compute_metrics, infer_periods_per_year",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_performance.py",
-          "line": 27,
-          "preview": "periods = infer_periods_per_year(index)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 5
-    },
-    "compute_metrics": {
-      "definition": {
-        "file": "src/ai_trading/performance.py",
-        "line": 41,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/allocator_tuning.py",
-          "line": 9,
-          "preview": "from .performance import compute_metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/allocator_tuning.py",
-          "line": 41,
-          "preview": "metrics = compute_metrics(equity)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 12,
-          "preview": "from .performance import PerformanceMetrics, buy_and_hold_equity, compute_metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 152,
-          "preview": "metrics = compute_metrics(equity, self.config.periods_per_year)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 153,
-          "preview": "benchmark_metrics = compute_metrics(benchmark, self.config.periods_per_year)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 11,
-          "preview": "from .performance import PerformanceMetrics, compute_metrics, infer_periods_per_year",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 42,
-          "preview": "return compute_metrics(equity, periods_per_year=periods_per_year)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/evolution_manager.py",
-          "line": 17,
-          "preview": "from .performance import compute_metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/evolution_manager.py",
-          "line": 83,
-          "preview": "return float(compute_metrics(equity).sharpe)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_sandbox.py",
-          "line": 8,
-          "preview": "from .performance import PerformanceMetrics, compute_metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_sandbox.py",
-          "line": 66,
-          "preview": "metrics = compute_metrics(curve)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/marginal_alpha.py",
-          "line": 7,
-          "preview": "from .performance import compute_metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/marginal_alpha.py",
-          "line": 43,
-          "preview": "base = compute_metrics(base_equity)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/marginal_alpha.py",
-          "line": 44,
-          "preview": "blended = compute_metrics(blended_equity)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 10,
-          "preview": "from .performance import PerformanceMetrics, compute_metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 166,
-          "preview": "metrics=compute_metrics(equity_curve),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_evolution.py",
-          "line": 14,
-          "preview": "from .performance import compute_metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_evolution.py",
-          "line": 94,
-          "preview": "return float(compute_metrics(equity).sharpe)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/performance.py",
-          "line": 41,
-          "preview": "def compute_metrics(equity: pd.Series, periods_per_year: float = 252.0) -> PerformanceMetrics:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/temporal_cv.py",
-          "line": 8,
-          "preview": "from .performance import PerformanceMetrics, compute_metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/temporal_cv.py",
-          "line": 83,
-          "preview": "metrics = compute_metrics(pd.Series(equity, dtype=float))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_performance.py",
-          "line": 4,
-          "preview": "from ai_trading.performance import buy_and_hold_equity, compute_metrics, infer_periods_per_year",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_performance.py",
-          "line": 9,
-          "preview": "metrics = compute_metrics(equity)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 23
-    },
-    "buy_and_hold_equity": {
-      "definition": {
-        "file": "src/ai_trading/performance.py",
-        "line": 85,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 12,
-          "preview": "from .performance import PerformanceMetrics, buy_and_hold_equity, compute_metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 147,
-          "preview": "benchmark = buy_and_hold_equity(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/performance.py",
-          "line": 85,
-          "preview": "def buy_and_hold_equity(",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_performance.py",
-          "line": 4,
-          "preview": "from ai_trading.performance import buy_and_hold_equity, compute_metrics, infer_periods_per_year",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_performance.py",
-          "line": 17,
-          "preview": "curve = buy_and_hold_equity(prices, 100_000.0)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 5
-    },
-    "DurablePersistence": {
-      "definition": {
-        "file": "tests/test_dashboard_persistence.py",
-        "line": 22,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 22,
-          "preview": "class DurablePersistence:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 171,
-          "preview": "persistence=DurablePersistence(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 241,
-          "preview": "persistence=DurablePersistence(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 259,
-          "preview": "persistence=DurablePersistence(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 278,
-          "preview": "persistence=DurablePersistence(),",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 5
-    },
     "load_runtime": {
       "definition": {
         "file": "tests/test_dashboard_persistence.py",
@@ -4191,7 +1438,7 @@
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 129,
+          "line": 158,
           "preview": "persisted = persistence.load_runtime(runtime_key, starting_cash)",
           "definition_candidate": false
         },
@@ -4454,7 +1701,7 @@
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 128,
+          "line": 157,
           "preview": "recent = persistence.list_trades(runtime_key, limit=200)",
           "definition_candidate": false
         },
@@ -4531,7 +1778,7 @@
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 135,
+          "line": 164,
           "preview": "load_performance = getattr(persistence, \"load_trade_performance\", None)",
           "definition_candidate": false
         },
@@ -4596,7 +1843,7 @@
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 142,
+          "line": 171,
           "preview": "load_burnin = getattr(persistence, \"list_burnin_snapshots\", None)",
           "definition_candidate": false
         },
@@ -4637,6 +1884,12 @@
           "definition_candidate": true
         },
         {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 297,
+          "preview": "def list_burnin_snapshots(self, runtime_key: str):",
+          "definition_candidate": false
+        },
+        {
           "file": "tests/test_durable_burnin_persistence.py",
           "line": 63,
           "preview": "_assert_snapshots(backend.list_burnin_snapshots(RUNTIME_KEY))",
@@ -4667,7 +1920,7 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 12
+      "occurrence_count": 13
     },
     "list_regimes": {
       "definition": {
@@ -4679,7 +1932,7 @@
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 144,
+          "line": 173,
           "preview": "load_regimes = getattr(persistence, \"list_regimes\", None)",
           "definition_candidate": false
         },
@@ -4744,13 +1997,13 @@
       "occurrences": [
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 134,
+          "line": 163,
           "preview": "runtime_status = persistence.load_runtime_status(runtime_key)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/dashboard.py",
-          "line": 681,
+          "line": 724,
           "preview": "return _public_runtime_snapshot(backend.load_runtime_status(runtime_key))",
           "definition_candidate": false
         },
@@ -5160,52 +2413,127 @@
       ],
       "occurrence_count": 1
     },
-    "test_metrics_for_monotonic_equity": {
+    "ReadinessPersistence": {
       "definition": {
-        "file": "tests/test_performance.py",
-        "line": 7,
+        "file": "tests/test_dashboard_persistence.py",
+        "line": 296,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 296,
+          "preview": "class ReadinessPersistence(DurablePersistence):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 330,
+          "preview": "persistence=ReadinessPersistence(),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "test_dashboard_readiness_panel_shows_eight_criteria_with_thresholds": {
+      "definition": {
+        "file": "tests/test_dashboard_persistence.py",
+        "line": 327,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_performance.py",
-          "line": 7,
-          "preview": "def test_metrics_for_monotonic_equity() -> None:",
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 327,
+          "preview": "def test_dashboard_readiness_panel_shows_eight_criteria_with_thresholds(tmp_path) -> None:",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_buy_and_hold_is_normalized_to_starting_equity": {
+    "good_metrics": {
       "definition": {
-        "file": "tests/test_performance.py",
-        "line": 15,
+        "file": "tests/test_readiness.py",
+        "line": 5,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_performance.py",
-          "line": 15,
-          "preview": "def test_buy_and_hold_is_normalized_to_starting_equity() -> None:",
+          "file": "tests/test_readiness.py",
+          "line": 5,
+          "preview": "def good_metrics() -> PerformanceMetrics:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_readiness.py",
+          "line": 19,
+          "preview": "metrics=good_metrics(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_readiness.py",
+          "line": 31,
+          "preview": "metrics=good_metrics(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_readiness.py",
+          "line": 44,
+          "preview": "metrics=good_metrics(),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "test_readiness_passes_strong_burn_in": {
+      "definition": {
+        "file": "tests/test_readiness.py",
+        "line": 17,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_readiness.py",
+          "line": 17,
+          "preview": "def test_readiness_passes_strong_burn_in() -> None:",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_infer_periods_per_year_from_elapsed_timestamps": {
+    "test_readiness_rejects_short_burn_in": {
       "definition": {
-        "file": "tests/test_performance.py",
-        "line": 25,
+        "file": "tests/test_readiness.py",
+        "line": 29,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_performance.py",
-          "line": 25,
-          "preview": "def test_infer_periods_per_year_from_elapsed_timestamps() -> None:",
+          "file": "tests/test_readiness.py",
+          "line": 29,
+          "preview": "def test_readiness_rejects_short_burn_in() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_readiness_report_exposes_all_structured_checks": {
+      "definition": {
+        "file": "tests/test_readiness.py",
+        "line": 42,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_readiness.py",
+          "line": 42,
+          "preview": "def test_readiness_report_exposes_all_structured_checks() -> None:",
           "definition_candidate": true
         }
       ],
