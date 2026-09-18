@@ -18,11 +18,21 @@ class ReadinessPolicy:
 
 
 @dataclass(frozen=True)
+class ReadinessCheck:
+    name: str
+    passed: bool
+    value: float | int
+    threshold: float | int
+    comparison: str
+
+
+@dataclass(frozen=True)
 class ReadinessReport:
     ready: bool
     checks_passed: int
     checks_total: int
     reasons: tuple[str, ...]
+    checks: tuple[ReadinessCheck, ...] = ()
 
 
 def evaluate_readiness(
@@ -35,29 +45,82 @@ def evaluate_readiness(
     policy: ReadinessPolicy | None = None,
 ) -> ReadinessReport:
     policy = policy or ReadinessPolicy()
-    failures: list[str] = []
+    checks = (
+        ReadinessCheck(
+            name="Burn-in bars",
+            passed=burn_in_bars >= policy.min_burn_in_bars,
+            value=burn_in_bars,
+            threshold=policy.min_burn_in_bars,
+            comparison=">=",
+        ),
+        ReadinessCheck(
+            name="Sharpe",
+            passed=metrics.sharpe >= policy.min_sharpe,
+            value=metrics.sharpe,
+            threshold=policy.min_sharpe,
+            comparison=">=",
+        ),
+        ReadinessCheck(
+            name="Sortino",
+            passed=metrics.sortino >= policy.min_sortino,
+            value=metrics.sortino,
+            threshold=policy.min_sortino,
+            comparison=">=",
+        ),
+        ReadinessCheck(
+            name="Max drawdown",
+            passed=metrics.max_drawdown <= policy.max_drawdown,
+            value=metrics.max_drawdown,
+            threshold=policy.max_drawdown,
+            comparison="<=",
+        ),
+        ReadinessCheck(
+            name="Total return",
+            passed=metrics.total_return >= policy.min_total_return,
+            value=metrics.total_return,
+            threshold=policy.min_total_return,
+            comparison=">=",
+        ),
+        ReadinessCheck(
+            name="Bootstrap confidence",
+            passed=bootstrap_probability_positive
+            >= policy.min_positive_bootstrap_probability,
+            value=bootstrap_probability_positive,
+            threshold=policy.min_positive_bootstrap_probability,
+            comparison=">=",
+        ),
+        ReadinessCheck(
+            name="Regime coverage",
+            passed=regimes_covered >= policy.min_regimes_covered,
+            value=regimes_covered,
+            threshold=policy.min_regimes_covered,
+            comparison=">=",
+        ),
+        ReadinessCheck(
+            name="Scheduler errors",
+            passed=scheduler_errors <= policy.max_consecutive_scheduler_errors,
+            value=scheduler_errors,
+            threshold=policy.max_consecutive_scheduler_errors,
+            comparison="<=",
+        ),
+    )
 
-    if burn_in_bars < policy.min_burn_in_bars:
-        failures.append("insufficient burn-in duration")
-    if metrics.sharpe < policy.min_sharpe:
-        failures.append("Sharpe below readiness threshold")
-    if metrics.sortino < policy.min_sortino:
-        failures.append("Sortino below readiness threshold")
-    if metrics.max_drawdown > policy.max_drawdown:
-        failures.append("drawdown above readiness threshold")
-    if metrics.total_return < policy.min_total_return:
-        failures.append("total return below readiness threshold")
-    if bootstrap_probability_positive < policy.min_positive_bootstrap_probability:
-        failures.append("bootstrap confidence below readiness threshold")
-    if regimes_covered < policy.min_regimes_covered:
-        failures.append("insufficient regime coverage")
-    if scheduler_errors > policy.max_consecutive_scheduler_errors:
-        failures.append("scheduler reliability below readiness threshold")
-
-    total = 8
+    reason_by_name = {
+        "Burn-in bars": "insufficient burn-in duration",
+        "Sharpe": "Sharpe below readiness threshold",
+        "Sortino": "Sortino below readiness threshold",
+        "Max drawdown": "drawdown above readiness threshold",
+        "Total return": "total return below readiness threshold",
+        "Bootstrap confidence": "bootstrap confidence below readiness threshold",
+        "Regime coverage": "insufficient regime coverage",
+        "Scheduler errors": "scheduler reliability below readiness threshold",
+    }
+    failures = [reason_by_name[check.name] for check in checks if not check.passed]
+    passed = sum(check.passed for check in checks)
     return ReadinessReport(
         ready=not failures,
-        checks_passed=total - len(failures),
-        checks_total=total,
+        checks_passed=passed,
+        checks_total=len(checks),
         reasons=tuple(failures),
+        checks=checks,
     )
