@@ -297,6 +297,7 @@
         "src/ai_trading/lifecycle_log.py",
         "src/ai_trading/meta_router.py",
         "src/ai_trading/meta_store.py",
+        "src/ai_trading/model.py",
         "src/ai_trading/model_blend.py",
         "src/ai_trading/model_quality.py",
         "src/ai_trading/model_quarantine.py",
@@ -326,7 +327,7 @@
         "tests/test_multiasset_scheduler.py"
       ],
       "in_degree": 6,
-      "out_degree": 47,
+      "out_degree": 48,
       "path": "src/ai_trading/multiasset_runtime.py"
     },
     {
@@ -405,6 +406,42 @@
       "path": "src/ai_trading/performance.py"
     },
     {
+      "dependencies": [
+        "src/ai_trading/audit.py",
+        "src/ai_trading/broker.py",
+        "src/ai_trading/config.py",
+        "src/ai_trading/features.py",
+        "src/ai_trading/file_persistence.py",
+        "src/ai_trading/model.py",
+        "src/ai_trading/model_codec.py",
+        "src/ai_trading/online.py",
+        "src/ai_trading/persistence.py",
+        "src/ai_trading/regime.py",
+        "src/ai_trading/risk.py",
+        "src/ai_trading/runtime_lock.py",
+        "src/ai_trading/runtime_state.py",
+        "src/ai_trading/trade_journal.py"
+      ],
+      "dependents": [
+        "src/ai_trading/cli.py",
+        "src/ai_trading/hosted_runtime.py",
+        "src/ai_trading/orchestrator.py",
+        "src/ai_trading/paper_cycle.py",
+        "tests/test_hosted_persistence.py",
+        "tests/test_hosted_runtime.py",
+        "tests/test_orchestrator_trigger.py",
+        "tests/test_paper_cycle.py",
+        "tests/test_paper_cycle_materialized_fresh.py",
+        "tests/test_paper_cycle_postgres.py",
+        "tests/test_runtime.py",
+        "tests/test_runtime_persistence.py",
+        "tests/test_runtime_targeted_step.py"
+      ],
+      "in_degree": 13,
+      "out_degree": 14,
+      "path": "src/ai_trading/runtime.py"
+    },
+    {
       "dependencies": [],
       "dependents": [
         "src/ai_trading/backtest.py",
@@ -474,37 +511,67 @@
     },
     {
       "dependencies": [
-        "src/ai_trading/audit.py",
-        "src/ai_trading/broker.py",
-        "src/ai_trading/config.py",
-        "src/ai_trading/features.py",
-        "src/ai_trading/file_persistence.py",
-        "src/ai_trading/model.py",
-        "src/ai_trading/model_codec.py",
+        "src/ai_trading/features.py"
+      ],
+      "dependents": [
+        "src/ai_trading/backtest.py",
+        "src/ai_trading/confidence_calibration.py",
+        "src/ai_trading/engine.py",
+        "src/ai_trading/ensemble.py",
+        "src/ai_trading/expert_returns.py",
+        "src/ai_trading/expert_uncertainty.py",
+        "src/ai_trading/meta_router.py",
+        "src/ai_trading/model_blend.py",
+        "src/ai_trading/multiasset_backtest.py",
+        "src/ai_trading/multiasset_runtime.py",
         "src/ai_trading/online.py",
-        "src/ai_trading/persistence.py",
-        "src/ai_trading/regime.py",
+        "src/ai_trading/quality_store.py",
         "src/ai_trading/risk.py",
-        "src/ai_trading/runtime_lock.py",
+        "src/ai_trading/runtime.py",
+        "src/ai_trading/specialist_experts.py",
+        "tests/test_confidence_calibration.py",
+        "tests/test_expert_uncertainty.py",
+        "tests/test_meta_router.py",
+        "tests/test_model_blend.py",
+        "tests/test_online.py",
+        "tests/test_quality_store.py",
+        "tests/test_risk.py"
+      ],
+      "in_degree": 22,
+      "out_degree": 1,
+      "path": "src/ai_trading/model.py"
+    },
+    {
+      "dependencies": [
+        "src/ai_trading/bootstrap_robustness.py",
+        "src/ai_trading/burnin.py",
+        "src/ai_trading/file_persistence.py",
+        "src/ai_trading/hosted_runtime.py",
+        "src/ai_trading/operational_overview.py",
+        "src/ai_trading/paper_cycle.py",
+        "src/ai_trading/paper_cycle_service.py",
+        "src/ai_trading/performance_metrics.py",
+        "src/ai_trading/persistence.py",
+        "src/ai_trading/persistence_factory.py",
+        "src/ai_trading/readiness.py",
         "src/ai_trading/runtime_state.py",
-        "src/ai_trading/trade_journal.py"
+        "src/ai_trading/runtime_status.py",
+        "src/ai_trading/scheduler_endpoint.py",
+        "src/ai_trading/trade_journal.py",
+        "src/ai_trading/watchdog.py"
       ],
       "dependents": [
         "src/ai_trading/cli.py",
-        "src/ai_trading/hosted_runtime.py",
-        "src/ai_trading/orchestrator.py",
-        "src/ai_trading/paper_cycle.py",
-        "tests/test_orchestrator_trigger.py",
-        "tests/test_paper_cycle.py",
-        "tests/test_paper_cycle_materialized_fresh.py",
-        "tests/test_paper_cycle_postgres.py",
-        "tests/test_runtime.py",
-        "tests/test_runtime_persistence.py",
-        "tests/test_runtime_targeted_step.py"
+        "tests/test_dashboard.py",
+        "tests/test_dashboard_engine_status.py",
+        "tests/test_dashboard_health.py",
+        "tests/test_dashboard_overview.py",
+        "tests/test_dashboard_persistence.py",
+        "tests/test_scheduler_endpoint.py"
       ],
-      "in_degree": 11,
-      "out_degree": 14,
-      "path": "src/ai_trading/runtime.py"
+      "in_degree": 7,
+      "out_degree": 16,
+      "path": "src/ai_trading/dashboard.py"
     },
     {
       "dependencies": [],
@@ -535,37 +602,6 @@
       "in_degree": 22,
       "out_degree": 0,
       "path": "src/ai_trading/features.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/bootstrap_robustness.py",
-        "src/ai_trading/burnin.py",
-        "src/ai_trading/file_persistence.py",
-        "src/ai_trading/hosted_runtime.py",
-        "src/ai_trading/operational_overview.py",
-        "src/ai_trading/paper_cycle.py",
-        "src/ai_trading/paper_cycle_service.py",
-        "src/ai_trading/performance_metrics.py",
-        "src/ai_trading/persistence.py",
-        "src/ai_trading/persistence_factory.py",
-        "src/ai_trading/readiness.py",
-        "src/ai_trading/runtime_state.py",
-        "src/ai_trading/runtime_status.py",
-        "src/ai_trading/scheduler_endpoint.py",
-        "src/ai_trading/trade_journal.py"
-      ],
-      "dependents": [
-        "src/ai_trading/cli.py",
-        "tests/test_dashboard.py",
-        "tests/test_dashboard_engine_status.py",
-        "tests/test_dashboard_health.py",
-        "tests/test_dashboard_overview.py",
-        "tests/test_dashboard_persistence.py",
-        "tests/test_scheduler_endpoint.py"
-      ],
-      "in_degree": 7,
-      "out_degree": 15,
-      "path": "src/ai_trading/dashboard.py"
     },
     {
       "dependencies": [
@@ -685,6 +721,33 @@
       "path": "src/ai_trading/supervisor.py"
     },
     {
+      "dependencies": [],
+      "dependents": [
+        "src/ai_trading/cli.py",
+        "src/ai_trading/dashboard.py",
+        "src/ai_trading/health_server.py",
+        "src/ai_trading/metrics.py",
+        "src/ai_trading/multiasset_scheduler.py",
+        "src/ai_trading/operational_overview.py",
+        "src/ai_trading/readiness_handshake.py",
+        "src/ai_trading/supervisor.py",
+        "src/ai_trading/watchdog_enforcer.py",
+        "src/ai_trading/worker_monitor.py",
+        "tests/test_cli_self_test.py",
+        "tests/test_dashboard_health.py",
+        "tests/test_dashboard_overview.py",
+        "tests/test_metrics.py",
+        "tests/test_readiness_handshake.py",
+        "tests/test_smoke_e2e.py",
+        "tests/test_watchdog.py",
+        "tests/test_watchdog_enforcer.py",
+        "tests/test_worker_monitor.py"
+      ],
+      "in_degree": 19,
+      "out_degree": 0,
+      "path": "src/ai_trading/watchdog.py"
+    },
+    {
       "dependencies": [
         "src/ai_trading/broker.py",
         "src/ai_trading/config.py",
@@ -740,29 +803,29 @@
     },
     {
       "dependencies": [
-        "src/ai_trading/features.py"
+        "src/ai_trading/backtest.py",
+        "src/ai_trading/champions.py",
+        "src/ai_trading/config.py",
+        "src/ai_trading/continuous.py",
+        "src/ai_trading/drift.py",
+        "src/ai_trading/features.py",
+        "src/ai_trading/governor_state_store.py",
+        "src/ai_trading/guardrails.py",
+        "src/ai_trading/performance.py",
+        "src/ai_trading/regime_validation.py",
+        "src/ai_trading/runtime.py"
       ],
       "dependents": [
-        "src/ai_trading/backtest.py",
-        "src/ai_trading/confidence_calibration.py",
-        "src/ai_trading/engine.py",
-        "src/ai_trading/ensemble.py",
-        "src/ai_trading/expert_uncertainty.py",
-        "src/ai_trading/meta_router.py",
-        "src/ai_trading/model_blend.py",
-        "src/ai_trading/online.py",
-        "src/ai_trading/risk.py",
-        "src/ai_trading/runtime.py",
-        "src/ai_trading/specialist_experts.py",
-        "tests/test_confidence_calibration.py",
-        "tests/test_expert_uncertainty.py",
-        "tests/test_meta_router.py",
-        "tests/test_model_blend.py",
-        "tests/test_risk.py"
+        "src/ai_trading/cli.py",
+        "src/ai_trading/hosted_runtime.py",
+        "src/ai_trading/scheduler.py",
+        "tests/test_hosted_persistence.py",
+        "tests/test_hosted_runtime.py",
+        "tests/test_orchestrator_trigger.py"
       ],
-      "in_degree": 16,
-      "out_degree": 1,
-      "path": "src/ai_trading/model.py"
+      "in_degree": 6,
+      "out_degree": 11,
+      "path": "src/ai_trading/orchestrator.py"
     },
     {
       "dependencies": [],
@@ -908,30 +971,6 @@
     },
     {
       "dependencies": [
-        "src/ai_trading/backtest.py",
-        "src/ai_trading/champions.py",
-        "src/ai_trading/config.py",
-        "src/ai_trading/continuous.py",
-        "src/ai_trading/drift.py",
-        "src/ai_trading/features.py",
-        "src/ai_trading/governor_state_store.py",
-        "src/ai_trading/guardrails.py",
-        "src/ai_trading/performance.py",
-        "src/ai_trading/regime_validation.py",
-        "src/ai_trading/runtime.py"
-      ],
-      "dependents": [
-        "src/ai_trading/cli.py",
-        "src/ai_trading/hosted_runtime.py",
-        "src/ai_trading/scheduler.py",
-        "tests/test_orchestrator_trigger.py"
-      ],
-      "in_degree": 4,
-      "out_degree": 11,
-      "path": "src/ai_trading/orchestrator.py"
-    },
-    {
-      "dependencies": [
         "src/ai_trading/crisis_gate.py",
         "src/ai_trading/evolution.py",
         "src/ai_trading/expert_factory.py",
@@ -953,28 +992,6 @@
       "in_degree": 3,
       "out_degree": 12,
       "path": "src/ai_trading/evolution_manager.py"
-    },
-    {
-      "dependencies": [],
-      "dependents": [
-        "src/ai_trading/cli.py",
-        "src/ai_trading/health_server.py",
-        "src/ai_trading/metrics.py",
-        "src/ai_trading/multiasset_scheduler.py",
-        "src/ai_trading/readiness_handshake.py",
-        "src/ai_trading/supervisor.py",
-        "src/ai_trading/watchdog_enforcer.py",
-        "src/ai_trading/worker_monitor.py",
-        "tests/test_metrics.py",
-        "tests/test_readiness_handshake.py",
-        "tests/test_smoke_e2e.py",
-        "tests/test_watchdog.py",
-        "tests/test_watchdog_enforcer.py",
-        "tests/test_worker_monitor.py"
-      ],
-      "in_degree": 14,
-      "out_degree": 0,
-      "path": "src/ai_trading/watchdog.py"
     },
     {
       "dependencies": [
@@ -1042,6 +1059,28 @@
       "in_degree": 13,
       "out_degree": 0,
       "path": "src/ai_trading/readiness_score.py"
+    },
+    {
+      "dependencies": [
+        "src/ai_trading/audit.py",
+        "src/ai_trading/burnin.py",
+        "src/ai_trading/performance_metrics.py",
+        "src/ai_trading/persistence.py",
+        "src/ai_trading/runtime_state.py",
+        "src/ai_trading/runtime_status.py",
+        "src/ai_trading/trade_journal.py"
+      ],
+      "dependents": [
+        "src/ai_trading/persistence_factory.py",
+        "tests/test_cumulative_performance_persistence.py",
+        "tests/test_durable_burnin_persistence.py",
+        "tests/test_paper_cycle_postgres.py",
+        "tests/test_persistence_factory.py",
+        "tests/test_postgres_persistence.py"
+      ],
+      "in_degree": 6,
+      "out_degree": 7,
+      "path": "src/ai_trading/postgres_persistence.py"
     },
     {
       "dependencies": [
@@ -1149,27 +1188,6 @@
       "in_degree": 5,
       "out_degree": 7,
       "path": "src/ai_trading/hosted_runtime.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/audit.py",
-        "src/ai_trading/burnin.py",
-        "src/ai_trading/performance_metrics.py",
-        "src/ai_trading/persistence.py",
-        "src/ai_trading/runtime_state.py",
-        "src/ai_trading/runtime_status.py",
-        "src/ai_trading/trade_journal.py"
-      ],
-      "dependents": [
-        "src/ai_trading/persistence_factory.py",
-        "tests/test_cumulative_performance_persistence.py",
-        "tests/test_durable_burnin_persistence.py",
-        "tests/test_paper_cycle_postgres.py",
-        "tests/test_postgres_persistence.py"
-      ],
-      "in_degree": 5,
-      "out_degree": 7,
-      "path": "src/ai_trading/postgres_persistence.py"
     },
     {
       "dependencies": [
@@ -1313,6 +1331,26 @@
       "path": "src/ai_trading/deployment_readiness.py"
     },
     {
+      "dependencies": [
+        "src/ai_trading/config.py",
+        "src/ai_trading/ensemble.py",
+        "src/ai_trading/features.py",
+        "src/ai_trading/model.py",
+        "src/ai_trading/performance.py",
+        "src/ai_trading/portfolio.py",
+        "src/ai_trading/portfolio_intelligence.py",
+        "src/ai_trading/portfolio_risk.py",
+        "src/ai_trading/regime.py"
+      ],
+      "dependents": [
+        "src/ai_trading/cli.py",
+        "tests/test_multiasset_backtest.py"
+      ],
+      "in_degree": 2,
+      "out_degree": 9,
+      "path": "src/ai_trading/multiasset_backtest.py"
+    },
+    {
       "dependencies": [],
       "dependents": [
         "src/ai_trading/cli.py",
@@ -1389,25 +1427,6 @@
     },
     {
       "dependencies": [
-        "src/ai_trading/config.py",
-        "src/ai_trading/ensemble.py",
-        "src/ai_trading/features.py",
-        "src/ai_trading/performance.py",
-        "src/ai_trading/portfolio.py",
-        "src/ai_trading/portfolio_intelligence.py",
-        "src/ai_trading/portfolio_risk.py",
-        "src/ai_trading/regime.py"
-      ],
-      "dependents": [
-        "src/ai_trading/cli.py",
-        "tests/test_multiasset_backtest.py"
-      ],
-      "in_degree": 2,
-      "out_degree": 8,
-      "path": "src/ai_trading/multiasset_backtest.py"
-    },
-    {
-      "dependencies": [
         "src/ai_trading/evolution_manager.py",
         "src/ai_trading/expert_diversity.py",
         "src/ai_trading/expert_pool.py",
@@ -1424,6 +1443,24 @@
       "in_degree": 2,
       "out_degree": 8,
       "path": "src/ai_trading/multiasset_evolution.py"
+    },
+    {
+      "dependencies": [
+        "src/ai_trading/__init__.py",
+        "src/ai_trading/burnin.py",
+        "src/ai_trading/dashboard.py",
+        "src/ai_trading/hosted_runtime.py",
+        "src/ai_trading/operational_overview.py",
+        "src/ai_trading/persistence.py",
+        "src/ai_trading/runtime_state.py",
+        "src/ai_trading/runtime_status.py",
+        "src/ai_trading/trade_journal.py",
+        "src/ai_trading/watchdog.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 10,
+      "path": "tests/test_dashboard_overview.py"
     },
     {
       "dependencies": [
@@ -1494,6 +1531,24 @@
       "in_degree": 7,
       "out_degree": 2,
       "path": "src/ai_trading/model_codec.py"
+    },
+    {
+      "dependencies": [
+        "src/ai_trading/governor_state_store.py",
+        "src/ai_trading/orchestrator.py"
+      ],
+      "dependents": [
+        "src/ai_trading/cli.py",
+        "src/ai_trading/hosted_runtime.py",
+        "tests/test_hosted_persistence.py",
+        "tests/test_hosted_runtime.py",
+        "tests/test_scheduler.py",
+        "tests/test_scheduler_governor.py",
+        "tests/test_scheduler_iteration_callback.py"
+      ],
+      "in_degree": 7,
+      "out_degree": 2,
+      "path": "src/ai_trading/scheduler.py"
     },
     {
       "dependencies": [
@@ -1609,23 +1664,6 @@
         "src/ai_trading/burnin.py",
         "src/ai_trading/dashboard.py",
         "src/ai_trading/hosted_runtime.py",
-        "src/ai_trading/operational_overview.py",
-        "src/ai_trading/persistence.py",
-        "src/ai_trading/runtime_state.py",
-        "src/ai_trading/runtime_status.py",
-        "src/ai_trading/trade_journal.py"
-      ],
-      "dependents": [],
-      "in_degree": 0,
-      "out_degree": 9,
-      "path": "tests/test_dashboard_overview.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/__init__.py",
-        "src/ai_trading/burnin.py",
-        "src/ai_trading/dashboard.py",
-        "src/ai_trading/hosted_runtime.py",
         "src/ai_trading/performance_metrics.py",
         "src/ai_trading/persistence.py",
         "src/ai_trading/runtime_state.py",
@@ -1687,26 +1725,9 @@
       "in_degree": 0,
       "out_degree": 9,
       "path": "tests/test_quantitative_artifact.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/__init__.py",
-        "src/ai_trading/data_quality.py",
-        "src/ai_trading/global_allocator.py",
-        "src/ai_trading/model_quality.py",
-        "src/ai_trading/performance.py",
-        "src/ai_trading/readiness_evidence.py",
-        "src/ai_trading/recovery_health.py",
-        "src/ai_trading/reliability.py",
-        "src/ai_trading/robustness.py"
-      ],
-      "dependents": [],
-      "in_degree": 0,
-      "out_degree": 9,
-      "path": "tests/test_readiness_evidence.py"
     }
   ],
-  "edge_count": 1054,
+  "edge_count": 1726,
   "generated_by": "dbrckk/repo-brain-v7-graph",
   "node_count": 323,
   "schema_version": 1

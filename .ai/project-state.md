@@ -27,19 +27,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T20:11:44Z
+Generated: 2026-09-18T20:51:42Z
 
 ### Git
 - Branch: `main`
-- Head: `c74442231f31`
-- Commit date: 2026-09-18T22:11:11+02:00
-- Commit: chore(ai): enable Kotlin Java graph resolver
-- Tracked files: 416
+- Head: `c834694f8aea`
+- Commit date: 2026-09-18T22:50:46+02:00
+- Commit: chore(ai): enable same-package symbol graph enrichment
+- Tracked files: 446
 
 ### Recently changed files
 - `.repo-standards.yml`
 - `.github/workflows/semantic-refresh.yml`
-- `AGENTS.md`
 
 ### Project signals
 - `pyproject.toml`
