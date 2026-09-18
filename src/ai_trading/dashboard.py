@@ -173,6 +173,11 @@ def render_dashboard(
     runtime_revision_display = (
         "-" if runtime_revision is None or storage_error else str(runtime_revision)
     )
+    cycle_errors_display = (
+        "-"
+        if runtime_status is None or storage_error
+        else str(runtime_status.consecutive_cycle_errors)
+    )
     if runtime_model is None or storage_error:
         model_display = "-"
         model_checksum = "-"
@@ -186,6 +191,8 @@ def render_dashboard(
     else:
         if engine_status == "STALE":
             operational_alerts.append("worker heartbeat expired")
+        if runtime_status is not None and runtime_status.consecutive_cycle_errors > 0:
+            operational_alerts.append("paper cycle reliability degraded")
         if (
             durable_runtime
             and runtime_model is None
@@ -294,6 +301,7 @@ th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
 <div class="metric"><small>Last processed</small><strong>{html.escape(last_processed)}</strong></div>
 <div class="metric"><small>Processed bars</small><strong>{processed_bars_display}</strong></div>
 <div class="metric"><small>Runtime revision</small><strong>{runtime_revision_display}</strong></div>
+<div class="metric"><small>Consecutive cycle errors</small><strong>{cycle_errors_display}</strong></div>
 <div class="metric"><small>Model</small><strong>{html.escape(model_display)}</strong></div>
 <div class="metric"><small>Model checksum</small><strong>{html.escape(model_checksum)}</strong></div>
 <div class="metric"><small>Signal</small><strong>{html.escape(signal)}</strong></div>
