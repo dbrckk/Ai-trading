@@ -14,7 +14,7 @@ Status: active
 
 ## Current priority
 - Validate and merge durable per-bar paper burn-in equity snapshots and observability.
-- Then enrich burn-in evidence with scheduler reliability, regime coverage, and bootstrap confidence before evaluating full readiness or changing trading logic.
+- Then enrich burn-in evidence with scheduler reliability, regime coverage, bootstrap confidence, and interval-aware annualization before evaluating full readiness or changing trading logic.
 
 ## Validation
 - Standards workflow: configured.
