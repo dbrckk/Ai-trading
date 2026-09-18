@@ -24,7 +24,7 @@ from .paper_cycle_service import (
 from .performance_metrics import calculate_performance_metrics
 from .persistence import PaperPersistence
 from .persistence_factory import build_paper_persistence
-from .readiness import ReadinessPolicy, evaluate_readiness
+from .readiness import ReadinessCheck, ReadinessPolicy, ReadinessReport, evaluate_readiness
 from .runtime_state import RuntimeStateStore
 from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore, runtime_status_snapshot
 from .scheduler_endpoint import handle_scheduler_request
@@ -99,6 +99,35 @@ def _equity_chart_svg(snapshots: tuple[BurnInSnapshot, ...]) -> str:
         '</div></div>'
     )
 
+
+
+def _readiness_number(check: ReadinessCheck, value: float) -> str:
+    if check.name in {"Max drawdown", "Total return", "Bootstrap confidence"}:
+        return f"{float(value):.1%}"
+    if check.name in {"Burn-in bars", "Regime coverage", "Scheduler errors"}:
+        return str(int(value))
+    return f"{float(value):.2f}"
+
+
+def _readiness_panel(report: ReadinessReport | None) -> str:
+    if report is None:
+        return '<div class="readiness-empty">Readiness evidence is not complete yet.</div>'
+    rows = []
+    for check in report.checks:
+        state = "pass" if check.passed else "fail"
+        label = "PASS" if check.passed else "FAIL"
+        value = _readiness_number(check, check.value)
+        threshold = _readiness_number(check, check.threshold)
+        rows.append(
+            '<div class="readiness-row">'
+            f'<span class="criterion">{html.escape(check.name)}</span>'
+            f'<span class="criterion-value">{html.escape(value)}</span>'
+            f'<span class="criterion-threshold">{html.escape(check.comparison)} '
+            f'{html.escape(threshold)}</span>'
+            f'<strong class="criterion-status {state}">{label}</strong>'
+            '</div>'
+        )
+    return '<div class="readiness-grid">' + "".join(rows) + '</div>'
 
 
 @lru_cache(maxsize=16)
@@ -390,6 +419,7 @@ def render_dashboard(
     )
     sharpe_display = "-" if burnin_metrics is None else f"{burnin_metrics.sharpe:.2f}"
     sortino_display = "-" if burnin_metrics is None else f"{burnin_metrics.sortino:.2f}"
+    readiness_panel = _readiness_panel(readiness_report)
     status_class = (
         "status-ok"
         if engine_status == "RUNNING" and not operational_alerts
@@ -449,6 +479,14 @@ small,.muted{{color:var(--muted)}}
 .alert-box{{margin-top:12px;padding:11px 13px;border-radius:11px;background:rgba(11,22,39,.72);border:1px solid var(--border);font-size:.84rem}}
 .alert-box.warn{{border-color:rgba(255,210,122,.28);background:rgba(87,62,9,.19);color:#ffe0a0}}
 .runtime-reason{{display:block;margin-top:7px;line-height:1.45;font-size:.77rem}}
+.readiness-grid{{display:grid;gap:7px;margin-top:12px}}
+.readiness-row{{display:grid;grid-template-columns:minmax(145px,1.5fr) minmax(72px,.65fr) minmax(86px,.75fr) 68px;align-items:center;gap:9px;padding:10px 12px;border:1px solid rgba(148,163,184,.11);border-radius:11px;background:rgba(7,15,29,.68)}}
+.criterion{{font-size:.82rem;font-weight:700;color:#d9e3f2}}
+.criterion-value,.criterion-threshold{{font-size:.8rem;color:#9fb0c8;text-align:right}}
+.criterion-status{{font-size:.72rem;text-align:center;padding:5px 7px;border-radius:999px;border:1px solid}}
+.criterion-status.pass{{color:#bdf7d6;background:rgba(20,94,60,.28);border-color:rgba(99,230,163,.24)}}
+.criterion-status.fail{{color:#ffc0c0;background:rgba(115,29,29,.26);border-color:rgba(255,138,138,.25)}}
+.readiness-empty{{margin-top:12px;padding:14px;border:1px dashed #31425f;border-radius:11px;color:var(--muted);text-align:center;font-size:.8rem}}
 .equity-chart{{margin-top:11px;background:linear-gradient(180deg,rgba(5,11,22,.88),rgba(8,16,30,.74));border:1px solid var(--border);border-radius:15px;padding:11px;overflow:hidden}}
 .equity-chart svg{{display:block;width:100%;height:240px;filter:drop-shadow(0 12px 24px rgba(0,0,0,.22))}}
 .chart-line{{fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}}
@@ -486,6 +524,10 @@ tbody tr:hover{{background:rgba(113,167,255,.045)}}
   .metric strong{{font-size:1.02rem}}
   .metric.primary strong{{font-size:1.18rem}}
   .section{{padding:12px;border-radius:14px}}
+  .readiness-row{{grid-template-columns:1fr auto;gap:6px 10px}}
+  .criterion-value,.criterion-threshold{{text-align:left}}
+  .criterion-status{{grid-column:2;grid-row:1 / span 2}}
+  .criterion-threshold{{grid-column:1}}
   .equity-chart svg{{height:180px}}
 }}
 @media (max-width:430px){{
@@ -598,8 +640,9 @@ tbody tr:hover{{background:rgba(113,167,255,.045)}}
 <div class="metric primary"><small>Full readiness</small><strong>{readiness_display}</strong></div>
 <div class="metric"><small>Readiness checks</small><strong>{readiness_checks_display}</strong></div>
 </div>
+{readiness_panel}
 <small class="runtime-reason">Observed regimes: {html.escape(regime_names_display)}.</small>
-<small class="runtime-reason">Sharpe and Sortino are annualized from the actual elapsed time covered by durable burn-in timestamps, not a fixed 252-period assumption.</small>
+<small class="runtime-reason">Each readiness criterion shows its current value, required threshold and PASS/FAIL result. Sharpe and Sortino are annualized from the actual elapsed time covered by durable burn-in timestamps.</small>
 </section>
 
 <section class="section" id="trades">

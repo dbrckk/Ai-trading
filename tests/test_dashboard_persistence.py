@@ -291,3 +291,60 @@ def test_dashboard_quant_evidence_is_explicit_and_non_misleading(tmp_path) -> No
     assert "Full readiness" in page
     assert "Readiness checks" in page
     assert "pending interval-aware annualization" not in page
+
+
+class ReadinessPersistence(DurablePersistence):
+    def list_burnin_snapshots(self, runtime_key: str):
+        assert runtime_key == RUNTIME_KEY
+        return (
+            BurnInSnapshot(
+                timestamp_utc="2026-09-16T05:10:00+00:00",
+                equity=12_000.0,
+                scheduler_errors=0,
+                regimes_covered=2,
+                bootstrap_probability_positive=0.0,
+                processed_bars=5,
+            ),
+            BurnInSnapshot(
+                timestamp_utc="2026-09-16T05:15:00+00:00",
+                equity=12_400.0,
+                scheduler_errors=0,
+                regimes_covered=2,
+                bootstrap_probability_positive=0.0,
+                processed_bars=6,
+            ),
+            BurnInSnapshot(
+                timestamp_utc="2026-09-16T05:20:00+00:00",
+                equity=12_845.0,
+                scheduler_errors=0,
+                regimes_covered=2,
+                bootstrap_probability_positive=0.0,
+                processed_bars=7,
+            ),
+        )
+
+
+def test_dashboard_readiness_panel_shows_eight_criteria_with_thresholds(tmp_path) -> None:
+    page = render_dashboard(
+        TradeJournal(tmp_path / "empty.jsonl"),
+        persistence=ReadinessPersistence(),
+        runtime_key=RUNTIME_KEY,
+    )
+
+    assert 'class="readiness-grid"' in page
+    assert page.count('class="readiness-row"') == 8
+    for label in (
+        "Burn-in bars",
+        "Sharpe",
+        "Sortino",
+        "Max drawdown",
+        "Total return",
+        "Bootstrap confidence",
+        "Regime coverage",
+        "Scheduler errors",
+    ):
+        assert label in page
+    assert "PASS" in page
+    assert "FAIL" in page
+    assert "&gt;=" in page or ">=" in page
+    assert "&lt;=" in page or "<=" in page
