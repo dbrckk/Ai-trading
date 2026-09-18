@@ -1,11 +1,18 @@
 # Change impact
 
-Base: ab927799c27bd77134597e1bb961dc591a3dfca8
-Head: ed67a813e1308fb8f0fef662b7920ce60fc075d6
+Base: 4763d9c3138f50a8bf0c7ae00ce131850b1dadb8
+Head: 0cbd00161bf87bd6f5a8278594f033dd7b6cf330
 
 ## Changed files
 - M src/ai_trading/dashboard.py
+- M src/ai_trading/file_persistence.py
+- M src/ai_trading/persistence.py
+- M src/ai_trading/postgres_persistence.py
+- M src/ai_trading/runtime.py
 - M tests/test_dashboard_persistence.py
+- M tests/test_file_persistence.py
+- M tests/test_postgres_persistence.py
+- M tests/test_runtime_persistence.py
 
 ## Affected areas
 - src
@@ -13,6 +20,10 @@ Head: ed67a813e1308fb8f0fef662b7920ce60fc075d6
 
 ## Related test candidates
 - tests/test_dashboard.py
+- tests/test_file_persistence.py
+- tests/test_persistence.py
+- tests/test_postgres_persistence.py
+- tests/test_runtime.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

@@ -1934,6 +1934,8 @@ trade_performance = calculate_performance_metrics(recent)
 performance_scope = "latest 200 trade events"
 load_burnin = getattr(persistence, "list_burnin_snapshots", None)
 burnin_snapshots = tuple(load_burnin(runtime_key)) if callable(load_burnin) else ()
+load_regimes = getattr(persistence, "list_regimes", None)
+regimes = tuple(load_regimes(runtime_key)) if callable(load_regimes) else ()
 burnin_metrics = (
 ⋮----
 recent = ()
@@ -1941,6 +1943,7 @@ state = None
 runtime_status = None
 trade_performance = None
 burnin_snapshots = ()
+regimes = ()
 burnin_metrics = None
 performance_scope = "unavailable"
 storage_error = True
@@ -2039,6 +2042,10 @@ bootstrap_probability_display = (
 bootstrap_threshold = ReadinessPolicy().min_positive_bootstrap_probability
 scheduler_reliable = (
 scheduler_reliability_display = (
+regimes_covered = len(regimes)
+regimes_covered_display = "-" if storage_error else str(regimes_covered)
+regimes_threshold = ReadinessPolicy().min_regimes_covered
+regime_names_display = "none" if not regimes else " · ".join(regimes)
 status_class = (
 ⋮----
 effective_settings = settings or HostedPaperSettings.from_env()
@@ -2861,9 +2868,13 @@ temp = self.model_path.with_suffix(".tmp")
 ⋮----
 state = commit.state
 ⋮----
+regimes = set(self.list_regimes(""))
+⋮----
 def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics
 ⋮----
 def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]
+⋮----
+def list_regimes(self, runtime_key: str) -> tuple[str, ...]
 ⋮----
 def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None
 ⋮----
@@ -4402,6 +4413,7 @@ model: ModelBlob
 trade: TradeSnapshot | None
 audit_event: str
 audit_payload: dict[str, Any]
+observed_regime: str | None = None
 ⋮----
 class PaperPersistence(Protocol)
 ⋮----
@@ -4414,6 +4426,8 @@ def commit_step(self, runtime_key: str, commit: RuntimeStepCommit) -> CommitOutc
 def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics: ...
 ⋮----
 def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]: ...
+⋮----
+def list_regimes(self, runtime_key: str) -> tuple[str, ...]: ...
 ⋮----
 def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None: ...
 ⋮----
@@ -4710,6 +4724,8 @@ rows = cursor.fetchall()
 def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics
 ⋮----
 def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]
+⋮----
+def list_regimes(self, runtime_key: str) -> tuple[str, ...]
 ⋮----
 def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None
 ⋮----
@@ -5961,6 +5977,7 @@ model = deserialize_model(persisted.model)
 learn_label = labels.get(learn_idx)
 ⋮----
 row = features.loc[signal_idx, FEATURES]
+observed_regime = detect_regime(row).name
 prediction: Prediction = model.predict_one(row)
 ⋮----
 execution_price = float(df.at[execution_idx, "Open"])
@@ -7283,6 +7300,8 @@ def load_trade_performance(self, runtime_key: str)
 ⋮----
 def list_burnin_snapshots(self, runtime_key: str)
 ⋮----
+def list_regimes(self, runtime_key: str) -> tuple[str, ...]
+⋮----
 def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None
 ⋮----
 class FailingPersistence
@@ -7718,6 +7737,13 @@ restored = FilePaperPersistence(root=tmp_path).load_runtime(key, 100_000.0)
 def test_file_backend_rejects_stale_revision(tmp_path) -> None
 ⋮----
 commit = RuntimeStepCommit(
+⋮----
+def test_file_backend_persists_unique_regimes(tmp_path) -> None
+⋮----
+first = RuntimeStepCommit(
+second = RuntimeStepCommit(
+⋮----
+restored = FilePaperPersistence(root=tmp_path)
 ````
 
 ## File: tests/test_generation_progress.py
@@ -8557,6 +8583,10 @@ def test_runtime_status_survives_new_instance(backend) -> None
 status = HostedRuntimeStatus(
 ⋮----
 restored = PostgresPaperPersistence(DATABASE_URL).load_runtime_status(RUNTIME_KEY)
+⋮----
+def test_regime_coverage_is_deduplicated_and_persisted(backend) -> None
+⋮----
+snapshots = backend.list_burnin_snapshots(RUNTIME_KEY)
 ````
 
 ## File: tests/test_process_watch.py

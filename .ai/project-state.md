@@ -27,18 +27,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T18:11:08Z
+Generated: 2026-09-18T18:19:25Z
 
 ### Git
 - Branch: `main`
-- Head: `ed67a813e130`
-- Commit date: 2026-09-18T20:09:04+02:00
-- Commit: Merge PR #33: quantitative evidence dashboard
+- Head: `0cbd00161bf8`
+- Commit date: 2026-09-18T20:19:11+02:00
+- Commit: Merge PR #34: durable regime coverage
 - Tracked files: 396
 
 ### Recently changed files
-- `src/ai_trading/dashboard.py`
 - `tests/test_dashboard_persistence.py`
+- `tests/test_file_persistence.py`
+- `tests/test_postgres_persistence.py`
+- `tests/test_runtime_persistence.py`
+- `src/ai_trading/dashboard.py`
 
 ### Project signals
 - `pyproject.toml`
