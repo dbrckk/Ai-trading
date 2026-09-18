@@ -10,6 +10,10 @@ from psycopg.rows import dict_row
 from psycopg.types.json import Jsonb
 
 from .audit import build_audit_record
+from .performance_metrics import (
+    TradePerformanceMetrics,
+    performance_metrics_from_totals,
+)
 from .persistence import (
     CommitOutcome,
     ModelBlob,
@@ -68,6 +72,19 @@ _SCHEMA_STATEMENTS = (
     )
     """,
     """
+    CREATE TABLE IF NOT EXISTS paper_trade_performance (
+        runtime_key text PRIMARY KEY
+            REFERENCES paper_runtime_state(runtime_key) ON DELETE CASCADE,
+        trade_count bigint NOT NULL DEFAULT 0,
+        realized_pnl double precision NOT NULL DEFAULT 0,
+        gross_profit double precision NOT NULL DEFAULT 0,
+        gross_loss double precision NOT NULL DEFAULT 0,
+        peak_realized_pnl double precision NOT NULL DEFAULT 0,
+        max_drawdown double precision NOT NULL DEFAULT 0,
+        updated_at timestamptz NOT NULL DEFAULT now()
+    )
+    """,
+    """
     CREATE TABLE IF NOT EXISTS paper_audit_events (
         id bigserial PRIMARY KEY,
         runtime_key text NOT NULL
@@ -97,6 +114,73 @@ _SCHEMA_STATEMENTS = (
     """
     CREATE INDEX IF NOT EXISTS paper_audit_runtime_id_idx
         ON paper_audit_events (runtime_key, id DESC)
+    """,
+    """
+    WITH source AS (
+        SELECT t.runtime_key, t.id, t.pnl
+        FROM paper_trades AS t
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM paper_trade_performance AS p
+            WHERE p.runtime_key = t.runtime_key
+        )
+    ),
+    curve AS (
+        SELECT
+            runtime_key,
+            id,
+            pnl,
+            SUM(pnl) OVER (
+                PARTITION BY runtime_key
+                ORDER BY id
+                ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+            ) AS cumulative_pnl
+        FROM source
+    ),
+    peaks AS (
+        SELECT
+            runtime_key,
+            id,
+            pnl,
+            cumulative_pnl,
+            MAX(GREATEST(cumulative_pnl, 0.0)) OVER (
+                PARTITION BY runtime_key
+                ORDER BY id
+                ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+            ) AS running_peak
+        FROM curve
+    ),
+    summary AS (
+        SELECT
+            runtime_key,
+            COUNT(*) AS trade_count,
+            SUM(pnl) AS realized_pnl,
+            SUM(CASE WHEN pnl > 0 THEN pnl ELSE 0 END) AS gross_profit,
+            -SUM(CASE WHEN pnl < 0 THEN pnl ELSE 0 END) AS gross_loss,
+            MAX(running_peak) AS peak_realized_pnl,
+            MAX(running_peak - cumulative_pnl) AS max_drawdown
+        FROM peaks
+        GROUP BY runtime_key
+    )
+    INSERT INTO paper_trade_performance (
+        runtime_key,
+        trade_count,
+        realized_pnl,
+        gross_profit,
+        gross_loss,
+        peak_realized_pnl,
+        max_drawdown
+    )
+    SELECT
+        runtime_key,
+        trade_count,
+        realized_pnl,
+        gross_profit,
+        gross_loss,
+        peak_realized_pnl,
+        max_drawdown
+    FROM summary
+    ON CONFLICT (runtime_key) DO NOTHING
     """,
 )
 
@@ -216,6 +300,7 @@ class PostgresPaperPersistence(PaperPersistence):
                     )
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     ON CONFLICT (runtime_key, event_key) DO NOTHING
+                    RETURNING id
                     """,
                     (
                         runtime_key,
@@ -231,6 +316,66 @@ class PostgresPaperPersistence(PaperPersistence):
                         trade.strategy,
                     ),
                 )
+                trade_inserted = cursor.fetchone() is not None
+                if trade_inserted:
+                    pnl = float(trade.pnl)
+                    cursor.execute(
+                        """
+                        INSERT INTO paper_trade_performance (
+                            runtime_key,
+                            trade_count,
+                            realized_pnl,
+                            gross_profit,
+                            gross_loss,
+                            peak_realized_pnl,
+                            max_drawdown,
+                            updated_at
+                        )
+                        VALUES (
+                            %s,
+                            1,
+                            %s,
+                            GREATEST(%s, 0.0),
+                            GREATEST(-%s, 0.0),
+                            GREATEST(%s, 0.0),
+                            GREATEST(-%s, 0.0),
+                            now()
+                        )
+                        ON CONFLICT (runtime_key) DO UPDATE SET
+                            trade_count = paper_trade_performance.trade_count + 1,
+                            realized_pnl = (
+                                paper_trade_performance.realized_pnl
+                                + EXCLUDED.realized_pnl
+                            ),
+                            gross_profit = (
+                                paper_trade_performance.gross_profit
+                                + EXCLUDED.gross_profit
+                            ),
+                            gross_loss = (
+                                paper_trade_performance.gross_loss
+                                + EXCLUDED.gross_loss
+                            ),
+                            peak_realized_pnl = GREATEST(
+                                paper_trade_performance.peak_realized_pnl,
+                                paper_trade_performance.realized_pnl
+                                + EXCLUDED.realized_pnl
+                            ),
+                            max_drawdown = GREATEST(
+                                paper_trade_performance.max_drawdown,
+                                GREATEST(
+                                    paper_trade_performance.peak_realized_pnl,
+                                    paper_trade_performance.realized_pnl
+                                    + EXCLUDED.realized_pnl
+                                )
+                                - (
+                                    paper_trade_performance.realized_pnl
+                                    + EXCLUDED.realized_pnl
+                                )
+                            ),
+                            updated_at = now()
+                        """,
+                        (runtime_key, pnl, pnl, pnl, pnl, pnl),
+                    )
 
             cursor.execute(
                 """
@@ -366,6 +511,38 @@ class PostgresPaperPersistence(PaperPersistence):
                 strategy=str(row["strategy"]),
             )
             for row in rows
+        )
+
+    def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics:
+        with self._connect() as connection, connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT
+                    trade_count,
+                    realized_pnl,
+                    gross_profit,
+                    gross_loss,
+                    max_drawdown
+                FROM paper_trade_performance
+                WHERE runtime_key = %s
+                """,
+                (runtime_key,),
+            )
+            row = cursor.fetchone()
+        if row is None:
+            return performance_metrics_from_totals(
+                trade_count=0,
+                realized_pnl=0.0,
+                gross_profit=0.0,
+                gross_loss=0.0,
+                max_drawdown=0.0,
+            )
+        return performance_metrics_from_totals(
+            trade_count=int(row["trade_count"]),
+            realized_pnl=float(row["realized_pnl"]),
+            gross_profit=float(row["gross_profit"]),
+            gross_loss=float(row["gross_loss"]),
+            max_drawdown=float(row["max_drawdown"]),
         )
 
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:
