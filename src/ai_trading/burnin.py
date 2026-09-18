@@ -18,6 +18,7 @@ class BurnInSnapshot:
     scheduler_errors: int
     regimes_covered: int
     bootstrap_probability_positive: float
+    processed_bars: int = 0
 
 
 class BurnInTracker:
@@ -31,6 +32,7 @@ class BurnInTracker:
         scheduler_errors: int = 0,
         regimes_covered: int = 0,
         bootstrap_probability_positive: float = 0.0,
+        processed_bars: int = 0,
     ) -> BurnInSnapshot:
         if equity <= 0:
             raise ValueError("equity must be positive")
@@ -40,6 +42,7 @@ class BurnInTracker:
             scheduler_errors=int(scheduler_errors),
             regimes_covered=int(regimes_covered),
             bootstrap_probability_positive=float(bootstrap_probability_positive),
+            processed_bars=int(processed_bars),
         )
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.path.open("a", encoding="utf-8") as handle:
@@ -52,7 +55,9 @@ class BurnInTracker:
         snapshots: list[BurnInSnapshot] = []
         for line in self.path.read_text(encoding="utf-8").splitlines():
             if line.strip():
-                snapshots.append(BurnInSnapshot(**json.loads(line)))
+                payload = json.loads(line)
+                payload.setdefault("processed_bars", len(snapshots) + 1)
+                snapshots.append(BurnInSnapshot(**payload))
         return snapshots
 
     def metrics(self) -> PerformanceMetrics:
@@ -69,7 +74,7 @@ class BurnInTracker:
         latest = snapshots[-1]
         return evaluate_readiness(
             metrics=self.metrics(),
-            burn_in_bars=len(snapshots),
+            burn_in_bars=latest.processed_bars or len(snapshots),
             bootstrap_probability_positive=latest.bootstrap_probability_positive,
             regimes_covered=latest.regimes_covered,
             scheduler_errors=latest.scheduler_errors,
