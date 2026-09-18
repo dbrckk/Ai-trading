@@ -332,57 +332,57 @@ def render_dashboard(
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AI Trading — Live</title>
 <style>
-:root{color-scheme:dark}
-*{box-sizing:border-box}
-body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;background:#08111f;color:#eef4ff}
-main{max-width:1480px;margin:auto;padding:20px}
-h1,h2{margin:0}
-h1{font-size:clamp(1.45rem,4vw,2rem)}
-h2{font-size:1rem;color:#d8e4f5}
-small,.muted{color:#94a3b8}
-.card{background:#0f1a2b;border:1px solid #22304a;border-radius:18px;padding:18px;box-shadow:0 12px 40px rgba(0,0,0,.22)}
-.header{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
-.status-badge{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:7px 11px;font-size:.82rem;font-weight:700;border:1px solid}
-.status-ok{color:#b7f7d0;background:#0d2a1d;border-color:#245c40}
-.status-warn{color:#ffe6a6;background:#30250a;border-color:#6b571b}
-.status-error{color:#ffc0c0;background:#351313;border-color:#6c2d2d}
-.section{margin-top:18px;padding-top:4px}
-.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:10px}
-.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
-.metric{background:#0a1423;border:1px solid #1d2a40;border-radius:12px;padding:13px;min-width:0}
-.metric strong{display:block;font-size:1.24rem;margin-top:5px;overflow-wrap:anywhere}
-.metric.primary strong{font-size:1.48rem}
-.alert-box{margin-top:14px;padding:12px 14px;border-radius:12px;background:#0a1423;border:1px solid #1d2a40}
-.alert-box.warn{border-color:#6b571b;background:#2a220b}
-.runtime-reason{display:block;margin-top:8px;line-height:1.45}
-.equity-chart{margin-top:12px;background:#08111f;border:1px solid #1d2a40;border-radius:14px;padding:10px}
-.equity-chart svg{display:block;width:100%;height:220px}
-.chart-line{fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
-.chart-line.positive{stroke:#59d98e}
-.chart-line.negative{stroke:#ff7b7b}
-.chart-grid{stroke:#24334d;stroke-width:1}
-.chart-scale{display:flex;justify-content:space-between;font-size:.8rem;color:#94a3b8;margin-top:4px}
-.chart-empty{margin-top:12px;padding:16px;border:1px dashed #31425f;border-radius:12px;color:#94a3b8;text-align:center}
-.progress-track{height:10px;background:#08111f;border:1px solid #24334d;border-radius:999px;overflow:hidden;margin-top:9px}
-.progress-fill{height:100%;background:linear-gradient(90deg,#4f8cff,#59d98e);border-radius:999px}
-.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:12px;border:1px solid #1d2a40;border-radius:12px}
-table{width:100%;border-collapse:collapse;min-width:900px}
-th,td{padding:10px 12px;border-bottom:1px solid #1d2a40;text-align:right;white-space:nowrap}
-th{position:sticky;top:0;background:#101b2d;color:#b9c7d9;font-size:.8rem}
-th:first-child,td:first-child,th:nth-child(2),td:nth-child(2),th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{text-align:left}
-tbody tr:hover{background:#101b2d}
-@media (max-width:700px){
-  main{padding:10px}
-  .card{padding:14px;border-radius:14px}
-  .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .metric{padding:11px}
-  .metric strong{font-size:1.05rem}
-  .metric.primary strong{font-size:1.2rem}
-  .equity-chart svg{height:170px}
-}
-@media (max-width:420px){
-  .metrics{grid-template-columns:1fr}
-}
+:root{{color-scheme:dark}}
+*{{box-sizing:border-box}}
+body{{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;background:#08111f;color:#eef4ff}}
+main{{max-width:1480px;margin:auto;padding:20px}}
+h1,h2{{margin:0}}
+h1{{font-size:clamp(1.45rem,4vw,2rem)}}
+h2{{font-size:1rem;color:#d8e4f5}}
+small,.muted{{color:#94a3b8}}
+.card{{background:#0f1a2b;border:1px solid #22304a;border-radius:18px;padding:18px;box-shadow:0 12px 40px rgba(0,0,0,.22)}}
+.header{{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}}
+.status-badge{{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:7px 11px;font-size:.82rem;font-weight:700;border:1px solid}}
+.status-ok{{color:#b7f7d0;background:#0d2a1d;border-color:#245c40}}
+.status-warn{{color:#ffe6a6;background:#30250a;border-color:#6b571b}}
+.status-error{{color:#ffc0c0;background:#351313;border-color:#6c2d2d}}
+.section{{margin-top:18px;padding-top:4px}}
+.section-head{{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:10px}}
+.metrics{{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}}
+.metric{{background:#0a1423;border:1px solid #1d2a40;border-radius:12px;padding:13px;min-width:0}}
+.metric strong{{display:block;font-size:1.24rem;margin-top:5px;overflow-wrap:anywhere}}
+.metric.primary strong{{font-size:1.48rem}}
+.alert-box{{margin-top:14px;padding:12px 14px;border-radius:12px;background:#0a1423;border:1px solid #1d2a40}}
+.alert-box.warn{{border-color:#6b571b;background:#2a220b}}
+.runtime-reason{{display:block;margin-top:8px;line-height:1.45}}
+.equity-chart{{margin-top:12px;background:#08111f;border:1px solid #1d2a40;border-radius:14px;padding:10px}}
+.equity-chart svg{{display:block;width:100%;height:220px}}
+.chart-line{{fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}}
+.chart-line.positive{{stroke:#59d98e}}
+.chart-line.negative{{stroke:#ff7b7b}}
+.chart-grid{{stroke:#24334d;stroke-width:1}}
+.chart-scale{{display:flex;justify-content:space-between;font-size:.8rem;color:#94a3b8;margin-top:4px}}
+.chart-empty{{margin-top:12px;padding:16px;border:1px dashed #31425f;border-radius:12px;color:#94a3b8;text-align:center}}
+.progress-track{{height:10px;background:#08111f;border:1px solid #24334d;border-radius:999px;overflow:hidden;margin-top:9px}}
+.progress-fill{{height:100%;background:linear-gradient(90deg,#4f8cff,#59d98e);border-radius:999px}}
+.table-scroll{{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:12px;border:1px solid #1d2a40;border-radius:12px}}
+table{{width:100%;border-collapse:collapse;min-width:900px}}
+th,td{{padding:10px 12px;border-bottom:1px solid #1d2a40;text-align:right;white-space:nowrap}}
+th{{position:sticky;top:0;background:#101b2d;color:#b9c7d9;font-size:.8rem}}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2),th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
+tbody tr:hover{{background:#101b2d}}
+@media (max-width:700px){{
+  main{{padding:10px}}
+  .card{{padding:14px;border-radius:14px}}
+  .metrics{{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .metric{{padding:11px}}
+  .metric strong{{font-size:1.05rem}}
+  .metric.primary strong{{font-size:1.2rem}}
+  .equity-chart svg{{height:170px}}
+}}
+@media (max-width:420px){{
+  .metrics{{grid-template-columns:1fr}}
+}}
 </style></head><body><main>
 <div class="card">
 <div class="header">
