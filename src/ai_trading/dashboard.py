@@ -8,7 +8,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from .burnin import calculate_burnin_metrics
+from .burnin import BurnInSnapshot, calculate_burnin_metrics
 from .file_persistence import FilePaperPersistence
 from .hosted_runtime import HostedPaperSettings, start_hosted_paper_runtime
 from .operational_overview import build_operational_overview, runtime_is_consistent
@@ -57,10 +57,10 @@ def _display_ratio(value: float | None) -> str:
     return f"{value:.2f}"
 
 
-def _equity_chart_svg(snapshots: tuple[object, ...]) -> str:
+def _equity_chart_svg(snapshots: tuple[BurnInSnapshot, ...]) -> str:
     if len(snapshots) < 2:
         return '<div class="chart-empty">Need at least two burn-in points.</div>'
-    values = [float(getattr(snapshot, "equity")) for snapshot in snapshots]
+    values = [float(snapshot.equity) for snapshot in snapshots]
     width = 900.0
     height = 240.0
     padding = 18.0
