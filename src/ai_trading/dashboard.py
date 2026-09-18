@@ -20,6 +20,7 @@ from .paper_cycle_service import (
 from .performance_metrics import calculate_performance_metrics
 from .persistence import PaperPersistence
 from .persistence_factory import build_paper_persistence
+from .readiness import ReadinessPolicy
 from .runtime_state import RuntimeStateStore
 from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore, runtime_status_snapshot
 from .scheduler_endpoint import handle_scheduler_request
@@ -307,6 +308,13 @@ def render_dashboard(
         else (state.processed_bars if state is not None and not storage_error else None)
     )
     burnin_bars_display = "-" if burnin_bars is None else str(burnin_bars)
+    burnin_target = ReadinessPolicy().min_burn_in_bars
+    burnin_progress = (
+        0.0
+        if burnin_bars is None
+        else min(1.0, max(0.0, burnin_bars / burnin_target))
+    )
+    burnin_progress_display = f"{burnin_progress:.0%}"
     burnin_return_display = (
         "-" if burnin_metrics is None else f"{burnin_metrics.total_return:.2%}"
     )
@@ -355,6 +363,8 @@ small,.muted{color:#94a3b8}
 .chart-grid{stroke:#24334d;stroke-width:1}
 .chart-scale{display:flex;justify-content:space-between;font-size:.8rem;color:#94a3b8;margin-top:4px}
 .chart-empty{margin-top:12px;padding:16px;border:1px dashed #31425f;border-radius:12px;color:#94a3b8;text-align:center}
+.progress-track{height:10px;background:#08111f;border:1px solid #24334d;border-radius:999px;overflow:hidden;margin-top:9px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#4f8cff,#59d98e);border-radius:999px}
 .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:12px;border:1px solid #1d2a40;border-radius:12px}
 table{width:100%;border-collapse:collapse;min-width:900px}
 th,td{padding:10px 12px;border-bottom:1px solid #1d2a40;text-align:right;white-space:nowrap}
@@ -432,7 +442,9 @@ tbody tr:hover{background:#101b2d}
 <section class="section">
 <div class="section-head"><h2>Burn-in evidence</h2><small>durable equity history</small></div>
 <div class="metrics">
-<div class="metric primary"><small>Burn-in bars</small><strong>{burnin_bars_display}</strong></div>
+<div class="metric primary"><small>Burn-in bars</small><strong>{burnin_bars_display} / {burnin_target}</strong></div>
+<div class="metric"><small>Burn-in progress</small><strong>{burnin_progress_display}</strong>
+<div class="progress-track"><div class="progress-fill" style="width:{burnin_progress_display}"></div></div></div>
 <div class="metric"><small>Equity return</small><strong>{burnin_return_display}</strong></div>
 <div class="metric"><small>Equity max DD</small><strong>{burnin_drawdown_display}</strong></div>
 </div>
