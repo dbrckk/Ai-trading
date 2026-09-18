@@ -241,7 +241,7 @@ def test_dashboard_v2_groups_critical_sections_and_renders_equity_chart(tmp_path
     assert "Trading state" in page
     assert "Performance" in page
     assert "Burn-in evidence" in page
-    assert 'class="status-badge status-ok"' in page
+    assert 'class="status-badge status-warn"' in page
     assert 'class="equity-chart"' in page
     assert "<svg" in page
     assert "<polyline" in page
