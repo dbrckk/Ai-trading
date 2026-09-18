@@ -1907,6 +1907,11 @@ y = padding + usable_height * (high - value) / (high - low)
 change = values[-1] - values[0]
 direction_class = "positive" if change >= 0 else "negative"
 ⋮----
+@lru_cache(maxsize=16)
+def _bootstrap_positive_probability(equities: tuple[float, ...]) -> float | None
+⋮----
+report = bootstrap_equity_curve(pd.Series(equities, dtype=float))
+⋮----
 storage_error = False
 runtime_revision: int | None = None
 runtime_model = None
@@ -2029,6 +2034,11 @@ burnin_progress_display = f"{burnin_progress:.0%}"
 burnin_return_display = (
 burnin_drawdown_display = (
 equity_chart = _equity_chart_svg(burnin_snapshots)
+bootstrap_probability = _bootstrap_positive_probability(
+bootstrap_probability_display = (
+bootstrap_threshold = ReadinessPolicy().min_positive_bootstrap_probability
+scheduler_reliable = (
+scheduler_reliability_display = (
 status_class = (
 ⋮----
 effective_settings = settings or HostedPaperSettings.from_env()
@@ -7312,6 +7322,8 @@ health_payload = json.loads(health_body)
 def test_dashboard_v2_groups_critical_sections_and_renders_equity_chart(tmp_path) -> None
 ⋮----
 def test_dashboard_premium_shell_and_navigation(tmp_path) -> None
+⋮----
+def test_dashboard_quant_evidence_is_explicit_and_non_misleading(tmp_path) -> None
 ````
 
 ## File: tests/test_dashboard.py

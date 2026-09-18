@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 88e39d45212d8ed815b2081f71824271efda6b79
-Head: e53460038fc2cffd8c0e29e8b443c006b3d451c6
+Base: ab927799c27bd77134597e1bb961dc591a3dfca8
+Head: ed67a813e1308fb8f0fef662b7920ce60fc075d6
 
 ## Changed files
 - M src/ai_trading/dashboard.py

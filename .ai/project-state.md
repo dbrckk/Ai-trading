@@ -27,18 +27,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T18:00:05Z
+Generated: 2026-09-18T18:11:08Z
 
 ### Git
 - Branch: `main`
-- Head: `e53460038fc2`
-- Commit date: 2026-09-18T19:59:53+02:00
-- Commit: Merge PR #32: premium hosted trading dashboard
+- Head: `ed67a813e130`
+- Commit date: 2026-09-18T20:09:04+02:00
+- Commit: Merge PR #33: quantitative evidence dashboard
 - Tracked files: 396
 
 ### Recently changed files
-- `tests/test_dashboard_persistence.py`
 - `src/ai_trading/dashboard.py`
+- `tests/test_dashboard_persistence.py`
 
 ### Project signals
 - `pyproject.toml`
