@@ -27,21 +27,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T19:17:29Z
+Generated: 2026-09-18T19:28:57Z
 
 ### Git
 - Branch: `main`
-- Head: `d3fe645b1335`
-- Commit date: 2026-09-18T21:16:55+02:00
-- Commit: chore(ai): align config with v6 bounded context
-- Tracked files: 396
+- Head: `3a963345f55b`
+- Commit date: 2026-09-18T21:28:38+02:00
+- Commit: chore(ai): enable compact graph routing
+- Tracked files: 401
 
 ### Recently changed files
 - `.repo-standards.yml`
 - `.github/workflows/ai-repo-map.yml`
 - `AGENTS.md`
 - `src/ai_trading/dashboard.py`
-- `tests/test_dashboard_persistence.py`
 
 ### Project signals
 - `pyproject.toml`
