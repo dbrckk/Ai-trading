@@ -167,6 +167,22 @@ paper:GC=F:5m:online-river:v1
 
 A fresh durable runtime processes only the latest eligible execution bar. An existing runtime catches up missed eligible bars oldest-first, with at most 12 attempted bars per invocation. If the durable `last_processed` marker is outside the loaded history window, the cycle fails closed instead of guessing where to resume. Revision conflicts cause state to be reloaded so overlapping executors cannot overwrite newer durable progress.
 
+### Hosted dashboard
+
+The read-only production paper dashboard is available at:
+
+```text
+https://ai-trading-dashboard-qyr2.onrender.com
+```
+
+Operational endpoints:
+
+```text
+https://ai-trading-dashboard-qyr2.onrender.com/api/overview
+https://ai-trading-dashboard-qyr2.onrender.com/api/status
+https://ai-trading-dashboard-qyr2.onrender.com/healthz
+```
+
 The Render web service should use the same `AI_TRADING_DATABASE_URL` and run with:
 
 ```text
