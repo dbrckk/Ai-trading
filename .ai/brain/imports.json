@@ -1,0 +1,2327 @@
+{
+  "imports": {
+    "infra/cloudflare-paper-scheduler/test/index.test.js": [
+      "../src/index.js",
+      "node:assert/strict",
+      "node:test"
+    ],
+    "src/ai_trading/allocation_state.py": [
+      "__future__",
+      "dataclasses",
+      "json",
+      "pandas",
+      "pathlib"
+    ],
+    "src/ai_trading/allocator_config_store.py": [
+      "__future__",
+      "dataclasses",
+      "global_allocator",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/allocator_tuning.py": [
+      "__future__",
+      "dataclasses",
+      "global_allocator",
+      "optuna",
+      "pandas",
+      "performance"
+    ],
+    "src/ai_trading/alpha_allocation.py": [
+      "__future__",
+      "dataclasses",
+      "numpy",
+      "pandas"
+    ],
+    "src/ai_trading/alpha_attribution.py": [
+      "__future__",
+      "dataclasses"
+    ],
+    "src/ai_trading/asset_classes.py": [
+      "__future__",
+      "dataclasses"
+    ],
+    "src/ai_trading/audit.py": [
+      "__future__",
+      "datetime",
+      "hashlib",
+      "json",
+      "pathlib",
+      "typing"
+    ],
+    "src/ai_trading/audit_chain.py": [
+      "__future__",
+      "dataclasses",
+      "hashlib",
+      "json",
+      "pathlib",
+      "typing"
+    ],
+    "src/ai_trading/audit_integrity.py": [
+      "__future__",
+      "dataclasses",
+      "hashlib",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/backtest.py": [
+      "__future__",
+      "broker",
+      "config",
+      "dataclasses",
+      "ensemble",
+      "features",
+      "model",
+      "pandas",
+      "performance",
+      "regime",
+      "risk"
+    ],
+    "src/ai_trading/benchmark_gate.py": [
+      "__future__",
+      "backtest",
+      "dataclasses"
+    ],
+    "src/ai_trading/bootstrap_gate.py": [
+      "__future__",
+      "bootstrap_robustness",
+      "dataclasses"
+    ],
+    "src/ai_trading/bootstrap_robustness.py": [
+      "__future__",
+      "dataclasses",
+      "numpy",
+      "pandas"
+    ],
+    "src/ai_trading/broker.py": [
+      "__future__",
+      "config",
+      "dataclasses"
+    ],
+    "src/ai_trading/burnin.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "json",
+      "pandas",
+      "pathlib",
+      "performance",
+      "readiness"
+    ],
+    "src/ai_trading/calibration_routing.py": [
+      "__future__",
+      "dataclasses"
+    ],
+    "src/ai_trading/champion_probation.py": [
+      "__future__",
+      "champions",
+      "dataclasses",
+      "json",
+      "lifecycle_log",
+      "model_quarantine",
+      "pathlib"
+    ],
+    "src/ai_trading/champions.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "json",
+      "lifecycle_log",
+      "model_quarantine",
+      "pathlib",
+      "promotion_guard",
+      "typing"
+    ],
+    "src/ai_trading/chaos.py": [
+      "__future__",
+      "dataclasses",
+      "pandas"
+    ],
+    "src/ai_trading/checkpoint_verification.py": [
+      "__future__",
+      "dataclasses",
+      "json",
+      "pathlib",
+      "state_hash"
+    ],
+    "src/ai_trading/cli.py": [
+      "__future__",
+      "allocator_config_store",
+      "allocator_tuning",
+      "audit_chain",
+      "audit_integrity",
+      "backtest",
+      "benchmark_gate",
+      "bootstrap_gate",
+      "bootstrap_robustness",
+      "champions",
+      "chaos",
+      "config",
+      "continuous",
+      "control_plane",
+      "cost_stress",
+      "cost_stress_gate",
+      "crisis_controller",
+      "crisis_state_store",
+      "dashboard",
+      "data",
+      "dataclasses",
+      "dataset_evidence",
+      "datetime",
+      "deployment_readiness",
+      "drift",
+      "engine",
+      "evolution_manager",
+      "experiments",
+      "expert_factory",
+      "expert_pool",
+      "expert_pool_manager",
+      "expert_sandbox",
+      "features",
+      "generation_rollback",
+      "generations",
+      "global_allocator",
+      "governor_state_store",
+      "guardrails",
+      "hashlib",
+      "health_server",
+      "json",
+      "lifecycle_log",
+      "maintenance",
+      "metrics",
+      "multiasset_backtest",
+      "multiasset_evolution",
+      "multiasset_runtime",
+      "multiasset_scheduler",
+      "numpy",
+      "orchestrator",
+      "os",
+      "pandas",
+      "parameter_sensitivity",
+      "pathlib",
+      "performance",
+      "portfolio",
+      "portfolio_risk",
+      "promotion",
+      "qualification_store",
+      "qualification_suite",
+      "quantitative_artifact",
+      "quantitative_qualification",
+      "readiness",
+      "readiness_release",
+      "readiness_revocation",
+      "readiness_score",
+      "readiness_trend",
+      "regime_gate",
+      "regime_validation",
+      "reliability",
+      "reproducibility",
+      "resilience",
+      "rich.console",
+      "rich.table",
+      "robustness",
+      "runtime",
+      "runtime_factory",
+      "scheduler",
+      "sensitivity_gate",
+      "soak",
+      "soak_gate",
+      "state_snapshot",
+      "supervisor",
+      "supervisor_lease",
+      "sys",
+      "time",
+      "tuning",
+      "typer",
+      "watchdog",
+      "watchdog_enforcer"
+    ],
+    "src/ai_trading/command_app.py": [
+      "__future__",
+      "cli",
+      "paper_cycle_service",
+      "typer"
+    ],
+    "src/ai_trading/compute_budget.py": [
+      "__future__",
+      "dataclasses",
+      "expert_pool"
+    ],
+    "src/ai_trading/confidence_calibration.py": [
+      "__future__",
+      "dataclasses",
+      "model",
+      "numpy",
+      "quality_store"
+    ],
+    "src/ai_trading/config.py": [
+      "dataclasses"
+    ],
+    "src/ai_trading/continuous.py": [
+      "__future__",
+      "backtest",
+      "champions",
+      "config",
+      "dataclasses",
+      "ensemble",
+      "features",
+      "pandas",
+      "performance",
+      "persistence",
+      "promotion",
+      "regime_validation",
+      "robustness",
+      "tuning"
+    ],
+    "src/ai_trading/control_plane.py": [
+      "__future__",
+      "crisis_state_store",
+      "dataclasses",
+      "governor_state_store",
+      "lifecycle_log",
+      "recovery_health",
+      "resilience"
+    ],
+    "src/ai_trading/cost_stress.py": [
+      "__future__",
+      "backtest",
+      "config",
+      "dataclasses",
+      "pandas"
+    ],
+    "src/ai_trading/cost_stress_gate.py": [
+      "__future__",
+      "cost_stress",
+      "dataclasses"
+    ],
+    "src/ai_trading/crisis_controller.py": [
+      "__future__",
+      "dataclasses"
+    ],
+    "src/ai_trading/crisis_gate.py": [
+      "__future__",
+      "crisis_state_store",
+      "governor_state_store"
+    ],
+    "src/ai_trading/crisis_state_store.py": [
+      "__future__",
+      "crisis_controller",
+      "dataclasses",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/dashboard.py": [
+      "__future__",
+      "collections.abc",
+      "file_persistence",
+      "hosted_runtime",
+      "html",
+      "http.server",
+      "json",
+      "operational_overview",
+      "os",
+      "paper_cycle",
+      "paper_cycle_service",
+      "pathlib",
+      "performance_metrics",
+      "persistence",
+      "persistence_factory",
+      "runtime_state",
+      "runtime_status",
+      "scheduler_endpoint",
+      "trade_journal",
+      "urllib.parse"
+    ],
+    "src/ai_trading/data.py": [
+      "__future__",
+      "pandas",
+      "yfinance"
+    ],
+    "src/ai_trading/data_quality.py": [
+      "__future__",
+      "dataclasses",
+      "pandas"
+    ],
+    "src/ai_trading/dataset_evidence.py": [
+      "__future__",
+      "dataclasses",
+      "hashlib",
+      "json",
+      "pandas"
+    ],
+    "src/ai_trading/deployment_readiness.py": [
+      "__future__",
+      "dataclasses",
+      "governor_state_store",
+      "qualification_guard",
+      "qualification_store",
+      "readiness_release",
+      "readiness_revocation",
+      "readiness_score",
+      "readiness_trend",
+      "reliability",
+      "resilience"
+    ],
+    "src/ai_trading/drift.py": [
+      "__future__",
+      "dataclasses",
+      "features",
+      "numpy",
+      "pandas"
+    ],
+    "src/ai_trading/drift_retrain_store.py": [
+      "__future__",
+      "dataclasses",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/economic_meta.py": [
+      "__future__",
+      "dataclasses",
+      "numpy"
+    ],
+    "src/ai_trading/economic_meta_store.py": [
+      "__future__",
+      "dataclasses",
+      "economic_meta",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/engine.py": [
+      "__future__",
+      "broker",
+      "config",
+      "dataclasses",
+      "features",
+      "model",
+      "pandas",
+      "risk"
+    ],
+    "src/ai_trading/ensemble.py": [
+      "__future__",
+      "dataclasses",
+      "features",
+      "model",
+      "numpy",
+      "pandas",
+      "regime",
+      "sklearn.ensemble",
+      "sklearn.linear_model",
+      "sklearn.pipeline",
+      "sklearn.preprocessing"
+    ],
+    "src/ai_trading/evolution.py": [
+      "__future__",
+      "dataclasses",
+      "expert_factory",
+      "expert_pool",
+      "itertools"
+    ],
+    "src/ai_trading/evolution_manager.py": [
+      "__future__",
+      "crisis_gate",
+      "dataclasses",
+      "evolution",
+      "expert_factory",
+      "expert_pool",
+      "expert_returns",
+      "generation_progress",
+      "generation_rollback",
+      "generations",
+      "marginal_alpha",
+      "pandas",
+      "performance",
+      "portfolio_selection",
+      "re",
+      "temporal_cv"
+    ],
+    "src/ai_trading/experiments.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "json",
+      "pathlib",
+      "typing"
+    ],
+    "src/ai_trading/expert_diversity.py": [
+      "__future__",
+      "dataclasses",
+      "pandas"
+    ],
+    "src/ai_trading/expert_factory.py": [
+      "__future__",
+      "crisis_gate",
+      "dataclasses",
+      "expert_pool",
+      "expert_sandbox",
+      "itertools",
+      "pandas"
+    ],
+    "src/ai_trading/expert_lifecycle.py": [
+      "__future__",
+      "dataclasses",
+      "economic_meta"
+    ],
+    "src/ai_trading/expert_pool.py": [
+      "__future__",
+      "dataclasses",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/expert_pool_manager.py": [
+      "__future__",
+      "crisis_gate",
+      "dataclasses",
+      "expert_pool",
+      "expert_sandbox",
+      "pandas"
+    ],
+    "src/ai_trading/expert_returns.py": [
+      "__future__",
+      "features",
+      "pandas",
+      "specialist_experts"
+    ],
+    "src/ai_trading/expert_sandbox.py": [
+      "__future__",
+      "dataclasses",
+      "features",
+      "pandas",
+      "performance",
+      "specialist_experts"
+    ],
+    "src/ai_trading/expert_uncertainty.py": [
+      "__future__",
+      "dataclasses",
+      "model",
+      "numpy"
+    ],
+    "src/ai_trading/features.py": [
+      "__future__",
+      "numpy",
+      "pandas"
+    ],
+    "src/ai_trading/file_persistence.py": [
+      "__future__",
+      "audit",
+      "hashlib",
+      "pathlib",
+      "persistence",
+      "runtime_state",
+      "runtime_status",
+      "trade_journal"
+    ],
+    "src/ai_trading/generation_progress.py": [
+      "__future__",
+      "dataclasses",
+      "generations"
+    ],
+    "src/ai_trading/generation_rollback.py": [
+      "__future__",
+      "dataclasses",
+      "expert_pool",
+      "generations"
+    ],
+    "src/ai_trading/generations.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/global_allocator.py": [
+      "__future__",
+      "dataclasses",
+      "numpy",
+      "pandas"
+    ],
+    "src/ai_trading/global_selection.py": [
+      "__future__",
+      "dataclasses",
+      "expert_diversity"
+    ],
+    "src/ai_trading/governor_state_store.py": [
+      "__future__",
+      "dataclasses",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/guardrails.py": [
+      "__future__",
+      "champions",
+      "dataclasses",
+      "drift",
+      "performance",
+      "persistence"
+    ],
+    "src/ai_trading/health_server.py": [
+      "__future__",
+      "control_plane",
+      "http.server",
+      "json",
+      "metrics",
+      "threading",
+      "watchdog"
+    ],
+    "src/ai_trading/hosted_runtime.py": [
+      "__future__",
+      "collections.abc",
+      "data",
+      "dataclasses",
+      "datetime",
+      "orchestrator",
+      "os",
+      "persistence",
+      "persistence_factory",
+      "runtime",
+      "runtime_status",
+      "scheduler",
+      "threading"
+    ],
+    "src/ai_trading/lifecycle_log.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "hashlib",
+      "json",
+      "pathlib",
+      "typing"
+    ],
+    "src/ai_trading/maintenance.py": [
+      "__future__",
+      "dataclasses",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/marginal_alpha.py": [
+      "__future__",
+      "dataclasses",
+      "pandas",
+      "performance"
+    ],
+    "src/ai_trading/meta_router.py": [
+      "__future__",
+      "dataclasses",
+      "model",
+      "numpy"
+    ],
+    "src/ai_trading/meta_store.py": [
+      "__future__",
+      "dataclasses",
+      "json",
+      "meta_router",
+      "pathlib"
+    ],
+    "src/ai_trading/metrics.py": [
+      "__future__",
+      "control_plane",
+      "dataclasses",
+      "governor_state_store",
+      "lifecycle_log",
+      "model_quarantine",
+      "recovery_health",
+      "reliability",
+      "resilience",
+      "resilience_stability",
+      "supervisor_state",
+      "watchdog"
+    ],
+    "src/ai_trading/model.py": [
+      "__future__",
+      "dataclasses",
+      "features",
+      "numpy",
+      "pandas",
+      "sklearn.linear_model",
+      "sklearn.pipeline",
+      "sklearn.preprocessing"
+    ],
+    "src/ai_trading/model_blend.py": [
+      "__future__",
+      "dataclasses",
+      "model"
+    ],
+    "src/ai_trading/model_codec.py": [
+      "__future__",
+      "hashlib",
+      "io",
+      "joblib",
+      "online",
+      "persistence"
+    ],
+    "src/ai_trading/model_quality.py": [
+      "__future__",
+      "dataclasses",
+      "numpy",
+      "pandas"
+    ],
+    "src/ai_trading/model_quarantine.py": [
+      "__future__",
+      "dataclasses",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/multiasset_backtest.py": [
+      "__future__",
+      "config",
+      "dataclasses",
+      "ensemble",
+      "features",
+      "pandas",
+      "performance",
+      "portfolio",
+      "portfolio_intelligence",
+      "portfolio_risk",
+      "regime"
+    ],
+    "src/ai_trading/multiasset_evolution.py": [
+      "__future__",
+      "dataclasses",
+      "evolution_manager",
+      "expert_diversity",
+      "expert_pool",
+      "expert_returns",
+      "generation_rollback",
+      "generations",
+      "global_selection",
+      "pandas",
+      "performance"
+    ],
+    "src/ai_trading/multiasset_runtime.py": [
+      "__future__",
+      "allocation_state",
+      "allocator_config_store",
+      "alpha_allocation",
+      "alpha_attribution",
+      "asset_classes",
+      "audit",
+      "calibration_routing",
+      "champion_probation",
+      "champions",
+      "confidence_calibration",
+      "config",
+      "crisis_controller",
+      "crisis_state_store",
+      "data_quality",
+      "dataclasses",
+      "drift",
+      "drift_retrain_store",
+      "economic_meta",
+      "economic_meta_store",
+      "ensemble",
+      "expert_lifecycle",
+      "expert_pool",
+      "expert_uncertainty",
+      "features",
+      "global_allocator",
+      "governor_state_store",
+      "joblib",
+      "lifecycle_log",
+      "meta_router",
+      "meta_store",
+      "model_blend",
+      "model_quality",
+      "model_quarantine",
+      "multiasset_state",
+      "online",
+      "pandas",
+      "pathlib",
+      "pnl_attribution",
+      "portfolio",
+      "portfolio_intelligence",
+      "portfolio_risk",
+      "quality_store",
+      "readiness_score",
+      "recovery_health",
+      "regime",
+      "resilience",
+      "resilience_stability",
+      "risk_governor",
+      "runtime_lock",
+      "specialist_experts",
+      "stress_engine"
+    ],
+    "src/ai_trading/multiasset_scheduler.py": [
+      "__future__",
+      "audit_chain",
+      "audit_integrity",
+      "collections.abc",
+      "control_plane",
+      "dataclasses",
+      "multiasset_runtime",
+      "pandas",
+      "recovery",
+      "session_integrity",
+      "startup_check",
+      "state_snapshot",
+      "time",
+      "watchdog"
+    ],
+    "src/ai_trading/multiasset_state.py": [
+      "__future__",
+      "dataclasses",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/online.py": [
+      "__future__",
+      "dataclasses",
+      "features",
+      "model",
+      "pandas",
+      "river"
+    ],
+    "src/ai_trading/operational_overview.py": [
+      "__future__",
+      "persistence",
+      "runtime_status"
+    ],
+    "src/ai_trading/orchestrator.py": [
+      "__future__",
+      "backtest",
+      "champions",
+      "config",
+      "continuous",
+      "dataclasses",
+      "drift",
+      "features",
+      "governor_state_store",
+      "guardrails",
+      "pandas",
+      "performance",
+      "regime_validation",
+      "runtime"
+    ],
+    "src/ai_trading/paper_cycle.py": [
+      "__future__",
+      "collections.abc",
+      "data",
+      "dataclasses",
+      "pandas",
+      "persistence",
+      "runtime"
+    ],
+    "src/ai_trading/paper_cycle_service.py": [
+      "__future__",
+      "collections.abc",
+      "config",
+      "dataclasses",
+      "datetime",
+      "paper_cycle",
+      "persistence",
+      "persistence_factory",
+      "runtime_status"
+    ],
+    "src/ai_trading/parameter_sensitivity.py": [
+      "__future__",
+      "backtest",
+      "dataclasses",
+      "pandas"
+    ],
+    "src/ai_trading/performance.py": [
+      "__future__",
+      "dataclasses",
+      "numpy",
+      "pandas"
+    ],
+    "src/ai_trading/performance_metrics.py": [
+      "__future__",
+      "collections.abc",
+      "dataclasses",
+      "trade_journal"
+    ],
+    "src/ai_trading/persistence.py": [
+      "__future__",
+      "dataclasses",
+      "enum",
+      "joblib",
+      "json",
+      "pathlib",
+      "runtime_state",
+      "runtime_status",
+      "trade_journal",
+      "typing"
+    ],
+    "src/ai_trading/persistence_factory.py": [
+      "__future__",
+      "file_persistence",
+      "os",
+      "pathlib",
+      "persistence",
+      "postgres_persistence"
+    ],
+    "src/ai_trading/pnl_attribution.py": [
+      "__future__",
+      "dataclasses",
+      "pandas"
+    ],
+    "src/ai_trading/portfolio.py": [
+      "__future__",
+      "dataclasses",
+      "numpy",
+      "pandas"
+    ],
+    "src/ai_trading/portfolio_intelligence.py": [
+      "__future__",
+      "dataclasses",
+      "numpy",
+      "pandas"
+    ],
+    "src/ai_trading/portfolio_risk.py": [
+      "__future__",
+      "dataclasses",
+      "pandas"
+    ],
+    "src/ai_trading/portfolio_selection.py": [
+      "__future__",
+      "dataclasses",
+      "marginal_alpha"
+    ],
+    "src/ai_trading/postgres_persistence.py": [
+      "__future__",
+      "audit",
+      "collections.abc",
+      "dataclasses",
+      "hashlib",
+      "json",
+      "persistence",
+      "psycopg",
+      "psycopg.rows",
+      "psycopg.types.json",
+      "runtime_state",
+      "runtime_status",
+      "trade_journal"
+    ],
+    "src/ai_trading/process_watch.py": [
+      "__future__",
+      "dataclasses",
+      "subprocess",
+      "time"
+    ],
+    "src/ai_trading/promotion.py": [
+      "__future__",
+      "dataclasses",
+      "performance"
+    ],
+    "src/ai_trading/promotion_guard.py": [
+      "__future__",
+      "dataclasses",
+      "math"
+    ],
+    "src/ai_trading/purged_cv.py": [
+      "__future__",
+      "dataclasses",
+      "pandas"
+    ],
+    "src/ai_trading/qualification_guard.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "qualification_store",
+      "reliability"
+    ],
+    "src/ai_trading/qualification_store.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "json",
+      "pathlib",
+      "reliability",
+      "soak",
+      "soak_gate"
+    ],
+    "src/ai_trading/qualification_suite.py": [
+      "__future__",
+      "chaos",
+      "dataclasses",
+      "pandas",
+      "pathlib",
+      "runtime_factory",
+      "soak",
+      "soak_gate"
+    ],
+    "src/ai_trading/quality_store.py": [
+      "__future__",
+      "dataclasses",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/quantitative_artifact.py": [
+      "__future__",
+      "benchmark_gate",
+      "bootstrap_gate",
+      "cost_stress_gate",
+      "dataclasses",
+      "dataset_evidence",
+      "datetime",
+      "hashlib",
+      "json",
+      "pathlib",
+      "quantitative_qualification",
+      "regime_gate",
+      "sensitivity_gate"
+    ],
+    "src/ai_trading/quantitative_qualification.py": [
+      "__future__",
+      "benchmark_gate",
+      "bootstrap_gate",
+      "cost_stress_gate",
+      "dataclasses",
+      "regime_gate",
+      "sensitivity_gate",
+      "soak_gate"
+    ],
+    "src/ai_trading/readiness.py": [
+      "__future__",
+      "dataclasses",
+      "performance"
+    ],
+    "src/ai_trading/readiness_evidence.py": [
+      "__future__",
+      "data_quality",
+      "dataclasses",
+      "global_allocator",
+      "model_quality",
+      "performance",
+      "readiness_score",
+      "recovery_health",
+      "reliability",
+      "robustness"
+    ],
+    "src/ai_trading/readiness_handshake.py": [
+      "__future__",
+      "dataclasses",
+      "subprocess",
+      "time",
+      "watchdog"
+    ],
+    "src/ai_trading/readiness_release.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "governor_state_store",
+      "hashlib",
+      "hmac",
+      "json",
+      "pathlib",
+      "qualification_store",
+      "readiness_score",
+      "readiness_trend",
+      "resilience"
+    ],
+    "src/ai_trading/readiness_revocation.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/readiness_score.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "hashlib",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/readiness_trend.py": [
+      "__future__",
+      "dataclasses",
+      "readiness_score"
+    ],
+    "src/ai_trading/recovery.py": [
+      "__future__",
+      "checkpoint_verification",
+      "dataclasses",
+      "pathlib",
+      "shutil",
+      "state_snapshot",
+      "tempfile"
+    ],
+    "src/ai_trading/recovery_health.py": [
+      "__future__",
+      "dataclasses",
+      "lifecycle_log"
+    ],
+    "src/ai_trading/regime.py": [
+      "__future__",
+      "dataclasses",
+      "pandas"
+    ],
+    "src/ai_trading/regime_gate.py": [
+      "__future__",
+      "backtest",
+      "dataclasses"
+    ],
+    "src/ai_trading/regime_validation.py": [
+      "__future__",
+      "dataclasses"
+    ],
+    "src/ai_trading/reliability.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "lifecycle_log",
+      "resilience"
+    ],
+    "src/ai_trading/replay.py": [
+      "__future__",
+      "dataclasses",
+      "json",
+      "pathlib",
+      "typing"
+    ],
+    "src/ai_trading/reproducibility.py": [
+      "__future__",
+      "dataclasses",
+      "dataset_evidence",
+      "pandas",
+      "quantitative_artifact"
+    ],
+    "src/ai_trading/resilience.py": [
+      "__future__",
+      "dataclasses",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/resilience_stability.py": [
+      "__future__",
+      "dataclasses",
+      "lifecycle_log"
+    ],
+    "src/ai_trading/restart_log.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/risk.py": [
+      "__future__",
+      "config",
+      "dataclasses",
+      "model"
+    ],
+    "src/ai_trading/risk_governor.py": [
+      "__future__",
+      "dataclasses"
+    ],
+    "src/ai_trading/robustness.py": [
+      "__future__",
+      "dataclasses",
+      "numpy",
+      "pandas"
+    ],
+    "src/ai_trading/runtime.py": [
+      "__future__",
+      "audit",
+      "broker",
+      "config",
+      "dataclasses",
+      "features",
+      "file_persistence",
+      "model",
+      "model_codec",
+      "online",
+      "pandas",
+      "pathlib",
+      "persistence",
+      "risk",
+      "runtime_lock",
+      "runtime_state",
+      "trade_journal"
+    ],
+    "src/ai_trading/runtime_factory.py": [
+      "__future__",
+      "allocation_state",
+      "allocator_config_store",
+      "audit",
+      "champion_probation",
+      "champions",
+      "crisis_state_store",
+      "drift_retrain_store",
+      "economic_meta_store",
+      "expert_pool",
+      "governor_state_store",
+      "lifecycle_log",
+      "meta_store",
+      "model_quarantine",
+      "multiasset_runtime",
+      "multiasset_state",
+      "pathlib",
+      "quality_store",
+      "readiness_score",
+      "resilience"
+    ],
+    "src/ai_trading/runtime_lock.py": [
+      "__future__",
+      "os",
+      "pathlib",
+      "typing"
+    ],
+    "src/ai_trading/runtime_state.py": [
+      "__future__",
+      "dataclasses",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/runtime_status.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/scheduler.py": [
+      "__future__",
+      "collections.abc",
+      "dataclasses",
+      "governor_state_store",
+      "orchestrator",
+      "pandas",
+      "time"
+    ],
+    "src/ai_trading/scheduler_endpoint.py": [
+      "__future__",
+      "collections.abc",
+      "dataclasses",
+      "hmac",
+      "paper_cycle",
+      "paper_cycle_service"
+    ],
+    "src/ai_trading/sensitivity_gate.py": [
+      "__future__",
+      "dataclasses",
+      "parameter_sensitivity"
+    ],
+    "src/ai_trading/session_integrity.py": [
+      "__future__",
+      "dataclasses",
+      "hashlib",
+      "json",
+      "pathlib",
+      "state_hash"
+    ],
+    "src/ai_trading/soak.py": [
+      "__future__",
+      "chaos",
+      "dataclasses",
+      "datetime",
+      "multiasset_runtime",
+      "pandas"
+    ],
+    "src/ai_trading/soak_gate.py": [
+      "__future__",
+      "dataclasses",
+      "soak"
+    ],
+    "src/ai_trading/specialist_experts.py": [
+      "__future__",
+      "dataclasses",
+      "features",
+      "model",
+      "pandas",
+      "regime",
+      "sklearn.ensemble",
+      "sklearn.linear_model",
+      "sklearn.pipeline",
+      "sklearn.preprocessing"
+    ],
+    "src/ai_trading/startup_check.py": [
+      "__future__",
+      "audit_chain",
+      "audit_integrity",
+      "champions",
+      "dataclasses",
+      "governor_state_store",
+      "json",
+      "lifecycle_log",
+      "pathlib",
+      "readiness_score",
+      "state_snapshot"
+    ],
+    "src/ai_trading/state_hash.py": [
+      "__future__",
+      "dataclasses",
+      "hashlib",
+      "json",
+      "pathlib",
+      "typing"
+    ],
+    "src/ai_trading/state_snapshot.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "hashlib",
+      "json",
+      "pathlib",
+      "shutil"
+    ],
+    "src/ai_trading/stress_engine.py": [
+      "__future__",
+      "dataclasses",
+      "numpy",
+      "pandas"
+    ],
+    "src/ai_trading/supervisor.py": [
+      "__future__",
+      "dataclasses",
+      "governor_state_store",
+      "lifecycle_log",
+      "maintenance",
+      "pathlib",
+      "qualification_guard",
+      "qualification_store",
+      "readiness_handshake",
+      "reliability",
+      "resilience",
+      "restart_log",
+      "secrets",
+      "startup_check",
+      "state_snapshot",
+      "subprocess",
+      "supervisor_lease",
+      "supervisor_state",
+      "time",
+      "watchdog",
+      "worker_monitor"
+    ],
+    "src/ai_trading/supervisor_lease.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "json",
+      "os",
+      "pathlib"
+    ],
+    "src/ai_trading/supervisor_state.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/temporal_cv.py": [
+      "__future__",
+      "dataclasses",
+      "features",
+      "pandas",
+      "performance",
+      "purged_cv",
+      "specialist_experts"
+    ],
+    "src/ai_trading/trade_journal.py": [
+      "__future__",
+      "dataclasses",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/tuning.py": [
+      "__future__",
+      "backtest",
+      "config",
+      "dataclasses",
+      "optuna",
+      "pandas",
+      "performance"
+    ],
+    "src/ai_trading/watchdog.py": [
+      "__future__",
+      "dataclasses",
+      "datetime",
+      "json",
+      "pathlib"
+    ],
+    "src/ai_trading/watchdog_enforcer.py": [
+      "__future__",
+      "audit_chain",
+      "audit_integrity",
+      "dataclasses",
+      "governor_state_store",
+      "pathlib",
+      "watchdog"
+    ],
+    "src/ai_trading/worker_monitor.py": [
+      "__future__",
+      "dataclasses",
+      "subprocess",
+      "time",
+      "watchdog"
+    ],
+    "tests/test_active_model.py": [
+      "ai_trading.persistence",
+      "pathlib"
+    ],
+    "tests/test_allocation_state.py": [
+      "ai_trading.allocation_state",
+      "pandas",
+      "pathlib"
+    ],
+    "tests/test_allocator_config_store.py": [
+      "ai_trading.allocator_config_store",
+      "ai_trading.global_allocator",
+      "pathlib"
+    ],
+    "tests/test_allocator_tuning.py": [
+      "ai_trading.allocator_tuning",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_alpha_allocation.py": [
+      "ai_trading.alpha_allocation",
+      "pandas"
+    ],
+    "tests/test_alpha_attribution.py": [
+      "ai_trading.alpha_attribution"
+    ],
+    "tests/test_asset_classes.py": [
+      "ai_trading.asset_classes"
+    ],
+    "tests/test_audit.py": [
+      "ai_trading.audit",
+      "json",
+      "pathlib"
+    ],
+    "tests/test_audit_chain.py": [
+      "ai_trading.audit",
+      "ai_trading.audit_chain",
+      "pathlib"
+    ],
+    "tests/test_audit_chain_legacy.py": [
+      "ai_trading.audit",
+      "ai_trading.audit_chain",
+      "pathlib"
+    ],
+    "tests/test_audit_integrity.py": [
+      "ai_trading.audit_integrity",
+      "pathlib"
+    ],
+    "tests/test_backtest.py": [
+      "ai_trading.backtest",
+      "ai_trading.config",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_backtest_ensemble.py": [
+      "ai_trading.backtest",
+      "ai_trading.config",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_benchmark_gate.py": [
+      "ai_trading.benchmark_gate",
+      "ai_trading.performance",
+      "types"
+    ],
+    "tests/test_bootstrap_gate.py": [
+      "ai_trading.bootstrap_gate",
+      "ai_trading.bootstrap_robustness"
+    ],
+    "tests/test_bootstrap_robustness.py": [
+      "ai_trading.bootstrap_robustness",
+      "pandas",
+      "pytest"
+    ],
+    "tests/test_burnin.py": [
+      "ai_trading.burnin",
+      "pathlib"
+    ],
+    "tests/test_calibration_routing.py": [
+      "ai_trading.calibration_routing"
+    ],
+    "tests/test_champion_probation.py": [
+      "ai_trading.champion_probation",
+      "ai_trading.champions",
+      "ai_trading.model_quarantine",
+      "pathlib"
+    ],
+    "tests/test_champions.py": [
+      "ai_trading.champions",
+      "ai_trading.model_quarantine",
+      "pathlib"
+    ],
+    "tests/test_chaos.py": [
+      "ai_trading.chaos",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_checkpoint_verification.py": [
+      "ai_trading.audit",
+      "ai_trading.checkpoint_verification",
+      "ai_trading.session_integrity",
+      "pathlib"
+    ],
+    "tests/test_cli_self_test.py": [
+      "ai_trading.cli",
+      "pathlib",
+      "typer.testing"
+    ],
+    "tests/test_compute_budget.py": [
+      "ai_trading.compute_budget",
+      "ai_trading.expert_pool"
+    ],
+    "tests/test_confidence_calibration.py": [
+      "ai_trading.confidence_calibration",
+      "ai_trading.model",
+      "ai_trading.quality_store"
+    ],
+    "tests/test_control_plane.py": [
+      "ai_trading.control_plane",
+      "ai_trading.crisis_controller",
+      "ai_trading.crisis_state_store",
+      "ai_trading.governor_state_store",
+      "ai_trading.lifecycle_log",
+      "ai_trading.resilience",
+      "pathlib"
+    ],
+    "tests/test_cost_stress.py": [
+      "ai_trading",
+      "ai_trading.backtest",
+      "ai_trading.config",
+      "ai_trading.cost_stress",
+      "ai_trading.performance",
+      "pandas"
+    ],
+    "tests/test_cost_stress_gate.py": [
+      "ai_trading.cost_stress",
+      "ai_trading.cost_stress_gate"
+    ],
+    "tests/test_crisis_controller.py": [
+      "ai_trading.crisis_controller",
+      "ai_trading.crisis_state_store",
+      "pathlib"
+    ],
+    "tests/test_crisis_gate.py": [
+      "ai_trading.crisis_controller",
+      "ai_trading.crisis_gate",
+      "ai_trading.crisis_state_store",
+      "ai_trading.governor_state_store",
+      "pathlib"
+    ],
+    "tests/test_dashboard.py": [
+      "ai_trading.dashboard",
+      "ai_trading.trade_journal"
+    ],
+    "tests/test_dashboard_engine_status.py": [
+      "__future__",
+      "ai_trading.dashboard",
+      "ai_trading.runtime_state",
+      "ai_trading.runtime_status",
+      "ai_trading.trade_journal",
+      "datetime"
+    ],
+    "tests/test_dashboard_health.py": [
+      "__future__",
+      "ai_trading.dashboard",
+      "ai_trading.runtime_state",
+      "ai_trading.runtime_status",
+      "ai_trading.trade_journal",
+      "json",
+      "socket",
+      "threading",
+      "time",
+      "urllib.error",
+      "urllib.request"
+    ],
+    "tests/test_dashboard_overview.py": [
+      "__future__",
+      "ai_trading.dashboard",
+      "ai_trading.hosted_runtime",
+      "ai_trading.operational_overview",
+      "ai_trading.persistence",
+      "ai_trading.runtime_state",
+      "ai_trading.runtime_status",
+      "ai_trading.trade_journal",
+      "json",
+      "socket",
+      "threading",
+      "time",
+      "urllib.error",
+      "urllib.request"
+    ],
+    "tests/test_dashboard_persistence.py": [
+      "__future__",
+      "ai_trading.dashboard",
+      "ai_trading.hosted_runtime",
+      "ai_trading.persistence",
+      "ai_trading.runtime_state",
+      "ai_trading.runtime_status",
+      "ai_trading.trade_journal",
+      "json",
+      "socket",
+      "threading",
+      "time",
+      "urllib.error",
+      "urllib.request"
+    ],
+    "tests/test_data_quality.py": [
+      "ai_trading.data_quality",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_dataset_evidence.py": [
+      "ai_trading.dataset_evidence",
+      "pandas"
+    ],
+    "tests/test_deployment_readiness.py": [
+      "ai_trading.deployment_readiness",
+      "ai_trading.governor_state_store",
+      "ai_trading.qualification_store",
+      "ai_trading.readiness_release",
+      "ai_trading.readiness_score",
+      "ai_trading.readiness_trend",
+      "ai_trading.reliability",
+      "ai_trading.resilience",
+      "datetime"
+    ],
+    "tests/test_distribution_drift.py": [
+      "ai_trading.drift",
+      "ai_trading.features",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_drift.py": [
+      "ai_trading.drift",
+      "ai_trading.features",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_drift_retrain_store.py": [
+      "ai_trading.drift_retrain_store",
+      "pathlib"
+    ],
+    "tests/test_economic_meta.py": [
+      "ai_trading.economic_meta"
+    ],
+    "tests/test_economic_meta_store.py": [
+      "ai_trading.economic_meta_store",
+      "pathlib"
+    ],
+    "tests/test_ensemble.py": [
+      "ai_trading.ensemble",
+      "ai_trading.features",
+      "ai_trading.regime",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_evolution.py": [
+      "ai_trading.evolution",
+      "ai_trading.expert_factory"
+    ],
+    "tests/test_evolution_manager.py": [
+      "ai_trading.evolution_manager",
+      "ai_trading.expert_pool",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_expert_diversity.py": [
+      "ai_trading.expert_diversity",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_expert_factory.py": [
+      "ai_trading.expert_factory",
+      "ai_trading.expert_pool",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_expert_horizon.py": [
+      "ai_trading.expert_factory",
+      "ai_trading.expert_pool",
+      "pandas",
+      "types"
+    ],
+    "tests/test_expert_lifecycle.py": [
+      "ai_trading.economic_meta",
+      "ai_trading.expert_lifecycle"
+    ],
+    "tests/test_expert_pool.py": [
+      "ai_trading.expert_pool"
+    ],
+    "tests/test_expert_pool_manager.py": [
+      "ai_trading.expert_pool",
+      "ai_trading.expert_pool_manager",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_expert_sandbox.py": [
+      "ai_trading.expert_sandbox",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_expert_uncertainty.py": [
+      "ai_trading.expert_uncertainty",
+      "ai_trading.model"
+    ],
+    "tests/test_features.py": [
+      "ai_trading.features",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_file_persistence.py": [
+      "ai_trading.file_persistence",
+      "ai_trading.model_codec",
+      "ai_trading.online",
+      "ai_trading.persistence",
+      "ai_trading.runtime_state"
+    ],
+    "tests/test_generation_progress.py": [
+      "ai_trading.generation_progress",
+      "ai_trading.generations",
+      "pytest"
+    ],
+    "tests/test_generation_rollback.py": [
+      "ai_trading.expert_pool",
+      "ai_trading.generation_rollback",
+      "ai_trading.generations",
+      "pathlib"
+    ],
+    "tests/test_generations.py": [
+      "ai_trading.generations",
+      "pathlib"
+    ],
+    "tests/test_global_allocator.py": [
+      "ai_trading.global_allocator",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_global_selection.py": [
+      "ai_trading.expert_diversity",
+      "ai_trading.global_selection"
+    ],
+    "tests/test_governor_state_store.py": [
+      "ai_trading.governor_state_store",
+      "pathlib"
+    ],
+    "tests/test_guardrails.py": [
+      "ai_trading.drift",
+      "ai_trading.guardrails",
+      "ai_trading.performance"
+    ],
+    "tests/test_health_server.py": [
+      "ai_trading.health_server",
+      "urllib.error",
+      "urllib.request"
+    ],
+    "tests/test_hosted_persistence.py": [
+      "__future__",
+      "ai_trading",
+      "ai_trading.hosted_runtime",
+      "ai_trading.runtime_status",
+      "pytest",
+      "types"
+    ],
+    "tests/test_hosted_runtime.py": [
+      "__future__",
+      "ai_trading",
+      "ai_trading.hosted_runtime",
+      "threading",
+      "types"
+    ],
+    "tests/test_lifecycle_log.py": [
+      "ai_trading.lifecycle_log",
+      "pathlib"
+    ],
+    "tests/test_maintenance.py": [
+      "ai_trading.maintenance",
+      "pathlib"
+    ],
+    "tests/test_marginal_alpha.py": [
+      "ai_trading.marginal_alpha",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_meta_router.py": [
+      "ai_trading.meta_router",
+      "ai_trading.model"
+    ],
+    "tests/test_meta_store.py": [
+      "ai_trading.meta_router",
+      "ai_trading.meta_store",
+      "pathlib"
+    ],
+    "tests/test_metrics.py": [
+      "ai_trading.crisis_controller",
+      "ai_trading.crisis_state_store",
+      "ai_trading.governor_state_store",
+      "ai_trading.lifecycle_log",
+      "ai_trading.metrics",
+      "ai_trading.model_quarantine",
+      "ai_trading.watchdog",
+      "pathlib"
+    ],
+    "tests/test_model_blend.py": [
+      "ai_trading.model",
+      "ai_trading.model_blend"
+    ],
+    "tests/test_model_codec.py": [
+      "ai_trading.model_codec",
+      "ai_trading.online",
+      "dataclasses",
+      "pytest"
+    ],
+    "tests/test_model_quality.py": [
+      "ai_trading.model_quality",
+      "pandas"
+    ],
+    "tests/test_model_quarantine.py": [
+      "ai_trading.model_quarantine",
+      "pathlib"
+    ],
+    "tests/test_multi_period_promotion.py": [
+      "ai_trading.performance",
+      "ai_trading.promotion"
+    ],
+    "tests/test_multiasset_backtest.py": [
+      "ai_trading.config",
+      "ai_trading.multiasset_backtest",
+      "ai_trading.portfolio",
+      "ai_trading.portfolio_risk",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_multiasset_evolution.py": [
+      "ai_trading.expert_pool",
+      "ai_trading.generations",
+      "ai_trading.multiasset_evolution",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_multiasset_runtime.py": [
+      "ai_trading.audit",
+      "ai_trading.config",
+      "ai_trading.drift",
+      "ai_trading.drift_retrain_store",
+      "ai_trading.multiasset_runtime",
+      "ai_trading.multiasset_state",
+      "ai_trading.portfolio",
+      "ai_trading.portfolio_risk",
+      "numpy",
+      "pandas",
+      "pathlib"
+    ],
+    "tests/test_multiasset_scheduler.py": [
+      "ai_trading.crisis_state_store",
+      "ai_trading.governor_state_store",
+      "ai_trading.multiasset_runtime",
+      "ai_trading.multiasset_scheduler",
+      "numpy",
+      "pandas",
+      "pathlib",
+      "pytest"
+    ],
+    "tests/test_multiasset_state.py": [
+      "ai_trading.multiasset_state",
+      "pathlib"
+    ],
+    "tests/test_online.py": [
+      "ai_trading.features",
+      "ai_trading.online",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_orchestrator_trigger.py": [
+      "ai_trading.audit",
+      "ai_trading.config",
+      "ai_trading.orchestrator",
+      "ai_trading.runtime",
+      "ai_trading.runtime_state",
+      "pathlib"
+    ],
+    "tests/test_paper_cycle.py": [
+      "ai_trading.config",
+      "ai_trading.file_persistence",
+      "ai_trading.paper_cycle",
+      "ai_trading.persistence",
+      "ai_trading.runtime",
+      "ai_trading.runtime_state",
+      "json",
+      "numpy",
+      "pandas",
+      "pathlib",
+      "pytest"
+    ],
+    "tests/test_paper_cycle_cli.py": [
+      "ai_trading",
+      "ai_trading.paper_cycle",
+      "ai_trading.paper_cycle_service",
+      "typer.testing"
+    ],
+    "tests/test_paper_cycle_materialized_fresh.py": [
+      "ai_trading.config",
+      "ai_trading.file_persistence",
+      "ai_trading.paper_cycle",
+      "ai_trading.runtime",
+      "ai_trading.runtime_state",
+      "numpy",
+      "pandas",
+      "pathlib"
+    ],
+    "tests/test_paper_cycle_postgres.py": [
+      "ai_trading.config",
+      "ai_trading.paper_cycle",
+      "ai_trading.persistence",
+      "ai_trading.postgres_persistence",
+      "ai_trading.runtime",
+      "numpy",
+      "os",
+      "pandas",
+      "pathlib",
+      "pytest",
+      "uuid"
+    ],
+    "tests/test_paper_cycle_service.py": [
+      "__future__",
+      "ai_trading.paper_cycle",
+      "ai_trading.paper_cycle_service",
+      "ai_trading.persistence",
+      "ai_trading.runtime_state",
+      "ai_trading.runtime_status",
+      "pytest"
+    ],
+    "tests/test_paper_cycle_workflow.py": [
+      "pathlib"
+    ],
+    "tests/test_performance.py": [
+      "ai_trading.performance",
+      "numpy",
+      "pandas",
+      "pytest"
+    ],
+    "tests/test_performance_metrics.py": [
+      "ai_trading.performance_metrics",
+      "ai_trading.trade_journal"
+    ],
+    "tests/test_persistence.py": [
+      "ai_trading.persistence",
+      "pathlib"
+    ],
+    "tests/test_persistence_contract.py": [
+      "ai_trading.persistence"
+    ],
+    "tests/test_persistence_factory.py": [
+      "ai_trading.file_persistence",
+      "ai_trading.persistence_factory"
+    ],
+    "tests/test_pnl_attribution.py": [
+      "ai_trading.pnl_attribution"
+    ],
+    "tests/test_portfolio.py": [
+      "ai_trading.portfolio",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_portfolio_intelligence.py": [
+      "ai_trading.portfolio_intelligence",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_portfolio_risk.py": [
+      "ai_trading.portfolio_risk",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_portfolio_selection.py": [
+      "ai_trading.marginal_alpha",
+      "ai_trading.portfolio_selection"
+    ],
+    "tests/test_postgres_persistence.py": [
+      "ai_trading.model_codec",
+      "ai_trading.online",
+      "ai_trading.persistence",
+      "ai_trading.postgres_persistence",
+      "ai_trading.runtime_state",
+      "ai_trading.runtime_status",
+      "ai_trading.trade_journal",
+      "os",
+      "psycopg",
+      "pytest"
+    ],
+    "tests/test_process_watch.py": [
+      "ai_trading.process_watch",
+      "subprocess",
+      "sys"
+    ],
+    "tests/test_promotion.py": [
+      "ai_trading.performance",
+      "ai_trading.promotion"
+    ],
+    "tests/test_promotion_guard.py": [
+      "ai_trading.promotion_guard"
+    ],
+    "tests/test_purged_cv.py": [
+      "ai_trading.purged_cv",
+      "pandas"
+    ],
+    "tests/test_qualification_guard.py": [
+      "ai_trading.qualification_guard",
+      "ai_trading.qualification_store",
+      "ai_trading.reliability",
+      "datetime"
+    ],
+    "tests/test_qualification_store.py": [
+      "ai_trading.qualification_store",
+      "ai_trading.reliability",
+      "ai_trading.soak",
+      "ai_trading.soak_gate",
+      "pathlib"
+    ],
+    "tests/test_qualification_suite.py": [
+      "ai_trading.qualification_suite"
+    ],
+    "tests/test_quality_store.py": [
+      "ai_trading.quality_store",
+      "pathlib"
+    ],
+    "tests/test_quantitative_artifact.py": [
+      "ai_trading.benchmark_gate",
+      "ai_trading.bootstrap_gate",
+      "ai_trading.cost_stress_gate",
+      "ai_trading.dataset_evidence",
+      "ai_trading.quantitative_artifact",
+      "ai_trading.quantitative_qualification",
+      "ai_trading.regime_gate",
+      "ai_trading.sensitivity_gate"
+    ],
+    "tests/test_quantitative_qualification.py": [
+      "ai_trading.quantitative_qualification",
+      "types"
+    ],
+    "tests/test_readiness.py": [
+      "ai_trading.performance",
+      "ai_trading.readiness"
+    ],
+    "tests/test_readiness_evidence.py": [
+      "ai_trading.data_quality",
+      "ai_trading.global_allocator",
+      "ai_trading.model_quality",
+      "ai_trading.performance",
+      "ai_trading.readiness_evidence",
+      "ai_trading.recovery_health",
+      "ai_trading.reliability",
+      "ai_trading.robustness",
+      "pandas"
+    ],
+    "tests/test_readiness_handshake.py": [
+      "ai_trading.readiness_handshake",
+      "ai_trading.watchdog",
+      "pathlib"
+    ],
+    "tests/test_readiness_release.py": [
+      "ai_trading.governor_state_store",
+      "ai_trading.qualification_store",
+      "ai_trading.readiness_release",
+      "ai_trading.readiness_score",
+      "ai_trading.readiness_trend",
+      "ai_trading.resilience",
+      "datetime"
+    ],
+    "tests/test_readiness_revocation.py": [
+      "ai_trading.readiness_revocation",
+      "pathlib"
+    ],
+    "tests/test_readiness_score.py": [
+      "ai_trading.readiness_score",
+      "pathlib"
+    ],
+    "tests/test_readiness_trend.py": [
+      "ai_trading.readiness_score",
+      "ai_trading.readiness_trend",
+      "datetime"
+    ],
+    "tests/test_recovery.py": [
+      "ai_trading.audit",
+      "ai_trading.recovery",
+      "ai_trading.session_integrity",
+      "ai_trading.state_snapshot",
+      "pathlib"
+    ],
+    "tests/test_recovery_health.py": [
+      "ai_trading.lifecycle_log",
+      "ai_trading.recovery_health",
+      "pathlib"
+    ],
+    "tests/test_regime.py": [
+      "ai_trading.regime",
+      "pandas"
+    ],
+    "tests/test_regime_gate.py": [
+      "ai_trading.regime_gate",
+      "types"
+    ],
+    "tests/test_regime_validation.py": [
+      "ai_trading.regime_validation"
+    ],
+    "tests/test_reliability.py": [
+      "ai_trading.lifecycle_log",
+      "ai_trading.reliability",
+      "ai_trading.resilience",
+      "dataclasses",
+      "datetime",
+      "json",
+      "pathlib"
+    ],
+    "tests/test_replay.py": [
+      "ai_trading.replay",
+      "pathlib"
+    ],
+    "tests/test_reproducibility.py": [
+      "ai_trading.benchmark_gate",
+      "ai_trading.bootstrap_gate",
+      "ai_trading.cost_stress_gate",
+      "ai_trading.dataset_evidence",
+      "ai_trading.quantitative_artifact",
+      "ai_trading.quantitative_qualification",
+      "ai_trading.regime_gate",
+      "ai_trading.reproducibility",
+      "ai_trading.sensitivity_gate",
+      "pandas"
+    ],
+    "tests/test_resilience.py": [
+      "ai_trading.resilience",
+      "pathlib"
+    ],
+    "tests/test_resilience_stability.py": [
+      "ai_trading.lifecycle_log",
+      "ai_trading.resilience_stability",
+      "pathlib"
+    ],
+    "tests/test_risk.py": [
+      "ai_trading.config",
+      "ai_trading.model",
+      "ai_trading.risk"
+    ],
+    "tests/test_risk_governor.py": [
+      "ai_trading.risk_governor"
+    ],
+    "tests/test_risk_parity.py": [
+      "ai_trading.portfolio",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_robustness.py": [
+      "ai_trading.robustness",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_rollback_model.py": [
+      "ai_trading.champions",
+      "ai_trading.drift",
+      "ai_trading.guardrails",
+      "ai_trading.performance",
+      "ai_trading.persistence",
+      "pathlib"
+    ],
+    "tests/test_runtime.py": [
+      "ai_trading.audit",
+      "ai_trading.config",
+      "ai_trading.runtime",
+      "ai_trading.runtime_state",
+      "numpy",
+      "pandas",
+      "pathlib"
+    ],
+    "tests/test_runtime_factory.py": [
+      "ai_trading.runtime_factory",
+      "pathlib"
+    ],
+    "tests/test_runtime_lock.py": [
+      "ai_trading.runtime_lock",
+      "pathlib",
+      "pytest"
+    ],
+    "tests/test_runtime_persistence.py": [
+      "__future__",
+      "ai_trading.config",
+      "ai_trading.model_codec",
+      "ai_trading.online",
+      "ai_trading.persistence",
+      "ai_trading.runtime",
+      "ai_trading.runtime_state",
+      "ai_trading.runtime_status",
+      "ai_trading.trade_journal",
+      "numpy",
+      "pandas",
+      "pytest"
+    ],
+    "tests/test_runtime_state.py": [
+      "ai_trading.runtime_state",
+      "pathlib"
+    ],
+    "tests/test_runtime_status.py": [
+      "__future__",
+      "ai_trading.runtime_status"
+    ],
+    "tests/test_runtime_targeted_step.py": [
+      "ai_trading.audit",
+      "ai_trading.config",
+      "ai_trading.runtime",
+      "ai_trading.runtime_state",
+      "numpy",
+      "pandas",
+      "pathlib",
+      "pytest"
+    ],
+    "tests/test_scheduler.py": [
+      "ai_trading.scheduler",
+      "pandas",
+      "pytest"
+    ],
+    "tests/test_scheduler_endpoint.py": [
+      "__future__",
+      "ai_trading.dashboard",
+      "ai_trading.paper_cycle",
+      "ai_trading.paper_cycle_service",
+      "ai_trading.scheduler_endpoint",
+      "json",
+      "socket",
+      "threading",
+      "time",
+      "urllib.error",
+      "urllib.request"
+    ],
+    "tests/test_scheduler_governor.py": [
+      "ai_trading.governor_state_store",
+      "ai_trading.scheduler",
+      "pandas",
+      "pathlib",
+      "pytest"
+    ],
+    "tests/test_scheduler_iteration_callback.py": [
+      "__future__",
+      "ai_trading.scheduler",
+      "pandas",
+      "types"
+    ],
+    "tests/test_sensitivity_gate.py": [
+      "ai_trading.parameter_sensitivity",
+      "ai_trading.sensitivity_gate"
+    ],
+    "tests/test_session_integrity.py": [
+      "ai_trading.audit",
+      "ai_trading.session_integrity",
+      "pathlib"
+    ],
+    "tests/test_smoke_e2e.py": [
+      "ai_trading.multiasset_scheduler",
+      "ai_trading.runtime_factory",
+      "ai_trading.state_snapshot",
+      "ai_trading.watchdog",
+      "numpy",
+      "pandas",
+      "pathlib"
+    ],
+    "tests/test_snapshot_retention.py": [
+      "ai_trading.state_snapshot",
+      "pathlib"
+    ],
+    "tests/test_soak_gate.py": [
+      "ai_trading.soak",
+      "ai_trading.soak_gate"
+    ],
+    "tests/test_soak_gate_drawdown.py": [
+      "ai_trading.soak",
+      "ai_trading.soak_gate"
+    ],
+    "tests/test_specialist_experts.py": [
+      "ai_trading.features",
+      "ai_trading.specialist_experts",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_startup_check.py": [
+      "ai_trading.champions",
+      "ai_trading.governor_state_store",
+      "ai_trading.lifecycle_log",
+      "ai_trading.readiness_score",
+      "ai_trading.startup_check",
+      "ai_trading.state_snapshot",
+      "pathlib"
+    ],
+    "tests/test_state_hash.py": [
+      "ai_trading.state_hash",
+      "pathlib"
+    ],
+    "tests/test_state_snapshot.py": [
+      "ai_trading.state_snapshot",
+      "pathlib"
+    ],
+    "tests/test_stress_engine.py": [
+      "ai_trading.stress_engine",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_supervisor.py": [
+      "ai_trading.lifecycle_log",
+      "ai_trading.maintenance",
+      "ai_trading.qualification_store",
+      "ai_trading.resilience",
+      "ai_trading.supervisor",
+      "ai_trading.supervisor_lease",
+      "dataclasses",
+      "datetime",
+      "json",
+      "pathlib"
+    ],
+    "tests/test_supervisor_clean_exit.py": [
+      "ai_trading.governor_state_store",
+      "ai_trading.maintenance",
+      "ai_trading.supervisor",
+      "ai_trading.supervisor_lease",
+      "pathlib"
+    ],
+    "tests/test_supervisor_crash_loop.py": [
+      "ai_trading.governor_state_store",
+      "ai_trading.maintenance",
+      "ai_trading.restart_log",
+      "ai_trading.supervisor",
+      "ai_trading.supervisor_lease",
+      "pathlib"
+    ],
+    "tests/test_supervisor_lease.py": [
+      "ai_trading.supervisor_lease",
+      "pathlib",
+      "pytest"
+    ],
+    "tests/test_supervisor_qualification.py": [
+      "ai_trading.governor_state_store",
+      "ai_trading.maintenance",
+      "ai_trading.qualification_store",
+      "ai_trading.supervisor",
+      "ai_trading.supervisor_lease",
+      "pathlib"
+    ],
+    "tests/test_supervisor_state.py": [
+      "ai_trading.supervisor_state",
+      "pathlib"
+    ],
+    "tests/test_temporal_cv.py": [
+      "ai_trading.temporal_cv",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_tuning.py": [
+      "ai_trading.performance",
+      "ai_trading.tuning"
+    ],
+    "tests/test_watchdog.py": [
+      "ai_trading.watchdog",
+      "datetime",
+      "pathlib"
+    ],
+    "tests/test_watchdog_enforcer.py": [
+      "ai_trading.governor_state_store",
+      "ai_trading.watchdog",
+      "ai_trading.watchdog_enforcer",
+      "datetime",
+      "pathlib"
+    ],
+    "tests/test_worker_monitor.py": [
+      "ai_trading.watchdog",
+      "ai_trading.worker_monitor",
+      "pathlib",
+      "subprocess",
+      "sys"
+    ]
+  }
+}
