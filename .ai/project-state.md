@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T08:53:37Z
+Generated: 2026-09-18T08:56:46Z
 
 ### Git
 - Branch: `main`
-- Head: `4bc4e967a60e`
-- Commit date: 2026-09-18T08:53:20Z
+- Head: `ef6b4b9d7442`
+- Commit date: 2026-09-18T08:56:24Z
 - Commit: chore(ai): refresh repo health
-- Tracked files: 347
+- Tracked files: 350
 
 ### Recently changed files
+- `AGENTS.md`
 - `.repo-standards.yml`
 - `.github/workflows/ai-repo-map.yml`
 
