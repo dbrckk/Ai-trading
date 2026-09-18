@@ -4,6 +4,7 @@ import hashlib
 from pathlib import Path
 
 from .audit import AuditLog
+from .performance_metrics import TradePerformanceMetrics, calculate_performance_metrics
 from .persistence import (
     CommitOutcome,
     ModelBlob,
@@ -83,6 +84,10 @@ class FilePaperPersistence(PaperPersistence):
     ) -> tuple[TradeSnapshot, ...]:
         del runtime_key
         return self.trade_journal.list(limit=limit)
+
+    def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics:
+        del runtime_key
+        return calculate_performance_metrics(self.trade_journal.list())
 
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:
         del runtime_key
