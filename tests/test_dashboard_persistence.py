@@ -7,6 +7,7 @@ from threading import Thread
 from urllib.error import URLError
 from urllib.request import urlopen
 
+from ai_trading.burnin import BurnInSnapshot
 from ai_trading.dashboard import render_dashboard, serve_dashboard
 from ai_trading.hosted_runtime import HostedPaperSettings
 from ai_trading.performance_metrics import performance_metrics_from_totals
@@ -74,6 +75,27 @@ class DurablePersistence:
             gross_profit=500.0,
             gross_loss=125.0,
             max_drawdown=80.0,
+        )
+
+    def list_burnin_snapshots(self, runtime_key: str):
+        assert runtime_key == RUNTIME_KEY
+        return (
+            BurnInSnapshot(
+                timestamp_utc="2026-09-16T05:15:00+00:00",
+                equity=12_500.0,
+                scheduler_errors=0,
+                regimes_covered=0,
+                bootstrap_probability_positive=0.0,
+                processed_bars=6,
+            ),
+            BurnInSnapshot(
+                timestamp_utc="2026-09-16T05:20:00+00:00",
+                equity=12_845.0,
+                scheduler_errors=0,
+                regimes_covered=0,
+                bootstrap_probability_positive=0.0,
+                processed_bars=7,
+            ),
         )
 
     def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:
@@ -161,6 +183,9 @@ def test_dashboard_uses_durable_state_trades_and_status(tmp_path) -> None:
     assert '<small>Profit factor</small><strong>4.00</strong>' in page
     assert '<small>Max realized DD</small><strong>80.00</strong>' in page
     assert "Performance window: full persisted history" in page
+    assert '<small>Burn-in bars</small><strong>7</strong>' in page
+    assert '<small>Equity return</small><strong>2.76%</strong>' in page
+    assert '<small>Equity max DD</small><strong>0.00%</strong>' in page
 
 
 def test_dashboard_storage_failure_is_sanitized(tmp_path) -> None:
