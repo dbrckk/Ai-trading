@@ -27,20 +27,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T19:28:57Z
+Generated: 2026-09-18T19:32:45Z
 
 ### Git
 - Branch: `main`
-- Head: `3a963345f55b`
-- Commit date: 2026-09-18T21:28:38+02:00
-- Commit: chore(ai): enable compact graph routing
-- Tracked files: 401
+- Head: `19a8da6e9d1e`
+- Commit date: 2026-09-18T21:32:23+02:00
+- Commit: chore(ai): adopt graph-first agent routing
+- Tracked files: 412
 
 ### Recently changed files
+- `AGENTS.md`
 - `.repo-standards.yml`
 - `.github/workflows/ai-repo-map.yml`
-- `AGENTS.md`
-- `src/ai_trading/dashboard.py`
 
 ### Project signals
 - `pyproject.toml`
