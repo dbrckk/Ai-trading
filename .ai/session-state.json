@@ -2,11 +2,11 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "feat/shadow-quality-report",
+  "active_branch": "feat/shadow-promotion-gate",
   "pull_request": null,
-  "focus": "Expose durable River-versus-shadow-challenger quality evidence without allowing the challenger to influence execution.",
+  "focus": "Add a review-only promotion evidence gate for the shadow challenger while keeping River authoritative.",
   "production_evidence": {
-    "main_head": "eb3862d64e1d7e243187908c0d2e571b6d6eae88",
+    "main_head": "05a37ae8bed66d05a50096f7de1c5eabd76cdc5f",
     "render_live_commit": "eb3862d64e1d7e243187908c0d2e571b6d6eae88",
     "render_shadow_challenger_enabled": true,
     "neon_runtime_processed_bars": 713,
@@ -23,7 +23,8 @@
     "PR #45 integrated the challenger as audit-only paper-cycle observability.",
     "Render environment AI_TRADING_SHADOW_CHALLENGER is enabled.",
     "River remains authoritative for risk and paper execution.",
-    "PR #47 enriched the shadow challenger to 14 features while leaving River execution features unchanged."
+    "PR #47 enriched the shadow challenger to 14 features while leaving River execution features unchanged.",
+    "PR #48 added durable River-versus-challenger quality reporting to /api/overview."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -31,10 +32,10 @@
     "github_schedule_fallback_enabled": true
   },
   "next_actions": [
-    "Merge the durable shadow-quality report only if CI is fully green.",
+    "Merge the shadow promotion review gate only if CI is fully green.",
     "Wait for new eligible GC=F 5-minute bars and confirm shadow_challenger entries appear in durable audit events.",
     "Use /api/overview to compare River and challenger quality after at least five realized shadow observations.",
-    "Require sustained out-of-sample improvement before considering champion/challenger promotion.",
+    "Require at least 250 realized shadow observations plus non-degraded calibration, accuracy, and directional edge before promotion review eligibility.",
     "Keep issue #40 open and retain the GitHub scheduled fallback until direct Cloudflare heartbeat evidence is complete."
   ]
 }
