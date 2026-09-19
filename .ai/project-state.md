@@ -14,7 +14,7 @@ Status: active
 - Repository-standards routing benchmark health failed on current main, while the trading CI itself remains green.
 
 ## Current priority
-- Validate and merge the bounded 72-bar paper-cycle catch-up increase so delayed scheduler runs can recover up to six hours of 5-minute bars per invocation.
+- Validate the staggered 7-57/5 GitHub schedule so delayed runs avoid the start-of-hour load window while the durable 72-bar catch-up remains the recovery boundary.
 - Restore and verify the external five-minute scheduler path, then prove production continuity until backlog clears before changing trading logic or considering live execution.
 
 ## Validation
