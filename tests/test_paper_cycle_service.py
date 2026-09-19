@@ -45,6 +45,7 @@ class FakePersistence:
 class FakeRunner:
     def __init__(self, persistence: FakePersistence) -> None:
         self.persistence = persistence
+        self.shadow_challenger_enabled = False
 
     def run_once(
         self,
@@ -53,7 +54,9 @@ class FakeRunner:
         period: str,
         interval: str,
         max_catchup_bars: int,
+        shadow_challenger_enabled: bool = False,
     ) -> PaperCycleResult:
+        self.shadow_challenger_enabled = shadow_challenger_enabled
         assert (symbol, period, interval, max_catchup_bars) == (
             "GC=F",
             "5d",
@@ -245,3 +248,18 @@ def test_failure_increments_consecutive_cycle_errors() -> None:
     assert backend.statuses[0].consecutive_cycle_errors == 2
     assert backend.statuses[-1].engine_status == "ERROR"
     assert backend.statuses[-1].consecutive_cycle_errors == 3
+
+
+
+def test_service_propagates_shadow_challenger_when_enabled() -> None:
+    backend = FakePersistence()
+    runner = FakeRunner(backend)
+
+    result = run_production_paper_cycle(
+        ProductionPaperCycleSettings(shadow_challenger_enabled=True),
+        persistence=backend,
+        runner_factory=lambda persistence: runner,
+    )
+
+    assert result.processed == 2
+    assert runner.shadow_challenger_enabled is True
