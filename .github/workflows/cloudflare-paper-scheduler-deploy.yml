@@ -1,0 +1,50 @@
+name: Deploy Cloudflare Paper Scheduler
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "infra/cloudflare-paper-scheduler/**"
+      - ".github/workflows/cloudflare-paper-scheduler-deploy.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-paper-scheduler-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || vars.CLOUDFLARE_SCHEDULER_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Require Cloudflare deployment configuration
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          SCHEDULER_TOKEN: ${{ secrets.AI_TRADING_SCHEDULER_TOKEN }}
+        run: |
+          missing=0
+          for name in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID SCHEDULER_TOKEN; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error::${name} repository secret is required"
+              missing=1
+            fi
+          done
+          exit "${missing}"
+      - name: Deploy Worker
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: infra/cloudflare-paper-scheduler
+          command: deploy
+          secrets: |
+            SCHEDULER_TOKEN
+        env:
+          SCHEDULER_TOKEN: ${{ secrets.AI_TRADING_SCHEDULER_TOKEN }}

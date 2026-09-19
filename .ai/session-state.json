@@ -2,13 +2,14 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "perf/paper-cycle-prepared-market",
+  "active_branch": "fix/cloudflare-scheduler-deploy",
   "pull_request": null,
-  "focus": "Clear the durable paper backlog quickly without changing paper-trading semantics.",
+  "focus": "Restore reliable five-minute paper execution by making the existing Cloudflare scheduler safely deployable while preserving the GitHub fallback.",
   "production_evidence": {
-    "main_head_at_start": "b0ac90bd6953c6a37ebe0a8054698897882a6b42",
+    "main_head_at_start": "8ad02281ffe896c074aafa861c9a9c8273571a44",
     "latest_observed_scheduled_cycle_run": 35426791032,
     "latest_observed_cycle_result": "catch-up pending; processed_bars=241",
+    "render_live_commit": "8ad02281ffe896c074aafa861c9a9c8273571a44",
     "render_internal_paper_cycle_requests_observed_on_2026_09_19": 0,
     "neon_runtime_processed_bars": 241,
     "neon_runtime_revision": 241,
@@ -20,18 +21,22 @@
     "neon_trade_count": 4
   },
   "change": {
-    "max_catchup_bars": 72,
-    "scheduled_job_timeout_minutes": 15,
-    "scope": "paper-only reliability; risk and trading decision logic unchanged",
+    "scope": "paper-only scheduler reliability; risk/model/trading decisions unchanged",
     "github_schedule": "7-57/5 * * * *",
-    "github_schedule_rationale": "Avoid GitHub Actions start-of-hour high-load window; durable catch-up covers the 10-minute hour-boundary gap.",
-    "prepared_market_cache": "Compute runtime features, labels, valid index, and eligible execution indices once per bounded paper cycle; retain per-bar durable commit/CAS semantics."
+    "cloudflare_cron": "*/5 * * * *",
+    "cloudflare_deploy_workflow": ".github/workflows/cloudflare-paper-scheduler-deploy.yml",
+    "cloudflare_deploy_gate": "manual dispatch always allowed; automatic deploy only when CLOUDFLARE_SCHEDULER_ENABLED=true",
+    "required_repository_secrets": [
+      "CLOUDFLARE_API_TOKEN",
+      "CLOUDFLARE_ACCOUNT_ID",
+      "AI_TRADING_SCHEDULER_TOKEN"
+    ]
   },
   "next_actions": [
-    "Get prepared-market catch-up optimization CI fully green.",
-    "Merge the optimization to main and confirm Render deploy.",
-    "Observe the next scheduled paper cycles and query Neon for processed_bars/revision/last_processed advancement.",
-    "Keep issue #40 open until five-minute delivery is proven or Cloudflare fallback is activated and verified.",
-    "Do not change trading/risk/model logic until continuity and backlog recovery are proven."
+    "Run CI on the Cloudflare deploy workflow change and merge only if green.",
+    "Configure the Cloudflare account/API token and shared scheduler token without exposing values in Git or chat.",
+    "Dispatch the Cloudflare deployment workflow and verify the Worker cron is active.",
+    "Observe at least three authenticated Cloudflare POSTs reaching Render and confirm Neon progress remains duplicate-safe.",
+    "Keep issue #40 open and keep the GitHub fallback schedule enabled until the Cloudflare heartbeat is proven."
   ]
 }
