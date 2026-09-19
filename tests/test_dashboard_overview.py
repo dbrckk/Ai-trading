@@ -362,6 +362,10 @@ def test_dashboard_renders_model_and_revision_metadata(tmp_path) -> None:
     assert '<small>Model</small><strong>joblib v1</strong>' in page
     assert '<small>Model checksum</small><strong>1234567890ab</strong>' in page
     assert "Operational alerts: none" in page
+    assert "Shadow challenger" in page
+    assert '<small>Observations</small><strong>1</strong>' in page
+    assert '<small>River accuracy</small><strong>100.0%</strong>' in page
+    assert '<small>Ensemble accuracy</small><strong>100.0%</strong>' in page
 
 
 def test_dashboard_renders_operational_alerts(tmp_path) -> None:
