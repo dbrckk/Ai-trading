@@ -5,13 +5,16 @@ import numpy as np
 import pandas as pd
 import pytest
 
+import ai_trading.paper_cycle as paper_cycle_module
 import ai_trading.runtime as runtime_module
 from ai_trading.config import RiskConfig
 from ai_trading.file_persistence import FilePaperPersistence
+from ai_trading.model import Prediction
 from ai_trading.paper_cycle import PaperCycleRunner
 from ai_trading.persistence import build_runtime_key
 from ai_trading.runtime import PaperAutonomousRuntime, RuntimeStepResult
 from ai_trading.runtime_state import RuntimeState
+from ai_trading.shadow_challenger import ShadowChallengerResult
 
 
 def sample_market(n: int = 110) -> pd.DataFrame:
@@ -302,3 +305,79 @@ def test_revision_conflict_reloads_and_continues(tmp_path: Path) -> None:
     assert final.processed_bars == 4
     assert result.processed == 2
     assert result.remaining_backlog is False
+
+
+
+def test_shadow_challenger_is_recorded_without_controlling_execution(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    backend = FilePaperPersistence(tmp_path)
+    df = sample_market()
+    runtime, eligible = build_runtime(tmp_path, backend, df)
+    target = eligible[-1]
+    signal = df.index[int(df.index.get_loc(target)) - 1]
+    train_end = df.index[int(df.index.get_loc(signal)) - 1]
+    calls: list[object] = []
+
+    def fake_shadow(
+        market,
+        features,
+        labels,
+        execution_idx,
+        *,
+        horizon_bars,
+    ):
+        del market, features, labels, horizon_bars
+        calls.append(execution_idx)
+        return ShadowChallengerResult(
+            prediction=Prediction(
+                side=-1,
+                confidence=0.99,
+                probabilities={-1: 0.99, 0: 0.005, 1: 0.005},
+            ),
+            regime="sideways_normal_vol",
+            signal_time=str(signal),
+            execution_time=str(execution_idx),
+            training_rows=120,
+            training_end=str(train_end),
+            realized_label=-1,
+        )
+
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "evaluate_shadow_challenger",
+        fake_shadow,
+    )
+    monkeypatch.setattr(
+        runtime_module.RiverDirectionModel,
+        "predict_one",
+        lambda self, row: Prediction(
+            side=1,
+            confidence=0.90,
+            probabilities={-1: 0.05, 0: 0.05, 1: 0.90},
+        ),
+    )
+
+    runner = build_runner(tmp_path, backend, df)
+    result = runner.run_once(
+        symbol="GC=F",
+        period="5d",
+        interval="5m",
+        max_catchup_bars=12,
+        shadow_challenger_enabled=True,
+    )
+
+    audit_rows = [
+        json.loads(line)
+        for line in backend.audit_log.path.read_text(encoding="utf-8").splitlines()
+    ]
+    payload = audit_rows[-1]["payload"]
+
+    assert result.processed == 1
+    assert calls == [target]
+    assert payload["prediction"]["side"] == 1
+    assert payload["risk_decision"]["side"] == 1
+    assert payload["shadow_challenger"]["prediction"]["side"] == -1
+    assert payload["shadow_challenger"]["execution_time"] == str(target)
+    assert runtime.runtime_key == build_runtime_key("GC=F", "5m")
