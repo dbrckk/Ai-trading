@@ -2,12 +2,12 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "feat/shadow-promotion-gate",
-  "pull_request": null,
-  "focus": "Add a review-only promotion evidence gate for the shadow challenger while keeping River authoritative.",
+  "active_branch": "feat/multi-market-paper-dashboard",
+  "pull_request": 50,
+  "focus": "Launch isolated Gold/DAX/BTC paper runtimes and expose a coherent normalized 100k multi-market dashboard.",
   "production_evidence": {
-    "main_head": "05a37ae8bed66d05a50096f7de1c5eabd76cdc5f",
-    "render_live_commit": "eb3862d64e1d7e243187908c0d2e571b6d6eae88",
+    "main_head": "5e6aec9a5de1a62026491c8e8195824ad766e438",
+    "render_live_commit": "5e6aec9a5de1a62026491c8e8195824ad766e438",
     "render_shadow_challenger_enabled": true,
     "neon_runtime_processed_bars": 713,
     "neon_runtime_revision": 713,
@@ -24,7 +24,9 @@
     "Render environment AI_TRADING_SHADOW_CHALLENGER is enabled.",
     "River remains authoritative for risk and paper execution.",
     "PR #47 enriched the shadow challenger to 14 features while leaving River execution features unchanged.",
-    "PR #48 added durable River-versus-challenger quality reporting to /api/overview."
+    "PR #48 added durable River-versus-challenger quality reporting to /api/overview.",
+    "PR #49 added a review-only shadow promotion evidence gate.",
+    "PR #50 branch adds Gold/DAX/BTC orchestration, failure isolation, normalized 100k portfolio reporting, /api/markets, and responsive dashboard cards."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -32,10 +34,10 @@
     "github_schedule_fallback_enabled": true
   },
   "next_actions": [
-    "Merge the shadow promotion review gate only if CI is fully green.",
-    "Wait for new eligible GC=F 5-minute bars and confirm shadow_challenger entries appear in durable audit events.",
-    "Use /api/overview to compare River and challenger quality after at least five realized shadow observations.",
-    "Require at least 250 realized shadow observations plus non-degraded calibration, accuracy, and directional edge before promotion review eligibility.",
-    "Keep issue #40 open and retain the GitHub scheduled fallback until direct Cloudflare heartbeat evidence is complete."
+    "Merge PR #50 only if Ruff, Pytest, PostgreSQL integration tests, and Cloudflare Worker tests are fully green.",
+    "Set Render AI_TRADING_MARKETS=GC=F,^GDAXI,BTC-USD only after merge.",
+    "Verify independent durable runtimes exist for Gold, DAX, and BTC and that one provider failure does not block the others.",
+    "Verify /api/markets and the dashboard show a 34%/33%/33% normalized 100k portfolio.",
+    "Collect shadow challenger evidence independently per market and keep all execution paper-only."
   ]
 }
