@@ -156,7 +156,7 @@ The scheduled executor is defined in `.github/workflows/paper-cycle.yml`. It run
 The production cycle is:
 
 ```bash
-ai-trading paper-cycle --symbol GC=F --period 5d --interval 5m --max-catchup-bars 12
+ai-trading paper-cycle --symbol GC=F --period 5d --interval 5m --max-catchup-bars 72
 ```
 
 Its durable runtime key is:
@@ -165,7 +165,7 @@ Its durable runtime key is:
 paper:GC=F:5m:online-river:v1
 ```
 
-A fresh durable runtime processes only the latest eligible execution bar. An existing runtime catches up missed eligible bars oldest-first, with at most 12 attempted bars per invocation. If the durable `last_processed` marker is outside the loaded history window, the cycle fails closed instead of guessing where to resume. Revision conflicts cause state to be reloaded so overlapping executors cannot overwrite newer durable progress.
+A fresh durable runtime processes only the latest eligible execution bar. An existing runtime catches up missed eligible bars oldest-first, with at most 72 attempted bars per invocation (six hours of 5-minute bars) so delayed external triggers can recover without unbounded work. If the durable `last_processed` marker is outside the loaded history window, the cycle fails closed instead of guessing where to resume. Revision conflicts cause state to be reloaded so overlapping executors cannot overwrite newer durable progress.
 
 ### Hosted dashboard
 
