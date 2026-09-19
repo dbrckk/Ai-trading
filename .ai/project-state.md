@@ -8,21 +8,24 @@ Status: active
 - Hosted paper runtime uses durable persistence and scheduled paper cycles.
 - Paper performance metrics are persisted cumulatively per runtime and exposed in the read-only dashboard.
 - Paper burn-in equity snapshots are persisted per committed bar and exposed through dashboard/API observability.
+- PR #41 is merged and Render is live on commit `8ad0228`; bounded catch-up now prepares features/labels once per cycle.
 
 ## Broken / blockers
-- The external five-minute Cloudflare scheduler was not observed reaching Render on 2026-09-19; GitHub scheduled paper-cycle runs have multi-hour gaps, so durable catch-up is still required.
+- GitHub scheduled paper-cycle delivery is still sparse; the durable runtime remains at processed_bars/revision 241 with last_processed `2026-09-17 00:35:00-04:00`.
+- No `POST /internal/paper-cycle` request was observed in Render request logs for the inspected 2026-09-19 window.
+- The external Cloudflare scheduler is not yet activated in production because its account credentials and scheduler token are not configured.
 - Repository-standards routing benchmark health failed on current main, while the trading CI itself remains green.
 
 ## Current priority
-- Accelerate bounded paper catch-up by preparing features and labels once per cycle while preserving one durable commit and CAS check per processed bar.
-- Then verify directly in Neon that the 241-bar runtime backlog advances toward the newest eligible market bar under the merged 72-bar catch-up and staggered 7-57/5 schedule.
-- Activate and prove the external Cloudflare five-minute scheduler only if GitHub scheduled delivery remains sparse.
+- Add a guarded GitHub deployment path for the existing Cloudflare Worker so production activation can be performed without placing secret material in Git.
+- Keep the existing GitHub paper-cycle schedule enabled as fallback until Cloudflare produces repeated authenticated production heartbeats.
+- After activation, verify Neon revision/processed_bars/last_processed advancement and close issue #40 only after continuity is proven.
 
 ## Validation
-- Standards workflow: configured; current main has a repo-brain benchmark-health failure unrelated to trading tests.
 - Canonical validation: `ruff check .` and `pytest`.
 - Paper runtime changes must keep Cloudflare Worker tests green.
-- PR #38 and PR #39 are merged; the active change is paper catch-up performance.
+- Cloudflare deployment workflow must fail closed when required repository secrets are missing and must never contain secret values.
+- PR #38, #39, and #41 are merged; issue #40 tracks scheduler delivery hardening.
 
 ## Last verified
 - 2026-09-19
