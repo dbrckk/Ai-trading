@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 
 from .audit import AuditLog
@@ -15,6 +16,7 @@ from .persistence import (
 )
 from .runtime_state import RuntimeStateStore
 from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore
+from .shadow_quality import ShadowObservation, shadow_observation_from_audit_payload
 from .trade_journal import TradeJournal, TradeSnapshot
 
 
@@ -119,6 +121,30 @@ class FilePaperPersistence(PaperPersistence):
             for line in self.regimes_path.read_text(encoding="utf-8").splitlines()
             if line.strip()
         )
+
+    def list_shadow_observations(
+        self,
+        runtime_key: str,
+    ) -> tuple[ShadowObservation, ...]:
+        del runtime_key
+        if not self.audit_log.path.exists():
+            return ()
+        observations: list[ShadowObservation] = []
+        with self.audit_log.path.open("r", encoding="utf-8") as handle:
+            for line in handle:
+                if not line.strip():
+                    continue
+                try:
+                    record = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                payload = record.get("payload")
+                if not isinstance(payload, dict):
+                    continue
+                observation = shadow_observation_from_audit_payload(payload)
+                if observation is not None:
+                    observations.append(observation)
+        return tuple(observations)
 
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:
         del runtime_key
