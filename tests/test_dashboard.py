@@ -114,3 +114,14 @@ def test_dashboard_renders_premium_terminal_shell(tmp_path) -> None:
     assert "live-dot" in page
     assert '<div class="portfolio-ribbon">' not in page
     assert "prefers-reduced-motion" in page
+
+
+
+def test_dashboard_live_refresh_preserves_scroll_without_meta_reload(tmp_path) -> None:
+    page = render_dashboard(TradeJournal(tmp_path / "empty.jsonl"))
+
+    assert 'http-equiv="refresh"' not in page
+    assert 'fetch(window.location.href' in page
+    assert 'window.scrollTo({left: scrollX, top: scrollY' in page
+    assert 'INTERACTION_GRACE_MS = 1800' in page
+    assert 'touchmove' in page

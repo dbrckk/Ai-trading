@@ -531,7 +531,7 @@ def render_dashboard(
         )
 
     return f"""<!doctype html>
-<html><head><meta charset="utf-8"><meta http-equiv="refresh" content="2">
+<html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AI Trading — Live</title>
 <style>
@@ -681,7 +681,7 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
 <div class="header-copy">
 <div class="eyebrow"><span class="live-dot"></span> Paper trading · live telemetry</div>
 <h1>AI Trading Terminal</h1>
-<small class="header-subtitle">Premium read-only control center · auto refresh 2s · durable hosted runtime</small>
+<small class="header-subtitle">Premium read-only control center · live refresh without page jumps · durable hosted runtime</small>
 </div>
 <div class="header-meta">
 <span class="pill">PAPER · READ ONLY</span>
@@ -783,6 +783,59 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
 </section>
 <div class="footer-note">AI Trading · paper runtime · read-only observability</div>
 </div>
+<script type="text/javascript">
+(() => {{
+  const REFRESH_MS = 2000;
+  const INTERACTION_GRACE_MS = 1800;
+  let refreshing = false;
+  let lastInteractionAt = 0;
+
+  const markInteraction = () => {{
+    lastInteractionAt = Date.now();
+  }};
+
+  for (const eventName of ["scroll", "touchstart", "touchmove", "pointerdown", "wheel"]) {{
+    window.addEventListener(eventName, markInteraction, {{passive: true}});
+  }}
+
+  async function refreshDashboard() {{
+    if (refreshing || document.hidden) return;
+    if (Date.now() - lastInteractionAt < INTERACTION_GRACE_MS) return;
+
+    refreshing = true;
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+
+    try {{
+      const response = await fetch(window.location.href, {{
+        cache: "no-store",
+        headers: {{"X-Dashboard-Refresh": "1"}},
+      }});
+      if (!response.ok) return;
+
+      const source = await response.text();
+      const nextDocument = new DOMParser().parseFromString(source, "text/html");
+      const currentCard = document.querySelector(".card");
+      const nextCard = nextDocument.querySelector(".card");
+      if (!currentCard || !nextCard) return;
+
+      currentCard.replaceChildren(
+        ...Array.from(nextCard.childNodes).map((node) => document.importNode(node, true))
+      );
+
+      requestAnimationFrame(() => {{
+        window.scrollTo({{left: scrollX, top: scrollY, behavior: "instant"}});
+      }});
+    }} catch (_) {{
+      // Keep the current dashboard visible if one refresh attempt fails.
+    }} finally {{
+      refreshing = false;
+    }}
+  }}
+
+  window.setInterval(refreshDashboard, REFRESH_MS);
+}})();
+</script>
 </div></main></body></html>"""
 
 
