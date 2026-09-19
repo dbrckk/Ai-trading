@@ -783,7 +783,7 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
 </section>
 <div class="footer-note">AI Trading · paper runtime · read-only observability</div>
 </div>
-<script>
+<script type="text/javascript">
 (() => {{
   const REFRESH_MS = 2000;
   const INTERACTION_GRACE_MS = 1800;
