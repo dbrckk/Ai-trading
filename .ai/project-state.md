@@ -9,9 +9,10 @@ Status: active
 - PR #43 fixed the paper runtime daily-loss baseline so it persists across bars within the same trading day and resets only on a new trading day.
 - PR #44 added a leakage-safe ensemble challenger evaluator trained only on labels observable by the signal bar.
 - PR #45 wired the ensemble challenger into paper cycles as an opt-in shadow observer. River remains the only model that can drive the RiskEngine and paper execution.
-- Render is live on commit `eb3862d` with `AI_TRADING_SHADOW_CHALLENGER=1`.
+- Render is deploying commit `05a37ae` with `AI_TRADING_SHADOW_CHALLENGER=1`.
 - PR #47 enriched only the shadow challenger to 14 features while keeping the production River feature set unchanged.
-- The shadow-quality branch aggregates River and challenger accuracy, Brier-style calibration error, directional edge, and composite quality from durable audit evidence and exposes it through `/api/overview`.
+- PR #48 aggregates River and challenger accuracy, Brier-style calibration error, directional edge, and composite quality from durable audit evidence and exposes it through `/api/overview`.
+- The shadow-promotion branch adds a review-only eligibility gate requiring sustained evidence before a challenger can even be considered for promotion; it does not promote models automatically.
 - Production runtime is healthy at processed_bars/revision 713, with zero consecutive cycle errors.
 
 ## Broken / blockers
@@ -22,14 +23,15 @@ Status: active
 
 ## Current priority
 - Collect shadow challenger observations as soon as new eligible GC=F 5-minute bars arrive.
-- Collect at least five realized shadow observations so the new River-vs-challenger quality summary becomes comparable in `/api/overview`.
+- Collect at least five realized shadow observations so the River-vs-challenger quality summary becomes comparable in `/api/overview`.
+- Collect at least 250 realized shadow observations before the challenger can pass the review-eligibility evidence floor.
 - Keep the challenger strictly observational until it demonstrates sustained out-of-sample improvement after costs and risk constraints.
 - Keep production paper-only and retain the GitHub scheduled fallback until issue #40 acceptance criteria are fully evidenced.
 
 ## Validation
 - Canonical validation: `ruff check .` and `pytest`.
 - Cloudflare Worker tests must remain green.
-- PR #43, #44, #45, and #47 are merged; the shadow-quality report change must pass Ruff, Pytest, PostgreSQL integration tests, and Cloudflare Worker tests before merge.
+- PR #43, #44, #45, #47, and #48 are merged; the shadow-promotion gate must pass Ruff, Pytest, PostgreSQL integration tests, and Cloudflare Worker tests before merge.
 - Live runtime remains `RUNNING` with zero consecutive cycle errors.
 
 ## Last verified
