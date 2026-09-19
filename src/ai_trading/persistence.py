@@ -12,6 +12,7 @@ from .burnin import BurnInSnapshot
 from .performance_metrics import TradePerformanceMetrics
 from .runtime_state import RuntimeState
 from .runtime_status import HostedRuntimeStatus
+from .shadow_quality import ShadowObservation
 from .trade_journal import TradeSnapshot
 
 
@@ -66,6 +67,11 @@ class PaperPersistence(Protocol):
     def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]: ...
 
     def list_regimes(self, runtime_key: str) -> tuple[str, ...]: ...
+
+    def list_shadow_observations(
+        self,
+        runtime_key: str,
+    ) -> tuple[ShadowObservation, ...]: ...
 
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None: ...
 
