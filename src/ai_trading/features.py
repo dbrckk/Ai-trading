@@ -39,8 +39,13 @@ def make_features(df: pd.DataFrame) -> pd.DataFrame:
     out["trend_30"] = close / close.rolling(30).mean() - 1.0
     out["range_pct"] = (high - low) / close.replace(0, np.nan)
     vol_mean = volume.rolling(20).mean()
-    vol_std = volume.rolling(20).std().replace(0, np.nan)
-    out["volume_z20"] = (volume - vol_mean) / vol_std
+    raw_vol_std = volume.rolling(20).std()
+    vol_std = raw_vol_std.replace(0, np.nan)
+    volume_z20 = (volume - vol_mean) / vol_std
+    out["volume_z20"] = volume_z20.mask(
+        vol_mean.notna() & raw_vol_std.eq(0.0),
+        0.0,
+    )
 
     return out.replace([np.inf, -np.inf], np.nan)
 
@@ -85,8 +90,13 @@ def make_challenger_features(df: pd.DataFrame) -> pd.DataFrame:
     out["range_pos_20"] = (close - rolling_low) / range_width
 
     out["body_pct"] = (close - open_) / close.replace(0, np.nan)
-    volume_20 = volume.rolling(20).mean().replace(0.0, np.nan)
-    out["volume_ratio_5_20"] = volume.rolling(5).mean() / volume_20 - 1.0
+    raw_volume_20 = volume.rolling(20).mean()
+    volume_20 = raw_volume_20.replace(0.0, np.nan)
+    volume_ratio = volume.rolling(5).mean() / volume_20 - 1.0
+    out["volume_ratio_5_20"] = volume_ratio.mask(
+        raw_volume_20.eq(0.0),
+        0.0,
+    )
 
     return out.loc[:, CHALLENGER_FEATURES].replace([np.inf, -np.inf], np.nan)
 

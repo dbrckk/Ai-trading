@@ -47,3 +47,17 @@ def test_challenger_features_extend_production_features_without_replacing_them()
     assert challenger.loc[:, FEATURES].equals(base)
     assert challenger.dropna().shape[0] > 0
     assert challenger["rsi_14"].dropna().between(0.0, 1.0).all()
+
+
+
+def test_volume_less_market_keeps_neutral_volume_features() -> None:
+    df = sample_df()
+    df["Volume"] = 0.0
+
+    base = make_features(df)
+    challenger = make_challenger_features(df)
+
+    assert base["volume_z20"].dropna().eq(0.0).all()
+    assert challenger["volume_ratio_5_20"].dropna().eq(0.0).all()
+    assert base.dropna().shape[0] > 0
+    assert challenger.dropna().shape[0] > 0

@@ -24,4 +24,6 @@ def load_history(symbol: str, period: str = "5y", interval: str = "1d") -> pd.Da
     if missing:
         raise ValueError(f"Missing columns: {sorted(missing)}")
 
-    return df.loc[:, ["Open", "High", "Low", "Close", "Volume"]].dropna().copy()
+    result = df.loc[:, ["Open", "High", "Low", "Close", "Volume"]].copy()
+    result["Volume"] = result["Volume"].fillna(0.0)
+    return result.dropna(subset=["Open", "High", "Low", "Close"]).copy()
