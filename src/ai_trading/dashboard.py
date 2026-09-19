@@ -693,6 +693,7 @@ def serve_dashboard(
             interval=effective_settings.interval,
             max_catchup_bars=DEFAULT_MAX_CATCHUP_BARS,
             poll_seconds=300.0,
+            shadow_challenger_enabled=effective_settings.shadow_challenger,
         )
 
         def execute_paper_cycle() -> PaperCycleResult:
