@@ -4,28 +4,31 @@ Status: active
 
 ## Working
 - Central AI repo-map generation is configured through dbrckk/repo-standards.
-- Repository agent instructions are present.
-- Hosted paper runtime uses durable persistence and scheduled paper cycles.
-- Paper performance metrics are persisted cumulatively per runtime and exposed in the read-only dashboard.
-- Paper burn-in equity snapshots are persisted per committed bar and exposed through dashboard/API observability.
-- PR #41 is merged and Render is live on commit `8ad0228`; bounded catch-up now prepares features/labels once per cycle.
+- Hosted paper runtime uses durable PostgreSQL persistence, bounded catch-up, a read-only Render dashboard, and an authenticated external scheduler endpoint.
+- The Cloudflare paper scheduler deployment path is configured and has deployed successfully; the GitHub paper-cycle schedule remains enabled as fallback.
+- PR #43 fixed the paper runtime daily-loss baseline so it persists across bars within the same trading day and resets only on a new trading day.
+- PR #44 added a leakage-safe ensemble challenger evaluator trained only on labels observable by the signal bar.
+- PR #45 wired the ensemble challenger into paper cycles as an opt-in shadow observer. River remains the only model that can drive the RiskEngine and paper execution.
+- Render is live on commit `9f64e7d` with `AI_TRADING_SHADOW_CHALLENGER=1`.
+- Production runtime is healthy at processed_bars/revision 713, with zero consecutive cycle errors.
 
 ## Broken / blockers
-- GitHub scheduled paper-cycle delivery is still sparse; the durable runtime remains at processed_bars/revision 241 with last_processed `2026-09-17 00:35:00-04:00`.
-- No `POST /internal/paper-cycle` request was observed in Render request logs for the inspected 2026-09-19 window.
-- The external Cloudflare scheduler is not yet activated in production because its account credentials and scheduler token are not configured.
-- Repository-standards routing benchmark health failed on current main, while the trading CI itself remains green.
+- No shadow-challenger production observation exists yet because no new eligible market bar has been processed since `2026-09-18 16:55:00-04:00`.
+- Render request logs do not expose the scheduler POST evidence needed to directly prove three consecutive Cloudflare heartbeats, so issue #40 remains open.
+- GitHub scheduled paper-cycle delivery has historically been sparse; keep it as fallback until the Cloudflare acceptance evidence is complete.
+- Repository-standards routing benchmark health is separate from the trading CI; trading CI is green.
 
 ## Current priority
-- Add a guarded GitHub deployment path for the existing Cloudflare Worker so production activation can be performed without placing secret material in Git.
-- Keep the existing GitHub paper-cycle schedule enabled as fallback until Cloudflare produces repeated authenticated production heartbeats.
-- After activation, verify Neon revision/processed_bars/last_processed advancement and close issue #40 only after continuity is proven.
+- Collect shadow challenger observations as soon as new eligible GC=F 5-minute bars arrive.
+- Compare River and ensemble challenger quality from durable audit evidence (accuracy, calibration/Brier-style error, and directional edge) before any promotion decision.
+- Keep the challenger strictly observational until it demonstrates sustained out-of-sample improvement after costs and risk constraints.
+- Keep production paper-only and retain the GitHub scheduled fallback until issue #40 acceptance criteria are fully evidenced.
 
 ## Validation
 - Canonical validation: `ruff check .` and `pytest`.
-- Paper runtime changes must keep Cloudflare Worker tests green.
-- Cloudflare deployment workflow must fail closed when required repository secrets are missing and must never contain secret values.
-- PR #38, #39, and #41 are merged; issue #40 tracks scheduler delivery hardening.
+- Cloudflare Worker tests must remain green.
+- PR #43, #44, and #45 are merged; PR #45 passed Ruff, Pytest, and Cloudflare Worker tests.
+- Live runtime remains `RUNNING` with zero consecutive cycle errors.
 
 ## Last verified
 - 2026-09-19
