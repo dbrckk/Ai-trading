@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 
 from .config import RiskConfig
-from .paper_cycle import PaperCycleResult, PaperCycleRunner
+from .paper_cycle import DEFAULT_MAX_CATCHUP_BARS, PaperCycleResult, PaperCycleRunner
 from .persistence import PaperPersistence, build_runtime_key
 from .persistence_factory import build_paper_persistence
 from .runtime_status import HostedRuntimeStatus
@@ -16,7 +16,7 @@ class ProductionPaperCycleSettings:
     symbol: str = "GC=F"
     period: str = "5d"
     interval: str = "5m"
-    max_catchup_bars: int = 12
+    max_catchup_bars: int = DEFAULT_MAX_CATCHUP_BARS
     poll_seconds: float = 300.0
 
 

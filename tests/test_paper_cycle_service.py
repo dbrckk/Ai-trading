@@ -58,7 +58,7 @@ class FakeRunner:
             "GC=F",
             "5d",
             "5m",
-            12,
+            72,
         )
         return PaperCycleResult(
             processed=2,

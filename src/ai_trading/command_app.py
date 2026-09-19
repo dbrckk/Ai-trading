@@ -3,6 +3,7 @@ from __future__ import annotations
 import typer
 
 from .cli import app, console
+from .paper_cycle import DEFAULT_MAX_CATCHUP_BARS
 from .paper_cycle_service import (
     PaperCycleServiceError,
     ProductionPaperCycleSettings,
@@ -17,7 +18,7 @@ def paper_cycle(
     symbol: str = typer.Option("GC=F", help="Yahoo Finance symbol"),
     period: str = typer.Option("5d", help="History period"),
     interval: str = typer.Option("5m", help="Bar interval"),
-    max_catchup_bars: int = typer.Option(12, min=1),
+    max_catchup_bars: int = typer.Option(DEFAULT_MAX_CATCHUP_BARS, min=1),
 ) -> None:
     settings = ProductionPaperCycleSettings(
         symbol=symbol,

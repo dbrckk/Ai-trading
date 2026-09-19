@@ -12,7 +12,7 @@ from .burnin import BurnInSnapshot, calculate_burnin_metrics
 from .file_persistence import FilePaperPersistence
 from .hosted_runtime import HostedPaperSettings, start_hosted_paper_runtime
 from .operational_overview import build_operational_overview, runtime_is_consistent
-from .paper_cycle import PaperCycleResult
+from .paper_cycle import DEFAULT_MAX_CATCHUP_BARS, PaperCycleResult
 from .paper_cycle_service import (
     ProductionPaperCycleSettings,
     run_production_paper_cycle,
@@ -691,7 +691,7 @@ def serve_dashboard(
             symbol=effective_settings.symbol,
             period=effective_settings.period,
             interval=effective_settings.interval,
-            max_catchup_bars=12,
+            max_catchup_bars=DEFAULT_MAX_CATCHUP_BARS,
             poll_seconds=300.0,
         )
 
