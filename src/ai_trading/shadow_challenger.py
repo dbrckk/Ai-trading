@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import pandas as pd
 
 from .ensemble import EnsembleDirectionModel
-from .features import FEATURES
+from .features import CHALLENGER_FEATURES, FEATURES, make_challenger_features
 from .model import Prediction
 from .regime import detect_regime
 
@@ -54,7 +54,9 @@ def evaluate_shadow_challenger(
     if signal_idx not in features.index:
         return None
 
-    signal_row = features.loc[signal_idx, FEATURES]
+    challenger_features = make_challenger_features(market)
+    challenger_features.loc[:, FEATURES] = features.loc[:, FEATURES]
+    signal_row = challenger_features.loc[signal_idx, CHALLENGER_FEATURES]
     if signal_row.isna().any():
         return None
 
@@ -63,7 +65,7 @@ def evaluate_shadow_challenger(
         return None
 
     allowed = set(market.index[: last_train_pos + 1])
-    valid_feature_rows = features.loc[:, FEATURES].dropna().index
+    valid_feature_rows = challenger_features.loc[:, CHALLENGER_FEATURES].dropna().index
     labeled_rows = labels.dropna().index
     train_idx = [
         idx
@@ -73,8 +75,11 @@ def evaluate_shadow_challenger(
     if len(train_idx) < min_train_rows:
         return None
 
-    model = EnsembleDirectionModel(random_state=random_state)
-    model.fit(features.loc[train_idx], labels.loc[train_idx])
+    model = EnsembleDirectionModel(
+        random_state=random_state,
+        feature_names=CHALLENGER_FEATURES,
+    )
+    model.fit(challenger_features.loc[train_idx], labels.loc[train_idx])
 
     regime = detect_regime(signal_row)
     prediction = model.predict_one(signal_row, regime)

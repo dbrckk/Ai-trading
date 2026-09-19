@@ -4,7 +4,11 @@ import numpy as np
 import pandas as pd
 
 import ai_trading.shadow_challenger as shadow_module
-from ai_trading.features import FEATURES, make_features, make_labels
+from ai_trading.features import (
+    CHALLENGER_FEATURES,
+    make_features,
+    make_labels,
+)
 from ai_trading.model import Prediction
 from ai_trading.shadow_challenger import evaluate_shadow_challenger
 
@@ -34,13 +38,18 @@ def test_shadow_challenger_purges_unobservable_training_labels(monkeypatch) -> N
     captured: dict[str, object] = {}
 
     class RecordingEnsemble:
-        def __init__(self, random_state: int = 42) -> None:
+        def __init__(
+            self,
+            random_state: int = 42,
+            feature_names: tuple[str, ...] | list[str] | None = None,
+        ) -> None:
             captured["random_state"] = random_state
+            captured["feature_names"] = tuple(feature_names or ())
 
         def fit(self, x: pd.DataFrame, y: pd.Series) -> None:
             captured["train_index"] = x.index
             assert x.index.equals(y.index)
-            assert list(x.columns) == FEATURES
+            assert list(x.columns) == CHALLENGER_FEATURES
 
         def predict_one(self, row: pd.Series, regime) -> Prediction:
             captured["regime"] = regime.name
@@ -62,6 +71,7 @@ def test_shadow_challenger_purges_unobservable_training_labels(monkeypatch) -> N
     )
 
     assert result is not None
+    assert captured["feature_names"] == tuple(CHALLENGER_FEATURES)
     signal_pos = int(market.index.get_loc(execution_idx)) - 1
     train_index = captured["train_index"]
     assert isinstance(train_index, pd.Index)

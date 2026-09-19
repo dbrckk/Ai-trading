@@ -34,3 +34,21 @@ def test_ensemble_returns_valid_probability_distribution() -> None:
     assert pred.side in {-1, 0, 1}
     assert 0.0 <= pred.confidence <= 1.0
     assert abs(sum(pred.probabilities.values()) - 1.0) < 1e-6
+
+
+
+def test_ensemble_accepts_explicit_feature_set() -> None:
+    x, y = sample_training()
+    x = x.copy()
+    x["extra_momentum"] = np.cos(np.arange(len(x), dtype=float) / 11.0)
+    feature_names = [*FEATURES, "extra_momentum"]
+
+    model = EnsembleDirectionModel(random_state=11, feature_names=feature_names)
+    model.fit(x, y)
+    pred = model.predict_one(
+        x.loc[150, feature_names],
+        MarketRegime("sideways", "normal_vol"),
+    )
+
+    assert pred.side in {-1, 0, 1}
+    assert abs(sum(pred.probabilities.values()) - 1.0) < 1e-6

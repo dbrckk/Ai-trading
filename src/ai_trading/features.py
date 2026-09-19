@@ -13,6 +13,17 @@ FEATURES = [
     "volume_z20",
 ]
 
+CHALLENGER_FEATURES = [
+    *FEATURES,
+    "ret_15",
+    "vol_30",
+    "atr_pct_14",
+    "rsi_14",
+    "range_pos_20",
+    "body_pct",
+    "volume_ratio_5_20",
+]
+
 
 def make_features(df: pd.DataFrame) -> pd.DataFrame:
     close = df["Close"].astype(float)
@@ -32,6 +43,52 @@ def make_features(df: pd.DataFrame) -> pd.DataFrame:
     out["volume_z20"] = (volume - vol_mean) / vol_std
 
     return out.replace([np.inf, -np.inf], np.nan)
+
+
+def make_challenger_features(df: pd.DataFrame) -> pd.DataFrame:
+    """Build richer research features without changing the production feature set."""
+
+    out = make_features(df).copy()
+    open_ = df["Open"].astype(float)
+    high = df["High"].astype(float)
+    low = df["Low"].astype(float)
+    close = df["Close"].astype(float)
+    volume = df["Volume"].astype(float)
+
+    returns = close.pct_change()
+    out["ret_15"] = close.pct_change(15)
+    out["vol_30"] = returns.rolling(30).std()
+
+    previous_close = close.shift(1)
+    true_range = pd.concat(
+        [
+            high - low,
+            (high - previous_close).abs(),
+            (low - previous_close).abs(),
+        ],
+        axis=1,
+    ).max(axis=1)
+    out["atr_pct_14"] = true_range.rolling(14).mean() / close.replace(0, np.nan)
+
+    delta = close.diff()
+    average_gain = delta.clip(lower=0.0).rolling(14).mean()
+    average_loss = (-delta.clip(upper=0.0)).rolling(14).mean()
+    relative_strength = average_gain / average_loss.replace(0.0, np.nan)
+    rsi = 100.0 - (100.0 / (1.0 + relative_strength))
+    rsi = rsi.mask((average_loss == 0.0) & (average_gain > 0.0), 100.0)
+    rsi = rsi.mask((average_loss == 0.0) & (average_gain == 0.0), 50.0)
+    out["rsi_14"] = rsi / 100.0
+
+    rolling_low = low.rolling(20).min()
+    rolling_high = high.rolling(20).max()
+    range_width = (rolling_high - rolling_low).replace(0.0, np.nan)
+    out["range_pos_20"] = (close - rolling_low) / range_width
+
+    out["body_pct"] = (close - open_) / close.replace(0, np.nan)
+    volume_20 = volume.rolling(20).mean().replace(0.0, np.nan)
+    out["volume_ratio_5_20"] = volume.rolling(5).mean() / volume_20 - 1.0
+
+    return out.loc[:, CHALLENGER_FEATURES].replace([np.inf, -np.inf], np.nan)
 
 
 def make_labels(
