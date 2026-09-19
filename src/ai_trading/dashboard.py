@@ -151,7 +151,11 @@ def render_dashboard(
     durable_runtime = persistence is not None and runtime_key is not None
     if durable_runtime:
         try:
-            recent = persistence.list_trades(runtime_key, limit=200)
+            multi_market_view = bool(markets and len(markets) > 1)
+            recent = persistence.list_trades(
+                None if multi_market_view else runtime_key,
+                limit=200,
+            )
             persisted = persistence.load_runtime(runtime_key, starting_cash)
             persisted_runtime = persisted
             state = persisted.state
@@ -159,7 +163,10 @@ def render_dashboard(
             runtime_model = persisted.model
             runtime_status = persistence.load_runtime_status(runtime_key)
             load_performance = getattr(persistence, "load_trade_performance", None)
-            if callable(load_performance):
+            if multi_market_view:
+                trade_performance = calculate_performance_metrics(recent)
+                performance_scope = "latest 200 cross-market trade events"
+            elif callable(load_performance):
                 trade_performance = load_performance(runtime_key)
                 performance_scope = "full persisted history"
             else:
