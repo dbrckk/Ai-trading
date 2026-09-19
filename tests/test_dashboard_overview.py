@@ -98,9 +98,44 @@ class OverviewPersistence:
             ),
         )
 
+    def list_regimes(self, runtime_key: str) -> tuple[str, ...]:
+        assert runtime_key == RUNTIME_KEY
+        return ("bull_normal_vol", "sideways_normal_vol")
+
     def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:
         assert runtime_key == RUNTIME_KEY
         return self.status
+
+
+class ReadinessOverviewPersistence(OverviewPersistence):
+    def list_burnin_snapshots(self, runtime_key: str):
+        assert runtime_key == RUNTIME_KEY
+        return (
+            BurnInSnapshot(
+                timestamp_utc="2026-09-16T05:10:00+00:00",
+                equity=12_000.0,
+                scheduler_errors=0,
+                regimes_covered=2,
+                bootstrap_probability_positive=0.0,
+                processed_bars=5,
+            ),
+            BurnInSnapshot(
+                timestamp_utc="2026-09-16T05:15:00+00:00",
+                equity=12_400.0,
+                scheduler_errors=0,
+                regimes_covered=2,
+                bootstrap_probability_positive=0.0,
+                processed_bars=6,
+            ),
+            BurnInSnapshot(
+                timestamp_utc="2026-09-16T05:20:00+00:00",
+                equity=12_845.0,
+                scheduler_errors=0,
+                regimes_covered=2,
+                bootstrap_probability_positive=0.0,
+                processed_bars=7,
+            ),
+        )
 
 
 class FailingOverviewPersistence:
@@ -166,6 +201,7 @@ def test_operational_overview_exposes_model_and_runtime_metadata() -> None:
     assert payload["burnin"]["processed_bars"] == 7
     assert payload["burnin"]["total_return"] > 0.0
     assert payload["burnin"]["max_drawdown"] == 0.0
+    assert payload["readiness"]["available"] is False
     assert payload["alerts"] == []
 
 
@@ -238,6 +274,13 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
             "processed_bars": 0,
             "total_return": None,
             "max_drawdown": None,
+        },
+        "readiness": {
+            "available": False,
+            "ready": None,
+            "checks_passed": None,
+            "checks_total": 8,
+            "checks": [],
         },
         "alerts": ["storage unavailable"],
     }
@@ -329,3 +372,42 @@ def test_dashboard_renders_cycle_reliability_alert(tmp_path) -> None:
 
     assert '<small>Consecutive cycle errors</small><strong>2</strong>' in page
     assert "Operational alerts: paper cycle reliability degraded" in page
+
+
+def test_operational_overview_exposes_structured_readiness() -> None:
+    payload = build_operational_overview(ReadinessOverviewPersistence(), RUNTIME_KEY)
+
+    readiness = payload["readiness"]
+    assert readiness["available"] is True
+    assert readiness["ready"] is False
+    assert readiness["checks_total"] == 8
+    assert len(readiness["checks"]) == 8
+    assert {check["name"] for check in readiness["checks"]} == {
+        "Burn-in bars",
+        "Sharpe",
+        "Sortino",
+        "Max drawdown",
+        "Total return",
+        "Bootstrap confidence",
+        "Regime coverage",
+        "Scheduler errors",
+    }
+    burnin = next(
+        check for check in readiness["checks"] if check["name"] == "Burn-in bars"
+    )
+    assert burnin["value"] == 7
+    assert burnin["threshold"] == 126
+    assert burnin["comparison"] == ">="
+    assert burnin["passed"] is False
+
+
+def test_overview_endpoint_includes_readiness_evidence() -> None:
+    port = _start_overview_dashboard(ReadinessOverviewPersistence())
+
+    with urlopen(f"http://127.0.0.1:{port}/api/overview", timeout=2) as response:
+        payload = json.loads(response.read().decode())
+
+    assert response.status == 200
+    assert payload["readiness"]["available"] is True
+    assert payload["readiness"]["checks_total"] == 8
+    assert len(payload["readiness"]["checks"]) == 8
