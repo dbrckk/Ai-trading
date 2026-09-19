@@ -259,7 +259,14 @@ class PaperAutonomousRuntime:
         close_price = float(df.at[execution_idx, "Close"])
         broker = self._broker_from_state(state)
         broker.mark(execution_price)
-        broker.state.day_start_equity = broker.state.equity
+        execution_day = pd.Timestamp(execution_idx).date()
+        previous_day = (
+            pd.Timestamp(state.last_processed).date()
+            if state.last_processed is not None
+            else None
+        )
+        if previous_day != execution_day:
+            broker.state.day_start_equity = broker.state.equity
         snapshot = PortfolioSnapshot(
             equity=broker.state.equity,
             peak_equity=broker.state.peak_equity,
