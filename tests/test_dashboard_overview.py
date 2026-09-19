@@ -11,9 +11,11 @@ from ai_trading.burnin import BurnInSnapshot
 from ai_trading.dashboard import render_dashboard, serve_dashboard
 from ai_trading.hosted_runtime import HostedPaperSettings
 from ai_trading.operational_overview import build_operational_overview
+from ai_trading.model import Prediction
 from ai_trading.persistence import ModelBlob, PersistedRuntime
 from ai_trading.runtime_state import RuntimeState
 from ai_trading.runtime_status import HostedRuntimeStatus
+from ai_trading.shadow_quality import ShadowObservation
 from ai_trading.trade_journal import TradeJournal
 
 RUNTIME_KEY = "paper:GC=F:5m:online-river:v1"
@@ -101,6 +103,27 @@ class OverviewPersistence:
     def list_regimes(self, runtime_key: str) -> tuple[str, ...]:
         assert runtime_key == RUNTIME_KEY
         return ("bull_normal_vol", "sideways_normal_vol")
+
+    def list_shadow_observations(self, runtime_key: str):
+        assert runtime_key == RUNTIME_KEY
+        return (
+            ShadowObservation(
+                signal_time="2026-09-16 05:15:00+00:00",
+                execution_time="2026-09-16 05:20:00+00:00",
+                regime="bull_normal_vol",
+                realized_label=1,
+                active_prediction=Prediction(
+                    side=1,
+                    confidence=0.7,
+                    probabilities={-1: 0.1, 0: 0.2, 1: 0.7},
+                ),
+                challenger_prediction=Prediction(
+                    side=1,
+                    confidence=0.85,
+                    probabilities={-1: 0.05, 0: 0.1, 1: 0.85},
+                ),
+            ),
+        )
 
     def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:
         assert runtime_key == RUNTIME_KEY
@@ -202,6 +225,10 @@ def test_operational_overview_exposes_model_and_runtime_metadata() -> None:
     assert payload["burnin"]["total_return"] > 0.0
     assert payload["burnin"]["max_drawdown"] == 0.0
     assert payload["readiness"]["available"] is False
+    assert payload["shadow_challenger"]["observations"] == 1
+    assert payload["shadow_challenger"]["active"]["accuracy"] == 1.0
+    assert payload["shadow_challenger"]["challenger"]["accuracy"] == 1.0
+    assert payload["shadow_challenger"]["agreement_rate"] == 1.0
     assert payload["alerts"] == []
 
 
@@ -282,6 +309,25 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
             "checks_total": 8,
             "checks": [],
         },
+        "shadow_challenger": {
+            "observations": 0,
+            "agreement_rate": None,
+            "accuracy_delta": None,
+            "brier_improvement": None,
+            "regimes": [],
+            "active": {
+                "accuracy": None,
+                "brier": None,
+                "directional_edge": None,
+                "directional_observations": 0,
+            },
+            "challenger": {
+                "accuracy": None,
+                "brier": None,
+                "directional_edge": None,
+                "directional_observations": 0,
+            },
+        },
         "alerts": ["storage unavailable"],
     }
     assert "secret" not in repr(payload)
@@ -300,6 +346,7 @@ def test_dashboard_exposes_operational_overview_endpoint() -> None:
     assert payload["model"]["checksum"] == "1234567890ab"
     assert payload["burnin"]["processed_bars"] == 7
     assert payload["burnin"]["samples"] == 2
+    assert payload["shadow_challenger"]["observations"] == 1
     assert payload["alerts"] == []
 
 
