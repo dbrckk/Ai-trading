@@ -10,19 +10,21 @@ Status: active
 - Paper burn-in equity snapshots are persisted per committed bar and exposed through dashboard/API observability.
 
 ## Broken / blockers
-- None documented here yet.
+- The external five-minute Cloudflare scheduler was not observed reaching Render on 2026-09-19; GitHub scheduled paper-cycle runs have multi-hour gaps, so durable catch-up is still required.
+- Repository-standards routing benchmark health failed on current main, while the trading CI itself remains green.
 
 ## Current priority
-- Validate and merge durable per-bar paper burn-in equity snapshots and observability.
-- Then enrich burn-in evidence with scheduler reliability, regime coverage, bootstrap confidence, and interval-aware annualization before evaluating full readiness or changing trading logic.
+- Validate and merge the bounded 72-bar paper-cycle catch-up increase so delayed scheduler runs can recover up to six hours of 5-minute bars per invocation.
+- Restore and verify the external five-minute scheduler path, then prove production continuity until backlog clears before changing trading logic or considering live execution.
 
 ## Validation
-- Standards workflow: configured.
+- Standards workflow: configured; current main has a repo-brain benchmark-health failure unrelated to trading tests.
 - Canonical validation: `ruff check .` and `pytest`.
 - Paper runtime changes must keep Cloudflare Worker tests green.
+- PR #38 is the active reliability change.
 
 ## Last verified
-- 2026-09-18
+- 2026-09-19
 
 <!-- AUTO:START -->
 ## Automatic repository state
