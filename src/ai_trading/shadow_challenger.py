@@ -18,6 +18,7 @@ class ShadowChallengerResult:
     execution_time: str
     training_rows: int
     training_end: str
+    realized_label: int | None
 
 
 def evaluate_shadow_challenger(
@@ -77,6 +78,8 @@ def evaluate_shadow_challenger(
 
     regime = detect_regime(signal_row)
     prediction = model.predict_one(signal_row, regime)
+    realized = labels.get(signal_idx)
+    realized_label = int(realized) if pd.notna(realized) else None
     return ShadowChallengerResult(
         prediction=prediction,
         regime=regime.name,
@@ -84,4 +87,5 @@ def evaluate_shadow_challenger(
         execution_time=str(execution_idx),
         training_rows=len(train_idx),
         training_end=str(train_idx[-1]),
+        realized_label=realized_label,
     )
