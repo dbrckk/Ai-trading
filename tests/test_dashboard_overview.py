@@ -230,6 +230,10 @@ def test_operational_overview_exposes_model_and_runtime_metadata() -> None:
     assert payload["shadow_challenger"]["observations"] == 8
     assert round(payload["shadow_challenger"]["score_delta"], 2) == 0.12
     assert payload["shadow_challenger"]["challenger"]["accuracy"] == 0.70
+    gate = payload["shadow_challenger"]["promotion_gate"]
+    assert gate["eligible_for_review"] is False
+    assert gate["min_observations"] == 250
+    assert any("250" in reason for reason in gate["reasons"])
     assert payload["alerts"] == []
 
 
@@ -317,6 +321,13 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
             "score_delta": None,
             "river": None,
             "challenger": None,
+            "promotion_gate": {
+                "eligible_for_review": False,
+                "min_observations": 250,
+                "reasons": [
+                    "need at least 250 realized shadow observations"
+                ],
+            },
         },
         "alerts": ["storage unavailable"],
     }

@@ -5,6 +5,10 @@ from .paper_readiness_evidence import bootstrap_positive_probability
 from .persistence import PaperPersistence, PersistedRuntime
 from .readiness import ReadinessPolicy, evaluate_readiness
 from .runtime_status import HostedRuntimeStatus, runtime_status_snapshot
+from .shadow_promotion_gate import (
+    ShadowPromotionPolicy,
+    evaluate_shadow_promotion_gate,
+)
 
 
 def _empty_model_snapshot() -> dict[str, object]:
@@ -17,6 +21,7 @@ def _empty_model_snapshot() -> dict[str, object]:
 
 
 def _empty_shadow_quality_snapshot() -> dict[str, object]:
+    policy = ShadowPromotionPolicy()
     return {
         "available": False,
         "status": "collecting",
@@ -24,6 +29,13 @@ def _empty_shadow_quality_snapshot() -> dict[str, object]:
         "score_delta": None,
         "river": None,
         "challenger": None,
+        "promotion_gate": {
+            "eligible_for_review": False,
+            "min_observations": policy.min_observations,
+            "reasons": [
+                f"need at least {policy.min_observations} realized shadow observations"
+            ],
+        },
     }
 
 
@@ -40,6 +52,8 @@ def _shadow_quality_snapshot(comparison) -> dict[str, object]:
             "observations": int(quality.observations),
         }
 
+    policy = ShadowPromotionPolicy()
+    gate = evaluate_shadow_promotion_gate(comparison, policy)
     return {
         "available": available,
         "status": "comparable" if available else "collecting",
@@ -47,6 +61,15 @@ def _shadow_quality_snapshot(comparison) -> dict[str, object]:
         "score_delta": float(comparison.score_delta) if available else None,
         "river": quality_payload(comparison.river) if observations else None,
         "challenger": quality_payload(comparison.challenger) if observations else None,
+        "promotion_gate": {
+            "eligible_for_review": gate.eligible_for_review,
+            "min_observations": policy.min_observations,
+            "reasons": list(gate.reasons),
+            "score_delta": gate.score_delta,
+            "accuracy_delta": gate.accuracy_delta,
+            "brier_delta": gate.brier_delta,
+            "directional_edge_delta": gate.directional_edge_delta,
+        },
     }
 
 
