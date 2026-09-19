@@ -4,19 +4,16 @@ import html
 import json
 import os
 from collections.abc import Callable
-from functools import lru_cache
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
 
-import pandas as pd
-
-from .bootstrap_robustness import bootstrap_equity_curve
 from .burnin import BurnInSnapshot, calculate_burnin_metrics
 from .file_persistence import FilePaperPersistence
 from .hosted_runtime import HostedPaperSettings, start_hosted_paper_runtime
 from .operational_overview import build_operational_overview, runtime_is_consistent
 from .paper_cycle import PaperCycleResult
+from .paper_readiness_evidence import bootstrap_positive_probability
 from .paper_cycle_service import (
     ProductionPaperCycleSettings,
     run_production_paper_cycle,
@@ -128,14 +125,6 @@ def _readiness_panel(report: ReadinessReport | None) -> str:
             '</div>'
         )
     return '<div class="readiness-grid">' + "".join(rows) + '</div>'
-
-
-@lru_cache(maxsize=16)
-def _bootstrap_positive_probability(equities: tuple[float, ...]) -> float | None:
-    if len(equities) < 3:
-        return None
-    report = bootstrap_equity_curve(pd.Series(equities, dtype=float))
-    return report.probability_positive
 
 
 def render_dashboard(
@@ -367,7 +356,7 @@ def render_dashboard(
         "-" if burnin_metrics is None else f"{burnin_metrics.max_drawdown:.2%}"
     )
     equity_chart = _equity_chart_svg(burnin_snapshots)
-    bootstrap_probability = _bootstrap_positive_probability(
+    bootstrap_probability = bootstrap_positive_probability(
         tuple(float(snapshot.equity) for snapshot in burnin_snapshots)
     )
     bootstrap_probability_display = (
