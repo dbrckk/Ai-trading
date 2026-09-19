@@ -52,6 +52,7 @@ def _commit(
     state: RuntimeState | None = None,
     trade: TradeSnapshot | None = None,
     observed_regime: str | None = None,
+    audit_payload: dict[str, object] | None = None,
 ) -> RuntimeStepCommit:
     commit_state = state or _state()
     return RuntimeStepCommit(
@@ -60,7 +61,11 @@ def _commit(
         model=serialize_model(RiverDirectionModel()),
         trade=trade,
         audit_event="runtime_step",
-        audit_payload={"processed_bars": commit_state.processed_bars},
+        audit_payload=(
+            audit_payload
+            if audit_payload is not None
+            else {"processed_bars": commit_state.processed_bars}
+        ),
         observed_regime=observed_regime,
     )
 
@@ -250,3 +255,48 @@ def test_regime_coverage_is_deduplicated_and_persisted(backend) -> None:
     )
     snapshots = backend.list_burnin_snapshots(RUNTIME_KEY)
     assert snapshots[-1].regimes_covered == 2
+
+
+
+def test_postgres_backend_reads_shadow_observations_from_audit(backend) -> None:
+    backend.load_runtime(RUNTIME_KEY, 100_000.0)
+    payload = {
+        "signal_time": "2026-09-15 10:00:00+00:00",
+        "execution_time": "2026-09-15 10:05:00+00:00",
+        "observed_regime": "bull_normal_vol",
+        "prediction": {
+            "side": 1,
+            "confidence": 0.7,
+            "probabilities": {-1: 0.1, 0: 0.2, 1: 0.7},
+        },
+        "shadow_challenger": {
+            "signal_time": "2026-09-15 10:00:00+00:00",
+            "execution_time": "2026-09-15 10:05:00+00:00",
+            "regime": "bull_normal_vol",
+            "training_rows": 120,
+            "training_end": "2026-09-15 09:55:00+00:00",
+            "realized_label": 1,
+            "prediction": {
+                "side": 0,
+                "confidence": 0.6,
+                "probabilities": {-1: 0.1, 0: 0.6, 1: 0.3},
+            },
+        },
+    }
+
+    assert (
+        backend.commit_step(
+            RUNTIME_KEY,
+            _commit(audit_payload=payload),
+        )
+        is CommitOutcome.COMMITTED
+    )
+
+    observations = backend.list_shadow_observations(RUNTIME_KEY)
+
+    assert len(observations) == 1
+    observation = observations[0]
+    assert observation.realized_label == 1
+    assert observation.active_prediction.side == 1
+    assert observation.challenger_prediction.side == 0
+    assert observation.regime == "bull_normal_vol"
