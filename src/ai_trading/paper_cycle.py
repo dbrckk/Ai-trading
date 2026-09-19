@@ -9,7 +9,6 @@ from .data import load_history
 from .persistence import PaperPersistence, PersistedRuntime, build_runtime_key
 from .runtime import PaperAutonomousRuntime
 
-
 DEFAULT_MAX_CATCHUP_BARS = 72
 
 
