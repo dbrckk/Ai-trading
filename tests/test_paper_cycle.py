@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
+import ai_trading.runtime as runtime_module
 from ai_trading.config import RiskConfig
 from ai_trading.file_persistence import FilePaperPersistence
 from ai_trading.paper_cycle import PaperCycleRunner
@@ -135,6 +136,47 @@ def test_catchup_cap_leaves_remaining_backlog(tmp_path: Path) -> None:
     assert result.processed_bars == 3
 
 
+def test_catchup_prepares_features_and_labels_once(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    backend = FilePaperPersistence(tmp_path)
+    df = sample_market()
+    runtime, eligible = build_runtime(tmp_path, backend, df)
+    assert runtime.step_at(df, eligible[-6]).processed is True
+
+    calls = {"features": 0, "labels": 0}
+    original_make_features = runtime_module.make_features
+    original_make_labels = runtime_module.make_labels
+
+    def counted_make_features(market):
+        calls["features"] += 1
+        return original_make_features(market)
+
+    def counted_make_labels(market, *, horizon_bars, return_threshold):
+        calls["labels"] += 1
+        return original_make_labels(
+            market,
+            horizon_bars=horizon_bars,
+            return_threshold=return_threshold,
+        )
+
+    monkeypatch.setattr(runtime_module, "make_features", counted_make_features)
+    monkeypatch.setattr(runtime_module, "make_labels", counted_make_labels)
+
+    runner = build_runner(tmp_path, backend, df)
+    result = runner.run_once(
+        symbol="GC=F",
+        period="5d",
+        interval="5m",
+        max_catchup_bars=12,
+    )
+
+    assert result.processed == 5
+    assert result.remaining_backlog is False
+    assert calls == {"features": 1, "labels": 1}
+
+
 def test_missing_last_processed_in_history_fails_closed(tmp_path: Path) -> None:
     backend = FilePaperPersistence(tmp_path)
     backend.state_store.save(
@@ -218,13 +260,13 @@ def test_revision_conflict_reloads_and_continues(tmp_path: Path) -> None:
     class ConflictOnceRuntime:
         risk_config = primary.risk_config
 
-        def _eligible_execution_indices(self, market):
-            return primary._eligible_execution_indices(market)
+        def prepare_market(self, market):
+            return primary.prepare_market(market)
 
-        def step_at(self, market, target):
+        def step_prepared(self, prepared, target):
             if not conflict_target:
                 conflict_target.append(target)
-                assert competitor.step_at(market, target).processed is True
+                assert competitor.step_prepared(prepared, target).processed is True
                 state = backend.load_runtime(primary.runtime_key, 100_000.0).state
                 return RuntimeStepResult(
                     processed=False,
@@ -238,7 +280,7 @@ def test_revision_conflict_reloads_and_continues(tmp_path: Path) -> None:
                     processed_bars=state.processed_bars,
                     retrain_due=False,
                 )
-            return primary.step_at(market, target)
+            return primary.step_prepared(prepared, target)
 
     runner = build_runner(
         tmp_path,

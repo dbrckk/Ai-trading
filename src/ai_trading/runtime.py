@@ -35,6 +35,15 @@ class RuntimeStepResult:
     retrain_due: bool
 
 
+@dataclass(frozen=True)
+class PreparedRuntimeMarket:
+    market: pd.DataFrame
+    features: pd.DataFrame
+    labels: pd.Series
+    valid: pd.Index
+    eligible: tuple[object, ...]
+
+
 class PaperAutonomousRuntime:
     """One-step autonomous paper runtime.
 
@@ -103,7 +112,10 @@ class PaperAutonomousRuntime:
             last_learning_cycle_bar=last_learning_cycle_bar,
         )
 
-    def _eligible_execution_indices(self, df: pd.DataFrame) -> tuple[object, ...]:
+    def _prepare_market_features(
+        self,
+        df: pd.DataFrame,
+    ) -> tuple[pd.DataFrame, pd.Index, tuple[object, ...]]:
         if len(df) < 40:
             raise ValueError("Need at least 40 bars for runtime features")
 
@@ -119,35 +131,72 @@ class PaperAutonomousRuntime:
             signal_pos = int(df.index.get_loc(signal_idx))
             if signal_pos + 1 < len(df.index):
                 execution.append(df.index[signal_pos + 1])
-        return tuple(dict.fromkeys(execution))
+        return features, valid, tuple(dict.fromkeys(execution))
 
-    def step(self, df: pd.DataFrame) -> RuntimeStepResult:
-        eligible = self._eligible_execution_indices(df)
-        if not eligible:
-            raise ValueError("No eligible execution bar available")
-        return self.step_at(df, eligible[-1])
+    def _eligible_execution_indices(self, df: pd.DataFrame) -> tuple[object, ...]:
+        _, _, eligible = self._prepare_market_features(df)
+        return eligible
 
-    def step_at(self, df: pd.DataFrame, execution_idx: object) -> RuntimeStepResult:
-        eligible = self._eligible_execution_indices(df)
-        if execution_idx not in eligible:
-            raise ValueError("Requested index is not an eligible execution bar")
-
-        with RuntimeLock(self.lock_path):
-            return self._step_at_locked(df, execution_idx, eligible)
-
-    def _step_at_locked(
-        self,
-        df: pd.DataFrame,
-        execution_idx: object,
-        eligible: tuple[object, ...],
-    ) -> RuntimeStepResult:
-        features = make_features(df)
+    def prepare_market(self, df: pd.DataFrame) -> PreparedRuntimeMarket:
+        features, valid, eligible = self._prepare_market_features(df)
         labels = make_labels(
             df,
             horizon_bars=self.model_config.horizon_bars,
             return_threshold=self.model_config.return_threshold,
         )
-        valid = features.dropna().index
+        return PreparedRuntimeMarket(
+            market=df,
+            features=features,
+            labels=labels,
+            valid=valid,
+            eligible=eligible,
+        )
+
+    def step(self, df: pd.DataFrame) -> RuntimeStepResult:
+        prepared = self.prepare_market(df)
+        if not prepared.eligible:
+            raise ValueError("No eligible execution bar available")
+        return self.step_prepared(prepared, prepared.eligible[-1])
+
+    def step_at(self, df: pd.DataFrame, execution_idx: object) -> RuntimeStepResult:
+        features, valid, eligible = self._prepare_market_features(df)
+        if execution_idx not in eligible:
+            raise ValueError("Requested index is not an eligible execution bar")
+        labels = make_labels(
+            df,
+            horizon_bars=self.model_config.horizon_bars,
+            return_threshold=self.model_config.return_threshold,
+        )
+        prepared = PreparedRuntimeMarket(
+            market=df,
+            features=features,
+            labels=labels,
+            valid=valid,
+            eligible=eligible,
+        )
+        return self.step_prepared(prepared, execution_idx)
+
+    def step_prepared(
+        self,
+        prepared: PreparedRuntimeMarket,
+        execution_idx: object,
+    ) -> RuntimeStepResult:
+        if execution_idx not in prepared.eligible:
+            raise ValueError("Requested index is not an eligible execution bar")
+
+        with RuntimeLock(self.lock_path):
+            return self._step_prepared_locked(prepared, execution_idx)
+
+    def _step_prepared_locked(
+        self,
+        prepared: PreparedRuntimeMarket,
+        execution_idx: object,
+    ) -> RuntimeStepResult:
+        df = prepared.market
+        features = prepared.features
+        labels = prepared.labels
+        valid = prepared.valid
+        eligible = prepared.eligible
 
         execution_pos = int(df.index.get_loc(execution_idx))
         if execution_pos < 1:
