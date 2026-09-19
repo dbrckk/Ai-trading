@@ -11,6 +11,12 @@ from urllib.parse import urlsplit
 from .burnin import BurnInSnapshot, calculate_burnin_metrics
 from .file_persistence import FilePaperPersistence
 from .hosted_runtime import HostedPaperSettings, start_hosted_paper_runtime
+from .multi_market import (
+    MarketSpec,
+    build_multi_market_overview,
+    configured_markets_from_env,
+    run_multi_market_paper_cycle,
+)
 from .operational_overview import build_operational_overview, runtime_is_consistent
 from .paper_cycle import DEFAULT_MAX_CATCHUP_BARS, PaperCycleResult
 from .paper_cycle_service import (
@@ -135,6 +141,8 @@ def render_dashboard(
     runtime_status_store: HostedRuntimeStatusStore | None = None,
     persistence: PaperPersistence | None = None,
     runtime_key: str | None = None,
+    markets: tuple[MarketSpec, ...] | None = None,
+    market_interval: str = "5m",
 ) -> str:
     storage_error = False
     runtime_revision: int | None = None
@@ -143,7 +151,11 @@ def render_dashboard(
     durable_runtime = persistence is not None and runtime_key is not None
     if durable_runtime:
         try:
-            recent = persistence.list_trades(runtime_key, limit=200)
+            multi_market_view = bool(markets and len(markets) > 1)
+            recent = persistence.list_trades(
+                None if multi_market_view else runtime_key,
+                limit=200,
+            )
             persisted = persistence.load_runtime(runtime_key, starting_cash)
             persisted_runtime = persisted
             state = persisted.state
@@ -151,7 +163,10 @@ def render_dashboard(
             runtime_model = persisted.model
             runtime_status = persistence.load_runtime_status(runtime_key)
             load_performance = getattr(persistence, "load_trade_performance", None)
-            if callable(load_performance):
+            if multi_market_view:
+                trade_performance = calculate_performance_metrics(recent)
+                performance_scope = "latest 200 cross-market trade events"
+            elif callable(load_performance):
                 trade_performance = load_performance(runtime_key)
                 performance_scope = "full persisted history"
             else:
@@ -414,6 +429,56 @@ def render_dashboard(
         if engine_status == "RUNNING" and not operational_alerts
         else ("status-warn" if not storage_error else "status-error")
     )
+    market_panel = ""
+    if persistence is not None and markets and len(markets) > 1:
+        snapshot = build_multi_market_overview(
+            persistence,
+            markets,
+            interval=market_interval,
+            portfolio_cash=starting_cash,
+        )
+        portfolio = snapshot["portfolio"]
+        cards = []
+        for item in snapshot["markets"]:
+            overview = item["overview"]
+            shadow = overview.get("shadow_challenger", {})
+            gate = shadow.get("promotion_gate", {})
+            status = str(overview.get("engine_status", "UNKNOWN"))
+            status_css = (
+                "status-ok" if status == "RUNNING"
+                else ("status-warn" if status in {"STARTING", "STALE"} else "status-error")
+            )
+            sleeve_equity = item.get("equity")
+            sleeve_pnl = item.get("pnl")
+            processed = overview.get("processed_bars")
+            observations = shadow.get("observations", 0)
+            review = "ELIGIBLE" if gate.get("eligible_for_review") else "COLLECTING"
+            cards.append(
+                '<div class="market-card">'
+                f'<div class="market-card-head"><strong>{html.escape(str(item["label"]))}</strong>'
+                f'<span class="status-badge {status_css}">{html.escape(status)}</span></div>'
+                f'<small>{html.escape(str(item["symbol"]))} · allocation {float(item["allocation"]):.0%}</small>'
+                '<div class="market-grid">'
+                f'<div><small>Equity</small><strong>{_display_money(sleeve_equity)}</strong></div>'
+                f'<div><small>PnL</small><strong>{_display_money(sleeve_pnl)}</strong></div>'
+                f'<div><small>Bars</small><strong>{"-" if processed is None else processed}</strong></div>'
+                f'<div><small>Shadow</small><strong>{observations}</strong></div>'
+                f'<div><small>Promotion gate</small><strong>{review}</strong></div>'
+                '</div></div>'
+            )
+        market_panel = (
+            '<section class="section" id="markets">'
+            '<div class="section-head"><h2>Multi-market portfolio</h2>'
+            '<small>normalized sleeves · independent runtimes</small></div>'
+            '<div class="metrics">'
+            f'<div class="metric primary"><small>Portfolio equity</small><strong>{_display_money(float(portfolio["equity"]))}</strong></div>'
+            f'<div class="metric"><small>Portfolio PnL</small><strong>{_display_money(float(portfolio["pnl"]))}</strong></div>'
+            f'<div class="metric"><small>Healthy markets</small><strong>{portfolio["healthy_markets"]} / {portfolio["markets"]}</strong></div>'
+            '</div><div class="market-cards">'
+            + "".join(cards)
+            + '</div></section>'
+        )
+
     return f"""<!doctype html>
 <html><head><meta charset="utf-8"><meta http-equiv="refresh" content="2">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -496,9 +561,18 @@ th{{position:sticky;top:0;background:#0d1829;color:#aebdd0;font-size:.7rem;text-
 td{{font-size:.83rem}}
 th:first-child,td:first-child,th:nth-child(2),td:nth-child(2),th:nth-child(3),td:nth-child(3),th:last-child,td:last-child{{text-align:left}}
 tbody tr:hover{{background:rgba(113,167,255,.045)}}
+.market-cards{{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}}
+.market-card{{padding:14px;border:1px solid var(--border);border-radius:14px;background:rgba(7,15,28,.72)}}
+.market-card-head{{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}}
+.market-card-head strong{{font-size:1rem}}
+.market-grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}}
+.market-grid div{{padding:9px;border-radius:10px;background:rgba(12,24,42,.72)}}
+.market-grid small{{display:block;color:var(--muted);font-size:.68rem;margin-bottom:3px}}
+.market-grid strong{{font-size:.9rem}}
 .footer-note{{text-align:center;color:#687891;font-size:.72rem;padding:16px 4px 0}}
 @media (max-width:900px){{
   .hero-kpis{{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .market-cards{{grid-template-columns:1fr}}
   .nav-links{{max-width:58vw}}
 }}
 @media (max-width:700px){{
@@ -532,6 +606,7 @@ tbody tr:hover{{background:rgba(113,167,255,.045)}}
 <div class="brand"><span class="brand-mark">AI</span><span>Trading Terminal</span></div>
 <div class="nav-links">
 <a href="#overview">Overview</a>
+<a href="#markets">Markets</a>
 <a href="#performance">Performance</a>
 <a href="#burnin">Burn-in</a>
 <a href="#evidence">Evidence</a>
@@ -591,6 +666,7 @@ tbody tr:hover{{background:rgba(113,167,255,.045)}}
 <small class="runtime-reason">Last engine reason: {html.escape(decision_reason)}</small>
 </section>
 
+{market_panel}
 <section class="section" id="performance">
 <div class="section-head"><h2>Performance</h2><small>Performance window: {html.escape(performance_scope)}</small></div>
 <div class="metrics">
@@ -661,6 +737,7 @@ def serve_dashboard(
     paper_cycle_executor: Callable[[], PaperCycleResult] | None = None,
 ) -> None:
     effective_settings = settings or HostedPaperSettings.from_env()
+    effective_markets = configured_markets_from_env()
     journal = TradeJournal(journal_path)
     state_store = RuntimeStateStore(state_path)
     runtime_status_store = HostedRuntimeStatusStore(status_path)
@@ -697,6 +774,16 @@ def serve_dashboard(
         )
 
         def execute_paper_cycle() -> PaperCycleResult:
+            if len(effective_markets) > 1:
+                return run_multi_market_paper_cycle(
+                    effective_markets,
+                    period=cycle_settings.period,
+                    interval=cycle_settings.interval,
+                    max_catchup_bars=cycle_settings.max_catchup_bars,
+                    poll_seconds=cycle_settings.poll_seconds,
+                    shadow_challenger_enabled=cycle_settings.shadow_challenger_enabled,
+                    persistence=backend,
+                )
             return run_production_paper_cycle(
                 cycle_settings,
                 persistence=backend,
@@ -741,6 +828,16 @@ def serve_dashboard(
                     )
                 )
                 return
+            if path == "/api/markets":
+                self._send_json(
+                    build_multi_market_overview(
+                        backend,
+                        effective_markets,
+                        interval=effective_settings.interval,
+                        portfolio_cash=starting_cash,
+                    )
+                )
+                return
             if path == "/api/status":
                 self._send_json(load_status_snapshot())
                 return
@@ -775,6 +872,8 @@ def serve_dashboard(
                 runtime_status_store=runtime_status_store,
                 persistence=backend,
                 runtime_key=runtime_key,
+                markets=effective_markets,
+                market_interval=effective_settings.interval,
             ).encode()
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
