@@ -103,3 +103,14 @@ def test_dashboard_renders_recent_trade_performance_metrics(tmp_path) -> None:
     assert '<small>Profit factor</small><strong>0.86</strong>' in page
     assert '<small>Max realized DD</small><strong>35.00</strong>' in page
     assert "Performance window: latest 200 trade events" in page
+
+
+
+def test_dashboard_renders_premium_terminal_shell(tmp_path) -> None:
+    page = render_dashboard(TradeJournal(tmp_path / "empty.jsonl"))
+
+    assert "premium-shell" in page
+    assert "PAPER · READ ONLY" in page
+    assert "live-dot" in page
+    assert "portfolio-ribbon" not in page
+    assert "prefers-reduced-motion" in page
