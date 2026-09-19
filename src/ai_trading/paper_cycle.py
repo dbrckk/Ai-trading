@@ -8,6 +8,7 @@ import pandas as pd
 from .data import load_history
 from .persistence import PaperPersistence, PersistedRuntime, build_runtime_key
 from .runtime import PaperAutonomousRuntime
+from .shadow_challenger import evaluate_shadow_challenger
 
 DEFAULT_MAX_CATCHUP_BARS = 72
 
@@ -74,6 +75,7 @@ class PaperCycleRunner:
         period: str,
         interval: str,
         max_catchup_bars: int = DEFAULT_MAX_CATCHUP_BARS,
+        shadow_challenger_enabled: bool = False,
     ) -> PaperCycleResult:
         if max_catchup_bars < 1:
             raise ValueError("max_catchup_bars must be at least 1")
@@ -104,11 +106,34 @@ class PaperCycleRunner:
                 reason="no new eligible bar",
             )
 
+        shadow_result = None
+        shadow_target: str | None = None
+        if shadow_challenger_enabled:
+            try:
+                shadow_target = str(pending[0])
+                shadow_result = evaluate_shadow_challenger(
+                    market,
+                    prepared.features,
+                    prepared.labels,
+                    pending[0],
+                    horizon_bars=runtime.model_config.horizon_bars,
+                )
+            except Exception:  # noqa: BLE001 - observer must never disrupt execution
+                shadow_result = None
+                shadow_target = None
+
         processed = 0
         attempts = 0
         while pending and attempts < max_catchup_bars:
             target = pending[0]
-            result = runtime.step_prepared(prepared, target)
+            if shadow_result is not None and str(target) == shadow_target:
+                result = runtime.step_prepared(
+                    prepared,
+                    target,
+                    shadow_challenger=shadow_result,
+                )
+            else:
+                result = runtime.step_prepared(prepared, target)
             attempts += 1
             if result.processed:
                 processed += 1
