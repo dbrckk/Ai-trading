@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from threading import Barrier
 
 import pytest
 
@@ -194,3 +195,38 @@ def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
     assert "Confidence" in page
     assert "LONG" in page
     assert "72.0%" in page
+
+
+
+def test_multi_market_cycle_runs_markets_concurrently(monkeypatch) -> None:
+    barrier = Barrier(len(DEFAULT_MARKETS))
+
+    def fake_cycle(settings, *, persistence=None, **kwargs):
+        del settings, persistence, kwargs
+        barrier.wait(timeout=2.0)
+        return PaperCycleResult(
+            processed=1,
+            remaining_backlog=False,
+            last_processed="2026-09-19 18:00:00+00:00",
+            processed_bars=5,
+            reason="processed 1 bar(s)",
+        )
+
+    monkeypatch.setattr(
+        multi_market_module,
+        "run_production_paper_cycle",
+        fake_cycle,
+    )
+
+    result = run_multi_market_paper_cycle(
+        DEFAULT_MARKETS,
+        period="5d",
+        interval="5m",
+        max_catchup_bars=72,
+        poll_seconds=300.0,
+        shadow_challenger_enabled=True,
+        persistence=object(),
+    )
+
+    assert result.processed == 3
+    assert "3 market(s)" in result.reason
