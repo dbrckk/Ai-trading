@@ -5,6 +5,7 @@ from .paper_readiness_evidence import bootstrap_positive_probability
 from .persistence import PaperPersistence, PersistedRuntime
 from .readiness import ReadinessPolicy, evaluate_readiness
 from .runtime_status import HostedRuntimeStatus, runtime_status_snapshot
+from .shadow_quality import ShadowQualityReport, evaluate_shadow_quality
 
 
 def _empty_model_snapshot() -> dict[str, object]:
@@ -51,6 +52,30 @@ def _burnin_snapshot(snapshots: tuple[BurnInSnapshot, ...]) -> dict[str, object]
         "max_drawdown": metrics.max_drawdown,
     }
 
+
+
+
+
+def _shadow_quality_snapshot(report: ShadowQualityReport) -> dict[str, object]:
+    return {
+        "observations": report.observations,
+        "agreement_rate": report.agreement_rate,
+        "accuracy_delta": report.accuracy_delta,
+        "brier_improvement": report.brier_improvement,
+        "regimes": list(report.regimes),
+        "active": {
+            "accuracy": report.active.accuracy,
+            "brier": report.active.brier,
+            "directional_edge": report.active.directional_edge,
+            "directional_observations": report.active.directional_observations,
+        },
+        "challenger": {
+            "accuracy": report.challenger.accuracy,
+            "brier": report.challenger.brier,
+            "directional_edge": report.challenger.directional_edge,
+            "directional_observations": report.challenger.directional_observations,
+        },
+    }
 
 
 def _empty_readiness_snapshot() -> dict[str, object]:
@@ -120,6 +145,15 @@ def build_operational_overview(
         regimes = tuple(regime_loader(runtime_key)) if callable(regime_loader) else ()
         burnin = _burnin_snapshot(snapshots)
         readiness = _readiness_snapshot(snapshots, regimes, status)
+        shadow_loader = getattr(persistence, "list_shadow_observations", None)
+        shadow_observations = (
+            tuple(shadow_loader(runtime_key))
+            if callable(shadow_loader)
+            else ()
+        )
+        shadow_quality = _shadow_quality_snapshot(
+            evaluate_shadow_quality(shadow_observations)
+        )
     except Exception:  # noqa: BLE001 - observability boundary must sanitize backend failures
         return {
             "storage_healthy": False,
@@ -137,6 +171,9 @@ def build_operational_overview(
                 "max_drawdown": None,
             },
             "readiness": _empty_readiness_snapshot(),
+            "shadow_challenger": _shadow_quality_snapshot(
+                evaluate_shadow_quality(())
+            ),
             "alerts": ["storage unavailable"],
         }
 
@@ -181,5 +218,6 @@ def build_operational_overview(
         "model": model_snapshot,
         "burnin": burnin,
         "readiness": readiness,
+        "shadow_challenger": shadow_quality,
         "alerts": alerts,
     }
