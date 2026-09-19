@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 import pandas as pd
 
+from .config import RiskConfig
 from .data import load_history
 from .persistence import PaperPersistence, PersistedRuntime, build_runtime_key
 from .runtime import PaperAutonomousRuntime
@@ -31,10 +32,12 @@ class PaperCycleRunner:
         persistence: PaperPersistence,
         data_loader: Callable[[str, str, str], pd.DataFrame] = load_history,
         runtime_factory: Callable[..., PaperAutonomousRuntime] = PaperAutonomousRuntime,
+        runtime_risk_config: RiskConfig | None = None,
     ) -> None:
         self.persistence = persistence
         self.data_loader = data_loader
         self.runtime_factory = runtime_factory
+        self.runtime_risk_config = runtime_risk_config
 
     @staticmethod
     def _is_logically_fresh(snapshot: PersistedRuntime) -> bool:
@@ -81,11 +84,14 @@ class PaperCycleRunner:
             raise ValueError("max_catchup_bars must be at least 1")
 
         runtime_key = build_runtime_key(symbol, interval)
-        runtime = self.runtime_factory(
-            symbol=symbol,
-            persistence=self.persistence,
-            runtime_key=runtime_key,
-        )
+        runtime_kwargs = {
+            "symbol": symbol,
+            "persistence": self.persistence,
+            "runtime_key": runtime_key,
+        }
+        if self.runtime_risk_config is not None:
+            runtime_kwargs["risk_config"] = self.runtime_risk_config
+        runtime = self.runtime_factory(**runtime_kwargs)
         market = self.data_loader(symbol, period, interval)
         prepared = runtime.prepare_market(market)
         eligible = prepared.eligible
