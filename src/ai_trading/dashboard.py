@@ -454,9 +454,9 @@ def render_dashboard(
             observations = shadow.get("observations", 0)
             review = "ELIGIBLE" if gate.get("eligible_for_review") else "COLLECTING"
             signal = item.get("signal") or "-"
-            confidence = item.get("confidence")
+            market_confidence = item.get("confidence")
             confidence_display = (
-                "-" if confidence is None else f"{float(confidence):.1%}"
+                "-" if market_confidence is None else f"{float(market_confidence):.1%}"
             )
             cards.append(
                 '<div class="market-card">'
