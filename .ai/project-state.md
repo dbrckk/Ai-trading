@@ -14,14 +14,15 @@ Status: active
 - Repository-standards routing benchmark health failed on current main, while the trading CI itself remains green.
 
 ## Current priority
-- Validate the staggered 7-57/5 GitHub schedule so delayed runs avoid the start-of-hour load window while the durable 72-bar catch-up remains the recovery boundary.
-- Restore and verify the external five-minute scheduler path, then prove production continuity until backlog clears before changing trading logic or considering live execution.
+- Accelerate bounded paper catch-up by preparing features and labels once per cycle while preserving one durable commit and CAS check per processed bar.
+- Then verify directly in Neon that the 241-bar runtime backlog advances toward the newest eligible market bar under the merged 72-bar catch-up and staggered 7-57/5 schedule.
+- Activate and prove the external Cloudflare five-minute scheduler only if GitHub scheduled delivery remains sparse.
 
 ## Validation
 - Standards workflow: configured; current main has a repo-brain benchmark-health failure unrelated to trading tests.
 - Canonical validation: `ruff check .` and `pytest`.
 - Paper runtime changes must keep Cloudflare Worker tests green.
-- PR #38 is the active reliability change.
+- PR #38 and PR #39 are merged; the active change is paper catch-up performance.
 
 ## Last verified
 - 2026-09-19
