@@ -2,20 +2,37 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "feat/three-market-paper-runtime",
+  "active_branch": "chore/record-three-market-live",
   "pull_request": null,
-  "focus": "Run Gold, DAX, and BTC paper cycles concurrently and enrich multi-market dashboard telemetry.",
+  "focus": "Monitor live Gold/DAX/BTC paper runtimes and collect per-market shadow challenger evidence.",
   "production_evidence": {
-    "main_head": "5e6aec9a5de1a62026491c8e8195824ad766e438",
-    "render_live_commit": "5e6aec9a5de1a62026491c8e8195824ad766e438",
+    "main_head": "3e40c11cd9cd923232b70f9b63dba71cee355f91",
+    "render_live_commit": "3e40c11cd9cd923232b70f9b63dba71cee355f91",
     "render_shadow_challenger_enabled": true,
-    "neon_runtime_processed_bars": 713,
-    "neon_runtime_revision": 713,
-    "neon_last_processed": "2026-09-18 16:55:00-04:00",
-    "neon_runtime_status": "RUNNING",
-    "neon_runtime_reason": "no new eligible bar",
-    "neon_consecutive_cycle_errors": 0,
-    "shadow_challenger_observations": 0
+    "render_markets": "GC=F,^GDAXI,BTC-USD",
+    "gold": {
+      "status": "RUNNING",
+      "processed_bars": 713,
+      "revision": 713,
+      "shadow_observations": 0,
+      "consecutive_cycle_errors": 0
+    },
+    "dax": {
+      "status": "RUNNING",
+      "processed_bars": 1,
+      "revision": 1,
+      "shadow_observations": 1,
+      "consecutive_cycle_errors": 0,
+      "last_processed": "2026-09-18 17:25:00+02:00"
+    },
+    "btc": {
+      "status": "RUNNING",
+      "processed_bars": 15,
+      "revision": 15,
+      "shadow_observations": 15,
+      "consecutive_cycle_errors": 0,
+      "last_processed": "2026-09-19 20:15:00+00:00"
+    }
   },
   "completed_changes": [
     "PR #43 fixed the daily-loss baseline across intraday bars.",
@@ -27,7 +44,9 @@
     "PR #48 added durable River-versus-challenger quality reporting to /api/overview.",
     "PR #49 added a review-only shadow promotion evidence gate.",
     "PR #50 branch adds Gold/DAX/BTC orchestration, failure isolation, normalized 100k portfolio reporting, /api/markets, and responsive dashboard cards.",
-    "PR #50 merged the first durable Gold/DAX/BTC multi-market runtime and dashboard."
+    "PR #50 merged the first durable Gold/DAX/BTC multi-market runtime and dashboard.",
+    "PR #51 made Gold/DAX/BTC production cycles concurrent and added market signal/confidence telemetry.",
+    "PR #52 added volume-less market support and restored the DAX runtime to RUNNING."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -35,10 +54,9 @@
     "github_schedule_fallback_enabled": true
   },
   "next_actions": [
-    "Merge concurrent multi-market execution only if CI is fully green.",
-    "Activate Render AI_TRADING_MARKETS=GC=F,^GDAXI,BTC-USD after merge.",
-    "Verify Neon creates independent ^GDAXI and BTC-USD runtimes without changing the existing Gold runtime.",
-    "Verify /api/markets and dashboard show per-market signal, confidence, shadow evidence, and promotion gate.",
-    "Keep all execution paper-only."
+    "Collect shadow challenger evidence independently for Gold, DAX, and BTC.",
+    "Use /api/markets and dashboard cards to monitor each runtime signal, confidence, bars, shadow samples, and promotion gate.",
+    "Require at least 250 realized shadow observations per market before promotion review eligibility.",
+    "Keep all execution paper-only and keep the GitHub scheduled fallback until scheduler issue #40 acceptance is fully evidenced."
   ]
 }
