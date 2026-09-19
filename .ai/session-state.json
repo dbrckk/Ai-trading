@@ -2,27 +2,36 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "fix/paper-cycle-scheduler-stagger-v2",
+  "active_branch": "perf/paper-cycle-prepared-market",
   "pull_request": null,
-  "focus": "Restore reliable continuous paper execution before further trading-logic changes.",
+  "focus": "Clear the durable paper backlog quickly without changing paper-trading semantics.",
   "production_evidence": {
     "main_head_at_start": "b0ac90bd6953c6a37ebe0a8054698897882a6b42",
     "latest_observed_scheduled_cycle_run": 35426791032,
     "latest_observed_cycle_result": "catch-up pending; processed_bars=241",
-    "render_internal_paper_cycle_requests_observed_on_2026_09_19": 0
+    "render_internal_paper_cycle_requests_observed_on_2026_09_19": 0,
+    "neon_runtime_processed_bars": 241,
+    "neon_runtime_revision": 241,
+    "neon_last_processed": "2026-09-17 00:35:00-04:00",
+    "neon_runtime_status": "RUNNING",
+    "neon_runtime_reason": "catch-up pending",
+    "neon_burnin_snapshots": 73,
+    "neon_regimes_covered": 1,
+    "neon_trade_count": 4
   },
   "change": {
     "max_catchup_bars": 72,
     "scheduled_job_timeout_minutes": 15,
     "scope": "paper-only reliability; risk and trading decision logic unchanged",
     "github_schedule": "7-57/5 * * * *",
-    "github_schedule_rationale": "Avoid GitHub Actions start-of-hour high-load window; durable catch-up covers the 10-minute hour-boundary gap."
+    "github_schedule_rationale": "Avoid GitHub Actions start-of-hour high-load window; durable catch-up covers the 10-minute hour-boundary gap.",
+    "prepared_market_cache": "Compute runtime features, labels, valid index, and eligible execution indices once per bounded paper cycle; retain per-bar durable commit/CAS semantics."
   },
   "next_actions": [
-    "Get staggered-schedule CI fully green.",
-    "Merge the staggered scheduler PR to main.",
-    "Confirm Render deploys the latest main commit.",
-    "Verify production paper-cycle continuity and backlog clearing.",
-    "Activate the Cloudflare five-minute scheduler if GitHub scheduled delivery remains sparse."
+    "Get prepared-market catch-up optimization CI fully green.",
+    "Merge the optimization to main and confirm Render deploy.",
+    "Observe the next scheduled paper cycles and query Neon for processed_bars/revision/last_processed advancement.",
+    "Keep issue #40 open until five-minute delivery is proven or Cloudflare fallback is activated and verified.",
+    "Do not change trading/risk/model logic until continuity and backlog recovery are proven."
   ]
 }
