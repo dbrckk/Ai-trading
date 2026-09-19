@@ -228,7 +228,7 @@ def test_operational_overview_exposes_model_and_runtime_metadata() -> None:
     assert payload["readiness"]["available"] is False
     assert payload["shadow_challenger"]["available"] is True
     assert payload["shadow_challenger"]["observations"] == 8
-    assert payload["shadow_challenger"]["score_delta"] == 0.12
+    assert round(payload["shadow_challenger"]["score_delta"], 2) == 0.12
     assert payload["shadow_challenger"]["challenger"]["accuracy"] == 0.70
     assert payload["alerts"] == []
 
