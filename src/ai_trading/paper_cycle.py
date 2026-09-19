@@ -85,7 +85,8 @@ class PaperCycleRunner:
             runtime_key=runtime_key,
         )
         market = self.data_loader(symbol, period, interval)
-        eligible = runtime._eligible_execution_indices(market)
+        prepared = runtime.prepare_market(market)
+        eligible = prepared.eligible
         if not eligible:
             raise RuntimeError("market history contains no eligible execution bar")
 
@@ -107,7 +108,7 @@ class PaperCycleRunner:
         attempts = 0
         while pending and attempts < max_catchup_bars:
             target = pending[0]
-            result = runtime.step_at(market, target)
+            result = runtime.step_prepared(prepared, target)
             attempts += 1
             if result.processed:
                 processed += 1
