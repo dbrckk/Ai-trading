@@ -71,6 +71,8 @@ def test_shadow_challenger_purges_unobservable_training_labels(monkeypatch) -> N
     assert result.execution_time == str(execution_idx)
     assert result.signal_time == str(market.index[signal_pos])
     assert result.regime == captured["regime"]
+    expected_label = labels.loc[market.index[signal_pos]]
+    assert result.realized_label == int(expected_label)
 
 
 def test_shadow_challenger_skips_when_history_is_insufficient() -> None:
