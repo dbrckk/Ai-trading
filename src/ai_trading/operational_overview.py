@@ -16,6 +16,40 @@ def _empty_model_snapshot() -> dict[str, object]:
     }
 
 
+def _empty_shadow_quality_snapshot() -> dict[str, object]:
+    return {
+        "available": False,
+        "status": "collecting",
+        "observations": 0,
+        "score_delta": None,
+        "river": None,
+        "challenger": None,
+    }
+
+
+def _shadow_quality_snapshot(comparison) -> dict[str, object]:
+    observations = int(comparison.observations)
+    available = observations >= 5
+
+    def quality_payload(quality) -> dict[str, object]:
+        return {
+            "score": float(quality.score),
+            "accuracy": float(quality.accuracy),
+            "brier": float(quality.brier),
+            "directional_edge": float(quality.directional_edge),
+            "observations": int(quality.observations),
+        }
+
+    return {
+        "available": available,
+        "status": "comparable" if available else "collecting",
+        "observations": observations,
+        "score_delta": float(comparison.score_delta) if available else None,
+        "river": quality_payload(comparison.river) if observations else None,
+        "challenger": quality_payload(comparison.challenger) if observations else None,
+    }
+
+
 def runtime_is_consistent(persisted: PersistedRuntime) -> bool:
     state = persisted.state
     if persisted.is_new:
@@ -137,8 +171,17 @@ def build_operational_overview(
                 "max_drawdown": None,
             },
             "readiness": _empty_readiness_snapshot(),
+            "shadow_challenger": _empty_shadow_quality_snapshot(),
             "alerts": ["storage unavailable"],
         }
+
+    shadow_quality = _empty_shadow_quality_snapshot()
+    shadow_loader = getattr(persistence, "load_shadow_quality", None)
+    if callable(shadow_loader):
+        try:
+            shadow_quality = _shadow_quality_snapshot(shadow_loader(runtime_key))
+        except Exception:  # noqa: BLE001 - optional observability must not break runtime status
+            shadow_quality = _empty_shadow_quality_snapshot()
 
     status_snapshot = runtime_status_snapshot(status)
     engine_status = str(status_snapshot["engine_status"])
@@ -181,5 +224,6 @@ def build_operational_overview(
         "model": model_snapshot,
         "burnin": burnin,
         "readiness": readiness,
+        "shadow_challenger": shadow_quality,
         "alerts": alerts,
     }

@@ -250,3 +250,31 @@ def test_regime_coverage_is_deduplicated_and_persisted(backend) -> None:
     )
     snapshots = backend.list_burnin_snapshots(RUNTIME_KEY)
     assert snapshots[-1].regimes_covered == 2
+
+
+
+def test_postgres_loads_shadow_quality_from_audit(backend) -> None:
+    backend.load_runtime(RUNTIME_KEY, 100_000.0)
+    commit = _commit()
+    shadow_commit = RuntimeStepCommit(
+        expected_revision=commit.expected_revision,
+        state=commit.state,
+        model=commit.model,
+        trade=commit.trade,
+        audit_event=commit.audit_event,
+        audit_payload={
+            "prediction": {"side": 1, "confidence": 0.80},
+            "shadow_challenger": {
+                "prediction": {"side": 0, "confidence": 0.70},
+                "realized_label": 0,
+            },
+        },
+        observed_regime=commit.observed_regime,
+    )
+
+    assert backend.commit_step(RUNTIME_KEY, shadow_commit) is CommitOutcome.COMMITTED
+    comparison = backend.load_shadow_quality(RUNTIME_KEY)
+
+    assert comparison.observations == 1
+    assert comparison.river.observations == 1
+    assert comparison.challenger.observations == 1

@@ -113,3 +113,34 @@ def test_file_backend_persists_unique_regimes(tmp_path) -> None:
     restored = FilePaperPersistence(root=tmp_path)
     assert restored.list_regimes(key) == ("bull_normal_vol",)
     assert restored.list_burnin_snapshots(key)[-1].regimes_covered == 1
+
+
+
+def test_file_backend_loads_shadow_quality_from_audit(tmp_path) -> None:
+    from ai_trading.file_persistence import FilePaperPersistence
+
+    backend = FilePaperPersistence(root=tmp_path)
+    payloads = [
+        {
+            "prediction": {"side": 1, "confidence": 0.80},
+            "shadow_challenger": {
+                "prediction": {"side": 1, "confidence": 0.90},
+                "realized_label": 1,
+            },
+        },
+        {
+            "prediction": {"side": 1, "confidence": 0.75},
+            "shadow_challenger": {
+                "prediction": {"side": 0, "confidence": 0.70},
+                "realized_label": 0,
+            },
+        },
+    ]
+    for payload in payloads:
+        backend.audit_log.append("runtime_step", payload)
+
+    comparison = backend.load_shadow_quality("paper:GC=F:5m:online-river:v1")
+
+    assert comparison.observations == 2
+    assert comparison.river.observations == 2
+    assert comparison.challenger.observations == 2
