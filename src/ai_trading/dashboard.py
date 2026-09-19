@@ -523,7 +523,7 @@ def render_dashboard(
             '<div class="portfolio-ribbon">'
             f'<div><small>Portfolio equity</small><strong>{_display_money(float(portfolio["equity"]))}</strong></div>'
             f'<div><small>Portfolio PnL</small><strong class="{portfolio_pnl_css}">{_display_money(portfolio_pnl)}</strong></div>'
-            f'<div><small>Healthy engines</small><strong>{portfolio["healthy_markets"]} / {portfolio["markets"]}</strong></div>'
+            f'<div><small>Healthy markets</small><strong>{portfolio["healthy_markets"]} / {portfolio["markets"]}</strong></div>'
             '<div><small>Execution mode</small><strong>PAPER ONLY</strong></div>'
             '</div><div class="market-cards">'
             + "".join(cards)
