@@ -81,7 +81,7 @@ def run_multi_market_paper_cycle(
     remaining_backlog = False
     processed_bars = 0
     last_processed: str | None = None
-    failures: list[str] = []
+    failures: list[tuple[str, str]] = []
 
     for market in markets:
         try:
@@ -96,8 +96,8 @@ def run_multi_market_paper_cycle(
                 ),
                 persistence=backend,
             )
-        except PaperCycleServiceError:
-            failures.append(market.symbol)
+        except PaperCycleServiceError as exc:
+            failures.append((market.symbol, exc.code))
             continue
 
         processed += result.processed
@@ -106,8 +106,14 @@ def run_multi_market_paper_cycle(
         last_processed = result.last_processed or last_processed
 
     if len(failures) == len(markets):
+        failure_codes = {code for _, code in failures}
+        code = (
+            "storage_unavailable"
+            if "storage_unavailable" in failure_codes
+            else "execution_failed"
+        )
         raise PaperCycleServiceError(
-            code="execution_failed",
+            code=code,
             error_type="MultiMarketFailure",
         )
 
