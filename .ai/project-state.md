@@ -9,10 +9,11 @@ Status: active
 - PR #43 fixed the paper runtime daily-loss baseline so it persists across bars within the same trading day and resets only on a new trading day.
 - PR #44 added a leakage-safe ensemble challenger evaluator trained only on labels observable by the signal bar.
 - PR #45 wired the ensemble challenger into paper cycles as an opt-in shadow observer. River remains the only model that can drive the RiskEngine and paper execution.
-- Render is deploying commit `05a37ae` with `AI_TRADING_SHADOW_CHALLENGER=1`.
+- Render is live on commit `5e6aec9` with `AI_TRADING_SHADOW_CHALLENGER=1`.
 - PR #47 enriched only the shadow challenger to 14 features while keeping the production River feature set unchanged.
 - PR #48 aggregates River and challenger accuracy, Brier-style calibration error, directional edge, and composite quality from durable audit evidence and exposes it through `/api/overview`.
-- The shadow-promotion branch adds a review-only eligibility gate requiring sustained evidence before a challenger can even be considered for promotion; it does not promote models automatically.
+- PR #49 adds a review-only eligibility gate requiring sustained evidence before a challenger can even be considered for promotion; it does not promote models automatically.
+- PR #50 introduces independent Gold/DAX/BTC paper runtimes, isolated market failures, a normalized 100k portfolio view (34%/33%/33%), `/api/markets`, responsive market cards, and cross-market recent trades. Production activation remains gated on green CI.
 - Production runtime is healthy at processed_bars/revision 713, with zero consecutive cycle errors.
 
 ## Broken / blockers
@@ -22,7 +23,8 @@ Status: active
 - Repository-standards routing benchmark health is separate from the trading CI; trading CI is green.
 
 ## Current priority
-- Collect shadow challenger observations as soon as new eligible GC=F 5-minute bars arrive.
+- Activate `AI_TRADING_MARKETS=GC=F,^GDAXI,BTC-USD` only after PR #50 CI is fully green and merged.
+- Collect shadow challenger observations independently for Gold, DAX, and BTC once multi-market production is active.
 - Collect at least five realized shadow observations so the River-vs-challenger quality summary becomes comparable in `/api/overview`.
 - Collect at least 250 realized shadow observations before the challenger can pass the review-eligibility evidence floor.
 - Keep the challenger strictly observational until it demonstrates sustained out-of-sample improvement after costs and risk constraints.
@@ -31,7 +33,7 @@ Status: active
 ## Validation
 - Canonical validation: `ruff check .` and `pytest`.
 - Cloudflare Worker tests must remain green.
-- PR #43, #44, #45, #47, and #48 are merged; the shadow-promotion gate must pass Ruff, Pytest, PostgreSQL integration tests, and Cloudflare Worker tests before merge.
+- PR #43, #44, #45, #47, #48, and #49 are merged; PR #50 must pass Ruff, Pytest, PostgreSQL integration tests, and Cloudflare Worker tests before merge and production activation.
 - Live runtime remains `RUNNING` with zero consecutive cycle errors.
 
 ## Last verified
