@@ -2,9 +2,9 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "feat/multi-market-paper-dashboard",
-  "pull_request": 50,
-  "focus": "Launch isolated Gold/DAX/BTC paper runtimes and expose a coherent normalized 100k multi-market dashboard.",
+  "active_branch": "feat/three-market-paper-runtime",
+  "pull_request": null,
+  "focus": "Run Gold, DAX, and BTC paper cycles concurrently and enrich multi-market dashboard telemetry.",
   "production_evidence": {
     "main_head": "5e6aec9a5de1a62026491c8e8195824ad766e438",
     "render_live_commit": "5e6aec9a5de1a62026491c8e8195824ad766e438",
@@ -26,7 +26,8 @@
     "PR #47 enriched the shadow challenger to 14 features while leaving River execution features unchanged.",
     "PR #48 added durable River-versus-challenger quality reporting to /api/overview.",
     "PR #49 added a review-only shadow promotion evidence gate.",
-    "PR #50 branch adds Gold/DAX/BTC orchestration, failure isolation, normalized 100k portfolio reporting, /api/markets, and responsive dashboard cards."
+    "PR #50 branch adds Gold/DAX/BTC orchestration, failure isolation, normalized 100k portfolio reporting, /api/markets, and responsive dashboard cards.",
+    "PR #50 merged the first durable Gold/DAX/BTC multi-market runtime and dashboard."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -34,10 +35,10 @@
     "github_schedule_fallback_enabled": true
   },
   "next_actions": [
-    "Merge PR #50 only if Ruff, Pytest, PostgreSQL integration tests, and Cloudflare Worker tests are fully green.",
-    "Set Render AI_TRADING_MARKETS=GC=F,^GDAXI,BTC-USD only after merge.",
-    "Verify independent durable runtimes exist for Gold, DAX, and BTC and that one provider failure does not block the others.",
-    "Verify /api/markets and the dashboard show a 34%/33%/33% normalized 100k portfolio.",
-    "Collect shadow challenger evidence independently per market and keep all execution paper-only."
+    "Merge concurrent multi-market execution only if CI is fully green.",
+    "Activate Render AI_TRADING_MARKETS=GC=F,^GDAXI,BTC-USD after merge.",
+    "Verify Neon creates independent ^GDAXI and BTC-USD runtimes without changing the existing Gold runtime.",
+    "Verify /api/markets and dashboard show per-market signal, confidence, shadow evidence, and promotion gate.",
+    "Keep all execution paper-only."
   ]
 }
