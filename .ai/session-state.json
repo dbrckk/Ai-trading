@@ -2,12 +2,12 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "main",
+  "active_branch": "feat/shadow-quality-report",
   "pull_request": null,
-  "focus": "Collect leakage-safe ensemble shadow evidence against the production River paper model before any model promotion.",
+  "focus": "Expose durable River-versus-shadow-challenger quality evidence without allowing the challenger to influence execution.",
   "production_evidence": {
-    "main_head": "9f64e7d583fb8013c9f4febc62a8d4261ed49864",
-    "render_live_commit": "9f64e7d583fb8013c9f4febc62a8d4261ed49864",
+    "main_head": "eb3862d64e1d7e243187908c0d2e571b6d6eae88",
+    "render_live_commit": "eb3862d64e1d7e243187908c0d2e571b6d6eae88",
     "render_shadow_challenger_enabled": true,
     "neon_runtime_processed_bars": 713,
     "neon_runtime_revision": 713,
@@ -22,7 +22,8 @@
     "PR #44 added a leakage-safe ensemble shadow evaluator.",
     "PR #45 integrated the challenger as audit-only paper-cycle observability.",
     "Render environment AI_TRADING_SHADOW_CHALLENGER is enabled.",
-    "River remains authoritative for risk and paper execution."
+    "River remains authoritative for risk and paper execution.",
+    "PR #47 enriched the shadow challenger to 14 features while leaving River execution features unchanged."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -30,8 +31,9 @@
     "github_schedule_fallback_enabled": true
   },
   "next_actions": [
+    "Merge the durable shadow-quality report only if CI is fully green.",
     "Wait for new eligible GC=F 5-minute bars and confirm shadow_challenger entries appear in durable audit events.",
-    "Aggregate River versus challenger realized-label quality from audit evidence.",
+    "Use /api/overview to compare River and challenger quality after at least five realized shadow observations.",
     "Require sustained out-of-sample improvement before considering champion/challenger promotion.",
     "Keep issue #40 open and retain the GitHub scheduled fallback until direct Cloudflare heartbeat evidence is complete."
   ]
