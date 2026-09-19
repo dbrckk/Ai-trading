@@ -1,8 +1,10 @@
 from __future__ import annotations
 
-from .burnin import calculate_burnin_metrics
+from .burnin import BurnInSnapshot, calculate_burnin_metrics
+from .paper_readiness_evidence import bootstrap_positive_probability
 from .persistence import PaperPersistence, PersistedRuntime
-from .runtime_status import runtime_status_snapshot
+from .readiness import ReadinessPolicy, evaluate_readiness
+from .runtime_status import HostedRuntimeStatus, runtime_status_snapshot
 
 
 def _empty_model_snapshot() -> dict[str, object]:
@@ -32,16 +34,7 @@ def runtime_is_consistent(persisted: PersistedRuntime) -> bool:
     return state.units == 0.0 or state.last_price > 0.0
 
 
-def _burnin_snapshot(persistence: PaperPersistence, runtime_key: str) -> dict[str, object]:
-    loader = getattr(persistence, "list_burnin_snapshots", None)
-    if not callable(loader):
-        return {
-            "samples": 0,
-            "processed_bars": 0,
-            "total_return": None,
-            "max_drawdown": None,
-        }
-    snapshots = loader(runtime_key)
+def _burnin_snapshot(snapshots: tuple[BurnInSnapshot, ...]) -> dict[str, object]:
     latest_bars = snapshots[-1].processed_bars if snapshots else 0
     if len(snapshots) < 2:
         return {
@@ -59,6 +52,56 @@ def _burnin_snapshot(persistence: PaperPersistence, runtime_key: str) -> dict[st
     }
 
 
+
+def _empty_readiness_snapshot() -> dict[str, object]:
+    return {
+        "available": False,
+        "ready": None,
+        "checks_passed": None,
+        "checks_total": 8,
+        "checks": [],
+    }
+
+
+def _readiness_snapshot(
+    snapshots: tuple[BurnInSnapshot, ...],
+    regimes: tuple[str, ...],
+    status: HostedRuntimeStatus | None,
+) -> dict[str, object]:
+    if len(snapshots) < 3 or status is None:
+        return _empty_readiness_snapshot()
+    metrics = calculate_burnin_metrics(snapshots)
+    probability = bootstrap_positive_probability(
+        tuple(float(snapshot.equity) for snapshot in snapshots)
+    )
+    if probability is None:
+        return _empty_readiness_snapshot()
+    report = evaluate_readiness(
+        metrics=metrics,
+        burn_in_bars=snapshots[-1].processed_bars,
+        bootstrap_probability_positive=probability,
+        regimes_covered=len(regimes),
+        scheduler_errors=status.consecutive_cycle_errors,
+        policy=ReadinessPolicy(),
+    )
+    return {
+        "available": True,
+        "ready": report.ready,
+        "checks_passed": report.checks_passed,
+        "checks_total": report.checks_total,
+        "checks": [
+            {
+                "name": check.name,
+                "passed": check.passed,
+                "value": check.value,
+                "threshold": check.threshold,
+                "comparison": check.comparison,
+            }
+            for check in report.checks
+        ],
+    }
+
+
 def build_operational_overview(
     persistence: PaperPersistence,
     runtime_key: str,
@@ -67,7 +110,16 @@ def build_operational_overview(
     try:
         persisted = persistence.load_runtime(runtime_key, starting_cash)
         status = persistence.load_runtime_status(runtime_key)
-        burnin = _burnin_snapshot(persistence, runtime_key)
+        burnin_loader = getattr(persistence, "list_burnin_snapshots", None)
+        snapshots = (
+            tuple(burnin_loader(runtime_key))
+            if callable(burnin_loader)
+            else ()
+        )
+        regime_loader = getattr(persistence, "list_regimes", None)
+        regimes = tuple(regime_loader(runtime_key)) if callable(regime_loader) else ()
+        burnin = _burnin_snapshot(snapshots)
+        readiness = _readiness_snapshot(snapshots, regimes, status)
     except Exception:  # noqa: BLE001 - observability boundary must sanitize backend failures
         return {
             "storage_healthy": False,
@@ -84,6 +136,7 @@ def build_operational_overview(
                 "total_return": None,
                 "max_drawdown": None,
             },
+            "readiness": _empty_readiness_snapshot(),
             "alerts": ["storage unavailable"],
         }
 
@@ -127,5 +180,6 @@ def build_operational_overview(
         "consecutive_cycle_errors": consecutive_cycle_errors,
         "model": model_snapshot,
         "burnin": burnin,
+        "readiness": readiness,
         "alerts": alerts,
     }
