@@ -9,21 +9,21 @@ Status: active
 - PR #43 fixed the paper runtime daily-loss baseline so it persists across bars within the same trading day and resets only on a new trading day.
 - PR #44 added a leakage-safe ensemble challenger evaluator trained only on labels observable by the signal bar.
 - PR #45 wired the ensemble challenger into paper cycles as an opt-in shadow observer. River remains the only model that can drive the RiskEngine and paper execution.
-- Render is live on commit `5e6aec9` with `AI_TRADING_SHADOW_CHALLENGER=1`.
+- Render is live on commit `3e40c11` with `AI_TRADING_SHADOW_CHALLENGER=1` and `AI_TRADING_MARKETS=GC=F,^GDAXI,BTC-USD`.
 - PR #47 enriched only the shadow challenger to 14 features while keeping the production River feature set unchanged.
 - PR #48 aggregates River and challenger accuracy, Brier-style calibration error, directional edge, and composite quality from durable audit evidence and exposes it through `/api/overview`.
 - PR #49 adds a review-only eligibility gate requiring sustained evidence before a challenger can even be considered for promotion; it does not promote models automatically.
-- PR #50 introduces independent Gold/DAX/BTC paper runtimes, isolated market failures, a normalized 100k portfolio view (34%/33%/33%), `/api/markets`, responsive market cards, and cross-market recent trades. Production activation remains gated on green CI.
-- Production runtime is healthy at processed_bars/revision 713, with zero consecutive cycle errors.
+- PR #50 introduced independent Gold/DAX/BTC paper runtimes, isolated market failures, a normalized 100k portfolio view (34%/33%/33%), `/api/markets`, responsive market cards, and cross-market recent trades.
+- PR #51 made Gold/DAX/BTC cycle execution concurrent and added per-market signal/confidence telemetry.
+- PR #52 made volume-less index data safe, unblocking the DAX runtime.
+- Production verification: Gold is RUNNING at 713 bars; DAX is RUNNING at 1 bar with 1 shadow observation; BTC is RUNNING at 15 bars with 15 shadow observations; all three report zero consecutive cycle errors.
 
 ## Broken / blockers
-- No shadow-challenger production observation exists yet because no new eligible market bar has been processed since `2026-09-18 16:55:00-04:00`.
 - Render request logs do not expose the scheduler POST evidence needed to directly prove three consecutive Cloudflare heartbeats, so issue #40 remains open.
 - GitHub scheduled paper-cycle delivery has historically been sparse; keep it as fallback until the Cloudflare acceptance evidence is complete.
 - Repository-standards routing benchmark health is separate from the trading CI; trading CI is green.
 
 ## Current priority
-- Activate `AI_TRADING_MARKETS=GC=F,^GDAXI,BTC-USD` only after PR #50 CI is fully green and merged.
 - Collect shadow challenger observations independently for Gold, DAX, and BTC once multi-market production is active.
 - Collect at least five realized shadow observations so the River-vs-challenger quality summary becomes comparable in `/api/overview`.
 - Collect at least 250 realized shadow observations before the challenger can pass the review-eligibility evidence floor.
@@ -33,7 +33,7 @@ Status: active
 ## Validation
 - Canonical validation: `ruff check .` and `pytest`.
 - Cloudflare Worker tests must remain green.
-- PR #43, #44, #45, #47, #48, and #49 are merged; PR #50 must pass Ruff, Pytest, PostgreSQL integration tests, and Cloudflare Worker tests before merge and production activation.
+- PR #43, #44, #45, #47, #48, #49, #50, #51, and #52 are merged and passed the trading CI before production activation.
 - Live runtime remains `RUNNING` with zero consecutive cycle errors.
 
 ## Last verified
