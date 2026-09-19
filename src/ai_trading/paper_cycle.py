@@ -10,6 +10,9 @@ from .persistence import PaperPersistence, PersistedRuntime, build_runtime_key
 from .runtime import PaperAutonomousRuntime
 
 
+DEFAULT_MAX_CATCHUP_BARS = 72
+
+
 @dataclass(frozen=True)
 class PaperCycleResult:
     processed: int
@@ -71,7 +74,7 @@ class PaperCycleRunner:
         symbol: str,
         period: str,
         interval: str,
-        max_catchup_bars: int = 12,
+        max_catchup_bars: int = DEFAULT_MAX_CATCHUP_BARS,
     ) -> PaperCycleResult:
         if max_catchup_bars < 1:
             raise ValueError("max_catchup_bars must be at least 1")
