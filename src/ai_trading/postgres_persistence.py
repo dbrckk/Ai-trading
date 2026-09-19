@@ -24,6 +24,7 @@ from .persistence import (
 )
 from .runtime_state import RuntimeState
 from .runtime_status import HostedRuntimeStatus
+from .shadow_quality import ShadowObservation, shadow_observation_from_audit_payload
 from .trade_journal import TradeSnapshot
 
 _SCHEMA_STATEMENTS = (
@@ -674,6 +675,33 @@ class PostgresPaperPersistence(PaperPersistence):
             )
             rows = cursor.fetchall()
         return tuple(str(row["regime_name"]) for row in rows)
+
+    def list_shadow_observations(
+        self,
+        runtime_key: str,
+    ) -> tuple[ShadowObservation, ...]:
+        with self._connect() as connection, connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT payload
+                FROM paper_audit_events
+                WHERE runtime_key = %s
+                  AND payload ? 'shadow_challenger'
+                ORDER BY id ASC
+                """,
+                (runtime_key,),
+            )
+            rows = cursor.fetchall()
+
+        observations: list[ShadowObservation] = []
+        for row in rows:
+            payload = row["payload"]
+            if not isinstance(payload, dict):
+                payload = json.loads(payload)
+            observation = shadow_observation_from_audit_payload(payload)
+            if observation is not None:
+                observations.append(observation)
+        return tuple(observations)
 
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:
         payload = asdict(status)
