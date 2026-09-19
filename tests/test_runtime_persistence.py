@@ -148,3 +148,109 @@ def test_runtime_rejects_missing_model_for_existing_state() -> None:
 
     with pytest.raises(ValueError, match="missing its online model"):
         runtime.step(sample_market())
+
+
+def intraday_market(n: int = 100) -> pd.DataFrame:
+    idx = pd.date_range("2025-01-01 09:00", periods=n, freq="5min")
+    t = np.arange(n, dtype=float)
+    close = 100.0 + 0.02 * t + 0.5 * np.sin(t / 5.0)
+    return pd.DataFrame(
+        {
+            "Open": close,
+            "High": close * 1.005,
+            "Low": close * 0.995,
+            "Close": close,
+            "Volume": 1000.0 + t,
+        },
+        index=idx,
+    )
+
+
+def test_runtime_preserves_daily_loss_baseline_within_trading_day() -> None:
+    market = intraday_market()
+    probe = PaperAutonomousRuntime(
+        risk_config=RiskConfig(min_confidence=0.0),
+        persistence=RecordingPersistence(_persisted_runtime()),
+        runtime_key=RUNTIME_KEY,
+        symbol="GC=F",
+    )
+    eligible = probe._eligible_execution_indices(market)
+    previous = eligible[-2]
+    target = eligible[-1]
+
+    state = RuntimeState(
+        cash=97_900.0,
+        units=0.0,
+        last_price=float(market.at[previous, "Close"]),
+        peak_equity=100_000.0,
+        day_start_equity=100_000.0,
+        last_processed=str(previous),
+        processed_bars=3,
+        last_learning_cycle_bar=0,
+    )
+    persisted = PersistedRuntime(
+        state=state,
+        model=serialize_model(RiverDirectionModel()),
+        revision=11,
+        is_new=False,
+    )
+    persistence = RecordingPersistence(persisted)
+    runtime = PaperAutonomousRuntime(
+        risk_config=RiskConfig(min_confidence=0.0),
+        persistence=persistence,
+        runtime_key=RUNTIME_KEY,
+        symbol="GC=F",
+    )
+
+    result = runtime.step_at(market, target)
+
+    assert result.processed is True
+    assert result.approved is False
+    assert result.reason == "daily loss limit reached"
+    assert len(persistence.commits) == 1
+    assert persistence.commits[0][1].state.day_start_equity == 100_000.0
+
+
+def test_runtime_resets_daily_loss_baseline_on_new_trading_day() -> None:
+    market = sample_market()
+    probe = PaperAutonomousRuntime(
+        risk_config=RiskConfig(min_confidence=0.0),
+        persistence=RecordingPersistence(_persisted_runtime()),
+        runtime_key=RUNTIME_KEY,
+        symbol="GC=F",
+    )
+    eligible = probe._eligible_execution_indices(market)
+    target = eligible[-1]
+    previous_day = market.index[-3]
+
+    state = RuntimeState(
+        cash=97_900.0,
+        units=0.0,
+        last_price=float(market.at[previous_day, "Close"]),
+        peak_equity=100_000.0,
+        day_start_equity=100_000.0,
+        last_processed=str(previous_day),
+        processed_bars=3,
+        last_learning_cycle_bar=0,
+    )
+    persisted = PersistedRuntime(
+        state=state,
+        model=serialize_model(RiverDirectionModel()),
+        revision=11,
+        is_new=False,
+    )
+    persistence = RecordingPersistence(persisted)
+    runtime = PaperAutonomousRuntime(
+        risk_config=RiskConfig(min_confidence=0.0),
+        persistence=persistence,
+        runtime_key=RUNTIME_KEY,
+        symbol="GC=F",
+    )
+
+    result = runtime.step_at(market, target)
+
+    assert result.processed is True
+    assert result.reason != "daily loss limit reached"
+    assert len(persistence.commits) == 1
+    expected = 97_900.0
+    assert persistence.commits[0][1].state.day_start_equity == pytest.approx(expected)
