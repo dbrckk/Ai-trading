@@ -14,6 +14,8 @@ from ai_trading.operational_overview import build_operational_overview
 from ai_trading.persistence import ModelBlob, PersistedRuntime
 from ai_trading.runtime_state import RuntimeState
 from ai_trading.runtime_status import HostedRuntimeStatus
+from ai_trading.model_quality import ModelQuality
+from ai_trading.shadow_quality import ShadowQualityComparison
 from ai_trading.trade_journal import TradeJournal
 
 RUNTIME_KEY = "paper:GC=F:5m:online-river:v1"
@@ -105,6 +107,28 @@ class OverviewPersistence:
     def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:
         assert runtime_key == RUNTIME_KEY
         return self.status
+
+    def load_shadow_quality(self, runtime_key: str) -> ShadowQualityComparison:
+        assert runtime_key == RUNTIME_KEY
+        river = ModelQuality(
+            score=0.60,
+            accuracy=0.55,
+            brier=0.30,
+            directional_edge=0.05,
+            observations=8,
+        )
+        challenger = ModelQuality(
+            score=0.72,
+            accuracy=0.70,
+            brier=0.20,
+            directional_edge=0.20,
+            observations=8,
+        )
+        return ShadowQualityComparison(
+            observations=8,
+            river=river,
+            challenger=challenger,
+        )
 
 
 class ReadinessOverviewPersistence(OverviewPersistence):
@@ -202,6 +226,10 @@ def test_operational_overview_exposes_model_and_runtime_metadata() -> None:
     assert payload["burnin"]["total_return"] > 0.0
     assert payload["burnin"]["max_drawdown"] == 0.0
     assert payload["readiness"]["available"] is False
+    assert payload["shadow_challenger"]["available"] is True
+    assert payload["shadow_challenger"]["observations"] == 8
+    assert payload["shadow_challenger"]["score_delta"] == 0.12
+    assert payload["shadow_challenger"]["challenger"]["accuracy"] == 0.70
     assert payload["alerts"] == []
 
 
@@ -282,6 +310,14 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
             "checks_total": 8,
             "checks": [],
         },
+        "shadow_challenger": {
+            "available": False,
+            "status": "collecting",
+            "observations": 0,
+            "score_delta": None,
+            "river": None,
+            "challenger": None,
+        },
         "alerts": ["storage unavailable"],
     }
     assert "secret" not in repr(payload)
@@ -300,6 +336,8 @@ def test_dashboard_exposes_operational_overview_endpoint() -> None:
     assert payload["model"]["checksum"] == "1234567890ab"
     assert payload["burnin"]["processed_bars"] == 7
     assert payload["burnin"]["samples"] == 2
+    assert payload["shadow_challenger"]["observations"] == 8
+    assert payload["shadow_challenger"]["available"] is True
     assert payload["alerts"] == []
 
 
