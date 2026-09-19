@@ -18,6 +18,7 @@ from .regime import detect_regime
 from .risk import PortfolioSnapshot, RiskEngine
 from .runtime_lock import RuntimeLock
 from .runtime_state import RuntimeState, RuntimeStateStore
+from .shadow_challenger import ShadowChallengerResult
 from .trade_journal import TradeJournal, TradeSnapshot
 
 
@@ -180,17 +181,25 @@ class PaperAutonomousRuntime:
         self,
         prepared: PreparedRuntimeMarket,
         execution_idx: object,
+        *,
+        shadow_challenger: ShadowChallengerResult | None = None,
     ) -> RuntimeStepResult:
         if execution_idx not in prepared.eligible:
             raise ValueError("Requested index is not an eligible execution bar")
 
         with RuntimeLock(self.lock_path):
-            return self._step_prepared_locked(prepared, execution_idx)
+            return self._step_prepared_locked(
+                prepared,
+                execution_idx,
+                shadow_challenger=shadow_challenger,
+            )
 
     def _step_prepared_locked(
         self,
         prepared: PreparedRuntimeMarket,
         execution_idx: object,
+        *,
+        shadow_challenger: ShadowChallengerResult | None = None,
     ) -> RuntimeStepResult:
         df = prepared.market
         features = prepared.features
@@ -315,6 +324,8 @@ class PaperAutonomousRuntime:
             "retrain_due": retrain_due,
             "observed_regime": observed_regime,
         }
+        if shadow_challenger is not None:
+            audit_payload["shadow_challenger"] = asdict(shadow_challenger)
         outcome = self.persistence.commit_step(
             self.runtime_key,
             RuntimeStepCommit(

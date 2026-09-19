@@ -30,7 +30,7 @@ def test_shadow_challenger_purges_unobservable_training_labels(monkeypatch) -> N
     market = sample_market()
     features = make_features(market)
     labels = make_labels(market, horizon_bars=3, return_threshold=0.001)
-    execution_idx = market.index[-2]
+    execution_idx = market.index[-5]
     captured: dict[str, object] = {}
 
     class RecordingEnsemble:
@@ -71,6 +71,8 @@ def test_shadow_challenger_purges_unobservable_training_labels(monkeypatch) -> N
     assert result.execution_time == str(execution_idx)
     assert result.signal_time == str(market.index[signal_pos])
     assert result.regime == captured["regime"]
+    expected_label = labels.loc[market.index[signal_pos]]
+    assert result.realized_label == int(expected_label)
 
 
 def test_shadow_challenger_skips_when_history_is_insufficient() -> None:
