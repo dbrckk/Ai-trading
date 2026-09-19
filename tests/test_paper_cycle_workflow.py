@@ -8,13 +8,14 @@ def test_paper_cycle_workflow_structure() -> None:
 
     required = (
         'cron: "2/5 * * * *"',
+        "timeout-minutes: 15",
         "workflow_dispatch:",
         "group: paper-cycle-production",
         "cancel-in-progress: false",
         "AI_TRADING_DATABASE_URL: ${{ secrets.AI_TRADING_DATABASE_URL }}",
         'if [ -z "${AI_TRADING_DATABASE_URL:-}" ]; then',
         "AI_TRADING_DATABASE_URL repository secret is required",
-        "ai-trading paper-cycle --symbol GC=F --period 5d --interval 5m --max-catchup-bars 12",
+        "ai-trading paper-cycle --symbol GC=F --period 5d --interval 5m --max-catchup-bars 72",
     )
     for expected in required:
         assert expected in text
