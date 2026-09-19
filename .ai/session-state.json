@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "project": "dbrckk/Ai-trading",
+  "base_branch": "main",
+  "active_branch": "fix/paper-cycle-catchup-capacity",
+  "pull_request": 38,
+  "focus": "Restore reliable continuous paper execution before further trading-logic changes.",
+  "production_evidence": {
+    "main_head_at_start": "b0ac90bd6953c6a37ebe0a8054698897882a6b42",
+    "latest_observed_scheduled_cycle_run": 35426791032,
+    "latest_observed_cycle_result": "catch-up pending; processed_bars=241",
+    "render_internal_paper_cycle_requests_observed_on_2026_09_19": 0
+  },
+  "change": {
+    "max_catchup_bars": 72,
+    "scheduled_job_timeout_minutes": 15,
+    "scope": "paper-only reliability; risk and trading decision logic unchanged"
+  },
+  "next_actions": [
+    "Get PR #38 CI fully green.",
+    "Merge PR #38 to main.",
+    "Confirm Render deploys the merged main commit.",
+    "Verify external five-minute scheduler delivery to /internal/paper-cycle.",
+    "Observe durable backlog clearing and scheduler reliability before changing trading logic."
+  ]
+}
