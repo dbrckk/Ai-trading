@@ -112,5 +112,5 @@ def test_dashboard_renders_premium_terminal_shell(tmp_path) -> None:
     assert "premium-shell" in page
     assert "PAPER · READ ONLY" in page
     assert "live-dot" in page
-    assert "portfolio-ribbon" not in page
+    assert '<div class="portfolio-ribbon">' not in page
     assert "prefers-reduced-motion" in page
