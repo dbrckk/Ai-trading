@@ -18,6 +18,7 @@ class ProductionPaperCycleSettings:
     interval: str = "5m"
     max_catchup_bars: int = DEFAULT_MAX_CATCHUP_BARS
     poll_seconds: float = 300.0
+    shadow_challenger_enabled: bool = False
 
 
 class PaperCycleServiceError(RuntimeError):
@@ -84,12 +85,22 @@ def run_production_paper_cycle(
         ) from None
 
     try:
-        result = runner_factory(backend).run_once(
-            symbol=settings.symbol,
-            period=settings.period,
-            interval=settings.interval,
-            max_catchup_bars=settings.max_catchup_bars,
-        )
+        runner = runner_factory(backend)
+        if settings.shadow_challenger_enabled:
+            result = runner.run_once(
+                symbol=settings.symbol,
+                period=settings.period,
+                interval=settings.interval,
+                max_catchup_bars=settings.max_catchup_bars,
+                shadow_challenger_enabled=True,
+            )
+        else:
+            result = runner.run_once(
+                symbol=settings.symbol,
+                period=settings.period,
+                interval=settings.interval,
+                max_catchup_bars=settings.max_catchup_bars,
+            )
         state = backend.load_runtime(runtime_key, starting_cash).state
         equity = state.cash + state.units * state.last_price
         backend.save_runtime_status(
