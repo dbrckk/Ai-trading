@@ -24,7 +24,14 @@ class _Member:
 class EnsembleDirectionModel:
     classes = np.array([-1, 0, 1], dtype=int)
 
-    def __init__(self, random_state: int = 42) -> None:
+    def __init__(
+        self,
+        random_state: int = 42,
+        feature_names: tuple[str, ...] | list[str] | None = None,
+    ) -> None:
+        self.feature_names = tuple(feature_names or FEATURES)
+        if not self.feature_names:
+            raise ValueError("feature_names must not be empty")
         self.members = [
             _Member(
                 "logistic",
@@ -69,7 +76,7 @@ class EnsembleDirectionModel:
         self._fitted = False
 
     def fit(self, x: pd.DataFrame, y: pd.Series) -> None:
-        x2 = x.loc[:, FEATURES].dropna()
+        x2 = x.loc[:, self.feature_names].dropna()
         y2 = y.reindex(x2.index).dropna().astype(int)
         x2 = x2.loc[y2.index]
         if len(x2) < 100:
@@ -100,7 +107,7 @@ class EnsembleDirectionModel:
         if not self._fitted:
             raise RuntimeError("Ensemble is not trained")
 
-        x = pd.DataFrame([row.loc[FEATURES].astype(float).to_dict()])
+        x = pd.DataFrame([row.loc[list(self.feature_names)].astype(float).to_dict()])
         weights = self._regime_weights(regime)
         aggregate = {-1: 0.0, 0: 0.0, 1: 0.0}
 
