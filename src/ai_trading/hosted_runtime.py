@@ -23,6 +23,7 @@ class HostedPaperSettings:
     period: str = "1y"
     interval: str = "1d"
     poll_seconds: float = 60.0
+    shadow_challenger: bool = False
 
     @property
     def runtime_key(self) -> str:
@@ -49,6 +50,15 @@ class HostedPaperSettings:
         period = os.getenv("AI_TRADING_HOSTED_PERIOD", "1y").strip() or "1y"
         interval = os.getenv("AI_TRADING_HOSTED_INTERVAL", "1d").strip() or "1d"
         poll_seconds = float(os.getenv("AI_TRADING_HOSTED_POLL_SECONDS", "60"))
+        shadow_challenger = os.getenv(
+            "AI_TRADING_SHADOW_CHALLENGER",
+            "0",
+        ).strip().lower() in {
+            "1",
+            "true",
+            "yes",
+            "on",
+        }
         if poll_seconds < 0:
             raise ValueError("AI_TRADING_HOSTED_POLL_SECONDS must be >= 0")
         return cls(
@@ -58,6 +68,7 @@ class HostedPaperSettings:
             period=period,
             interval=interval,
             poll_seconds=poll_seconds,
+            shadow_challenger=shadow_challenger,
         )
 
 
