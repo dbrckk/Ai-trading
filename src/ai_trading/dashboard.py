@@ -25,6 +25,7 @@ from .readiness import ReadinessCheck, ReadinessPolicy, ReadinessReport, evaluat
 from .runtime_state import RuntimeStateStore
 from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore, runtime_status_snapshot
 from .scheduler_endpoint import handle_scheduler_request
+from .shadow_quality import evaluate_shadow_quality
 from .trade_journal import TradeJournal
 
 _STORAGE_ERROR_STATUS: dict[str, object] = {
@@ -166,6 +167,13 @@ def render_dashboard(
                 if len(burnin_snapshots) >= 2
                 else None
             )
+            load_shadow = getattr(persistence, "list_shadow_observations", None)
+            shadow_observations = (
+                tuple(load_shadow(runtime_key))
+                if callable(load_shadow)
+                else ()
+            )
+            shadow_quality = evaluate_shadow_quality(shadow_observations)
         except Exception:
             recent = ()
             state = None
@@ -174,6 +182,7 @@ def render_dashboard(
             burnin_snapshots = ()
             regimes = ()
             burnin_metrics = None
+            shadow_quality = evaluate_shadow_quality(())
             performance_scope = "unavailable"
             storage_error = True
     else:
@@ -186,6 +195,7 @@ def render_dashboard(
         burnin_snapshots = ()
         regimes = ()
         burnin_metrics = None
+        shadow_quality = evaluate_shadow_quality(())
         performance_scope = "latest 200 trade events"
 
     trades = reversed(recent)
@@ -409,6 +419,42 @@ def render_dashboard(
     sharpe_display = "-" if burnin_metrics is None else f"{burnin_metrics.sharpe:.2f}"
     sortino_display = "-" if burnin_metrics is None else f"{burnin_metrics.sortino:.2f}"
     readiness_panel = _readiness_panel(readiness_report)
+    shadow_observations_display = str(shadow_quality.observations)
+    shadow_active_accuracy = (
+        "-"
+        if shadow_quality.active.accuracy is None
+        else f"{shadow_quality.active.accuracy:.1%}"
+    )
+    shadow_challenger_accuracy = (
+        "-"
+        if shadow_quality.challenger.accuracy is None
+        else f"{shadow_quality.challenger.accuracy:.1%}"
+    )
+    shadow_agreement = (
+        "-"
+        if shadow_quality.agreement_rate is None
+        else f"{shadow_quality.agreement_rate:.1%}"
+    )
+    shadow_active_brier = (
+        "-"
+        if shadow_quality.active.brier is None
+        else f"{shadow_quality.active.brier:.4f}"
+    )
+    shadow_challenger_brier = (
+        "-"
+        if shadow_quality.challenger.brier is None
+        else f"{shadow_quality.challenger.brier:.4f}"
+    )
+    shadow_accuracy_delta = (
+        "-"
+        if shadow_quality.accuracy_delta is None
+        else f"{shadow_quality.accuracy_delta:+.1%}"
+    )
+    shadow_brier_improvement = (
+        "-"
+        if shadow_quality.brier_improvement is None
+        else f"{shadow_quality.brier_improvement:+.4f}"
+    )
     status_class = (
         "status-ok"
         if engine_status == "RUNNING" and not operational_alerts
@@ -535,6 +581,7 @@ tbody tr:hover{{background:rgba(113,167,255,.045)}}
 <a href="#performance">Performance</a>
 <a href="#burnin">Burn-in</a>
 <a href="#evidence">Evidence</a>
+<a href="#shadow">Shadow</a>
 <a href="#trades">Trades</a>
 </div>
 </nav>
@@ -632,6 +679,21 @@ tbody tr:hover{{background:rgba(113,167,255,.045)}}
 {readiness_panel}
 <small class="runtime-reason">Observed regimes: {html.escape(regime_names_display)}.</small>
 <small class="runtime-reason">Each readiness criterion shows its current value, required threshold and PASS/FAIL result. Sharpe and Sortino are annualized from the actual elapsed time covered by durable burn-in timestamps.</small>
+</section>
+
+<section class="section" id="shadow">
+<div class="section-head"><h2>Shadow challenger</h2><small>observation only · no execution authority</small></div>
+<div class="metrics">
+<div class="metric primary"><small>Observations</small><strong>{shadow_observations_display}</strong></div>
+<div class="metric"><small>River accuracy</small><strong>{shadow_active_accuracy}</strong></div>
+<div class="metric"><small>Ensemble accuracy</small><strong>{shadow_challenger_accuracy}</strong></div>
+<div class="metric"><small>Agreement</small><strong>{shadow_agreement}</strong></div>
+<div class="metric"><small>River Brier</small><strong>{shadow_active_brier}</strong></div>
+<div class="metric"><small>Ensemble Brier</small><strong>{shadow_challenger_brier}</strong></div>
+<div class="metric"><small>Accuracy delta</small><strong>{shadow_accuracy_delta}</strong></div>
+<div class="metric"><small>Brier improvement</small><strong>{shadow_brier_improvement}</strong></div>
+</div>
+<small class="runtime-reason">Positive accuracy delta means the shadow ensemble has higher observed classification accuracy. Positive Brier improvement means lower challenger probability error. These are evidence metrics only; they do not promote a model or alter paper orders.</small>
 </section>
 
 <section class="section" id="trades">
