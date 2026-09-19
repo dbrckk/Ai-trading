@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 
 from .operational_overview import build_operational_overview
@@ -83,27 +84,41 @@ def run_multi_market_paper_cycle(
     last_processed: str | None = None
     failures: list[tuple[str, str]] = []
 
-    for market in markets:
-        try:
-            result = run_production_paper_cycle(
-                ProductionPaperCycleSettings(
-                    symbol=market.symbol,
-                    period=period,
-                    interval=interval,
-                    max_catchup_bars=max_catchup_bars,
-                    poll_seconds=poll_seconds,
-                    shadow_challenger_enabled=shadow_challenger_enabled,
-                ),
-                persistence=backend,
-            )
-        except PaperCycleServiceError as exc:
-            failures.append((market.symbol, exc.code))
-            continue
+    def run_market(market: MarketSpec):
+        return run_production_paper_cycle(
+            ProductionPaperCycleSettings(
+                symbol=market.symbol,
+                period=period,
+                interval=interval,
+                max_catchup_bars=max_catchup_bars,
+                poll_seconds=poll_seconds,
+                shadow_challenger_enabled=shadow_challenger_enabled,
+            ),
+            persistence=backend,
+        )
 
-        processed += result.processed
-        processed_bars += result.processed_bars
-        remaining_backlog = remaining_backlog or result.remaining_backlog
-        last_processed = result.last_processed or last_processed
+    with ThreadPoolExecutor(max_workers=min(4, len(markets))) as executor:
+        futures = {
+            executor.submit(run_market, market): market
+            for market in markets
+        }
+        for future in as_completed(futures):
+            market = futures[future]
+            try:
+                result = future.result()
+            except PaperCycleServiceError as exc:
+                failures.append((market.symbol, exc.code))
+                continue
+
+            processed += result.processed
+            processed_bars += result.processed_bars
+            remaining_backlog = remaining_backlog or result.remaining_backlog
+            if result.last_processed is not None:
+                last_processed = (
+                    result.last_processed
+                    if last_processed is None
+                    else max(last_processed, result.last_processed)
+                )
 
     if len(failures) == len(markets):
         failure_codes = {code for _, code in failures}
@@ -156,6 +171,18 @@ def build_multi_market_overview(
                 runtime_key,
                 _NORMALIZED_RUNTIME_CASH,
             )
+            status = persistence.load_runtime_status(runtime_key)
+            market_signal = None
+            market_confidence = None
+            market_reason = None
+            if status is not None:
+                market_signal = (
+                    {1: "LONG", -1: "SHORT", 0: "FLAT"}.get(status.side)
+                    if status.processed
+                    else None
+                )
+                market_confidence = status.confidence if status.processed else None
+                market_reason = status.reason
             healthy = bool(overview.get("storage_healthy"))
             if healthy:
                 healthy_markets += 1
@@ -170,6 +197,9 @@ def build_multi_market_overview(
                     "pnl": sleeve_equity - allocated_cash,
                     "normalized_equity": normalized_equity,
                     "runtime_key": runtime_key,
+                    "signal": market_signal,
+                    "confidence": market_confidence,
+                    "reason": market_reason,
                     "overview": overview,
                 }
             )

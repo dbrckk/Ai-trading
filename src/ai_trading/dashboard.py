@@ -453,6 +453,11 @@ def render_dashboard(
             processed = overview.get("processed_bars")
             observations = shadow.get("observations", 0)
             review = "ELIGIBLE" if gate.get("eligible_for_review") else "COLLECTING"
+            signal = item.get("signal") or "-"
+            market_confidence = item.get("confidence")
+            confidence_display = (
+                "-" if market_confidence is None else f"{float(market_confidence):.1%}"
+            )
             cards.append(
                 '<div class="market-card">'
                 f'<div class="market-card-head"><strong>{html.escape(str(item["label"]))}</strong>'
@@ -461,6 +466,8 @@ def render_dashboard(
                 '<div class="market-grid">'
                 f'<div><small>Equity</small><strong>{_display_money(sleeve_equity)}</strong></div>'
                 f'<div><small>PnL</small><strong>{_display_money(sleeve_pnl)}</strong></div>'
+                f'<div><small>Signal</small><strong>{html.escape(str(signal))}</strong></div>'
+                f'<div><small>Confidence</small><strong>{confidence_display}</strong></div>'
                 f'<div><small>Bars</small><strong>{"-" if processed is None else processed}</strong></div>'
                 f'<div><small>Shadow</small><strong>{observations}</strong></div>'
                 f'<div><small>Promotion gate</small><strong>{review}</strong></div>'
