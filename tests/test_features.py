@@ -1,7 +1,13 @@
 import numpy as np
 import pandas as pd
 
-from ai_trading.features import FEATURES, make_features, make_labels
+from ai_trading.features import (
+    CHALLENGER_FEATURES,
+    FEATURES,
+    make_challenger_features,
+    make_features,
+    make_labels,
+)
 
 
 def sample_df(n: int = 100) -> pd.DataFrame:
@@ -28,3 +34,16 @@ def test_features_have_expected_columns() -> None:
 def test_labels_only_three_classes() -> None:
     y = make_labels(sample_df(), return_threshold=0.002).dropna().astype(int)
     assert set(y.unique()).issubset({-1, 0, 1})
+
+
+
+def test_challenger_features_extend_production_features_without_replacing_them() -> None:
+    base = make_features(sample_df())
+    challenger = make_challenger_features(sample_df())
+
+    assert list(base.columns) == FEATURES
+    assert list(challenger.columns) == CHALLENGER_FEATURES
+    assert CHALLENGER_FEATURES[: len(FEATURES)] == FEATURES
+    assert challenger.loc[:, FEATURES].equals(base)
+    assert challenger.dropna().shape[0] > 0
+    assert challenger["rsi_14"].dropna().between(0.0, 1.0).all()
