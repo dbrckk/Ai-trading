@@ -195,6 +195,13 @@ def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
     assert "Confidence" in page
     assert "LONG" in page
     assert "72.0%" in page
+    assert 'class="market-card gold"' in page
+    assert 'class="market-card dax"' in page
+    assert 'class="market-card btc"' in page
+    assert "confidence-meter" in page
+    assert "Challenger evidence" in page
+    assert "portfolio-ribbon" in page
+    assert "PAPER ONLY" in page
 
 
 
