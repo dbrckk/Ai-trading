@@ -19,6 +19,10 @@ def paper_cycle(
     period: str = typer.Option("5d", help="History period"),
     interval: str = typer.Option("5m", help="Bar interval"),
     max_catchup_bars: int = typer.Option(DEFAULT_MAX_CATCHUP_BARS, min=1),
+    shadow_challenger: bool = typer.Option(
+        False,
+        "--shadow-challenger/--no-shadow-challenger",
+    ),
 ) -> None:
     settings = ProductionPaperCycleSettings(
         symbol=symbol,
@@ -26,6 +30,7 @@ def paper_cycle(
         interval=interval,
         max_catchup_bars=max_catchup_bars,
         poll_seconds=PAPER_CYCLE_POLL_SECONDS,
+        shadow_challenger_enabled=shadow_challenger,
     )
     try:
         result = run_production_paper_cycle(settings)
