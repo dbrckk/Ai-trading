@@ -7,7 +7,7 @@ def test_paper_cycle_workflow_structure() -> None:
     text = path.read_text(encoding="utf-8")
 
     required = (
-        'cron: "2/5 * * * *"',
+        'cron: "7-57/5 * * * *"',
         "timeout-minutes: 15",
         "workflow_dispatch:",
         "group: paper-cycle-production",
