@@ -24,15 +24,10 @@ class HostedPaperSettings:
     interval: str = "1d"
     poll_seconds: float = 60.0
     shadow_challenger: bool = False
-    symbols: tuple[str, ...] = ()
 
     @property
     def runtime_key(self) -> str:
         return build_runtime_key(self.symbol, self.interval)
-
-    @property
-    def market_symbols(self) -> tuple[str, ...]:
-        return self.symbols or (self.symbol,)
 
     @classmethod
     def from_env(cls) -> HostedPaperSettings:
@@ -52,14 +47,6 @@ class HostedPaperSettings:
             "on",
         }
         symbol = os.getenv("AI_TRADING_HOSTED_SYMBOL", "GC=F").strip() or "GC=F"
-        raw_symbols = os.getenv("AI_TRADING_HOSTED_SYMBOLS", "").strip()
-        symbols = tuple(
-            dict.fromkeys(
-                value.strip()
-                for value in raw_symbols.split(",")
-                if value.strip()
-            )
-        )
         period = os.getenv("AI_TRADING_HOSTED_PERIOD", "1y").strip() or "1y"
         interval = os.getenv("AI_TRADING_HOSTED_INTERVAL", "1d").strip() or "1d"
         poll_seconds = float(os.getenv("AI_TRADING_HOSTED_POLL_SECONDS", "60"))
@@ -82,7 +69,6 @@ class HostedPaperSettings:
             interval=interval,
             poll_seconds=poll_seconds,
             shadow_challenger=shadow_challenger,
-            symbols=symbols,
         )
 
 
