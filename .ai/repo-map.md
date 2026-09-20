@@ -546,7 +546,9 @@ name: MTF Parameter Benchmark
 
 on:
   push:
-    branches: ["feat/mtf-parameter-benchmark"]
+    branches:
+      - "feat/mtf-parameter-benchmark"
+      - "feat/per-market-mtf-parameter-selection"
     paths:
       - "src/ai_trading/mtf_parameter_benchmark.py"
       - ".github/workflows/mtf-parameter-benchmark.yml"
@@ -558,7 +560,7 @@ permissions:
 jobs:
   benchmark:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -574,14 +576,28 @@ jobs:
           --period 1mo
           --interval 5m
           --folds 2
-          --test-window-bars 48
+          --test-window-bars 96
           --json-output artifacts/mtf_benchmark/results.json
           --markdown-output artifacts/mtf_benchmark/report.md
+      - name: Run BTC focused benchmark
+        run: >-
+          python -m ai_trading.mtf_parameter_benchmark
+          --profile btc-focused
+          --symbols "BTC-USD"
+          --period 1mo
+          --interval 5m
+          --folds 2
+          --test-window-bars 96
+          --json-output artifacts/mtf_benchmark/btc-results.json
+          --markdown-output artifacts/mtf_benchmark/btc-report.md
       - name: Print report
         if: always()
         run: |
           if [ -f artifacts/mtf_benchmark/report.md ]; then
             cat artifacts/mtf_benchmark/report.md
+          fi
+          if [ -f artifacts/mtf_benchmark/btc-report.md ]; then
+            cat artifacts/mtf_benchmark/btc-report.md
           fi
       - uses: actions/upload-artifact@v4
         if: always()
@@ -3779,6 +3795,9 @@ side = max(mapping, key=mapping.get)
 
 ## File: src/ai_trading/mtf_parameter_benchmark.py
 ````python
+_MIN_ACTIVE_PREDICTIONS = 20
+_MIN_ACTIVE_PRECISION = 0.50
+⋮----
 @dataclass(frozen=True)
 class MTFBenchmarkConfig
 ⋮----
@@ -3839,6 +3858,17 @@ def default_benchmark_grid() -> tuple[MTFBenchmarkConfig, ...]
     horizon and confidence while testing a lower threshold floor.
     """
 ⋮----
+def btc_focused_benchmark_grid() -> tuple[MTFBenchmarkConfig, ...]
+⋮----
+"""Focused search for BTC after the shared grid failed its directional gate."""
+⋮----
+"""Choose the strongest gate-passing configuration independently per market."""
+⋮----
+symbols = sorted(
+selections: dict[str, dict[str, object] | None] = {}
+⋮----
+candidates: list[tuple[MarketBenchmarkResult, MTFBenchmarkConfig]] = []
+⋮----
 def _macro_recall(predicted: pd.Series, realized: pd.Series) -> float
 ⋮----
 recalls: list[float] = []
@@ -3893,7 +3923,7 @@ active_predictions = int(active_mask.sum())
 active_precision = (
 macro_recall = _macro_recall(predicted, realized)
 selection_score = _selection_score(
-directional_gate_passed = active_predictions >= 10 and active_precision > 0.5
+directional_gate_passed = (
 ⋮----
 grid = tuple(configs or default_benchmark_grid())
 ⋮----
@@ -3910,6 +3940,7 @@ payload = benchmark_payload(results)
 json_target = Path(json_path)
 markdown_target = Path(markdown_path)
 ⋮----
+selections = market_selections(results)
 lines = [
 ⋮----
 def main() -> None
@@ -3921,6 +3952,7 @@ args = parser.parse_args()
 symbols = tuple(part.strip() for part in args.symbols.split(",") if part.strip())
 ⋮----
 markets = {
+configs = (
 results = run_parameter_benchmark(
 ````
 
@@ -9138,6 +9170,18 @@ markets = {"A": sample_market()}
 configs = (MTFBenchmarkConfig(3, 0.001, 0.25, 600, 0.56),)
 ⋮----
 payload = benchmark_payload(results)
+⋮----
+def test_btc_focused_grid_is_bounded_and_longer_horizon() -> None
+⋮----
+grid = btc_focused_benchmark_grid()
+⋮----
+def test_market_selections_choose_gate_passing_config_per_symbol() -> None
+⋮----
+selections = market_selections(results)
+⋮----
+def test_payload_exposes_per_market_selection() -> None
+⋮----
+configs = (MTFBenchmarkConfig(3, 0.0005, 0.25, 700, 0.50),)
 ````
 
 ## File: tests/test_mtf_shadow_challenger.py

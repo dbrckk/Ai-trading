@@ -42,19 +42,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T11:52:57Z
+Generated: 2026-09-20T15:02:26Z
 
 ### Git
 - Branch: `main`
-- Head: `6eb3b4dde99c`
-- Commit date: 2026-09-20T13:52:48+02:00
-- Commit: feat: refine MTF benchmark for confidence-gated directional edge (#63)
+- Head: `c98cf8375477`
+- Commit date: 2026-09-20T17:02:16+02:00
+- Commit: feat: select MTF parameters independently per market (#66)
 - Tracked files: 475
 
 ### Recently changed files
+- `.github/workflows/mtf-parameter-benchmark.yml`
 - `src/ai_trading/mtf_parameter_benchmark.py`
 - `tests/test_mtf_parameter_benchmark.py`
-- `.github/workflows/mtf-parameter-benchmark.yml`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/mtf_shadow_quality.py`
 - `src/ai_trading/operational_overview.py`
@@ -67,7 +67,6 @@ Generated: 2026-09-20T11:52:57Z
 - `src/ai_trading/runtime_status.py`
 - `tests/test_paper_cycle_service.py`
 - `tests/test_runtime_status.py`
-- `tests/test_paper_cycle.py`
 
 ### Project signals
 - `pyproject.toml`

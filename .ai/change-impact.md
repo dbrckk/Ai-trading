@@ -1,13 +1,15 @@
 # Change impact
 
-Base: bb92f320dcd0e851f1e189fbcd2ef92b181b1436
-Head: 6eb3b4dde99c0ea9010cfdc8f896d4f191de91d5
+Base: e46a479d8a81aecd7a13257bfa7a74b4ca8004a3
+Head: c98cf8375477c89918d1dd2c38b31ec41b920d0c
 
 ## Changed files
+- M .github/workflows/mtf-parameter-benchmark.yml
 - M src/ai_trading/mtf_parameter_benchmark.py
 - M tests/test_mtf_parameter_benchmark.py
 
 ## Affected areas
+- .github
 - src
 - tests
 
