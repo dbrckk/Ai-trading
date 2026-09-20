@@ -10,6 +10,7 @@ import ai_trading.runtime as runtime_module
 from ai_trading.config import RiskConfig
 from ai_trading.file_persistence import FilePaperPersistence
 from ai_trading.model import Prediction
+from ai_trading.mtf_shadow_challenger import MultiTimeframeShadowResult
 from ai_trading.paper_cycle import PaperCycleRunner
 from ai_trading.persistence import build_runtime_key
 from ai_trading.runtime import PaperAutonomousRuntime, RuntimeStepResult
@@ -381,3 +382,83 @@ def test_shadow_challenger_is_recorded_without_controlling_execution(
     assert payload["shadow_challenger"]["prediction"]["side"] == -1
     assert payload["shadow_challenger"]["execution_time"] == str(target)
     assert runtime.runtime_key == build_runtime_key("GC=F", "5m")
+
+
+
+def test_mtf_shadow_is_audit_only_and_cannot_control_execution(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    backend = FilePaperPersistence(tmp_path)
+    df = sample_market()
+    runtime, eligible = build_runtime(tmp_path, backend, df)
+    current_target = eligible[-1]
+    mtf_target = eligible[-3]
+    mtf_signal = df.index[int(df.index.get_loc(mtf_target)) - 1]
+
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "evaluate_shadow_challenger",
+        lambda *args, **kwargs: None,
+    )
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "select_observable_execution_target",
+        lambda *args, **kwargs: mtf_target,
+    )
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "evaluate_multi_timeframe_shadow",
+        lambda *args, **kwargs: MultiTimeframeShadowResult(
+            prediction=Prediction(
+                side=-1,
+                confidence=0.97,
+                probabilities={-1: 0.97, 0: 0.02, 1: 0.01},
+            ),
+            regime="bear_normal_vol",
+            signal_time=str(mtf_signal),
+            execution_time=str(mtf_target),
+            training_rows=500,
+            training_end=str(df.index[-20]),
+            realized_label=-1,
+            horizon_bars=3,
+            horizon_minutes=15,
+            timeframes=("5m", "15m", "1h", "4h"),
+            threshold_at_signal=0.0012,
+            minimum_threshold=0.001,
+            atr_multiplier=0.25,
+            feature_count=29,
+        ),
+    )
+    monkeypatch.setattr(
+        runtime_module.RiverDirectionModel,
+        "predict_one",
+        lambda self, row: Prediction(
+            side=1,
+            confidence=0.90,
+            probabilities={-1: 0.05, 0: 0.05, 1: 0.90},
+        ),
+    )
+
+    runner = build_runner(tmp_path, backend, df)
+    result = runner.run_once(
+        symbol="GC=F",
+        period="5d",
+        interval="5m",
+        max_catchup_bars=12,
+        shadow_challenger_enabled=True,
+    )
+
+    audit_rows = [
+        json.loads(line)
+        for line in backend.audit_log.path.read_text(encoding="utf-8").splitlines()
+    ]
+    payload = audit_rows[-1]["payload"]
+
+    assert result.processed == 1
+    assert payload["execution_time"] == str(current_target)
+    assert payload["prediction"]["side"] == 1
+    assert payload["risk_decision"]["side"] == 1
+    assert payload["mtf_shadow_challenger"]["prediction"]["side"] == -1
+    assert payload["mtf_shadow_challenger"]["execution_time"] == str(mtf_target)
+    assert payload["mtf_shadow_challenger"]["horizon_minutes"] == 15
