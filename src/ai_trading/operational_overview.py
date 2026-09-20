@@ -10,6 +10,8 @@ from .shadow_promotion_gate import (
     evaluate_shadow_promotion_gate,
 )
 
+_MTF_MIN_DIRECTIONAL_OBSERVATIONS = 100
+
 
 def _empty_model_snapshot() -> dict[str, object]:
     return {
@@ -45,6 +47,9 @@ def _empty_mtf_shadow_quality_snapshot() -> dict[str, object]:
         "available": False,
         "status": "collecting",
         "observations": 0,
+        "directional_observations": 0,
+        "directional_rate": 0.0,
+        "label_distribution": {"long": 0, "flat": 0, "short": 0},
         "score_delta": None,
         "river": None,
         "challenger": None,
@@ -58,8 +63,13 @@ def _empty_mtf_shadow_quality_snapshot() -> dict[str, object]:
         "promotion_gate": {
             "eligible_for_review": False,
             "min_observations": policy.min_observations,
+            "min_directional_observations": _MTF_MIN_DIRECTIONAL_OBSERVATIONS,
             "reasons": [
-                f"need at least {policy.min_observations} realized MTF observations"
+                f"need at least {policy.min_observations} realized MTF observations",
+                (
+                    "need at least "
+                    f"{_MTF_MIN_DIRECTIONAL_OBSERVATIONS} directional MTF observations"
+                ),
             ],
         },
     }
@@ -114,10 +124,26 @@ def _mtf_shadow_quality_snapshot(comparison) -> dict[str, object]:
 
     policy = ShadowPromotionPolicy(min_observations=500)
     gate = evaluate_shadow_promotion_gate(comparison, policy)
+    directional_observations = int(comparison.directional_observations)
+    directional_rate = float(comparison.directional_rate)
+    gate_reasons = list(gate.reasons)
+    if directional_observations < _MTF_MIN_DIRECTIONAL_OBSERVATIONS:
+        gate_reasons.append(
+            "need at least "
+            f"{_MTF_MIN_DIRECTIONAL_OBSERVATIONS} directional MTF observations"
+        )
+    eligible_for_review = gate.eligible_for_review and not gate_reasons
     return {
         "available": available,
         "status": "comparable" if available else "collecting",
         "observations": observations,
+        "directional_observations": directional_observations,
+        "directional_rate": directional_rate,
+        "label_distribution": {
+            "long": int(comparison.long_labels),
+            "flat": int(comparison.flat_labels),
+            "short": int(comparison.short_labels),
+        },
         "score_delta": float(comparison.score_delta) if available else None,
         "river": quality_payload(comparison.river) if observations else None,
         "challenger": quality_payload(comparison.challenger) if observations else None,
@@ -129,9 +155,10 @@ def _mtf_shadow_quality_snapshot(comparison) -> dict[str, object]:
             "atr_multiplier": 0.25,
         },
         "promotion_gate": {
-            "eligible_for_review": gate.eligible_for_review,
+            "eligible_for_review": eligible_for_review,
             "min_observations": policy.min_observations,
-            "reasons": list(gate.reasons),
+            "min_directional_observations": _MTF_MIN_DIRECTIONAL_OBSERVATIONS,
+            "reasons": gate_reasons,
             "score_delta": gate.score_delta,
             "accuracy_delta": gate.accuracy_delta,
             "brier_delta": gate.brier_delta,
