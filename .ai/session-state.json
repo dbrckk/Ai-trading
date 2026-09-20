@@ -2,9 +2,9 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "feat/validated-per-market-mtf-shadow",
-  "pull_request": 67,
-  "focus": "Activate benchmark-validated Gold/DAX 45-minute MTF candidates as versioned audit-only shadows; keep BTC unvalidated.",
+  "active_branch": "feat/validated-btc-mtf-shadow",
+  "pull_request": null,
+  "focus": "Activate the benchmark-validated BTC 90-minute MTF candidate as a versioned audit-only shadow alongside Gold/DAX.",
   "production_evidence": {
     "main_head": "3e40c11cd9cd923232b70f9b63dba71cee355f91",
     "render_live_commit": "3e40c11cd9cd923232b70f9b63dba71cee355f91",
@@ -49,7 +49,7 @@
     "PR #52 added volume-less market support and restored the DAX runtime to RUNNING.",
     "PR #54-#61 added premium dashboard, scroll-safe refresh, true multi-timeframe shadow research, bounded compute, 15-minute cadence, latency telemetry, and directional evidence gates.",
     "PR #63 refined MTF benchmark scoring around confidence-gated directional evidence.",
-    "PR #66 selected validated parameters independently per market: Gold 45m/5bp/ATR0.25/train1000/conf56, DAX 45m/5bp/ATR0.25/train1000/conf60; BTC remains unvalidated."
+    "PR #68 fixed MTF benchmark fairness with a common seed; corrected focused benchmark validated BTC 90m/3bp/ATR0.15/train1000/conf60 at 56.6% active precision across 83 active predictions."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -57,9 +57,8 @@
     "github_schedule_fallback_enabled": true
   },
   "next_actions": [
-    "Deploy PR #67 after green CI and verify the versioned Gold/DAX candidate metadata in production.",
-    "Collect at least 500 realized MTF observations and 100 directional observations for each validated Gold/DAX candidate before review eligibility.",
-    "Keep BTC MTF disabled until a focused leakage-safe benchmark produces a directional-gate-passing candidate.",
+    "Deploy the validated BTC 90-minute candidate after green CI and verify versioned audit metadata in production.",
+    "Collect at least 500 realized MTF observations and 100 directional observations independently for Gold, DAX, and BTC candidates before review eligibility.",
     "Keep River authoritative for all PAPER risk and execution."
   ]
 }
