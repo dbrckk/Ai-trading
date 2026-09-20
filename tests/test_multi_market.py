@@ -104,11 +104,11 @@ def test_configured_default_bundle_uses_34_33_33(monkeypatch) -> None:
 
 
 def test_multi_market_cycle_isolates_one_market_failure(monkeypatch) -> None:
-    calls: list[str] = []
+    calls: list[tuple[str, str]] = []
 
     def fake_cycle(settings, *, persistence=None, **kwargs):
         del persistence, kwargs
-        calls.append(settings.symbol)
+        calls.append((settings.symbol, settings.mtf_period))
         if settings.symbol == "^GDAXI":
             raise PaperCycleServiceError(
                 code="execution_failed",
@@ -138,7 +138,9 @@ def test_multi_market_cycle_isolates_one_market_failure(monkeypatch) -> None:
         persistence=object(),
     )
 
-    assert sorted(calls) == sorted(["GC=F", "^GDAXI", "BTC-USD"])
+    assert sorted(calls) == sorted(
+        [("GC=F", "1mo"), ("^GDAXI", "1mo"), ("BTC-USD", "1mo")]
+    )
     assert result.processed == 4
     assert "isolated failures=1" in result.reason
 
