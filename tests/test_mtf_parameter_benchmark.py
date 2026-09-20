@@ -112,3 +112,5 @@ def test_benchmark_payload_is_reproducible_and_explicit() -> None:
     assert payload["ranking"][0]["rank"] == 1
     assert payload["ranking"][0]["config"]["horizon_bars"] == 3
     assert payload["ranking"][0]["config"]["min_confidence"] == 0.56
+    assert payload["market_leaders"]["A"]["config_name"] == configs[0].name
+    assert "directional_gate_passed" in payload["market_leaders"]["A"]
