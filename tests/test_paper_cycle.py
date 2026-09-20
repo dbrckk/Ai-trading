@@ -391,7 +391,7 @@ def test_mtf_shadow_is_audit_only_and_cannot_control_execution(
 ) -> None:
     backend = FilePaperPersistence(tmp_path)
     df = sample_market()
-    runtime, eligible = build_runtime(tmp_path, backend, df)
+    _runtime, eligible = build_runtime(tmp_path, backend, df)
     current_target = eligible[-1]
     mtf_target = eligible[-3]
     mtf_signal = df.index[int(df.index.get_loc(mtf_target)) - 1]
