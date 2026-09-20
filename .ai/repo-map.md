@@ -137,6 +137,7 @@ src/
     model.py
     mtf_parameter_benchmark.py
     mtf_shadow_challenger.py
+    mtf_shadow_config.py
     mtf_shadow_quality.py
     multi_market.py
     multi_timeframe_features.py
@@ -304,6 +305,7 @@ tests/
   test_model_quarantine.py
   test_mtf_parameter_benchmark.py
   test_mtf_shadow_challenger.py
+  test_mtf_shadow_config.py
   test_mtf_shadow_quality.py
   test_multi_market.py
   test_multi_period_promotion.py
@@ -2251,7 +2253,11 @@ sleeve_pnl = item.get("pnl")
 processed = overview.get("processed_bars")
 cycle_duration = item.get("cycle_duration_seconds")
 cycle_duration_display = (
-mtf_cycle_display = "YES" if item.get("mtf_evaluated") else "NO"
+mtf_candidate = mtf_shadow.get("candidate_config")
+mtf_horizon = mtf_shadow.get("horizon_minutes")
+mtf_candidate_name = (
+mtf_label = (
+mtf_cycle_display = (
 observations = shadow.get("observations", 0)
 mtf_observations = mtf_shadow.get("observations", 0)
 mtf_directional = mtf_shadow.get("directional_observations", 0)
@@ -3961,7 +3967,10 @@ results = run_parameter_benchmark(
 @dataclass(frozen=True)
 class MultiTimeframeShadowResult
 ⋮----
+config_name: str
 prediction: Prediction
+raw_side: int
+min_confidence: float
 regime: str
 signal_time: str
 execution_time: str
@@ -4026,7 +4035,36 @@ threshold_at_signal = threshold.get(signal_idx)
 model = EnsembleDirectionModel(
 ⋮----
 regime = detect_regime(signal_row)
-prediction = model.predict_one(signal_row, regime)
+raw_prediction = model.predict_one(signal_row, regime)
+effective_side = (
+prediction = Prediction(
+````
+
+## File: src/ai_trading/mtf_shadow_config.py
+````python
+@dataclass(frozen=True)
+class ValidatedMTFShadowConfig
+⋮----
+"""Benchmark-validated, research-only MTF shadow configuration."""
+⋮----
+symbol: str
+config_name: str
+horizon_bars: int
+minimum_threshold: float
+atr_multiplier: float
+max_train_rows: int
+min_confidence: float
+min_train_rows: int = 500
+feature_warmup_rows: int = 600
+⋮----
+@property
+    def horizon_minutes(self) -> int
+⋮----
+def as_dict(self) -> dict[str, object]
+⋮----
+_VALIDATED_CONFIGS: dict[str, ValidatedMTFShadowConfig] = {
+⋮----
+"""Return a benchmark-validated MTF config, or None when none passed."""
 ````
 
 ## File: src/ai_trading/mtf_shadow_quality.py
@@ -4812,9 +4850,19 @@ def _empty_shadow_quality_snapshot() -> dict[str, object]
 ⋮----
 policy = ShadowPromotionPolicy()
 ⋮----
-def _empty_mtf_shadow_quality_snapshot() -> dict[str, object]
-⋮----
 policy = ShadowPromotionPolicy(min_observations=500)
+⋮----
+reasons = ["no benchmark-validated MTF configuration for this market"]
+status = "unvalidated"
+candidate_config = None
+horizon_minutes = None
+label = None
+⋮----
+reasons = [
+status = "collecting"
+candidate_config = config.as_dict()
+horizon_minutes = config.horizon_minutes
+label = {
 ⋮----
 def _shadow_quality_snapshot(comparison) -> dict[str, object]
 ⋮----
@@ -4824,8 +4872,6 @@ available = observations >= 5
 def quality_payload(quality) -> dict[str, object]
 ⋮----
 gate = evaluate_shadow_promotion_gate(comparison, policy)
-⋮----
-def _mtf_shadow_quality_snapshot(comparison) -> dict[str, object]
 ⋮----
 directional_observations = int(comparison.directional_observations)
 directional_rate = float(comparison.directional_rate)
@@ -4849,6 +4895,10 @@ probability = bootstrap_positive_probability(
 ⋮----
 report = evaluate_readiness(
 ⋮----
+runtime_parts = runtime_key.split(":", 2)
+runtime_symbol = runtime_parts[1] if len(runtime_parts) > 1 else ""
+mtf_config = validated_mtf_shadow_config(runtime_symbol)
+⋮----
 persisted = persistence.load_runtime(runtime_key, starting_cash)
 status = persistence.load_runtime_status(runtime_key)
 burnin_loader = getattr(persistence, "list_burnin_snapshots", None)
@@ -4865,7 +4915,7 @@ shadow_loader = getattr(persistence, "load_shadow_quality", None)
 shadow_quality = _shadow_quality_snapshot(shadow_loader(runtime_key))
 except Exception:  # noqa: BLE001 - optional observability must not break runtime status
 ⋮----
-mtf_shadow_quality = _empty_mtf_shadow_quality_snapshot()
+mtf_shadow_quality = _empty_mtf_shadow_quality_snapshot(mtf_config)
 mtf_shadow_loader = getattr(persistence, "load_mtf_shadow_quality", None)
 ⋮----
 mtf_shadow_quality = _mtf_shadow_quality_snapshot(
@@ -5043,7 +5093,8 @@ except Exception:  # noqa: BLE001 - observer must never disrupt execution
 ⋮----
 shadow_target = None
 ⋮----
-mtf_candidate = next(
+mtf_config = validated_mtf_shadow_config(symbol)
+mtf_candidate = (
 ⋮----
 mtf_market = (
 mtf_current = {
@@ -8233,8 +8284,6 @@ def load_shadow_quality(self, runtime_key: str) -> ShadowQualityComparison
 river = ModelQuality(
 challenger = ModelQuality(
 ⋮----
-def load_mtf_shadow_quality(self, runtime_key: str) -> MultiTimeframeShadowQuality
-⋮----
 class ReadinessOverviewPersistence(OverviewPersistence)
 ⋮----
 class FailingOverviewPersistence
@@ -8305,6 +8354,16 @@ burnin = next(
 def test_overview_endpoint_includes_readiness_evidence() -> None
 ⋮----
 port = _start_overview_dashboard(ReadinessOverviewPersistence())
+⋮----
+class BtcOverviewPersistence(OverviewPersistence)
+⋮----
+def list_regimes(self, runtime_key: str)
+⋮----
+def load_mtf_shadow_quality(self, runtime_key: str, **kwargs)
+⋮----
+def test_btc_overview_marks_mtf_candidate_unvalidated() -> None
+⋮----
+mtf = payload["mtf_shadow_challenger"]
 ````
 
 ## File: tests/test_dashboard_persistence.py
@@ -9226,6 +9285,27 @@ signal_pos = int(market.index.get_loc(execution_idx)) - 1
 def test_mtf_shadow_rejects_invalid_feature_warmup() -> None
 ⋮----
 market = sample_market(800)
+⋮----
+def test_mtf_shadow_confidence_gate_turns_weak_direction_flat(monkeypatch) -> None
+⋮----
+class WeakDirectionalEnsemble
+⋮----
+def __init__(self, **kwargs) -> None
+⋮----
+def test_mtf_shadow_rejects_invalid_confidence_gate() -> None
+````
+
+## File: tests/test_mtf_shadow_config.py
+````python
+def test_gold_uses_validated_45m_candidate() -> None
+⋮----
+config = validated_mtf_shadow_config("GC=F")
+⋮----
+def test_dax_uses_validated_45m_candidate() -> None
+⋮----
+config = validated_mtf_shadow_config("^GDAXI")
+⋮----
+def test_btc_has_no_validated_mtf_candidate() -> None
 ````
 
 ## File: tests/test_mtf_shadow_quality.py
@@ -9241,6 +9321,10 @@ comparison = compare_mtf_shadow_audit_payloads(payloads)
 def test_mtf_quality_deduplicates_same_evaluated_execution() -> None
 ⋮----
 def test_mtf_quality_exposes_flat_only_evidence() -> None
+⋮----
+def test_mtf_quality_filters_evidence_by_candidate_version() -> None
+⋮----
+comparison = compare_mtf_shadow_audit_payloads(
 ````
 
 ## File: tests/test_multi_market.py
@@ -9694,6 +9778,13 @@ runner = PaperCycleRunner(
 def test_mtf_boundary_runs_only_on_quarter_hour() -> None
 ⋮----
 primary = sample_market(110)
+⋮----
+long_history = sample_market(1400)
+captured: dict[str, object] = {}
+⋮----
+mtf_calls = 0
+⋮----
+def fake_mtf(*args, **kwargs)
 ````
 
 ## File: tests/test_performance_metrics.py

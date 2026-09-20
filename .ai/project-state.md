@@ -45,31 +45,33 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T15:02:26Z
+Generated: 2026-09-20T15:16:54Z
 
 ### Git
 - Branch: `main`
-- Head: `c98cf8375477`
-- Commit date: 2026-09-20T17:02:16+02:00
-- Commit: feat: select MTF parameters independently per market (#66)
-- Tracked files: 475
+- Head: `fbb56bd11179`
+- Commit date: 2026-09-20T17:16:43+02:00
+- Commit: feat: run benchmark-validated Gold DAX MTF shadows (#67)
+- Tracked files: 477
 
 ### Recently changed files
+- `src/ai_trading/dashboard.py`
+- `src/ai_trading/file_persistence.py`
+- `src/ai_trading/mtf_shadow_challenger.py`
+- `src/ai_trading/mtf_shadow_config.py`
+- `src/ai_trading/mtf_shadow_quality.py`
+- `src/ai_trading/operational_overview.py`
+- `src/ai_trading/paper_cycle.py`
+- `src/ai_trading/postgres_persistence.py`
+- `tests/test_dashboard_overview.py`
+- `tests/test_mtf_shadow_challenger.py`
+- `tests/test_mtf_shadow_config.py`
+- `tests/test_mtf_shadow_quality.py`
+- `tests/test_multi_market.py`
+- `tests/test_paper_cycle.py`
 - `.github/workflows/mtf-parameter-benchmark.yml`
 - `src/ai_trading/mtf_parameter_benchmark.py`
 - `tests/test_mtf_parameter_benchmark.py`
-- `src/ai_trading/dashboard.py`
-- `src/ai_trading/mtf_shadow_quality.py`
-- `src/ai_trading/operational_overview.py`
-- `tests/test_dashboard_overview.py`
-- `tests/test_mtf_shadow_quality.py`
-- `tests/test_multi_market.py`
-- `src/ai_trading/multi_market.py`
-- `src/ai_trading/paper_cycle.py`
-- `src/ai_trading/paper_cycle_service.py`
-- `src/ai_trading/runtime_status.py`
-- `tests/test_paper_cycle_service.py`
-- `tests/test_runtime_status.py`
 
 ### Project signals
 - `pyproject.toml`

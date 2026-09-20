@@ -89,6 +89,7 @@
         "tests/test_model_quarantine.py",
         "tests/test_mtf_parameter_benchmark.py",
         "tests/test_mtf_shadow_challenger.py",
+        "tests/test_mtf_shadow_config.py",
         "tests/test_mtf_shadow_quality.py",
         "tests/test_multi_market.py",
         "tests/test_multi_period_promotion.py",
@@ -185,7 +186,7 @@
         "tests/test_watchdog_enforcer.py",
         "tests/test_worker_monitor.py"
       ],
-      "in_degree": 176,
+      "in_degree": 177,
       "out_degree": 0,
       "path": "src/ai_trading/__init__.py"
     },
@@ -784,6 +785,34 @@
     },
     {
       "dependencies": [
+        "src/ai_trading/data.py",
+        "src/ai_trading/features.py",
+        "src/ai_trading/mtf_shadow_challenger.py",
+        "src/ai_trading/mtf_shadow_config.py",
+        "src/ai_trading/persistence.py",
+        "src/ai_trading/runtime.py",
+        "src/ai_trading/shadow_challenger.py"
+      ],
+      "dependents": [
+        "src/ai_trading/command_app.py",
+        "src/ai_trading/dashboard.py",
+        "src/ai_trading/multi_market.py",
+        "src/ai_trading/paper_cycle_service.py",
+        "src/ai_trading/scheduler_endpoint.py",
+        "tests/test_multi_market.py",
+        "tests/test_paper_cycle.py",
+        "tests/test_paper_cycle_cli.py",
+        "tests/test_paper_cycle_materialized_fresh.py",
+        "tests/test_paper_cycle_postgres.py",
+        "tests/test_paper_cycle_service.py",
+        "tests/test_scheduler_endpoint.py"
+      ],
+      "in_degree": 12,
+      "out_degree": 7,
+      "path": "src/ai_trading/paper_cycle.py"
+    },
+    {
+      "dependencies": [
         "src/ai_trading/broker.py",
         "src/ai_trading/config.py",
         "src/ai_trading/ensemble.py",
@@ -835,33 +864,6 @@
       "in_degree": 18,
       "out_degree": 0,
       "path": "src/ai_trading/expert_pool.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/data.py",
-        "src/ai_trading/features.py",
-        "src/ai_trading/mtf_shadow_challenger.py",
-        "src/ai_trading/persistence.py",
-        "src/ai_trading/runtime.py",
-        "src/ai_trading/shadow_challenger.py"
-      ],
-      "dependents": [
-        "src/ai_trading/command_app.py",
-        "src/ai_trading/dashboard.py",
-        "src/ai_trading/multi_market.py",
-        "src/ai_trading/paper_cycle_service.py",
-        "src/ai_trading/scheduler_endpoint.py",
-        "tests/test_multi_market.py",
-        "tests/test_paper_cycle.py",
-        "tests/test_paper_cycle_cli.py",
-        "tests/test_paper_cycle_materialized_fresh.py",
-        "tests/test_paper_cycle_postgres.py",
-        "tests/test_paper_cycle_service.py",
-        "tests/test_scheduler_endpoint.py"
-      ],
-      "in_degree": 12,
-      "out_degree": 6,
-      "path": "src/ai_trading/paper_cycle.py"
     },
     {
       "dependencies": [
@@ -1426,6 +1428,26 @@
     },
     {
       "dependencies": [
+        "src/ai_trading/burnin.py",
+        "src/ai_trading/mtf_shadow_config.py",
+        "src/ai_trading/paper_readiness_evidence.py",
+        "src/ai_trading/persistence.py",
+        "src/ai_trading/readiness.py",
+        "src/ai_trading/runtime_status.py",
+        "src/ai_trading/shadow_promotion_gate.py",
+        "src/ai_trading/watchdog.py"
+      ],
+      "dependents": [
+        "src/ai_trading/dashboard.py",
+        "src/ai_trading/multi_market.py",
+        "tests/test_dashboard_overview.py"
+      ],
+      "in_degree": 3,
+      "out_degree": 8,
+      "path": "src/ai_trading/operational_overview.py"
+    },
+    {
+      "dependencies": [
         "src/ai_trading/governor_state_store.py",
         "src/ai_trading/qualification_guard.py",
         "src/ai_trading/qualification_store.py",
@@ -1538,25 +1560,6 @@
       "in_degree": 5,
       "out_degree": 5,
       "path": "src/ai_trading/control_plane.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/burnin.py",
-        "src/ai_trading/paper_readiness_evidence.py",
-        "src/ai_trading/persistence.py",
-        "src/ai_trading/readiness.py",
-        "src/ai_trading/runtime_status.py",
-        "src/ai_trading/shadow_promotion_gate.py",
-        "src/ai_trading/watchdog.py"
-      ],
-      "dependents": [
-        "src/ai_trading/dashboard.py",
-        "src/ai_trading/multi_market.py",
-        "tests/test_dashboard_overview.py"
-      ],
-      "in_degree": 3,
-      "out_degree": 7,
-      "path": "src/ai_trading/operational_overview.py"
     },
     {
       "dependencies": [
@@ -1792,8 +1795,8 @@
       "path": "src/ai_trading/mtf_shadow_challenger.py"
     }
   ],
-  "edge_count": 1853,
+  "edge_count": 1858,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 341,
+  "node_count": 343,
   "schema_version": 1
 }
