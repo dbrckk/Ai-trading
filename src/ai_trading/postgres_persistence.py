@@ -11,6 +11,10 @@ from psycopg.types.json import Jsonb
 
 from .audit import build_audit_record
 from .burnin import BurnInSnapshot
+from .mtf_shadow_quality import (
+    MultiTimeframeShadowQuality,
+    compare_mtf_shadow_audit_payloads,
+)
 from .performance_metrics import (
     TradePerformanceMetrics,
     performance_metrics_from_totals,
@@ -21,10 +25,6 @@ from .persistence import (
     PaperPersistence,
     PersistedRuntime,
     RuntimeStepCommit,
-)
-from .mtf_shadow_quality import (
-    MultiTimeframeShadowQuality,
-    compare_mtf_shadow_audit_payloads,
 )
 from .runtime_state import RuntimeState
 from .runtime_status import HostedRuntimeStatus
