@@ -26,6 +26,7 @@ class MTFBenchmarkConfig:
     minimum_threshold: float
     atr_multiplier: float
     max_train_rows: int
+    min_confidence: float
 
     @property
     def horizon_minutes(self) -> int:
@@ -39,6 +40,7 @@ class MTFBenchmarkConfig:
             f"-min{threshold_bps}bp"
             f"-atr{self.atr_multiplier:g}"
             f"-train{self.max_train_rows}"
+            f"-conf{round(self.min_confidence * 100)}"
         )
 
 
@@ -57,8 +59,11 @@ class MarketBenchmarkResult:
     brier: float
     directional_accuracy: float
     directional_edge: float
+    active_predictions: int
+    active_precision: float
     quality_score: float
     selection_score: float
+    directional_gate_passed: bool
 
 
 @dataclass(frozen=True)
@@ -70,19 +75,29 @@ class AggregateBenchmarkResult:
     aggregate_score: float
     total_observations: int
     total_directional_observations: int
+    markets_passing_directional_gate: int
 
 
 def default_benchmark_grid() -> tuple[MTFBenchmarkConfig, ...]:
+    """Refined grid after the first coarse 10m/15m/30m benchmark.
+
+    The first run showed 30m ahead of 15m/10m, while ATR multipliers were
+    largely masked by the 10bp threshold floor. This grid therefore expands
+    horizon and confidence while testing a lower threshold floor.
+    """
+
     return tuple(
         MTFBenchmarkConfig(
             horizon_bars=horizon,
-            minimum_threshold=0.001,
-            atr_multiplier=atr_multiplier,
+            minimum_threshold=minimum_threshold,
+            atr_multiplier=0.25,
             max_train_rows=max_train_rows,
+            min_confidence=min_confidence,
         )
-        for horizon in (2, 3, 6)
-        for atr_multiplier in (0.15, 0.25, 0.40)
+        for horizon in (3, 6, 9)
+        for minimum_threshold in (0.0005, 0.001)
         for max_train_rows in (1000, 2000)
+        for min_confidence in (0.56, 0.60, 0.65)
     )
 
 
@@ -101,16 +116,17 @@ def _selection_score(
     macro_recall: float,
     directional_accuracy: float,
     brier: float,
-    quality_score: float,
-    directional_observations: int,
+    active_precision: float,
+    active_predictions: int,
 ) -> float:
-    directional_evidence = min(1.0, directional_observations / 20.0)
+    active_edge = max(0.0, min(1.0, (active_precision - 0.5) * 2.0))
+    active_evidence = min(1.0, active_predictions / 20.0)
     return float(
-        0.30 * macro_recall
-        + 0.25 * directional_accuracy
-        + 0.20 * max(0.0, 1.0 - brier)
-        + 0.15 * quality_score
-        + 0.10 * directional_evidence
+        0.35 * active_edge
+        + 0.25 * macro_recall
+        + 0.15 * directional_accuracy
+        + 0.15 * max(0.0, 1.0 - brier)
+        + 0.10 * active_evidence
     )
 
 
@@ -205,7 +221,12 @@ def evaluate_market_config(
             label = labels.loc[signal_idx]
             if pd.isna(label):
                 continue
-            predicted_sides.append(int(prediction.side))
+            effective_side = (
+                int(prediction.side)
+                if float(prediction.confidence) >= config.min_confidence
+                else 0
+            )
+            predicted_sides.append(effective_side)
             confidences.append(float(prediction.confidence))
             realized_labels.append(int(label))
 
@@ -225,14 +246,22 @@ def evaluate_market_config(
         if directional_observations
         else 0.0
     )
+    active_mask = predicted != 0
+    active_predictions = int(active_mask.sum())
+    active_precision = (
+        float((predicted.loc[active_mask] == realized.loc[active_mask]).mean())
+        if active_predictions
+        else 0.0
+    )
     macro_recall = _macro_recall(predicted, realized)
     selection_score = _selection_score(
         macro_recall=macro_recall,
         directional_accuracy=directional_accuracy,
         brier=quality.brier,
-        quality_score=quality.score,
-        directional_observations=directional_observations,
+        active_precision=active_precision,
+        active_predictions=active_predictions,
     )
+    directional_gate_passed = active_predictions >= 10 and active_precision > 0.5
 
     return MarketBenchmarkResult(
         symbol=symbol,
@@ -248,8 +277,11 @@ def evaluate_market_config(
         brier=float(quality.brier),
         directional_accuracy=float(directional_accuracy),
         directional_edge=float(quality.directional_edge),
+        active_predictions=active_predictions,
+        active_precision=float(active_precision),
         quality_score=float(quality.score),
         selection_score=float(selection_score),
+        directional_gate_passed=directional_gate_passed,
     )
 
 
@@ -295,6 +327,9 @@ def run_parameter_benchmark(
                 total_directional_observations=sum(
                     row.directional_observations for row in market_results
                 ),
+                markets_passing_directional_gate=sum(
+                    1 for row in market_results if row.directional_gate_passed
+                ),
             )
         )
 
@@ -302,6 +337,7 @@ def run_parameter_benchmark(
         sorted(
             results,
             key=lambda result: (
+                result.markets_passing_directional_gate,
                 result.aggregate_score,
                 result.total_directional_observations,
             ),
@@ -318,9 +354,9 @@ def benchmark_payload(results: tuple[AggregateBenchmarkResult, ...]) -> dict[str
             "walk_forward": True,
             "purged": True,
             "selection_score": (
-                "30% macro recall + 25% directional accuracy + "
-                "20% calibration + 15% model quality + 10% directional evidence; "
-                "minus 10% cross-market score dispersion"
+                "35% positive active-direction edge + 25% macro recall + "
+                "15% realized directional accuracy + 15% calibration + "
+                "10% active-signal evidence; minus 10% cross-market dispersion"
             ),
         },
         "ranking": [
@@ -333,6 +369,9 @@ def benchmark_payload(results: tuple[AggregateBenchmarkResult, ...]) -> dict[str
                 "stability_penalty": result.stability_penalty,
                 "total_observations": result.total_observations,
                 "total_directional_observations": result.total_directional_observations,
+                "markets_passing_directional_gate": (
+                    result.markets_passing_directional_gate
+                ),
                 "markets": [asdict(row) for row in result.markets],
             }
             for rank, result in enumerate(results, start=1)
@@ -361,14 +400,15 @@ def write_benchmark_report(
         "",
         "Leakage-safe purged walk-forward comparison across markets.",
         "",
-        "| Rank | Config | Score | Directional / total |",
-        "| ---: | --- | ---: | ---: |",
+        "| Rank | Config | Score | Directional / total | Markets gate |",
+        "| ---: | --- | ---: | ---: | ---: |",
     ]
     for rank, result in enumerate(results, start=1):
         lines.append(
             f"| {rank} | {result.config.name} | "
             f"{result.aggregate_score:.4f} | "
-            f"{result.total_directional_observations} / {result.total_observations} |"
+            f"{result.total_directional_observations} / {result.total_observations} | "
+            f"{result.markets_passing_directional_gate} / {len(result.markets)} |"
         )
     lines.extend(["", "## Per-market detail", ""])
     for rank, result in enumerate(results, start=1):
@@ -376,13 +416,14 @@ def write_benchmark_report(
         lines.append("")
         lines.append(
             "| Market | Sel. score | Macro recall | Directional accuracy | "
-            "Brier | L/F/S |"
+            "Active precision | Active n | Brier | L/F/S |"
         )
-        lines.append("| --- | ---: | ---: | ---: | ---: | ---: |")
+        lines.append("| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |")
         for row in result.markets:
             lines.append(
                 f"| {row.symbol} | {row.selection_score:.4f} | "
                 f"{row.macro_recall:.3f} | {row.directional_accuracy:.3f} | "
+                f"{row.active_precision:.3f} | {row.active_predictions} | "
                 f"{row.brier:.3f} | "
                 f"{row.long_labels}/{row.flat_labels}/{row.short_labels} |"
             )
