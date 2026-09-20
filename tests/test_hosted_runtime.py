@@ -15,6 +15,7 @@ def test_hosted_paper_settings_disabled_by_default(monkeypatch) -> None:
     monkeypatch.delenv("AI_TRADING_HOSTED_INTERVAL", raising=False)
     monkeypatch.delenv("AI_TRADING_HOSTED_POLL_SECONDS", raising=False)
     monkeypatch.delenv("AI_TRADING_SHADOW_CHALLENGER", raising=False)
+    monkeypatch.delenv("AI_TRADING_MTF_PERIOD", raising=False)
 
     settings = HostedPaperSettings.from_env()
 
@@ -25,6 +26,7 @@ def test_hosted_paper_settings_disabled_by_default(monkeypatch) -> None:
     assert settings.interval == "1d"
     assert settings.poll_seconds == 60.0
     assert settings.shadow_challenger is False
+    assert settings.mtf_period == "1mo"
 
 
 def test_enabled_hosted_runtime_starts_daemon_worker(monkeypatch) -> None:
@@ -119,3 +121,12 @@ def test_hosted_settings_enable_shadow_challenger(monkeypatch) -> None:
     settings = HostedPaperSettings.from_env()
 
     assert settings.shadow_challenger is True
+
+
+
+def test_hosted_settings_read_separate_mtf_period(monkeypatch) -> None:
+    monkeypatch.setenv("AI_TRADING_MTF_PERIOD", "30d")
+
+    settings = HostedPaperSettings.from_env()
+
+    assert settings.mtf_period == "30d"
