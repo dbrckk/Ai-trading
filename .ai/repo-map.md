@@ -2179,6 +2179,9 @@ status_css = (
 sleeve_equity = item.get("equity")
 sleeve_pnl = item.get("pnl")
 processed = overview.get("processed_bars")
+cycle_duration = item.get("cycle_duration_seconds")
+cycle_duration_display = (
+mtf_cycle_display = "YES" if item.get("mtf_evaluated") else "NO"
 observations = shadow.get("observations", 0)
 mtf_observations = mtf_shadow.get("observations", 0)
 review = "ELIGIBLE" if gate.get("eligible_for_review") else "COLLECTING"
@@ -3874,6 +3877,7 @@ processed = 0
 remaining_backlog = False
 processed_bars = 0
 last_processed: str | None = None
+mtf_evaluated = False
 failures: list[tuple[str, str]] = []
 ⋮----
 def run_market(market: MarketSpec)
@@ -3885,6 +3889,7 @@ market = futures[future]
 result = future.result()
 ⋮----
 remaining_backlog = remaining_backlog or result.remaining_backlog
+mtf_evaluated = mtf_evaluated or result.mtf_evaluated
 ⋮----
 last_processed = (
 ⋮----
@@ -3908,10 +3913,14 @@ status = persistence.load_runtime_status(runtime_key)
 market_signal = None
 market_confidence = None
 market_reason = None
+cycle_duration_seconds = None
+market_mtf_evaluated = False
 ⋮----
 market_signal = (
 market_confidence = status.confidence if status.processed else None
 market_reason = status.reason
+cycle_duration_seconds = status.cycle_duration_seconds
+market_mtf_evaluated = status.mtf_evaluated
 healthy = bool(overview.get("storage_healthy"))
 ⋮----
 except Exception:  # noqa: BLE001 - isolate one market from the dashboard
@@ -4703,6 +4712,7 @@ def _default_runner_factory(persistence: PaperPersistence) -> PaperCycleRunner
 ⋮----
 runtime_key = build_runtime_key(settings.symbol, settings.interval)
 starting_cash = RiskConfig().starting_cash
+cycle_started = perf_counter()
 ⋮----
 backend = persistence
 ⋮----
@@ -4720,6 +4730,7 @@ result = runner.run_once(
 ⋮----
 state = backend.load_runtime(runtime_key, starting_cash).state
 equity = state.cash + state.units * state.last_price
+cycle_duration_seconds = perf_counter() - cycle_started
 ⋮----
 except Exception as exc:  # noqa: BLE001 - sanitize execution/provider failures
 ⋮----
@@ -4742,6 +4753,7 @@ remaining_backlog: bool
 last_processed: str | None
 processed_bars: int
 reason: str
+mtf_evaluated: bool = False
 ⋮----
 class PaperCycleRunner
 ⋮----
@@ -6443,6 +6455,8 @@ processed_bars: int = 0
 error: str | None = None
 poll_seconds: float = 60.0
 consecutive_cycle_errors: int = 0
+cycle_duration_seconds: float | None = None
+mtf_evaluated: bool = False
 ⋮----
 current_time = now or datetime.now(UTC)
 ⋮----
