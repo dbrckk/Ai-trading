@@ -79,7 +79,7 @@ class AggregateBenchmarkResult:
 
 
 def default_benchmark_grid() -> tuple[MTFBenchmarkConfig, ...]:
-    """Refined grid after the first coarse 10m/15m/30m benchmark.
+    """Research-only grid refined after the first coarse 10m/15m/30m benchmark.
 
     The first run showed 30m ahead of 15m/10m, while ATR multipliers were
     largely masked by the 10bp threshold floor. This grid therefore expands
