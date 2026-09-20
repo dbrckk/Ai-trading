@@ -207,8 +207,10 @@ def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
     assert "MTF 45m" in page
     assert "h45m-min5bp-atr0.25-train1000-conf56" in page
     assert "h45m-min5bp-atr0.25-train1000-conf60" in page
-    assert "UNVALIDATED" in page
-    assert "DISABLED" in page
+    assert "h90m-min3bp-atr0.15-train1000-conf60" in page
+    assert "MTF 90m" in page
+    assert "UNVALIDATED" not in page
+    assert "DISABLED" not in page
     assert "Directional MTF" in page
     assert "Directional MTF evidence" in page
     assert "5m/15m/1h/4h" in page
