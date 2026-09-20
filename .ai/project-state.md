@@ -18,8 +18,9 @@ Status: active
 - PR #52 made volume-less index data safe, unblocking the DAX runtime.
 - PRs #54-#61 upgraded the premium dashboard, fixed scroll-safe live refresh, introduced the leakage-safe 5m/15m/1h/4h MTF shadow, isolated its long history, bounded its compute window, reduced it to a 15-minute research cadence, added cycle-latency telemetry, and required directional evidence.
 - PR #63 refined the MTF benchmark toward confidence-gated directional evidence.
-- PR #66 added per-market leakage-safe parameter selection. Latest validated research result: Gold uses 45m / 5bp / ATR 0.25 / train 1000 / confidence 56%; DAX uses 45m / 5bp / ATR 0.25 / train 1000 / confidence 60%; BTC has no candidate that passes the directional gate, including the focused 45m/60m/90m search.
-- PR #67 prepares those validated Gold/DAX configurations as versioned audit-only MTF candidates, resets their quality evidence logically by config name, and leaves BTC MTF disabled until a benchmark candidate passes.
+- PR #66 added per-market leakage-safe parameter selection. Gold uses 45m / 5bp / ATR 0.25 / train 1000 / confidence 56%; DAX uses 45m / 5bp / ATR 0.25 / train 1000 / confidence 60%.
+- PR #67 prepared the validated Gold/DAX configurations as versioned audit-only MTF candidates and reset their quality evidence logically by config name.
+- PR #68 fixed benchmark fairness by using a common random seed for every parameter configuration. Gold/DAX selections were unchanged; the corrected BTC-focused benchmark validated 90m / 3bp / ATR 0.15 / train 1000 / confidence 60% with 56.6% active precision on 83 active predictions.
 
 ## Broken / blockers
 - Render request logs do not expose the scheduler POST evidence needed to directly prove three consecutive Cloudflare heartbeats, so issue #40 remains open.
@@ -27,9 +28,9 @@ Status: active
 - Repository-standards routing benchmark health is separate from the trading CI; trading CI is green.
 
 ## Current priority
-- Collect new versioned MTF evidence independently for the validated Gold and DAX 45-minute candidates.
-- Require at least 500 realized MTF observations and at least 100 directional observations before MTF review eligibility.
-- Keep BTC MTF unvalidated/disabled until a leakage-safe benchmark candidate passes the active-direction gate.
+- Collect new versioned MTF evidence independently for Gold 45m, DAX 45m, and BTC 90m validated candidates.
+- Require at least 500 realized MTF observations and at least 100 directional observations per candidate before review eligibility.
+- Keep all MTF candidates audit-only; River remains authoritative.
 - Keep River authoritative and every challenger strictly observational until sustained out-of-sample improvement is demonstrated.
 - Keep production paper-only and retain the GitHub scheduled fallback until issue #40 acceptance criteria are fully evidenced.
 
