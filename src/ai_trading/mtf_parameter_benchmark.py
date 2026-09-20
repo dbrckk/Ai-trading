@@ -28,6 +28,7 @@ class MTFBenchmarkScenario:
     minimum_threshold: float
     atr_multiplier: float
     max_train_rows: int = 2000
+    min_confidence: float = 0.56
 
 
 @dataclass(frozen=True)
@@ -67,16 +68,22 @@ class MTFBenchmarkSummary:
     objective: float
 
 
-DEFAULT_SCENARIOS = (
-    MTFBenchmarkScenario("10m_aggressive", 2, 0.0005, 0.15),
-    MTFBenchmarkScenario("10m_balanced", 2, 0.00075, 0.25),
-    MTFBenchmarkScenario("10m_conservative", 2, 0.0010, 0.40),
-    MTFBenchmarkScenario("15m_aggressive", 3, 0.0005, 0.15),
-    MTFBenchmarkScenario("15m_balanced", 3, 0.00075, 0.25),
-    MTFBenchmarkScenario("15m_conservative", 3, 0.0010, 0.40),
-    MTFBenchmarkScenario("30m_aggressive", 6, 0.0005, 0.15),
-    MTFBenchmarkScenario("30m_balanced", 6, 0.00075, 0.25),
-    MTFBenchmarkScenario("30m_conservative", 6, 0.0010, 0.40),
+DEFAULT_SCENARIOS = tuple(
+    MTFBenchmarkScenario(
+        f"{name}_c{int(confidence * 100)}",
+        horizon,
+        threshold,
+        atr,
+        2000,
+        confidence,
+    )
+    for name, horizon, threshold, atr in (
+        ("10m_balanced", 2, 0.00075, 0.25),
+        ("10m_conservative", 2, 0.0010, 0.40),
+        ("15m_balanced", 3, 0.00075, 0.25),
+        ("15m_conservative", 3, 0.0010, 0.40),
+    )
+    for confidence in (0.56, 0.60, 0.65, 0.70)
 )
 
 
@@ -150,6 +157,7 @@ def benchmark_scenario(
         raise ValueError(f"insufficient usable MTF history for {symbol}")
 
     predictions: list[int] = []
+    raw_predictions: list[int] = []
     confidences: list[float] = []
     realized: list[int] = []
     net_bps: list[float] = []
@@ -177,11 +185,13 @@ def benchmark_scenario(
             row = features.loc[signal_idx, MTF_CHALLENGER_FEATURES]
             prediction = model.predict_one(row, detect_regime(row))
             label = int(labels.loc[signal_idx])
-            predictions.append(int(prediction.side))
+            raw_side = int(prediction.side)
+            side = raw_side if prediction.confidence >= scenario.min_confidence else 0
+            predictions.append(side)
+            raw_predictions.append(raw_side)
             confidences.append(float(prediction.confidence))
             realized.append(label)
 
-            side = int(prediction.side)
             gross_bps = float(side * future_returns.loc[signal_idx] * 10_000.0)
             cost_bps = round_trip_cost_bps if side != 0 else 0.0
             net_bps.append(gross_bps - cost_bps)
@@ -191,9 +201,10 @@ def benchmark_scenario(
 
     index = pd.RangeIndex(len(predictions))
     pred_series = pd.Series(predictions, index=index, dtype="int64")
+    raw_pred_series = pd.Series(raw_predictions, index=index, dtype="int64")
     confidence_series = pd.Series(confidences, index=index, dtype="float64")
     label_series = pd.Series(realized, index=index, dtype="int64")
-    quality = evaluate_model_quality(pred_series, confidence_series, label_series)
+    quality = evaluate_model_quality(raw_pred_series, confidence_series, label_series)
 
     directional_mask = label_series != 0
     active_mask = pred_series != 0
