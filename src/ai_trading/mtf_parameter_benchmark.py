@@ -360,6 +360,7 @@ def run_parameter_benchmark(
     folds: int = 2,
     test_window_bars: int = 48,
     min_train_rows: int = 500,
+    random_state: int = 42,
 ) -> tuple[AggregateBenchmarkResult, ...]:
     grid = tuple(configs or default_benchmark_grid())
     if not markets:
@@ -368,7 +369,7 @@ def run_parameter_benchmark(
         raise ValueError("configs must not be empty")
 
     results: list[AggregateBenchmarkResult] = []
-    for config_index, config in enumerate(grid):
+    for config in grid:
         market_results = tuple(
             evaluate_market_config(
                 symbol,
@@ -377,7 +378,7 @@ def run_parameter_benchmark(
                 folds=folds,
                 test_window_bars=test_window_bars,
                 min_train_rows=min_train_rows,
-                random_state=42 + config_index * 100,
+                random_state=random_state,
             )
             for symbol, market in markets.items()
         )
@@ -421,6 +422,7 @@ def benchmark_payload(results: tuple[AggregateBenchmarkResult, ...]) -> dict[str
             "context_timeframes": ["5m", "15m", "1h", "4h"],
             "walk_forward": True,
             "purged": True,
+            "common_random_seed": True,
             "directional_gate": {
                 "min_active_predictions": _MIN_ACTIVE_PREDICTIONS,
                 "min_active_precision": _MIN_ACTIVE_PRECISION,
