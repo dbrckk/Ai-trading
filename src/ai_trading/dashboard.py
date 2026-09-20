@@ -460,6 +460,9 @@ def render_dashboard(
             mtf_cycle_display = "YES" if item.get("mtf_evaluated") else "NO"
             observations = shadow.get("observations", 0)
             mtf_observations = mtf_shadow.get("observations", 0)
+            mtf_directional = mtf_shadow.get("directional_observations", 0)
+            mtf_directional_rate = float(mtf_shadow.get("directional_rate", 0.0) or 0.0)
+            mtf_distribution = mtf_shadow.get("label_distribution", {})
             review = "ELIGIBLE" if gate.get("eligible_for_review") else "COLLECTING"
             mtf_review = (
                 "ELIGIBLE" if mtf_gate.get("eligible_for_review") else "MTF COLLECTING"
@@ -486,6 +489,10 @@ def render_dashboard(
             mtf_shadow_progress = min(
                 100.0,
                 float(mtf_observations) / 500.0 * 100.0,
+            )
+            mtf_directional_progress = min(
+                100.0,
+                float(mtf_directional) / 100.0 * 100.0,
             )
             market_tone = {
                 "GC=F": "gold",
@@ -523,6 +530,8 @@ def render_dashboard(
                 f'<div><small>MTF this cycle</small><strong>{mtf_cycle_display}</strong></div>'
                 f'<div><small>Shadow 5m</small><strong>{observations}</strong></div>'
                 f'<div><small>MTF 15m</small><strong>{mtf_observations}</strong></div>'
+                f'<div><small>Directional MTF</small><strong>{mtf_directional} · {mtf_directional_rate:.0%}</strong></div>'
+                f'<div><small>MTF labels</small><strong>L {mtf_distribution.get("long", 0)} · F {mtf_distribution.get("flat", 0)} · S {mtf_distribution.get("short", 0)}</strong></div>'
                 f'<div><small>MTF score Δ</small><strong>{mtf_score_display}</strong></div>'
                 '</div>'
                 '<div class="shadow-row">'
@@ -532,6 +541,10 @@ def render_dashboard(
                 '<div class="shadow-row">'
                 f'<div><span>MTF 15m · 5m/15m/1h/4h</span><strong>{mtf_observations} / 500</strong></div>'
                 f'<div class="shadow-track mtf-track"><span style="width:{mtf_shadow_progress:.1f}%"></span></div>'
+                '</div>'
+                '<div class="shadow-row">'
+                f'<div><span>Directional MTF evidence</span><strong>{mtf_directional} / 100</strong></div>'
+                f'<div class="shadow-track mtf-track"><span style="width:{mtf_directional_progress:.1f}%"></span></div>'
                 '</div>'
                 f'<div class="market-card-footer"><span class="gate-chip">{review}</span>'
                 f'<span class="gate-chip">{mtf_review}</span><small>{reason}</small></div>'
