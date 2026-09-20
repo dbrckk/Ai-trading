@@ -39,6 +39,7 @@ def test_market_benchmark_is_purged_and_reports_directional_evidence() -> None:
         minimum_threshold=0.001,
         atr_multiplier=0.25,
         max_train_rows=700,
+        min_confidence=0.56,
     )
 
     result = evaluate_market_config(
@@ -63,6 +64,8 @@ def test_market_benchmark_is_purged_and_reports_directional_evidence() -> None:
     assert 0.0 <= result.macro_recall <= 1.0
     assert 0.0 <= result.brier <= 1.0
     assert 0.0 <= result.selection_score <= 1.0
+    assert 0 <= result.active_predictions <= result.observations
+    assert 0.0 <= result.active_precision <= 1.0
 
 
 def test_parameter_benchmark_ranks_configs_across_markets() -> None:
@@ -71,8 +74,8 @@ def test_parameter_benchmark_ranks_configs_across_markets() -> None:
         "B": sample_market(phase=0.7),
     }
     configs = (
-        MTFBenchmarkConfig(2, 0.001, 0.15, 600),
-        MTFBenchmarkConfig(3, 0.001, 0.25, 700),
+        MTFBenchmarkConfig(2, 0.001, 0.15, 600, 0.56),
+        MTFBenchmarkConfig(3, 0.001, 0.25, 700, 0.60),
     )
 
     results = run_parameter_benchmark(
@@ -91,7 +94,7 @@ def test_parameter_benchmark_ranks_configs_across_markets() -> None:
 
 def test_benchmark_payload_is_reproducible_and_explicit() -> None:
     markets = {"A": sample_market()}
-    configs = (MTFBenchmarkConfig(3, 0.001, 0.25, 600),)
+    configs = (MTFBenchmarkConfig(3, 0.001, 0.25, 600, 0.56),)
     results = run_parameter_benchmark(
         markets,
         configs,
@@ -108,3 +111,4 @@ def test_benchmark_payload_is_reproducible_and_explicit() -> None:
     assert payload["method"]["purged"] is True
     assert payload["ranking"][0]["rank"] == 1
     assert payload["ranking"][0]["config"]["horizon_bars"] == 3
+    assert payload["ranking"][0]["config"]["min_confidence"] == 0.56
