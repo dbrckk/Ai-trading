@@ -6,6 +6,7 @@ from collections.abc import Iterable
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from statistics import fmean, pstdev
+
 import pandas as pd
 
 from .data import load_history
