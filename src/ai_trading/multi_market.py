@@ -63,6 +63,7 @@ def run_multi_market_paper_cycle(
     max_catchup_bars: int,
     poll_seconds: float,
     shadow_challenger_enabled: bool,
+    mtf_period: str = "1mo",
     persistence: PaperPersistence | None = None,
 ) -> PaperCycleResult:
     if not markets:
@@ -93,6 +94,7 @@ def run_multi_market_paper_cycle(
                 max_catchup_bars=max_catchup_bars,
                 poll_seconds=poll_seconds,
                 shadow_challenger_enabled=shadow_challenger_enabled,
+                mtf_period=mtf_period,
             ),
             persistence=backend,
         )
