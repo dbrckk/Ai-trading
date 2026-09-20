@@ -94,10 +94,10 @@ def default_benchmark_grid() -> tuple[MTFBenchmarkConfig, ...]:
             max_train_rows=max_train_rows,
             min_confidence=min_confidence,
         )
-        for horizon in (3, 6, 9)
-        for minimum_threshold in (0.0005, 0.001)
+        for horizon in (6, 9, 12)
+        for minimum_threshold in (0.00035, 0.00050, 0.00065)
         for max_train_rows in (1000, 2000)
-        for min_confidence in (0.56, 0.60, 0.65)
+        for min_confidence in (0.52, 0.56)
     )
 
 
@@ -261,7 +261,7 @@ def evaluate_market_config(
         active_precision=active_precision,
         active_predictions=active_predictions,
     )
-    directional_gate_passed = active_predictions >= 10 and active_precision > 0.5
+    directional_gate_passed = active_predictions >= 15 and active_precision > 0.5
 
     return MarketBenchmarkResult(
         symbol=symbol,
@@ -347,6 +347,41 @@ def run_parameter_benchmark(
 
 
 def benchmark_payload(results: tuple[AggregateBenchmarkResult, ...]) -> dict[str, object]:
+    symbols = tuple(
+        dict.fromkeys(
+            row.symbol
+            for result in results
+            for row in result.markets
+        )
+    )
+    market_leaders = {}
+    for symbol in symbols:
+        candidates = [
+            (result, row)
+            for result in results
+            for row in result.markets
+            if row.symbol == symbol
+        ]
+        if not candidates:
+            continue
+        best_result, best_row = max(
+            candidates,
+            key=lambda pair: (
+                pair[1].directional_gate_passed,
+                pair[1].selection_score,
+                pair[1].active_predictions,
+            ),
+        )
+        market_leaders[symbol] = {
+            "config": asdict(best_result.config),
+            "config_name": best_result.config.name,
+            "directional_gate_passed": best_row.directional_gate_passed,
+            "selection_score": best_row.selection_score,
+            "active_precision": best_row.active_precision,
+            "active_predictions": best_row.active_predictions,
+            "directional_accuracy": best_row.directional_accuracy,
+        }
+
     return {
         "method": {
             "execution_timeframe": "5m",
@@ -359,6 +394,7 @@ def benchmark_payload(results: tuple[AggregateBenchmarkResult, ...]) -> dict[str
                 "10% active-signal evidence; minus 10% cross-market dispersion"
             ),
         },
+        "market_leaders": market_leaders,
         "ranking": [
             {
                 "rank": rank,
@@ -399,6 +435,8 @@ def write_benchmark_report(
         "# MTF parameter benchmark",
         "",
         "Leakage-safe purged walk-forward comparison across markets.",
+        "",
+        "Directional gate: at least 15 active predictions with precision > 50%.",
         "",
         "| Rank | Config | Score | Directional / total | Markets gate |",
         "| ---: | --- | ---: | ---: | ---: |",
