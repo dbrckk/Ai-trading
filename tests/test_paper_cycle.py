@@ -462,3 +462,59 @@ def test_mtf_shadow_is_audit_only_and_cannot_control_execution(
     assert payload["mtf_shadow_challenger"]["prediction"]["side"] == -1
     assert payload["mtf_shadow_challenger"]["execution_time"] == str(mtf_target)
     assert payload["mtf_shadow_challenger"]["horizon_minutes"] == 15
+
+
+
+def test_mtf_history_load_is_isolated_from_primary_market(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    backend = FilePaperPersistence(tmp_path)
+    primary = sample_market(220)
+    long_history = sample_market(900)
+    calls: list[str] = []
+    seen_rows: list[int] = []
+
+    def loader(symbol: str, period: str, interval: str) -> pd.DataFrame:
+        del symbol, interval
+        calls.append(period)
+        return long_history if period == "1mo" else primary
+
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "evaluate_shadow_challenger",
+        lambda *args, **kwargs: None,
+    )
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "select_observable_execution_target",
+        lambda market, eligible, current_execution_idx, **kwargs: eligible[-3],
+    )
+
+    def fake_mtf(market, authoritative_features, execution_idx, **kwargs):
+        del authoritative_features, execution_idx, kwargs
+        seen_rows.append(len(market))
+        return None
+
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "evaluate_multi_timeframe_shadow",
+        fake_mtf,
+    )
+
+    runner = PaperCycleRunner(
+        persistence=backend,
+        data_loader=loader,
+        runtime_factory=runtime_factory(tmp_path),
+    )
+    result = runner.run_once(
+        symbol="GC=F",
+        period="5d",
+        interval="5m",
+        shadow_challenger_enabled=True,
+        mtf_period="1mo",
+    )
+
+    assert result.processed == 1
+    assert calls == ["5d", "1mo"]
+    assert seen_rows == [len(long_history)]
