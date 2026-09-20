@@ -494,7 +494,6 @@ def test_mtf_history_load_is_isolated_from_primary_market(
     def fake_mtf(market, authoritative_features, execution_idx, **kwargs):
         del authoritative_features, execution_idx, kwargs
         seen_rows.append(len(market))
-        return None
 
     monkeypatch.setattr(
         paper_cycle_module,
