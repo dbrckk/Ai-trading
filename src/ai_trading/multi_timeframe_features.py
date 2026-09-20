@@ -108,7 +108,7 @@ def make_multi_timeframe_challenger_features(
     """
 
     if not isinstance(market.index, pd.DatetimeIndex):
-        raise ValueError("multi-timeframe features require a DatetimeIndex")
+        raise TypeError("multi-timeframe features require a DatetimeIndex")
     if not market.index.is_monotonic_increasing:
         raise ValueError("market index must be sorted")
     if market.index.has_duplicates:
@@ -125,33 +125,33 @@ def make_multi_timeframe_challenger_features(
     contexts = (
         (
             "15min",
-            dict(
-                prefix="mtf_15m",
-                return_window=4,
-                trend_window=8,
-                volatility_window=8,
-                rsi_window=8,
-            ),
+            {
+                "prefix": "mtf_15m",
+                "return_window": 4,
+                "trend_window": 8,
+                "volatility_window": 8,
+                "rsi_window": 8,
+            },
         ),
         (
             "1h",
-            dict(
-                prefix="mtf_1h",
-                return_window=4,
-                trend_window=8,
-                volatility_window=8,
-                rsi_window=8,
-            ),
+            {
+                "prefix": "mtf_1h",
+                "return_window": 4,
+                "trend_window": 8,
+                "volatility_window": 8,
+                "rsi_window": 8,
+            },
         ),
         (
             "4h",
-            dict(
-                prefix="mtf_4h",
-                return_window=3,
-                trend_window=6,
-                volatility_window=6,
-                rsi_window=6,
-            ),
+            {
+                "prefix": "mtf_4h",
+                "return_window": 3,
+                "trend_window": 6,
+                "volatility_window": 6,
+                "rsi_window": 6,
+            },
         ),
     )
 
