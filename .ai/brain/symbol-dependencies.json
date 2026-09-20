@@ -5,24 +5,163 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "ValidatedMTFShadowConfig": {
+    "_is_mtf_evaluation_boundary": {
       "source": {
-        "file": "src/ai_trading/mtf_shadow_config.py",
-        "start": 7,
-        "end": 25
+        "file": "src/ai_trading/paper_cycle.py",
+        "start": 22,
+        "end": 33
       },
       "symbol_dependencies": [
         {
-          "symbol": "as_dict",
+          "symbol": "horizon_minutes",
           "definitions": [
             {
               "file": "src/ai_trading/mtf_shadow_config.py",
-              "line": 24,
+              "line": 21,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "PaperCycleResult": {
+      "source": {
+        "file": "src/ai_trading/paper_cycle.py",
+        "start": 38,
+        "end": 44
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "PaperCycleRunner": {
+      "source": {
+        "file": "src/ai_trading/paper_cycle.py",
+        "start": 47,
+        "end": 249
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PaperAutonomousRuntime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime.py",
+              "line": 49,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "PaperCycleResult",
+          "definitions": [
+            {
+              "file": "src/ai_trading/paper_cycle.py",
+              "line": 38,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "PaperPersistence",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 50,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "PersistedRuntime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 32,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_is_logically_fresh",
+          "definitions": [
+            {
+              "file": "src/ai_trading/paper_cycle.py",
+              "line": 62,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
+        },
+        {
+          "symbol": "_is_mtf_evaluation_boundary",
+          "definitions": [
+            {
+              "file": "src/ai_trading/paper_cycle.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_pending_targets",
+          "definitions": [
+            {
+              "file": "src/ai_trading/paper_cycle.py",
+              "line": 75,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "build_runtime_key",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 75,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate_multi_timeframe_shadow",
+          "definitions": [
+            {
+              "file": "src/ai_trading/mtf_shadow_challenger.py",
+              "line": 74,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate_shadow_challenger",
+          "definitions": [
+            {
+              "file": "src/ai_trading/shadow_challenger.py",
+              "line": 24,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
         },
         {
           "symbol": "horizon_minutes",
@@ -34,2147 +173,62 @@
               "language": "python"
             }
           ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "horizon_minutes": {
-      "source": {
-        "file": "src/ai_trading/mtf_shadow_config.py",
-        "start": 21,
-        "end": 22
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "as_dict": {
-      "source": {
-        "file": "src/ai_trading/mtf_shadow_config.py",
-        "start": 24,
-        "end": 25
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "validated_mtf_shadow_config": {
-      "source": {
-        "file": "src/ai_trading/mtf_shadow_config.py",
-        "start": 59,
-        "end": 64
-      },
-      "symbol_dependencies": [
+          "relation": "imported_module"
+        },
         {
-          "symbol": "ValidatedMTFShadowConfig",
+          "symbol": "load_history",
           "definitions": [
             {
-              "file": "src/ai_trading/mtf_shadow_config.py",
+              "file": "src/ai_trading/data.py",
               "line": 7,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "OverviewPersistence": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 25,
-        "end": 163
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "BurnInSnapshot",
-          "definitions": [
-            {
-              "file": "src/ai_trading/burnin.py",
-              "line": 16,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "HostedRuntimeStatus",
-          "definitions": [
-            {
-              "file": "src/ai_trading/runtime_status.py",
-              "line": 10,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "ModelBlob",
-          "definitions": [
-            {
-              "file": "src/ai_trading/persistence.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "ModelQuality",
-          "definitions": [
-            {
-              "file": "src/ai_trading/model_quality.py",
-              "line": 10,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "MultiTimeframeShadowQuality",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shadow_quality.py",
-              "line": 13,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "PersistedRuntime",
-          "definitions": [
-            {
-              "file": "src/ai_trading/persistence.py",
-              "line": 32,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RuntimeState",
-          "definitions": [
-            {
-              "file": "src/ai_trading/runtime_state.py",
-              "line": 9,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "ShadowQualityComparison",
-          "definitions": [
-            {
-              "file": "src/ai_trading/shadow_quality.py",
-              "line": 13,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "__init__",
-          "definitions": [
-            {
-              "file": "src/ai_trading/burnin.py",
-              "line": 46,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        },
-        {
-          "symbol": "list_burnin_snapshots",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 83,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 167,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 573,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "list_regimes",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 104,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 577,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "list_trades",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 78,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_mtf_shadow_quality",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 134,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 585,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
         },
         {
           "symbol": "load_runtime",
           "definitions": [
             {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 73,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 198,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 558,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_runtime_status",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 108,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 202,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 563,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_shadow_quality",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 112,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 581,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "runtime_key",
-          "definitions": [
-            {
-              "file": "src/ai_trading/hosted_runtime.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 17
-    },
-    "__init__": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 26,
-        "end": 71
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "HostedRuntimeStatus",
-          "definitions": [
-            {
-              "file": "src/ai_trading/runtime_status.py",
-              "line": 10,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "ModelBlob",
-          "definitions": [
-            {
               "file": "src/ai_trading/persistence.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "PersistedRuntime",
-          "definitions": [
-            {
-              "file": "src/ai_trading/persistence.py",
-              "line": 32,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RuntimeState",
-          "definitions": [
-            {
-              "file": "src/ai_trading/runtime_state.py",
-              "line": 9,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "load_runtime": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 73,
-        "end": 76
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "PersistedRuntime",
-          "definitions": [
-            {
-              "file": "src/ai_trading/persistence.py",
-              "line": 32,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "runtime_key",
-          "definitions": [
-            {
-              "file": "src/ai_trading/hosted_runtime.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "list_trades": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 78,
-        "end": 81
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "runtime_key",
-          "definitions": [
-            {
-              "file": "src/ai_trading/hosted_runtime.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "list_burnin_snapshots": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 83,
-        "end": 102
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "BurnInSnapshot",
-          "definitions": [
-            {
-              "file": "src/ai_trading/burnin.py",
-              "line": 16,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "runtime_key",
-          "definitions": [
-            {
-              "file": "src/ai_trading/hosted_runtime.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "list_regimes": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 104,
-        "end": 106
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "runtime_key",
-          "definitions": [
-            {
-              "file": "src/ai_trading/hosted_runtime.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "load_runtime_status": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 108,
-        "end": 110
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "HostedRuntimeStatus",
-          "definitions": [
-            {
-              "file": "src/ai_trading/runtime_status.py",
-              "line": 10,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "runtime_key",
-          "definitions": [
-            {
-              "file": "src/ai_trading/hosted_runtime.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "load_shadow_quality": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 112,
-        "end": 132
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "ModelQuality",
-          "definitions": [
-            {
-              "file": "src/ai_trading/model_quality.py",
-              "line": 10,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "ShadowQualityComparison",
-          "definitions": [
-            {
-              "file": "src/ai_trading/shadow_quality.py",
-              "line": 13,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "runtime_key",
-          "definitions": [
-            {
-              "file": "src/ai_trading/hosted_runtime.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "load_mtf_shadow_quality": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 134,
-        "end": 163
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "ModelQuality",
-          "definitions": [
-            {
-              "file": "src/ai_trading/model_quality.py",
-              "line": 10,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "MultiTimeframeShadowQuality",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shadow_quality.py",
-              "line": 13,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "runtime_key",
-          "definitions": [
-            {
-              "file": "src/ai_trading/hosted_runtime.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "ReadinessOverviewPersistence": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 166,
-        "end": 194
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "BurnInSnapshot",
-          "definitions": [
-            {
-              "file": "src/ai_trading/burnin.py",
-              "line": 16,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "OverviewPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 25,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "list_burnin_snapshots",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 83,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 167,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 573,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "runtime_key",
-          "definitions": [
-            {
-              "file": "src/ai_trading/hosted_runtime.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "FailingOverviewPersistence": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 197,
-        "end": 204
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "load_runtime",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 73,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 198,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 558,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_runtime_status",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 108,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 202,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 563,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "runtime_key",
-          "definitions": [
-            {
-              "file": "src/ai_trading/hosted_runtime.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "_free_port": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 207,
-        "end": 210
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "_start_overview_dashboard": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 213,
-        "end": 238
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "HostedPaperSettings",
-          "definitions": [
-            {
-              "file": "src/ai_trading/hosted_runtime.py",
-              "line": 19,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "OverviewPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 25,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_free_port",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 207,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "serve_dashboard",
-          "definitions": [
-            {
-              "file": "src/ai_trading/dashboard.py",
-              "line": 907,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "test_operational_overview_exposes_model_and_runtime_metadata": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 241,
-        "end": 288
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "OverviewPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 25,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "build_operational_overview",
-          "definitions": [
-            {
-              "file": "src/ai_trading/operational_overview.py",
-              "line": 279,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "directional_observations",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shadow_quality.py",
-              "line": 26,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "directional_rate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shadow_quality.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "readiness",
-          "definitions": [
-            {
-              "file": "src/ai_trading/burnin.py",
-              "line": 87,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "score_delta",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shadow_quality.py",
-              "line": 22,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "src/ai_trading/shadow_quality.py",
-              "line": 19,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 6
-    },
-    "test_operational_overview_flags_stale_runtime": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 291,
-        "end": 298
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "OverviewPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 25,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "build_operational_overview",
-          "definitions": [
-            {
-              "file": "src/ai_trading/operational_overview.py",
-              "line": 279,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_operational_overview_flags_missing_model_after_processing": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 301,
-        "end": 313
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "OverviewPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 25,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "build_operational_overview",
-          "definitions": [
-            {
-              "file": "src/ai_trading/operational_overview.py",
-              "line": 279,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_operational_overview_flags_inconsistent_runtime": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 316,
-        "end": 335
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "OverviewPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 25,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "PersistedRuntime",
-          "definitions": [
-            {
-              "file": "src/ai_trading/persistence.py",
-              "line": 32,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RuntimeState",
-          "definitions": [
-            {
-              "file": "src/ai_trading/runtime_state.py",
-              "line": 9,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "build_operational_overview",
-          "definitions": [
-            {
-              "file": "src/ai_trading/operational_overview.py",
-              "line": 279,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "test_operational_overview_storage_failure_is_sanitized": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 338,
-        "end": 424
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "FailingOverviewPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 197,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "build_operational_overview",
-          "definitions": [
-            {
-              "file": "src/ai_trading/operational_overview.py",
-              "line": 279,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "directional_observations",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shadow_quality.py",
-              "line": 26,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "directional_rate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shadow_quality.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "readiness",
-          "definitions": [
-            {
-              "file": "src/ai_trading/burnin.py",
-              "line": 87,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "score_delta",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shadow_quality.py",
-              "line": 22,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "src/ai_trading/shadow_quality.py",
-              "line": 19,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 6
-    },
-    "test_dashboard_exposes_operational_overview_endpoint": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 427,
-        "end": 443
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "OverviewPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 25,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_start_overview_dashboard",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 213,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "read",
-          "definitions": [
-            {
-              "file": "src/ai_trading/burnin.py",
-              "line": 73,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "test_dashboard_renders_model_and_revision_metadata": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 446,
-        "end": 457
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "OverviewPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 25,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "TradeJournal",
-          "definitions": [
-            {
-              "file": "src/ai_trading/trade_journal.py",
-              "line": 21,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "render_dashboard",
-          "definitions": [
-            {
-              "file": "src/ai_trading/dashboard.py",
-              "line": 136,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "runtime_key",
-          "definitions": [
-            {
-              "file": "src/ai_trading/hosted_runtime.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "test_dashboard_renders_operational_alerts": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 460,
-        "end": 467
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "OverviewPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 25,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "TradeJournal",
-          "definitions": [
-            {
-              "file": "src/ai_trading/trade_journal.py",
-              "line": 21,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "render_dashboard",
-          "definitions": [
-            {
-              "file": "src/ai_trading/dashboard.py",
-              "line": 136,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "runtime_key",
-          "definitions": [
-            {
-              "file": "src/ai_trading/hosted_runtime.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "test_dashboard_renders_inconsistent_runtime_alert": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 470,
-        "end": 493
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "OverviewPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 25,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "PersistedRuntime",
-          "definitions": [
-            {
-              "file": "src/ai_trading/persistence.py",
-              "line": 32,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RuntimeState",
-          "definitions": [
-            {
-              "file": "src/ai_trading/runtime_state.py",
-              "line": 9,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "TradeJournal",
-          "definitions": [
-            {
-              "file": "src/ai_trading/trade_journal.py",
-              "line": 21,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "render_dashboard",
-          "definitions": [
-            {
-              "file": "src/ai_trading/dashboard.py",
-              "line": 136,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "runtime_key",
-          "definitions": [
-            {
-              "file": "src/ai_trading/hosted_runtime.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 6
-    },
-    "test_operational_overview_flags_cycle_reliability_degradation": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 496,
-        "end": 503
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "OverviewPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 25,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "build_operational_overview",
-          "definitions": [
-            {
-              "file": "src/ai_trading/operational_overview.py",
-              "line": 279,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_dashboard_renders_cycle_reliability_alert": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 506,
-        "end": 514
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "OverviewPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 25,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "TradeJournal",
-          "definitions": [
-            {
-              "file": "src/ai_trading/trade_journal.py",
-              "line": 21,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "render_dashboard",
-          "definitions": [
-            {
-              "file": "src/ai_trading/dashboard.py",
-              "line": 136,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "runtime_key",
-          "definitions": [
-            {
-              "file": "src/ai_trading/hosted_runtime.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "test_operational_overview_exposes_structured_readiness": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 517,
-        "end": 541
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "ReadinessOverviewPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 166,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "build_operational_overview",
-          "definitions": [
-            {
-              "file": "src/ai_trading/operational_overview.py",
-              "line": 279,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "readiness",
-          "definitions": [
-            {
-              "file": "src/ai_trading/burnin.py",
-              "line": 87,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "test_overview_endpoint_includes_readiness_evidence": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 544,
-        "end": 553
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "ReadinessOverviewPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 166,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_start_overview_dashboard",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 213,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "read",
-          "definitions": [
-            {
-              "file": "src/ai_trading/burnin.py",
-              "line": 73,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "readiness",
-          "definitions": [
-            {
-              "file": "src/ai_trading/burnin.py",
-              "line": 87,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "BtcOverviewPersistence": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 557,
-        "end": 588
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "HostedRuntimeStatus",
-          "definitions": [
-            {
-              "file": "src/ai_trading/runtime_status.py",
-              "line": 10,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "OverviewPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 25,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "PersistedRuntime",
-          "definitions": [
-            {
-              "file": "src/ai_trading/persistence.py",
-              "line": 32,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "ShadowQualityComparison",
-          "definitions": [
-            {
-              "file": "src/ai_trading/shadow_quality.py",
-              "line": 13,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "list_burnin_snapshots",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 83,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 167,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 573,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "list_regimes",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 104,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 577,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_mtf_shadow_quality",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 134,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 585,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_runtime",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 73,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 198,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 558,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_runtime_status",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 108,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 202,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 563,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_shadow_quality",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 112,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 581,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "runtime_key",
-          "definitions": [
-            {
-              "file": "src/ai_trading/hosted_runtime.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 11
-    },
-    "test_btc_overview_exposes_validated_mtf_candidate": {
-      "source": {
-        "file": "tests/test_dashboard_overview.py",
-        "start": 591,
-        "end": 607
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "BtcOverviewPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_dashboard_overview.py",
-              "line": 557,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "build_operational_overview",
-          "definitions": [
-            {
-              "file": "src/ai_trading/operational_overview.py",
-              "line": 279,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_gold_uses_validated_45m_candidate": {
-      "source": {
-        "file": "tests/test_mtf_shadow_config.py",
-        "start": 4,
-        "end": 14
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "horizon_minutes",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shadow_config.py",
-              "line": 21,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "validated_mtf_shadow_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shadow_config.py",
-              "line": 59,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_dax_uses_validated_45m_candidate": {
-      "source": {
-        "file": "tests/test_mtf_shadow_config.py",
-        "start": 17,
-        "end": 26
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "horizon_minutes",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shadow_config.py",
-              "line": 21,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "validated_mtf_shadow_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shadow_config.py",
-              "line": 59,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_btc_uses_validated_90m_candidate": {
-      "source": {
-        "file": "tests/test_mtf_shadow_config.py",
-        "start": 29,
-        "end": 39
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "horizon_minutes",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shadow_config.py",
-              "line": 21,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "validated_mtf_shadow_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shadow_config.py",
-              "line": 59,
+              "line": 53,
               "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "FakeMultiPersistence": {
-      "source": {
-        "file": "tests/test_multi_market.py",
-        "start": 25,
-        "end": 87
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "HostedRuntimeStatus",
-          "definitions": [
-            {
-              "file": "src/ai_trading/runtime_status.py",
-              "line": 10,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "PersistedRuntime",
-          "definitions": [
-            {
-              "file": "src/ai_trading/persistence.py",
-              "line": 32,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RuntimeState",
-          "definitions": [
-            {
-              "file": "src/ai_trading/runtime_state.py",
-              "line": 9,
-              "kind": "class",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        },
-        {
-          "symbol": "list_burnin_snapshots",
-          "definitions": [
-            {
-              "file": "tests/test_multi_market.py",
-              "line": 65,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "list_regimes",
-          "definitions": [
-            {
-              "file": "tests/test_multi_market.py",
-              "line": 69,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "list_trades",
-          "definitions": [
-            {
-              "file": "tests/test_multi_market.py",
-              "line": 73,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
         },
         {
-          "symbol": "load_runtime",
+          "symbol": "make_features",
           "definitions": [
             {
-              "file": "tests/test_multi_market.py",
+              "file": "src/ai_trading/features.py",
               "line": 28,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         },
         {
-          "symbol": "load_runtime_status",
+          "symbol": "prepare_market",
           "definitions": [
             {
-              "file": "tests/test_multi_market.py",
-              "line": 47,
+              "file": "src/ai_trading/runtime.py",
+              "line": 142,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         },
         {
-          "symbol": "load_trade_performance",
-          "definitions": [
-            {
-              "file": "tests/test_multi_market.py",
-              "line": 77,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "performance_metrics_from_totals",
-          "definitions": [
-            {
-              "file": "src/ai_trading/performance_metrics.py",
-              "line": 20,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 10
-    },
-    "load_trade_performance": {
-      "source": {
-        "file": "tests/test_multi_market.py",
-        "start": 77,
-        "end": 87
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "performance_metrics_from_totals",
-          "definitions": [
-            {
-              "file": "src/ai_trading/performance_metrics.py",
-              "line": 20,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_configured_markets_default_to_gold": {
-      "source": {
-        "file": "tests/test_multi_market.py",
-        "start": 90,
-        "end": 96
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "configured_markets_from_env",
-          "definitions": [
-            {
-              "file": "src/ai_trading/multi_market.py",
-              "line": 34,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_configured_default_bundle_uses_34_33_33": {
-      "source": {
-        "file": "tests/test_multi_market.py",
-        "start": 99,
-        "end": 105
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "configured_markets_from_env",
-          "definitions": [
-            {
-              "file": "src/ai_trading/multi_market.py",
-              "line": 34,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_multi_market_cycle_isolates_one_market_failure": {
-      "source": {
-        "file": "tests/test_multi_market.py",
-        "start": 108,
-        "end": 147
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "PaperCycleResult",
+          "symbol": "run_once",
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 31,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "PaperCycleServiceError",
-          "definitions": [
-            {
-              "file": "src/ai_trading/paper_cycle_service.py",
-              "line": 26,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "append",
-          "definitions": [
-            {
-              "file": "src/ai_trading/trade_journal.py",
-              "line": 27,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fake_cycle",
-          "definitions": [
-            {
-              "file": "tests/test_multi_market.py",
-              "line": 111,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_multi_market.py",
-              "line": 229,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -2182,11 +236,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "list",
+          "symbol": "select_observable_execution_target",
           "definitions": [
             {
-              "file": "src/ai_trading/trade_journal.py",
-              "line": 32,
+              "file": "src/ai_trading/mtf_shadow_challenger.py",
+              "line": 40,
               "kind": "function",
               "language": "python"
             }
@@ -2194,11 +248,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "run_multi_market_paper_cycle",
+          "symbol": "step_prepared",
           "definitions": [
             {
-              "file": "src/ai_trading/multi_market.py",
-              "line": 58,
+              "file": "src/ai_trading/runtime.py",
+              "line": 181,
               "kind": "function",
               "language": "python"
             }
@@ -2206,11 +260,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "run_production_paper_cycle",
+          "symbol": "validated_mtf_shadow_config",
           "definitions": [
             {
-              "file": "src/ai_trading/paper_cycle_service.py",
-              "line": 41,
+              "file": "src/ai_trading/mtf_shadow_config.py",
+              "line": 59,
               "kind": "function",
               "language": "python"
             }
@@ -2218,33 +272,21 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 7
+      "dependency_count": 19
     },
-    "fake_cycle": {
+    "__init__": {
       "source": {
-        "file": "tests/test_multi_market.py",
-        "start": 111,
-        "end": 231
+        "file": "src/ai_trading/paper_cycle.py",
+        "start": 50,
+        "end": 59
       },
       "symbol_dependencies": [
         {
-          "symbol": "FakeMultiPersistence",
+          "symbol": "PaperAutonomousRuntime",
           "definitions": [
             {
-              "file": "tests/test_multi_market.py",
-              "line": 25,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "PaperCycleResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/paper_cycle.py",
-              "line": 31,
+              "file": "src/ai_trading/runtime.py",
+              "line": 49,
               "kind": "class",
               "language": "python"
             }
@@ -2252,11 +294,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "PaperCycleServiceError",
+          "symbol": "PaperPersistence",
           "definitions": [
             {
-              "file": "src/ai_trading/paper_cycle_service.py",
-              "line": 26,
+              "file": "src/ai_trading/persistence.py",
+              "line": 50,
               "kind": "class",
               "language": "python"
             }
@@ -2264,187 +306,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "TradeJournal",
+          "symbol": "load_history",
           "definitions": [
             {
-              "file": "src/ai_trading/trade_journal.py",
-              "line": 21,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "append",
-          "definitions": [
-            {
-              "file": "src/ai_trading/trade_journal.py",
-              "line": 27,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "build_multi_market_overview",
-          "definitions": [
-            {
-              "file": "src/ai_trading/multi_market.py",
-              "line": 153,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "render_dashboard",
-          "definitions": [
-            {
-              "file": "src/ai_trading/dashboard.py",
-              "line": 136,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_multi_market_paper_cycle",
-          "definitions": [
-            {
-              "file": "src/ai_trading/multi_market.py",
-              "line": 58,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_production_paper_cycle",
-          "definitions": [
-            {
-              "file": "src/ai_trading/paper_cycle_service.py",
-              "line": 41,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "test_dashboard_renders_multi_market_cards",
-          "definitions": [
-            {
-              "file": "tests/test_multi_market.py",
-              "line": 176,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_multi_market_cycle_runs_markets_concurrently",
-          "definitions": [
-            {
-              "file": "tests/test_multi_market.py",
-              "line": 226,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_multi_market_overview_scales_normalized_sleeves_to_100k",
-          "definitions": [
-            {
-              "file": "tests/test_multi_market.py",
-              "line": 150,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 12
-    },
-    "test_multi_market_overview_scales_normalized_sleeves_to_100k": {
-      "source": {
-        "file": "tests/test_multi_market.py",
-        "start": 150,
-        "end": 173
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "FakeMultiPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_multi_market.py",
-              "line": 25,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "build_multi_market_overview",
-          "definitions": [
-            {
-              "file": "src/ai_trading/multi_market.py",
-              "line": 153,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_dashboard_renders_multi_market_cards": {
-      "source": {
-        "file": "tests/test_multi_market.py",
-        "start": 176,
-        "end": 222
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "FakeMultiPersistence",
-          "definitions": [
-            {
-              "file": "tests/test_multi_market.py",
-              "line": 25,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "TradeJournal",
-          "definitions": [
-            {
-              "file": "src/ai_trading/trade_journal.py",
-              "line": 21,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "render_dashboard",
-          "definitions": [
-            {
-              "file": "src/ai_trading/dashboard.py",
-              "line": 136,
+              "file": "src/ai_trading/data.py",
+              "line": 7,
               "kind": "function",
               "language": "python"
             }
@@ -2454,19 +320,41 @@
       ],
       "dependency_count": 3
     },
-    "test_multi_market_cycle_runs_markets_concurrently": {
+    "_is_logically_fresh": {
       "source": {
-        "file": "tests/test_multi_market.py",
-        "start": 226,
-        "end": 257
+        "file": "src/ai_trading/paper_cycle.py",
+        "start": 62,
+        "end": 72
       },
       "symbol_dependencies": [
         {
-          "symbol": "PaperCycleResult",
+          "symbol": "PersistedRuntime",
           "definitions": [
             {
-              "file": "src/ai_trading/paper_cycle.py",
-              "line": 31,
+              "file": "src/ai_trading/persistence.py",
+              "line": 32,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "_pending_targets": {
+      "source": {
+        "file": "src/ai_trading/paper_cycle.py",
+        "start": 75,
+        "end": 91
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PersistedRuntime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 32,
               "kind": "class",
               "language": "python"
             }
@@ -2474,17 +362,45 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "fake_cycle",
+          "symbol": "_is_logically_fresh",
           "definitions": [
             {
-              "file": "tests/test_multi_market.py",
-              "line": 111,
+              "file": "src/ai_trading/paper_cycle.py",
+              "line": 62,
               "kind": "function",
               "language": "python"
-            },
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "run_once": {
+      "source": {
+        "file": "src/ai_trading/paper_cycle.py",
+        "start": 93,
+        "end": 249
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PaperCycleResult",
+          "definitions": [
             {
-              "file": "tests/test_multi_market.py",
-              "line": 229,
+              "file": "src/ai_trading/paper_cycle.py",
+              "line": 38,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_is_mtf_evaluation_boundary",
+          "definitions": [
+            {
+              "file": "src/ai_trading/paper_cycle.py",
+              "line": 22,
               "kind": "function",
               "language": "python"
             }
@@ -2492,11 +408,23 @@
           "relation": "same_file"
         },
         {
-          "symbol": "run_multi_market_paper_cycle",
+          "symbol": "_pending_targets",
           "definitions": [
             {
-              "file": "src/ai_trading/multi_market.py",
-              "line": 58,
+              "file": "src/ai_trading/paper_cycle.py",
+              "line": 75,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "build_runtime_key",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 75,
               "kind": "function",
               "language": "python"
             }
@@ -2504,11 +432,107 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "run_production_paper_cycle",
+          "symbol": "evaluate_multi_timeframe_shadow",
           "definitions": [
             {
-              "file": "src/ai_trading/paper_cycle_service.py",
-              "line": 41,
+              "file": "src/ai_trading/mtf_shadow_challenger.py",
+              "line": 74,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate_shadow_challenger",
+          "definitions": [
+            {
+              "file": "src/ai_trading/shadow_challenger.py",
+              "line": 24,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "horizon_minutes",
+          "definitions": [
+            {
+              "file": "src/ai_trading/mtf_shadow_config.py",
+              "line": 21,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_runtime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 53,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "make_features",
+          "definitions": [
+            {
+              "file": "src/ai_trading/features.py",
+              "line": 28,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "prepare_market",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime.py",
+              "line": 142,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "select_observable_execution_target",
+          "definitions": [
+            {
+              "file": "src/ai_trading/mtf_shadow_challenger.py",
+              "line": 40,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "step_prepared",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime.py",
+              "line": 181,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "validated_mtf_shadow_config",
+          "definitions": [
+            {
+              "file": "src/ai_trading/mtf_shadow_config.py",
+              "line": 59,
               "kind": "function",
               "language": "python"
             }
@@ -2516,7 +540,7 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 4
+      "dependency_count": 13
     },
     "sample_market": {
       "source": {
@@ -2609,7 +633,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 40,
+              "line": 47,
               "kind": "class",
               "language": "python"
             }
@@ -2711,7 +735,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -2829,7 +853,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 40,
+              "line": 47,
               "kind": "class",
               "language": "python"
             }
@@ -2987,7 +1011,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -3057,7 +1081,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -3139,7 +1163,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -3245,7 +1269,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -3417,7 +1441,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -3679,7 +1703,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -3851,7 +1875,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -3939,7 +1963,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -4009,7 +2033,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -4145,7 +2169,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -4377,7 +2401,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -4597,7 +2621,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -4817,7 +2841,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -4995,7 +3019,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -5161,7 +3185,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -5327,7 +3351,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -5385,7 +3409,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 40,
+              "line": 47,
               "kind": "class",
               "language": "python"
             }
@@ -5427,13 +3451,13 @@
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 607,
+              "line": 626,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 664,
+              "line": 683,
               "kind": "function",
               "language": "python"
             }
@@ -5451,19 +3475,19 @@
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 554,
+              "line": 573,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 592,
+              "line": 611,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 648,
+              "line": 667,
               "kind": "function",
               "language": "python"
             }
@@ -5475,7 +3499,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -5545,7 +3569,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 40,
+              "line": 47,
               "kind": "class",
               "language": "python"
             }
@@ -5599,13 +3623,13 @@
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 607,
+              "line": 626,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 664,
+              "line": 683,
               "kind": "function",
               "language": "python"
             }
@@ -5617,7 +3641,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -5661,7 +3685,7 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "test_mtf_boundary_runs_only_on_quarter_hour",
+          "symbol": "test_mtf_boundary_aligns_with_candidate_horizon",
           "definitions": [
             {
               "file": "tests/test_paper_cycle.py",
@@ -5677,7 +3701,7 @@
           "definitions": [
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 546,
+              "line": 565,
               "kind": "function",
               "language": "python"
             }
@@ -5689,7 +3713,7 @@
           "definitions": [
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 583,
+              "line": 602,
               "kind": "function",
               "language": "python"
             }
@@ -5723,7 +3747,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 40,
+              "line": 47,
               "kind": "class",
               "language": "python"
             }
@@ -5777,19 +3801,19 @@
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 554,
+              "line": 573,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 592,
+              "line": 611,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 648,
+              "line": 667,
               "kind": "function",
               "language": "python"
             }
@@ -5801,7 +3825,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -5833,19 +3857,7 @@
           "relation": "same_file"
         },
         {
-          "symbol": "select_observable_execution_target",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shadow_challenger.py",
-              "line": 40,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "test_mtf_boundary_runs_only_on_quarter_hour",
+          "symbol": "test_mtf_boundary_aligns_with_candidate_horizon",
           "definitions": [
             {
               "file": "tests/test_paper_cycle.py",
@@ -5861,7 +3873,7 @@
           "definitions": [
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 546,
+              "line": 565,
               "kind": "function",
               "language": "python"
             }
@@ -5873,7 +3885,7 @@
           "definitions": [
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 583,
+              "line": 602,
               "kind": "function",
               "language": "python"
             }
@@ -5881,13 +3893,13 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 13
+      "dependency_count": 12
     },
-    "test_mtf_boundary_runs_only_on_quarter_hour": {
+    "test_mtf_boundary_aligns_with_candidate_horizon": {
       "source": {
         "file": "tests/test_paper_cycle.py",
         "start": 530,
-        "end": 542
+        "end": 561
       },
       "symbol_dependencies": [
         {
@@ -5908,8 +3920,8 @@
     "test_non_boundary_cycle_skips_long_mtf_history_load": {
       "source": {
         "file": "tests/test_paper_cycle.py",
-        "start": 546,
-        "end": 579
+        "start": 565,
+        "end": 598
       },
       "symbol_dependencies": [
         {
@@ -5929,7 +3941,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 40,
+              "line": 47,
               "kind": "class",
               "language": "python"
             }
@@ -5959,19 +3971,19 @@
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 554,
+              "line": 573,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 592,
+              "line": 611,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 648,
+              "line": 667,
               "kind": "function",
               "language": "python"
             }
@@ -5983,7 +3995,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -6020,8 +4032,8 @@
     "test_validated_gold_mtf_config_is_forwarded_to_shadow_evaluator": {
       "source": {
         "file": "tests/test_paper_cycle.py",
-        "start": 583,
-        "end": 635
+        "start": 602,
+        "end": 654
       },
       "symbol_dependencies": [
         {
@@ -6041,7 +4053,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 40,
+              "line": 47,
               "kind": "class",
               "language": "python"
             }
@@ -6083,13 +4095,13 @@
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 607,
+              "line": 626,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 664,
+              "line": 683,
               "kind": "function",
               "language": "python"
             }
@@ -6107,19 +4119,19 @@
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 554,
+              "line": 573,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 592,
+              "line": 611,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 648,
+              "line": 667,
               "kind": "function",
               "language": "python"
             }
@@ -6131,7 +4143,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -6180,8 +4192,8 @@
     "test_validated_btc_mtf_config_is_forwarded_to_shadow_evaluator": {
       "source": {
         "file": "tests/test_paper_cycle.py",
-        "start": 638,
-        "end": 694
+        "start": 657,
+        "end": 713
       },
       "symbol_dependencies": [
         {
@@ -6201,7 +4213,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 40,
+              "line": 47,
               "kind": "class",
               "language": "python"
             }
@@ -6243,13 +4255,13 @@
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 607,
+              "line": 626,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 664,
+              "line": 683,
               "kind": "function",
               "language": "python"
             }
@@ -6267,19 +4279,19 @@
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 554,
+              "line": 573,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 592,
+              "line": 611,
               "kind": "function",
               "language": "python"
             },
             {
               "file": "tests/test_paper_cycle.py",
-              "line": 648,
+              "line": 667,
               "kind": "function",
               "language": "python"
             }
@@ -6291,7 +4303,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }

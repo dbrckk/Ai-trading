@@ -5046,9 +5046,8 @@ except Exception:  # noqa: BLE001, S110 - best-effort failure reporting
 ````python
 DEFAULT_MAX_CATCHUP_BARS = 72
 ⋮----
-def _is_mtf_evaluation_boundary(execution_idx: object, interval: str) -> bool
-⋮----
 timestamp = pd.Timestamp(execution_idx)
+epoch_minutes = timestamp.value // (60 * 1_000_000_000)
 ⋮----
 @dataclass(frozen=True)
 class PaperCycleResult
@@ -9771,7 +9770,7 @@ current_target = eligible[-1]
 mtf_target = eligible[-3]
 mtf_signal = df.index[int(df.index.get_loc(mtf_target)) - 1]
 ⋮----
-primary = sample_market(220)
+primary = sample_market(217)
 long_history = sample_market(900)
 calls: list[str] = []
 seen_rows: list[int] = []
@@ -9782,7 +9781,7 @@ def fake_mtf(market, authoritative_features, execution_idx, **kwargs)
 ⋮----
 runner = PaperCycleRunner(
 ⋮----
-def test_mtf_boundary_runs_only_on_quarter_hour() -> None
+def test_mtf_boundary_aligns_with_candidate_horizon() -> None
 ⋮----
 primary = sample_market(110)
 ⋮----

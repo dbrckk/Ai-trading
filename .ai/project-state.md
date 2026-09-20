@@ -45,21 +45,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T19:02:53Z
+Generated: 2026-09-20T19:15:42Z
 
 ### Git
 - Branch: `main`
-- Head: `5b05ffe01132`
-- Commit date: 2026-09-20T21:02:41+02:00
-- Commit: feat: activate benchmark-validated BTC 90m MTF shadow (#69)
+- Head: `6c376ef15698`
+- Commit date: 2026-09-20T21:15:30+02:00
+- Commit: fix: align MTF evidence cadence with candidate horizon (#70)
 - Tracked files: 477
 
 ### Recently changed files
+- `src/ai_trading/paper_cycle.py`
+- `tests/test_paper_cycle.py`
 - `src/ai_trading/mtf_shadow_config.py`
 - `tests/test_dashboard_overview.py`
 - `tests/test_mtf_shadow_config.py`
 - `tests/test_multi_market.py`
-- `tests/test_paper_cycle.py`
 - `.github/workflows/mtf-parameter-benchmark.yml`
 - `src/ai_trading/mtf_parameter_benchmark.py`
 - `tests/test_mtf_parameter_benchmark.py`
@@ -68,7 +69,6 @@ Generated: 2026-09-20T19:02:53Z
 - `src/ai_trading/mtf_shadow_challenger.py`
 - `src/ai_trading/mtf_shadow_quality.py`
 - `src/ai_trading/operational_overview.py`
-- `src/ai_trading/paper_cycle.py`
 - `src/ai_trading/postgres_persistence.py`
 - `tests/test_mtf_shadow_challenger.py`
 - `tests/test_mtf_shadow_quality.py`

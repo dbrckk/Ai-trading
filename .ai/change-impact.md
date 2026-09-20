@@ -1,13 +1,10 @@
 # Change impact
 
-Base: a8fe0d2f3270e9054c70ade5e3ea6ba011ce2060
-Head: 5b05ffe011320ba525b632263f31e285e3ac3021
+Base: 77286ac1fbd120abe6fb3154ec48fd6cf0677f42
+Head: 6c376ef15698a7e823de9c3fe775e3d3ad0d71d0
 
 ## Changed files
-- M src/ai_trading/mtf_shadow_config.py
-- M tests/test_dashboard_overview.py
-- M tests/test_mtf_shadow_config.py
-- M tests/test_multi_market.py
+- M src/ai_trading/paper_cycle.py
 - M tests/test_paper_cycle.py
 
 ## Affected areas
@@ -15,7 +12,7 @@ Head: 5b05ffe011320ba525b632263f31e285e3ac3021
 - tests
 
 ## Related test candidates
-- tests/test_mtf_shadow_config.py
+- tests/test_paper_cycle.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.
