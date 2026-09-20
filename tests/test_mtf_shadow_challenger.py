@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+import pytest
 
 import ai_trading.mtf_shadow_challenger as mtf_module
 from ai_trading.features import make_features
@@ -120,7 +121,7 @@ def test_mtf_shadow_rejects_invalid_feature_warmup() -> None:
     market = sample_market(800)
     authoritative = make_features(market)
 
-    try:
+    with pytest.raises(ValueError, match="feature_warmup_rows"):
         evaluate_multi_timeframe_shadow(
             market,
             authoritative,
@@ -129,7 +130,3 @@ def test_mtf_shadow_rejects_invalid_feature_warmup() -> None:
             max_train_rows=200,
             feature_warmup_rows=0,
         )
-    except ValueError as exc:
-        assert "feature_warmup_rows" in str(exc)
-    else:
-        raise AssertionError("expected invalid feature warmup to fail")
