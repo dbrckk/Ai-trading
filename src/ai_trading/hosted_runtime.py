@@ -24,6 +24,7 @@ class HostedPaperSettings:
     interval: str = "1d"
     poll_seconds: float = 60.0
     shadow_challenger: bool = False
+    mtf_period: str = "1mo"
 
     @property
     def runtime_key(self) -> str:
@@ -50,6 +51,7 @@ class HostedPaperSettings:
         period = os.getenv("AI_TRADING_HOSTED_PERIOD", "1y").strip() or "1y"
         interval = os.getenv("AI_TRADING_HOSTED_INTERVAL", "1d").strip() or "1d"
         poll_seconds = float(os.getenv("AI_TRADING_HOSTED_POLL_SECONDS", "60"))
+        mtf_period = os.getenv("AI_TRADING_MTF_PERIOD", "1mo").strip() or "1mo"
         shadow_challenger = os.getenv(
             "AI_TRADING_SHADOW_CHALLENGER",
             "0",
@@ -69,6 +71,7 @@ class HostedPaperSettings:
             interval=interval,
             poll_seconds=poll_seconds,
             shadow_challenger=shadow_challenger,
+            mtf_period=mtf_period,
         )
 
 
