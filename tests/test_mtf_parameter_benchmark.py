@@ -6,7 +6,9 @@ import pandas as pd
 from ai_trading.mtf_parameter_benchmark import (
     MTFBenchmarkConfig,
     benchmark_payload,
+    btc_focused_benchmark_grid,
     evaluate_market_config,
+    market_selections,
     run_parameter_benchmark,
 )
 
@@ -112,3 +114,58 @@ def test_benchmark_payload_is_reproducible_and_explicit() -> None:
     assert payload["ranking"][0]["rank"] == 1
     assert payload["ranking"][0]["config"]["horizon_bars"] == 3
     assert payload["ranking"][0]["config"]["min_confidence"] == 0.56
+
+
+
+def test_btc_focused_grid_is_bounded_and_longer_horizon() -> None:
+    grid = btc_focused_benchmark_grid()
+
+    assert len(grid) == 36
+    assert {config.horizon_minutes for config in grid} == {45, 60, 90}
+    assert {config.max_train_rows for config in grid} == {1000}
+    assert {config.atr_multiplier for config in grid} == {0.15, 0.25}
+    assert {config.min_confidence for config in grid} == {0.56, 0.60}
+
+
+def test_market_selections_choose_gate_passing_config_per_symbol() -> None:
+    markets = {
+        "A": sample_market(phase=0.0),
+        "B": sample_market(phase=0.9),
+    }
+    configs = (
+        MTFBenchmarkConfig(3, 0.0005, 0.25, 700, 0.50),
+        MTFBenchmarkConfig(6, 0.0005, 0.25, 700, 0.50),
+    )
+    results = run_parameter_benchmark(
+        markets,
+        configs,
+        folds=1,
+        test_window_bars=24,
+        min_train_rows=500,
+    )
+
+    selections = market_selections(results)
+
+    assert set(selections) == {"A", "B"}
+    for selection in selections.values():
+        if selection is not None:
+            assert selection["active_predictions"] >= 10
+            assert selection["active_precision"] > 0.5
+            assert selection["config_name"]
+
+
+def test_payload_exposes_per_market_selection() -> None:
+    markets = {"A": sample_market()}
+    configs = (MTFBenchmarkConfig(3, 0.0005, 0.25, 700, 0.50),)
+    results = run_parameter_benchmark(
+        markets,
+        configs,
+        folds=1,
+        test_window_bars=24,
+        min_train_rows=500,
+    )
+
+    payload = benchmark_payload(results)
+
+    assert "market_selections" in payload
+    assert set(payload["market_selections"]) == {"A"}
