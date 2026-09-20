@@ -12,6 +12,7 @@ from .features import FEATURES, make_features, make_labels
 from .file_persistence import FilePaperPersistence
 from .model import Prediction
 from .model_codec import deserialize_model, serialize_model
+from .mtf_shadow_challenger import MultiTimeframeShadowResult
 from .online import RiverDirectionModel
 from .persistence import CommitOutcome, PaperPersistence, RuntimeStepCommit
 from .regime import detect_regime
@@ -183,6 +184,7 @@ class PaperAutonomousRuntime:
         execution_idx: object,
         *,
         shadow_challenger: ShadowChallengerResult | None = None,
+        mtf_shadow_challenger: MultiTimeframeShadowResult | None = None,
     ) -> RuntimeStepResult:
         if execution_idx not in prepared.eligible:
             raise ValueError("Requested index is not an eligible execution bar")
@@ -192,6 +194,7 @@ class PaperAutonomousRuntime:
                 prepared,
                 execution_idx,
                 shadow_challenger=shadow_challenger,
+                mtf_shadow_challenger=mtf_shadow_challenger,
             )
 
     def _step_prepared_locked(
@@ -200,6 +203,7 @@ class PaperAutonomousRuntime:
         execution_idx: object,
         *,
         shadow_challenger: ShadowChallengerResult | None = None,
+        mtf_shadow_challenger: MultiTimeframeShadowResult | None = None,
     ) -> RuntimeStepResult:
         df = prepared.market
         features = prepared.features
@@ -326,6 +330,8 @@ class PaperAutonomousRuntime:
         }
         if shadow_challenger is not None:
             audit_payload["shadow_challenger"] = asdict(shadow_challenger)
+        if mtf_shadow_challenger is not None:
+            audit_payload["mtf_shadow_challenger"] = asdict(mtf_shadow_challenger)
         outcome = self.persistence.commit_step(
             self.runtime_key,
             RuntimeStepCommit(
