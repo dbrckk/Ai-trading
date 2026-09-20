@@ -705,6 +705,8 @@ class PostgresPaperPersistence(PaperPersistence):
     def load_mtf_shadow_quality(
         self,
         runtime_key: str,
+        *,
+        config_name: str | None = None,
     ) -> MultiTimeframeShadowQuality:
         with self._connect() as connection, connection.cursor() as cursor:
             cursor.execute(
@@ -725,7 +727,7 @@ class PostgresPaperPersistence(PaperPersistence):
                 payload = json.loads(payload)
             if isinstance(payload, dict):
                 payloads.append(payload)
-        return compare_mtf_shadow_audit_payloads(payloads)
+        return compare_mtf_shadow_audit_payloads(payloads, config_name=config_name)
 
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:
         payload = asdict(status)
