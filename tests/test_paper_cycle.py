@@ -527,19 +527,38 @@ def test_mtf_history_load_is_isolated_from_primary_market(
 
 
 
-def test_mtf_boundary_runs_only_on_quarter_hour() -> None:
+def test_mtf_boundary_aligns_with_candidate_horizon() -> None:
     assert paper_cycle_module._is_mtf_evaluation_boundary(
-        pd.Timestamp("2026-09-20 07:45:00+00:00"),
+        pd.Timestamp("2026-09-20 07:30:00+00:00"),
         "5m",
-    )
-    assert not paper_cycle_module._is_mtf_evaluation_boundary(
-        pd.Timestamp("2026-09-20 07:50:00+00:00"),
-        "5m",
+        45,
     )
     assert not paper_cycle_module._is_mtf_evaluation_boundary(
         pd.Timestamp("2026-09-20 07:45:00+00:00"),
+        "5m",
+        45,
+    )
+    assert paper_cycle_module._is_mtf_evaluation_boundary(
+        pd.Timestamp("2026-09-20 07:30:00+00:00"),
+        "5m",
+        90,
+    )
+    assert not paper_cycle_module._is_mtf_evaluation_boundary(
+        pd.Timestamp("2026-09-20 08:00:00+00:00"),
+        "5m",
+        90,
+    )
+    assert not paper_cycle_module._is_mtf_evaluation_boundary(
+        pd.Timestamp("2026-09-20 07:30:00+00:00"),
         "1m",
+        45,
     )
+    with pytest.raises(ValueError, match="5-minute multiple"):
+        paper_cycle_module._is_mtf_evaluation_boundary(
+            pd.Timestamp("2026-09-20 07:30:00+00:00"),
+            "5m",
+            7,
+        )
 
 
 
@@ -640,7 +659,7 @@ def test_validated_btc_mtf_config_is_forwarded_to_shadow_evaluator(
     monkeypatch,
 ) -> None:
     backend = FilePaperPersistence(tmp_path)
-    primary = sample_market(220)
+    primary = sample_market(217)
     long_history = sample_market(1600)
     calls: list[str] = []
     captured: dict[str, object] = {}
