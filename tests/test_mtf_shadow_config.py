@@ -26,5 +26,14 @@ def test_dax_uses_validated_45m_candidate() -> None:
     assert config.min_confidence == 0.60
 
 
-def test_btc_has_no_validated_mtf_candidate() -> None:
-    assert validated_mtf_shadow_config("BTC-USD") is None
+def test_btc_uses_validated_90m_candidate() -> None:
+    config = validated_mtf_shadow_config("BTC-USD")
+
+    assert config is not None
+    assert config.config_name == "h90m-min3bp-atr0.15-train1000-conf60"
+    assert config.horizon_bars == 18
+    assert config.horizon_minutes == 90
+    assert config.minimum_threshold == 0.0003
+    assert config.atr_multiplier == 0.15
+    assert config.max_train_rows == 1000
+    assert config.min_confidence == 0.60
