@@ -72,6 +72,7 @@ class FakeRunner:
             last_processed="2026-09-16 08:00:00+00:00",
             processed_bars=4,
             reason="processed 2 bar(s)",
+            mtf_evaluated=shadow_challenger_enabled,
         )
 
 
@@ -94,6 +95,9 @@ def test_service_persists_starting_and_running_status() -> None:
     assert final.units == 2.0
     assert final.equity == 99_702.0
     assert final.reason == "processed 2 bar(s)"
+    assert final.cycle_duration_seconds is not None
+    assert final.cycle_duration_seconds >= 0.0
+    assert final.mtf_evaluated is False
 
 
 def test_persistence_factory_failure_is_sanitized() -> None:
@@ -266,6 +270,8 @@ def test_service_propagates_shadow_challenger_when_enabled() -> None:
 
     assert result.processed == 2
     assert runner.shadow_challenger_enabled is True
+    assert backend.statuses[-1].mtf_evaluated is True
+    assert backend.statuses[-1].cycle_duration_seconds is not None
 
 
 
