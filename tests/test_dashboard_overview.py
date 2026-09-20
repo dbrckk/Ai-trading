@@ -595,7 +595,8 @@ def test_btc_overview_exposes_validated_mtf_candidate() -> None:
     )
 
     mtf = payload["mtf_shadow_challenger"]
-    assert mtf["status"] == "comparable"
+    assert mtf["status"] == "collecting"
+    assert mtf["observations"] == 0
     assert mtf["candidate_config"]["config_name"] == (
         "h90m-min3bp-atr0.15-train1000-conf60"
     )
