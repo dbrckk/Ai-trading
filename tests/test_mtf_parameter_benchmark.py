@@ -5,8 +5,8 @@ import pandas as pd
 
 import ai_trading.mtf_parameter_benchmark as benchmark_module
 from ai_trading.mtf_parameter_benchmark import (
-    MTFBenchmarkConfig,
     MarketBenchmarkResult,
+    MTFBenchmarkConfig,
     benchmark_payload,
     btc_focused_benchmark_grid,
     evaluate_market_config,
