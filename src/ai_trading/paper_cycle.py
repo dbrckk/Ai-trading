@@ -19,11 +19,18 @@ from .shadow_challenger import evaluate_shadow_challenger
 DEFAULT_MAX_CATCHUP_BARS = 72
 
 
-def _is_mtf_evaluation_boundary(execution_idx: object, interval: str) -> bool:
+def _is_mtf_evaluation_boundary(
+    execution_idx: object,
+    interval: str,
+    horizon_minutes: int = 15,
+) -> bool:
     if interval != "5m":
         return False
+    if horizon_minutes < 5 or horizon_minutes % 5 != 0:
+        raise ValueError("horizon_minutes must be a positive 5-minute multiple")
     timestamp = pd.Timestamp(execution_idx)
-    return timestamp.minute % 15 == 0
+    epoch_minutes = timestamp.value // (60 * 1_000_000_000)
+    return epoch_minutes % horizon_minutes == 0
 
 
 
@@ -146,7 +153,11 @@ class PaperCycleRunner:
                     (
                         target
                         for target in pending[:max_catchup_bars]
-                        if _is_mtf_evaluation_boundary(target, interval)
+                        if _is_mtf_evaluation_boundary(
+                            target,
+                            interval,
+                            mtf_config.horizon_minutes,
+                        )
                     ),
                     None,
                 )
