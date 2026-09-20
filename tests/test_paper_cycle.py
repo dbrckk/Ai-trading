@@ -477,7 +477,7 @@ def test_mtf_history_load_is_isolated_from_primary_market(
     monkeypatch,
 ) -> None:
     backend = FilePaperPersistence(tmp_path)
-    primary = sample_market(220)
+    primary = sample_market(217)
     long_history = sample_market(900)
     calls: list[str] = []
     seen_rows: list[int] = []
@@ -604,7 +604,7 @@ def test_validated_gold_mtf_config_is_forwarded_to_shadow_evaluator(
     monkeypatch,
 ) -> None:
     backend = FilePaperPersistence(tmp_path)
-    primary = sample_market(220)
+    primary = sample_market(217)
     long_history = sample_market(1400)
     captured: dict[str, object] = {}
 
