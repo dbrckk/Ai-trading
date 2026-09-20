@@ -583,21 +583,24 @@ class BtcOverviewPersistence(OverviewPersistence):
         return super().load_shadow_quality(RUNTIME_KEY)
 
     def load_mtf_shadow_quality(self, runtime_key: str, **kwargs):
-        raise AssertionError("BTC must not load unvalidated MTF quality")
+        assert runtime_key == "paper:BTC-USD:5m:online-river:v1"
+        assert kwargs["config_name"] == "h90m-min3bp-atr0.15-train1000-conf60"
+        return super().load_mtf_shadow_quality(RUNTIME_KEY)
 
 
-def test_btc_overview_marks_mtf_candidate_unvalidated() -> None:
+def test_btc_overview_exposes_validated_mtf_candidate() -> None:
     payload = build_operational_overview(
         BtcOverviewPersistence(),
         "paper:BTC-USD:5m:online-river:v1",
     )
 
     mtf = payload["mtf_shadow_challenger"]
-    assert mtf["status"] == "unvalidated"
-    assert mtf["candidate_config"] is None
-    assert mtf["horizon_minutes"] is None
-    assert mtf["promotion_gate"]["eligible_for_review"] is False
-    assert any(
-        "no benchmark-validated" in reason
-        for reason in mtf["promotion_gate"]["reasons"]
+    assert mtf["status"] == "comparable"
+    assert mtf["candidate_config"]["config_name"] == (
+        "h90m-min3bp-atr0.15-train1000-conf60"
     )
+    assert mtf["candidate_config"]["minimum_threshold"] == 0.0003
+    assert mtf["candidate_config"]["atr_multiplier"] == 0.15
+    assert mtf["candidate_config"]["min_confidence"] == 0.60
+    assert mtf["horizon_minutes"] == 90
+    assert mtf["promotion_gate"]["eligible_for_review"] is False
