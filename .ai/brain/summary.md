@@ -46,7 +46,7 @@
 - AST files reparsed this run: 2
 - outline files retained: 343
 - top-level items retained: 2747
-- direct members retained: 1420
+- direct members retained: 1425
 - symbol shards: 25
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 

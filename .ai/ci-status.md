@@ -1,18 +1,14 @@
 # CI status
 
-Summary: 5 success / 2 failure / 1 active
+Summary: 6 success / 0 failure / 2 active
 
-- CI: in_progress / pending (008eab92)
+- CI: in_progress / pending (6eb3b4dd)
+- DAX MTF Refinement: in_progress / pending (b9ad5675)
+- CI: completed / success (55dd8e9e)
+- Paper Cycle: completed / success (bb92f320)
+- MTF Parameter Benchmark: completed / success (34e179d4)
+- CI: completed / success (008eab92)
 - MTF Parameter Benchmark: completed / success (8af6b3d8)
 - CI: completed / success (8af6b3d8)
-- CI: completed / success (b895a932)
-- CI: completed / failure (36d7a76e)
-- CI: completed / failure (01f158e5)
-- MTF Parameter Benchmark: completed / success (d8adb73c)
-- MTF Parameter Benchmark: completed / success (6d98e883)
-
-## Latest failed run structure
-- Job: test
-  - Failed step: Ruff
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

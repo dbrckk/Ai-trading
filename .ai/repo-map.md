@@ -3786,6 +3786,7 @@ horizon_bars: int
 minimum_threshold: float
 atr_multiplier: float
 max_train_rows: int
+min_confidence: float
 ⋮----
 @property
     def horizon_minutes(self) -> int
@@ -3811,8 +3812,11 @@ macro_recall: float
 brier: float
 directional_accuracy: float
 directional_edge: float
+active_predictions: int
+active_precision: float
 quality_score: float
 selection_score: float
+directional_gate_passed: bool
 ⋮----
 @dataclass(frozen=True)
 class AggregateBenchmarkResult
@@ -3824,8 +3828,16 @@ stability_penalty: float
 aggregate_score: float
 total_observations: int
 total_directional_observations: int
+markets_passing_directional_gate: int
 ⋮----
 def default_benchmark_grid() -> tuple[MTFBenchmarkConfig, ...]
+⋮----
+"""Refined grid after the first coarse 10m/15m/30m benchmark.
+
+    The first run showed 30m ahead of 15m/10m, while ATR multipliers were
+    largely masked by the 10bp threshold floor. This grid therefore expands
+    horizon and confidence while testing a lower threshold floor.
+    """
 ⋮----
 def _macro_recall(predicted: pd.Series, realized: pd.Series) -> float
 ⋮----
@@ -3833,7 +3845,8 @@ recalls: list[float] = []
 ⋮----
 mask = realized == label
 ⋮----
-directional_evidence = min(1.0, directional_observations / 20.0)
+active_edge = max(0.0, min(1.0, (active_precision - 0.5) * 2.0))
+active_evidence = min(1.0, active_predictions / 20.0)
 ⋮----
 required = min_train_rows + folds * test_window_bars
 ⋮----
@@ -3864,6 +3877,8 @@ row = features.loc[signal_idx, MTF_CHALLENGER_FEATURES]
 prediction = model.predict_one(row, detect_regime(row))
 label = labels.loc[signal_idx]
 ⋮----
+effective_side = (
+⋮----
 index = pd.RangeIndex(len(realized_labels))
 predicted = pd.Series(predicted_sides, index=index, dtype="int64")
 confidence = pd.Series(confidences, index=index, dtype="float64")
@@ -3873,8 +3888,12 @@ quality = evaluate_model_quality(predicted, confidence, realized)
 directional_mask = realized != 0
 directional_observations = int(directional_mask.sum())
 directional_accuracy = (
+active_mask = predicted != 0
+active_predictions = int(active_mask.sum())
+active_precision = (
 macro_recall = _macro_recall(predicted, realized)
 selection_score = _selection_score(
+directional_gate_passed = active_predictions >= 10 and active_precision > 0.5
 ⋮----
 grid = tuple(configs or default_benchmark_grid())
 ⋮----
@@ -9116,7 +9135,7 @@ results = run_parameter_benchmark(
 def test_benchmark_payload_is_reproducible_and_explicit() -> None
 ⋮----
 markets = {"A": sample_market()}
-configs = (MTFBenchmarkConfig(3, 0.001, 0.25, 600),)
+configs = (MTFBenchmarkConfig(3, 0.001, 0.25, 600, 0.56),)
 ⋮----
 payload = benchmark_payload(results)
 ````
