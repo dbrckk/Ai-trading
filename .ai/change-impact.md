@@ -1,17 +1,15 @@
 # Change impact
 
-Base: 73cf8de088f7117efac336193171d157f1edb54b
-Head: 84e2fddf8d4c6e3df029781c1ff2a089104ba30e
+Base: bcdcabfe0b1e4bd1c9d5651407f9ae8f7907dc49
+Head: 5963d372f882f3967ee7de415ef34b102403577e
 
 ## Changed files
 - M src/ai_trading/dashboard.py
-- M src/ai_trading/multi_market.py
-- M src/ai_trading/paper_cycle.py
-- M src/ai_trading/paper_cycle_service.py
-- M src/ai_trading/runtime_status.py
+- M src/ai_trading/mtf_shadow_quality.py
+- M src/ai_trading/operational_overview.py
+- M tests/test_dashboard_overview.py
+- M tests/test_mtf_shadow_quality.py
 - M tests/test_multi_market.py
-- M tests/test_paper_cycle_service.py
-- M tests/test_runtime_status.py
 
 ## Affected areas
 - src
@@ -19,10 +17,7 @@ Head: 84e2fddf8d4c6e3df029781c1ff2a089104ba30e
 
 ## Related test candidates
 - tests/test_dashboard.py
-- tests/test_multi_market.py
-- tests/test_paper_cycle.py
-- tests/test_paper_cycle_service.py
-- tests/test_runtime_status.py
+- tests/test_mtf_shadow_quality.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

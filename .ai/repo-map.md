@@ -2184,6 +2184,9 @@ cycle_duration_display = (
 mtf_cycle_display = "YES" if item.get("mtf_evaluated") else "NO"
 observations = shadow.get("observations", 0)
 mtf_observations = mtf_shadow.get("observations", 0)
+mtf_directional = mtf_shadow.get("directional_observations", 0)
+mtf_directional_rate = float(mtf_shadow.get("directional_rate", 0.0) or 0.0)
+mtf_distribution = mtf_shadow.get("label_distribution", {})
 review = "ELIGIBLE" if gate.get("eligible_for_review") else "COLLECTING"
 mtf_review = (
 mtf_score_delta = mtf_shadow.get("score_delta")
@@ -2195,6 +2198,7 @@ confidence_value = (
 confidence_display = (
 shadow_progress = min(100.0, float(observations) / 250.0 * 100.0)
 mtf_shadow_progress = min(
+mtf_directional_progress = min(
 market_tone = {
 market_mark = {
 pnl_css = (
@@ -3800,9 +3804,18 @@ class MultiTimeframeShadowQuality
 observations: int
 river: ModelQuality
 challenger: ModelQuality
+long_labels: int = 0
+flat_labels: int = 0
+short_labels: int = 0
 ⋮----
 @property
     def score_delta(self) -> float
+⋮----
+@property
+    def directional_observations(self) -> int
+⋮----
+@property
+    def directional_rate(self) -> float
 ⋮----
 def _empty_quality() -> ModelQuality
 ⋮----
@@ -4558,6 +4571,8 @@ side = max(probabilities, key=probabilities.get)
 
 ## File: src/ai_trading/operational_overview.py
 ````python
+_MTF_MIN_DIRECTIONAL_OBSERVATIONS = 100
+⋮----
 def _empty_model_snapshot() -> dict[str, object]
 ⋮----
 def _empty_shadow_quality_snapshot() -> dict[str, object]
@@ -4578,6 +4593,12 @@ def quality_payload(quality) -> dict[str, object]
 gate = evaluate_shadow_promotion_gate(comparison, policy)
 ⋮----
 def _mtf_shadow_quality_snapshot(comparison) -> dict[str, object]
+⋮----
+directional_observations = int(comparison.directional_observations)
+directional_rate = float(comparison.directional_rate)
+gate_reasons = list(gate.reasons)
+⋮----
+eligible_for_review = gate.eligible_for_review and not gate_reasons
 ⋮----
 def runtime_is_consistent(persisted: PersistedRuntime) -> bool
 ⋮----
@@ -8002,6 +8023,8 @@ def test_operational_overview_exposes_model_and_runtime_metadata() -> None
 ⋮----
 payload = build_operational_overview(OverviewPersistence(), RUNTIME_KEY)
 ⋮----
+mtf_gate = payload["mtf_shadow_challenger"]["promotion_gate"]
+⋮----
 gate = payload["shadow_challenger"]["promotion_gate"]
 ⋮----
 def test_operational_overview_flags_stale_runtime() -> None
@@ -8941,6 +8964,8 @@ payloads = [
 comparison = compare_mtf_shadow_audit_payloads(payloads)
 ⋮----
 def test_mtf_quality_deduplicates_same_evaluated_execution() -> None
+⋮----
+def test_mtf_quality_exposes_flat_only_evidence() -> None
 ````
 
 ## File: tests/test_multi_market.py

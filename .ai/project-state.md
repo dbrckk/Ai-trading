@@ -42,22 +42,26 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T08:17:59Z
+Generated: 2026-09-20T08:28:08Z
 
 ### Git
 - Branch: `main`
-- Head: `84e2fddf8d4c`
-- Commit date: 2026-09-20T10:17:48+02:00
-- Commit: feat: expose cycle latency and MTF activity telemetry (#60)
+- Head: `5963d372f882`
+- Commit date: 2026-09-20T10:27:58+02:00
+- Commit: feat: require directional evidence for MTF review (#61)
 - Tracked files: 472
 
 ### Recently changed files
 - `src/ai_trading/dashboard.py`
+- `src/ai_trading/mtf_shadow_quality.py`
+- `src/ai_trading/operational_overview.py`
+- `tests/test_dashboard_overview.py`
+- `tests/test_mtf_shadow_quality.py`
+- `tests/test_multi_market.py`
 - `src/ai_trading/multi_market.py`
 - `src/ai_trading/paper_cycle.py`
 - `src/ai_trading/paper_cycle_service.py`
 - `src/ai_trading/runtime_status.py`
-- `tests/test_multi_market.py`
 - `tests/test_paper_cycle_service.py`
 - `tests/test_runtime_status.py`
 - `tests/test_paper_cycle.py`
@@ -65,13 +69,6 @@ Generated: 2026-09-20T08:17:59Z
 - `tests/test_mtf_shadow_challenger.py`
 - `src/ai_trading/hosted_runtime.py`
 - `tests/test_hosted_runtime.py`
-- `src/ai_trading/file_persistence.py`
-- `src/ai_trading/mtf_shadow_quality.py`
-- `src/ai_trading/multi_timeframe_features.py`
-- `src/ai_trading/operational_overview.py`
-- `src/ai_trading/postgres_persistence.py`
-- `src/ai_trading/runtime.py`
-- `tests/test_dashboard_overview.py`
 
 ### Project signals
 - `pyproject.toml`
