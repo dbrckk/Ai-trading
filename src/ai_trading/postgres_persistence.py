@@ -22,6 +22,10 @@ from .persistence import (
     PersistedRuntime,
     RuntimeStepCommit,
 )
+from .mtf_shadow_quality import (
+    MultiTimeframeShadowQuality,
+    compare_mtf_shadow_audit_payloads,
+)
 from .runtime_state import RuntimeState
 from .runtime_status import HostedRuntimeStatus
 from .shadow_quality import ShadowQualityComparison, compare_shadow_audit_payloads
@@ -697,6 +701,31 @@ class PostgresPaperPersistence(PaperPersistence):
             if isinstance(payload, dict):
                 payloads.append(payload)
         return compare_shadow_audit_payloads(payloads)
+
+    def load_mtf_shadow_quality(
+        self,
+        runtime_key: str,
+    ) -> MultiTimeframeShadowQuality:
+        with self._connect() as connection, connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT payload
+                FROM paper_audit_events
+                WHERE runtime_key = %s
+                  AND payload ? 'prediction'
+                ORDER BY id ASC
+                """,
+                (runtime_key,),
+            )
+            rows = cursor.fetchall()
+        payloads = []
+        for row in rows:
+            payload = row["payload"]
+            if not isinstance(payload, dict):
+                payload = json.loads(payload)
+            if isinstance(payload, dict):
+                payloads.append(payload)
+        return compare_mtf_shadow_audit_payloads(payloads)
 
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:
         payload = asdict(status)
