@@ -1,29 +1,18 @@
 # Change impact
 
-Base: cfe8222be03fd006af61a0e0b7eb052ced78638f
-Head: b26b32622774344d34e4d7230d78873c3321c85d
+Base: 1c06eaa06c7a12923624989a9054bc07977723a3
+Head: 3fd912f979ab66bdfa43e8240ff37a140c2f5c7c
 
 ## Changed files
-- M src/ai_trading/dashboard.py
-- M src/ai_trading/hosted_runtime.py
-- M src/ai_trading/multi_market.py
-- M src/ai_trading/paper_cycle.py
-- M src/ai_trading/paper_cycle_service.py
-- M tests/test_hosted_runtime.py
-- M tests/test_multi_market.py
-- M tests/test_paper_cycle.py
-- M tests/test_paper_cycle_service.py
+- M src/ai_trading/mtf_shadow_challenger.py
+- M tests/test_mtf_shadow_challenger.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_dashboard.py
-- tests/test_hosted_runtime.py
-- tests/test_multi_market.py
-- tests/test_paper_cycle.py
-- tests/test_paper_cycle_service.py
+- tests/test_mtf_shadow_challenger.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

@@ -3754,6 +3754,13 @@ candidate = execution_idx
 ⋮----
 """Evaluate a 5m/15m/1h/4h ensemble without controlling execution."""
 ⋮----
+full_execution_pos = int(market.index.get_loc(execution_idx))
+⋮----
+window_start = max(
+window_stop = min(
+market = market.iloc[window_start:window_stop]
+authoritative_features = authoritative_features.reindex(market.index)
+⋮----
 signal_pos = execution_pos - 1
 signal_idx = market.index[signal_pos]
 ⋮----
@@ -8882,6 +8889,9 @@ market = sample_market()
 authoritative = make_features(market)
 execution_idx = market.index[-4]
 captured: dict[str, object] = {}
+original_feature_builder = mtf_module.make_multi_timeframe_challenger_features
+⋮----
+def recording_feature_builder(frame: pd.DataFrame) -> pd.DataFrame
 ⋮----
 class RecordingEnsemble
 ⋮----
@@ -8894,6 +8904,10 @@ result = evaluate_multi_timeframe_shadow(
 train_index = captured["train_index"]
 ⋮----
 signal_pos = int(market.index.get_loc(execution_idx)) - 1
+⋮----
+def test_mtf_shadow_rejects_invalid_feature_warmup() -> None
+⋮----
+market = sample_market(800)
 ````
 
 ## File: tests/test_mtf_shadow_quality.py
