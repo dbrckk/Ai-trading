@@ -45,16 +45,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T15:16:54Z
+Generated: 2026-09-20T16:37:49Z
 
 ### Git
 - Branch: `main`
-- Head: `fbb56bd11179`
-- Commit date: 2026-09-20T17:16:43+02:00
-- Commit: feat: run benchmark-validated Gold DAX MTF shadows (#67)
+- Head: `eea5d0af1852`
+- Commit date: 2026-09-20T18:37:39+02:00
+- Commit: fix: compare MTF parameter configs with a common random seed (#68)
 - Tracked files: 477
 
 ### Recently changed files
+- `.github/workflows/mtf-parameter-benchmark.yml`
+- `src/ai_trading/mtf_parameter_benchmark.py`
+- `tests/test_mtf_parameter_benchmark.py`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/file_persistence.py`
 - `src/ai_trading/mtf_shadow_challenger.py`
@@ -69,9 +72,6 @@ Generated: 2026-09-20T15:16:54Z
 - `tests/test_mtf_shadow_quality.py`
 - `tests/test_multi_market.py`
 - `tests/test_paper_cycle.py`
-- `.github/workflows/mtf-parameter-benchmark.yml`
-- `src/ai_trading/mtf_parameter_benchmark.py`
-- `tests/test_mtf_parameter_benchmark.py`
 
 ### Project signals
 - `pyproject.toml`

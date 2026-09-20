@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 7 success / 0 failure / 1 active
+Summary: 6 success / 1 failure / 1 active
 
-- CI: in_progress / pending (fbb56bd1)
+- CI: in_progress / pending (eea5d0af)
+- CI: completed / success (6aec1130)
+- CI: completed / failure (84bf2c15)
+- MTF Parameter Benchmark: completed / success (6817ad16)
+- CI: completed / success (fbb56bd1)
 - CI: completed / success (c867acfc)
 - CI: completed / success (ab791599)
 - CI: completed / success (b9fd13bc)
-- CI: completed / success (c98cf837)
-- Paper Cycle: completed / success (e46a479d)
-- CI: completed / success (2e13d539)
-- CI: completed / success (c2ad2f3d)
+
+## Latest failed run structure
+- Job: test
+  - Failed step: Ruff
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

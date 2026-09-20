@@ -551,6 +551,7 @@ on:
     branches:
       - "feat/mtf-parameter-benchmark"
       - "feat/per-market-mtf-parameter-selection"
+      - "fix/mtf-benchmark-common-seed"
     paths:
       - "src/ai_trading/mtf_parameter_benchmark.py"
       - ".github/workflows/mtf-parameter-benchmark.yml"
@@ -9241,6 +9242,10 @@ selections = market_selections(results)
 def test_payload_exposes_per_market_selection() -> None
 ⋮----
 configs = (MTFBenchmarkConfig(3, 0.0005, 0.25, 700, 0.50),)
+⋮----
+def test_parameter_grid_uses_same_random_seed_for_every_config(monkeypatch) -> None
+⋮----
+seen_random_states: list[int] = []
 ````
 
 ## File: tests/test_mtf_shadow_challenger.py
