@@ -3,8 +3,10 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
+import ai_trading.mtf_parameter_benchmark as benchmark_module
 from ai_trading.mtf_parameter_benchmark import (
     MTFBenchmarkConfig,
+    MarketBenchmarkResult,
     benchmark_payload,
     btc_focused_benchmark_grid,
     evaluate_market_config,
@@ -111,6 +113,7 @@ def test_benchmark_payload_is_reproducible_and_explicit() -> None:
     assert payload["method"]["context_timeframes"] == ["5m", "15m", "1h", "4h"]
     assert payload["method"]["walk_forward"] is True
     assert payload["method"]["purged"] is True
+    assert payload["method"]["common_random_seed"] is True
     assert payload["method"]["directional_gate"] == {
         "min_active_predictions": 20,
         "min_active_precision": 0.5,
@@ -173,3 +176,62 @@ def test_payload_exposes_per_market_selection() -> None:
 
     assert "market_selections" in payload
     assert set(payload["market_selections"]) == {"A"}
+
+
+
+def test_parameter_grid_uses_same_random_seed_for_every_config(monkeypatch) -> None:
+    seen_random_states: list[int] = []
+
+    def fake_evaluate_market_config(
+        symbol,
+        market,
+        config,
+        *,
+        folds,
+        test_window_bars,
+        min_train_rows,
+        random_state,
+    ):
+        del market, folds, test_window_bars, min_train_rows
+        seen_random_states.append(random_state)
+        return MarketBenchmarkResult(
+            symbol=symbol,
+            config_name=config.name,
+            folds=1,
+            observations=20,
+            directional_observations=12,
+            long_labels=6,
+            flat_labels=8,
+            short_labels=6,
+            accuracy=0.5,
+            macro_recall=0.5,
+            brier=0.25,
+            directional_accuracy=0.5,
+            directional_edge=0.0,
+            active_predictions=20,
+            active_precision=0.55,
+            quality_score=0.5,
+            selection_score=0.5,
+            directional_gate_passed=True,
+        )
+
+    monkeypatch.setattr(
+        benchmark_module,
+        "evaluate_market_config",
+        fake_evaluate_market_config,
+    )
+
+    configs = (
+        MTFBenchmarkConfig(3, 0.0005, 0.25, 700, 0.56),
+        MTFBenchmarkConfig(9, 0.0005, 0.25, 700, 0.60),
+    )
+    run_parameter_benchmark(
+        {"A": sample_market(), "B": sample_market(phase=0.3)},
+        configs,
+        folds=1,
+        test_window_bars=20,
+        min_train_rows=500,
+        random_state=73,
+    )
+
+    assert seen_random_states == [73, 73, 73, 73]
