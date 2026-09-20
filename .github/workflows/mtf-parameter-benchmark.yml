@@ -2,7 +2,9 @@ name: MTF Parameter Benchmark
 
 on:
   push:
-    branches: ["feat/mtf-parameter-benchmark"]
+    branches:
+      - "feat/mtf-parameter-benchmark"
+      - "feat/per-market-mtf-parameter-selection"
     paths:
       - "src/ai_trading/mtf_parameter_benchmark.py"
       - ".github/workflows/mtf-parameter-benchmark.yml"
@@ -14,7 +16,7 @@ permissions:
 jobs:
   benchmark:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -30,14 +32,28 @@ jobs:
           --period 1mo
           --interval 5m
           --folds 2
-          --test-window-bars 48
+          --test-window-bars 96
           --json-output artifacts/mtf_benchmark/results.json
           --markdown-output artifacts/mtf_benchmark/report.md
+      - name: Run BTC focused benchmark
+        run: >-
+          python -m ai_trading.mtf_parameter_benchmark
+          --profile btc-focused
+          --symbols "BTC-USD"
+          --period 1mo
+          --interval 5m
+          --folds 2
+          --test-window-bars 96
+          --json-output artifacts/mtf_benchmark/btc-results.json
+          --markdown-output artifacts/mtf_benchmark/btc-report.md
       - name: Print report
         if: always()
         run: |
           if [ -f artifacts/mtf_benchmark/report.md ]; then
             cat artifacts/mtf_benchmark/report.md
+          fi
+          if [ -f artifacts/mtf_benchmark/btc-report.md ]; then
+            cat artifacts/mtf_benchmark/btc-report.md
           fi
       - uses: actions/upload-artifact@v4
         if: always()
