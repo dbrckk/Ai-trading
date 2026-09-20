@@ -2,9 +2,9 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "chore/record-three-market-live",
-  "pull_request": null,
-  "focus": "Monitor live Gold/DAX/BTC paper runtimes and collect per-market shadow challenger evidence.",
+  "active_branch": "feat/validated-per-market-mtf-shadow",
+  "pull_request": 67,
+  "focus": "Activate benchmark-validated Gold/DAX 45-minute MTF candidates as versioned audit-only shadows; keep BTC unvalidated.",
   "production_evidence": {
     "main_head": "3e40c11cd9cd923232b70f9b63dba71cee355f91",
     "render_live_commit": "3e40c11cd9cd923232b70f9b63dba71cee355f91",
@@ -46,7 +46,10 @@
     "PR #50 branch adds Gold/DAX/BTC orchestration, failure isolation, normalized 100k portfolio reporting, /api/markets, and responsive dashboard cards.",
     "PR #50 merged the first durable Gold/DAX/BTC multi-market runtime and dashboard.",
     "PR #51 made Gold/DAX/BTC production cycles concurrent and added market signal/confidence telemetry.",
-    "PR #52 added volume-less market support and restored the DAX runtime to RUNNING."
+    "PR #52 added volume-less market support and restored the DAX runtime to RUNNING.",
+    "PR #54-#61 added premium dashboard, scroll-safe refresh, true multi-timeframe shadow research, bounded compute, 15-minute cadence, latency telemetry, and directional evidence gates.",
+    "PR #63 refined MTF benchmark scoring around confidence-gated directional evidence.",
+    "PR #66 selected validated parameters independently per market: Gold 45m/5bp/ATR0.25/train1000/conf56, DAX 45m/5bp/ATR0.25/train1000/conf60; BTC remains unvalidated."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -54,9 +57,9 @@
     "github_schedule_fallback_enabled": true
   },
   "next_actions": [
-    "Collect shadow challenger evidence independently for Gold, DAX, and BTC.",
-    "Use /api/markets and dashboard cards to monitor each runtime signal, confidence, bars, shadow samples, and promotion gate.",
-    "Require at least 250 realized shadow observations per market before promotion review eligibility.",
-    "Keep all execution paper-only and keep the GitHub scheduled fallback until scheduler issue #40 acceptance is fully evidenced."
+    "Deploy PR #67 after green CI and verify the versioned Gold/DAX candidate metadata in production.",
+    "Collect at least 500 realized MTF observations and 100 directional observations for each validated Gold/DAX candidate before review eligibility.",
+    "Keep BTC MTF disabled until a focused leakage-safe benchmark produces a directional-gate-passing candidate.",
+    "Keep River authoritative for all PAPER risk and execution."
   ]
 }
