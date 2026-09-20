@@ -97,6 +97,8 @@ def test_mtf_shadow_purges_future_labels_and_caps_training(monkeypatch) -> None:
         feature_warmup_rows=400,
         minimum_threshold=0.001,
         atr_multiplier=0.25,
+        min_confidence=0.60,
+        config_name="test-h15",
     )
 
     assert result is not None
@@ -114,6 +116,10 @@ def test_mtf_shadow_purges_future_labels_and_caps_training(monkeypatch) -> None:
     assert result.threshold_at_signal >= 0.001
     assert result.realized_label in {-1, 0, 1}
     assert result.regime == captured["regime"]
+    assert result.config_name == "test-h15"
+    assert result.raw_side == 1
+    assert result.min_confidence == 0.60
+    assert result.prediction.side == 1
 
 
 
@@ -129,4 +135,66 @@ def test_mtf_shadow_rejects_invalid_feature_warmup() -> None:
             min_train_rows=100,
             max_train_rows=200,
             feature_warmup_rows=0,
+        )
+
+
+
+def test_mtf_shadow_confidence_gate_turns_weak_direction_flat(monkeypatch) -> None:
+    market = sample_market()
+    authoritative = make_features(market)
+    execution_idx = market.index[-4]
+
+    class WeakDirectionalEnsemble:
+        def __init__(self, **kwargs) -> None:
+            del kwargs
+
+        def fit(self, x: pd.DataFrame, y: pd.Series) -> None:
+            assert len(x) == len(y)
+
+        def predict_one(self, row: pd.Series, regime) -> Prediction:
+            del row, regime
+            return Prediction(
+                side=1,
+                confidence=0.55,
+                probabilities={-1: 0.15, 0: 0.30, 1: 0.55},
+            )
+
+    monkeypatch.setattr(
+        mtf_module,
+        "EnsembleDirectionModel",
+        WeakDirectionalEnsemble,
+    )
+
+    result = evaluate_multi_timeframe_shadow(
+        market,
+        authoritative,
+        execution_idx,
+        horizon_bars=3,
+        min_train_rows=500,
+        max_train_rows=700,
+        minimum_threshold=0.001,
+        atr_multiplier=0.25,
+        min_confidence=0.60,
+        config_name="weak-direction",
+    )
+
+    assert result is not None
+    assert result.raw_side == 1
+    assert result.prediction.side == 0
+    assert result.prediction.confidence == pytest.approx(0.55)
+    assert result.config_name == "weak-direction"
+
+
+def test_mtf_shadow_rejects_invalid_confidence_gate() -> None:
+    market = sample_market(800)
+    authoritative = make_features(market)
+
+    with pytest.raises(ValueError, match="min_confidence"):
+        evaluate_multi_timeframe_shadow(
+            market,
+            authoritative,
+            market.index[-4],
+            min_train_rows=100,
+            max_train_rows=200,
+            min_confidence=1.1,
         )
