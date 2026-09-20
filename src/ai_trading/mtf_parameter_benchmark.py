@@ -2,12 +2,10 @@ from __future__ import annotations
 
 import argparse
 import json
+from collections.abc import Iterable
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from statistics import fmean, pstdev
-from typing import Iterable
-
-import numpy as np
 import pandas as pd
 
 from .data import load_history
