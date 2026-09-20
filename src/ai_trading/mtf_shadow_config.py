@@ -44,6 +44,15 @@ _VALIDATED_CONFIGS: dict[str, ValidatedMTFShadowConfig] = {
         max_train_rows=1000,
         min_confidence=0.60,
     ),
+    "BTC-USD": ValidatedMTFShadowConfig(
+        symbol="BTC-USD",
+        config_name="h90m-min3bp-atr0.15-train1000-conf60",
+        horizon_bars=18,
+        minimum_threshold=0.0003,
+        atr_multiplier=0.15,
+        max_train_rows=1000,
+        min_confidence=0.60,
+    ),
 }
 
 
