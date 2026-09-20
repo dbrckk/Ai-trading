@@ -453,6 +453,11 @@ def render_dashboard(
             sleeve_equity = item.get("equity")
             sleeve_pnl = item.get("pnl")
             processed = overview.get("processed_bars")
+            cycle_duration = item.get("cycle_duration_seconds")
+            cycle_duration_display = (
+                "-" if cycle_duration is None else f"{float(cycle_duration):.1f}s"
+            )
+            mtf_cycle_display = "YES" if item.get("mtf_evaluated") else "NO"
             observations = shadow.get("observations", 0)
             mtf_observations = mtf_shadow.get("observations", 0)
             review = "ELIGIBLE" if gate.get("eligible_for_review") else "COLLECTING"
@@ -514,6 +519,8 @@ def render_dashboard(
                 f'<div><small>Equity</small><strong>{_display_money(sleeve_equity)}</strong></div>'
                 f'<div><small>PnL</small><strong class="{pnl_css}">{_display_money(sleeve_pnl)}</strong></div>'
                 f'<div><small>Processed bars</small><strong>{"-" if processed is None else processed}</strong></div>'
+                f'<div><small>Cycle latency</small><strong>{cycle_duration_display}</strong></div>'
+                f'<div><small>MTF this cycle</small><strong>{mtf_cycle_display}</strong></div>'
                 f'<div><small>Shadow 5m</small><strong>{observations}</strong></div>'
                 f'<div><small>MTF 15m</small><strong>{mtf_observations}</strong></div>'
                 f'<div><small>MTF score Δ</small><strong>{mtf_score_display}</strong></div>'
