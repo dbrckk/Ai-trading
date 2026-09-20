@@ -112,7 +112,6 @@ def _shadow_quality_snapshot(comparison) -> dict[str, object]:
     return {
         "available": available,
         "status": "comparable" if available else "collecting",
-        "candidate_config": config.as_dict(),
         "observations": observations,
         "score_delta": float(comparison.score_delta) if available else None,
         "river": quality_payload(comparison.river) if observations else None,
@@ -159,6 +158,7 @@ def _mtf_shadow_quality_snapshot(
     return {
         "available": available,
         "status": "comparable" if available else "collecting",
+        "candidate_config": config.as_dict(),
         "observations": observations,
         "directional_observations": directional_observations,
         "directional_rate": directional_rate,
