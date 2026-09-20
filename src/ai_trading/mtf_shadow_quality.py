@@ -14,10 +14,23 @@ class MultiTimeframeShadowQuality:
     observations: int
     river: ModelQuality
     challenger: ModelQuality
+    long_labels: int = 0
+    flat_labels: int = 0
+    short_labels: int = 0
 
     @property
     def score_delta(self) -> float:
         return float(self.challenger.score - self.river.score)
+
+    @property
+    def directional_observations(self) -> int:
+        return int(self.long_labels + self.short_labels)
+
+    @property
+    def directional_rate(self) -> float:
+        if self.observations == 0:
+            return 0.0
+        return float(self.directional_observations / self.observations)
 
 
 def _empty_quality() -> ModelQuality:
@@ -98,6 +111,9 @@ def compare_mtf_shadow_audit_payloads(
             observations=0,
             river=empty,
             challenger=empty,
+            long_labels=0,
+            flat_labels=0,
+            short_labels=0,
         )
 
     index = pd.RangeIndex(observations)
@@ -116,4 +132,7 @@ def compare_mtf_shadow_audit_payloads(
         observations=observations,
         river=river,
         challenger=challenger,
+        long_labels=sum(1 for label in labels if label == 1),
+        flat_labels=sum(1 for label in labels if label == 0),
+        short_labels=sum(1 for label in labels if label == -1),
     )
