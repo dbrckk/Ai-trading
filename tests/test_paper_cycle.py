@@ -390,7 +390,7 @@ def test_mtf_shadow_is_audit_only_and_cannot_control_execution(
     monkeypatch,
 ) -> None:
     backend = FilePaperPersistence(tmp_path)
-    df = sample_market()
+    df = sample_market(109)
     _runtime, eligible = build_runtime(tmp_path, backend, df)
     current_target = eligible[-1]
     mtf_target = eligible[-3]
@@ -517,3 +517,19 @@ def test_mtf_history_load_is_isolated_from_primary_market(
     assert result.processed == 1
     assert calls == ["5d", "1mo"]
     assert seen_rows == [len(long_history)]
+
+
+
+def test_mtf_boundary_runs_only_on_quarter_hour() -> None:
+    assert paper_cycle_module._is_mtf_evaluation_boundary(
+        pd.Timestamp("2026-09-20 07:45:00+00:00"),
+        "5m",
+    )
+    assert not paper_cycle_module._is_mtf_evaluation_boundary(
+        pd.Timestamp("2026-09-20 07:50:00+00:00"),
+        "5m",
+    )
+    assert not paper_cycle_module._is_mtf_evaluation_boundary(
+        pd.Timestamp("2026-09-20 07:45:00+00:00"),
+        "1m",
+    )
