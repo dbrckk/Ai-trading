@@ -6,6 +6,7 @@ from dataclasses import dataclass
 import pandas as pd
 
 from .data import load_history
+from .features import make_features
 from .mtf_shadow_challenger import (
     evaluate_multi_timeframe_shadow,
     select_observable_execution_target,
@@ -80,6 +81,7 @@ class PaperCycleRunner:
         interval: str,
         max_catchup_bars: int = DEFAULT_MAX_CATCHUP_BARS,
         shadow_challenger_enabled: bool = False,
+        mtf_period: str | None = None,
     ) -> PaperCycleResult:
         if max_catchup_bars < 1:
             raise ValueError("max_catchup_bars must be at least 1")
@@ -129,25 +131,35 @@ class PaperCycleRunner:
                 shadow_target = None
 
             try:
-                mtf_execution = select_observable_execution_target(
-                    market,
-                    eligible,
-                    pending[0],
-                    horizon_bars=3,
+                mtf_market = (
+                    market
+                    if not mtf_period or mtf_period == period
+                    else self.data_loader(symbol, mtf_period, interval)
                 )
-                if mtf_execution is not None:
-                    mtf_shadow_result = evaluate_multi_timeframe_shadow(
-                        market,
-                        prepared.features,
-                        mtf_execution,
+                mtf_current = {
+                    str(index): index
+                    for index in mtf_market.index
+                }.get(str(pending[0]))
+                if mtf_current is not None:
+                    mtf_execution = select_observable_execution_target(
+                        mtf_market,
+                        tuple(mtf_market.index[1:]),
+                        mtf_current,
                         horizon_bars=3,
-                        min_train_rows=500,
-                        max_train_rows=2000,
-                        minimum_threshold=0.001,
-                        atr_multiplier=0.25,
                     )
-                    if mtf_shadow_result is not None:
-                        mtf_attach_target = str(pending[0])
+                    if mtf_execution is not None:
+                        mtf_shadow_result = evaluate_multi_timeframe_shadow(
+                            mtf_market,
+                            make_features(mtf_market),
+                            mtf_execution,
+                            horizon_bars=3,
+                            min_train_rows=500,
+                            max_train_rows=2000,
+                            minimum_threshold=0.001,
+                            atr_multiplier=0.25,
+                        )
+                        if mtf_shadow_result is not None:
+                            mtf_attach_target = str(pending[0])
             except Exception:  # noqa: BLE001 - observer must never disrupt execution
                 mtf_shadow_result = None
                 mtf_attach_target = None

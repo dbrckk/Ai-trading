@@ -46,6 +46,7 @@ class FakeRunner:
     def __init__(self, persistence: FakePersistence) -> None:
         self.persistence = persistence
         self.shadow_challenger_enabled = False
+        self.mtf_period = None
 
     def run_once(
         self,
@@ -55,8 +56,10 @@ class FakeRunner:
         interval: str,
         max_catchup_bars: int,
         shadow_challenger_enabled: bool = False,
+        mtf_period: str | None = None,
     ) -> PaperCycleResult:
         self.shadow_challenger_enabled = shadow_challenger_enabled
+        self.mtf_period = mtf_period
         assert (symbol, period, interval, max_catchup_bars) == (
             "GC=F",
             "5d",
@@ -263,3 +266,21 @@ def test_service_propagates_shadow_challenger_when_enabled() -> None:
 
     assert result.processed == 2
     assert runner.shadow_challenger_enabled is True
+
+
+
+def test_service_propagates_separate_mtf_period() -> None:
+    backend = FakePersistence()
+    runner = FakeRunner(backend)
+
+    run_production_paper_cycle(
+        ProductionPaperCycleSettings(
+            shadow_challenger_enabled=True,
+            mtf_period="1mo",
+        ),
+        persistence=backend,
+        runner_factory=lambda persistence: runner,
+    )
+
+    assert runner.shadow_challenger_enabled is True
+    assert runner.mtf_period == "1mo"

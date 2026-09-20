@@ -909,6 +909,7 @@ def serve_dashboard(
             max_catchup_bars=DEFAULT_MAX_CATCHUP_BARS,
             poll_seconds=300.0,
             shadow_challenger_enabled=effective_settings.shadow_challenger,
+            mtf_period=effective_settings.mtf_period,
         )
 
         def execute_paper_cycle() -> PaperCycleResult:
@@ -920,6 +921,7 @@ def serve_dashboard(
                     max_catchup_bars=cycle_settings.max_catchup_bars,
                     poll_seconds=cycle_settings.poll_seconds,
                     shadow_challenger_enabled=cycle_settings.shadow_challenger_enabled,
+                    mtf_period=cycle_settings.mtf_period,
                     persistence=backend,
                 )
             return run_production_paper_cycle(

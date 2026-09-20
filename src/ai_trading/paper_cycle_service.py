@@ -19,6 +19,7 @@ class ProductionPaperCycleSettings:
     max_catchup_bars: int = DEFAULT_MAX_CATCHUP_BARS
     poll_seconds: float = 300.0
     shadow_challenger_enabled: bool = False
+    mtf_period: str = "1mo"
 
 
 class PaperCycleServiceError(RuntimeError):
@@ -93,6 +94,7 @@ def run_production_paper_cycle(
                 interval=settings.interval,
                 max_catchup_bars=settings.max_catchup_bars,
                 shadow_challenger_enabled=True,
+                mtf_period=settings.mtf_period,
             )
         else:
             result = runner.run_once(
