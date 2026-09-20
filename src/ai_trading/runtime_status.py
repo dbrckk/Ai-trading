@@ -24,6 +24,8 @@ class HostedRuntimeStatus:
     error: str | None = None
     poll_seconds: float = 60.0
     consecutive_cycle_errors: int = 0
+    cycle_duration_seconds: float | None = None
+    mtf_evaluated: bool = False
 
 
 def runtime_status_snapshot(
