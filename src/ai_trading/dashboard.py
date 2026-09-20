@@ -457,7 +457,23 @@ def render_dashboard(
             cycle_duration_display = (
                 "-" if cycle_duration is None else f"{float(cycle_duration):.1f}s"
             )
-            mtf_cycle_display = "YES" if item.get("mtf_evaluated") else "NO"
+            mtf_candidate = mtf_shadow.get("candidate_config")
+            mtf_horizon = mtf_shadow.get("horizon_minutes")
+            mtf_candidate_name = (
+                html.escape(str(mtf_candidate.get("config_name")))
+                if isinstance(mtf_candidate, dict)
+                else "UNVALIDATED"
+            )
+            mtf_label = (
+                f"MTF {int(mtf_horizon)}m"
+                if mtf_horizon is not None
+                else "MTF candidate"
+            )
+            mtf_cycle_display = (
+                "DISABLED"
+                if mtf_candidate is None
+                else ("YES" if item.get("mtf_evaluated") else "NO")
+            )
             observations = shadow.get("observations", 0)
             mtf_observations = mtf_shadow.get("observations", 0)
             mtf_directional = mtf_shadow.get("directional_observations", 0)
@@ -465,7 +481,13 @@ def render_dashboard(
             mtf_distribution = mtf_shadow.get("label_distribution", {})
             review = "ELIGIBLE" if gate.get("eligible_for_review") else "COLLECTING"
             mtf_review = (
-                "ELIGIBLE" if mtf_gate.get("eligible_for_review") else "MTF COLLECTING"
+                "MTF UNVALIDATED"
+                if mtf_candidate is None
+                else (
+                    "ELIGIBLE"
+                    if mtf_gate.get("eligible_for_review")
+                    else "MTF COLLECTING"
+                )
             )
             mtf_score_delta = mtf_shadow.get("score_delta")
             mtf_score_display = (
@@ -529,7 +551,8 @@ def render_dashboard(
                 f'<div><small>Cycle latency</small><strong>{cycle_duration_display}</strong></div>'
                 f'<div><small>MTF this cycle</small><strong>{mtf_cycle_display}</strong></div>'
                 f'<div><small>Shadow 5m</small><strong>{observations}</strong></div>'
-                f'<div><small>MTF 15m</small><strong>{mtf_observations}</strong></div>'
+                f'<div><small>{mtf_label}</small><strong>{mtf_observations}</strong></div>'
+                f'<div><small>MTF candidate</small><strong>{mtf_candidate_name}</strong></div>'
                 f'<div><small>Directional MTF</small><strong>{mtf_directional} · {mtf_directional_rate:.0%}</strong></div>'
                 f'<div><small>MTF labels</small><strong>L {mtf_distribution.get("long", 0)} · F {mtf_distribution.get("flat", 0)} · S {mtf_distribution.get("short", 0)}</strong></div>'
                 f'<div><small>MTF score Δ</small><strong>{mtf_score_display}</strong></div>'
@@ -539,7 +562,7 @@ def render_dashboard(
                 f'<div class="shadow-track"><span style="width:{shadow_progress:.1f}%"></span></div>'
                 '</div>'
                 '<div class="shadow-row">'
-                f'<div><span>MTF 15m · 5m/15m/1h/4h</span><strong>{mtf_observations} / 500</strong></div>'
+                f'<div><span>{mtf_label} · 5m/15m/1h/4h</span><strong>{mtf_observations} / 500</strong></div>'
                 f'<div class="shadow-track mtf-track"><span style="width:{mtf_shadow_progress:.1f}%"></span></div>'
                 '</div>'
                 '<div class="shadow-row">'
