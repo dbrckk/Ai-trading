@@ -180,6 +180,8 @@ def build_multi_market_overview(
             market_signal = None
             market_confidence = None
             market_reason = None
+            cycle_duration_seconds = None
+            market_mtf_evaluated = False
             if status is not None:
                 market_signal = (
                     {1: "LONG", -1: "SHORT", 0: "FLAT"}.get(status.side)
@@ -188,6 +190,8 @@ def build_multi_market_overview(
                 )
                 market_confidence = status.confidence if status.processed else None
                 market_reason = status.reason
+                cycle_duration_seconds = status.cycle_duration_seconds
+                market_mtf_evaluated = status.mtf_evaluated
             healthy = bool(overview.get("storage_healthy"))
             if healthy:
                 healthy_markets += 1
@@ -205,6 +209,8 @@ def build_multi_market_overview(
                     "signal": market_signal,
                     "confidence": market_confidence,
                     "reason": market_reason,
+                    "cycle_duration_seconds": cycle_duration_seconds,
+                    "mtf_evaluated": market_mtf_evaluated,
                     "overview": overview,
                 }
             )
