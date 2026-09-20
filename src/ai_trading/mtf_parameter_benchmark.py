@@ -19,6 +19,9 @@ from .multi_timeframe_features import (
 )
 from .regime import detect_regime
 
+_MIN_ACTIVE_PREDICTIONS = 20
+_MIN_ACTIVE_PRECISION = 0.50
+
 
 @dataclass(frozen=True)
 class MTFBenchmarkConfig:
@@ -323,7 +326,10 @@ def evaluate_market_config(
         active_precision=active_precision,
         active_predictions=active_predictions,
     )
-    directional_gate_passed = active_predictions >= 10 and active_precision > 0.5
+    directional_gate_passed = (
+        active_predictions >= _MIN_ACTIVE_PREDICTIONS
+        and active_precision > _MIN_ACTIVE_PRECISION
+    )
 
     return MarketBenchmarkResult(
         symbol=symbol,
@@ -415,6 +421,10 @@ def benchmark_payload(results: tuple[AggregateBenchmarkResult, ...]) -> dict[str
             "context_timeframes": ["5m", "15m", "1h", "4h"],
             "walk_forward": True,
             "purged": True,
+            "directional_gate": {
+                "min_active_predictions": _MIN_ACTIVE_PREDICTIONS,
+                "min_active_precision": _MIN_ACTIVE_PRECISION,
+            },
             "selection_score": (
                 "35% positive active-direction edge + 25% macro recall + "
                 "15% realized directional accuracy + 15% calibration + "
