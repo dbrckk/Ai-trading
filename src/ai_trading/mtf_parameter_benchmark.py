@@ -90,19 +90,21 @@ def _future_returns(market: pd.DataFrame, horizon_bars: int) -> pd.Series:
 
 
 def _fold_starts(
-    valid: pd.DatetimeIndex,
+    evaluation_index: pd.DatetimeIndex,
     *,
-    min_train_rows: int,
     folds: int,
+    test_points_per_fold: int,
 ) -> tuple[int, ...]:
     if folds < 1:
         raise ValueError("folds must be positive")
-    if len(valid) <= min_train_rows + 30:
+    if test_points_per_fold < 5:
+        raise ValueError("test_points_per_fold must be at least 5")
+    usable = len(evaluation_index) - test_points_per_fold
+    if usable < 1:
         return ()
-    available = len(valid) - min_train_rows - 1
     return tuple(
-        min_train_rows + int(available * fraction)
-        for fraction in np.linspace(0.0, 0.70, folds)
+        int(usable * fraction)
+        for fraction in np.linspace(0.0, 1.0, folds)
     )
 
 
@@ -130,8 +132,20 @@ def benchmark_scenario(
         .index.intersection(labels.dropna().index)
         .intersection(future_returns.dropna().index)
     )
-    valid = valid.intersection(_evaluation_index(valid))
-    starts = _fold_starts(valid, min_train_rows=min_train_rows, folds=folds)
+    evaluation_index = valid.intersection(_evaluation_index(valid))
+    purge = max(1, scenario.horizon_bars)
+    evaluation_index = pd.DatetimeIndex(
+        [
+            idx
+            for idx in evaluation_index
+            if int(valid.get_loc(idx)) >= min_train_rows + purge
+        ]
+    )
+    starts = _fold_starts(
+        evaluation_index,
+        folds=folds,
+        test_points_per_fold=test_points_per_fold,
+    )
     if not starts:
         raise ValueError(f"insufficient usable MTF history for {symbol}")
 
@@ -141,13 +155,15 @@ def benchmark_scenario(
     net_bps: list[float] = []
     completed_folds = 0
 
-    purge = max(1, scenario.horizon_bars)
     for fold_no, start in enumerate(starts):
-        train_end = max(0, start - purge)
+        test_idx = evaluation_index[start : start + test_points_per_fold]
+        if len(test_idx) < 5:
+            continue
+        first_test = test_idx[0]
+        train_end = int(valid.get_loc(first_test)) - purge
         train_start = max(0, train_end - scenario.max_train_rows)
         train_idx = valid[train_start:train_end]
-        test_idx = valid[start : start + test_points_per_fold]
-        if len(train_idx) < min_train_rows or len(test_idx) < 5:
+        if len(train_idx) < min_train_rows:
             continue
 
         model = EnsembleDirectionModel(
