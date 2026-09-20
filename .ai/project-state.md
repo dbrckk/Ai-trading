@@ -42,36 +42,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T07:01:08Z
+Generated: 2026-09-20T07:36:21Z
 
 ### Git
 - Branch: `main`
-- Head: `d954a582630d`
-- Commit date: 2026-09-20T09:00:57+02:00
-- Commit: feat: add leakage-safe multi-timeframe shadow challenger (#56)
-- Tracked files: 471
+- Head: `b26b32622774`
+- Commit date: 2026-09-20T09:36:11+02:00
+- Commit: fix: isolate long MTF history from the primary paper cycle (#57)
+- Tracked files: 472
 
 ### Recently changed files
 - `src/ai_trading/dashboard.py`
+- `src/ai_trading/hosted_runtime.py`
+- `src/ai_trading/multi_market.py`
+- `src/ai_trading/paper_cycle.py`
+- `src/ai_trading/paper_cycle_service.py`
+- `tests/test_hosted_runtime.py`
+- `tests/test_multi_market.py`
+- `tests/test_paper_cycle.py`
+- `tests/test_paper_cycle_service.py`
 - `src/ai_trading/file_persistence.py`
 - `src/ai_trading/mtf_shadow_challenger.py`
 - `src/ai_trading/mtf_shadow_quality.py`
 - `src/ai_trading/multi_timeframe_features.py`
 - `src/ai_trading/operational_overview.py`
-- `src/ai_trading/paper_cycle.py`
 - `src/ai_trading/postgres_persistence.py`
 - `src/ai_trading/runtime.py`
 - `tests/test_dashboard_overview.py`
 - `tests/test_mtf_shadow_challenger.py`
 - `tests/test_mtf_shadow_quality.py`
-- `tests/test_multi_market.py`
 - `tests/test_multi_timeframe_features.py`
-- `tests/test_paper_cycle.py`
-- `tests/test_dashboard.py`
-- `src/ai_trading/data.py`
-- `src/ai_trading/features.py`
-- `tests/test_data.py`
-- `tests/test_features.py`
 
 ### Project signals
 - `pyproject.toml`

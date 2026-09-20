@@ -3320,6 +3320,7 @@ period: str = "1y"
 interval: str = "1d"
 poll_seconds: float = 60.0
 shadow_challenger: bool = False
+mtf_period: str = "1mo"
 ⋮----
 @property
     def runtime_key(self) -> str
@@ -3333,6 +3334,7 @@ symbol = os.getenv("AI_TRADING_HOSTED_SYMBOL", "GC=F").strip() or "GC=F"
 period = os.getenv("AI_TRADING_HOSTED_PERIOD", "1y").strip() or "1y"
 interval = os.getenv("AI_TRADING_HOSTED_INTERVAL", "1d").strip() or "1d"
 poll_seconds = float(os.getenv("AI_TRADING_HOSTED_POLL_SECONDS", "60"))
+mtf_period = os.getenv("AI_TRADING_MTF_PERIOD", "1mo").strip() or "1mo"
 shadow_challenger = os.getenv(
 ⋮----
 def _now_utc() -> str
@@ -4682,6 +4684,7 @@ interval: str = "5m"
 max_catchup_bars: int = DEFAULT_MAX_CATCHUP_BARS
 poll_seconds: float = 300.0
 shadow_challenger_enabled: bool = False
+mtf_period: str = "1mo"
 ⋮----
 class PaperCycleServiceError(RuntimeError)
 ⋮----
@@ -4762,6 +4765,9 @@ shadow_result = evaluate_shadow_challenger(
 except Exception:  # noqa: BLE001 - observer must never disrupt execution
 ⋮----
 shadow_target = None
+⋮----
+mtf_market = (
+mtf_current = {
 ⋮----
 mtf_execution = select_observable_execution_target(
 ⋮----
@@ -8717,6 +8723,8 @@ fake_runtime = SimpleNamespace(
 config = captured["config"]
 ⋮----
 def test_hosted_settings_enable_shadow_challenger(monkeypatch) -> None
+⋮----
+def test_hosted_settings_read_separate_mtf_period(monkeypatch) -> None
 ````
 
 ## File: tests/test_lifecycle_log.py
@@ -8931,7 +8939,7 @@ def test_configured_default_bundle_uses_34_33_33(monkeypatch) -> None
 ⋮----
 def test_multi_market_cycle_isolates_one_market_failure(monkeypatch) -> None
 ⋮----
-calls: list[str] = []
+calls: list[tuple[str, str]] = []
 ⋮----
 def fake_cycle(settings, *, persistence=None, **kwargs)
 ⋮----
@@ -9242,6 +9250,8 @@ def test_failure_increments_consecutive_cycle_errors() -> None
 def test_service_propagates_shadow_challenger_when_enabled() -> None
 ⋮----
 runner = FakeRunner(backend)
+⋮----
+def test_service_propagates_separate_mtf_period() -> None
 ````
 
 ## File: tests/test_paper_cycle_workflow.py
@@ -9333,6 +9343,17 @@ payload = audit_rows[-1]["payload"]
 current_target = eligible[-1]
 mtf_target = eligible[-3]
 mtf_signal = df.index[int(df.index.get_loc(mtf_target)) - 1]
+⋮----
+primary = sample_market(220)
+long_history = sample_market(900)
+calls: list[str] = []
+seen_rows: list[int] = []
+⋮----
+def loader(symbol: str, period: str, interval: str) -> pd.DataFrame
+⋮----
+def fake_mtf(market, authoritative_features, execution_idx, **kwargs)
+⋮----
+runner = PaperCycleRunner(
 ````
 
 ## File: tests/test_performance_metrics.py
