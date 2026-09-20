@@ -1,0 +1,47 @@
+name: MTF Parameter Benchmark
+
+on:
+  push:
+    branches: ["feat/mtf-parameter-benchmark"]
+    paths:
+      - "src/ai_trading/mtf_parameter_benchmark.py"
+      - ".github/workflows/mtf-parameter-benchmark.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Run Gold DAX BTC benchmark
+        run: >-
+          python -m ai_trading.mtf_parameter_benchmark
+          --symbols "GC=F,^GDAXI,BTC-USD"
+          --period 1mo
+          --interval 5m
+          --folds 2
+          --test-window-bars 48
+          --json-output artifacts/mtf_benchmark/results.json
+          --markdown-output artifacts/mtf_benchmark/report.md
+      - name: Print report
+        if: always()
+        run: |
+          if [ -f artifacts/mtf_benchmark/report.md ]; then
+            cat artifacts/mtf_benchmark/report.md
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mtf-parameter-benchmark
+          path: artifacts/mtf_benchmark
+          if-no-files-found: warn
