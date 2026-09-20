@@ -101,6 +101,68 @@ def default_benchmark_grid() -> tuple[MTFBenchmarkConfig, ...]:
     )
 
 
+def btc_focused_benchmark_grid() -> tuple[MTFBenchmarkConfig, ...]:
+    """Focused search for BTC after the shared grid failed its directional gate."""
+
+    return tuple(
+        MTFBenchmarkConfig(
+            horizon_bars=horizon,
+            minimum_threshold=minimum_threshold,
+            atr_multiplier=atr_multiplier,
+            max_train_rows=1000,
+            min_confidence=min_confidence,
+        )
+        for horizon in (9, 12, 18)
+        for minimum_threshold in (0.0003, 0.0004, 0.0005)
+        for atr_multiplier in (0.15, 0.25)
+        for min_confidence in (0.56, 0.60)
+    )
+
+
+def market_selections(
+    results: tuple[AggregateBenchmarkResult, ...],
+) -> dict[str, dict[str, object] | None]:
+    """Choose the strongest gate-passing configuration independently per market."""
+
+    symbols = sorted(
+        {
+            row.symbol
+            for aggregate in results
+            for row in aggregate.markets
+        }
+    )
+    selections: dict[str, dict[str, object] | None] = {}
+    for symbol in symbols:
+        candidates: list[tuple[MarketBenchmarkResult, MTFBenchmarkConfig]] = []
+        for aggregate in results:
+            for row in aggregate.markets:
+                if row.symbol == symbol and row.directional_gate_passed:
+                    candidates.append((row, aggregate.config))
+        if not candidates:
+            selections[symbol] = None
+            continue
+        row, config = max(
+            candidates,
+            key=lambda item: (
+                item[0].selection_score,
+                item[0].active_precision,
+                item[0].active_predictions,
+                -item[0].brier,
+            ),
+        )
+        selections[symbol] = {
+            "config_name": row.config_name,
+            "config": asdict(config),
+            "selection_score": row.selection_score,
+            "active_precision": row.active_precision,
+            "active_predictions": row.active_predictions,
+            "directional_accuracy": row.directional_accuracy,
+            "macro_recall": row.macro_recall,
+            "brier": row.brier,
+        }
+    return selections
+
+
 def _macro_recall(predicted: pd.Series, realized: pd.Series) -> float:
     recalls: list[float] = []
     for label in (-1, 0, 1):
@@ -359,6 +421,7 @@ def benchmark_payload(results: tuple[AggregateBenchmarkResult, ...]) -> dict[str
                 "10% active-signal evidence; minus 10% cross-market dispersion"
             ),
         },
+        "market_selections": market_selections(results),
         "ranking": [
             {
                 "rank": rank,
@@ -395,14 +458,33 @@ def write_benchmark_report(
         encoding="utf-8",
     )
 
+    selections = market_selections(results)
     lines = [
         "# MTF parameter benchmark",
         "",
         "Leakage-safe purged walk-forward comparison across markets.",
         "",
-        "| Rank | Config | Score | Directional / total | Markets gate |",
-        "| ---: | --- | ---: | ---: | ---: |",
+        "## Best validated configuration per market",
+        "",
     ]
+    for symbol, selection in selections.items():
+        if selection is None:
+            lines.append(
+                f"- **{symbol}**: no configuration passed the directional gate."
+            )
+        else:
+            lines.append(
+                f"- **{symbol}**: `{selection['config_name']}` "
+                f"(active precision {float(selection['active_precision']):.1%}, "
+                f"n={int(selection['active_predictions'])})."
+            )
+    lines.extend(
+        [
+            "",
+            "| Rank | Config | Score | Directional / total | Markets gate |",
+            "| ---: | --- | ---: | ---: | ---: |",
+        ]
+    )
     for rank, result in enumerate(results, start=1):
         lines.append(
             f"| {rank} | {result.config.name} | "
@@ -437,6 +519,11 @@ def main() -> None:
     parser.add_argument("--period", default="1mo")
     parser.add_argument("--interval", default="5m")
     parser.add_argument("--folds", type=int, default=2)
+    parser.add_argument(
+        "--profile",
+        choices=("global", "btc-focused"),
+        default="global",
+    )
     parser.add_argument("--test-window-bars", type=int, default=48)
     parser.add_argument(
         "--json-output",
@@ -456,8 +543,14 @@ def main() -> None:
         symbol: load_history(symbol, args.period, args.interval)
         for symbol in symbols
     }
+    configs = (
+        btc_focused_benchmark_grid()
+        if args.profile == "btc-focused"
+        else default_benchmark_grid()
+    )
     results = run_parameter_benchmark(
         markets,
+        configs=configs,
         folds=args.folds,
         test_window_bars=args.test_window_bars,
     )
