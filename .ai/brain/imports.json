@@ -240,6 +240,7 @@
     "src/ai_trading/command_app.py": [
       "__future__",
       "cli",
+      "paper_cycle",
       "paper_cycle_service",
       "typer"
     ],
@@ -313,20 +314,19 @@
     ],
     "src/ai_trading/dashboard.py": [
       "__future__",
-      "bootstrap_robustness",
       "burnin",
       "collections.abc",
       "file_persistence",
-      "functools",
       "hosted_runtime",
       "html",
       "http.server",
       "json",
+      "multi_market",
       "operational_overview",
       "os",
-      "pandas",
       "paper_cycle",
       "paper_cycle_service",
+      "paper_readiness_evidence",
       "pathlib",
       "performance_metrics",
       "persistence",
@@ -512,11 +512,14 @@
       "audit",
       "burnin",
       "hashlib",
+      "json",
+      "mtf_shadow_quality",
       "pathlib",
       "performance_metrics",
       "persistence",
       "runtime_state",
       "runtime_status",
+      "shadow_quality",
       "trade_journal"
     ],
     "src/ai_trading/generation_progress.py": [
@@ -669,6 +672,41 @@
       "json",
       "pathlib"
     ],
+    "src/ai_trading/mtf_shadow_challenger.py": [
+      "__future__",
+      "dataclasses",
+      "ensemble",
+      "features",
+      "model",
+      "multi_timeframe_features",
+      "pandas",
+      "regime"
+    ],
+    "src/ai_trading/mtf_shadow_quality.py": [
+      "__future__",
+      "collections.abc",
+      "dataclasses",
+      "model_quality",
+      "pandas",
+      "typing"
+    ],
+    "src/ai_trading/multi_market.py": [
+      "__future__",
+      "concurrent.futures",
+      "dataclasses",
+      "operational_overview",
+      "os",
+      "paper_cycle",
+      "paper_cycle_service",
+      "persistence",
+      "persistence_factory"
+    ],
+    "src/ai_trading/multi_timeframe_features.py": [
+      "__future__",
+      "features",
+      "numpy",
+      "pandas"
+    ],
     "src/ai_trading/multiasset_backtest.py": [
       "__future__",
       "config",
@@ -782,8 +820,11 @@
     "src/ai_trading/operational_overview.py": [
       "__future__",
       "burnin",
+      "paper_readiness_evidence",
       "persistence",
-      "runtime_status"
+      "readiness",
+      "runtime_status",
+      "shadow_promotion_gate"
     ],
     "src/ai_trading/orchestrator.py": [
       "__future__",
@@ -806,9 +847,11 @@
       "collections.abc",
       "data",
       "dataclasses",
+      "mtf_shadow_challenger",
       "pandas",
       "persistence",
-      "runtime"
+      "runtime",
+      "shadow_challenger"
     ],
     "src/ai_trading/paper_cycle_service.py": [
       "__future__",
@@ -820,6 +863,12 @@
       "persistence",
       "persistence_factory",
       "runtime_status"
+    ],
+    "src/ai_trading/paper_readiness_evidence.py": [
+      "__future__",
+      "bootstrap_robustness",
+      "functools",
+      "pandas"
     ],
     "src/ai_trading/parameter_sensitivity.py": [
       "__future__",
@@ -896,6 +945,7 @@
       "dataclasses",
       "hashlib",
       "json",
+      "mtf_shadow_quality",
       "performance_metrics",
       "persistence",
       "psycopg",
@@ -903,6 +953,7 @@
       "psycopg.types.json",
       "runtime_state",
       "runtime_status",
+      "shadow_quality",
       "trade_journal"
     ],
     "src/ai_trading/process_watch.py": [
@@ -1135,6 +1186,7 @@
       "file_persistence",
       "model",
       "model_codec",
+      "mtf_shadow_challenger",
       "online",
       "pandas",
       "pathlib",
@@ -1143,6 +1195,7 @@
       "risk",
       "runtime_lock",
       "runtime_state",
+      "shadow_challenger",
       "trade_journal"
     ],
     "src/ai_trading/runtime_factory.py": [
@@ -1215,6 +1268,28 @@
       "json",
       "pathlib",
       "state_hash"
+    ],
+    "src/ai_trading/shadow_challenger.py": [
+      "__future__",
+      "dataclasses",
+      "ensemble",
+      "features",
+      "model",
+      "pandas",
+      "regime"
+    ],
+    "src/ai_trading/shadow_promotion_gate.py": [
+      "__future__",
+      "dataclasses",
+      "shadow_quality"
+    ],
+    "src/ai_trading/shadow_quality.py": [
+      "__future__",
+      "collections.abc",
+      "dataclasses",
+      "model_quality",
+      "pandas",
+      "typing"
     ],
     "src/ai_trading/soak.py": [
       "__future__",
@@ -1470,6 +1545,9 @@
       "pathlib",
       "typer.testing"
     ],
+    "tests/test_cloudflare_scheduler_deploy_workflow.py": [
+      "pathlib"
+    ],
     "tests/test_compute_budget.py": [
       "ai_trading.compute_budget",
       "ai_trading.expert_pool"
@@ -1554,10 +1632,13 @@
       "ai_trading.burnin",
       "ai_trading.dashboard",
       "ai_trading.hosted_runtime",
+      "ai_trading.model_quality",
+      "ai_trading.mtf_shadow_quality",
       "ai_trading.operational_overview",
       "ai_trading.persistence",
       "ai_trading.runtime_state",
       "ai_trading.runtime_status",
+      "ai_trading.shadow_quality",
       "ai_trading.trade_journal",
       "json",
       "socket",
@@ -1582,6 +1663,11 @@
       "time",
       "urllib.error",
       "urllib.request"
+    ],
+    "tests/test_data.py": [
+      "ai_trading.data",
+      "numpy",
+      "pandas"
     ],
     "tests/test_data_quality.py": [
       "ai_trading.data_quality",
@@ -1808,9 +1894,42 @@
       "ai_trading.model_quarantine",
       "pathlib"
     ],
+    "tests/test_mtf_shadow_challenger.py": [
+      "__future__",
+      "ai_trading.features",
+      "ai_trading.model",
+      "ai_trading.mtf_shadow_challenger",
+      "ai_trading.multi_timeframe_features",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_mtf_shadow_quality.py": [
+      "ai_trading.mtf_shadow_quality"
+    ],
+    "tests/test_multi_market.py": [
+      "__future__",
+      "ai_trading.dashboard",
+      "ai_trading.multi_market",
+      "ai_trading.paper_cycle",
+      "ai_trading.paper_cycle_service",
+      "ai_trading.performance_metrics",
+      "ai_trading.persistence",
+      "ai_trading.runtime_state",
+      "ai_trading.runtime_status",
+      "ai_trading.trade_journal",
+      "dataclasses",
+      "pytest",
+      "threading"
+    ],
     "tests/test_multi_period_promotion.py": [
       "ai_trading.performance",
       "ai_trading.promotion"
+    ],
+    "tests/test_multi_timeframe_features.py": [
+      "__future__",
+      "ai_trading.multi_timeframe_features",
+      "numpy",
+      "pandas"
     ],
     "tests/test_multiasset_backtest.py": [
       "ai_trading.config",
@@ -1871,10 +1990,13 @@
     "tests/test_paper_cycle.py": [
       "ai_trading.config",
       "ai_trading.file_persistence",
+      "ai_trading.model",
+      "ai_trading.mtf_shadow_challenger",
       "ai_trading.paper_cycle",
       "ai_trading.persistence",
       "ai_trading.runtime",
       "ai_trading.runtime_state",
+      "ai_trading.shadow_challenger",
       "json",
       "numpy",
       "pandas",
@@ -2241,6 +2363,22 @@
       "ai_trading.audit",
       "ai_trading.session_integrity",
       "pathlib"
+    ],
+    "tests/test_shadow_challenger.py": [
+      "__future__",
+      "ai_trading.features",
+      "ai_trading.model",
+      "ai_trading.shadow_challenger",
+      "numpy",
+      "pandas"
+    ],
+    "tests/test_shadow_promotion_gate.py": [
+      "ai_trading.model_quality",
+      "ai_trading.shadow_promotion_gate",
+      "ai_trading.shadow_quality"
+    ],
+    "tests/test_shadow_quality.py": [
+      "ai_trading.shadow_quality"
     ],
     "tests/test_smoke_e2e.py": [
       "ai_trading.multiasset_scheduler",

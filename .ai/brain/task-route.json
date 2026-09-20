@@ -6,13 +6,13 @@
     "requested_max_files": 12,
     "score_margin": 0,
     "tier": "bounded",
-    "top_score": 17
+    "top_score": 26
   },
   "cache": {
-    "fingerprint": "3a5cef4355111fc31c8e18f636b9d89ef3e846a3349770d12a087f9a51a66d6a",
+    "fingerprint": "5971632d36ab0bd7ef960a9f91b6d3b75b06f27d83239c4cff0cac9cd44b66cf",
     "hit": false
   },
-  "candidate_count": 11,
+  "candidate_count": 82,
   "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
   "files": [
     {
@@ -20,11 +20,70 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/cli.py",
+      "path": "src/ai_trading/dashboard.py",
       "reasons": [
+        "impact",
+        "recently-changed",
         "search-index"
       ],
-      "score": 17,
+      "score": 26,
+      "symbols": [
+        "Handler",
+        "_display_money",
+        "_display_ratio",
+        "_display_units",
+        "_equity_chart_svg",
+        "_public_runtime_snapshot",
+        "_readiness_number",
+        "_readiness_panel",
+        "_send_json",
+        "do_GET",
+        "do_POST",
+        "execute_paper_cycle",
+        "load_status_snapshot",
+        "log_message",
+        "render_dashboard",
+        "serve_dashboard"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "engine"
+      ],
+      "path": "src/ai_trading/runtime.py",
+      "reasons": [
+        "impact",
+        "recently-changed",
+        "search-index"
+      ],
+      "score": 26,
+      "symbols": [
+        "PaperAutonomousRuntime",
+        "PreparedRuntimeMarket",
+        "RuntimeStepResult",
+        "_broker_from_state",
+        "_eligible_execution_indices",
+        "_prepare_market_features",
+        "_state_from_broker",
+        "_step_prepared_locked",
+        "prepare_market",
+        "step",
+        "step_at",
+        "step_prepared"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "engine"
+      ],
+      "path": "src/ai_trading/cli.py",
+      "reasons": [
+        "impact",
+        "search-index"
+      ],
+      "score": 23,
       "symbols": [
         "compare_models",
         "create_readiness_release_command",
@@ -53,57 +112,6 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/dashboard.py",
-      "reasons": [
-        "search-index"
-      ],
-      "score": 17,
-      "symbols": [
-        "Handler",
-        "_bootstrap_positive_probability",
-        "_display_money",
-        "_display_ratio",
-        "_display_units",
-        "_equity_chart_svg",
-        "_public_runtime_snapshot",
-        "_readiness_number",
-        "_readiness_panel",
-        "_send_json",
-        "do_GET",
-        "do_POST",
-        "execute_paper_cycle",
-        "load_status_snapshot",
-        "log_message",
-        "render_dashboard",
-        "serve_dashboard"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "engine"
-      ],
-      "path": "src/ai_trading/runtime.py",
-      "reasons": [
-        "search-index"
-      ],
-      "score": 17,
-      "symbols": [
-        "PaperAutonomousRuntime",
-        "RuntimeStepResult",
-        "_broker_from_state",
-        "_eligible_execution_indices",
-        "_state_from_broker",
-        "_step_at_locked",
-        "step",
-        "step_at"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "engine"
-      ],
       "path": "tests/test_risk.py",
       "reasons": [
         "search-index"
@@ -120,8 +128,10 @@
         "engine"
       ],
       "path": "src/ai_trading/engine.py",
-      "reasons": [],
-      "score": 10,
+      "reasons": [
+        "impact"
+      ],
+      "score": 16,
       "symbols": [
         "RunResult",
         "TradingEngine",
@@ -135,15 +145,13 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/stress_engine.py",
-      "reasons": [],
-      "score": 10,
+      "path": "tests/test_dashboard_engine_status.py",
+      "reasons": [
+        "impact"
+      ],
+      "score": 16,
       "symbols": [
-        "StressPolicy",
-        "StressReport",
-        "StressScenario",
-        "_stressed_covariance",
-        "run_stress_test"
+        "test_dashboard_shows_engine_and_latest_decision"
       ]
     }
   ],

@@ -1,16 +1,38 @@
 # Change impact
 
-Base: c6ee1c280fd11332de80b609a136890b58e79ac1
-Head: 01a15112f45b72b8c3f84823819dc9fc73e1c6c5
+Base: 484dac0ae5efcfc25707122114b34f31038cd8ed
+Head: d954a582630dd355c8ff744476a702ff62f825f1
 
 ## Changed files
-- M .repo-standards.yml
+- M src/ai_trading/dashboard.py
+- M src/ai_trading/file_persistence.py
+- A src/ai_trading/mtf_shadow_challenger.py
+- A src/ai_trading/mtf_shadow_quality.py
+- A src/ai_trading/multi_timeframe_features.py
+- M src/ai_trading/operational_overview.py
+- M src/ai_trading/paper_cycle.py
+- M src/ai_trading/postgres_persistence.py
+- M src/ai_trading/runtime.py
+- M tests/test_dashboard_overview.py
+- A tests/test_mtf_shadow_challenger.py
+- A tests/test_mtf_shadow_quality.py
+- M tests/test_multi_market.py
+- A tests/test_multi_timeframe_features.py
+- M tests/test_paper_cycle.py
 
 ## Affected areas
-- (root)
+- src
+- tests
 
 ## Related test candidates
-- No direct filename-based test match detected.
+- tests/test_dashboard.py
+- tests/test_file_persistence.py
+- tests/test_mtf_shadow_challenger.py
+- tests/test_mtf_shadow_quality.py
+- tests/test_multi_timeframe_features.py
+- tests/test_paper_cycle.py
+- tests/test_postgres_persistence.py
+- tests/test_runtime.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

@@ -42,6 +42,7 @@ The content is organized as follows:
   workflows/
     ai-repo-map.yml
     ci.yml
+    cloudflare-paper-scheduler-deploy.yml
     paper-cycle.yml
     semantic-refresh.yml
 .serena/
@@ -133,6 +134,10 @@ src/
     model_quality.py
     model_quarantine.py
     model.py
+    mtf_shadow_challenger.py
+    mtf_shadow_quality.py
+    multi_market.py
+    multi_timeframe_features.py
     multiasset_backtest.py
     multiasset_evolution.py
     multiasset_runtime.py
@@ -143,6 +148,7 @@ src/
     orchestrator.py
     paper_cycle_service.py
     paper_cycle.py
+    paper_readiness_evidence.py
     parameter_sensitivity.py
     performance_metrics.py
     performance.py
@@ -194,6 +200,9 @@ src/
     scheduler.py
     sensitivity_gate.py
     session_integrity.py
+    shadow_challenger.py
+    shadow_promotion_gate.py
+    shadow_quality.py
     soak_gate.py
     soak.py
     specialist_experts.py
@@ -234,6 +243,7 @@ tests/
   test_chaos.py
   test_checkpoint_verification.py
   test_cli_self_test.py
+  test_cloudflare_scheduler_deploy_workflow.py
   test_compute_budget.py
   test_confidence_calibration.py
   test_control_plane.py
@@ -248,6 +258,7 @@ tests/
   test_dashboard_persistence.py
   test_dashboard.py
   test_data_quality.py
+  test_data.py
   test_dataset_evidence.py
   test_deployment_readiness.py
   test_distribution_drift.py
@@ -289,7 +300,11 @@ tests/
   test_model_codec.py
   test_model_quality.py
   test_model_quarantine.py
+  test_mtf_shadow_challenger.py
+  test_mtf_shadow_quality.py
+  test_multi_market.py
   test_multi_period_promotion.py
+  test_multi_timeframe_features.py
   test_multiasset_backtest.py
   test_multiasset_evolution.py
   test_multiasset_runtime.py
@@ -359,6 +374,9 @@ tests/
   test_scheduler.py
   test_sensitivity_gate.py
   test_session_integrity.py
+  test_shadow_challenger.py
+  test_shadow_promotion_gate.py
+  test_shadow_quality.py
   test_smoke_e2e.py
   test_snapshot_retention.py
   test_soak_gate_drawdown.py
@@ -465,13 +483,67 @@ jobs:
         run: npm test --prefix infra/cloudflare-paper-scheduler
 ````
 
+## File: .github/workflows/cloudflare-paper-scheduler-deploy.yml
+````yaml
+name: Deploy Cloudflare Paper Scheduler
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "infra/cloudflare-paper-scheduler/**"
+      - ".github/workflows/cloudflare-paper-scheduler-deploy.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-paper-scheduler-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || vars.CLOUDFLARE_SCHEDULER_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Require Cloudflare deployment configuration
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          SCHEDULER_TOKEN: ${{ secrets.AI_TRADING_SCHEDULER_TOKEN }}
+        run: |
+          missing=0
+          for name in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID SCHEDULER_TOKEN; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error::${name} repository secret is required"
+              missing=1
+            fi
+          done
+          exit "${missing}"
+      - name: Deploy Worker
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: infra/cloudflare-paper-scheduler
+          command: deploy
+          secrets: |
+            SCHEDULER_TOKEN
+        env:
+          SCHEDULER_TOKEN: ${{ secrets.AI_TRADING_SCHEDULER_TOKEN }}
+````
+
 ## File: .github/workflows/paper-cycle.yml
 ````yaml
 name: Paper Cycle
 
 on:
   schedule:
-    - cron: "2/5 * * * *"
+    - cron: "7-57/5 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -484,7 +556,7 @@ concurrency:
 jobs:
   paper-cycle:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     env:
       AI_TRADING_DATABASE_URL: ${{ secrets.AI_TRADING_DATABASE_URL }}
     steps:
@@ -503,7 +575,7 @@ jobs:
       - name: Install
         run: python -m pip install .
       - name: Run paper cycle
-        run: ai-trading paper-cycle --symbol GC=F --period 5d --interval 5m --max-catchup-bars 12
+        run: ai-trading paper-cycle --symbol GC=F --period 5d --interval 5m --max-catchup-bars 72
 ````
 
 ## File: .github/workflows/semantic-refresh.yml
@@ -1944,18 +2016,14 @@ label = "PASS" if check.passed else "FAIL"
 value = _readiness_number(check, check.value)
 threshold = _readiness_number(check, check.threshold)
 ⋮----
-@lru_cache(maxsize=16)
-def _bootstrap_positive_probability(equities: tuple[float, ...]) -> float | None
-⋮----
-report = bootstrap_equity_curve(pd.Series(equities, dtype=float))
-⋮----
 storage_error = False
 runtime_revision: int | None = None
 runtime_model = None
 persisted_runtime = None
 durable_runtime = persistence is not None and runtime_key is not None
 ⋮----
-recent = persistence.list_trades(runtime_key, limit=200)
+multi_market_view = bool(markets and len(markets) > 1)
+recent = persistence.list_trades(
 persisted = persistence.load_runtime(runtime_key, starting_cash)
 persisted_runtime = persisted
 state = persisted.state
@@ -1964,10 +2032,12 @@ runtime_model = persisted.model
 runtime_status = persistence.load_runtime_status(runtime_key)
 load_performance = getattr(persistence, "load_trade_performance", None)
 ⋮----
+trade_performance = calculate_performance_metrics(recent)
+performance_scope = "latest 200 cross-market trade events"
+⋮----
 trade_performance = load_performance(runtime_key)
 performance_scope = "full persisted history"
 ⋮----
-trade_performance = calculate_performance_metrics(recent)
 performance_scope = "latest 200 trade events"
 load_burnin = getattr(persistence, "list_burnin_snapshots", None)
 burnin_snapshots = tuple(load_burnin(runtime_key)) if callable(load_burnin) else ()
@@ -2074,7 +2144,7 @@ burnin_progress_display = f"{burnin_progress:.0%}"
 burnin_return_display = (
 burnin_drawdown_display = (
 equity_chart = _equity_chart_svg(burnin_snapshots)
-bootstrap_probability = _bootstrap_positive_probability(
+bootstrap_probability = bootstrap_positive_probability(
 bootstrap_probability_display = (
 readiness_policy = ReadinessPolicy()
 bootstrap_threshold = readiness_policy.min_positive_bootstrap_probability
@@ -2093,8 +2163,46 @@ sharpe_display = "-" if burnin_metrics is None else f"{burnin_metrics.sharpe:.2f
 sortino_display = "-" if burnin_metrics is None else f"{burnin_metrics.sortino:.2f}"
 readiness_panel = _readiness_panel(readiness_report)
 status_class = (
+market_panel = ""
+⋮----
+snapshot = build_multi_market_overview(
+portfolio = snapshot["portfolio"]
+cards = []
+⋮----
+overview = item["overview"]
+shadow = overview.get("shadow_challenger", {})
+gate = shadow.get("promotion_gate", {})
+mtf_shadow = overview.get("mtf_shadow_challenger", {})
+mtf_gate = mtf_shadow.get("promotion_gate", {})
+status = str(overview.get("engine_status", "UNKNOWN"))
+status_css = (
+sleeve_equity = item.get("equity")
+sleeve_pnl = item.get("pnl")
+processed = overview.get("processed_bars")
+observations = shadow.get("observations", 0)
+mtf_observations = mtf_shadow.get("observations", 0)
+review = "ELIGIBLE" if gate.get("eligible_for_review") else "COLLECTING"
+mtf_review = (
+mtf_score_delta = mtf_shadow.get("score_delta")
+mtf_score_display = (
+signal = item.get("signal") or "-"
+signal_css = {
+market_confidence = item.get("confidence")
+confidence_value = (
+confidence_display = (
+shadow_progress = min(100.0, float(observations) / 250.0 * 100.0)
+mtf_shadow_progress = min(
+market_tone = {
+market_mark = {
+pnl_css = (
+reason = html.escape(str(item.get("reason") or "waiting for next eligible bar"))
+⋮----
+portfolio_pnl = float(portfolio["pnl"])
+portfolio_pnl_css = (
+market_panel = (
 ⋮----
 effective_settings = settings or HostedPaperSettings.from_env()
+effective_markets = configured_markets_from_env()
 journal = TradeJournal(journal_path)
 state_store = RuntimeStateStore(state_path)
 runtime_status_store = HostedRuntimeStatusStore(status_path)
@@ -2185,6 +2293,8 @@ df = yf.download(
 ⋮----
 required = {"Open", "High", "Low", "Close", "Volume"}
 missing = required.difference(df.columns)
+⋮----
+result = df.loc[:, ["Open", "High", "Low", "Close", "Volume"]].copy()
 ````
 
 ## File: src/ai_trading/dataset_evidence.py
@@ -2445,11 +2555,9 @@ class EnsembleDirectionModel
 ⋮----
 classes = np.array([-1, 0, 1], dtype=int)
 ⋮----
-def __init__(self, random_state: int = 42) -> None
-⋮----
 def fit(self, x: pd.DataFrame, y: pd.Series) -> None
 ⋮----
-x2 = x.loc[:, FEATURES].dropna()
+x2 = x.loc[:, self.feature_names].dropna()
 y2 = y.reindex(x2.index).dropna().astype(int)
 x2 = x2.loc[y2.index]
 ⋮----
@@ -2461,7 +2569,7 @@ total = sum(weights.values())
 ⋮----
 def predict_one(self, row: pd.Series, regime: MarketRegime) -> Prediction
 ⋮----
-x = pd.DataFrame([row.loc[FEATURES].astype(float).to_dict()])
+x = pd.DataFrame([row.loc[list(self.feature_names)].astype(float).to_dict()])
 weights = self._regime_weights(regime)
 aggregate = {-1: 0.0, 0: 0.0, 1: 0.0}
 ⋮----
@@ -2871,6 +2979,8 @@ consensus_confidence = float(consensus.max())
 ````python
 FEATURES = [
 ⋮----
+CHALLENGER_FEATURES = [
+⋮----
 def make_features(df: pd.DataFrame) -> pd.DataFrame
 ⋮----
 close = df["Close"].astype(float)
@@ -2881,7 +2991,37 @@ volume = df["Volume"].astype(float)
 out = pd.DataFrame(index=df.index)
 ⋮----
 vol_mean = volume.rolling(20).mean()
-vol_std = volume.rolling(20).std().replace(0, np.nan)
+raw_vol_std = volume.rolling(20).std()
+vol_std = raw_vol_std.replace(0, np.nan)
+volume_z20 = (volume - vol_mean) / vol_std
+⋮----
+def make_challenger_features(df: pd.DataFrame) -> pd.DataFrame
+⋮----
+"""Build richer research features without changing the production feature set."""
+⋮----
+out = make_features(df).copy()
+open_ = df["Open"].astype(float)
+⋮----
+returns = close.pct_change()
+⋮----
+previous_close = close.shift(1)
+true_range = pd.concat(
+⋮----
+delta = close.diff()
+average_gain = delta.clip(lower=0.0).rolling(14).mean()
+average_loss = (-delta.clip(upper=0.0)).rolling(14).mean()
+relative_strength = average_gain / average_loss.replace(0.0, np.nan)
+rsi = 100.0 - (100.0 / (1.0 + relative_strength))
+rsi = rsi.mask((average_loss == 0.0) & (average_gain > 0.0), 100.0)
+rsi = rsi.mask((average_loss == 0.0) & (average_gain == 0.0), 50.0)
+⋮----
+rolling_low = low.rolling(20).min()
+rolling_high = high.rolling(20).max()
+range_width = (rolling_high - rolling_low).replace(0.0, np.nan)
+⋮----
+raw_volume_20 = volume.rolling(20).mean()
+volume_20 = raw_volume_20.replace(0.0, np.nan)
+volume_ratio = volume.rolling(5).mean() / volume_20 - 1.0
 ⋮----
 future_return = df["Close"].shift(-horizon_bars) / df["Close"] - 1.0
 labels = pd.Series(0, index=df.index, dtype="int8")
@@ -2921,6 +3061,14 @@ def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics
 def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]
 ⋮----
 def list_regimes(self, runtime_key: str) -> tuple[str, ...]
+⋮----
+def load_shadow_quality(self, runtime_key: str) -> ShadowQualityComparison
+⋮----
+payloads = []
+⋮----
+record = json.loads(line)
+⋮----
+payload = record.get("payload")
 ⋮----
 def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None
 ⋮----
@@ -3171,6 +3319,7 @@ symbol: str = "GC=F"
 period: str = "1y"
 interval: str = "1d"
 poll_seconds: float = 60.0
+shadow_challenger: bool = False
 ⋮----
 @property
     def runtime_key(self) -> str
@@ -3184,6 +3333,7 @@ symbol = os.getenv("AI_TRADING_HOSTED_SYMBOL", "GC=F").strip() or "GC=F"
 period = os.getenv("AI_TRADING_HOSTED_PERIOD", "1y").strip() or "1y"
 interval = os.getenv("AI_TRADING_HOSTED_INTERVAL", "1d").strip() or "1d"
 poll_seconds = float(os.getenv("AI_TRADING_HOSTED_POLL_SECONDS", "60"))
+shadow_challenger = os.getenv(
 ⋮----
 def _now_utc() -> str
 ⋮----
@@ -3562,6 +3712,268 @@ proba = self.pipeline.predict_proba(x)[0]
 model = self.pipeline.named_steps["model"]
 mapping = {int(cls): float(p) for cls, p in zip(model.classes_, proba, strict=True)}
 side = max(mapping, key=mapping.get)
+````
+
+## File: src/ai_trading/mtf_shadow_challenger.py
+````python
+@dataclass(frozen=True)
+class MultiTimeframeShadowResult
+⋮----
+prediction: Prediction
+regime: str
+signal_time: str
+execution_time: str
+training_rows: int
+training_end: str
+realized_label: int
+horizon_bars: int
+horizon_minutes: int
+timeframes: tuple[str, ...]
+threshold_at_signal: float
+minimum_threshold: float
+atr_multiplier: float
+feature_count: int
+⋮----
+"""Select the newest shadow target whose horizon is observable now.
+
+    The chosen target is delayed relative to the current production target, so
+    its full forward outcome is known without using information unavailable at
+    the time the shadow prediction would have been made.
+    """
+⋮----
+current_pos = int(market.index.get_loc(current_execution_idx))
+max_execution_pos = current_pos - (horizon_bars - 1)
+⋮----
+candidate = None
+⋮----
+execution_pos = int(market.index.get_loc(execution_idx))
+⋮----
+candidate = execution_idx
+⋮----
+"""Evaluate a 5m/15m/1h/4h ensemble without controlling execution."""
+⋮----
+signal_pos = execution_pos - 1
+signal_idx = market.index[signal_pos]
+⋮----
+mtf_features = make_multi_timeframe_challenger_features(market)
+⋮----
+signal_row = mtf_features.loc[signal_idx, MTF_CHALLENGER_FEATURES]
+⋮----
+labels = make_volatility_adaptive_labels(
+threshold = adaptive_return_threshold(
+⋮----
+last_train_pos = signal_pos - horizon_bars
+⋮----
+allowed = set(market.index[: last_train_pos + 1])
+valid_feature_rows = mtf_features.loc[:, MTF_CHALLENGER_FEATURES].dropna().index
+labeled_rows = labels.dropna().index
+train_idx = [
+⋮----
+train_idx = train_idx[-max_train_rows:]
+⋮----
+realized = labels.get(signal_idx)
+threshold_at_signal = threshold.get(signal_idx)
+⋮----
+model = EnsembleDirectionModel(
+⋮----
+regime = detect_regime(signal_row)
+prediction = model.predict_one(signal_row, regime)
+````
+
+## File: src/ai_trading/mtf_shadow_quality.py
+````python
+@dataclass(frozen=True)
+class MultiTimeframeShadowQuality
+⋮----
+observations: int
+river: ModelQuality
+challenger: ModelQuality
+⋮----
+@property
+    def score_delta(self) -> float
+⋮----
+def _empty_quality() -> ModelQuality
+⋮----
+"""Compare delayed MTF predictions with River at the same execution time."""
+⋮----
+river_by_execution: dict[str, tuple[int, float]] = {}
+shadow_by_execution: dict[str, tuple[int, float, int]] = {}
+⋮----
+execution_time = payload.get("execution_time")
+prediction = payload.get("prediction")
+⋮----
+side = int(prediction["side"])
+confidence = float(prediction["confidence"])
+⋮----
+shadow = payload.get("mtf_shadow_challenger")
+⋮----
+shadow_execution = shadow.get("execution_time")
+shadow_prediction = shadow.get("prediction")
+realized = shadow.get("realized_label")
+⋮----
+side = int(shadow_prediction["side"])
+confidence = float(shadow_prediction["confidence"])
+label = int(realized)
+⋮----
+river_sides: list[int] = []
+river_confidences: list[float] = []
+challenger_sides: list[int] = []
+challenger_confidences: list[float] = []
+labels: list[int] = []
+⋮----
+river = river_by_execution.get(execution_time)
+⋮----
+observations = len(labels)
+⋮----
+empty = _empty_quality()
+⋮----
+index = pd.RangeIndex(observations)
+realized = pd.Series(labels, index=index, dtype="int64")
+river = evaluate_model_quality(
+challenger = evaluate_model_quality(
+````
+
+## File: src/ai_trading/multi_market.py
+````python
+_NORMALIZED_RUNTIME_CASH = 100_000.0
+⋮----
+@dataclass(frozen=True)
+class MarketSpec
+⋮----
+symbol: str
+label: str
+allocation: float
+⋮----
+DEFAULT_MARKETS: tuple[MarketSpec, ...] = (
+⋮----
+def configured_markets_from_env() -> tuple[MarketSpec, ...]
+⋮----
+raw = os.getenv("AI_TRADING_MARKETS", "").strip()
+⋮----
+symbols = tuple(part.strip() for part in raw.split(",") if part.strip())
+⋮----
+known = {spec.symbol: spec for spec in DEFAULT_MARKETS}
+⋮----
+weight = 1.0 / len(symbols)
+⋮----
+backend = persistence
+⋮----
+backend = build_paper_persistence()
+except Exception as exc:  # noqa: BLE001 - sanitize provider failures
+⋮----
+processed = 0
+remaining_backlog = False
+processed_bars = 0
+last_processed: str | None = None
+failures: list[tuple[str, str]] = []
+⋮----
+def run_market(market: MarketSpec)
+⋮----
+futures = {
+⋮----
+market = futures[future]
+⋮----
+result = future.result()
+⋮----
+remaining_backlog = remaining_backlog or result.remaining_backlog
+⋮----
+last_processed = (
+⋮----
+failure_codes = {code for _, code in failures}
+code = (
+⋮----
+reason = f"processed {processed} bar(s) across {len(markets) - len(failures)} market(s)"
+⋮----
+market_rows: list[dict[str, object]] = []
+portfolio_equity = 0.0
+healthy_markets = 0
+⋮----
+runtime_key = build_runtime_key(market.symbol, interval)
+allocated_cash = portfolio_cash * market.allocation
+⋮----
+persisted = persistence.load_runtime(runtime_key, _NORMALIZED_RUNTIME_CASH)
+normalized_equity = (
+sleeve_equity = allocated_cash * normalized_equity / _NORMALIZED_RUNTIME_CASH
+overview = build_operational_overview(
+status = persistence.load_runtime_status(runtime_key)
+market_signal = None
+market_confidence = None
+market_reason = None
+⋮----
+market_signal = (
+market_confidence = status.confidence if status.processed else None
+market_reason = status.reason
+healthy = bool(overview.get("storage_healthy"))
+⋮----
+except Exception:  # noqa: BLE001 - isolate one market from the dashboard
+````
+
+## File: src/ai_trading/multi_timeframe_features.py
+````python
+MTF_CONTEXT_FEATURES = [
+⋮----
+MTF_CHALLENGER_FEATURES = [*CHALLENGER_FEATURES, *MTF_CONTEXT_FEATURES]
+⋮----
+def _infer_base_delta(index: pd.DatetimeIndex) -> pd.Timedelta
+⋮----
+deltas = index.to_series().diff().dropna()
+deltas = deltas[deltas > pd.Timedelta(0)]
+⋮----
+def _resample_ohlcv(market: pd.DataFrame, rule: str) -> pd.DataFrame
+⋮----
+aggregated = market.resample(
+⋮----
+def _rsi(close: pd.Series, window: int) -> pd.Series
+⋮----
+delta = close.diff()
+average_gain = delta.clip(lower=0.0).rolling(window).mean()
+average_loss = (-delta.clip(upper=0.0)).rolling(window).mean()
+relative_strength = average_gain / average_loss.replace(0.0, np.nan)
+rsi = 100.0 - (100.0 / (1.0 + relative_strength))
+rsi = rsi.mask((average_loss == 0.0) & (average_gain > 0.0), 100.0)
+rsi = rsi.mask((average_loss == 0.0) & (average_gain == 0.0), 50.0)
+⋮----
+close = frame["Close"].astype(float)
+returns = close.pct_change()
+out = pd.DataFrame(index=frame.index)
+⋮----
+availability = market_index + base_delta
+aligned = context.reindex(availability, method="ffill")
+⋮----
+"""Build leakage-safe 5m/15m/1h/4h features on the base market index.
+
+    Higher-timeframe bars are labeled at their close and are only exposed to a
+    5-minute signal row once that higher-timeframe close is available at the
+    following execution boundary.
+    """
+⋮----
+required = {"Open", "High", "Low", "Close", "Volume"}
+missing = required.difference(market.columns)
+⋮----
+base = make_challenger_features(market).copy()
+base_delta = _infer_base_delta(market.index)
+⋮----
+contexts = (
+⋮----
+resampled = _resample_ohlcv(market, rule)
+context = _context_features(resampled, **settings)
+aligned = _align_completed_context(market.index, context, base_delta)
+⋮----
+high = market["High"].astype(float)
+low = market["Low"].astype(float)
+close = market["Close"].astype(float)
+previous_close = close.shift(1)
+true_range = pd.concat(
+atr_pct = true_range.rolling(atr_window).mean() / close.replace(0.0, np.nan)
+⋮----
+"""Label 15-minute direction on 5-minute data using a volatility floor."""
+⋮----
+future_return = close.shift(-horizon_bars) / close - 1.0
+threshold = adaptive_return_threshold(
+⋮----
+labels = pd.Series(0, index=market.index, dtype="int8")
+⋮----
+invalid = future_return.isna() | threshold.isna()
 ````
 
 ## File: src/ai_trading/multiasset_backtest.py
@@ -4130,23 +4542,62 @@ side = max(probabilities, key=probabilities.get)
 ````python
 def _empty_model_snapshot() -> dict[str, object]
 ⋮----
+def _empty_shadow_quality_snapshot() -> dict[str, object]
+⋮----
+policy = ShadowPromotionPolicy()
+⋮----
+def _empty_mtf_shadow_quality_snapshot() -> dict[str, object]
+⋮----
+policy = ShadowPromotionPolicy(min_observations=500)
+⋮----
+def _shadow_quality_snapshot(comparison) -> dict[str, object]
+⋮----
+observations = int(comparison.observations)
+available = observations >= 5
+⋮----
+def quality_payload(quality) -> dict[str, object]
+⋮----
+gate = evaluate_shadow_promotion_gate(comparison, policy)
+⋮----
+def _mtf_shadow_quality_snapshot(comparison) -> dict[str, object]
+⋮----
 def runtime_is_consistent(persisted: PersistedRuntime) -> bool
 ⋮----
 state = persisted.state
 ⋮----
-def _burnin_snapshot(persistence: PaperPersistence, runtime_key: str) -> dict[str, object]
+def _burnin_snapshot(snapshots: tuple[BurnInSnapshot, ...]) -> dict[str, object]
 ⋮----
-loader = getattr(persistence, "list_burnin_snapshots", None)
-⋮----
-snapshots = loader(runtime_key)
 latest_bars = snapshots[-1].processed_bars if snapshots else 0
 ⋮----
 metrics = calculate_burnin_metrics(snapshots)
 ⋮----
+def _empty_readiness_snapshot() -> dict[str, object]
+⋮----
+probability = bootstrap_positive_probability(
+⋮----
+report = evaluate_readiness(
+⋮----
 persisted = persistence.load_runtime(runtime_key, starting_cash)
 status = persistence.load_runtime_status(runtime_key)
-burnin = _burnin_snapshot(persistence, runtime_key)
+burnin_loader = getattr(persistence, "list_burnin_snapshots", None)
+snapshots = (
+regime_loader = getattr(persistence, "list_regimes", None)
+regimes = tuple(regime_loader(runtime_key)) if callable(regime_loader) else ()
+burnin = _burnin_snapshot(snapshots)
+readiness = _readiness_snapshot(snapshots, regimes, status)
 except Exception:  # noqa: BLE001 - observability boundary must sanitize backend failures
+⋮----
+shadow_quality = _empty_shadow_quality_snapshot()
+shadow_loader = getattr(persistence, "load_shadow_quality", None)
+⋮----
+shadow_quality = _shadow_quality_snapshot(shadow_loader(runtime_key))
+except Exception:  # noqa: BLE001 - optional observability must not break runtime status
+⋮----
+mtf_shadow_quality = _empty_mtf_shadow_quality_snapshot()
+mtf_shadow_loader = getattr(persistence, "load_mtf_shadow_quality", None)
+⋮----
+mtf_shadow_quality = _mtf_shadow_quality_snapshot(
+except Exception:  # noqa: BLE001 - optional observer must not break status
 ⋮----
 status_snapshot = runtime_status_snapshot(status)
 engine_status = str(status_snapshot["engine_status"])
@@ -4228,8 +4679,9 @@ class ProductionPaperCycleSettings
 symbol: str = "GC=F"
 period: str = "5d"
 interval: str = "5m"
-max_catchup_bars: int = 12
+max_catchup_bars: int = DEFAULT_MAX_CATCHUP_BARS
 poll_seconds: float = 300.0
+shadow_challenger_enabled: bool = False
 ⋮----
 class PaperCycleServiceError(RuntimeError)
 ⋮----
@@ -4252,7 +4704,10 @@ previous_cycle_errors = (
 ⋮----
 except Exception as exc:  # noqa: BLE001 - storage boundary is fail-closed
 ⋮----
-result = runner_factory(backend).run_once(
+runner = runner_factory(backend)
+⋮----
+result = runner.run_once(
+⋮----
 state = backend.load_runtime(runtime_key, starting_cash).state
 equity = state.cash + state.units * state.last_price
 ⋮----
@@ -4263,6 +4718,8 @@ except Exception:  # noqa: BLE001, S110 - best-effort failure reporting
 
 ## File: src/ai_trading/paper_cycle.py
 ````python
+DEFAULT_MAX_CATCHUP_BARS = 72
+⋮----
 @dataclass(frozen=True)
 class PaperCycleResult
 ⋮----
@@ -4289,16 +4746,38 @@ position = positions.get(last_processed)
 runtime_key = build_runtime_key(symbol, interval)
 runtime = self.runtime_factory(
 market = self.data_loader(symbol, period, interval)
-eligible = runtime._eligible_execution_indices(market)
+prepared = runtime.prepare_market(market)
+eligible = prepared.eligible
 ⋮----
 snapshot = self.persistence.load_runtime(
 pending = self._pending_targets(snapshot, eligible)
+⋮----
+shadow_result = None
+shadow_target: str | None = None
+mtf_shadow_result = None
+mtf_attach_target: str | None = None
+⋮----
+shadow_target = str(pending[0])
+shadow_result = evaluate_shadow_challenger(
+except Exception:  # noqa: BLE001 - observer must never disrupt execution
+⋮----
+shadow_target = None
+⋮----
+mtf_execution = select_observable_execution_target(
+⋮----
+mtf_shadow_result = evaluate_multi_timeframe_shadow(
+⋮----
+mtf_attach_target = str(pending[0])
+⋮----
+mtf_attach_target = None
 ⋮----
 processed = 0
 attempts = 0
 ⋮----
 target = pending[0]
-result = runtime.step_at(market, target)
+observer_kwargs = {}
+⋮----
+result = runtime.step_prepared(
 ⋮----
 remaining_backlog = bool(pending)
 ⋮----
@@ -4307,6 +4786,14 @@ reason = "catch-up pending"
 reason = f"processed {processed} bar(s)"
 ⋮----
 reason = "concurrent progress observed"
+````
+
+## File: src/ai_trading/paper_readiness_evidence.py
+````python
+@lru_cache(maxsize=16)
+def bootstrap_positive_probability(equities: tuple[float, ...]) -> float | None
+⋮----
+report = bootstrap_equity_curve(pd.Series(equities, dtype=float))
 ````
 
 ## File: src/ai_trading/parameter_sensitivity.py
@@ -4782,15 +5269,19 @@ def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]
 ⋮----
 def list_regimes(self, runtime_key: str) -> tuple[str, ...]
 ⋮----
+def load_shadow_quality(self, runtime_key: str) -> ShadowQualityComparison
+⋮----
+payloads = []
+⋮----
+payload = row["payload"]
+⋮----
+payload = json.loads(payload)
+⋮----
 def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None
 ⋮----
 payload = asdict(status)
 ⋮----
 def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None
-⋮----
-payload = row["payload"]
-⋮----
-payload = json.loads(payload)
 ````
 
 ## File: src/ai_trading/process_watch.py
@@ -5988,6 +6479,15 @@ units: float
 processed_bars: int
 retrain_due: bool
 ⋮----
+@dataclass(frozen=True)
+class PreparedRuntimeMarket
+⋮----
+market: pd.DataFrame
+features: pd.DataFrame
+labels: pd.Series
+valid: pd.Index
+eligible: tuple[object, ...]
+⋮----
 class PaperAutonomousRuntime
 ⋮----
 """One-step autonomous paper runtime.
@@ -6000,8 +6500,6 @@ def _broker_from_state(self, state: RuntimeState) -> PaperBroker
 ⋮----
 broker = PaperBroker(self.risk_config)
 ⋮----
-def _eligible_execution_indices(self, df: pd.DataFrame) -> tuple[object, ...]
-⋮----
 features = make_features(df)
 valid = features.dropna().index
 ⋮----
@@ -6011,13 +6509,25 @@ execution: list[object] = []
 ⋮----
 signal_pos = int(df.index.get_loc(signal_idx))
 ⋮----
+def _eligible_execution_indices(self, df: pd.DataFrame) -> tuple[object, ...]
+⋮----
+def prepare_market(self, df: pd.DataFrame) -> PreparedRuntimeMarket
+⋮----
+labels = make_labels(
+⋮----
 def step(self, df: pd.DataFrame) -> RuntimeStepResult
 ⋮----
-eligible = self._eligible_execution_indices(df)
+prepared = self.prepare_market(df)
 ⋮----
 def step_at(self, df: pd.DataFrame, execution_idx: object) -> RuntimeStepResult
 ⋮----
-labels = make_labels(
+prepared = PreparedRuntimeMarket(
+⋮----
+df = prepared.market
+features = prepared.features
+labels = prepared.labels
+valid = prepared.valid
+eligible = prepared.eligible
 ⋮----
 execution_pos = int(df.index.get_loc(execution_idx))
 ⋮----
@@ -6050,6 +6560,9 @@ prediction: Prediction = model.predict_one(row)
 execution_price = float(df.at[execution_idx, "Open"])
 close_price = float(df.at[execution_idx, "Close"])
 ⋮----
+execution_day = pd.Timestamp(execution_idx).date()
+previous_day = (
+⋮----
 snapshot = PortfolioSnapshot(
 decision = self.risk.evaluate(prediction, snapshot)
 ⋮----
@@ -6066,6 +6579,7 @@ retrain_due = bars_since_cycle >= self.learning_cycle_every_bars
 ⋮----
 new_state = self._state_from_broker(
 audit_payload = {
+⋮----
 outcome = self.persistence.commit_step(
 ````
 
@@ -6180,6 +6694,123 @@ audit_tail = _audit_tail_hash(Path(audit_path))
 payload = {
 canonical = json.dumps(
 digest = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+````
+
+## File: src/ai_trading/shadow_challenger.py
+````python
+@dataclass(frozen=True)
+class ShadowChallengerResult
+⋮----
+prediction: Prediction
+regime: str
+signal_time: str
+execution_time: str
+training_rows: int
+training_end: str
+realized_label: int | None
+⋮----
+"""Evaluate a batch ensemble without allowing it to influence execution.
+
+    Training rows are restricted so every training label is fully observable by
+    the signal bar. This keeps the challenger suitable for shadow evaluation
+    during paper trading and catch-up processing.
+    """
+⋮----
+execution_pos = int(market.index.get_loc(execution_idx))
+⋮----
+signal_pos = execution_pos - 1
+signal_idx = market.index[signal_pos]
+⋮----
+challenger_features = make_challenger_features(market)
+⋮----
+signal_row = challenger_features.loc[signal_idx, CHALLENGER_FEATURES]
+⋮----
+last_train_pos = signal_pos - horizon_bars
+⋮----
+allowed = set(market.index[: last_train_pos + 1])
+valid_feature_rows = challenger_features.loc[:, CHALLENGER_FEATURES].dropna().index
+labeled_rows = labels.dropna().index
+train_idx = [
+⋮----
+model = EnsembleDirectionModel(
+⋮----
+regime = detect_regime(signal_row)
+prediction = model.predict_one(signal_row, regime)
+realized = labels.get(signal_idx)
+realized_label = int(realized) if pd.notna(realized) else None
+````
+
+## File: src/ai_trading/shadow_promotion_gate.py
+````python
+@dataclass(frozen=True)
+class ShadowPromotionPolicy
+⋮----
+min_observations: int = 250
+min_score_delta: float = 0.02
+min_accuracy_delta: float = 0.0
+max_brier_increase: float = 0.02
+min_directional_edge_delta: float = 0.0
+⋮----
+@dataclass(frozen=True)
+class ShadowPromotionGate
+⋮----
+eligible_for_review: bool
+reasons: tuple[str, ...]
+observations: int
+score_delta: float
+accuracy_delta: float
+brier_delta: float
+directional_edge_delta: float
+⋮----
+policy = policy or ShadowPromotionPolicy()
+reasons: list[str] = []
+⋮----
+score_delta = float(comparison.challenger.score - comparison.river.score)
+accuracy_delta = float(
+brier_delta = float(comparison.challenger.brier - comparison.river.brier)
+directional_edge_delta = float(
+````
+
+## File: src/ai_trading/shadow_quality.py
+````python
+@dataclass(frozen=True)
+class ShadowQualityComparison
+⋮----
+observations: int
+river: ModelQuality
+challenger: ModelQuality
+⋮----
+@property
+    def score_delta(self) -> float
+⋮----
+def _empty_quality() -> ModelQuality
+⋮----
+river_sides: list[int] = []
+river_confidences: list[float] = []
+challenger_sides: list[int] = []
+challenger_confidences: list[float] = []
+labels: list[int] = []
+⋮----
+shadow = payload.get("shadow_challenger")
+river_prediction = payload.get("prediction")
+⋮----
+challenger_prediction = shadow.get("prediction")
+realized = shadow.get("realized_label")
+⋮----
+river_side = int(river_prediction["side"])
+river_confidence = float(river_prediction["confidence"])
+challenger_side = int(challenger_prediction["side"])
+challenger_confidence = float(challenger_prediction["confidence"])
+label = int(realized)
+⋮----
+observations = len(labels)
+⋮----
+empty = _empty_quality()
+⋮----
+index = pd.RangeIndex(observations)
+realized = pd.Series(labels, index=index, dtype="int64")
+river = evaluate_model_quality(
+challenger = evaluate_model_quality(
 ````
 
 ## File: src/ai_trading/soak_gate.py
@@ -7123,6 +7754,17 @@ workspace = tmp_path / "self-test"
 result = runner.invoke(
 ````
 
+## File: tests/test_cloudflare_scheduler_deploy_workflow.py
+````python
+def test_cloudflare_scheduler_deploy_workflow_is_fail_closed() -> None
+⋮----
+path = Path(".github/workflows/cloudflare-paper-scheduler-deploy.yml")
+⋮----
+text = path.read_text(encoding="utf-8")
+⋮----
+required = (
+````
+
 ## File: tests/test_compute_budget.py
 ````python
 def test_compute_budget_sums_to_total_and_rewards_efficiency() -> None
@@ -7295,7 +7937,18 @@ def list_trades(self, runtime_key: str | None = None, *, limit: int | None = Non
 ⋮----
 def list_burnin_snapshots(self, runtime_key: str)
 ⋮----
+def list_regimes(self, runtime_key: str) -> tuple[str, ...]
+⋮----
 def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None
+⋮----
+def load_shadow_quality(self, runtime_key: str) -> ShadowQualityComparison
+⋮----
+river = ModelQuality(
+challenger = ModelQuality(
+⋮----
+def load_mtf_shadow_quality(self, runtime_key: str) -> MultiTimeframeShadowQuality
+⋮----
+class ReadinessOverviewPersistence(OverviewPersistence)
 ⋮----
 class FailingOverviewPersistence
 ⋮----
@@ -7315,6 +7968,8 @@ deadline = time.time() + 3
 def test_operational_overview_exposes_model_and_runtime_metadata() -> None
 ⋮----
 payload = build_operational_overview(OverviewPersistence(), RUNTIME_KEY)
+⋮----
+gate = payload["shadow_challenger"]["promotion_gate"]
 ⋮----
 def test_operational_overview_flags_stale_runtime() -> None
 ⋮----
@@ -7349,6 +8004,18 @@ def test_dashboard_renders_inconsistent_runtime_alert(tmp_path) -> None
 def test_operational_overview_flags_cycle_reliability_degradation() -> None
 ⋮----
 def test_dashboard_renders_cycle_reliability_alert(tmp_path) -> None
+⋮----
+def test_operational_overview_exposes_structured_readiness() -> None
+⋮----
+payload = build_operational_overview(ReadinessOverviewPersistence(), RUNTIME_KEY)
+⋮----
+readiness = payload["readiness"]
+⋮----
+burnin = next(
+⋮----
+def test_overview_endpoint_includes_readiness_evidence() -> None
+⋮----
+port = _start_overview_dashboard(ReadinessOverviewPersistence())
 ````
 
 ## File: tests/test_dashboard_persistence.py
@@ -7432,6 +8099,12 @@ def test_trade_journal_limit_returns_latest_events(tmp_path) -> None
 def test_dashboard_renders_portfolio_summary(tmp_path) -> None
 ⋮----
 def test_dashboard_renders_recent_trade_performance_metrics(tmp_path) -> None
+⋮----
+def test_dashboard_renders_premium_terminal_shell(tmp_path) -> None
+⋮----
+page = render_dashboard(TradeJournal(tmp_path / "empty.jsonl"))
+⋮----
+def test_dashboard_live_refresh_preserves_scroll_without_meta_reload(tmp_path) -> None
 ````
 
 ## File: tests/test_data_quality.py
@@ -7454,6 +8127,16 @@ report = evaluate_market_data_quality(df)
 def test_missing_required_column_fails_closed() -> None
 ⋮----
 report = evaluate_market_data_quality(clean_market().drop(columns=["Open"]))
+````
+
+## File: tests/test_data.py
+````python
+def test_load_history_keeps_price_rows_when_volume_is_missing(monkeypatch) -> None
+⋮----
+index = pd.date_range("2026-09-18 08:00", periods=60, freq="5min")
+frame = pd.DataFrame(
+⋮----
+loaded = data_module.load_history("^GDAXI", period="5d", interval="5m")
 ````
 
 ## File: tests/test_dataset_evidence.py
@@ -7633,6 +8316,14 @@ def test_ensemble_returns_valid_probability_distribution() -> None
 model = EnsembleDirectionModel(random_state=7)
 ⋮----
 pred = model.predict_one(
+⋮----
+def test_ensemble_accepts_explicit_feature_set() -> None
+⋮----
+x = x.copy()
+⋮----
+feature_names = [*FEATURES, "extra_momentum"]
+⋮----
+model = EnsembleDirectionModel(random_state=11, feature_names=feature_names)
 ````
 
 ## File: tests/test_evolution_manager.py
@@ -7791,6 +8482,18 @@ x = make_features(sample_df())
 def test_labels_only_three_classes() -> None
 ⋮----
 y = make_labels(sample_df(), return_threshold=0.002).dropna().astype(int)
+⋮----
+def test_challenger_features_extend_production_features_without_replacing_them() -> None
+⋮----
+base = make_features(sample_df())
+challenger = make_challenger_features(sample_df())
+⋮----
+def test_volume_less_market_keeps_neutral_volume_features() -> None
+⋮----
+df = sample_df()
+⋮----
+base = make_features(df)
+challenger = make_challenger_features(df)
 ````
 
 ## File: tests/test_file_persistence.py
@@ -7815,6 +8518,12 @@ first = RuntimeStepCommit(
 second = RuntimeStepCommit(
 ⋮----
 restored = FilePaperPersistence(root=tmp_path)
+⋮----
+def test_file_backend_loads_shadow_quality_from_audit(tmp_path) -> None
+⋮----
+payloads = [
+⋮----
+comparison = backend.load_shadow_quality("paper:GC=F:5m:online-river:v1")
 ````
 
 ## File: tests/test_generation_progress.py
@@ -8006,6 +8715,8 @@ def run(self) -> list[object]
 fake_runtime = SimpleNamespace(
 ⋮----
 config = captured["config"]
+⋮----
+def test_hosted_settings_enable_shadow_challenger(monkeypatch) -> None
 ````
 
 ## File: tests/test_lifecycle_log.py
@@ -8140,6 +8851,107 @@ def test_success_resets_failure_history(tmp_path: Path) -> None
 record = store.record_success("v2")
 ````
 
+## File: tests/test_mtf_shadow_challenger.py
+````python
+def sample_market(n: int = 2600) -> pd.DataFrame
+⋮----
+idx = pd.date_range("2026-01-01", periods=n, freq="5min")
+t = np.arange(n, dtype=float)
+close = 100.0 + 0.015 * t + 1.3 * np.sin(t / 17.0)
+open_ = close * (1.0 + 0.0004 * np.sin(t / 9.0))
+⋮----
+def test_select_observable_execution_target_delays_three_bar_horizon() -> None
+⋮----
+market = sample_market(200)
+eligible = tuple(market.index[40:])
+current = eligible[-1]
+⋮----
+target = select_observable_execution_target(
+⋮----
+def test_mtf_shadow_purges_future_labels_and_caps_training(monkeypatch) -> None
+⋮----
+market = sample_market()
+authoritative = make_features(market)
+execution_idx = market.index[-4]
+captured: dict[str, object] = {}
+⋮----
+class RecordingEnsemble
+⋮----
+def fit(self, x: pd.DataFrame, y: pd.Series) -> None
+⋮----
+def predict_one(self, row: pd.Series, regime) -> Prediction
+⋮----
+result = evaluate_multi_timeframe_shadow(
+⋮----
+train_index = captured["train_index"]
+⋮----
+signal_pos = int(market.index.get_loc(execution_idx)) - 1
+````
+
+## File: tests/test_mtf_shadow_quality.py
+````python
+def river_payload(execution_time: str, side: int, confidence: float) -> dict[str, object]
+⋮----
+def test_mtf_quality_joins_river_prediction_by_delayed_execution_time() -> None
+⋮----
+payloads = [
+⋮----
+comparison = compare_mtf_shadow_audit_payloads(payloads)
+⋮----
+def test_mtf_quality_deduplicates_same_evaluated_execution() -> None
+````
+
+## File: tests/test_multi_market.py
+````python
+@dataclass
+class FakeMultiPersistence
+⋮----
+equities: dict[str, float]
+⋮----
+def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime
+⋮----
+symbol = runtime_key.split(":", 2)[1]
+equity = self.equities[symbol]
+⋮----
+def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus
+⋮----
+def list_burnin_snapshots(self, runtime_key: str)
+⋮----
+def list_regimes(self, runtime_key: str)
+⋮----
+def list_trades(self, runtime_key: str | None = None, *, limit: int | None = None)
+⋮----
+def load_trade_performance(self, runtime_key: str)
+⋮----
+def test_configured_markets_default_to_gold(monkeypatch) -> None
+⋮----
+markets = configured_markets_from_env()
+⋮----
+def test_configured_default_bundle_uses_34_33_33(monkeypatch) -> None
+⋮----
+def test_multi_market_cycle_isolates_one_market_failure(monkeypatch) -> None
+⋮----
+calls: list[str] = []
+⋮----
+def fake_cycle(settings, *, persistence=None, **kwargs)
+⋮----
+result = run_multi_market_paper_cycle(
+⋮----
+def test_multi_market_overview_scales_normalized_sleeves_to_100k() -> None
+⋮----
+backend = FakeMultiPersistence(
+⋮----
+snapshot = build_multi_market_overview(
+⋮----
+def test_dashboard_renders_multi_market_cards(tmp_path) -> None
+⋮----
+page = render_dashboard(
+⋮----
+def test_multi_market_cycle_runs_markets_concurrently(monkeypatch) -> None
+⋮----
+barrier = Barrier(len(DEFAULT_MARKETS))
+````
+
 ## File: tests/test_multi_period_promotion.py
 ````python
 def metric(total_return: float, sharpe: float, drawdown: float) -> PerformanceMetrics
@@ -8149,6 +8961,36 @@ def test_multi_period_promotion_requires_consistency() -> None
 champion = [metric(0.10, 0.8, 0.08) for _ in range(5)]
 challenger = [
 decision = evaluate_multi_period_challenger(
+````
+
+## File: tests/test_multi_timeframe_features.py
+````python
+def sample_market(n: int = 2600) -> pd.DataFrame
+⋮----
+idx = pd.date_range("2026-01-01", periods=n, freq="5min")
+t = np.arange(n, dtype=float)
+close = 100.0 + 0.01 * t + 1.8 * np.sin(t / 19.0)
+open_ = close * (1.0 + 0.0003 * np.sin(t / 7.0))
+⋮----
+def test_multi_timeframe_features_include_true_contexts() -> None
+⋮----
+features = make_multi_timeframe_challenger_features(sample_market())
+⋮----
+def test_multi_timeframe_features_do_not_change_when_future_prices_change() -> None
+⋮----
+market = sample_market()
+probe_time = market.index[1800]
+before = make_multi_timeframe_challenger_features(market).loc[probe_time]
+⋮----
+altered = market.copy()
+future = altered.index > probe_time
+⋮----
+after = make_multi_timeframe_challenger_features(altered).loc[probe_time]
+⋮----
+def test_adaptive_labels_use_15_minute_horizon_and_valid_classes() -> None
+⋮----
+labels = make_volatility_adaptive_labels(
+threshold = adaptive_return_threshold(
 ````
 
 ## File: tests/test_multiasset_backtest.py
@@ -8396,6 +9238,10 @@ def test_success_resets_consecutive_cycle_errors() -> None
 backend = FakePersistence(
 ⋮----
 def test_failure_increments_consecutive_cycle_errors() -> None
+⋮----
+def test_service_propagates_shadow_challenger_when_enabled() -> None
+⋮----
+runner = FakeRunner(backend)
 ````
 
 ## File: tests/test_paper_cycle_workflow.py
@@ -8441,6 +9287,14 @@ catchup_times = [row["payload"]["execution_time"] for row in audit_rows[1:]]
 ⋮----
 def test_catchup_cap_leaves_remaining_backlog(tmp_path: Path) -> None
 ⋮----
+calls = {"features": 0, "labels": 0}
+original_make_features = runtime_module.make_features
+original_make_labels = runtime_module.make_labels
+⋮----
+def counted_make_features(market)
+⋮----
+def counted_make_labels(market, *, horizon_bars, return_threshold)
+⋮----
 def test_missing_last_processed_in_history_fails_closed(tmp_path: Path) -> None
 ⋮----
 runner = build_runner(tmp_path, backend, sample_market())
@@ -8459,15 +9313,26 @@ class ConflictOnceRuntime
 ⋮----
 risk_config = primary.risk_config
 ⋮----
-def _eligible_execution_indices(self, market)
+def prepare_market(self, market)
 ⋮----
-def step_at(self, market, target)
+def step_prepared(self, prepared, target)
 ⋮----
 state = backend.load_runtime(primary.runtime_key, 100_000.0).state
 ⋮----
 runner = build_runner(
 ⋮----
 final = backend.load_runtime(primary.runtime_key, 100_000.0).state
+⋮----
+target = eligible[-1]
+signal = df.index[int(df.index.get_loc(target)) - 1]
+train_end = df.index[int(df.index.get_loc(signal)) - 1]
+calls: list[object] = []
+⋮----
+payload = audit_rows[-1]["payload"]
+⋮----
+current_target = eligible[-1]
+mtf_target = eligible[-3]
+mtf_signal = df.index[int(df.index.get_loc(mtf_target)) - 1]
 ````
 
 ## File: tests/test_performance_metrics.py
@@ -8663,6 +9528,13 @@ restored = PostgresPaperPersistence(DATABASE_URL).load_runtime_status(RUNTIME_KE
 def test_regime_coverage_is_deduplicated_and_persisted(backend) -> None
 ⋮----
 snapshots = backend.list_burnin_snapshots(RUNTIME_KEY)
+⋮----
+def test_postgres_loads_shadow_quality_from_audit(backend) -> None
+⋮----
+commit = _commit()
+shadow_commit = RuntimeStepCommit(
+⋮----
+comparison = backend.load_shadow_quality(RUNTIME_KEY)
 ````
 
 ## File: tests/test_process_watch.py
@@ -9281,6 +10153,33 @@ persistence = RecordingPersistence(
 def test_runtime_rejects_missing_model_for_existing_state() -> None
 ⋮----
 persistence = RecordingPersistence(_persisted_runtime(with_model=False))
+⋮----
+def intraday_market(n: int = 100) -> pd.DataFrame
+⋮----
+idx = pd.date_range("2025-01-01 09:00", periods=n, freq="5min")
+⋮----
+close = 100.0 + 0.02 * t + 0.5 * np.sin(t / 5.0)
+⋮----
+def test_runtime_preserves_daily_loss_baseline_within_trading_day() -> None
+⋮----
+market = intraday_market()
+probe = PaperAutonomousRuntime(
+eligible = probe._eligible_execution_indices(market)
+previous = eligible[-2]
+target = eligible[-1]
+⋮----
+persisted = PersistedRuntime(
+persistence = RecordingPersistence(persisted)
+⋮----
+result = runtime.step_at(market, target)
+⋮----
+def test_runtime_resets_daily_loss_baseline_on_new_trading_day() -> None
+⋮----
+market = sample_market()
+⋮----
+previous_day = market.index[-3]
+⋮----
+expected = 97_900.0
 ````
 
 ## File: tests/test_runtime_state.py
@@ -9497,6 +10396,70 @@ audit_path = tmp_path / "audit.jsonl"
 first = compute_session_fingerprint([state], audit_path)
 ⋮----
 second = compute_session_fingerprint([state], audit_path)
+````
+
+## File: tests/test_shadow_challenger.py
+````python
+def sample_market(n: int = 220) -> pd.DataFrame
+⋮----
+idx = pd.date_range("2025-01-01", periods=n, freq="5min")
+t = np.arange(n, dtype=float)
+close = 100.0 + 0.03 * t + 1.5 * np.sin(t / 7.0)
+open_ = close * (1.0 + 0.0005 * np.sin(t / 4.0))
+⋮----
+def test_shadow_challenger_purges_unobservable_training_labels(monkeypatch) -> None
+⋮----
+market = sample_market()
+features = make_features(market)
+labels = make_labels(market, horizon_bars=3, return_threshold=0.001)
+execution_idx = market.index[-5]
+captured: dict[str, object] = {}
+⋮----
+class RecordingEnsemble
+⋮----
+def fit(self, x: pd.DataFrame, y: pd.Series) -> None
+⋮----
+def predict_one(self, row: pd.Series, regime) -> Prediction
+⋮----
+result = evaluate_shadow_challenger(
+⋮----
+signal_pos = int(market.index.get_loc(execution_idx)) - 1
+train_index = captured["train_index"]
+⋮----
+expected_label = labels.loc[market.index[signal_pos]]
+⋮----
+def test_shadow_challenger_skips_when_history_is_insufficient() -> None
+⋮----
+market = sample_market(90)
+⋮----
+labels = make_labels(market)
+````
+
+## File: tests/test_shadow_promotion_gate.py
+````python
+river = ModelQuality(
+challenger = ModelQuality(
+⋮----
+def test_shadow_promotion_gate_requires_sufficient_evidence() -> None
+⋮----
+gate = evaluate_shadow_promotion_gate(comparison(observations=40))
+⋮----
+def test_shadow_promotion_gate_accepts_stronger_challenger_for_review() -> None
+⋮----
+gate = evaluate_shadow_promotion_gate(comparison(observations=300))
+⋮----
+def test_shadow_promotion_gate_rejects_calibration_degradation() -> None
+⋮----
+gate = evaluate_shadow_promotion_gate(
+````
+
+## File: tests/test_shadow_quality.py
+````python
+def test_shadow_quality_compares_both_models_on_identical_labels() -> None
+⋮----
+comparison = compare_shadow_audit_payloads(
+⋮----
+def test_shadow_quality_ignores_unusable_audit_rows() -> None
 ````
 
 ## File: tests/test_smoke_e2e.py
@@ -9774,7 +10737,7 @@ result = monitor_worker(
 ````yaml
 source: dbrckk/repo-standards
 ref: main
-version: 19
+version: 20
 adopted: true
 workflow_mode: unified-single-commit
 repo_brain: dbrckk/repo-brain@main
@@ -9789,6 +10752,8 @@ auto_routing_learning: source-diff-success-v1
 validation_memory: passed-failed-test-history-v1
 regression_gate: repo-brain-core-tests-v1
 benchmark: routing-benchmark-v1
+stability_profile: stable-v1
+benchmark_guard: avg-files-le-6-cache-required-v1
 ai_context:
   index: .ai/index.md
   project_state: .ai/project-state.md
@@ -9827,6 +10792,7 @@ ai_context:
   brain_auto_learning: .ai/brain/auto-learning.json
   brain_validation_memory: .ai/brain/validation-memory.json
   brain_benchmark: .ai/brain/benchmark.json
+  brain_benchmark_health: .ai/brain/benchmark-health.json
   brain_hotset: .ai/brain/hotset.json
   brain_context_manifest: .ai/brain/context-manifest.json
   brain_context_packets: .ai/brain/context/
@@ -10087,7 +11053,7 @@ The scheduled executor is defined in `.github/workflows/paper-cycle.yml`. It run
 The production cycle is:
 
 ```bash
-ai-trading paper-cycle --symbol GC=F --period 5d --interval 5m --max-catchup-bars 12
+ai-trading paper-cycle --symbol GC=F --period 5d --interval 5m --max-catchup-bars 72
 ```
 
 Its durable runtime key is:
@@ -10096,7 +11062,7 @@ Its durable runtime key is:
 paper:GC=F:5m:online-river:v1
 ```
 
-A fresh durable runtime processes only the latest eligible execution bar. An existing runtime catches up missed eligible bars oldest-first, with at most 12 attempted bars per invocation. If the durable `last_processed` marker is outside the loaded history window, the cycle fails closed instead of guessing where to resume. Revision conflicts cause state to be reloaded so overlapping executors cannot overwrite newer durable progress.
+A fresh durable runtime processes only the latest eligible execution bar. An existing runtime catches up missed eligible bars oldest-first, with at most 72 attempted bars per invocation (six hours of 5-minute bars) so delayed external triggers can recover without unbounded work. If the durable `last_processed` marker is outside the loaded history window, the cycle fails closed instead of guessing where to resume. Revision conflicts cause state to be reloaded so overlapping executors cannot overwrite newer durable progress.
 
 ### Hosted dashboard
 
