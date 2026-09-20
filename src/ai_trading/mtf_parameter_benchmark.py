@@ -70,20 +70,15 @@ class MTFBenchmarkSummary:
 
 DEFAULT_SCENARIOS = tuple(
     MTFBenchmarkScenario(
-        f"{name}_c{int(confidence * 100)}",
-        horizon,
-        threshold,
-        atr,
-        2000,
+        f"10m_conservative_t{train_rows}_c{int(confidence * 100)}",
+        2,
+        0.0010,
+        0.40,
+        train_rows,
         confidence,
     )
-    for name, horizon, threshold, atr in (
-        ("10m_balanced", 2, 0.00075, 0.25),
-        ("10m_conservative", 2, 0.0010, 0.40),
-        ("15m_balanced", 3, 0.00075, 0.25),
-        ("15m_conservative", 3, 0.0010, 0.40),
-    )
-    for confidence in (0.56, 0.60, 0.65, 0.70)
+    for train_rows in (750, 1000, 1500, 2000)
+    for confidence in (0.56, 0.60, 0.65)
 )
 
 
