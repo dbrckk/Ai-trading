@@ -33,6 +33,7 @@ class PaperCycleResult:
     last_processed: str | None
     processed_bars: int
     reason: str
+    mtf_evaluated: bool = False
 
 
 class PaperCycleRunner:
@@ -224,4 +225,5 @@ class PaperCycleRunner:
             last_processed=snapshot.state.last_processed,
             processed_bars=snapshot.state.processed_bars,
             reason=reason,
+            mtf_evaluated=mtf_shadow_result is not None,
         )
