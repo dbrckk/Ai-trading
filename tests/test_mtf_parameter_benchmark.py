@@ -111,6 +111,10 @@ def test_benchmark_payload_is_reproducible_and_explicit() -> None:
     assert payload["method"]["context_timeframes"] == ["5m", "15m", "1h", "4h"]
     assert payload["method"]["walk_forward"] is True
     assert payload["method"]["purged"] is True
+    assert payload["method"]["directional_gate"] == {
+        "min_active_predictions": 20,
+        "min_active_precision": 0.5,
+    }
     assert payload["ranking"][0]["rank"] == 1
     assert payload["ranking"][0]["config"]["horizon_bars"] == 3
     assert payload["ranking"][0]["config"]["min_confidence"] == 0.56
@@ -149,7 +153,7 @@ def test_market_selections_choose_gate_passing_config_per_symbol() -> None:
     assert set(selections) == {"A", "B"}
     for selection in selections.values():
         if selection is not None:
-            assert selection["active_predictions"] >= 10
+            assert selection["active_predictions"] >= 20
             assert selection["active_precision"] > 0.5
             assert selection["config_name"]
 
