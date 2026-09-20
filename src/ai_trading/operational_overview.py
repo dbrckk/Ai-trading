@@ -39,6 +39,32 @@ def _empty_shadow_quality_snapshot() -> dict[str, object]:
     }
 
 
+def _empty_mtf_shadow_quality_snapshot() -> dict[str, object]:
+    policy = ShadowPromotionPolicy(min_observations=500)
+    return {
+        "available": False,
+        "status": "collecting",
+        "observations": 0,
+        "score_delta": None,
+        "river": None,
+        "challenger": None,
+        "horizon_minutes": 15,
+        "timeframes": ["5m", "15m", "1h", "4h"],
+        "label": {
+            "type": "volatility_adaptive",
+            "minimum_threshold": 0.001,
+            "atr_multiplier": 0.25,
+        },
+        "promotion_gate": {
+            "eligible_for_review": False,
+            "min_observations": policy.min_observations,
+            "reasons": [
+                f"need at least {policy.min_observations} realized MTF observations"
+            ],
+        },
+    }
+
+
 def _shadow_quality_snapshot(comparison) -> dict[str, object]:
     observations = int(comparison.observations)
     available = observations >= 5
@@ -61,6 +87,47 @@ def _shadow_quality_snapshot(comparison) -> dict[str, object]:
         "score_delta": float(comparison.score_delta) if available else None,
         "river": quality_payload(comparison.river) if observations else None,
         "challenger": quality_payload(comparison.challenger) if observations else None,
+        "promotion_gate": {
+            "eligible_for_review": gate.eligible_for_review,
+            "min_observations": policy.min_observations,
+            "reasons": list(gate.reasons),
+            "score_delta": gate.score_delta,
+            "accuracy_delta": gate.accuracy_delta,
+            "brier_delta": gate.brier_delta,
+            "directional_edge_delta": gate.directional_edge_delta,
+        },
+    }
+
+
+def _mtf_shadow_quality_snapshot(comparison) -> dict[str, object]:
+    observations = int(comparison.observations)
+    available = observations >= 5
+
+    def quality_payload(quality) -> dict[str, object]:
+        return {
+            "score": float(quality.score),
+            "accuracy": float(quality.accuracy),
+            "brier": float(quality.brier),
+            "directional_edge": float(quality.directional_edge),
+            "observations": int(quality.observations),
+        }
+
+    policy = ShadowPromotionPolicy(min_observations=500)
+    gate = evaluate_shadow_promotion_gate(comparison, policy)
+    return {
+        "available": available,
+        "status": "comparable" if available else "collecting",
+        "observations": observations,
+        "score_delta": float(comparison.score_delta) if available else None,
+        "river": quality_payload(comparison.river) if observations else None,
+        "challenger": quality_payload(comparison.challenger) if observations else None,
+        "horizon_minutes": 15,
+        "timeframes": ["5m", "15m", "1h", "4h"],
+        "label": {
+            "type": "volatility_adaptive",
+            "minimum_threshold": 0.001,
+            "atr_multiplier": 0.25,
+        },
         "promotion_gate": {
             "eligible_for_review": gate.eligible_for_review,
             "min_observations": policy.min_observations,
@@ -195,6 +262,7 @@ def build_operational_overview(
             },
             "readiness": _empty_readiness_snapshot(),
             "shadow_challenger": _empty_shadow_quality_snapshot(),
+            "mtf_shadow_challenger": _empty_mtf_shadow_quality_snapshot(),
             "alerts": ["storage unavailable"],
         }
 
@@ -205,6 +273,16 @@ def build_operational_overview(
             shadow_quality = _shadow_quality_snapshot(shadow_loader(runtime_key))
         except Exception:  # noqa: BLE001 - optional observability must not break runtime status
             shadow_quality = _empty_shadow_quality_snapshot()
+
+    mtf_shadow_quality = _empty_mtf_shadow_quality_snapshot()
+    mtf_shadow_loader = getattr(persistence, "load_mtf_shadow_quality", None)
+    if callable(mtf_shadow_loader):
+        try:
+            mtf_shadow_quality = _mtf_shadow_quality_snapshot(
+                mtf_shadow_loader(runtime_key)
+            )
+        except Exception:  # noqa: BLE001 - optional observer must not break status
+            mtf_shadow_quality = _empty_mtf_shadow_quality_snapshot()
 
     status_snapshot = runtime_status_snapshot(status)
     engine_status = str(status_snapshot["engine_status"])
@@ -248,5 +326,6 @@ def build_operational_overview(
         "burnin": burnin,
         "readiness": readiness,
         "shadow_challenger": shadow_quality,
+        "mtf_shadow_challenger": mtf_shadow_quality,
         "alerts": alerts,
     }
