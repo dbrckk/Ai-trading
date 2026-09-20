@@ -83,6 +83,7 @@ def run_multi_market_paper_cycle(
     remaining_backlog = False
     processed_bars = 0
     last_processed: str | None = None
+    mtf_evaluated = False
     failures: list[tuple[str, str]] = []
 
     def run_market(market: MarketSpec):
@@ -115,6 +116,7 @@ def run_multi_market_paper_cycle(
             processed += result.processed
             processed_bars += result.processed_bars
             remaining_backlog = remaining_backlog or result.remaining_backlog
+            mtf_evaluated = mtf_evaluated or result.mtf_evaluated
             if result.last_processed is not None:
                 last_processed = (
                     result.last_processed
@@ -144,6 +146,7 @@ def run_multi_market_paper_cycle(
         last_processed=last_processed,
         processed_bars=processed_bars,
         reason=reason,
+        mtf_evaluated=mtf_evaluated,
     )
 
 
