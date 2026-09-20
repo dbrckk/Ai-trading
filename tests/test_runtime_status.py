@@ -19,6 +19,8 @@ def test_runtime_status_store_round_trip(tmp_path) -> None:
         equity=100_250.0,
         units=2.0,
         processed_bars=12,
+        cycle_duration_seconds=14.2,
+        mtf_evaluated=True,
     )
 
     store.save(status)

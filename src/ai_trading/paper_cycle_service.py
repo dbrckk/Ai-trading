@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from time import perf_counter
 
 from .config import RiskConfig
 from .paper_cycle import DEFAULT_MAX_CATCHUP_BARS, PaperCycleResult, PaperCycleRunner
@@ -49,6 +50,7 @@ def run_production_paper_cycle(
 
     runtime_key = build_runtime_key(settings.symbol, settings.interval)
     starting_cash = RiskConfig().starting_cash
+    cycle_started = perf_counter()
 
     backend = persistence
     if backend is None:
@@ -105,6 +107,7 @@ def run_production_paper_cycle(
             )
         state = backend.load_runtime(runtime_key, starting_cash).state
         equity = state.cash + state.units * state.last_price
+        cycle_duration_seconds = perf_counter() - cycle_started
         backend.save_runtime_status(
             runtime_key,
             HostedRuntimeStatus(
@@ -120,6 +123,8 @@ def run_production_paper_cycle(
                 processed_bars=state.processed_bars,
                 poll_seconds=settings.poll_seconds,
                 consecutive_cycle_errors=0,
+                cycle_duration_seconds=cycle_duration_seconds,
+                mtf_evaluated=result.mtf_evaluated,
             ),
         )
         return result
@@ -135,6 +140,7 @@ def run_production_paper_cycle(
                     error=f"{type(exc).__name__}: worker failure",
                     poll_seconds=settings.poll_seconds,
                     consecutive_cycle_errors=previous_cycle_errors + 1,
+                    cycle_duration_seconds=perf_counter() - cycle_started,
                 ),
             )
         except Exception:  # noqa: BLE001, S110 - best-effort failure reporting

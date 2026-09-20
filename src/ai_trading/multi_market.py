@@ -83,6 +83,7 @@ def run_multi_market_paper_cycle(
     remaining_backlog = False
     processed_bars = 0
     last_processed: str | None = None
+    mtf_evaluated = False
     failures: list[tuple[str, str]] = []
 
     def run_market(market: MarketSpec):
@@ -115,6 +116,7 @@ def run_multi_market_paper_cycle(
             processed += result.processed
             processed_bars += result.processed_bars
             remaining_backlog = remaining_backlog or result.remaining_backlog
+            mtf_evaluated = mtf_evaluated or result.mtf_evaluated
             if result.last_processed is not None:
                 last_processed = (
                     result.last_processed
@@ -144,6 +146,7 @@ def run_multi_market_paper_cycle(
         last_processed=last_processed,
         processed_bars=processed_bars,
         reason=reason,
+        mtf_evaluated=mtf_evaluated,
     )
 
 
@@ -177,6 +180,8 @@ def build_multi_market_overview(
             market_signal = None
             market_confidence = None
             market_reason = None
+            cycle_duration_seconds = None
+            market_mtf_evaluated = False
             if status is not None:
                 market_signal = (
                     {1: "LONG", -1: "SHORT", 0: "FLAT"}.get(status.side)
@@ -185,6 +190,8 @@ def build_multi_market_overview(
                 )
                 market_confidence = status.confidence if status.processed else None
                 market_reason = status.reason
+                cycle_duration_seconds = status.cycle_duration_seconds
+                market_mtf_evaluated = status.mtf_evaluated
             healthy = bool(overview.get("storage_healthy"))
             if healthy:
                 healthy_markets += 1
@@ -202,6 +209,8 @@ def build_multi_market_overview(
                     "signal": market_signal,
                     "confidence": market_confidence,
                     "reason": market_reason,
+                    "cycle_duration_seconds": cycle_duration_seconds,
+                    "mtf_evaluated": market_mtf_evaluated,
                     "overview": overview,
                 }
             )
