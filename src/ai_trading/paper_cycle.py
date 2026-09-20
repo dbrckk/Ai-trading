@@ -18,6 +18,14 @@ from .shadow_challenger import evaluate_shadow_challenger
 DEFAULT_MAX_CATCHUP_BARS = 72
 
 
+def _is_mtf_evaluation_boundary(execution_idx: object, interval: str) -> bool:
+    if interval != "5m":
+        return False
+    timestamp = pd.Timestamp(execution_idx)
+    return timestamp.minute % 15 == 0
+
+
+
 @dataclass(frozen=True)
 class PaperCycleResult:
     processed: int
@@ -130,39 +138,48 @@ class PaperCycleRunner:
                 shadow_result = None
                 shadow_target = None
 
-            try:
-                mtf_market = (
-                    market
-                    if not mtf_period or mtf_period == period
-                    else self.data_loader(symbol, mtf_period, interval)
-                )
-                mtf_current = {
-                    str(index): index
-                    for index in mtf_market.index
-                }.get(str(pending[0]))
-                if mtf_current is not None:
-                    mtf_execution = select_observable_execution_target(
-                        mtf_market,
-                        tuple(mtf_market.index[1:]),
-                        mtf_current,
-                        horizon_bars=3,
+            mtf_candidate = next(
+                (
+                    target
+                    for target in pending[:max_catchup_bars]
+                    if _is_mtf_evaluation_boundary(target, interval)
+                ),
+                None,
+            )
+            if mtf_candidate is not None:
+                try:
+                    mtf_market = (
+                        market
+                        if not mtf_period or mtf_period == period
+                        else self.data_loader(symbol, mtf_period, interval)
                     )
-                    if mtf_execution is not None:
-                        mtf_shadow_result = evaluate_multi_timeframe_shadow(
+                    mtf_current = {
+                        str(index): index
+                        for index in mtf_market.index
+                    }.get(str(mtf_candidate))
+                    if mtf_current is not None:
+                        mtf_execution = select_observable_execution_target(
                             mtf_market,
-                            make_features(mtf_market),
-                            mtf_execution,
+                            tuple(mtf_market.index[1:]),
+                            mtf_current,
                             horizon_bars=3,
-                            min_train_rows=500,
-                            max_train_rows=2000,
-                            minimum_threshold=0.001,
-                            atr_multiplier=0.25,
                         )
-                        if mtf_shadow_result is not None:
-                            mtf_attach_target = str(pending[0])
-            except Exception:  # noqa: BLE001 - observer must never disrupt execution
-                mtf_shadow_result = None
-                mtf_attach_target = None
+                        if mtf_execution is not None:
+                            mtf_shadow_result = evaluate_multi_timeframe_shadow(
+                                mtf_market,
+                                make_features(mtf_market),
+                                mtf_execution,
+                                horizon_bars=3,
+                                min_train_rows=500,
+                                max_train_rows=2000,
+                                minimum_threshold=0.001,
+                                atr_multiplier=0.25,
+                            )
+                            if mtf_shadow_result is not None:
+                                mtf_attach_target = str(mtf_candidate)
+                except Exception:  # noqa: BLE001 - observer must never disrupt execution
+                    mtf_shadow_result = None
+                    mtf_attach_target = None
 
         processed = 0
         attempts = 0
