@@ -87,6 +87,7 @@
         "tests/test_model_codec.py",
         "tests/test_model_quality.py",
         "tests/test_model_quarantine.py",
+        "tests/test_mtf_parameter_benchmark.py",
         "tests/test_mtf_shadow_challenger.py",
         "tests/test_mtf_shadow_quality.py",
         "tests/test_multi_market.py",
@@ -184,7 +185,7 @@
         "tests/test_watchdog_enforcer.py",
         "tests/test_worker_monitor.py"
       ],
-      "in_degree": 175,
+      "in_degree": 176,
       "out_degree": 0,
       "path": "src/ai_trading/__init__.py"
     },
@@ -351,6 +352,7 @@
         "src/ai_trading/expert_uncertainty.py",
         "src/ai_trading/meta_router.py",
         "src/ai_trading/model_blend.py",
+        "src/ai_trading/mtf_parameter_benchmark.py",
         "src/ai_trading/mtf_shadow_challenger.py",
         "src/ai_trading/mtf_shadow_quality.py",
         "src/ai_trading/multiasset_backtest.py",
@@ -378,7 +380,7 @@
         "tests/test_shadow_challenger.py",
         "tests/test_shadow_quality.py"
       ],
-      "in_degree": 34,
+      "in_degree": 35,
       "out_degree": 1,
       "path": "src/ai_trading/model.py"
     },
@@ -1107,6 +1109,29 @@
     },
     {
       "dependencies": [
+        "src/ai_trading/features.py",
+        "src/ai_trading/model.py",
+        "src/ai_trading/regime.py"
+      ],
+      "dependents": [
+        "src/ai_trading/backtest.py",
+        "src/ai_trading/continuous.py",
+        "src/ai_trading/mtf_parameter_benchmark.py",
+        "src/ai_trading/mtf_shadow_challenger.py",
+        "src/ai_trading/multiasset_backtest.py",
+        "src/ai_trading/multiasset_runtime.py",
+        "src/ai_trading/shadow_challenger.py",
+        "src/ai_trading/specialist_experts.py",
+        "tests/test_ensemble.py",
+        "tests/test_mtf_shadow_challenger.py",
+        "tests/test_shadow_challenger.py"
+      ],
+      "in_degree": 11,
+      "out_degree": 3,
+      "path": "src/ai_trading/ensemble.py"
+    },
+    {
+      "dependencies": [
         "src/ai_trading/reliability.py",
         "src/ai_trading/soak.py",
         "src/ai_trading/soak_gate.py"
@@ -1170,28 +1195,6 @@
       "in_degree": 11,
       "out_degree": 2,
       "path": "src/ai_trading/online.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/features.py",
-        "src/ai_trading/model.py",
-        "src/ai_trading/regime.py"
-      ],
-      "dependents": [
-        "src/ai_trading/backtest.py",
-        "src/ai_trading/continuous.py",
-        "src/ai_trading/mtf_shadow_challenger.py",
-        "src/ai_trading/multiasset_backtest.py",
-        "src/ai_trading/multiasset_runtime.py",
-        "src/ai_trading/shadow_challenger.py",
-        "src/ai_trading/specialist_experts.py",
-        "tests/test_ensemble.py",
-        "tests/test_mtf_shadow_challenger.py",
-        "tests/test_shadow_challenger.py"
-      ],
-      "in_degree": 10,
-      "out_degree": 3,
-      "path": "src/ai_trading/ensemble.py"
     },
     {
       "dependencies": [
@@ -1321,6 +1324,25 @@
       "in_degree": 3,
       "out_degree": 9,
       "path": "src/ai_trading/multiasset_scheduler.py"
+    },
+    {
+      "dependencies": [],
+      "dependents": [
+        "src/ai_trading/backtest.py",
+        "src/ai_trading/ensemble.py",
+        "src/ai_trading/mtf_parameter_benchmark.py",
+        "src/ai_trading/mtf_shadow_challenger.py",
+        "src/ai_trading/multiasset_backtest.py",
+        "src/ai_trading/multiasset_runtime.py",
+        "src/ai_trading/runtime.py",
+        "src/ai_trading/shadow_challenger.py",
+        "src/ai_trading/specialist_experts.py",
+        "tests/test_ensemble.py",
+        "tests/test_regime.py"
+      ],
+      "in_degree": 11,
+      "out_degree": 0,
+      "path": "src/ai_trading/regime.py"
     },
     {
       "dependencies": [
@@ -1460,24 +1482,6 @@
       "in_degree": 0,
       "out_degree": 11,
       "path": "tests/test_paper_cycle.py"
-    },
-    {
-      "dependencies": [],
-      "dependents": [
-        "src/ai_trading/backtest.py",
-        "src/ai_trading/ensemble.py",
-        "src/ai_trading/mtf_shadow_challenger.py",
-        "src/ai_trading/multiasset_backtest.py",
-        "src/ai_trading/multiasset_runtime.py",
-        "src/ai_trading/runtime.py",
-        "src/ai_trading/shadow_challenger.py",
-        "src/ai_trading/specialist_experts.py",
-        "tests/test_ensemble.py",
-        "tests/test_regime.py"
-      ],
-      "in_degree": 10,
-      "out_degree": 0,
-      "path": "src/ai_trading/regime.py"
     },
     {
       "dependencies": [],
@@ -1648,6 +1652,23 @@
     {
       "dependencies": [],
       "dependents": [
+        "src/ai_trading/mtf_parameter_benchmark.py",
+        "src/ai_trading/mtf_shadow_quality.py",
+        "src/ai_trading/multiasset_runtime.py",
+        "src/ai_trading/readiness_evidence.py",
+        "src/ai_trading/shadow_quality.py",
+        "tests/test_dashboard_overview.py",
+        "tests/test_model_quality.py",
+        "tests/test_readiness_evidence.py",
+        "tests/test_shadow_promotion_gate.py"
+      ],
+      "in_degree": 9,
+      "out_degree": 0,
+      "path": "src/ai_trading/model_quality.py"
+    },
+    {
+      "dependencies": [],
+      "dependents": [
         "src/ai_trading/champion_probation.py",
         "src/ai_trading/champions.py",
         "src/ai_trading/metrics.py",
@@ -1769,28 +1790,10 @@
       "in_degree": 4,
       "out_degree": 5,
       "path": "src/ai_trading/mtf_shadow_challenger.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/governor_state_store.py",
-        "src/ai_trading/qualification_store.py",
-        "src/ai_trading/readiness_score.py",
-        "src/ai_trading/readiness_trend.py",
-        "src/ai_trading/resilience.py"
-      ],
-      "dependents": [
-        "src/ai_trading/cli.py",
-        "src/ai_trading/deployment_readiness.py",
-        "tests/test_deployment_readiness.py",
-        "tests/test_readiness_release.py"
-      ],
-      "in_degree": 4,
-      "out_degree": 5,
-      "path": "src/ai_trading/readiness_release.py"
     }
   ],
-  "edge_count": 1843,
+  "edge_count": 1853,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 339,
+  "node_count": 341,
   "schema_version": 1
 }

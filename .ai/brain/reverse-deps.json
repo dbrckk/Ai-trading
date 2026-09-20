@@ -98,6 +98,7 @@
         "tests/test_model_codec.py",
         "tests/test_model_quality.py",
         "tests/test_model_quarantine.py",
+        "tests/test_mtf_parameter_benchmark.py",
         "tests/test_mtf_shadow_challenger.py",
         "tests/test_mtf_shadow_quality.py",
         "tests/test_multi_market.py",
@@ -195,7 +196,7 @@
         "tests/test_watchdog_enforcer.py",
         "tests/test_worker_monitor.py"
       ],
-      "in_degree": 175,
+      "in_degree": 176,
       "out_degree": 0
     },
     "src/ai_trading/allocation_state.py": {
@@ -779,10 +780,11 @@
       "dependents": [
         "src/ai_trading/cli.py",
         "src/ai_trading/hosted_runtime.py",
+        "src/ai_trading/mtf_parameter_benchmark.py",
         "src/ai_trading/paper_cycle.py",
         "tests/test_data.py"
       ],
-      "in_degree": 4,
+      "in_degree": 5,
       "out_degree": 0
     },
     "src/ai_trading/data_quality.py": {
@@ -904,6 +906,7 @@
       "dependents": [
         "src/ai_trading/backtest.py",
         "src/ai_trading/continuous.py",
+        "src/ai_trading/mtf_parameter_benchmark.py",
         "src/ai_trading/mtf_shadow_challenger.py",
         "src/ai_trading/multiasset_backtest.py",
         "src/ai_trading/multiasset_runtime.py",
@@ -913,7 +916,7 @@
         "tests/test_mtf_shadow_challenger.py",
         "tests/test_shadow_challenger.py"
       ],
-      "in_degree": 10,
+      "in_degree": 11,
       "out_degree": 3
     },
     "src/ai_trading/evolution.py": {
@@ -1398,6 +1401,7 @@
         "src/ai_trading/expert_uncertainty.py",
         "src/ai_trading/meta_router.py",
         "src/ai_trading/model_blend.py",
+        "src/ai_trading/mtf_parameter_benchmark.py",
         "src/ai_trading/mtf_shadow_challenger.py",
         "src/ai_trading/mtf_shadow_quality.py",
         "src/ai_trading/multiasset_backtest.py",
@@ -1425,7 +1429,7 @@
         "tests/test_shadow_challenger.py",
         "tests/test_shadow_quality.py"
       ],
-      "in_degree": 34,
+      "in_degree": 35,
       "out_degree": 1
     },
     "src/ai_trading/model_blend.py": {
@@ -1459,6 +1463,7 @@
     "src/ai_trading/model_quality.py": {
       "dependencies": [],
       "dependents": [
+        "src/ai_trading/mtf_parameter_benchmark.py",
         "src/ai_trading/mtf_shadow_quality.py",
         "src/ai_trading/multiasset_runtime.py",
         "src/ai_trading/readiness_evidence.py",
@@ -1468,7 +1473,7 @@
         "tests/test_readiness_evidence.py",
         "tests/test_shadow_promotion_gate.py"
       ],
-      "in_degree": 8,
+      "in_degree": 9,
       "out_degree": 0
     },
     "src/ai_trading/model_quarantine.py": {
@@ -1486,6 +1491,21 @@
       ],
       "in_degree": 9,
       "out_degree": 0
+    },
+    "src/ai_trading/mtf_parameter_benchmark.py": {
+      "dependencies": [
+        "src/ai_trading/data.py",
+        "src/ai_trading/ensemble.py",
+        "src/ai_trading/model.py",
+        "src/ai_trading/model_quality.py",
+        "src/ai_trading/multi_timeframe_features.py",
+        "src/ai_trading/regime.py"
+      ],
+      "dependents": [
+        "tests/test_mtf_parameter_benchmark.py"
+      ],
+      "in_degree": 1,
+      "out_degree": 6
     },
     "src/ai_trading/mtf_shadow_challenger.py": {
       "dependencies": [
@@ -1538,11 +1558,12 @@
         "src/ai_trading/features.py"
       ],
       "dependents": [
+        "src/ai_trading/mtf_parameter_benchmark.py",
         "src/ai_trading/mtf_shadow_challenger.py",
         "tests/test_mtf_shadow_challenger.py",
         "tests/test_multi_timeframe_features.py"
       ],
-      "in_degree": 3,
+      "in_degree": 4,
       "out_degree": 1
     },
     "src/ai_trading/multiasset_backtest.py": {
@@ -2273,6 +2294,7 @@
       "dependents": [
         "src/ai_trading/backtest.py",
         "src/ai_trading/ensemble.py",
+        "src/ai_trading/mtf_parameter_benchmark.py",
         "src/ai_trading/mtf_shadow_challenger.py",
         "src/ai_trading/multiasset_backtest.py",
         "src/ai_trading/multiasset_runtime.py",
@@ -2282,7 +2304,7 @@
         "tests/test_ensemble.py",
         "tests/test_regime.py"
       ],
-      "in_degree": 10,
+      "in_degree": 11,
       "out_degree": 0
     },
     "src/ai_trading/regime_gate.py": {
@@ -3738,6 +3760,15 @@
       "dependencies": [
         "src/ai_trading/__init__.py",
         "src/ai_trading/model_quarantine.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 2
+    },
+    "tests/test_mtf_parameter_benchmark.py": {
+      "dependencies": [
+        "src/ai_trading/__init__.py",
+        "src/ai_trading/mtf_parameter_benchmark.py"
       ],
       "dependents": [],
       "in_degree": 0,

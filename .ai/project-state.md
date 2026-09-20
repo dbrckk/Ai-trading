@@ -42,16 +42,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T08:28:08Z
+Generated: 2026-09-20T11:40:57Z
 
 ### Git
 - Branch: `main`
-- Head: `5963d372f882`
-- Commit date: 2026-09-20T10:27:58+02:00
-- Commit: feat: require directional evidence for MTF review (#61)
-- Tracked files: 472
+- Head: `008eab92017f`
+- Commit date: 2026-09-20T13:40:48+02:00
+- Commit: feat: add purged multi-market MTF parameter benchmark (#62)
+- Tracked files: 475
 
 ### Recently changed files
+- `.github/workflows/mtf-parameter-benchmark.yml`
+- `src/ai_trading/mtf_parameter_benchmark.py`
+- `tests/test_mtf_parameter_benchmark.py`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/mtf_shadow_quality.py`
 - `src/ai_trading/operational_overview.py`
@@ -67,8 +70,6 @@ Generated: 2026-09-20T08:28:08Z
 - `tests/test_paper_cycle.py`
 - `src/ai_trading/mtf_shadow_challenger.py`
 - `tests/test_mtf_shadow_challenger.py`
-- `src/ai_trading/hosted_runtime.py`
-- `tests/test_hosted_runtime.py`
 
 ### Project signals
 - `pyproject.toml`

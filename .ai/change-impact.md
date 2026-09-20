@@ -1,23 +1,20 @@
 # Change impact
 
-Base: bcdcabfe0b1e4bd1c9d5651407f9ae8f7907dc49
-Head: 5963d372f882f3967ee7de415ef34b102403577e
+Base: a42355df978f37e061f8f37b67a5953179011683
+Head: 008eab92017f0c113979d7c562ee2fde5e9cb9d4
 
 ## Changed files
-- M src/ai_trading/dashboard.py
-- M src/ai_trading/mtf_shadow_quality.py
-- M src/ai_trading/operational_overview.py
-- M tests/test_dashboard_overview.py
-- M tests/test_mtf_shadow_quality.py
-- M tests/test_multi_market.py
+- A .github/workflows/mtf-parameter-benchmark.yml
+- A src/ai_trading/mtf_parameter_benchmark.py
+- A tests/test_mtf_parameter_benchmark.py
 
 ## Affected areas
+- .github
 - src
 - tests
 
 ## Related test candidates
-- tests/test_dashboard.py
-- tests/test_mtf_shadow_quality.py
+- tests/test_mtf_parameter_benchmark.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

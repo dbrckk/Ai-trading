@@ -43,6 +43,7 @@ The content is organized as follows:
     ai-repo-map.yml
     ci.yml
     cloudflare-paper-scheduler-deploy.yml
+    mtf-parameter-benchmark.yml
     paper-cycle.yml
     semantic-refresh.yml
 .serena/
@@ -134,6 +135,7 @@ src/
     model_quality.py
     model_quarantine.py
     model.py
+    mtf_parameter_benchmark.py
     mtf_shadow_challenger.py
     mtf_shadow_quality.py
     multi_market.py
@@ -300,6 +302,7 @@ tests/
   test_model_codec.py
   test_model_quality.py
   test_model_quarantine.py
+  test_mtf_parameter_benchmark.py
   test_mtf_shadow_challenger.py
   test_mtf_shadow_quality.py
   test_multi_market.py
@@ -535,6 +538,57 @@ jobs:
             SCHEDULER_TOKEN
         env:
           SCHEDULER_TOKEN: ${{ secrets.AI_TRADING_SCHEDULER_TOKEN }}
+````
+
+## File: .github/workflows/mtf-parameter-benchmark.yml
+````yaml
+name: MTF Parameter Benchmark
+
+on:
+  push:
+    branches: ["feat/mtf-parameter-benchmark"]
+    paths:
+      - "src/ai_trading/mtf_parameter_benchmark.py"
+      - ".github/workflows/mtf-parameter-benchmark.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Run Gold DAX BTC benchmark
+        run: >-
+          python -m ai_trading.mtf_parameter_benchmark
+          --symbols "GC=F,^GDAXI,BTC-USD"
+          --period 1mo
+          --interval 5m
+          --folds 2
+          --test-window-bars 48
+          --json-output artifacts/mtf_benchmark/results.json
+          --markdown-output artifacts/mtf_benchmark/report.md
+      - name: Print report
+        if: always()
+        run: |
+          if [ -f artifacts/mtf_benchmark/report.md ]; then
+            cat artifacts/mtf_benchmark/report.md
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mtf-parameter-benchmark
+          path: artifacts/mtf_benchmark
+          if-no-files-found: warn
 ````
 
 ## File: .github/workflows/paper-cycle.yml
@@ -3721,6 +3775,134 @@ proba = self.pipeline.predict_proba(x)[0]
 model = self.pipeline.named_steps["model"]
 mapping = {int(cls): float(p) for cls, p in zip(model.classes_, proba, strict=True)}
 side = max(mapping, key=mapping.get)
+````
+
+## File: src/ai_trading/mtf_parameter_benchmark.py
+````python
+@dataclass(frozen=True)
+class MTFBenchmarkConfig
+⋮----
+horizon_bars: int
+minimum_threshold: float
+atr_multiplier: float
+max_train_rows: int
+⋮----
+@property
+    def horizon_minutes(self) -> int
+⋮----
+@property
+    def name(self) -> str
+⋮----
+threshold_bps = round(self.minimum_threshold * 10_000)
+⋮----
+@dataclass(frozen=True)
+class MarketBenchmarkResult
+⋮----
+symbol: str
+config_name: str
+folds: int
+observations: int
+directional_observations: int
+long_labels: int
+flat_labels: int
+short_labels: int
+accuracy: float
+macro_recall: float
+brier: float
+directional_accuracy: float
+directional_edge: float
+quality_score: float
+selection_score: float
+⋮----
+@dataclass(frozen=True)
+class AggregateBenchmarkResult
+⋮----
+config: MTFBenchmarkConfig
+markets: tuple[MarketBenchmarkResult, ...]
+mean_selection_score: float
+stability_penalty: float
+aggregate_score: float
+total_observations: int
+total_directional_observations: int
+⋮----
+def default_benchmark_grid() -> tuple[MTFBenchmarkConfig, ...]
+⋮----
+def _macro_recall(predicted: pd.Series, realized: pd.Series) -> float
+⋮----
+recalls: list[float] = []
+⋮----
+mask = realized == label
+⋮----
+directional_evidence = min(1.0, directional_observations / 20.0)
+⋮----
+required = min_train_rows + folds * test_window_bars
+⋮----
+start = len(usable) - folds * test_window_bars
+⋮----
+features = make_multi_timeframe_challenger_features(market)
+labels = make_volatility_adaptive_labels(
+usable = features.dropna().index.intersection(labels.dropna().index)
+windows = _fold_test_windows(
+⋮----
+market_positions = {timestamp: pos for pos, timestamp in enumerate(market.index)}
+predicted_sides: list[int] = []
+confidences: list[float] = []
+realized_labels: list[int] = []
+⋮----
+completed_folds = 0
+⋮----
+first_test = test_idx[0]
+first_test_pos = market_positions[first_test]
+max_train_pos = first_test_pos - config.horizon_bars
+train_candidates = [
+⋮----
+train_idx = train_candidates[-config.max_train_rows :]
+⋮----
+model = EnsembleDirectionModel(
+⋮----
+row = features.loc[signal_idx, MTF_CHALLENGER_FEATURES]
+prediction = model.predict_one(row, detect_regime(row))
+label = labels.loc[signal_idx]
+⋮----
+index = pd.RangeIndex(len(realized_labels))
+predicted = pd.Series(predicted_sides, index=index, dtype="int64")
+confidence = pd.Series(confidences, index=index, dtype="float64")
+realized = pd.Series(realized_labels, index=index, dtype="int64")
+⋮----
+quality = evaluate_model_quality(predicted, confidence, realized)
+directional_mask = realized != 0
+directional_observations = int(directional_mask.sum())
+directional_accuracy = (
+macro_recall = _macro_recall(predicted, realized)
+selection_score = _selection_score(
+⋮----
+grid = tuple(configs or default_benchmark_grid())
+⋮----
+results: list[AggregateBenchmarkResult] = []
+⋮----
+market_results = tuple(
+scores = [row.selection_score for row in market_results]
+stability_penalty = pstdev(scores) if len(scores) > 1 else 0.0
+mean_score = fmean(scores)
+⋮----
+def benchmark_payload(results: tuple[AggregateBenchmarkResult, ...]) -> dict[str, object]
+⋮----
+payload = benchmark_payload(results)
+json_target = Path(json_path)
+markdown_target = Path(markdown_path)
+⋮----
+lines = [
+⋮----
+def main() -> None
+⋮----
+parser = argparse.ArgumentParser(description="Run MTF parameter benchmark")
+⋮----
+args = parser.parse_args()
+⋮----
+symbols = tuple(part.strip() for part in args.symbols.split(",") if part.strip())
+⋮----
+markets = {
+results = run_parameter_benchmark(
 ````
 
 ## File: src/ai_trading/mtf_shadow_challenger.py
@@ -8907,6 +9089,36 @@ released = store.release("v2")
 def test_success_resets_failure_history(tmp_path: Path) -> None
 ⋮----
 record = store.record_success("v2")
+````
+
+## File: tests/test_mtf_parameter_benchmark.py
+````python
+def sample_market(n: int = 3200, phase: float = 0.0) -> pd.DataFrame
+⋮----
+idx = pd.date_range("2026-01-01", periods=n, freq="5min")
+t = np.arange(n, dtype=float)
+close = (
+open_ = close * (1.0 + 0.0004 * np.sin(t / 9.0 + phase))
+⋮----
+def test_market_benchmark_is_purged_and_reports_directional_evidence() -> None
+⋮----
+config = MTFBenchmarkConfig(
+⋮----
+result = evaluate_market_config(
+⋮----
+def test_parameter_benchmark_ranks_configs_across_markets() -> None
+⋮----
+markets = {
+configs = (
+⋮----
+results = run_parameter_benchmark(
+⋮----
+def test_benchmark_payload_is_reproducible_and_explicit() -> None
+⋮----
+markets = {"A": sample_market()}
+configs = (MTFBenchmarkConfig(3, 0.001, 0.25, 600),)
+⋮----
+payload = benchmark_payload(results)
 ````
 
 ## File: tests/test_mtf_shadow_challenger.py
