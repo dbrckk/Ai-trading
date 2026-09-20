@@ -76,6 +76,7 @@ def evaluate_multi_timeframe_shadow(
     horizon_bars: int = 3,
     min_train_rows: int = 500,
     max_train_rows: int = 2000,
+    feature_warmup_rows: int = 600,
     minimum_threshold: float = 0.001,
     atr_multiplier: float = 0.25,
     random_state: int = 42,
@@ -88,12 +89,27 @@ def evaluate_multi_timeframe_shadow(
         raise ValueError("min_train_rows must be at least 1")
     if max_train_rows < min_train_rows:
         raise ValueError("max_train_rows must be >= min_train_rows")
+    if feature_warmup_rows < 1:
+        raise ValueError("feature_warmup_rows must be at least 1")
     if execution_idx not in market.index:
         raise ValueError("execution index is not present in market data")
 
-    execution_pos = int(market.index.get_loc(execution_idx))
-    if execution_pos < 1:
+    full_execution_pos = int(market.index.get_loc(execution_idx))
+    if full_execution_pos < 1:
         return None
+
+    window_start = max(
+        0,
+        full_execution_pos - max_train_rows - feature_warmup_rows,
+    )
+    window_stop = min(
+        len(market),
+        full_execution_pos + horizon_bars,
+    )
+    market = market.iloc[window_start:window_stop]
+    authoritative_features = authoritative_features.reindex(market.index)
+
+    execution_pos = int(market.index.get_loc(execution_idx))
     signal_pos = execution_pos - 1
     signal_idx = market.index[signal_pos]
 

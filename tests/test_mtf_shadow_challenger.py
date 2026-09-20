@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+import pytest
 
 import ai_trading.mtf_shadow_challenger as mtf_module
 from ai_trading.features import make_features
@@ -50,6 +51,17 @@ def test_mtf_shadow_purges_future_labels_and_caps_training(monkeypatch) -> None:
     authoritative = make_features(market)
     execution_idx = market.index[-4]
     captured: dict[str, object] = {}
+    original_feature_builder = mtf_module.make_multi_timeframe_challenger_features
+
+    def recording_feature_builder(frame: pd.DataFrame) -> pd.DataFrame:
+        captured["feature_rows"] = len(frame)
+        return original_feature_builder(frame)
+
+    monkeypatch.setattr(
+        mtf_module,
+        "make_multi_timeframe_challenger_features",
+        recording_feature_builder,
+    )
 
     class RecordingEnsemble:
         def __init__(
@@ -82,6 +94,7 @@ def test_mtf_shadow_purges_future_labels_and_caps_training(monkeypatch) -> None:
         horizon_bars=3,
         min_train_rows=500,
         max_train_rows=700,
+        feature_warmup_rows=400,
         minimum_threshold=0.001,
         atr_multiplier=0.25,
     )
@@ -91,6 +104,7 @@ def test_mtf_shadow_purges_future_labels_and_caps_training(monkeypatch) -> None:
     train_index = captured["train_index"]
     assert isinstance(train_index, pd.Index)
     assert len(train_index) <= 700
+    assert int(captured["feature_rows"]) <= 1103
     signal_pos = int(market.index.get_loc(execution_idx)) - 1
     assert market.index.get_loc(train_index[-1]) <= signal_pos - 3
     assert result.horizon_bars == 3
@@ -100,3 +114,19 @@ def test_mtf_shadow_purges_future_labels_and_caps_training(monkeypatch) -> None:
     assert result.threshold_at_signal >= 0.001
     assert result.realized_label in {-1, 0, 1}
     assert result.regime == captured["regime"]
+
+
+
+def test_mtf_shadow_rejects_invalid_feature_warmup() -> None:
+    market = sample_market(800)
+    authoritative = make_features(market)
+
+    with pytest.raises(ValueError, match="feature_warmup_rows"):
+        evaluate_multi_timeframe_shadow(
+            market,
+            authoritative,
+            market.index[-4],
+            min_train_rows=100,
+            max_train_rows=200,
+            feature_warmup_rows=0,
+        )
