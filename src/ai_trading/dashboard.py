@@ -443,6 +443,8 @@ def render_dashboard(
             overview = item["overview"]
             shadow = overview.get("shadow_challenger", {})
             gate = shadow.get("promotion_gate", {})
+            mtf_shadow = overview.get("mtf_shadow_challenger", {})
+            mtf_gate = mtf_shadow.get("promotion_gate", {})
             status = str(overview.get("engine_status", "UNKNOWN"))
             status_css = (
                 "status-ok" if status == "RUNNING"
@@ -452,7 +454,15 @@ def render_dashboard(
             sleeve_pnl = item.get("pnl")
             processed = overview.get("processed_bars")
             observations = shadow.get("observations", 0)
+            mtf_observations = mtf_shadow.get("observations", 0)
             review = "ELIGIBLE" if gate.get("eligible_for_review") else "COLLECTING"
+            mtf_review = (
+                "ELIGIBLE" if mtf_gate.get("eligible_for_review") else "MTF COLLECTING"
+            )
+            mtf_score_delta = mtf_shadow.get("score_delta")
+            mtf_score_display = (
+                "-" if mtf_score_delta is None else f"{float(mtf_score_delta):+.3f}"
+            )
             signal = item.get("signal") or "-"
             signal_css = {
                 "LONG": "signal-long",
@@ -468,6 +478,10 @@ def render_dashboard(
                 "-" if market_confidence is None else f"{confidence_value:.1%}"
             )
             shadow_progress = min(100.0, float(observations) / 250.0 * 100.0)
+            mtf_shadow_progress = min(
+                100.0,
+                float(mtf_observations) / 500.0 * 100.0,
+            )
             market_tone = {
                 "GC=F": "gold",
                 "^GDAXI": "dax",
@@ -500,13 +514,20 @@ def render_dashboard(
                 f'<div><small>Equity</small><strong>{_display_money(sleeve_equity)}</strong></div>'
                 f'<div><small>PnL</small><strong class="{pnl_css}">{_display_money(sleeve_pnl)}</strong></div>'
                 f'<div><small>Processed bars</small><strong>{"-" if processed is None else processed}</strong></div>'
-                f'<div><small>Shadow samples</small><strong>{observations}</strong></div>'
+                f'<div><small>Shadow 5m</small><strong>{observations}</strong></div>'
+                f'<div><small>MTF 15m</small><strong>{mtf_observations}</strong></div>'
+                f'<div><small>MTF score Δ</small><strong>{mtf_score_display}</strong></div>'
                 '</div>'
                 '<div class="shadow-row">'
-                f'<div><span>Challenger evidence</span><strong>{observations} / 250</strong></div>'
+                f'<div><span>5m challenger evidence</span><strong>{observations} / 250</strong></div>'
                 f'<div class="shadow-track"><span style="width:{shadow_progress:.1f}%"></span></div>'
                 '</div>'
-                f'<div class="market-card-footer"><span class="gate-chip">{review}</span><small>{reason}</small></div>'
+                '<div class="shadow-row">'
+                f'<div><span>MTF 15m · 5m/15m/1h/4h</span><strong>{mtf_observations} / 500</strong></div>'
+                f'<div class="shadow-track mtf-track"><span style="width:{mtf_shadow_progress:.1f}%"></span></div>'
+                '</div>'
+                f'<div class="market-card-footer"><span class="gate-chip">{review}</span>'
+                f'<span class="gate-chip">{mtf_review}</span><small>{reason}</small></div>'
                 '</article>'
             )
         portfolio_pnl = float(portfolio["pnl"])
@@ -628,6 +649,7 @@ small,.muted{{color:var(--muted)}}
 .shadow-row>div:first-child{{display:flex;justify-content:space-between;gap:10px;margin-bottom:6px;font-size:.67rem;color:var(--muted)}}
 .shadow-row strong{{color:#cdd9e9;font-size:.67rem}}
 .shadow-track>span{{display:block;height:100%;background:linear-gradient(90deg,var(--violet),var(--cyan));border-radius:inherit}}
+.mtf-track>span{{background:linear-gradient(90deg,var(--blue),var(--green))}}
 .market-card-footer{{display:flex;align-items:center;gap:9px;margin-top:11px;min-width:0}}
 .market-card-footer small{{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.65rem}}
 .gate-chip{{flex:0 0 auto;padding:5px 8px;border-radius:999px;font-size:.59rem;font-weight:850;letter-spacing:.06em;color:#c9bcff;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.18)}}
