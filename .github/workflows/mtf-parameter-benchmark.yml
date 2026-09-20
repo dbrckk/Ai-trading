@@ -1,0 +1,41 @@
+name: MTF Parameter Benchmark
+
+on:
+  push:
+    branches: ["benchmark/mtf-param-search"]
+    paths:
+      - "src/ai_trading/mtf_parameter_benchmark.py"
+      - "src/ai_trading/multi_timeframe_features.py"
+      - "src/ai_trading/ensemble.py"
+      - ".github/workflows/mtf-parameter-benchmark.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install
+        run: python -m pip install -e .
+      - name: Run MTF coarse parameter search
+        run: python -m ai_trading.mtf_parameter_benchmark
+      - name: Print benchmark result
+        if: always()
+        run: |
+          if [ -f artifacts/mtf-parameter-benchmark.json ]; then
+            cat artifacts/mtf-parameter-benchmark.json
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mtf-parameter-benchmark
+          path: artifacts/mtf-parameter-benchmark.json
+          if-no-files-found: warn
