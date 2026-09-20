@@ -151,6 +151,9 @@ class OverviewPersistence:
             observations=8,
             river=river,
             challenger=challenger,
+            long_labels=3,
+            flat_labels=3,
+            short_labels=2,
         )
 
 
@@ -257,6 +260,17 @@ def test_operational_overview_exposes_model_and_runtime_metadata() -> None:
     assert payload["mtf_shadow_challenger"]["horizon_minutes"] == 15
     assert payload["mtf_shadow_challenger"]["timeframes"] == ["5m", "15m", "1h", "4h"]
     assert payload["mtf_shadow_challenger"]["promotion_gate"]["min_observations"] == 500
+    assert payload["mtf_shadow_challenger"]["directional_observations"] == 5
+    assert payload["mtf_shadow_challenger"]["directional_rate"] == 0.625
+    assert payload["mtf_shadow_challenger"]["label_distribution"] == {
+        "long": 3,
+        "flat": 3,
+        "short": 2,
+    }
+    mtf_gate = payload["mtf_shadow_challenger"]["promotion_gate"]
+    assert mtf_gate["min_directional_observations"] == 100
+    assert mtf_gate["eligible_for_review"] is False
+    assert any("directional" in reason for reason in mtf_gate["reasons"])
     gate = payload["shadow_challenger"]["promotion_gate"]
     assert gate["eligible_for_review"] is False
     assert gate["min_observations"] == 250
@@ -345,6 +359,9 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
             "available": False,
             "status": "collecting",
             "observations": 0,
+            "directional_observations": 0,
+            "directional_rate": 0.0,
+            "label_distribution": {"long": 0, "flat": 0, "short": 0},
             "score_delta": None,
             "river": None,
             "challenger": None,
@@ -373,8 +390,10 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
             "promotion_gate": {
                 "eligible_for_review": False,
                 "min_observations": 500,
+                "min_directional_observations": 100,
                 "reasons": [
-                    "need at least 500 realized MTF observations"
+                    "need at least 500 realized MTF observations",
+                    "need at least 100 directional MTF observations",
                 ],
             },
         },
