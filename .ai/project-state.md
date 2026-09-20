@@ -42,26 +42,26 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T07:46:52Z
+Generated: 2026-09-20T07:56:20Z
 
 ### Git
 - Branch: `main`
-- Head: `3fd912f979ab`
-- Commit date: 2026-09-20T09:46:42+02:00
-- Commit: perf: bound MTF feature computation window (#58)
+- Head: `4cfb5b66d725`
+- Commit date: 2026-09-20T09:56:09+02:00
+- Commit: perf: run MTF research on quarter-hour boundaries (#59)
 - Tracked files: 472
 
 ### Recently changed files
+- `src/ai_trading/paper_cycle.py`
+- `tests/test_paper_cycle.py`
 - `src/ai_trading/mtf_shadow_challenger.py`
 - `tests/test_mtf_shadow_challenger.py`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/hosted_runtime.py`
 - `src/ai_trading/multi_market.py`
-- `src/ai_trading/paper_cycle.py`
 - `src/ai_trading/paper_cycle_service.py`
 - `tests/test_hosted_runtime.py`
 - `tests/test_multi_market.py`
-- `tests/test_paper_cycle.py`
 - `tests/test_paper_cycle_service.py`
 - `src/ai_trading/file_persistence.py`
 - `src/ai_trading/mtf_shadow_quality.py`

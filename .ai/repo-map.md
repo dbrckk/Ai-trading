@@ -4730,6 +4730,10 @@ except Exception:  # noqa: BLE001, S110 - best-effort failure reporting
 ````python
 DEFAULT_MAX_CATCHUP_BARS = 72
 ⋮----
+def _is_mtf_evaluation_boundary(execution_idx: object, interval: str) -> bool
+⋮----
+timestamp = pd.Timestamp(execution_idx)
+⋮----
 @dataclass(frozen=True)
 class PaperCycleResult
 ⋮----
@@ -4773,6 +4777,8 @@ except Exception:  # noqa: BLE001 - observer must never disrupt execution
 ⋮----
 shadow_target = None
 ⋮----
+mtf_candidate = next(
+⋮----
 mtf_market = (
 mtf_current = {
 ⋮----
@@ -4780,7 +4786,7 @@ mtf_execution = select_observable_execution_target(
 ⋮----
 mtf_shadow_result = evaluate_multi_timeframe_shadow(
 ⋮----
-mtf_attach_target = str(pending[0])
+mtf_attach_target = str(mtf_candidate)
 ⋮----
 mtf_attach_target = None
 ⋮----
@@ -9354,6 +9360,8 @@ calls: list[object] = []
 ⋮----
 payload = audit_rows[-1]["payload"]
 ⋮----
+df = sample_market(109)
+⋮----
 current_target = eligible[-1]
 mtf_target = eligible[-3]
 mtf_signal = df.index[int(df.index.get_loc(mtf_target)) - 1]
@@ -9368,6 +9376,10 @@ def loader(symbol: str, period: str, interval: str) -> pd.DataFrame
 def fake_mtf(market, authoritative_features, execution_idx, **kwargs)
 ⋮----
 runner = PaperCycleRunner(
+⋮----
+def test_mtf_boundary_runs_only_on_quarter_hour() -> None
+⋮----
+primary = sample_market(110)
 ````
 
 ## File: tests/test_performance_metrics.py

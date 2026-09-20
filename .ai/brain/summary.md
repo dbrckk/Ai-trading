@@ -3,10 +3,10 @@
 - Index mode: incremental
 - Files indexed: 341
 - Files reparsed this run: 2
-- Symbols: 1466
+- Symbols: 1470
 - Internal import edges: 1124
-- Impacted files: 5
-- Selected tests: 3
+- Impacted files: 13
+- Selected tests: 8
 
 ## Languages
 - python: 339 files
@@ -15,10 +15,10 @@
 ## Highest-density symbol files
 - src/ai_trading/cli.py: 42 symbols
 - tests/test_dashboard_overview.py: 29 symbols
+- tests/test_paper_cycle.py: 27 symbols
 - tests/test_paper_cycle_service.py: 27 symbols
 - tests/test_dashboard_persistence.py: 25 symbols
 - src/ai_trading/persistence.py: 24 symbols
-- tests/test_paper_cycle.py: 24 symbols
 - tests/test_hosted_persistence.py: 22 symbols
 - tests/test_scheduler_endpoint.py: 22 symbols
 - tests/test_deployment_readiness.py: 17 symbols
@@ -45,7 +45,7 @@
 - AST index mode: incremental
 - AST files reparsed this run: 2
 - outline files retained: 341
-- top-level items retained: 2712
+- top-level items retained: 2715
 - direct members retained: 1384
 - symbol shards: 25
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
