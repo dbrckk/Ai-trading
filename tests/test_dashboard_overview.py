@@ -11,6 +11,7 @@ from ai_trading.burnin import BurnInSnapshot
 from ai_trading.dashboard import render_dashboard, serve_dashboard
 from ai_trading.hosted_runtime import HostedPaperSettings
 from ai_trading.model_quality import ModelQuality
+from ai_trading.mtf_shadow_quality import MultiTimeframeShadowQuality
 from ai_trading.operational_overview import build_operational_overview
 from ai_trading.persistence import ModelBlob, PersistedRuntime
 from ai_trading.runtime_state import RuntimeState
@@ -130,6 +131,28 @@ class OverviewPersistence:
             challenger=challenger,
         )
 
+    def load_mtf_shadow_quality(self, runtime_key: str) -> MultiTimeframeShadowQuality:
+        assert runtime_key == RUNTIME_KEY
+        river = ModelQuality(
+            score=0.58,
+            accuracy=0.52,
+            brier=0.32,
+            directional_edge=0.02,
+            observations=8,
+        )
+        challenger = ModelQuality(
+            score=0.75,
+            accuracy=0.72,
+            brier=0.18,
+            directional_edge=0.24,
+            observations=8,
+        )
+        return MultiTimeframeShadowQuality(
+            observations=8,
+            river=river,
+            challenger=challenger,
+        )
+
 
 class ReadinessOverviewPersistence(OverviewPersistence):
     def list_burnin_snapshots(self, runtime_key: str):
@@ -230,6 +253,10 @@ def test_operational_overview_exposes_model_and_runtime_metadata() -> None:
     assert payload["shadow_challenger"]["observations"] == 8
     assert round(payload["shadow_challenger"]["score_delta"], 2) == 0.12
     assert payload["shadow_challenger"]["challenger"]["accuracy"] == 0.70
+    assert payload["mtf_shadow_challenger"]["observations"] == 8
+    assert payload["mtf_shadow_challenger"]["horizon_minutes"] == 15
+    assert payload["mtf_shadow_challenger"]["timeframes"] == ["5m", "15m", "1h", "4h"]
+    assert payload["mtf_shadow_challenger"]["promotion_gate"]["min_observations"] == 500
     gate = payload["shadow_challenger"]["promotion_gate"]
     assert gate["eligible_for_review"] is False
     assert gate["min_observations"] == 250
@@ -329,6 +356,28 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
                 ],
             },
         },
+        "mtf_shadow_challenger": {
+            "available": False,
+            "status": "collecting",
+            "observations": 0,
+            "score_delta": None,
+            "river": None,
+            "challenger": None,
+            "horizon_minutes": 15,
+            "timeframes": ["5m", "15m", "1h", "4h"],
+            "label": {
+                "type": "volatility_adaptive",
+                "minimum_threshold": 0.001,
+                "atr_multiplier": 0.25,
+            },
+            "promotion_gate": {
+                "eligible_for_review": False,
+                "min_observations": 500,
+                "reasons": [
+                    "need at least 500 realized MTF observations"
+                ],
+            },
+        },
         "alerts": ["storage unavailable"],
     }
     assert "secret" not in repr(payload)
@@ -349,6 +398,8 @@ def test_dashboard_exposes_operational_overview_endpoint() -> None:
     assert payload["burnin"]["samples"] == 2
     assert payload["shadow_challenger"]["observations"] == 8
     assert payload["shadow_challenger"]["available"] is True
+    assert payload["mtf_shadow_challenger"]["observations"] == 8
+    assert payload["mtf_shadow_challenger"]["available"] is True
     assert payload["alerts"] == []
 
 

@@ -6,6 +6,10 @@ from dataclasses import dataclass
 import pandas as pd
 
 from .data import load_history
+from .mtf_shadow_challenger import (
+    evaluate_multi_timeframe_shadow,
+    select_observable_execution_target,
+)
 from .persistence import PaperPersistence, PersistedRuntime, build_runtime_key
 from .runtime import PaperAutonomousRuntime
 from .shadow_challenger import evaluate_shadow_challenger
@@ -108,6 +112,8 @@ class PaperCycleRunner:
 
         shadow_result = None
         shadow_target: str | None = None
+        mtf_shadow_result = None
+        mtf_attach_target: str | None = None
         if shadow_challenger_enabled:
             try:
                 shadow_target = str(pending[0])
@@ -122,18 +128,44 @@ class PaperCycleRunner:
                 shadow_result = None
                 shadow_target = None
 
+            try:
+                mtf_execution = select_observable_execution_target(
+                    market,
+                    eligible,
+                    pending[0],
+                    horizon_bars=3,
+                )
+                if mtf_execution is not None:
+                    mtf_shadow_result = evaluate_multi_timeframe_shadow(
+                        market,
+                        prepared.features,
+                        mtf_execution,
+                        horizon_bars=3,
+                        min_train_rows=500,
+                        max_train_rows=2000,
+                        minimum_threshold=0.001,
+                        atr_multiplier=0.25,
+                    )
+                    if mtf_shadow_result is not None:
+                        mtf_attach_target = str(pending[0])
+            except Exception:  # noqa: BLE001 - observer must never disrupt execution
+                mtf_shadow_result = None
+                mtf_attach_target = None
+
         processed = 0
         attempts = 0
         while pending and attempts < max_catchup_bars:
             target = pending[0]
+            observer_kwargs = {}
             if shadow_result is not None and str(target) == shadow_target:
-                result = runtime.step_prepared(
-                    prepared,
-                    target,
-                    shadow_challenger=shadow_result,
-                )
-            else:
-                result = runtime.step_prepared(prepared, target)
+                observer_kwargs["shadow_challenger"] = shadow_result
+            if mtf_shadow_result is not None and str(target) == mtf_attach_target:
+                observer_kwargs["mtf_shadow_challenger"] = mtf_shadow_result
+            result = runtime.step_prepared(
+                prepared,
+                target,
+                **observer_kwargs,
+            )
             attempts += 1
             if result.processed:
                 processed += 1

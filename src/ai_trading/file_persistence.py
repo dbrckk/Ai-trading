@@ -6,6 +6,10 @@ from pathlib import Path
 
 from .audit import AuditLog
 from .burnin import BurnInSnapshot, BurnInTracker
+from .mtf_shadow_quality import (
+    MultiTimeframeShadowQuality,
+    compare_mtf_shadow_audit_payloads,
+)
 from .performance_metrics import TradePerformanceMetrics, calculate_performance_metrics
 from .persistence import (
     CommitOutcome,
@@ -139,6 +143,27 @@ class FilePaperPersistence(PaperPersistence):
                 if isinstance(payload, dict) and "shadow_challenger" in payload:
                     payloads.append(payload)
         return compare_shadow_audit_payloads(payloads)
+
+    def load_mtf_shadow_quality(
+        self,
+        runtime_key: str,
+    ) -> MultiTimeframeShadowQuality:
+        del runtime_key
+        if not self.audit_log.path.exists():
+            return compare_mtf_shadow_audit_payloads(())
+        payloads = []
+        with self.audit_log.path.open("r", encoding="utf-8") as handle:
+            for line in handle:
+                if not line.strip():
+                    continue
+                try:
+                    record = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                payload = record.get("payload")
+                if isinstance(payload, dict):
+                    payloads.append(payload)
+        return compare_mtf_shadow_audit_payloads(payloads)
 
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:
         del runtime_key

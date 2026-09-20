@@ -199,7 +199,9 @@ def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
     assert 'class="market-card dax"' in page
     assert 'class="market-card btc"' in page
     assert "confidence-meter" in page
-    assert "Challenger evidence" in page
+    assert "5m challenger evidence" in page
+    assert "MTF 15m" in page
+    assert "5m/15m/1h/4h" in page
     assert "portfolio-ribbon" in page
     assert "PAPER ONLY" in page
 
