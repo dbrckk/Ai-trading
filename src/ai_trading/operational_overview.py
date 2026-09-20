@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 from .burnin import BurnInSnapshot, calculate_burnin_metrics
+from .mtf_shadow_config import (
+    ValidatedMTFShadowConfig,
+    validated_mtf_shadow_config,
+)
 from .paper_readiness_evidence import bootstrap_positive_probability
 from .persistence import PaperPersistence, PersistedRuntime
 from .readiness import ReadinessPolicy, evaluate_readiness
@@ -41,11 +45,36 @@ def _empty_shadow_quality_snapshot() -> dict[str, object]:
     }
 
 
-def _empty_mtf_shadow_quality_snapshot() -> dict[str, object]:
+def _empty_mtf_shadow_quality_snapshot(
+    config: ValidatedMTFShadowConfig | None = None,
+) -> dict[str, object]:
     policy = ShadowPromotionPolicy(min_observations=500)
+    if config is None:
+        reasons = ["no benchmark-validated MTF configuration for this market"]
+        status = "unvalidated"
+        candidate_config = None
+        horizon_minutes = None
+        label = None
+    else:
+        reasons = [
+            f"need at least {policy.min_observations} realized MTF observations",
+            (
+                "need at least "
+                f"{_MTF_MIN_DIRECTIONAL_OBSERVATIONS} directional MTF observations"
+            ),
+        ]
+        status = "collecting"
+        candidate_config = config.as_dict()
+        horizon_minutes = config.horizon_minutes
+        label = {
+            "type": "volatility_adaptive",
+            "minimum_threshold": config.minimum_threshold,
+            "atr_multiplier": config.atr_multiplier,
+        }
     return {
         "available": False,
-        "status": "collecting",
+        "status": status,
+        "candidate_config": candidate_config,
         "observations": 0,
         "directional_observations": 0,
         "directional_rate": 0.0,
@@ -53,24 +82,14 @@ def _empty_mtf_shadow_quality_snapshot() -> dict[str, object]:
         "score_delta": None,
         "river": None,
         "challenger": None,
-        "horizon_minutes": 15,
+        "horizon_minutes": horizon_minutes,
         "timeframes": ["5m", "15m", "1h", "4h"],
-        "label": {
-            "type": "volatility_adaptive",
-            "minimum_threshold": 0.001,
-            "atr_multiplier": 0.25,
-        },
+        "label": label,
         "promotion_gate": {
             "eligible_for_review": False,
             "min_observations": policy.min_observations,
             "min_directional_observations": _MTF_MIN_DIRECTIONAL_OBSERVATIONS,
-            "reasons": [
-                f"need at least {policy.min_observations} realized MTF observations",
-                (
-                    "need at least "
-                    f"{_MTF_MIN_DIRECTIONAL_OBSERVATIONS} directional MTF observations"
-                ),
-            ],
+            "reasons": reasons,
         },
     }
 
@@ -93,6 +112,7 @@ def _shadow_quality_snapshot(comparison) -> dict[str, object]:
     return {
         "available": available,
         "status": "comparable" if available else "collecting",
+        "candidate_config": config.as_dict(),
         "observations": observations,
         "score_delta": float(comparison.score_delta) if available else None,
         "river": quality_payload(comparison.river) if observations else None,
@@ -109,7 +129,10 @@ def _shadow_quality_snapshot(comparison) -> dict[str, object]:
     }
 
 
-def _mtf_shadow_quality_snapshot(comparison) -> dict[str, object]:
+def _mtf_shadow_quality_snapshot(
+    comparison,
+    config: ValidatedMTFShadowConfig,
+) -> dict[str, object]:
     observations = int(comparison.observations)
     available = observations >= 5
 
@@ -147,12 +170,12 @@ def _mtf_shadow_quality_snapshot(comparison) -> dict[str, object]:
         "score_delta": float(comparison.score_delta) if available else None,
         "river": quality_payload(comparison.river) if observations else None,
         "challenger": quality_payload(comparison.challenger) if observations else None,
-        "horizon_minutes": 15,
+        "horizon_minutes": config.horizon_minutes,
         "timeframes": ["5m", "15m", "1h", "4h"],
         "label": {
             "type": "volatility_adaptive",
-            "minimum_threshold": 0.001,
-            "atr_multiplier": 0.25,
+            "minimum_threshold": config.minimum_threshold,
+            "atr_multiplier": config.atr_multiplier,
         },
         "promotion_gate": {
             "eligible_for_review": eligible_for_review,
@@ -258,6 +281,9 @@ def build_operational_overview(
     runtime_key: str,
     starting_cash: float = 100_000.0,
 ) -> dict[str, object]:
+    runtime_parts = runtime_key.split(":", 2)
+    runtime_symbol = runtime_parts[1] if len(runtime_parts) > 1 else ""
+    mtf_config = validated_mtf_shadow_config(runtime_symbol)
     try:
         persisted = persistence.load_runtime(runtime_key, starting_cash)
         status = persistence.load_runtime_status(runtime_key)
@@ -289,7 +315,7 @@ def build_operational_overview(
             },
             "readiness": _empty_readiness_snapshot(),
             "shadow_challenger": _empty_shadow_quality_snapshot(),
-            "mtf_shadow_challenger": _empty_mtf_shadow_quality_snapshot(),
+            "mtf_shadow_challenger": _empty_mtf_shadow_quality_snapshot(mtf_config),
             "alerts": ["storage unavailable"],
         }
 
@@ -301,15 +327,19 @@ def build_operational_overview(
         except Exception:  # noqa: BLE001 - optional observability must not break runtime status
             shadow_quality = _empty_shadow_quality_snapshot()
 
-    mtf_shadow_quality = _empty_mtf_shadow_quality_snapshot()
+    mtf_shadow_quality = _empty_mtf_shadow_quality_snapshot(mtf_config)
     mtf_shadow_loader = getattr(persistence, "load_mtf_shadow_quality", None)
-    if callable(mtf_shadow_loader):
+    if mtf_config is not None and callable(mtf_shadow_loader):
         try:
             mtf_shadow_quality = _mtf_shadow_quality_snapshot(
-                mtf_shadow_loader(runtime_key)
+                mtf_shadow_loader(
+                    runtime_key,
+                    config_name=mtf_config.config_name,
+                ),
+                mtf_config,
             )
         except Exception:  # noqa: BLE001 - optional observer must not break status
-            mtf_shadow_quality = _empty_mtf_shadow_quality_snapshot()
+            mtf_shadow_quality = _empty_mtf_shadow_quality_snapshot(mtf_config)
 
     status_snapshot = runtime_status_snapshot(status)
     engine_status = str(status_snapshot["engine_status"])
