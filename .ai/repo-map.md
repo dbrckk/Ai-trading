@@ -8362,7 +8362,7 @@ def list_regimes(self, runtime_key: str)
 ⋮----
 def load_mtf_shadow_quality(self, runtime_key: str, **kwargs)
 ⋮----
-def test_btc_overview_marks_mtf_candidate_unvalidated() -> None
+def test_btc_overview_exposes_validated_mtf_candidate() -> None
 ⋮----
 mtf = payload["mtf_shadow_challenger"]
 ````
@@ -9310,7 +9310,9 @@ def test_dax_uses_validated_45m_candidate() -> None
 ⋮----
 config = validated_mtf_shadow_config("^GDAXI")
 ⋮----
-def test_btc_has_no_validated_mtf_candidate() -> None
+def test_btc_uses_validated_90m_candidate() -> None
+⋮----
+config = validated_mtf_shadow_config("BTC-USD")
 ````
 
 ## File: tests/test_mtf_shadow_quality.py
@@ -9787,9 +9789,7 @@ primary = sample_market(110)
 long_history = sample_market(1400)
 captured: dict[str, object] = {}
 ⋮----
-mtf_calls = 0
-⋮----
-def fake_mtf(*args, **kwargs)
+long_history = sample_market(1600)
 ````
 
 ## File: tests/test_performance_metrics.py

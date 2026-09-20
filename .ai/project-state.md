@@ -45,33 +45,33 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T16:37:49Z
+Generated: 2026-09-20T19:02:53Z
 
 ### Git
 - Branch: `main`
-- Head: `eea5d0af1852`
-- Commit date: 2026-09-20T18:37:39+02:00
-- Commit: fix: compare MTF parameter configs with a common random seed (#68)
+- Head: `5b05ffe01132`
+- Commit date: 2026-09-20T21:02:41+02:00
+- Commit: feat: activate benchmark-validated BTC 90m MTF shadow (#69)
 - Tracked files: 477
 
 ### Recently changed files
+- `src/ai_trading/mtf_shadow_config.py`
+- `tests/test_dashboard_overview.py`
+- `tests/test_mtf_shadow_config.py`
+- `tests/test_multi_market.py`
+- `tests/test_paper_cycle.py`
 - `.github/workflows/mtf-parameter-benchmark.yml`
 - `src/ai_trading/mtf_parameter_benchmark.py`
 - `tests/test_mtf_parameter_benchmark.py`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/file_persistence.py`
 - `src/ai_trading/mtf_shadow_challenger.py`
-- `src/ai_trading/mtf_shadow_config.py`
 - `src/ai_trading/mtf_shadow_quality.py`
 - `src/ai_trading/operational_overview.py`
 - `src/ai_trading/paper_cycle.py`
 - `src/ai_trading/postgres_persistence.py`
-- `tests/test_dashboard_overview.py`
 - `tests/test_mtf_shadow_challenger.py`
-- `tests/test_mtf_shadow_config.py`
 - `tests/test_mtf_shadow_quality.py`
-- `tests/test_multi_market.py`
-- `tests/test_paper_cycle.py`
 
 ### Project signals
 - `pyproject.toml`
