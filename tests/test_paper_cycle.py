@@ -533,3 +533,40 @@ def test_mtf_boundary_runs_only_on_quarter_hour() -> None:
         pd.Timestamp("2026-09-20 07:45:00+00:00"),
         "1m",
     )
+
+
+
+def test_non_boundary_cycle_skips_long_mtf_history_load(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    backend = FilePaperPersistence(tmp_path)
+    primary = sample_market(110)
+    calls: list[str] = []
+
+    def loader(symbol: str, period: str, interval: str) -> pd.DataFrame:
+        del symbol, interval
+        calls.append(period)
+        return primary
+
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "evaluate_shadow_challenger",
+        lambda *args, **kwargs: None,
+    )
+
+    runner = PaperCycleRunner(
+        persistence=backend,
+        data_loader=loader,
+        runtime_factory=runtime_factory(tmp_path),
+    )
+    result = runner.run_once(
+        symbol="GC=F",
+        period="5d",
+        interval="5m",
+        shadow_challenger_enabled=True,
+        mtf_period="1mo",
+    )
+
+    assert result.processed == 1
+    assert calls == ["5d"]
