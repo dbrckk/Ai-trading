@@ -59,6 +59,11 @@ def test_mtf_quality_joins_river_prediction_by_delayed_execution_time() -> None:
     assert comparison.challenger.observations == 5
     assert comparison.challenger.accuracy > comparison.river.accuracy
     assert comparison.score_delta > 0.0
+    assert comparison.directional_observations == 3
+    assert comparison.directional_rate == 0.6
+    assert comparison.long_labels == 1
+    assert comparison.flat_labels == 2
+    assert comparison.short_labels == 2
 
 
 def test_mtf_quality_deduplicates_same_evaluated_execution() -> None:
@@ -71,3 +76,24 @@ def test_mtf_quality_deduplicates_same_evaluated_execution() -> None:
     comparison = compare_mtf_shadow_audit_payloads(payloads)
 
     assert comparison.observations == 1
+    assert comparison.directional_observations == 1
+    assert comparison.long_labels == 1
+    assert comparison.flat_labels == 0
+    assert comparison.short_labels == 0
+
+
+
+def test_mtf_quality_exposes_flat_only_evidence() -> None:
+    payloads = [
+        river_payload("t1", 0, 0.60),
+        river_payload("t2", 0, 0.61),
+        mtf_payload("t4", "t1", 0, 0.70, 0),
+        mtf_payload("t5", "t2", 0, 0.71, 0),
+    ]
+
+    comparison = compare_mtf_shadow_audit_payloads(payloads)
+
+    assert comparison.observations == 2
+    assert comparison.directional_observations == 0
+    assert comparison.directional_rate == 0.0
+    assert comparison.flat_labels == 2
