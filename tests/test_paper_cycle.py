@@ -635,30 +635,35 @@ def test_validated_gold_mtf_config_is_forwarded_to_shadow_evaluator(
     assert captured["config_name"] == "h45m-min5bp-atr0.25-train1000-conf56"
 
 
-def test_btc_skips_unvalidated_mtf_candidate(
+def test_validated_btc_mtf_config_is_forwarded_to_shadow_evaluator(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
     backend = FilePaperPersistence(tmp_path)
     primary = sample_market(220)
+    long_history = sample_market(1600)
     calls: list[str] = []
-    mtf_calls = 0
+    captured: dict[str, object] = {}
 
     def loader(symbol: str, period: str, interval: str) -> pd.DataFrame:
         del symbol, interval
         calls.append(period)
-        return primary
+        return long_history if period == "1mo" else primary
 
     monkeypatch.setattr(
         paper_cycle_module,
         "evaluate_shadow_challenger",
         lambda *args, **kwargs: None,
     )
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "select_observable_execution_target",
+        lambda market, eligible, current_execution_idx, **kwargs: eligible[-19],
+    )
 
-    def fake_mtf(*args, **kwargs):
-        nonlocal mtf_calls
-        del args, kwargs
-        mtf_calls += 1
+    def fake_mtf(market, authoritative_features, execution_idx, **kwargs):
+        del market, authoritative_features, execution_idx
+        captured.update(kwargs)
 
     monkeypatch.setattr(
         paper_cycle_module,
@@ -680,6 +685,10 @@ def test_btc_skips_unvalidated_mtf_candidate(
     )
 
     assert result.processed == 1
-    assert result.mtf_evaluated is False
-    assert calls == ["5d"]
-    assert mtf_calls == 0
+    assert calls == ["5d", "1mo"]
+    assert captured["horizon_bars"] == 18
+    assert captured["max_train_rows"] == 1000
+    assert captured["minimum_threshold"] == 0.0003
+    assert captured["atr_multiplier"] == 0.15
+    assert captured["min_confidence"] == 0.60
+    assert captured["config_name"] == "h90m-min3bp-atr0.15-train1000-conf60"
