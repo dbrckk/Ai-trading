@@ -131,8 +131,14 @@ class OverviewPersistence:
             challenger=challenger,
         )
 
-    def load_mtf_shadow_quality(self, runtime_key: str) -> MultiTimeframeShadowQuality:
+    def load_mtf_shadow_quality(
+        self,
+        runtime_key: str,
+        *,
+        config_name: str | None = None,
+    ) -> MultiTimeframeShadowQuality:
         assert runtime_key == RUNTIME_KEY
+        assert config_name == "h45m-min5bp-atr0.25-train1000-conf56"
         river = ModelQuality(
             score=0.58,
             accuracy=0.52,
@@ -257,7 +263,11 @@ def test_operational_overview_exposes_model_and_runtime_metadata() -> None:
     assert round(payload["shadow_challenger"]["score_delta"], 2) == 0.12
     assert payload["shadow_challenger"]["challenger"]["accuracy"] == 0.70
     assert payload["mtf_shadow_challenger"]["observations"] == 8
-    assert payload["mtf_shadow_challenger"]["horizon_minutes"] == 15
+    assert payload["mtf_shadow_challenger"]["horizon_minutes"] == 45
+    assert payload["mtf_shadow_challenger"]["candidate_config"]["config_name"] == (
+        "h45m-min5bp-atr0.25-train1000-conf56"
+    )
+    assert payload["mtf_shadow_challenger"]["candidate_config"]["min_confidence"] == 0.56
     assert payload["mtf_shadow_challenger"]["timeframes"] == ["5m", "15m", "1h", "4h"]
     assert payload["mtf_shadow_challenger"]["promotion_gate"]["min_observations"] == 500
     assert payload["mtf_shadow_challenger"]["directional_observations"] == 5
@@ -373,6 +383,17 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
         "mtf_shadow_challenger": {
             "available": False,
             "status": "collecting",
+            "candidate_config": {
+                "symbol": "GC=F",
+                "config_name": "h45m-min5bp-atr0.25-train1000-conf56",
+                "horizon_bars": 9,
+                "minimum_threshold": 0.0005,
+                "atr_multiplier": 0.25,
+                "max_train_rows": 1000,
+                "min_confidence": 0.56,
+                "min_train_rows": 500,
+                "feature_warmup_rows": 600,
+            },
             "observations": 0,
             "directional_observations": 0,
             "directional_rate": 0.0,
@@ -380,11 +401,11 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
             "score_delta": None,
             "river": None,
             "challenger": None,
-            "horizon_minutes": 15,
+            "horizon_minutes": 45,
             "timeframes": ["5m", "15m", "1h", "4h"],
             "label": {
                 "type": "volatility_adaptive",
-                "minimum_threshold": 0.001,
+                "minimum_threshold": 0.0005,
                 "atr_multiplier": 0.25,
             },
             "promotion_gate": {
@@ -530,3 +551,53 @@ def test_overview_endpoint_includes_readiness_evidence() -> None:
     assert payload["readiness"]["available"] is True
     assert payload["readiness"]["checks_total"] == 8
     assert len(payload["readiness"]["checks"]) == 8
+
+
+
+class BtcOverviewPersistence(OverviewPersistence):
+    def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:
+        assert runtime_key == "paper:BTC-USD:5m:online-river:v1"
+        assert starting_cash == 100_000.0
+        return self.runtime
+
+    def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:
+        assert runtime_key == "paper:BTC-USD:5m:online-river:v1"
+        return HostedRuntimeStatus(
+            engine_status="RUNNING",
+            symbol="BTC-USD",
+            interval="5m",
+            updated_at_utc="2099-01-01T00:00:00+00:00",
+            poll_seconds=300.0,
+        )
+
+    def list_burnin_snapshots(self, runtime_key: str):
+        del runtime_key
+        return ()
+
+    def list_regimes(self, runtime_key: str):
+        del runtime_key
+        return ()
+
+    def load_shadow_quality(self, runtime_key: str) -> ShadowQualityComparison:
+        del runtime_key
+        return super().load_shadow_quality(RUNTIME_KEY)
+
+    def load_mtf_shadow_quality(self, runtime_key: str, **kwargs):
+        raise AssertionError("BTC must not load unvalidated MTF quality")
+
+
+def test_btc_overview_marks_mtf_candidate_unvalidated() -> None:
+    payload = build_operational_overview(
+        BtcOverviewPersistence(),
+        "paper:BTC-USD:5m:online-river:v1",
+    )
+
+    mtf = payload["mtf_shadow_challenger"]
+    assert mtf["status"] == "unvalidated"
+    assert mtf["candidate_config"] is None
+    assert mtf["horizon_minutes"] is None
+    assert mtf["promotion_gate"]["eligible_for_review"] is False
+    assert any(
+        "no benchmark-validated" in reason
+        for reason in mtf["promotion_gate"]["reasons"]
+    )

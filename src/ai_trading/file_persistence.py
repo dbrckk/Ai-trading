@@ -147,10 +147,12 @@ class FilePaperPersistence(PaperPersistence):
     def load_mtf_shadow_quality(
         self,
         runtime_key: str,
+        *,
+        config_name: str | None = None,
     ) -> MultiTimeframeShadowQuality:
         del runtime_key
         if not self.audit_log.path.exists():
-            return compare_mtf_shadow_audit_payloads(())
+            return compare_mtf_shadow_audit_payloads((), config_name=config_name)
         payloads = []
         with self.audit_log.path.open("r", encoding="utf-8") as handle:
             for line in handle:
@@ -163,7 +165,7 @@ class FilePaperPersistence(PaperPersistence):
                 payload = record.get("payload")
                 if isinstance(payload, dict):
                     payloads.append(payload)
-        return compare_mtf_shadow_audit_payloads(payloads)
+        return compare_mtf_shadow_audit_payloads(payloads, config_name=config_name)
 
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:
         del runtime_key

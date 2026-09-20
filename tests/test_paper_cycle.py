@@ -410,22 +410,25 @@ def test_mtf_shadow_is_audit_only_and_cannot_control_execution(
         paper_cycle_module,
         "evaluate_multi_timeframe_shadow",
         lambda *args, **kwargs: MultiTimeframeShadowResult(
+            config_name="h45m-min5bp-atr0.25-train1000-conf56",
             prediction=Prediction(
                 side=-1,
                 confidence=0.97,
                 probabilities={-1: 0.97, 0: 0.02, 1: 0.01},
             ),
+            raw_side=-1,
+            min_confidence=0.56,
             regime="bear_normal_vol",
             signal_time=str(mtf_signal),
             execution_time=str(mtf_target),
             training_rows=500,
             training_end=str(df.index[-20]),
             realized_label=-1,
-            horizon_bars=3,
-            horizon_minutes=15,
+            horizon_bars=9,
+            horizon_minutes=45,
             timeframes=("5m", "15m", "1h", "4h"),
             threshold_at_signal=0.0012,
-            minimum_threshold=0.001,
+            minimum_threshold=0.0005,
             atr_multiplier=0.25,
             feature_count=29,
         ),
@@ -461,7 +464,11 @@ def test_mtf_shadow_is_audit_only_and_cannot_control_execution(
     assert payload["risk_decision"]["side"] == 1
     assert payload["mtf_shadow_challenger"]["prediction"]["side"] == -1
     assert payload["mtf_shadow_challenger"]["execution_time"] == str(mtf_target)
-    assert payload["mtf_shadow_challenger"]["horizon_minutes"] == 15
+    assert payload["mtf_shadow_challenger"]["horizon_minutes"] == 45
+    assert payload["mtf_shadow_challenger"]["config_name"] == (
+        "h45m-min5bp-atr0.25-train1000-conf56"
+    )
+    assert payload["mtf_shadow_challenger"]["min_confidence"] == 0.56
 
 
 
@@ -570,3 +577,109 @@ def test_non_boundary_cycle_skips_long_mtf_history_load(
 
     assert result.processed == 1
     assert calls == ["5d"]
+
+
+
+def test_validated_gold_mtf_config_is_forwarded_to_shadow_evaluator(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    backend = FilePaperPersistence(tmp_path)
+    primary = sample_market(220)
+    long_history = sample_market(1400)
+    captured: dict[str, object] = {}
+
+    def loader(symbol: str, period: str, interval: str) -> pd.DataFrame:
+        del symbol, interval
+        return long_history if period == "1mo" else primary
+
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "evaluate_shadow_challenger",
+        lambda *args, **kwargs: None,
+    )
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "select_observable_execution_target",
+        lambda market, eligible, current_execution_idx, **kwargs: eligible[-10],
+    )
+
+    def fake_mtf(market, authoritative_features, execution_idx, **kwargs):
+        del market, authoritative_features, execution_idx
+        captured.update(kwargs)
+
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "evaluate_multi_timeframe_shadow",
+        fake_mtf,
+    )
+
+    runner = PaperCycleRunner(
+        persistence=backend,
+        data_loader=loader,
+        runtime_factory=runtime_factory(tmp_path),
+    )
+    runner.run_once(
+        symbol="GC=F",
+        period="5d",
+        interval="5m",
+        shadow_challenger_enabled=True,
+        mtf_period="1mo",
+    )
+
+    assert captured["horizon_bars"] == 9
+    assert captured["max_train_rows"] == 1000
+    assert captured["minimum_threshold"] == 0.0005
+    assert captured["atr_multiplier"] == 0.25
+    assert captured["min_confidence"] == 0.56
+    assert captured["config_name"] == "h45m-min5bp-atr0.25-train1000-conf56"
+
+
+def test_btc_skips_unvalidated_mtf_candidate(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    backend = FilePaperPersistence(tmp_path)
+    primary = sample_market(220)
+    calls: list[str] = []
+    mtf_calls = 0
+
+    def loader(symbol: str, period: str, interval: str) -> pd.DataFrame:
+        del symbol, interval
+        calls.append(period)
+        return primary
+
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "evaluate_shadow_challenger",
+        lambda *args, **kwargs: None,
+    )
+
+    def fake_mtf(*args, **kwargs):
+        nonlocal mtf_calls
+        del args, kwargs
+        mtf_calls += 1
+
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "evaluate_multi_timeframe_shadow",
+        fake_mtf,
+    )
+
+    runner = PaperCycleRunner(
+        persistence=backend,
+        data_loader=loader,
+        runtime_factory=runtime_factory(tmp_path),
+    )
+    result = runner.run_once(
+        symbol="BTC-USD",
+        period="5d",
+        interval="5m",
+        shadow_challenger_enabled=True,
+        mtf_period="1mo",
+    )
+
+    assert result.processed == 1
+    assert result.mtf_evaluated is False
+    assert calls == ["5d"]
+    assert mtf_calls == 0

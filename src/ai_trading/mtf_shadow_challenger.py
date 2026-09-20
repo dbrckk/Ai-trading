@@ -18,7 +18,10 @@ from .regime import detect_regime
 
 @dataclass(frozen=True)
 class MultiTimeframeShadowResult:
+    config_name: str
     prediction: Prediction
+    raw_side: int
+    min_confidence: float
     regime: str
     signal_time: str
     execution_time: str
@@ -79,6 +82,8 @@ def evaluate_multi_timeframe_shadow(
     feature_warmup_rows: int = 600,
     minimum_threshold: float = 0.001,
     atr_multiplier: float = 0.25,
+    min_confidence: float = 0.0,
+    config_name: str = "legacy-mtf",
     random_state: int = 42,
 ) -> MultiTimeframeShadowResult | None:
     """Evaluate a 5m/15m/1h/4h ensemble without controlling execution."""
@@ -91,6 +96,10 @@ def evaluate_multi_timeframe_shadow(
         raise ValueError("max_train_rows must be >= min_train_rows")
     if feature_warmup_rows < 1:
         raise ValueError("feature_warmup_rows must be at least 1")
+    if not 0.0 <= min_confidence <= 1.0:
+        raise ValueError("min_confidence must be between 0 and 1")
+    if not config_name:
+        raise ValueError("config_name must not be empty")
     if execution_idx not in market.index:
         raise ValueError("execution index is not present in market data")
 
@@ -159,9 +168,22 @@ def evaluate_multi_timeframe_shadow(
     model.fit(mtf_features.loc[train_idx], labels.loc[train_idx])
 
     regime = detect_regime(signal_row)
-    prediction = model.predict_one(signal_row, regime)
+    raw_prediction = model.predict_one(signal_row, regime)
+    effective_side = (
+        int(raw_prediction.side)
+        if float(raw_prediction.confidence) >= min_confidence
+        else 0
+    )
+    prediction = Prediction(
+        side=effective_side,
+        confidence=float(raw_prediction.confidence),
+        probabilities=dict(raw_prediction.probabilities),
+    )
     return MultiTimeframeShadowResult(
+        config_name=config_name,
         prediction=prediction,
+        raw_side=int(raw_prediction.side),
+        min_confidence=min_confidence,
         regime=regime.name,
         signal_time=str(signal_idx),
         execution_time=str(execution_idx),

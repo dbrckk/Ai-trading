@@ -11,6 +11,7 @@ from .mtf_shadow_challenger import (
     evaluate_multi_timeframe_shadow,
     select_observable_execution_target,
 )
+from .mtf_shadow_config import validated_mtf_shadow_config
 from .persistence import PaperPersistence, PersistedRuntime, build_runtime_key
 from .runtime import PaperAutonomousRuntime
 from .shadow_challenger import evaluate_shadow_challenger
@@ -139,15 +140,20 @@ class PaperCycleRunner:
                 shadow_result = None
                 shadow_target = None
 
-            mtf_candidate = next(
-                (
-                    target
-                    for target in pending[:max_catchup_bars]
-                    if _is_mtf_evaluation_boundary(target, interval)
-                ),
-                None,
+            mtf_config = validated_mtf_shadow_config(symbol)
+            mtf_candidate = (
+                next(
+                    (
+                        target
+                        for target in pending[:max_catchup_bars]
+                        if _is_mtf_evaluation_boundary(target, interval)
+                    ),
+                    None,
+                )
+                if mtf_config is not None
+                else None
             )
-            if mtf_candidate is not None:
+            if mtf_candidate is not None and mtf_config is not None:
                 try:
                     mtf_market = (
                         market
@@ -163,18 +169,21 @@ class PaperCycleRunner:
                             mtf_market,
                             tuple(mtf_market.index[1:]),
                             mtf_current,
-                            horizon_bars=3,
+                            horizon_bars=mtf_config.horizon_bars,
                         )
                         if mtf_execution is not None:
                             mtf_shadow_result = evaluate_multi_timeframe_shadow(
                                 mtf_market,
                                 make_features(mtf_market),
                                 mtf_execution,
-                                horizon_bars=3,
-                                min_train_rows=500,
-                                max_train_rows=2000,
-                                minimum_threshold=0.001,
-                                atr_multiplier=0.25,
+                                horizon_bars=mtf_config.horizon_bars,
+                                min_train_rows=mtf_config.min_train_rows,
+                                max_train_rows=mtf_config.max_train_rows,
+                                feature_warmup_rows=mtf_config.feature_warmup_rows,
+                                minimum_threshold=mtf_config.minimum_threshold,
+                                atr_multiplier=mtf_config.atr_multiplier,
+                                min_confidence=mtf_config.min_confidence,
+                                config_name=mtf_config.config_name,
                             )
                             if mtf_shadow_result is not None:
                                 mtf_attach_target = str(mtf_candidate)

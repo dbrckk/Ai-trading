@@ -16,7 +16,10 @@ Status: active
 - PR #50 introduced independent Gold/DAX/BTC paper runtimes, isolated market failures, a normalized 100k portfolio view (34%/33%/33%), `/api/markets`, responsive market cards, and cross-market recent trades.
 - PR #51 made Gold/DAX/BTC cycle execution concurrent and added per-market signal/confidence telemetry.
 - PR #52 made volume-less index data safe, unblocking the DAX runtime.
-- Production verification: Gold is RUNNING at 713 bars; DAX is RUNNING at 1 bar with 1 shadow observation; BTC is RUNNING at 15 bars with 15 shadow observations; all three report zero consecutive cycle errors.
+- PRs #54-#61 upgraded the premium dashboard, fixed scroll-safe live refresh, introduced the leakage-safe 5m/15m/1h/4h MTF shadow, isolated its long history, bounded its compute window, reduced it to a 15-minute research cadence, added cycle-latency telemetry, and required directional evidence.
+- PR #63 refined the MTF benchmark toward confidence-gated directional evidence.
+- PR #66 added per-market leakage-safe parameter selection. Latest validated research result: Gold uses 45m / 5bp / ATR 0.25 / train 1000 / confidence 56%; DAX uses 45m / 5bp / ATR 0.25 / train 1000 / confidence 60%; BTC has no candidate that passes the directional gate, including the focused 45m/60m/90m search.
+- PR #67 prepares those validated Gold/DAX configurations as versioned audit-only MTF candidates, resets their quality evidence logically by config name, and leaves BTC MTF disabled until a benchmark candidate passes.
 
 ## Broken / blockers
 - Render request logs do not expose the scheduler POST evidence needed to directly prove three consecutive Cloudflare heartbeats, so issue #40 remains open.
@@ -24,10 +27,10 @@ Status: active
 - Repository-standards routing benchmark health is separate from the trading CI; trading CI is green.
 
 ## Current priority
-- Collect shadow challenger observations independently for Gold, DAX, and BTC once multi-market production is active.
-- Collect at least five realized shadow observations so the River-vs-challenger quality summary becomes comparable in `/api/overview`.
-- Collect at least 250 realized shadow observations before the challenger can pass the review-eligibility evidence floor.
-- Keep the challenger strictly observational until it demonstrates sustained out-of-sample improvement after costs and risk constraints.
+- Collect new versioned MTF evidence independently for the validated Gold and DAX 45-minute candidates.
+- Require at least 500 realized MTF observations and at least 100 directional observations before MTF review eligibility.
+- Keep BTC MTF unvalidated/disabled until a leakage-safe benchmark candidate passes the active-direction gate.
+- Keep River authoritative and every challenger strictly observational until sustained out-of-sample improvement is demonstrated.
 - Keep production paper-only and retain the GitHub scheduled fallback until issue #40 acceptance criteria are fully evidenced.
 
 ## Validation
@@ -37,7 +40,7 @@ Status: active
 - Live runtime remains `RUNNING` with zero consecutive cycle errors.
 
 ## Last verified
-- 2026-09-19
+- 2026-09-20
 
 <!-- AUTO:START -->
 ## Automatic repository state

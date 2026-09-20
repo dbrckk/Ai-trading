@@ -45,6 +45,8 @@ def _empty_quality() -> ModelQuality:
 
 def compare_mtf_shadow_audit_payloads(
     payloads: Iterable[dict[str, Any]],
+    *,
+    config_name: str | None = None,
 ) -> MultiTimeframeShadowQuality:
     """Compare delayed MTF predictions with River at the same execution time."""
 
@@ -66,6 +68,8 @@ def compare_mtf_shadow_audit_payloads(
 
         shadow = payload.get("mtf_shadow_challenger")
         if not isinstance(shadow, dict):
+            continue
+        if config_name is not None and shadow.get("config_name") != config_name:
             continue
         shadow_execution = shadow.get("execution_time")
         shadow_prediction = shadow.get("prediction")

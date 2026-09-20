@@ -18,6 +18,8 @@ def mtf_payload(
     side: int,
     confidence: float,
     realized_label: int,
+    *,
+    config_name: str = "candidate-a",
 ) -> dict[str, object]:
     return {
         "execution_time": attached_execution_time,
@@ -27,6 +29,7 @@ def mtf_payload(
             "probabilities": {},
         },
         "mtf_shadow_challenger": {
+            "config_name": config_name,
             "execution_time": evaluated_execution_time,
             "prediction": {
                 "side": side,
@@ -97,3 +100,23 @@ def test_mtf_quality_exposes_flat_only_evidence() -> None:
     assert comparison.directional_observations == 0
     assert comparison.directional_rate == 0.0
     assert comparison.flat_labels == 2
+
+
+
+def test_mtf_quality_filters_evidence_by_candidate_version() -> None:
+    payloads = [
+        river_payload("t1", 1, 0.70),
+        river_payload("t2", -1, 0.75),
+        mtf_payload("t4", "t1", 1, 0.80, 1, config_name="candidate-a"),
+        mtf_payload("t5", "t2", -1, 0.82, -1, config_name="candidate-b"),
+    ]
+
+    comparison = compare_mtf_shadow_audit_payloads(
+        payloads,
+        config_name="candidate-b",
+    )
+
+    assert comparison.observations == 1
+    assert comparison.directional_observations == 1
+    assert comparison.short_labels == 1
+    assert comparison.long_labels == 0
