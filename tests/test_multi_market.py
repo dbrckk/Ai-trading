@@ -58,6 +58,8 @@ class FakeMultiPersistence:
             reason="processed 1 bar(s)",
             processed_bars=10,
             poll_seconds=300.0,
+            cycle_duration_seconds=12.3,
+            mtf_evaluated=True,
         )
 
     def list_burnin_snapshots(self, runtime_key: str):
@@ -206,6 +208,10 @@ def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
     assert "5m/15m/1h/4h" in page
     assert "portfolio-ribbon" in page
     assert "PAPER ONLY" in page
+    assert "Cycle latency" in page
+    assert "12.3s" in page
+    assert "MTF this cycle" in page
+    assert "YES" in page
 
 
 
