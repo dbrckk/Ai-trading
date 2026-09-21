@@ -6,6 +6,7 @@ from dataclasses import dataclass
 import pandas as pd
 
 from .data import load_history
+from .data_quality import evaluate_market_data_quality
 from .features import make_features
 from .mtf_shadow_challenger import (
     evaluate_multi_timeframe_shadow,
@@ -165,6 +166,10 @@ class PaperCycleRunner:
             runtime_key=runtime_key,
         )
         market = self.data_loader(symbol, period, interval)
+        quality = evaluate_market_data_quality(market)
+        if not quality.valid:
+            reasons = ",".join(quality.reasons) or "score below threshold"
+            raise RuntimeError(f"market data failed quality gate: {reasons}")
         prepared = runtime.prepare_market(market)
         eligible = prepared.eligible
         if not eligible:
