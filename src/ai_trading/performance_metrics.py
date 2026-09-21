@@ -31,10 +31,11 @@ def performance_metrics_from_totals(
     if observations < 0 or observations > trade_count:
         raise ValueError("pnl_observations must be between 0 and trade_count")
     average_pnl = realized_pnl / observations if observations else 0.0
+    profit_factor: float | None
     if observations == 0:
-        profit_factor: float | None = None
+        profit_factor = None
     elif gross_loss > 0.0:
-        profit_factor: float | None = gross_profit / gross_loss
+        profit_factor = gross_profit / gross_loss
     elif gross_profit > 0.0:
         profit_factor = float("inf")
     else:
