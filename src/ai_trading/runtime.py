@@ -99,6 +99,7 @@ class PaperAutonomousRuntime:
         broker.state.last_price = state.last_price
         broker.state.peak_equity = state.peak_equity
         broker.state.day_start_equity = state.day_start_equity
+        broker.state.average_entry_price = state.average_entry_price
         return broker
 
     @staticmethod
@@ -115,6 +116,7 @@ class PaperAutonomousRuntime:
             last_price=broker.state.last_price,
             peak_equity=broker.state.peak_equity,
             day_start_equity=broker.state.day_start_equity,
+            average_entry_price=broker.state.average_entry_price,
             last_processed=last_processed,
             processed_bars=processed_bars,
             last_learning_cycle_bar=last_learning_cycle_bar,
@@ -297,7 +299,11 @@ class PaperAutonomousRuntime:
         trade: TradeSnapshot | None = None
         previous_units = broker.state.units
         if decision.approved:
-            broker.rebalance(decision.side, decision.target_notional, execution_price)
+            fill = broker.rebalance(
+                decision.side,
+                decision.target_notional,
+                execution_price,
+            )
             delta_units = broker.state.units - previous_units
             if abs(delta_units) > 1e-12:
                 trade = TradeSnapshot(
@@ -307,6 +313,8 @@ class PaperAutonomousRuntime:
                     quantity=abs(delta_units),
                     price=execution_price,
                     status="PAPER_FILLED",
+                    pnl=0.0 if fill.realized_net_pnl is None else fill.realized_net_pnl,
+                    pnl_known=fill.realized_net_pnl is not None,
                     confidence=prediction.confidence,
                     strategy="online-river",
                 )
