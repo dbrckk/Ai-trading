@@ -1,8 +1,10 @@
 import numpy as np
 import pandas as pd
+import pytest
 
 from ai_trading.config import RiskConfig
 from ai_trading.multiasset_backtest import MultiAssetWalkForwardBacktester
+from ai_trading.performance import compute_metrics, infer_periods_per_year
 from ai_trading.portfolio import AllocationConfig
 from ai_trading.portfolio_risk import PortfolioRiskConfig
 
@@ -48,3 +50,26 @@ def test_multiasset_walk_forward_produces_portfolio_curve() -> None:
     assert report.decisions > 0
     assert report.trades >= 0
     assert report.metrics.max_drawdown >= 0.0
+
+
+def test_multiasset_backtest_annualizes_from_actual_timestamps() -> None:
+    report = MultiAssetWalkForwardBacktester(
+        risk_config=RiskConfig(min_confidence=0.0),
+        allocation_config=AllocationConfig(max_asset_weight=0.6),
+        portfolio_risk_config=PortfolioRiskConfig(
+            max_gross_exposure=1.0,
+            max_net_exposure=1.0,
+            max_asset_exposure=0.6,
+            max_pair_correlation=0.999,
+        ),
+        min_train_bars=140,
+        test_window_bars=40,
+    ).run({"A": market(3), "B": market(4)})
+
+    periods = infer_periods_per_year(report.equity_curve.index)
+    expected = compute_metrics(report.equity_curve, periods)
+
+    assert report.metrics.sharpe == pytest.approx(expected.sharpe)
+    assert report.metrics.annualized_volatility == pytest.approx(
+        expected.annualized_volatility
+    )
