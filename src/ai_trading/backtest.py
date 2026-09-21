@@ -34,6 +34,16 @@ class WalkForwardConfig:
     periods_per_year: float | None = None
     use_ensemble: bool = False
 
+    def __post_init__(self) -> None:
+        if self.min_train_bars < 2:
+            raise ValueError("min_train_bars must be at least 2")
+        if self.test_window_bars < 1:
+            raise ValueError("test_window_bars must be at least 1")
+        if self.max_train_bars is not None and self.max_train_bars < self.min_train_bars:
+            raise ValueError("max_train_bars must be >= min_train_bars")
+        if self.periods_per_year is not None and self.periods_per_year <= 0:
+            raise ValueError("periods_per_year must be positive when provided")
+
     def as_dict(self) -> dict[str, int | float | bool | None]:
         return asdict(self)
 
