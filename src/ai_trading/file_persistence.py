@@ -114,6 +114,13 @@ class FilePaperPersistence(PaperPersistence):
         del runtime_key
         return calculate_performance_metrics(self.trade_journal.list())
 
+    def load_portfolio_trade_performance(
+        self,
+        runtime_keys: tuple[str, ...],
+    ) -> TradePerformanceMetrics:
+        del runtime_keys
+        return calculate_performance_metrics(self.trade_journal.list())
+
     def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]:
         del runtime_key
         return tuple(self.burnin_tracker.read())
