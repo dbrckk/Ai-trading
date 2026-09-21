@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from math import isclose, isfinite
 from dataclasses import dataclass
 from datetime import datetime
+from math import isclose, isfinite
 
 from .market_freshness import classify_market_freshness
 from .operational_overview import build_operational_overview
