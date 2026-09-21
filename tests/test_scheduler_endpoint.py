@@ -3,9 +3,12 @@ from __future__ import annotations
 import json
 import socket
 import time
+from datetime import UTC, datetime, timedelta
 from threading import Thread
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
+
+import pytest
 
 from ai_trading.dashboard import serve_dashboard
 from ai_trading.paper_cycle import PaperCycleResult
@@ -354,10 +357,15 @@ def test_scheduler_delivery_overview_verifies_three_consecutive_cloudflare_succe
         for minute in (0, 5, 10)
     )
 
-    overview = scheduler_delivery_overview(deliveries)
+    overview = scheduler_delivery_overview(
+        deliveries,
+        now=datetime(2026, 9, 21, 16, 10, tzinfo=UTC),
+    )
 
     assert overview["consecutive_cloudflare_successes"] == 3
+    assert overview["cloudflare_delivery_fresh"] is True
     assert overview["cloudflare_delivery_verified"] is True
+    assert overview["last_delivery_age_seconds"] == 0.0
     assert overview["last_source"] == "cloudflare"
 
 
@@ -389,3 +397,30 @@ def test_http_scheduler_exposes_durable_cloudflare_delivery_evidence(tmp_path) -
     assert payload["cloudflare_delivery_verified"] is True
     assert all(item["source"] == "cloudflare" for item in payload["deliveries"])
     assert "server-secret" not in body
+
+
+
+def test_scheduler_delivery_verification_expires_when_latest_success_is_stale() -> None:
+    now = datetime(2026, 9, 21, 17, 0, tzinfo=UTC)
+    deliveries = tuple(
+        SchedulerDelivery(
+            timestamp_utc=(now - timedelta(minutes=offset)).isoformat(),
+            source="cloudflare",
+            status_code=200,
+            ok=True,
+            processed=1,
+        )
+        for offset in (25, 20, 15)
+    )
+
+    overview = scheduler_delivery_overview(deliveries, now=now)
+
+    assert overview["consecutive_cloudflare_successes"] == 3
+    assert overview["cloudflare_delivery_fresh"] is False
+    assert overview["cloudflare_delivery_verified"] is False
+    assert overview["last_delivery_age_seconds"] == 15 * 60
+
+
+def test_scheduler_delivery_overview_rejects_invalid_freshness_window() -> None:
+    with pytest.raises(ValueError, match="freshness_seconds"):
+        scheduler_delivery_overview((), freshness_seconds=0)
