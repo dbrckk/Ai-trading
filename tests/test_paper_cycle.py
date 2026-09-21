@@ -942,7 +942,6 @@ def test_degraded_mtf_history_is_skipped_without_disrupting_primary_cycle(
         nonlocal mtf_calls
         del args, kwargs
         mtf_calls += 1
-        return None
 
     monkeypatch.setattr(
         paper_cycle_module,
