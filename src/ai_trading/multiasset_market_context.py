@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+import numpy as np
 import pandas as pd
 
 from .config import ModelConfig
@@ -31,9 +32,26 @@ def prepare_multiasset_market_context(
     features_by_symbol: dict[str, pd.DataFrame] = {}
     labels_by_symbol: dict[str, pd.Series] = {}
 
+    required_columns = {"Open", "High", "Low", "Close", "Volume"}
     for symbol, market in markets.items():
         if len(market) < 40:
             raise ValueError(f"Insufficient data for {symbol}")
+        missing_columns = required_columns.difference(market.columns)
+        if missing_columns:
+            raise ValueError(
+                f"Missing market columns for {symbol}: {sorted(missing_columns)}"
+            )
+
+        latest_open = float(market["Open"].iloc[-1])
+        latest_close = float(market["Close"].iloc[-1])
+        if (
+            not np.isfinite(latest_open)
+            or not np.isfinite(latest_close)
+            or latest_open <= 0.0
+            or latest_close <= 0.0
+        ):
+            raise ValueError(f"Invalid latest execution prices for {symbol}")
+
         closes[symbol] = market["Close"].astype(float)
         opens[symbol] = market["Open"].astype(float)
         execution_times.add(str(market.index[-1]))
