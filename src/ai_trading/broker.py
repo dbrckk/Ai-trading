@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from math import isfinite
 
 from .config import RiskConfig
+from .paper_execution import calculate_rebalance_fill
 
 
 @dataclass
@@ -46,13 +47,16 @@ class PaperBroker:
         if not isfinite(target_notional) or target_notional < 0:
             raise ValueError("target_notional must be finite and non-negative")
         self.mark(price)
-        desired_units = 0.0 if side == 0 else side * target_notional / price
-        delta_units = desired_units - self.state.units
-        gross = abs(delta_units) * price
-        bps = self.config.transaction_cost_bps + self.config.slippage_bps
-        costs = gross * bps / 10_000.0
+        signed_target_notional = 0.0 if side == 0 else side * target_notional
+        fill = calculate_rebalance_fill(
+            current_units=self.state.units,
+            target_notional=signed_target_notional,
+            price=price,
+            transaction_cost_bps=self.config.transaction_cost_bps,
+            slippage_bps=self.config.slippage_bps,
+        )
 
-        self.state.cash -= delta_units * price
-        self.state.cash -= costs
-        self.state.units = desired_units
+        self.state.cash -= fill.delta_units * price
+        self.state.cash -= fill.costs
+        self.state.units = fill.desired_units
         self.mark(price)
