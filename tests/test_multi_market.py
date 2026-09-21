@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from threading import Barrier
 
 import pytest
@@ -19,6 +20,9 @@ from ai_trading.persistence import PersistedRuntime
 from ai_trading.runtime_state import RuntimeState
 from ai_trading.runtime_status import HostedRuntimeStatus
 from ai_trading.trade_journal import TradeJournal
+
+
+TEST_MARKET_NOW = datetime(2026, 9, 21, 12, 0, tzinfo=UTC)
 
 
 @dataclass
@@ -161,6 +165,7 @@ def test_multi_market_overview_scales_normalized_sleeves_to_100k() -> None:
         DEFAULT_MARKETS,
         interval="5m",
         portfolio_cash=100_000.0,
+        now=TEST_MARKET_NOW,
     )
 
     assert snapshot["portfolio"]["equity"] == pytest.approx(100_100.0)
@@ -170,6 +175,9 @@ def test_multi_market_overview_scales_normalized_sleeves_to_100k() -> None:
     assert snapshot["portfolio"]["stale_markets"] == 0
     assert snapshot["portfolio"]["error_markets"] == 0
     assert snapshot["portfolio"]["alert_markets"] == 3
+    assert snapshot["portfolio"]["closed_markets"] == 0
+    assert snapshot["portfolio"]["catching_up_markets"] == 0
+    assert snapshot["portfolio"]["provider_gap_markets"] == 0
     assert [row["label"] for row in snapshot["markets"]] == [
         "Gold",
         "DAX",
@@ -177,6 +185,7 @@ def test_multi_market_overview_scales_normalized_sleeves_to_100k() -> None:
     ]
     assert {row["freshness"] for row in snapshot["markets"]} == {"LIVE"}
     assert all(row["heartbeat_age_seconds"] == 0.0 for row in snapshot["markets"])
+    assert all(row["session_open"] is True for row in snapshot["markets"])
 
 
 def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
@@ -227,9 +236,10 @@ def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
     assert "Cycle latency" in page
     assert "12.3s" in page
     assert "Freshness" in page
-    assert "LIVE" in page
+    assert "Session" in page
     assert "Heartbeat age" in page
-    assert "0s" in page
+    assert "Sessions closed" in page
+    assert "Catch-up / provider gaps" in page
     assert "MTF this cycle" in page
     assert "YES" in page
 
@@ -296,6 +306,7 @@ def test_multi_market_overview_marks_stale_heartbeat_as_delayed() -> None:
         DEFAULT_MARKETS,
         interval="5m",
         portfolio_cash=100_000.0,
+        now=TEST_MARKET_NOW,
     )
 
     assert {row["freshness"] for row in snapshot["markets"]} == {"DELAYED"}
