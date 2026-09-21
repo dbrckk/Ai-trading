@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 
 from ai_trading.backtest import WalkForwardBacktester, WalkForwardConfig
+from ai_trading.broker import PaperBroker
 from ai_trading.config import ModelConfig, RiskConfig
 
 
@@ -39,3 +40,28 @@ def test_walk_forward_produces_out_of_sample_report() -> None:
     assert report.equity_curve.index.is_monotonic_increasing
     assert report.metrics.max_drawdown >= 0.0
     assert report.benchmark_metrics.total_return != 0.0
+
+
+def test_walk_forward_resets_daily_risk_baseline_between_dates(monkeypatch) -> None:
+    calls = 0
+    original = PaperBroker.reset_day_start
+
+    def tracked_reset(self) -> None:
+        nonlocal calls
+        calls += 1
+        original(self)
+
+    monkeypatch.setattr(PaperBroker, "reset_day_start", tracked_reset)
+
+    report = WalkForwardBacktester(
+        risk_config=RiskConfig(min_confidence=0.0),
+        model_config=ModelConfig(return_threshold=0.001),
+        config=WalkForwardConfig(
+            min_train_bars=120,
+            test_window_bars=40,
+            max_train_bars=180,
+        ),
+    ).run(sample_market())
+
+    assert report.decisions > 1
+    assert calls == report.decisions
