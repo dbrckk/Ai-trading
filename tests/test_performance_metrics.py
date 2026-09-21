@@ -11,12 +11,15 @@ def _trade(pnl: float) -> TradeSnapshot:
         price=3650.0,
         status="PAPER_FILLED",
         pnl=pnl,
+        pnl_known=True,
     )
 
 
 def test_performance_metrics_empty_history() -> None:
     metrics = calculate_performance_metrics(())
 
+    assert metrics.trade_count == 0
+    assert metrics.pnl_observations == 0
     assert metrics.realized_pnl == 0.0
     assert metrics.average_pnl == 0.0
     assert metrics.gross_profit == 0.0
@@ -30,6 +33,8 @@ def test_performance_metrics_profit_factor_and_average() -> None:
         (_trade(10.0), _trade(-4.0), _trade(6.0), _trade(0.0))
     )
 
+    assert metrics.trade_count == 4
+    assert metrics.pnl_observations == 4
     assert metrics.realized_pnl == 12.0
     assert metrics.average_pnl == 3.0
     assert metrics.gross_profit == 16.0

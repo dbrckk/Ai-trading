@@ -20,20 +20,31 @@ def test_postgres_16_is_reachable() -> None:
         assert int(cursor.fetchone()[0]) >= 160000
 
 
-def _state(*, cash: float = 99_900.0, processed_bars: int = 1) -> RuntimeState:
+def _state(
+    *,
+    cash: float = 99_900.0,
+    processed_bars: int = 1,
+    average_entry_price: float = 100.0,
+) -> RuntimeState:
     return RuntimeState(
         cash=cash,
         units=1.0,
         last_price=100.0,
         peak_equity=100_000.0,
         day_start_equity=100_000.0,
+        average_entry_price=average_entry_price,
         last_processed="2026-09-15 10:00:00+00:00",
         processed_bars=processed_bars,
         last_learning_cycle_bar=0,
     )
 
 
-def _trade(*, side: str = "BUY") -> TradeSnapshot:
+def _trade(
+    *,
+    side: str = "BUY",
+    pnl: float = 0.0,
+    pnl_known: bool | None = None,
+) -> TradeSnapshot:
     return TradeSnapshot(
         timestamp_utc="2026-09-15 10:00:00+00:00",
         symbol="GC=F",
@@ -41,6 +52,8 @@ def _trade(*, side: str = "BUY") -> TradeSnapshot:
         quantity=1.0,
         price=100.0,
         status="PAPER_FILLED",
+        pnl=pnl,
+        pnl_known=pnl_known,
         confidence=0.75,
         strategy="online-river",
     )
@@ -98,6 +111,7 @@ def test_runtime_state_and_model_survive_new_instance(backend) -> None:
     assert restored.is_new is False
     assert restored.revision == 1
     assert restored.state.cash == 99_900.0
+    assert restored.state.average_entry_price == 100.0
     assert restored.model is not None
     assert isinstance(deserialize_model(restored.model), RiverDirectionModel)
 
@@ -295,3 +309,102 @@ def test_scheduler_deliveries_survive_postgres_restart(backend) -> None:
 
     restored = PostgresPaperPersistence(DATABASE_URL)
     assert restored.list_scheduler_deliveries(limit=10) == (delivery,)
+
+
+
+def test_postgres_persists_pnl_provenance_and_performance_coverage(backend) -> None:
+    backend.load_runtime(RUNTIME_KEY, 100_000.0)
+
+    known = _trade(side="BUY", pnl=5.0, pnl_known=True)
+    unknown = _trade(side="SELL", pnl=0.0, pnl_known=False)
+
+    assert (
+        backend.commit_step(
+            RUNTIME_KEY,
+            _commit(
+                expected_revision=0,
+                state=_state(processed_bars=1, average_entry_price=101.5),
+                trade=known,
+            ),
+        )
+        is CommitOutcome.COMMITTED
+    )
+    assert (
+        backend.commit_step(
+            RUNTIME_KEY,
+            _commit(
+                expected_revision=1,
+                state=_state(
+                    cash=99_800.0,
+                    processed_bars=2,
+                    average_entry_price=0.0,
+                ),
+                trade=unknown,
+            ),
+        )
+        is CommitOutcome.COMMITTED
+    )
+
+    restored = backend.load_runtime(RUNTIME_KEY, 100_000.0)
+    assert restored.state.average_entry_price == 0.0
+
+    trades = backend.list_trades(RUNTIME_KEY)
+    assert trades[0].pnl == 5.0
+    assert trades[0].pnl_known is True
+    assert trades[1].pnl == 0.0
+    assert trades[1].pnl_known is False
+
+    metrics = backend.load_trade_performance(RUNTIME_KEY)
+    assert metrics.trade_count == 2
+    assert metrics.pnl_observations == 1
+    assert metrics.realized_pnl == 5.0
+    assert metrics.average_pnl == 5.0
+    assert metrics.gross_profit == 5.0
+    assert metrics.gross_loss == 0.0
+    assert metrics.profit_factor == float("inf")
+
+
+def test_trade_event_key_ignores_pnl_provenance_metadata() -> None:
+    from ai_trading.postgres_persistence import _trade_event_key
+
+    known = _trade(pnl=0.0, pnl_known=True)
+    unknown = _trade(pnl=0.0, pnl_known=False)
+
+    assert _trade_event_key(known) == _trade_event_key(unknown)
+
+
+
+def test_schema_upgrade_adds_pnl_accounting_columns_without_reset(backend) -> None:
+    with psycopg.connect(DATABASE_URL) as connection, connection.cursor() as cursor:
+        cursor.execute(
+            "ALTER TABLE paper_trade_performance "
+            "DROP COLUMN IF EXISTS pnl_observations"
+        )
+        cursor.execute("ALTER TABLE paper_trades DROP COLUMN IF EXISTS pnl_known")
+        cursor.execute(
+            "ALTER TABLE paper_runtime_state "
+            "DROP COLUMN IF EXISTS average_entry_price"
+        )
+
+    backend.initialize_schema()
+
+    with psycopg.connect(DATABASE_URL) as connection, connection.cursor() as cursor:
+        cursor.execute(
+            """
+            SELECT table_name, column_name
+            FROM information_schema.columns
+            WHERE (table_name, column_name) IN (
+                ('paper_runtime_state', 'average_entry_price'),
+                ('paper_trades', 'pnl_known'),
+                ('paper_trade_performance', 'pnl_observations')
+            )
+            ORDER BY table_name, column_name
+            """
+        )
+        columns = {(row[0], row[1]) for row in cursor.fetchall()}
+
+    assert columns == {
+        ("paper_runtime_state", "average_entry_price"),
+        ("paper_trade_performance", "pnl_observations"),
+        ("paper_trades", "pnl_known"),
+    }

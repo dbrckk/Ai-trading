@@ -14,8 +14,13 @@ class TradeSnapshot:
     price: float
     status: str
     pnl: float = 0.0
+    pnl_known: bool | None = None
     confidence: float | None = None
     strategy: str = ""
+
+    def __post_init__(self) -> None:
+        if self.pnl_known is None:
+            object.__setattr__(self, "pnl_known", self.pnl != 0.0)
 
 
 class TradeJournal:

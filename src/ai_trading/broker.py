@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from math import isfinite
 
 from .config import RiskConfig
-from .paper_execution import calculate_rebalance_fill
+from .paper_execution import RebalanceFill, calculate_rebalance_fill
 
 
 @dataclass
@@ -14,6 +14,7 @@ class BrokerState:
     last_price: float = 0.0
     peak_equity: float = 0.0
     day_start_equity: float = 0.0
+    average_entry_price: float = 0.0
 
     @property
     def equity(self) -> float:
@@ -40,7 +41,7 @@ class PaperBroker:
     def reset_day_start(self) -> None:
         self.state.day_start_equity = self.state.equity
 
-    def rebalance(self, side: int, target_notional: float, price: float) -> None:
+    def rebalance(self, side: int, target_notional: float, price: float) -> RebalanceFill:
         if side not in {-1, 0, 1}:
             raise ValueError("side must be -1, 0, or 1")
         target_notional = float(target_notional)
@@ -50,6 +51,7 @@ class PaperBroker:
         signed_target_notional = 0.0 if side == 0 else side * target_notional
         fill = calculate_rebalance_fill(
             current_units=self.state.units,
+            current_average_entry_price=self.state.average_entry_price,
             target_notional=signed_target_notional,
             price=price,
             transaction_cost_bps=self.config.transaction_cost_bps,
@@ -59,4 +61,6 @@ class PaperBroker:
         self.state.cash -= fill.delta_units * price
         self.state.cash -= fill.costs
         self.state.units = fill.desired_units
+        self.state.average_entry_price = fill.next_average_entry_price
         self.mark(price)
+        return fill

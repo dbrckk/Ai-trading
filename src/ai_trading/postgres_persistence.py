@@ -41,12 +41,17 @@ _SCHEMA_STATEMENTS = (
         last_price double precision NOT NULL,
         peak_equity double precision NOT NULL,
         day_start_equity double precision NOT NULL,
+        average_entry_price double precision NOT NULL DEFAULT 0,
         last_processed text NULL,
         processed_bars bigint NOT NULL,
         last_learning_cycle_bar bigint NOT NULL,
         revision bigint NOT NULL DEFAULT 0,
         updated_at timestamptz NOT NULL DEFAULT now()
     )
+    """,
+    """
+    ALTER TABLE paper_runtime_state
+        ADD COLUMN IF NOT EXISTS average_entry_price double precision NOT NULL DEFAULT 0
     """,
     """
     CREATE TABLE IF NOT EXISTS paper_model_state (
@@ -72,6 +77,7 @@ _SCHEMA_STATEMENTS = (
         price double precision NOT NULL,
         status text NOT NULL,
         pnl double precision NOT NULL DEFAULT 0,
+        pnl_known boolean NOT NULL DEFAULT false,
         confidence double precision NULL,
         strategy text NOT NULL,
         created_at timestamptz NOT NULL DEFAULT now(),
@@ -79,10 +85,15 @@ _SCHEMA_STATEMENTS = (
     )
     """,
     """
+    ALTER TABLE paper_trades
+        ADD COLUMN IF NOT EXISTS pnl_known boolean NOT NULL DEFAULT false
+    """,
+    """
     CREATE TABLE IF NOT EXISTS paper_trade_performance (
         runtime_key text PRIMARY KEY
             REFERENCES paper_runtime_state(runtime_key) ON DELETE CASCADE,
         trade_count bigint NOT NULL DEFAULT 0,
+        pnl_observations bigint NOT NULL DEFAULT 0,
         realized_pnl double precision NOT NULL DEFAULT 0,
         gross_profit double precision NOT NULL DEFAULT 0,
         gross_loss double precision NOT NULL DEFAULT 0,
@@ -90,6 +101,10 @@ _SCHEMA_STATEMENTS = (
         max_drawdown double precision NOT NULL DEFAULT 0,
         updated_at timestamptz NOT NULL DEFAULT now()
     )
+    """,
+    """
+    ALTER TABLE paper_trade_performance
+        ADD COLUMN IF NOT EXISTS pnl_observations bigint NOT NULL DEFAULT 0
     """,
     """
     CREATE TABLE IF NOT EXISTS paper_burnin_snapshots (
@@ -181,7 +196,7 @@ _SCHEMA_STATEMENTS = (
     """,
     """
     WITH source AS (
-        SELECT t.runtime_key, t.id, t.pnl
+        SELECT t.runtime_key, t.id, t.pnl, t.pnl_known
         FROM paper_trades AS t
         WHERE NOT EXISTS (
             SELECT 1
@@ -194,7 +209,8 @@ _SCHEMA_STATEMENTS = (
             runtime_key,
             id,
             pnl,
-            SUM(pnl) OVER (
+            pnl_known,
+            SUM(CASE WHEN pnl_known THEN pnl ELSE 0.0 END) OVER (
                 PARTITION BY runtime_key
                 ORDER BY id
                 ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
@@ -206,6 +222,7 @@ _SCHEMA_STATEMENTS = (
             runtime_key,
             id,
             pnl,
+            pnl_known,
             cumulative_pnl,
             MAX(GREATEST(cumulative_pnl, 0.0)) OVER (
                 PARTITION BY runtime_key
@@ -218,9 +235,10 @@ _SCHEMA_STATEMENTS = (
         SELECT
             runtime_key,
             COUNT(*) AS trade_count,
-            SUM(pnl) AS realized_pnl,
-            SUM(CASE WHEN pnl > 0 THEN pnl ELSE 0 END) AS gross_profit,
-            -SUM(CASE WHEN pnl < 0 THEN pnl ELSE 0 END) AS gross_loss,
+            COUNT(*) FILTER (WHERE pnl_known) AS pnl_observations,
+            SUM(CASE WHEN pnl_known THEN pnl ELSE 0.0 END) AS realized_pnl,
+            SUM(CASE WHEN pnl_known AND pnl > 0 THEN pnl ELSE 0 END) AS gross_profit,
+            -SUM(CASE WHEN pnl_known AND pnl < 0 THEN pnl ELSE 0 END) AS gross_loss,
             MAX(running_peak) AS peak_realized_pnl,
             MAX(running_peak - cumulative_pnl) AS max_drawdown
         FROM peaks
@@ -229,6 +247,7 @@ _SCHEMA_STATEMENTS = (
     INSERT INTO paper_trade_performance (
         runtime_key,
         trade_count,
+        pnl_observations,
         realized_pnl,
         gross_profit,
         gross_loss,
@@ -238,6 +257,7 @@ _SCHEMA_STATEMENTS = (
     SELECT
         runtime_key,
         trade_count,
+        pnl_observations,
         realized_pnl,
         gross_profit,
         gross_loss,
@@ -250,8 +270,10 @@ _SCHEMA_STATEMENTS = (
 
 
 def _trade_event_key(trade: TradeSnapshot) -> str:
+    payload = asdict(trade)
+    payload.pop("pnl_known", None)
     canonical = json.dumps(
-        asdict(trade),
+        payload,
         sort_keys=True,
         separators=(",", ":"),
         default=str,
@@ -283,10 +305,10 @@ class PostgresPaperPersistence(PaperPersistence):
                 """
                 INSERT INTO paper_runtime_state (
                     runtime_key, cash, units, last_price, peak_equity,
-                    day_start_equity, last_processed, processed_bars,
-                    last_learning_cycle_bar, revision
+                    day_start_equity, average_entry_price, last_processed,
+                    processed_bars, last_learning_cycle_bar, revision
                 )
-                VALUES (%s, %s, 0, 0, %s, %s, NULL, 0, 0, 0)
+                VALUES (%s, %s, 0, 0, %s, %s, 0, NULL, 0, 0, 0)
                 ON CONFLICT (runtime_key) DO NOTHING
                 RETURNING runtime_key
                 """,
@@ -297,7 +319,8 @@ class PostgresPaperPersistence(PaperPersistence):
             cursor.execute(
                 """
                 SELECT cash, units, last_price, peak_equity, day_start_equity,
-                       last_processed, processed_bars, last_learning_cycle_bar, revision
+                       average_entry_price, last_processed, processed_bars,
+                       last_learning_cycle_bar, revision
                 FROM paper_runtime_state
                 WHERE runtime_key = %s
                 """,
@@ -323,6 +346,7 @@ class PostgresPaperPersistence(PaperPersistence):
             last_price=float(row["last_price"]),
             peak_equity=float(row["peak_equity"]),
             day_start_equity=float(row["day_start_equity"]),
+            average_entry_price=float(row["average_entry_price"]),
             last_processed=row["last_processed"],
             processed_bars=int(row["processed_bars"]),
             last_learning_cycle_bar=int(row["last_learning_cycle_bar"]),
@@ -360,9 +384,9 @@ class PostgresPaperPersistence(PaperPersistence):
                     """
                     INSERT INTO paper_trades (
                         runtime_key, event_key, timestamp_utc, symbol, side,
-                        quantity, price, status, pnl, confidence, strategy
+                        quantity, price, status, pnl, pnl_known, confidence, strategy
                     )
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     ON CONFLICT (runtime_key, event_key) DO NOTHING
                     RETURNING id
                     """,
@@ -376,18 +400,22 @@ class PostgresPaperPersistence(PaperPersistence):
                         trade.price,
                         trade.status,
                         trade.pnl,
+                        bool(trade.pnl_known),
                         trade.confidence,
                         trade.strategy,
                     ),
                 )
                 trade_inserted = cursor.fetchone() is not None
                 if trade_inserted:
-                    pnl = float(trade.pnl)
+                    pnl_known = bool(trade.pnl_known)
+                    pnl = float(trade.pnl) if pnl_known else 0.0
+                    pnl_observations = 1 if pnl_known else 0
                     cursor.execute(
                         """
                         INSERT INTO paper_trade_performance (
                             runtime_key,
                             trade_count,
+                            pnl_observations,
                             realized_pnl,
                             gross_profit,
                             gross_loss,
@@ -399,6 +427,7 @@ class PostgresPaperPersistence(PaperPersistence):
                             %s,
                             1,
                             %s,
+                            %s,
                             GREATEST(%s, 0.0),
                             GREATEST(-%s, 0.0),
                             GREATEST(%s, 0.0),
@@ -407,6 +436,10 @@ class PostgresPaperPersistence(PaperPersistence):
                         )
                         ON CONFLICT (runtime_key) DO UPDATE SET
                             trade_count = paper_trade_performance.trade_count + 1,
+                            pnl_observations = (
+                                paper_trade_performance.pnl_observations
+                                + EXCLUDED.pnl_observations
+                            ),
                             realized_pnl = (
                                 paper_trade_performance.realized_pnl
                                 + EXCLUDED.realized_pnl
@@ -438,7 +471,15 @@ class PostgresPaperPersistence(PaperPersistence):
                             ),
                             updated_at = now()
                         """,
-                        (runtime_key, pnl, pnl, pnl, pnl, pnl),
+                        (
+                            runtime_key,
+                            pnl_observations,
+                            pnl,
+                            pnl,
+                            pnl,
+                            pnl,
+                            pnl,
+                        ),
                     )
 
             cursor.execute(
@@ -508,6 +549,7 @@ class PostgresPaperPersistence(PaperPersistence):
                     last_price = %s,
                     peak_equity = %s,
                     day_start_equity = %s,
+                    average_entry_price = %s,
                     last_processed = %s,
                     processed_bars = %s,
                     last_learning_cycle_bar = %s,
@@ -522,6 +564,7 @@ class PostgresPaperPersistence(PaperPersistence):
                     state.last_price,
                     state.peak_equity,
                     state.day_start_equity,
+                    state.average_entry_price,
                     state.last_processed,
                     state.processed_bars,
                     state.last_learning_cycle_bar,
@@ -589,7 +632,7 @@ class PostgresPaperPersistence(PaperPersistence):
 
         query = f"""
             SELECT timestamp_utc, symbol, side, quantity, price, status,
-                   pnl, confidence, strategy
+                   pnl, pnl_known, confidence, strategy
             FROM paper_trades
             {where}
             {order}
@@ -609,6 +652,7 @@ class PostgresPaperPersistence(PaperPersistence):
                 price=float(row["price"]),
                 status=str(row["status"]),
                 pnl=float(row["pnl"]),
+                pnl_known=bool(row["pnl_known"]),
                 confidence=(
                     None if row["confidence"] is None else float(row["confidence"])
                 ),
@@ -623,6 +667,7 @@ class PostgresPaperPersistence(PaperPersistence):
                 """
                 SELECT
                     trade_count,
+                    pnl_observations,
                     realized_pnl,
                     gross_profit,
                     gross_loss,
@@ -636,6 +681,7 @@ class PostgresPaperPersistence(PaperPersistence):
         if row is None:
             return performance_metrics_from_totals(
                 trade_count=0,
+                pnl_observations=0,
                 realized_pnl=0.0,
                 gross_profit=0.0,
                 gross_loss=0.0,
@@ -643,6 +689,7 @@ class PostgresPaperPersistence(PaperPersistence):
             )
         return performance_metrics_from_totals(
             trade_count=int(row["trade_count"]),
+            pnl_observations=int(row["pnl_observations"]),
             realized_pnl=float(row["realized_pnl"]),
             gross_profit=float(row["gross_profit"]),
             gross_loss=float(row["gross_loss"]),

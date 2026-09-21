@@ -12,6 +12,7 @@ class RuntimeState:
     last_price: float
     peak_equity: float
     day_start_equity: float
+    average_entry_price: float = 0.0
     last_processed: str | None = None
     processed_bars: int = 0
     last_learning_cycle_bar: int = 0
