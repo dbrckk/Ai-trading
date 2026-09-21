@@ -77,6 +77,7 @@ class WalkForwardBacktester:
         rejected = 0
         folds = 0
         previous_units = broker.state.units
+        previous_execution_day = None
 
         purge = max(1, self.model_config.horizon_bars)
         start = self.config.min_train_bars + purge
@@ -109,6 +110,10 @@ class WalkForwardBacktester:
                 close_price = float(df.at[execution_idx, "Close"])
 
                 broker.mark(execution_price)
+                execution_day = pd.Timestamp(execution_idx).date()
+                if execution_day != previous_execution_day:
+                    broker.reset_day_start()
+                    previous_execution_day = execution_day
                 feature_row = features.loc[signal_idx, FEATURES]
                 regime = detect_regime(feature_row)
                 if self.config.use_ensemble:
