@@ -622,7 +622,7 @@ def render_dashboard(
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AI Trading — Live</title>
 <style>
-html.dashboard-refreshing, html.dashboard-refreshing body { overflow-anchor: none; }
+html.dashboard-refreshing, html.dashboard-refreshing body {{ overflow-anchor: none; }}
 :root{{color-scheme:dark;--bg:#030712;--bg-2:#07101d;--surface:rgba(12,21,37,.78);--surface-2:rgba(8,15,28,.86);--surface-3:rgba(17,29,49,.86);--border:rgba(148,163,184,.14);--border-strong:rgba(148,163,184,.22);--text:#f7f9ff;--muted:#8797b0;--muted-2:#617087;--blue:#79aaff;--cyan:#5de0df;--green:#62e6a4;--amber:#ffd273;--red:#ff838d;--violet:#a78bfa;--shadow:0 28px 70px rgba(0,0,0,.32);--shadow-soft:0 14px 36px rgba(0,0,0,.24)}}
 *{{box-sizing:border-box}}
 html{{scroll-behavior:smooth;background:var(--bg)}}
