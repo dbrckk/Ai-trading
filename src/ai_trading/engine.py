@@ -67,10 +67,15 @@ class TradingEngine:
         trades = 0
         decisions = 0
         previous_units = broker.state.units
+        previous_execution_day = None
 
         for idx in test_idx:
             price = float(df.at[idx, "Close"])
             broker.mark(price)
+            execution_day = pd.Timestamp(idx).date()
+            if execution_day != previous_execution_day:
+                broker.reset_day_start()
+                previous_execution_day = execution_day
 
             prediction = self.model.predict_one(x.loc[idx, FEATURES])
             snapshot = PortfolioSnapshot(

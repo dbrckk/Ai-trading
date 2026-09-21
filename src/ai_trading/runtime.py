@@ -279,7 +279,7 @@ class PaperAutonomousRuntime:
             else None
         )
         if previous_day != execution_day:
-            broker.state.day_start_equity = broker.state.equity
+            broker.reset_day_start()
         snapshot = PortfolioSnapshot(
             equity=broker.state.equity,
             peak_equity=broker.state.peak_equity,

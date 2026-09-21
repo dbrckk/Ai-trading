@@ -9,9 +9,21 @@ from .config import ModelConfig, RiskConfig
 from .ensemble import EnsembleDirectionModel
 from .features import FEATURES, make_features, make_labels
 from .model import OnlineDirectionModel
-from .performance import PerformanceMetrics, buy_and_hold_equity, compute_metrics
+from .performance import (
+    PerformanceMetrics,
+    buy_and_hold_equity,
+    compute_metrics,
+    infer_periods_per_year,
+)
 from .regime import detect_regime
 from .risk import PortfolioSnapshot, RiskEngine
+
+
+def _compound_step_returns(step_returns: list[float]) -> float:
+    growth = 1.0
+    for value in step_returns:
+        growth *= 1.0 + float(value)
+    return float(growth - 1.0)
 
 
 @dataclass(frozen=True)
@@ -19,10 +31,10 @@ class WalkForwardConfig:
     min_train_bars: int = 252
     test_window_bars: int = 63
     max_train_bars: int | None = 1000
-    periods_per_year: int = 252
+    periods_per_year: float | None = None
     use_ensemble: bool = False
 
-    def as_dict(self) -> dict[str, int | None]:
+    def as_dict(self) -> dict[str, int | float | bool | None]:
         return asdict(self)
 
 
@@ -71,12 +83,13 @@ class WalkForwardBacktester:
         broker = PaperBroker(self.risk_config)
         curve: dict[pd.Timestamp, float] = {}
         benchmark_prices: dict[pd.Timestamp, float] = {}
-        regime_equities: dict[str, list[float]] = {}
+        regime_step_returns: dict[str, list[float]] = {}
         trades = 0
         decisions = 0
         rejected = 0
         folds = 0
         previous_units = broker.state.units
+        previous_execution_day = None
 
         purge = max(1, self.model_config.horizon_bars)
         start = self.config.min_train_bars + purge
@@ -109,6 +122,11 @@ class WalkForwardBacktester:
                 close_price = float(df.at[execution_idx, "Close"])
 
                 broker.mark(execution_price)
+                execution_day = pd.Timestamp(execution_idx).date()
+                if execution_day != previous_execution_day:
+                    broker.reset_day_start()
+                    previous_execution_day = execution_day
+                equity_before_step = broker.state.equity
                 feature_row = features.loc[signal_idx, FEATURES]
                 regime = detect_regime(feature_row)
                 if self.config.use_ensemble:
@@ -135,7 +153,10 @@ class WalkForwardBacktester:
                 broker.mark(close_price)
                 curve[execution_idx] = broker.state.equity
                 benchmark_prices[execution_idx] = close_price
-                regime_equities.setdefault(regime.name, []).append(broker.state.equity)
+                if equity_before_step > 0:
+                    regime_step_returns.setdefault(regime.name, []).append(
+                        broker.state.equity / equity_before_step - 1.0
+                    )
 
             start = test_end
 
@@ -149,13 +170,19 @@ class WalkForwardBacktester:
             self.risk_config.starting_cash,
         )
 
-        metrics = compute_metrics(equity, self.config.periods_per_year)
-        benchmark_metrics = compute_metrics(benchmark, self.config.periods_per_year)
+        periods_per_year = (
+            self.config.periods_per_year
+            if self.config.periods_per_year is not None
+            else infer_periods_per_year(equity.index)
+        )
+        metrics = compute_metrics(equity, periods_per_year)
+        benchmark_metrics = compute_metrics(benchmark, periods_per_year)
 
-        regime_returns = {}
-        for name, values in regime_equities.items():
-            if len(values) >= 2 and values[0] != 0:
-                regime_returns[name] = float(values[-1] / values[0] - 1.0)
+        regime_returns = {
+            name: _compound_step_returns(values)
+            for name, values in regime_step_returns.items()
+            if values
+        }
 
         return BacktestReport(
             metrics=metrics,

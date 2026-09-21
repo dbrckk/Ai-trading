@@ -7,7 +7,7 @@ import pandas as pd
 from .config import ModelConfig, RiskConfig
 from .ensemble import EnsembleDirectionModel
 from .features import FEATURES, make_features, make_labels
-from .performance import PerformanceMetrics, compute_metrics
+from .performance import PerformanceMetrics, compute_metrics, infer_periods_per_year
 from .portfolio import AllocationConfig, inverse_volatility_weights, target_notionals
 from .portfolio_intelligence import PortfolioIntelligenceConfig, apply_portfolio_intelligence
 from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
@@ -163,7 +163,10 @@ class MultiAssetWalkForwardBacktester:
             raise ValueError("Insufficient multi-asset out-of-sample observations")
 
         return MultiAssetBacktestReport(
-            metrics=compute_metrics(equity_curve),
+            metrics=compute_metrics(
+                equity_curve,
+                infer_periods_per_year(equity_curve.index),
+            ),
             equity_curve=equity_curve,
             trades=trades,
             decisions=decisions,
