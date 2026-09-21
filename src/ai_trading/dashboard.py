@@ -1216,7 +1216,7 @@ def serve_dashboard(
 
         def _write_response_body(self, body: bytes) -> None:
             try:
-                self._write_response_body(body)
+                self.wfile.write(body)
             except (BrokenPipeError, ConnectionResetError):
                 return
 
