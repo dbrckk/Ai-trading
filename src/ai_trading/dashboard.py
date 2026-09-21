@@ -622,6 +622,7 @@ def render_dashboard(
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AI Trading — Live</title>
 <style>
+html.dashboard-refreshing, html.dashboard-refreshing body {{ overflow-anchor: none; }}
 :root{{color-scheme:dark;--bg:#030712;--bg-2:#07101d;--surface:rgba(12,21,37,.78);--surface-2:rgba(8,15,28,.86);--surface-3:rgba(17,29,49,.86);--border:rgba(148,163,184,.14);--border-strong:rgba(148,163,184,.22);--text:#f7f9ff;--muted:#8797b0;--muted-2:#617087;--blue:#79aaff;--cyan:#5de0df;--green:#62e6a4;--amber:#ffd273;--red:#ff838d;--violet:#a78bfa;--shadow:0 28px 70px rgba(0,0,0,.32);--shadow-soft:0 14px 36px rgba(0,0,0,.24)}}
 *{{box-sizing:border-box}}
 html{{scroll-behavior:smooth;background:var(--bg)}}
@@ -886,35 +887,95 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
     window.addEventListener(eventName, markInteraction, {{passive: true}});
   }}
 
+  function captureViewportAnchor() {{
+    const candidates = Array.from(document.querySelectorAll("[id], .market-card, .section, .hero-kpi"));
+    let best = null;
+    let bestDistance = Number.POSITIVE_INFINITY;
+
+    for (const element of candidates) {{
+      const rect = element.getBoundingClientRect();
+      if (rect.bottom <= 0 || rect.top >= window.innerHeight) continue;
+      const distance = Math.abs(rect.top);
+      if (distance < bestDistance) {{
+        best = element;
+        bestDistance = distance;
+      }}
+    }}
+
+    if (!best) return null;
+
+    const id = best.id || null;
+    const marketLabel = best.classList.contains("market-card")
+      ? best.querySelector(".market-card-head h3")?.textContent?.trim() || null
+      : null;
+    const sectionLabel = best.classList.contains("section")
+      ? best.querySelector(".section-head h2")?.textContent?.trim() || null
+      : null;
+
+    return {{
+      id,
+      marketLabel,
+      sectionLabel,
+      top: best.getBoundingClientRect().top,
+    }};
+  }}
+
+  function restoreViewportAnchor(anchor) {{
+    if (!anchor) return;
+
+    let element = null;
+    if (anchor.id) {{
+      element = document.getElementById(anchor.id);
+    }}
+    if (!element && anchor.marketLabel) {{
+      element = Array.from(document.querySelectorAll(".market-card")).find(
+        (card) => card.querySelector(".market-card-head h3")?.textContent?.trim() === anchor.marketLabel
+      ) || null;
+    }}
+    if (!element && anchor.sectionLabel) {{
+      element = Array.from(document.querySelectorAll(".section")).find(
+        (section) => section.querySelector(".section-head h2")?.textContent?.trim() === anchor.sectionLabel
+      ) || null;
+    }}
+    if (!element) return;
+
+    const delta = element.getBoundingClientRect().top - anchor.top;
+    if (Math.abs(delta) > 0.5) {{
+      window.scrollBy({{left: 0, top: delta, behavior: "auto"}});
+    }}
+  }}
+
   async function refreshDashboard() {{
     if (refreshing || document.hidden) return;
     if (Date.now() - lastInteractionAt < INTERACTION_GRACE_MS) return;
 
     refreshing = true;
-    const scrollX = window.scrollX;
-    const scrollY = window.scrollY;
+    const anchor = captureViewportAnchor();
+    document.documentElement.classList.add("dashboard-refreshing");
 
     try {{
       const response = await fetch(window.location.href, {{
         cache: "no-store",
         headers: {{"X-Dashboard-Refresh": "1"}},
       }});
-      if (!response.ok) return;
+      if (!response.ok) throw new Error("dashboard refresh failed");
 
       const source = await response.text();
       const nextDocument = new DOMParser().parseFromString(source, "text/html");
       const currentCard = document.querySelector(".card");
       const nextCard = nextDocument.querySelector(".card");
-      if (!currentCard || !nextCard) return;
+      if (!currentCard || !nextCard) throw new Error("dashboard refresh markup missing");
 
       currentCard.replaceChildren(
         ...Array.from(nextCard.childNodes).map((node) => document.importNode(node, true))
       );
 
       requestAnimationFrame(() => {{
-        window.scrollTo({{left: scrollX, top: scrollY, behavior: "instant"}});
+        restoreViewportAnchor(anchor);
+        document.documentElement.classList.remove("dashboard-refreshing");
       }});
     }} catch (_) {{
+      document.documentElement.classList.remove("dashboard-refreshing");
       // Keep the current dashboard visible if one refresh attempt fails.
     }} finally {{
       refreshing = false;
