@@ -4,6 +4,7 @@ import html
 import json
 import os
 from collections.abc import Callable
+from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -25,12 +26,16 @@ from .paper_cycle_service import (
 )
 from .paper_readiness_evidence import bootstrap_positive_probability
 from .performance_metrics import calculate_performance_metrics
-from .persistence import PaperPersistence
+from .persistence import PaperPersistence, SchedulerDelivery
 from .persistence_factory import build_paper_persistence
 from .readiness import ReadinessCheck, ReadinessPolicy, ReadinessReport, evaluate_readiness
 from .runtime_state import RuntimeStateStore
 from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore, runtime_status_snapshot
-from .scheduler_endpoint import handle_scheduler_request, scheduler_telemetry_payload
+from .scheduler_endpoint import (
+    handle_scheduler_request,
+    scheduler_delivery_overview,
+    scheduler_telemetry_payload,
+)
 from .trade_journal import TradeJournal
 
 _STORAGE_ERROR_STATUS: dict[str, object] = {
@@ -1105,6 +1110,19 @@ def serve_dashboard(
                     )
                 )
                 return
+            if path == "/api/scheduler":
+                try:
+                    deliveries = backend.list_scheduler_deliveries(limit=20)
+                    self._send_json(scheduler_delivery_overview(deliveries))
+                except Exception:
+                    self._send_json(
+                        {
+                            "storage_healthy": False,
+                            "error": "scheduler telemetry unavailable",
+                        },
+                        status_code=503,
+                    )
+                return
             if path == "/api/status":
                 self._send_json(load_status_snapshot())
                 return
@@ -1163,6 +1181,32 @@ def serve_dashboard(
                 response,
                 self.headers.get("X-Scheduler-Source"),
             )
+            try:
+                backend.record_scheduler_delivery(
+                    SchedulerDelivery(
+                        timestamp_utc=datetime.now(UTC).isoformat(),
+                        source=str(telemetry["source"]),
+                        status_code=int(telemetry["status_code"]),
+                        ok=bool(telemetry["ok"]),
+                        processed=(
+                            int(telemetry["processed"])
+                            if isinstance(telemetry.get("processed"), int)
+                            and not isinstance(telemetry.get("processed"), bool)
+                            else None
+                        ),
+                    )
+                )
+            except Exception:
+                print(
+                    json.dumps(
+                        {
+                            "event": "scheduler_delivery_persist_failed",
+                            "source": telemetry["source"],
+                        },
+                        sort_keys=True,
+                    ),
+                    flush=True,
+                )
             print(json.dumps(telemetry, sort_keys=True), flush=True)
             self._send_json(
                 response.payload,
