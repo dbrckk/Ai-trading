@@ -696,6 +696,99 @@ class PostgresPaperPersistence(PaperPersistence):
             max_drawdown=float(row["max_drawdown"]),
         )
 
+    def load_portfolio_trade_performance(
+        self,
+        runtime_keys: tuple[str, ...],
+    ) -> TradePerformanceMetrics:
+        if not runtime_keys:
+            return performance_metrics_from_totals(
+                trade_count=0,
+                pnl_observations=0,
+                realized_pnl=0.0,
+                gross_profit=0.0,
+                gross_loss=0.0,
+                max_drawdown=0.0,
+            )
+
+        with self._connect() as connection, connection.cursor() as cursor:
+            cursor.execute(
+                """
+                WITH source AS (
+                    SELECT id, pnl, pnl_known
+                    FROM paper_trades
+                    WHERE runtime_key = ANY(%s)
+                ),
+                curve AS (
+                    SELECT
+                        id,
+                        pnl,
+                        pnl_known,
+                        SUM(
+                            CASE WHEN pnl_known THEN pnl ELSE 0.0 END
+                        ) OVER (
+                            ORDER BY id
+                            ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+                        ) AS cumulative_pnl
+                    FROM source
+                ),
+                peaks AS (
+                    SELECT
+                        id,
+                        pnl,
+                        pnl_known,
+                        cumulative_pnl,
+                        MAX(GREATEST(cumulative_pnl, 0.0)) OVER (
+                            ORDER BY id
+                            ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+                        ) AS running_peak
+                    FROM curve
+                )
+                SELECT
+                    COUNT(*) AS trade_count,
+                    COUNT(*) FILTER (WHERE pnl_known) AS pnl_observations,
+                    COALESCE(
+                        SUM(CASE WHEN pnl_known THEN pnl ELSE 0.0 END),
+                        0.0
+                    ) AS realized_pnl,
+                    COALESCE(
+                        SUM(
+                            CASE
+                                WHEN pnl_known AND pnl > 0 THEN pnl
+                                ELSE 0.0
+                            END
+                        ),
+                        0.0
+                    ) AS gross_profit,
+                    COALESCE(
+                        -SUM(
+                            CASE
+                                WHEN pnl_known AND pnl < 0 THEN pnl
+                                ELSE 0.0
+                            END
+                        ),
+                        0.0
+                    ) AS gross_loss,
+                    COALESCE(
+                        MAX(running_peak - cumulative_pnl),
+                        0.0
+                    ) AS max_drawdown
+                FROM peaks
+                """,
+                (list(runtime_keys),),
+            )
+            row = cursor.fetchone()
+
+        if row is None:
+            raise RuntimeError("portfolio performance query returned no row")
+        return performance_metrics_from_totals(
+            trade_count=int(row["trade_count"]),
+            pnl_observations=int(row["pnl_observations"]),
+            realized_pnl=float(row["realized_pnl"]),
+            gross_profit=float(row["gross_profit"]),
+            gross_loss=float(row["gross_loss"]),
+            max_drawdown=float(row["max_drawdown"]),
+        )
+
     def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]:
         with self._connect() as connection, connection.cursor() as cursor:
             cursor.execute(

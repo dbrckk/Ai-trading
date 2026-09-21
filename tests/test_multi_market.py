@@ -91,6 +91,24 @@ class FakeMultiPersistence:
         )
 
 
+    def load_portfolio_trade_performance(self, runtime_keys: tuple[str, ...]):
+        assert runtime_keys == (
+            "paper:GC=F:5m:online-river:v1",
+            "paper:^GDAXI:5m:online-river:v1",
+            "paper:BTC-USD:5m:online-river:v1",
+        )
+        from ai_trading.performance_metrics import performance_metrics_from_totals
+
+        return performance_metrics_from_totals(
+            trade_count=600,
+            pnl_observations=300,
+            realized_pnl=150.0,
+            gross_profit=500.0,
+            gross_loss=350.0,
+            max_drawdown=100.0,
+        )
+
+
 def test_configured_markets_default_to_gold(monkeypatch) -> None:
     monkeypatch.delenv("AI_TRADING_MARKETS", raising=False)
 
@@ -178,6 +196,19 @@ def test_multi_market_overview_scales_normalized_sleeves_to_100k() -> None:
     assert snapshot["portfolio"]["closed_markets"] == 0
     assert snapshot["portfolio"]["catching_up_markets"] == 0
     assert snapshot["portfolio"]["provider_gap_markets"] == 0
+    assert snapshot["portfolio"]["performance"] == {
+        "available": True,
+        "trade_count": 600,
+        "pnl_observations": 300,
+        "pnl_coverage": 0.5,
+        "realized_pnl": 150.0,
+        "average_pnl": 0.5,
+        "gross_profit": 500.0,
+        "gross_loss": 350.0,
+        "profit_factor": pytest.approx(500.0 / 350.0),
+        "profit_factor_infinite": False,
+        "max_drawdown": 100.0,
+    }
     assert [row["label"] for row in snapshot["markets"]] == [
         "Gold",
         "DAX",
@@ -246,6 +277,10 @@ def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
     assert "restoreViewportAnchor" in page
     assert "overflow-anchor: none" in page
     assert "window.scrollTo" not in page
+    assert "Performance window: full persisted cross-market history" in page
+    assert '<small>Trades</small><strong>600</strong>' in page
+    assert '<small>PnL coverage</small><strong>300 / 600</strong>' in page
+    assert '<small>Realized PnL</small><strong>150.00</strong>' in page
 
 
 
