@@ -45,29 +45,34 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T16:48:24Z
+Generated: 2026-09-21T17:32:12Z
 
 ### Git
 - Branch: `main`
-- Head: `f1df4aabca7c`
-- Commit date: 2026-09-21T18:48:14+02:00
-- Commit: feat: support per-market paper execution costs (#90)
-- Tracked files: 490
+- Head: `bf094e8ca9d5`
+- Commit date: 2026-09-21T19:31:47+02:00
+- Commit: feat: separate dashboard liveness and readiness probes (#93)
+- Tracked files: 492
 
 ### Recently changed files
 - `README.md`
+- `src/ai_trading/dashboard.py`
+- `tests/test_dashboard_persistence.py`
+- `src/ai_trading/backtest.py`
+- `src/ai_trading/mtf_parameter_benchmark.py`
+- `src/ai_trading/multi_market.py`
+- `src/ai_trading/multiasset_backtest.py`
+- `tests/test_multi_market.py`
+- `tests/test_research_config_validation.py`
 - `src/ai_trading/execution_costs.py`
 - `src/ai_trading/runtime.py`
 - `tests/test_execution_costs.py`
 - `src/ai_trading/broker.py`
-- `src/ai_trading/multiasset_backtest.py`
 - `src/ai_trading/multiasset_runtime.py`
 - `src/ai_trading/paper_execution.py`
 - `tests/test_paper_execution.py`
 - `src/ai_trading/multiasset_market_context.py`
 - `tests/test_multiasset_market_context.py`
-- `src/ai_trading/dashboard.py`
-- `tests/test_dashboard_persistence.py`
 
 ### Project signals
 - `pyproject.toml`

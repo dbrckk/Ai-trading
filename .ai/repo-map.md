@@ -371,6 +371,7 @@ tests/
   test_reliability.py
   test_replay.py
   test_reproducibility.py
+  test_research_config_validation.py
   test_resilience_stability.py
   test_resilience.py
   test_risk_governor.py
@@ -1089,6 +1090,8 @@ test_window_bars: int = 63
 max_train_bars: int | None = 1000
 periods_per_year: float | None = None
 use_ensemble: bool = False
+⋮----
+def __post_init__(self) -> None
 ⋮----
 def as_dict(self) -> dict[str, int | float | bool | None]
 ⋮----
@@ -2466,6 +2469,7 @@ path = urlsplit(self.path).path.rstrip("/")
 deliveries = backend.list_scheduler_deliveries(limit=20)
 ⋮----
 snapshot = load_status_snapshot()
+storage_healthy = snapshot.get("storage_healthy") is not False
 ⋮----
 payload = render_dashboard(
 ⋮----
@@ -4044,6 +4048,8 @@ atr_multiplier: float
 max_train_rows: int
 min_confidence: float
 ⋮----
+def __post_init__(self) -> None
+⋮----
 @property
     def horizon_minutes(self) -> int
 ⋮----
@@ -4370,6 +4376,14 @@ class MarketSpec
 symbol: str
 label: str
 allocation: float
+⋮----
+def __post_init__(self) -> None
+⋮----
+def _validate_market_bundle(markets: tuple[MarketSpec, ...]) -> None
+⋮----
+symbols = tuple(market.symbol for market in markets)
+⋮----
+total_allocation = sum(market.allocation for market in markets)
 ⋮----
 DEFAULT_MARKETS: tuple[MarketSpec, ...] = (
 ⋮----
@@ -8826,9 +8840,13 @@ page = render_dashboard(
 ⋮----
 def test_dashboard_storage_failure_is_sanitized(tmp_path) -> None
 ⋮----
-def test_status_endpoints_fail_closed_without_leaking_storage_details() -> None
+def test_liveness_stays_healthy_when_storage_is_unavailable() -> None
 ⋮----
 port = _start_failure_dashboard()
+⋮----
+def test_readiness_fails_when_durable_storage_is_unavailable() -> None
+⋮----
+def test_status_endpoints_fail_closed_without_leaking_storage_details() -> None
 ⋮----
 status_payload = json.loads(status_body)
 health_payload = json.loads(health_body)
@@ -9893,6 +9911,14 @@ def stale_status(runtime_key: str) -> HostedRuntimeStatus
 status = original(runtime_key)
 ⋮----
 backend.load_runtime_status = stale_status  # type: ignore[method-assign]
+⋮----
+def test_market_spec_rejects_invalid_fields(spec) -> None
+⋮----
+def test_multi_market_cycle_rejects_duplicate_symbols(monkeypatch) -> None
+⋮----
+markets = (
+⋮----
+def test_multi_market_cycle_rejects_invalid_allocation_sum() -> None
 ````
 
 ## File: tests/test_multi_period_promotion.py
@@ -11012,6 +11038,17 @@ result = verify_quantitative_reproducibility(artifact(), modified)
 def test_reproducibility_rejects_provider_change() -> None
 ⋮----
 def test_reproducibility_rejects_config_change() -> None
+````
+
+## File: tests/test_research_config_validation.py
+````python
+def test_invalid_research_configuration_fails_closed(factory) -> None
+⋮----
+def test_valid_research_configurations_remain_supported() -> None
+⋮----
+walk = WalkForwardConfig(
+mtf = MTFBenchmarkConfig(
+multi = MultiAssetWalkForwardBacktester(
 ````
 
 ## File: tests/test_resilience_stability.py
@@ -12192,6 +12229,8 @@ https://ai-trading-dashboard-qyr2.onrender.com/api/overview
 https://ai-trading-dashboard-qyr2.onrender.com/api/markets
 https://ai-trading-dashboard-qyr2.onrender.com/api/scheduler
 https://ai-trading-dashboard-qyr2.onrender.com/api/status
+https://ai-trading-dashboard-qyr2.onrender.com/livez
+https://ai-trading-dashboard-qyr2.onrender.com/readyz
 https://ai-trading-dashboard-qyr2.onrender.com/healthz
 ```
 
@@ -12208,6 +12247,8 @@ AI_TRADING_HOSTED_INTERVAL=5m
 `AI_TRADING_EXTERNAL_SCHEDULER=1` explicitly suppresses the legacy in-process daemon worker. Render serves the dashboard and the authenticated cycle endpoint while external schedulers own delivery. The dashboard reads the shared durable state and exposes the last processed bar, processed-bar count, per-market freshness and durable scheduler evidence without exposing storage connection details.
 
 The scheduler verification endpoint reports recent sanitized deliveries, the current consecutive Cloudflare-success count and whether the three-delivery verification threshold has been reached. A successful HTTP trigger with zero newly processed bars is still a valid delivery: duplicate/overlapping invocations are intentionally benign and durable runtime revision protection prevents stale writers from overwriting newer state.
+
+Health probes intentionally have separate semantics: `/livez` checks only that the HTTP process is alive, `/readyz` returns HTTP 503 when durable storage is unavailable, and `/healthz` remains the backwards-compatible detailed runtime health view. Market/provider errors therefore do not masquerade as web-process failures.
 
 ## Walk-forward methodology
 

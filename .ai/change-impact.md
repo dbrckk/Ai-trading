@@ -1,13 +1,12 @@
 # Change impact
 
-Base: 88ad342c4c11e4b7880108dd8a864244bac87e12
-Head: f1df4aabca7c1043b90954e591d567f5f38f0dda
+Base: 22e2a96befbdb81d2f52d9658111321dcd0fcc62
+Head: bf094e8ca9d55bd9ceb77f1fecbe354136f4f81b
 
 ## Changed files
 - M README.md
-- A src/ai_trading/execution_costs.py
-- M src/ai_trading/runtime.py
-- A tests/test_execution_costs.py
+- M src/ai_trading/dashboard.py
+- M tests/test_dashboard_persistence.py
 
 ## Affected areas
 - (root)
@@ -15,8 +14,7 @@ Head: f1df4aabca7c1043b90954e591d567f5f38f0dda
 - tests
 
 ## Related test candidates
-- tests/test_execution_costs.py
-- tests/test_runtime.py
+- tests/test_dashboard.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

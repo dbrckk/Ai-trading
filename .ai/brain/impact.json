@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "5b9858aaeb928322752e925785e5a242ee2d675f",
-  "head": "f1df4aabca7c1043b90954e591d567f5f38f0dda",
+  "base": "f1df4aabca7c1043b90954e591d567f5f38f0dda",
+  "head": "bf094e8ca9d55bd9ceb77f1fecbe354136f4f81b",
   "index_mode": "incremental",
   "changed_files": [
     {
@@ -10,40 +10,143 @@
       "status": "M"
     },
     {
-      "path": "src/ai_trading/execution_costs.py",
-      "status": "A"
-    },
-    {
-      "path": "src/ai_trading/runtime.py",
+      "path": "src/ai_trading/backtest.py",
       "status": "M"
     },
     {
-      "path": "tests/test_execution_costs.py",
+      "path": "src/ai_trading/dashboard.py",
+      "status": "M"
+    },
+    {
+      "path": "src/ai_trading/mtf_parameter_benchmark.py",
+      "status": "M"
+    },
+    {
+      "path": "src/ai_trading/multi_market.py",
+      "status": "M"
+    },
+    {
+      "path": "src/ai_trading/multiasset_backtest.py",
+      "status": "M"
+    },
+    {
+      "path": "tests/test_dashboard_persistence.py",
+      "status": "M"
+    },
+    {
+      "path": "tests/test_multi_market.py",
+      "status": "M"
+    },
+    {
+      "path": "tests/test_research_config_validation.py",
       "status": "A"
     }
   ],
   "changed_source_files": [
-    "src/ai_trading/execution_costs.py",
-    "src/ai_trading/runtime.py",
-    "tests/test_execution_costs.py"
+    "src/ai_trading/backtest.py",
+    "src/ai_trading/dashboard.py",
+    "src/ai_trading/mtf_parameter_benchmark.py",
+    "src/ai_trading/multi_market.py",
+    "src/ai_trading/multiasset_backtest.py",
+    "tests/test_dashboard_persistence.py",
+    "tests/test_multi_market.py",
+    "tests/test_research_config_validation.py"
   ],
   "impacted_files": [
+    "src/ai_trading/backtest.py",
+    "src/ai_trading/benchmark_gate.py",
     "src/ai_trading/cli.py",
-    "src/ai_trading/execution_costs.py",
-    "src/ai_trading/hosted_runtime.py",
+    "src/ai_trading/continuous.py",
+    "src/ai_trading/cost_stress.py",
+    "src/ai_trading/dashboard.py",
+    "src/ai_trading/mtf_parameter_benchmark.py",
+    "src/ai_trading/multi_market.py",
+    "src/ai_trading/multiasset_backtest.py",
     "src/ai_trading/orchestrator.py",
-    "src/ai_trading/paper_cycle.py",
-    "src/ai_trading/runtime.py",
-    "tests/test_execution_costs.py",
-    "tests/test_orchestrator_trigger.py",
-    "tests/test_paper_cycle.py",
-    "tests/test_paper_cycle_materialized_fresh.py",
-    "tests/test_paper_cycle_postgres.py",
-    "tests/test_runtime.py",
-    "tests/test_runtime_persistence.py",
-    "tests/test_runtime_targeted_step.py"
+    "src/ai_trading/parameter_sensitivity.py",
+    "src/ai_trading/regime_gate.py",
+    "src/ai_trading/tuning.py",
+    "tests/test_backtest.py",
+    "tests/test_backtest_ensemble.py",
+    "tests/test_cost_stress.py",
+    "tests/test_dashboard.py",
+    "tests/test_dashboard_engine_status.py",
+    "tests/test_dashboard_health.py",
+    "tests/test_dashboard_overview.py",
+    "tests/test_dashboard_persistence.py",
+    "tests/test_mtf_parameter_benchmark.py",
+    "tests/test_multi_market.py",
+    "tests/test_multiasset_backtest.py",
+    "tests/test_research_config_validation.py",
+    "tests/test_scheduler_endpoint.py"
   ],
   "impacted_symbols": [
+    {
+      "name": "_compound_step_returns",
+      "kind": "function",
+      "file": "src/ai_trading/backtest.py",
+      "line": 22
+    },
+    {
+      "name": "WalkForwardConfig",
+      "kind": "class",
+      "file": "src/ai_trading/backtest.py",
+      "line": 30
+    },
+    {
+      "name": "__post_init__",
+      "kind": "function",
+      "file": "src/ai_trading/backtest.py",
+      "line": 37
+    },
+    {
+      "name": "as_dict",
+      "kind": "function",
+      "file": "src/ai_trading/backtest.py",
+      "line": 47
+    },
+    {
+      "name": "BacktestReport",
+      "kind": "class",
+      "file": "src/ai_trading/backtest.py",
+      "line": 52
+    },
+    {
+      "name": "WalkForwardBacktester",
+      "kind": "class",
+      "file": "src/ai_trading/backtest.py",
+      "line": 65
+    },
+    {
+      "name": "__init__",
+      "kind": "function",
+      "file": "src/ai_trading/backtest.py",
+      "line": 68
+    },
+    {
+      "name": "run",
+      "kind": "function",
+      "file": "src/ai_trading/backtest.py",
+      "line": 80
+    },
+    {
+      "name": "BenchmarkGatePolicy",
+      "kind": "class",
+      "file": "src/ai_trading/benchmark_gate.py",
+      "line": 9
+    },
+    {
+      "name": "BenchmarkGateResult",
+      "kind": "class",
+      "file": "src/ai_trading/benchmark_gate.py",
+      "line": 20
+    },
+    {
+      "name": "evaluate_benchmark_gate",
+      "kind": "function",
+      "file": "src/ai_trading/benchmark_gate.py",
+      "line": 25
+    },
     {
       "name": "self_test",
       "kind": "function",
@@ -297,52 +400,316 @@
       "line": 1882
     },
     {
-      "name": "risk_config_for_symbol",
-      "kind": "function",
-      "file": "src/ai_trading/execution_costs.py",
-      "line": 13
-    },
-    {
-      "name": "HostedPaperSettings",
+      "name": "ContinuousCycleResult",
       "kind": "class",
-      "file": "src/ai_trading/hosted_runtime.py",
-      "line": 19
+      "file": "src/ai_trading/continuous.py",
+      "line": 21
     },
     {
-      "name": "runtime_key",
+      "name": "run_learning_cycle",
       "kind": "function",
-      "file": "src/ai_trading/hosted_runtime.py",
+      "file": "src/ai_trading/continuous.py",
       "line": 30
     },
     {
-      "name": "from_env",
+      "name": "CostStressScenario",
+      "kind": "class",
+      "file": "src/ai_trading/cost_stress.py",
+      "line": 12
+    },
+    {
+      "name": "CostStressResult",
+      "kind": "class",
+      "file": "src/ai_trading/cost_stress.py",
+      "line": 19
+    },
+    {
+      "name": "run_cost_stress",
       "kind": "function",
-      "file": "src/ai_trading/hosted_runtime.py",
+      "file": "src/ai_trading/cost_stress.py",
+      "line": 35
+    },
+    {
+      "name": "_result",
+      "kind": "function",
+      "file": "src/ai_trading/cost_stress.py",
+      "line": 57
+    },
+    {
+      "name": "risk_config_for_scenario",
+      "kind": "function",
+      "file": "src/ai_trading/cost_stress.py",
+      "line": 68
+    },
+    {
+      "name": "_public_runtime_snapshot",
+      "kind": "function",
+      "file": "src/ai_trading/dashboard.py",
+      "line": 49
+    },
+    {
+      "name": "_display_money",
+      "kind": "function",
+      "file": "src/ai_trading/dashboard.py",
+      "line": 56
+    },
+    {
+      "name": "_display_units",
+      "kind": "function",
+      "file": "src/ai_trading/dashboard.py",
+      "line": 60
+    },
+    {
+      "name": "_display_ratio",
+      "kind": "function",
+      "file": "src/ai_trading/dashboard.py",
+      "line": 64
+    },
+    {
+      "name": "_equity_chart_svg",
+      "kind": "function",
+      "file": "src/ai_trading/dashboard.py",
+      "line": 72
+    },
+    {
+      "name": "_readiness_number",
+      "kind": "function",
+      "file": "src/ai_trading/dashboard.py",
+      "line": 112
+    },
+    {
+      "name": "_readiness_panel",
+      "kind": "function",
+      "file": "src/ai_trading/dashboard.py",
+      "line": 120
+    },
+    {
+      "name": "render_dashboard",
+      "kind": "function",
+      "file": "src/ai_trading/dashboard.py",
+      "line": 141
+    },
+    {
+      "name": "serve_dashboard",
+      "kind": "function",
+      "file": "src/ai_trading/dashboard.py",
+      "line": 1047
+    },
+    {
+      "name": "execute_paper_cycle",
+      "kind": "function",
+      "file": "src/ai_trading/dashboard.py",
+      "line": 1098
+    },
+    {
+      "name": "load_status_snapshot",
+      "kind": "function",
+      "file": "src/ai_trading/dashboard.py",
+      "line": 1122
+    },
+    {
+      "name": "Handler",
+      "kind": "class",
+      "file": "src/ai_trading/dashboard.py",
+      "line": 1128
+    },
+    {
+      "name": "end_headers",
+      "kind": "function",
+      "file": "src/ai_trading/dashboard.py",
+      "line": 1132
+    },
+    {
+      "name": "_send_json",
+      "kind": "function",
+      "file": "src/ai_trading/dashboard.py",
+      "line": 1149
+    },
+    {
+      "name": "do_GET",
+      "kind": "function",
+      "file": "src/ai_trading/dashboard.py",
+      "line": 1163
+    },
+    {
+      "name": "do_POST",
+      "kind": "function",
+      "file": "src/ai_trading/dashboard.py",
+      "line": 1261
+    },
+    {
+      "name": "log_message",
+      "kind": "function",
+      "file": "src/ai_trading/dashboard.py",
+      "line": 1307
+    },
+    {
+      "name": "MTFBenchmarkConfig",
+      "kind": "class",
+      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "line": 27
+    },
+    {
+      "name": "__post_init__",
+      "kind": "function",
+      "file": "src/ai_trading/mtf_parameter_benchmark.py",
       "line": 34
     },
     {
-      "name": "_now_utc",
+      "name": "horizon_minutes",
       "kind": "function",
-      "file": "src/ai_trading/hosted_runtime.py",
-      "line": 78
+      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "line": 47
     },
     {
-      "name": "run_hosted_paper_loop",
+      "name": "name",
       "kind": "function",
-      "file": "src/ai_trading/hosted_runtime.py",
-      "line": 82
+      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "line": 51
     },
     {
-      "name": "report_iteration",
-      "kind": "function",
-      "file": "src/ai_trading/hosted_runtime.py",
-      "line": 113
+      "name": "MarketBenchmarkResult",
+      "kind": "class",
+      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "line": 63
     },
     {
-      "name": "start_hosted_paper_runtime",
+      "name": "AggregateBenchmarkResult",
+      "kind": "class",
+      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "line": 85
+    },
+    {
+      "name": "default_benchmark_grid",
       "kind": "function",
-      "file": "src/ai_trading/hosted_runtime.py",
-      "line": 190
+      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "line": 96
+    },
+    {
+      "name": "btc_focused_benchmark_grid",
+      "kind": "function",
+      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "line": 119
+    },
+    {
+      "name": "market_selections",
+      "kind": "function",
+      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "line": 137
+    },
+    {
+      "name": "_macro_recall",
+      "kind": "function",
+      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "line": 181
+    },
+    {
+      "name": "_selection_score",
+      "kind": "function",
+      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "line": 191
+    },
+    {
+      "name": "_fold_test_windows",
+      "kind": "function",
+      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "line": 210
+    },
+    {
+      "name": "evaluate_market_config",
+      "kind": "function",
+      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "line": 238
+    },
+    {
+      "name": "run_parameter_benchmark",
+      "kind": "function",
+      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "line": 368
+    },
+    {
+      "name": "benchmark_payload",
+      "kind": "function",
+      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "line": 430
+    },
+    {
+      "name": "write_benchmark_report",
+      "kind": "function",
+      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "line": 469
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "line": 540
+    },
+    {
+      "name": "MarketSpec",
+      "kind": "class",
+      "file": "src/ai_trading/multi_market.py",
+      "line": 25
+    },
+    {
+      "name": "__post_init__",
+      "kind": "function",
+      "file": "src/ai_trading/multi_market.py",
+      "line": 30
+    },
+    {
+      "name": "_validate_market_bundle",
+      "kind": "function",
+      "file": "src/ai_trading/multi_market.py",
+      "line": 39
+    },
+    {
+      "name": "configured_markets_from_env",
+      "kind": "function",
+      "file": "src/ai_trading/multi_market.py",
+      "line": 57
+    },
+    {
+      "name": "run_multi_market_paper_cycle",
+      "kind": "function",
+      "file": "src/ai_trading/multi_market.py",
+      "line": 81
+    },
+    {
+      "name": "run_market",
+      "kind": "function",
+      "file": "src/ai_trading/multi_market.py",
+      "line": 111
+    },
+    {
+      "name": "build_multi_market_overview",
+      "kind": "function",
+      "file": "src/ai_trading/multi_market.py",
+      "line": 175
+    },
+    {
+      "name": "MultiAssetBacktestReport",
+      "kind": "class",
+      "file": "src/ai_trading/multiasset_backtest.py",
+      "line": 19
+    },
+    {
+      "name": "MultiAssetWalkForwardBacktester",
+      "kind": "class",
+      "file": "src/ai_trading/multiasset_backtest.py",
+      "line": 27
+    },
+    {
+      "name": "__init__",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_backtest.py",
+      "line": 28
+    },
+    {
+      "name": "run",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_backtest.py",
+      "line": 52
     },
     {
       "name": "OrchestrationResult",
@@ -375,596 +742,1023 @@
       "line": 71
     },
     {
-      "name": "_utc_timestamp",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 23
-    },
-    {
-      "name": "_is_mtf_evaluation_boundary",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 30
-    },
-    {
-      "name": "PaperCycleResult",
+      "name": "SensitivityScenario",
       "kind": "class",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 46
+      "file": "src/ai_trading/parameter_sensitivity.py",
+      "line": 11
     },
     {
-      "name": "PaperCycleRunner",
+      "name": "SensitivityResult",
       "kind": "class",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 55
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 58
-    },
-    {
-      "name": "_is_logically_fresh",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 70
-    },
-    {
-      "name": "_pending_targets",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 83
-    },
-    {
-      "name": "run_once",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 148
-    },
-    {
-      "name": "RuntimeStepResult",
-      "kind": "class",
-      "file": "src/ai_trading/runtime.py",
-      "line": 28
-    },
-    {
-      "name": "PreparedRuntimeMarket",
-      "kind": "class",
-      "file": "src/ai_trading/runtime.py",
-      "line": 42
-    },
-    {
-      "name": "PaperAutonomousRuntime",
-      "kind": "class",
-      "file": "src/ai_trading/runtime.py",
-      "line": 50
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 57
-    },
-    {
-      "name": "_broker_from_state",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 95
-    },
-    {
-      "name": "_state_from_broker",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 105
-    },
-    {
-      "name": "_prepare_market_features",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 123
-    },
-    {
-      "name": "_eligible_execution_indices",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 144
-    },
-    {
-      "name": "prepare_market",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 148
-    },
-    {
-      "name": "step",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 163
-    },
-    {
-      "name": "step_at",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 169
-    },
-    {
-      "name": "step_prepared",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 187
-    },
-    {
-      "name": "_step_prepared_locked",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 206
-    },
-    {
-      "name": "test_execution_cost_override_is_symbol_specific",
-      "kind": "function",
-      "file": "tests/test_execution_costs.py",
-      "line": 8
-    },
-    {
-      "name": "test_execution_cost_override_can_be_partial",
-      "kind": "function",
-      "file": "tests/test_execution_costs.py",
-      "line": 25
-    },
-    {
-      "name": "test_execution_cost_overrides_fail_closed_on_invalid_configuration",
-      "kind": "function",
-      "file": "tests/test_execution_costs.py",
-      "line": 48
-    },
-    {
-      "name": "test_default_runtime_uses_symbol_cost_override",
-      "kind": "function",
-      "file": "tests/test_execution_costs.py",
-      "line": 53
-    },
-    {
-      "name": "test_explicit_runtime_risk_config_has_priority",
-      "kind": "function",
-      "file": "tests/test_execution_costs.py",
-      "line": 69
-    },
-    {
-      "name": "test_orchestrator_configuration_accepts_injected_runtime",
-      "kind": "function",
-      "file": "tests/test_orchestrator_trigger.py",
-      "line": 10
-    },
-    {
-      "name": "sample_market",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 21
-    },
-    {
-      "name": "runtime_factory",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 38
-    },
-    {
-      "name": "build",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 39
-    },
-    {
-      "name": "build_runner",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 49
-    },
-    {
-      "name": "build_runtime",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 63
-    },
-    {
-      "name": "test_fresh_runtime_processes_only_latest_eligible_bar",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 76
-    },
-    {
-      "name": "test_existing_runtime_catches_up_oldest_first",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 97
-    },
-    {
-      "name": "test_catchup_cap_leaves_remaining_backlog",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 123
-    },
-    {
-      "name": "test_catchup_prepares_features_and_labels_once",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 143
-    },
-    {
-      "name": "counted_make_features",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 156
-    },
-    {
-      "name": "counted_make_labels",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 160
-    },
-    {
-      "name": "test_missing_last_processed_in_history_fails_closed",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 184
-    },
-    {
-      "name": "test_no_new_bar_is_healthy_and_idempotent",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 212
-    },
-    {
-      "name": "test_max_catchup_bars_must_be_positive",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 233
-    },
-    {
-      "name": "test_revision_conflict_reloads_and_continues",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 246
-    },
-    {
-      "name": "ConflictOnceRuntime",
-      "kind": "class",
-      "file": "tests/test_paper_cycle.py",
-      "line": 264
-    },
-    {
-      "name": "prepare_market",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 267
-    },
-    {
-      "name": "step_prepared",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 270
-    },
-    {
-      "name": "test_shadow_challenger_is_recorded_without_controlling_execution",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 312
-    },
-    {
-      "name": "fake_shadow",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 324
-    },
-    {
-      "name": "test_mtf_shadow_is_audit_only_and_cannot_control_execution",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 388
-    },
-    {
-      "name": "test_mtf_history_load_is_isolated_from_primary_market",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 475
-    },
-    {
-      "name": "loader",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 485
-    },
-    {
-      "name": "fake_mtf",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 501
-    },
-    {
-      "name": "test_mtf_boundary_aligns_with_candidate_horizon",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 530
-    },
-    {
-      "name": "test_non_boundary_cycle_skips_long_mtf_history_load",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 565
-    },
-    {
-      "name": "loader",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 573
-    },
-    {
-      "name": "test_validated_gold_mtf_config_is_forwarded_to_shadow_evaluator",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 602
-    },
-    {
-      "name": "loader",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 611
-    },
-    {
-      "name": "fake_mtf",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 626
-    },
-    {
-      "name": "test_validated_btc_mtf_config_is_forwarded_to_shadow_evaluator",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 657
-    },
-    {
-      "name": "loader",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 667
-    },
-    {
-      "name": "fake_mtf",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 683
-    },
-    {
-      "name": "test_pending_targets_resume_when_last_processed_is_raw_market_bar",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 717
-    },
-    {
-      "name": "test_pending_targets_still_fail_when_persisted_bar_is_not_loaded",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 746
-    },
-    {
-      "name": "test_pending_targets_resume_when_provider_removed_persisted_bar",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 778
-    },
-    {
-      "name": "test_pending_targets_allow_bounded_gap_before_loaded_history",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 813
-    },
-    {
-      "name": "test_pending_targets_reject_gap_beyond_three_days",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 843
-    },
-    {
-      "name": "sample_market",
-      "kind": "function",
-      "file": "tests/test_paper_cycle_materialized_fresh.py",
-      "line": 13
-    },
-    {
-      "name": "test_materialized_empty_runtime_is_treated_as_fresh",
-      "kind": "function",
-      "file": "tests/test_paper_cycle_materialized_fresh.py",
-      "line": 30
-    },
-    {
-      "name": "runtime_factory",
-      "kind": "function",
-      "file": "tests/test_paper_cycle_materialized_fresh.py",
-      "line": 46
-    },
-    {
-      "name": "sample_market",
-      "kind": "function",
-      "file": "tests/test_paper_cycle_postgres.py",
-      "line": 16
-    },
-    {
-      "name": "runtime_factory",
-      "kind": "function",
-      "file": "tests/test_paper_cycle_postgres.py",
-      "line": 33
-    },
-    {
-      "name": "build",
-      "kind": "function",
-      "file": "tests/test_paper_cycle_postgres.py",
-      "line": 34
-    },
-    {
-      "name": "test_paper_cycle_survives_postgres_object_reconstruction",
-      "kind": "function",
-      "file": "tests/test_paper_cycle_postgres.py",
-      "line": 48
-    },
-    {
-      "name": "sample_market",
-      "kind": "function",
-      "file": "tests/test_runtime.py",
-      "line": 12
-    },
-    {
-      "name": "test_runtime_step_is_persistent_and_idempotent",
-      "kind": "function",
-      "file": "tests/test_runtime.py",
-      "line": 29
-    },
-    {
-      "name": "sample_market",
-      "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
+      "file": "src/ai_trading/parameter_sensitivity.py",
       "line": 19
     },
     {
-      "name": "RecordingPersistence",
+      "name": "run_parameter_sensitivity",
+      "kind": "function",
+      "file": "src/ai_trading/parameter_sensitivity.py",
+      "line": 38
+    },
+    {
+      "name": "_bounded",
+      "kind": "function",
+      "file": "src/ai_trading/parameter_sensitivity.py",
+      "line": 80
+    },
+    {
+      "name": "_result",
+      "kind": "function",
+      "file": "src/ai_trading/parameter_sensitivity.py",
+      "line": 84
+    },
+    {
+      "name": "RegimeGatePolicy",
       "kind": "class",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 36
+      "file": "src/ai_trading/regime_gate.py",
+      "line": 9
+    },
+    {
+      "name": "RegimeGateResult",
+      "kind": "class",
+      "file": "src/ai_trading/regime_gate.py",
+      "line": 16
+    },
+    {
+      "name": "evaluate_regime_gate",
+      "kind": "function",
+      "file": "src/ai_trading/regime_gate.py",
+      "line": 25
+    },
+    {
+      "name": "OptimizationWeights",
+      "kind": "class",
+      "file": "src/ai_trading/tuning.py",
+      "line": 14
+    },
+    {
+      "name": "TuningResult",
+      "kind": "class",
+      "file": "src/ai_trading/tuning.py",
+      "line": 22
+    },
+    {
+      "name": "objective_score",
+      "kind": "function",
+      "file": "src/ai_trading/tuning.py",
+      "line": 28
+    },
+    {
+      "name": "tune_walk_forward",
+      "kind": "function",
+      "file": "src/ai_trading/tuning.py",
+      "line": 42
+    },
+    {
+      "name": "objective",
+      "kind": "function",
+      "file": "src/ai_trading/tuning.py",
+      "line": 55
+    },
+    {
+      "name": "sample_market",
+      "kind": "function",
+      "file": "tests/test_backtest.py",
+      "line": 15
+    },
+    {
+      "name": "test_walk_forward_produces_out_of_sample_report",
+      "kind": "function",
+      "file": "tests/test_backtest.py",
+      "line": 32
+    },
+    {
+      "name": "test_walk_forward_resets_daily_risk_baseline_between_dates",
+      "kind": "function",
+      "file": "tests/test_backtest.py",
+      "line": 51
+    },
+    {
+      "name": "tracked_reset",
+      "kind": "function",
+      "file": "tests/test_backtest.py",
+      "line": 55
+    },
+    {
+      "name": "test_regime_step_returns_are_compounded_without_intervening_equity",
+      "kind": "function",
+      "file": "tests/test_backtest.py",
+      "line": 76
+    },
+    {
+      "name": "test_walk_forward_annualizes_from_actual_oos_timestamps_by_default",
+      "kind": "function",
+      "file": "tests/test_backtest.py",
+      "line": 81
+    },
+    {
+      "name": "sample_market",
+      "kind": "function",
+      "file": "tests/test_backtest_ensemble.py",
+      "line": 8
+    },
+    {
+      "name": "test_walk_forward_ensemble_runs",
+      "kind": "function",
+      "file": "tests/test_backtest_ensemble.py",
+      "line": 25
+    },
+    {
+      "name": "FakeBacktester",
+      "kind": "class",
+      "file": "tests/test_cost_stress.py",
+      "line": 10
     },
     {
       "name": "__init__",
       "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 37
+      "file": "tests/test_cost_stress.py",
+      "line": 11
     },
     {
-      "name": "initialize_schema",
+      "name": "run",
       "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 48
+      "file": "tests/test_cost_stress.py",
+      "line": 16
+    },
+    {
+      "name": "test_cost_stress_applies_each_cost_scenario",
+      "kind": "function",
+      "file": "tests/test_cost_stress.py",
+      "line": 43
+    },
+    {
+      "name": "test_trade_journal_round_trip",
+      "kind": "function",
+      "file": "tests/test_dashboard.py",
+      "line": 5
+    },
+    {
+      "name": "test_dashboard_renders_trade_and_escapes_text",
+      "kind": "function",
+      "file": "tests/test_dashboard.py",
+      "line": 23
+    },
+    {
+      "name": "test_trade_journal_limit_returns_latest_events",
+      "kind": "function",
+      "file": "tests/test_dashboard.py",
+      "line": 45
+    },
+    {
+      "name": "test_dashboard_renders_portfolio_summary",
+      "kind": "function",
+      "file": "tests/test_dashboard.py",
+      "line": 62
+    },
+    {
+      "name": "test_dashboard_renders_recent_trade_performance_metrics",
+      "kind": "function",
+      "file": "tests/test_dashboard.py",
+      "line": 85
+    },
+    {
+      "name": "test_dashboard_renders_premium_terminal_shell",
+      "kind": "function",
+      "file": "tests/test_dashboard.py",
+      "line": 109
+    },
+    {
+      "name": "test_dashboard_live_refresh_preserves_scroll_without_meta_reload",
+      "kind": "function",
+      "file": "tests/test_dashboard.py",
+      "line": 120
+    },
+    {
+      "name": "test_dashboard_shows_engine_and_latest_decision",
+      "kind": "function",
+      "file": "tests/test_dashboard_engine_status.py",
+      "line": 11
+    },
+    {
+      "name": "_free_port",
+      "kind": "function",
+      "file": "tests/test_dashboard_health.py",
+      "line": 16
+    },
+    {
+      "name": "_get",
+      "kind": "function",
+      "file": "tests/test_dashboard_health.py",
+      "line": 22
+    },
+    {
+      "name": "_start_dashboard",
+      "kind": "function",
+      "file": "tests/test_dashboard_health.py",
+      "line": 34
+    },
+    {
+      "name": "test_dashboard_marks_expired_worker_heartbeat_stale",
+      "kind": "function",
+      "file": "tests/test_dashboard_health.py",
+      "line": 59
+    },
+    {
+      "name": "test_api_status_reports_stale_worker_without_hiding_web_health",
+      "kind": "function",
+      "file": "tests/test_dashboard_health.py",
+      "line": 85
+    },
+    {
+      "name": "test_healthz_keeps_web_liveness_separate_from_engine_health",
+      "kind": "function",
+      "file": "tests/test_dashboard_health.py",
+      "line": 107
+    },
+    {
+      "name": "OverviewPersistence",
+      "kind": "class",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 25
+    },
+    {
+      "name": "__init__",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 26
     },
     {
       "name": "load_runtime",
       "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 51
-    },
-    {
-      "name": "commit_step",
-      "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 55
+      "file": "tests/test_dashboard_overview.py",
+      "line": 73
     },
     {
       "name": "list_trades",
       "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 59
+      "file": "tests/test_dashboard_overview.py",
+      "line": 78
     },
     {
-      "name": "save_runtime_status",
+      "name": "list_burnin_snapshots",
       "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 68
+      "file": "tests/test_dashboard_overview.py",
+      "line": 83
+    },
+    {
+      "name": "list_regimes",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 104
     },
     {
       "name": "load_runtime_status",
       "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 71
+      "file": "tests/test_dashboard_overview.py",
+      "line": 108
     },
     {
-      "name": "_persisted_runtime",
+      "name": "load_shadow_quality",
       "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 76
+      "file": "tests/test_dashboard_overview.py",
+      "line": 112
     },
     {
-      "name": "test_runtime_commits_one_durable_step",
+      "name": "load_mtf_shadow_quality",
       "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 90
+      "file": "tests/test_dashboard_overview.py",
+      "line": 134
     },
     {
-      "name": "test_runtime_returns_safe_skip_on_revision_conflict",
-      "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 122
+      "name": "ReadinessOverviewPersistence",
+      "kind": "class",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 166
     },
     {
-      "name": "test_runtime_rejects_missing_model_for_existing_state",
+      "name": "list_burnin_snapshots",
       "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 142
+      "file": "tests/test_dashboard_overview.py",
+      "line": 167
     },
     {
-      "name": "intraday_market",
-      "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 153
+      "name": "FailingOverviewPersistence",
+      "kind": "class",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 197
     },
     {
-      "name": "test_runtime_preserves_daily_loss_baseline_within_trading_day",
+      "name": "load_runtime",
       "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 169
+      "file": "tests/test_dashboard_overview.py",
+      "line": 198
     },
     {
-      "name": "test_runtime_resets_daily_loss_baseline_on_new_trading_day",
+      "name": "load_runtime_status",
       "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 214
+      "file": "tests/test_dashboard_overview.py",
+      "line": 202
+    },
+    {
+      "name": "_free_port",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 207
+    },
+    {
+      "name": "_start_overview_dashboard",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 213
+    },
+    {
+      "name": "test_operational_overview_exposes_model_and_runtime_metadata",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 241
+    },
+    {
+      "name": "test_operational_overview_flags_stale_runtime",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 291
+    },
+    {
+      "name": "test_operational_overview_flags_missing_model_after_processing",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 301
+    },
+    {
+      "name": "test_operational_overview_flags_inconsistent_runtime",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 316
+    },
+    {
+      "name": "test_operational_overview_storage_failure_is_sanitized",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 338
+    },
+    {
+      "name": "test_dashboard_exposes_operational_overview_endpoint",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 427
+    },
+    {
+      "name": "test_dashboard_renders_model_and_revision_metadata",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 446
+    },
+    {
+      "name": "test_dashboard_renders_operational_alerts",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 460
+    },
+    {
+      "name": "test_dashboard_renders_inconsistent_runtime_alert",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 470
+    },
+    {
+      "name": "test_operational_overview_flags_cycle_reliability_degradation",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 496
+    },
+    {
+      "name": "test_dashboard_renders_cycle_reliability_alert",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 506
+    },
+    {
+      "name": "test_operational_overview_exposes_structured_readiness",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 517
+    },
+    {
+      "name": "test_overview_endpoint_includes_readiness_evidence",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 544
+    },
+    {
+      "name": "BtcOverviewPersistence",
+      "kind": "class",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 557
+    },
+    {
+      "name": "load_runtime",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 558
+    },
+    {
+      "name": "load_runtime_status",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 563
+    },
+    {
+      "name": "list_burnin_snapshots",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 573
+    },
+    {
+      "name": "list_regimes",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 577
+    },
+    {
+      "name": "load_shadow_quality",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 581
+    },
+    {
+      "name": "load_mtf_shadow_quality",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 585
+    },
+    {
+      "name": "test_btc_overview_exposes_validated_mtf_candidate",
+      "kind": "function",
+      "file": "tests/test_dashboard_overview.py",
+      "line": 591
+    },
+    {
+      "name": "DurablePersistence",
+      "kind": "class",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 22
+    },
+    {
+      "name": "__init__",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 23
+    },
+    {
+      "name": "load_runtime",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 60
+    },
+    {
+      "name": "list_trades",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 65
+    },
+    {
+      "name": "load_trade_performance",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 70
+    },
+    {
+      "name": "list_burnin_snapshots",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 80
+    },
+    {
+      "name": "list_regimes",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 101
+    },
+    {
+      "name": "load_runtime_status",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 105
+    },
+    {
+      "name": "list_scheduler_deliveries",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 109
+    },
+    {
+      "name": "FailingPersistence",
+      "kind": "class",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 123
+    },
+    {
+      "name": "_fail",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 124
+    },
+    {
+      "name": "load_runtime",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 127
+    },
+    {
+      "name": "list_trades",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 131
+    },
+    {
+      "name": "load_runtime_status",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 135
+    },
+    {
+      "name": "_free_port",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 140
+    },
+    {
+      "name": "_get",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 146
+    },
+    {
+      "name": "_get_with_headers",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 154
+    },
+    {
+      "name": "_start_failure_dashboard",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 159
+    },
+    {
+      "name": "test_dashboard_uses_durable_state_trades_and_status",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 187
+    },
+    {
+      "name": "test_dashboard_storage_failure_is_sanitized",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 217
+    },
+    {
+      "name": "test_liveness_stays_healthy_when_storage_is_unavailable",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 230
+    },
+    {
+      "name": "test_readiness_fails_when_durable_storage_is_unavailable",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 239
+    },
+    {
+      "name": "test_status_endpoints_fail_closed_without_leaking_storage_details",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 254
+    },
+    {
+      "name": "test_dashboard_surfaces_verified_scheduler_delivery",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 283
+    },
+    {
+      "name": "test_dashboard_http_responses_include_security_headers",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 300
+    },
+    {
+      "name": "test_dashboard_v2_groups_critical_sections_and_renders_equity_chart",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 313
+    },
+    {
+      "name": "test_dashboard_premium_shell_and_navigation",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 331
+    },
+    {
+      "name": "test_dashboard_quant_evidence_is_explicit_and_non_misleading",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 350
+    },
+    {
+      "name": "ReadinessPersistence",
+      "kind": "class",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 371
+    },
+    {
+      "name": "list_burnin_snapshots",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 372
+    },
+    {
+      "name": "test_dashboard_readiness_panel_shows_eight_criteria_with_thresholds",
+      "kind": "function",
+      "file": "tests/test_dashboard_persistence.py",
+      "line": 402
     },
     {
       "name": "sample_market",
       "kind": "function",
-      "file": "tests/test_runtime_targeted_step.py",
-      "line": 13
+      "file": "tests/test_mtf_parameter_benchmark.py",
+      "line": 18
     },
     {
-      "name": "build_file_runtime",
+      "name": "test_market_benchmark_is_purged_and_reports_directional_evidence",
       "kind": "function",
-      "file": "tests/test_runtime_targeted_step.py",
+      "file": "tests/test_mtf_parameter_benchmark.py",
+      "line": 40
+    },
+    {
+      "name": "test_parameter_benchmark_ranks_configs_across_markets",
+      "kind": "function",
+      "file": "tests/test_mtf_parameter_benchmark.py",
+      "line": 75
+    },
+    {
+      "name": "test_benchmark_payload_is_reproducible_and_explicit",
+      "kind": "function",
+      "file": "tests/test_mtf_parameter_benchmark.py",
+      "line": 99
+    },
+    {
+      "name": "test_btc_focused_grid_is_bounded_and_longer_horizon",
+      "kind": "function",
+      "file": "tests/test_mtf_parameter_benchmark.py",
+      "line": 127
+    },
+    {
+      "name": "test_market_selections_choose_gate_passing_config_per_symbol",
+      "kind": "function",
+      "file": "tests/test_mtf_parameter_benchmark.py",
+      "line": 137
+    },
+    {
+      "name": "test_payload_exposes_per_market_selection",
+      "kind": "function",
+      "file": "tests/test_mtf_parameter_benchmark.py",
+      "line": 164
+    },
+    {
+      "name": "test_parameter_grid_uses_same_random_seed_for_every_config",
+      "kind": "function",
+      "file": "tests/test_mtf_parameter_benchmark.py",
+      "line": 182
+    },
+    {
+      "name": "fake_evaluate_market_config",
+      "kind": "function",
+      "file": "tests/test_mtf_parameter_benchmark.py",
+      "line": 185
+    },
+    {
+      "name": "FakeMultiPersistence",
+      "kind": "class",
+      "file": "tests/test_multi_market.py",
+      "line": 29
+    },
+    {
+      "name": "load_runtime",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 32
+    },
+    {
+      "name": "load_runtime_status",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 51
+    },
+    {
+      "name": "list_burnin_snapshots",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 69
+    },
+    {
+      "name": "list_regimes",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 73
+    },
+    {
+      "name": "list_trades",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 77
+    },
+    {
+      "name": "load_trade_performance",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 81
+    },
+    {
+      "name": "test_configured_markets_default_to_gold",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 94
+    },
+    {
+      "name": "test_configured_default_bundle_uses_34_33_33",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 103
+    },
+    {
+      "name": "test_multi_market_cycle_isolates_one_market_failure",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 112
+    },
+    {
+      "name": "fake_cycle",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 115
+    },
+    {
+      "name": "test_multi_market_overview_scales_normalized_sleeves_to_100k",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 154
+    },
+    {
+      "name": "test_dashboard_renders_multi_market_cards",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 191
+    },
+    {
+      "name": "test_multi_market_cycle_runs_markets_concurrently",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 252
+    },
+    {
+      "name": "fake_cycle",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 255
+    },
+    {
+      "name": "test_multi_market_overview_marks_stale_heartbeat_as_delayed",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 286
+    },
+    {
+      "name": "stale_status",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 297
+    },
+    {
+      "name": "test_market_spec_rejects_invalid_fields",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 331
+    },
+    {
+      "name": "test_multi_market_cycle_rejects_duplicate_symbols",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 336
+    },
+    {
+      "name": "test_multi_market_cycle_rejects_invalid_allocation_sum",
+      "kind": "function",
+      "file": "tests/test_multi_market.py",
+      "line": 354
+    },
+    {
+      "name": "market",
+      "kind": "function",
+      "file": "tests/test_multiasset_backtest.py",
+      "line": 12
+    },
+    {
+      "name": "test_multiasset_walk_forward_produces_portfolio_curve",
+      "kind": "function",
+      "file": "tests/test_multiasset_backtest.py",
       "line": 30
     },
     {
-      "name": "test_step_at_processes_requested_execution_bar",
+      "name": "test_multiasset_backtest_annualizes_from_actual_timestamps",
       "kind": "function",
-      "file": "tests/test_runtime_targeted_step.py",
-      "line": 41
+      "file": "tests/test_multiasset_backtest.py",
+      "line": 55
     },
     {
-      "name": "test_step_at_is_idempotent_for_same_execution_bar",
+      "name": "test_invalid_research_configuration_fails_closed",
       "kind": "function",
-      "file": "tests/test_runtime_targeted_step.py",
-      "line": 52
+      "file": "tests/test_research_config_validation.py",
+      "line": 54
     },
     {
-      "name": "test_step_at_rejects_non_eligible_execution_bar",
+      "name": "test_valid_research_configurations_remain_supported",
       "kind": "function",
-      "file": "tests/test_runtime_targeted_step.py",
-      "line": 65
+      "file": "tests/test_research_config_validation.py",
+      "line": 59
     },
     {
-      "name": "test_step_at_cannot_regress_to_older_execution_bar",
+      "name": "successful_result",
       "kind": "function",
-      "file": "tests/test_runtime_targeted_step.py",
-      "line": 73
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 22
+    },
+    {
+      "name": "_free_port",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 36
+    },
+    {
+      "name": "_request",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 42
+    },
+    {
+      "name": "_start_scheduler_dashboard",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 57
+    },
+    {
+      "name": "test_missing_server_token_fails_closed",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 89
+    },
+    {
+      "name": "run_cycle",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 92
+    },
+    {
+      "name": "test_missing_authorization_is_unauthorized",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 108
+    },
+    {
+      "name": "test_wrong_scheme_is_unauthorized",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 119
+    },
+    {
+      "name": "test_wrong_bearer_token_is_unauthorized",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 130
+    },
+    {
+      "name": "test_valid_token_runs_exactly_one_cycle",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 141
+    },
+    {
+      "name": "run_cycle",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 144
+    },
+    {
+      "name": "test_concurrent_progress_is_successful_noop",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 160
+    },
+    {
+      "name": "test_storage_failure_is_sanitized",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 174
+    },
+    {
+      "name": "run_cycle",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 175
+    },
+    {
+      "name": "test_execution_failure_is_sanitized",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 195
+    },
+    {
+      "name": "run_cycle",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 196
+    },
+    {
+      "name": "test_http_scheduler_rejects_missing_and_wrong_authorization",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 216
+    },
+    {
+      "name": "test_http_scheduler_valid_token_runs_one_cycle_and_ignores_body",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 237
+    },
+    {
+      "name": "fake_cycle",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 240
+    },
+    {
+      "name": "test_http_scheduler_other_post_routes_are_not_exposed",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 265
+    },
+    {
+      "name": "test_http_scheduler_failure_response_never_leaks_secrets",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 281
+    },
+    {
+      "name": "fail_cycle",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 282
+    },
+    {
+      "name": "test_scheduler_telemetry_is_sanitized_and_identifies_cloudflare",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 306
+    },
+    {
+      "name": "test_scheduler_telemetry_does_not_trust_arbitrary_source_headers",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 325
+    },
+    {
+      "name": "test_scheduler_delivery_overview_verifies_three_consecutive_cloudflare_successes",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 345
+    },
+    {
+      "name": "test_http_scheduler_exposes_durable_cloudflare_delivery_evidence",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 364
     }
   ],
   "selected_tests": [
-    "tests/test_execution_costs.py",
-    "tests/test_hosted_runtime.py",
-    "tests/test_multiasset_runtime.py",
-    "tests/test_orchestrator_trigger.py",
-    "tests/test_paper_cycle.py",
-    "tests/test_paper_cycle_materialized_fresh.py",
-    "tests/test_paper_cycle_postgres.py",
-    "tests/test_runtime.py",
-    "tests/test_runtime_factory.py",
-    "tests/test_runtime_lock.py",
-    "tests/test_runtime_persistence.py",
-    "tests/test_runtime_state.py",
-    "tests/test_runtime_status.py",
-    "tests/test_runtime_targeted_step.py"
+    "tests/test_backtest.py",
+    "tests/test_backtest_ensemble.py",
+    "tests/test_config_validation.py",
+    "tests/test_cost_stress.py",
+    "tests/test_dashboard.py",
+    "tests/test_dashboard_engine_status.py",
+    "tests/test_dashboard_health.py",
+    "tests/test_dashboard_overview.py",
+    "tests/test_dashboard_persistence.py",
+    "tests/test_mtf_parameter_benchmark.py",
+    "tests/test_multi_market.py",
+    "tests/test_multiasset_backtest.py",
+    "tests/test_persistence.py",
+    "tests/test_research_config_validation.py",
+    "tests/test_scheduler_endpoint.py"
   ]
 }

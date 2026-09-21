@@ -159,6 +159,7 @@
         "tests/test_reliability.py",
         "tests/test_replay.py",
         "tests/test_reproducibility.py",
+        "tests/test_research_config_validation.py",
         "tests/test_resilience.py",
         "tests/test_resilience_stability.py",
         "tests/test_risk.py",
@@ -203,7 +204,7 @@
         "tests/test_watchdog_enforcer.py",
         "tests/test_worker_monitor.py"
       ],
-      "in_degree": 183,
+      "in_degree": 184,
       "out_degree": 0
     },
     "src/ai_trading/allocation_state.py": {
@@ -338,9 +339,10 @@
         "src/ai_trading/tuning.py",
         "tests/test_backtest.py",
         "tests/test_backtest_ensemble.py",
-        "tests/test_cost_stress.py"
+        "tests/test_cost_stress.py",
+        "tests/test_research_config_validation.py"
       ],
-      "in_degree": 11,
+      "in_degree": 12,
       "out_degree": 8
     },
     "src/ai_trading/benchmark_gate.py": {
@@ -1543,9 +1545,10 @@
         "src/ai_trading/regime.py"
       ],
       "dependents": [
-        "tests/test_mtf_parameter_benchmark.py"
+        "tests/test_mtf_parameter_benchmark.py",
+        "tests/test_research_config_validation.py"
       ],
-      "in_degree": 1,
+      "in_degree": 2,
       "out_degree": 6
     },
     "src/ai_trading/mtf_shadow_challenger.py": {
@@ -1634,9 +1637,10 @@
       ],
       "dependents": [
         "src/ai_trading/cli.py",
-        "tests/test_multiasset_backtest.py"
+        "tests/test_multiasset_backtest.py",
+        "tests/test_research_config_validation.py"
       ],
-      "in_degree": 2,
+      "in_degree": 3,
       "out_degree": 10
     },
     "src/ai_trading/multiasset_evolution.py": {
@@ -4533,6 +4537,17 @@
       "dependents": [],
       "in_degree": 0,
       "out_degree": 10
+    },
+    "tests/test_research_config_validation.py": {
+      "dependencies": [
+        "src/ai_trading/__init__.py",
+        "src/ai_trading/backtest.py",
+        "src/ai_trading/mtf_parameter_benchmark.py",
+        "src/ai_trading/multiasset_backtest.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 4
     },
     "tests/test_resilience.py": {
       "dependencies": [

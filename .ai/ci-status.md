@@ -1,18 +1,14 @@
 # CI status
 
-Summary: 2 success / 1 failure / 4 active
+Summary: 4 success / 0 failure / 4 active
 
-- CI: in_progress / pending (f1df4aab)
-- CodeQL: in_progress / pending (f1df4aab)
-- CI: in_progress / pending (97021bf3)
-- CodeQL: in_progress / pending (97021bf3)
-- CI: completed / success (8f4f53a9)
-- CodeQL: completed / success (8f4f53a9)
-- CI: completed / failure (513c5ac4)
-- CodeQL: completed / cancelled (513c5ac4)
-
-## Latest failed run structure
-- Job: test
-  - Failed step: Ruff
+- CodeQL: pending / pending (bf094e8c)
+- CI: queued / pending (bf094e8c)
+- CI: in_progress / pending (22e2a96b)
+- CodeQL: in_progress / pending (22e2a96b)
+- CI: completed / success (c6479649)
+- CodeQL: completed / success (c6479649)
+- CodeQL: completed / success (afe15d39)
+- CI: completed / success (afe15d39)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
