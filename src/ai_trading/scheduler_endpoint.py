@@ -53,7 +53,7 @@ def _delivery_age_seconds(
     now: datetime,
 ) -> float | None:
     try:
-        timestamp = datetime.fromisoformat(timestamp_utc.replace("Z", "+00:00"))
+        timestamp = datetime.fromisoformat(timestamp_utc)
     except ValueError:
         return None
     if timestamp.tzinfo is None:
