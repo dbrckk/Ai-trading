@@ -2254,6 +2254,9 @@ sleeve_pnl = item.get("pnl")
 processed = overview.get("processed_bars")
 cycle_duration = item.get("cycle_duration_seconds")
 cycle_duration_display = (
+heartbeat_age_seconds = item.get("heartbeat_age_seconds")
+heartbeat_age_display = (
+freshness = str(item.get("freshness") or "OFF")
 mtf_candidate = mtf_shadow.get("candidate_config")
 mtf_horizon = mtf_shadow.get("horizon_minutes")
 mtf_candidate_name = (
@@ -4204,12 +4207,18 @@ market_confidence = None
 market_reason = None
 cycle_duration_seconds = None
 market_mtf_evaluated = False
+heartbeat_age_seconds = None
+freshness = "OFF"
 ⋮----
 market_signal = (
 market_confidence = status.confidence if status.processed else None
 market_reason = status.reason
 cycle_duration_seconds = status.cycle_duration_seconds
 market_mtf_evaluated = status.mtf_evaluated
+status_snapshot = runtime_status_snapshot(status)
+heartbeat_age_seconds = status_snapshot.get("heartbeat_age_seconds")
+effective_status = str(status_snapshot.get("engine_status") or "OFF").upper()
+freshness = {
 healthy = bool(overview.get("storage_healthy"))
 ⋮----
 engine_status = str(overview.get("engine_status") or "UNKNOWN").upper()
@@ -9410,6 +9419,16 @@ page = render_dashboard(
 def test_multi_market_cycle_runs_markets_concurrently(monkeypatch) -> None
 ⋮----
 barrier = Barrier(len(DEFAULT_MARKETS))
+⋮----
+def test_multi_market_overview_marks_stale_heartbeat_as_delayed() -> None
+⋮----
+original = backend.load_runtime_status
+⋮----
+def stale_status(runtime_key: str) -> HostedRuntimeStatus
+⋮----
+status = original(runtime_key)
+⋮----
+backend.load_runtime_status = stale_status  # type: ignore[method-assign]
 ````
 
 ## File: tests/test_multi_period_promotion.py

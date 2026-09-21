@@ -45,13 +45,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T07:38:26Z
+Generated: 2026-09-21T07:43:19Z
 
 ### Git
 - Branch: `main`
-- Head: `b00460e67a88`
-- Commit date: 2026-09-21T09:38:14+02:00
-- Commit: feat: add multi-market runtime health telemetry (#73)
+- Head: `b174d18726de`
+- Commit date: 2026-09-21T09:43:09+02:00
+- Commit: feat: add per-market freshness telemetry (#74)
 - Tracked files: 477
 
 ### Recently changed files
@@ -62,9 +62,6 @@ Generated: 2026-09-21T07:38:26Z
 - `src/ai_trading/paper_cycle_service.py`
 - `tests/test_paper_cycle.py`
 - `tests/test_paper_cycle_service.py`
-- `src/ai_trading/mtf_shadow_config.py`
-- `tests/test_dashboard_overview.py`
-- `tests/test_mtf_shadow_config.py`
 
 ### Project signals
 - `pyproject.toml`
