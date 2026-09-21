@@ -772,3 +772,101 @@ def test_pending_targets_still_fail_when_persisted_bar_is_not_loaded() -> None:
             eligible,
             market.index,
         )
+
+
+
+def test_pending_targets_resume_when_provider_removed_persisted_bar() -> None:
+    market = sample_market(120)
+    eligible = tuple(market.index[40:])
+    missing_bar = market.index[60]
+    provider_index = market.index.delete(60)
+    state = RuntimeState(
+        cash=100_000.0,
+        units=0.0,
+        last_price=100.0,
+        peak_equity=100_000.0,
+        day_start_equity=100_000.0,
+        last_processed=str(missing_bar),
+        processed_bars=1,
+        last_learning_cycle_bar=0,
+    )
+    snapshot = PersistedRuntime(
+        state=state,
+        model=None,
+        revision=1,
+        is_new=False,
+    )
+
+    pending = PaperCycleRunner._pending_targets(
+        snapshot,
+        eligible,
+        provider_index,
+    )
+
+    assert pending == [
+        target
+        for target in eligible
+        if pd.Timestamp(target) > missing_bar
+    ]
+
+
+def test_pending_targets_allow_bounded_gap_before_loaded_history() -> None:
+    market = sample_market(120)
+    eligible = tuple(market.index[40:])
+    persisted = market.index[0] - pd.Timedelta(days=2)
+    state = RuntimeState(
+        cash=100_000.0,
+        units=0.0,
+        last_price=100.0,
+        peak_equity=100_000.0,
+        day_start_equity=100_000.0,
+        last_processed=str(persisted),
+        processed_bars=1,
+        last_learning_cycle_bar=0,
+    )
+    snapshot = PersistedRuntime(
+        state=state,
+        model=None,
+        revision=1,
+        is_new=False,
+    )
+
+    pending = PaperCycleRunner._pending_targets(
+        snapshot,
+        eligible,
+        market.index,
+    )
+
+    assert pending == list(eligible)
+
+
+def test_pending_targets_reject_gap_beyond_three_days() -> None:
+    market = sample_market(120)
+    eligible = tuple(market.index[40:])
+    persisted = market.index[0] - pd.Timedelta(days=4)
+    state = RuntimeState(
+        cash=100_000.0,
+        units=0.0,
+        last_price=100.0,
+        peak_equity=100_000.0,
+        day_start_equity=100_000.0,
+        last_processed=str(persisted),
+        processed_bars=1,
+        last_learning_cycle_bar=0,
+    )
+    snapshot = PersistedRuntime(
+        state=state,
+        model=None,
+        revision=1,
+        is_new=False,
+    )
+
+    with pytest.raises(
+        RuntimeError,
+        match="persisted last_processed is outside loaded history",
+    ):
+        PaperCycleRunner._pending_targets(
+            snapshot,
+            eligible,
+            market.index,
+        )
