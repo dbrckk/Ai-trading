@@ -37,6 +37,15 @@ class PersistedRuntime:
 
 
 @dataclass(frozen=True)
+class SchedulerDelivery:
+    timestamp_utc: str
+    source: str
+    status_code: int
+    ok: bool
+    processed: int | None = None
+
+
+@dataclass(frozen=True)
 class RuntimeStepCommit:
     expected_revision: int
     state: RuntimeState
@@ -70,6 +79,14 @@ class PaperPersistence(Protocol):
     def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None: ...
 
     def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None: ...
+
+    def record_scheduler_delivery(self, delivery: SchedulerDelivery) -> None: ...
+
+    def list_scheduler_deliveries(
+        self,
+        *,
+        limit: int = 20,
+    ) -> tuple[SchedulerDelivery, ...]: ...
 
 
 def build_runtime_key(symbol: str, interval: str) -> str:

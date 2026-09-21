@@ -1,6 +1,6 @@
 from ai_trading.model_codec import serialize_model
 from ai_trading.online import RiverDirectionModel
-from ai_trading.persistence import CommitOutcome, RuntimeStepCommit
+from ai_trading.persistence import CommitOutcome, RuntimeStepCommit, SchedulerDelivery
 from ai_trading.runtime_state import RuntimeState
 
 
@@ -144,3 +144,20 @@ def test_file_backend_loads_shadow_quality_from_audit(tmp_path) -> None:
     assert comparison.observations == 2
     assert comparison.river.observations == 2
     assert comparison.challenger.observations == 2
+
+
+def test_file_backend_persists_scheduler_deliveries(tmp_path) -> None:
+    from ai_trading.file_persistence import FilePaperPersistence
+
+    backend = FilePaperPersistence(root=tmp_path)
+    delivery = SchedulerDelivery(
+        timestamp_utc="2026-09-21T16:00:00+00:00",
+        source="cloudflare",
+        status_code=200,
+        ok=True,
+        processed=2,
+    )
+    backend.record_scheduler_delivery(delivery)
+
+    restored = FilePaperPersistence(root=tmp_path)
+    assert restored.list_scheduler_deliveries() == (delivery,)

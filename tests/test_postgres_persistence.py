@@ -5,7 +5,7 @@ import pytest
 
 from ai_trading.model_codec import deserialize_model, serialize_model
 from ai_trading.online import RiverDirectionModel
-from ai_trading.persistence import CommitOutcome, RuntimeStepCommit
+from ai_trading.persistence import CommitOutcome, RuntimeStepCommit, SchedulerDelivery
 from ai_trading.runtime_state import RuntimeState
 from ai_trading.runtime_status import HostedRuntimeStatus
 from ai_trading.trade_journal import TradeSnapshot
@@ -73,8 +73,9 @@ def backend():
     persistence.initialize_schema()
     with psycopg.connect(DATABASE_URL) as connection, connection.cursor() as cursor:
         cursor.execute(
-            "TRUNCATE paper_runtime_status, paper_audit_events, paper_trades, "
-            "paper_model_state, paper_runtime_state RESTART IDENTITY CASCADE"
+            "TRUNCATE paper_scheduler_deliveries, paper_runtime_status, "
+            "paper_audit_events, paper_trades, paper_model_state, "
+            "paper_runtime_state RESTART IDENTITY CASCADE"
         )
     return persistence
 
@@ -278,3 +279,19 @@ def test_postgres_loads_shadow_quality_from_audit(backend) -> None:
     assert comparison.observations == 1
     assert comparison.river.observations == 1
     assert comparison.challenger.observations == 1
+
+
+def test_scheduler_deliveries_survive_postgres_restart(backend) -> None:
+    from ai_trading.postgres_persistence import PostgresPaperPersistence
+
+    delivery = SchedulerDelivery(
+        timestamp_utc="2026-09-21T16:05:00+00:00",
+        source="cloudflare",
+        status_code=200,
+        ok=True,
+        processed=1,
+    )
+    backend.record_scheduler_delivery(delivery)
+
+    restored = PostgresPaperPersistence(DATABASE_URL)
+    assert restored.list_scheduler_deliveries(limit=10) == (delivery,)

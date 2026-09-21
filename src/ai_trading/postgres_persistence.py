@@ -25,6 +25,7 @@ from .persistence import (
     PaperPersistence,
     PersistedRuntime,
     RuntimeStepCommit,
+    SchedulerDelivery,
 )
 from .runtime_state import RuntimeState
 from .runtime_status import HostedRuntimeStatus
@@ -135,6 +136,20 @@ _SCHEMA_STATEMENTS = (
         updated_at_utc timestamptz NOT NULL,
         payload jsonb NOT NULL
     )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS paper_scheduler_deliveries (
+        id bigserial PRIMARY KEY,
+        timestamp_utc timestamptz NOT NULL,
+        source text NOT NULL,
+        status_code integer NOT NULL,
+        ok boolean NOT NULL,
+        processed integer NULL
+    )
+    """,
+    """
+    CREATE INDEX IF NOT EXISTS paper_scheduler_deliveries_id_idx
+        ON paper_scheduler_deliveries (id DESC)
     """,
     """
     CREATE INDEX IF NOT EXISTS paper_trades_runtime_id_idx
@@ -768,3 +783,52 @@ class PostgresPaperPersistence(PaperPersistence):
         if not isinstance(payload, dict):
             payload = json.loads(payload)
         return HostedRuntimeStatus(**payload)
+
+
+    def record_scheduler_delivery(self, delivery: SchedulerDelivery) -> None:
+        with self._connect() as connection, connection.cursor() as cursor:
+            cursor.execute(
+                """
+                INSERT INTO paper_scheduler_deliveries (
+                    timestamp_utc, source, status_code, ok, processed
+                )
+                VALUES (%s, %s, %s, %s, %s)
+                """,
+                (
+                    delivery.timestamp_utc,
+                    delivery.source,
+                    delivery.status_code,
+                    delivery.ok,
+                    delivery.processed,
+                ),
+            )
+
+    def list_scheduler_deliveries(
+        self,
+        *,
+        limit: int = 20,
+    ) -> tuple[SchedulerDelivery, ...]:
+        if limit <= 0:
+            return ()
+        with self._connect() as connection, connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT timestamp_utc, source, status_code, ok, processed
+                FROM paper_scheduler_deliveries
+                ORDER BY id DESC
+                LIMIT %s
+                """,
+                (limit,),
+            )
+            rows = cursor.fetchall()
+        rows.reverse()
+        return tuple(
+            SchedulerDelivery(
+                timestamp_utc=row["timestamp_utc"].isoformat(),
+                source=str(row["source"]),
+                status_code=int(row["status_code"]),
+                ok=bool(row["ok"]),
+                processed=None if row["processed"] is None else int(row["processed"]),
+            )
+            for row in rows
+        )
