@@ -457,6 +457,16 @@ def render_dashboard(
             cycle_duration_display = (
                 "-" if cycle_duration is None else f"{float(cycle_duration):.1f}s"
             )
+            heartbeat_age_seconds = item.get("heartbeat_age_seconds")
+            heartbeat_age_display = (
+                "-" if heartbeat_age_seconds is None
+                else (
+                    f"{float(heartbeat_age_seconds):.0f}s"
+                    if float(heartbeat_age_seconds) < 120
+                    else f"{float(heartbeat_age_seconds) / 60.0:.1f}m"
+                )
+            )
+            freshness = str(item.get("freshness") or "OFF")
             mtf_candidate = mtf_shadow.get("candidate_config")
             mtf_horizon = mtf_shadow.get("horizon_minutes")
             mtf_candidate_name = (
@@ -549,6 +559,8 @@ def render_dashboard(
                 f'<div><small>PnL</small><strong class="{pnl_css}">{_display_money(sleeve_pnl)}</strong></div>'
                 f'<div><small>Processed bars</small><strong>{"-" if processed is None else processed}</strong></div>'
                 f'<div><small>Cycle latency</small><strong>{cycle_duration_display}</strong></div>'
+                f'<div><small>Freshness</small><strong>{html.escape(freshness)}</strong></div>'
+                f'<div><small>Heartbeat age</small><strong>{heartbeat_age_display}</strong></div>'
                 f'<div><small>MTF this cycle</small><strong>{mtf_cycle_display}</strong></div>'
                 f'<div><small>Shadow 5m</small><strong>{observations}</strong></div>'
                 f'<div><small>{mtf_label}</small><strong>{mtf_observations}</strong></div>'
