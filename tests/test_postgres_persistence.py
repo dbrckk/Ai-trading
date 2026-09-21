@@ -12,6 +12,7 @@ from ai_trading.trade_journal import TradeSnapshot
 
 DATABASE_URL = os.environ["TEST_DATABASE_URL"]
 RUNTIME_KEY = "paper:GC=F:5m:online-river:v1"
+BTC_RUNTIME_KEY = "paper:BTC-USD:5m:online-river:v1"
 
 
 def test_postgres_16_is_reachable() -> None:
@@ -408,3 +409,77 @@ def test_schema_upgrade_adds_pnl_accounting_columns_without_reset(backend) -> No
         ("paper_trade_performance", "pnl_observations"),
         ("paper_trades", "pnl_known"),
     }
+
+
+
+def test_postgres_portfolio_performance_uses_global_trade_chronology(backend) -> None:
+    backend.load_runtime(RUNTIME_KEY, 100_000.0)
+    backend.load_runtime(BTC_RUNTIME_KEY, 100_000.0)
+
+    assert (
+        backend.commit_step(
+            RUNTIME_KEY,
+            _commit(
+                expected_revision=0,
+                state=_state(processed_bars=1),
+                trade=_trade(pnl=10.0, pnl_known=True),
+            ),
+        )
+        is CommitOutcome.COMMITTED
+    )
+    assert (
+        backend.commit_step(
+            BTC_RUNTIME_KEY,
+            _commit(
+                expected_revision=0,
+                state=_state(processed_bars=1),
+                trade=_trade(pnl=-20.0, pnl_known=True),
+            ),
+        )
+        is CommitOutcome.COMMITTED
+    )
+    assert (
+        backend.commit_step(
+            RUNTIME_KEY,
+            _commit(
+                expected_revision=1,
+                state=_state(cash=99_800.0, processed_bars=2),
+                trade=_trade(pnl=5.0, pnl_known=True),
+            ),
+        )
+        is CommitOutcome.COMMITTED
+    )
+    assert (
+        backend.commit_step(
+            BTC_RUNTIME_KEY,
+            _commit(
+                expected_revision=1,
+                state=_state(cash=99_800.0, processed_bars=2),
+                trade=_trade(pnl=0.0, pnl_known=False),
+            ),
+        )
+        is CommitOutcome.COMMITTED
+    )
+
+    metrics = backend.load_portfolio_trade_performance(
+        (RUNTIME_KEY, BTC_RUNTIME_KEY)
+    )
+
+    assert metrics.trade_count == 4
+    assert metrics.pnl_observations == 3
+    assert metrics.realized_pnl == -5.0
+    assert metrics.average_pnl == pytest.approx(-5.0 / 3.0)
+    assert metrics.gross_profit == 15.0
+    assert metrics.gross_loss == 20.0
+    assert metrics.profit_factor == pytest.approx(0.75)
+    assert metrics.max_drawdown == 20.0
+
+
+def test_postgres_portfolio_performance_empty_runtime_set_is_empty(backend) -> None:
+    metrics = backend.load_portfolio_trade_performance(())
+
+    assert metrics.trade_count == 0
+    assert metrics.pnl_observations == 0
+    assert metrics.realized_pnl == 0.0
+    assert metrics.profit_factor is None
+    assert metrics.max_drawdown == 0.0
