@@ -1,7 +1,12 @@
 import numpy as np
 import pandas as pd
+import pytest
 
-from ai_trading.backtest import WalkForwardBacktester, WalkForwardConfig
+from ai_trading.backtest import (
+    WalkForwardBacktester,
+    WalkForwardConfig,
+    _compound_step_returns,
+)
 from ai_trading.broker import PaperBroker
 from ai_trading.config import ModelConfig, RiskConfig
 
@@ -65,3 +70,8 @@ def test_walk_forward_resets_daily_risk_baseline_between_dates(monkeypatch) -> N
 
     assert report.decisions > 1
     assert calls == report.decisions
+
+
+def test_regime_step_returns_are_compounded_without_intervening_equity() -> None:
+    result = _compound_step_returns([0.10, -0.05, 0.02])
+    assert result == pytest.approx((1.10 * 0.95 * 1.02) - 1.0)
