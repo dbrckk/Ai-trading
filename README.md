@@ -4,7 +4,7 @@ Autonomous trading research platform focused on reproducible, risk-aware, out-of
 
 ## Current capabilities
 
-- OHLCV ingestion through `yfinance`
+- hardened OHLCV ingestion through `yfinance` with retries, sorting, timestamp deduplication and fail-closed OHLC validation
 - deterministic feature engineering
 - LONG / SHORT / FLAT probabilistic model
 - independent fail-closed risk engine
@@ -16,7 +16,12 @@ Autonomous trading research platform focused on reproducible, risk-aware, out-of
 - Sharpe, Sortino, Calmar, annualized return/volatility and max drawdown
 - append-only experiment registry
 - durable PostgreSQL persistence for hosted paper runtime state
+- Gold / DAX / BTC multi-market paper runtime with session-aware freshness telemetry
+- multi-timeframe evidence across 5m / 15m / 1h / 4h
+- correlation-aware portfolio de-risking and fail-closed configuration validation
 - bounded external paper-cycle scheduling with catch-up support
+- Cloudflare five-minute scheduler with authenticated Render endpoint and durable delivery evidence
+- GitHub Actions scheduler retained as operational fallback
 - read-only hosted dashboard backed by the same durable runtime state
 - CI with Ruff + Pytest + PostgreSQL 16 integration tests
 
@@ -137,21 +142,27 @@ This persistence layer does not enable live trading. Broker routing remains pape
 The production paper architecture separates execution from the hosted web process:
 
 ```text
-GitHub Actions (every 5 minutes)
+Cloudflare Worker (every 5 minutes)
         |
+        | authenticated POST
         v
-ai-trading paper-cycle
+Render /internal/paper-cycle
         |
         v
 Shared PostgreSQL durable state
         |
-        +----------------------+
-        |                      |
-        v                      v
-paper state/model/trades     Render dashboard
+        +---------------------------+
+        |                           |
+        v                           v
+paper state/model/trades         Render dashboard
+        ^
+        |
+GitHub Actions fallback scheduler
 ```
 
-The scheduled executor is defined in `.github/workflows/paper-cycle.yml`. It runs every five minutes and can also be invoked through `workflow_dispatch`. The database connection string is supplied only through the GitHub Actions secret named `AI_TRADING_DATABASE_URL`.
+The primary scheduler is the Cloudflare Worker under `infra/cloudflare-paper-scheduler/`. Its cron runs every five minutes and sends an authenticated POST to Render's `/internal/paper-cycle` endpoint. The Worker contains no database credentials and no trading logic. The existing `.github/workflows/paper-cycle.yml` schedule remains available as a fallback until external scheduler delivery has accumulated sufficient production evidence.
+
+Scheduler delivery telemetry is sanitized and persisted durably. The application never persists the bearer token or raw authorization headers. Three consecutive successful Cloudflare deliveries are treated as the minimum verification threshold exposed by `/api/scheduler`.
 
 The production cycle is:
 
@@ -179,6 +190,8 @@ Operational endpoints:
 
 ```text
 https://ai-trading-dashboard-qyr2.onrender.com/api/overview
+https://ai-trading-dashboard-qyr2.onrender.com/api/markets
+https://ai-trading-dashboard-qyr2.onrender.com/api/scheduler
 https://ai-trading-dashboard-qyr2.onrender.com/api/status
 https://ai-trading-dashboard-qyr2.onrender.com/healthz
 ```
@@ -193,7 +206,9 @@ AI_TRADING_HOSTED_PERIOD=5d
 AI_TRADING_HOSTED_INTERVAL=5m
 ```
 
-`AI_TRADING_EXTERNAL_SCHEDULER=1` explicitly suppresses the legacy in-process daemon worker. Render then serves the dashboard only, while GitHub Actions owns paper-cycle execution. The dashboard reads the shared durable state and exposes the last processed bar and processed-bar count without exposing storage connection details.
+`AI_TRADING_EXTERNAL_SCHEDULER=1` explicitly suppresses the legacy in-process daemon worker. Render serves the dashboard and the authenticated cycle endpoint while external schedulers own delivery. The dashboard reads the shared durable state and exposes the last processed bar, processed-bar count, per-market freshness and durable scheduler evidence without exposing storage connection details.
+
+The scheduler verification endpoint reports recent sanitized deliveries, the current consecutive Cloudflare-success count and whether the three-delivery verification threshold has been reached. A successful HTTP trigger with zero newly processed bars is still a valid delivery: duplicate/overlapping invocations are intentionally benign and durable runtime revision protection prevents stale writers from overwriting newer state.
 
 ## Walk-forward methodology
 
