@@ -10,6 +10,7 @@ import ai_trading.multi_market as multi_market_module
 from ai_trading.dashboard import render_dashboard
 from ai_trading.multi_market import (
     DEFAULT_MARKETS,
+    MarketSpec,
     build_multi_market_overview,
     configured_markets_from_env,
     run_multi_market_paper_cycle,
@@ -315,3 +316,54 @@ def test_multi_market_overview_marks_stale_heartbeat_as_delayed() -> None:
     assert {row["freshness"] for row in snapshot["markets"]} == {"DELAYED"}
     assert snapshot["portfolio"]["stale_markets"] == 3
     assert snapshot["portfolio"]["running_markets"] == 0
+
+
+@pytest.mark.parametrize(
+    "spec",
+    [
+        ("", "Gold", 1.0),
+        ("GC=F", "", 1.0),
+        ("GC=F", "Gold", 0.0),
+        ("GC=F", "Gold", -0.1),
+        ("GC=F", "Gold", float("inf")),
+    ],
+)
+def test_market_spec_rejects_invalid_fields(spec) -> None:
+    with pytest.raises(ValueError):
+        MarketSpec(*spec)
+
+
+def test_multi_market_cycle_rejects_duplicate_symbols(monkeypatch) -> None:
+    markets = (
+        MarketSpec("GC=F", "Gold A", 0.5),
+        MarketSpec("GC=F", "Gold B", 0.5),
+    )
+
+    with pytest.raises(ValueError, match="unique"):
+        run_multi_market_paper_cycle(
+            markets,
+            period="5d",
+            interval="5m",
+            max_catchup_bars=72,
+            poll_seconds=300.0,
+            shadow_challenger_enabled=False,
+            persistence=object(),
+        )
+
+
+def test_multi_market_cycle_rejects_invalid_allocation_sum() -> None:
+    markets = (
+        MarketSpec("GC=F", "Gold", 0.4),
+        MarketSpec("BTC-USD", "BTC", 0.4),
+    )
+
+    with pytest.raises(ValueError, match="sum to 1.0"):
+        run_multi_market_paper_cycle(
+            markets,
+            period="5d",
+            interval="5m",
+            max_catchup_bars=72,
+            poll_seconds=300.0,
+            shadow_challenger_enabled=False,
+            persistence=object(),
+        )
