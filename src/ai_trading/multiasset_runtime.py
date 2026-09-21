@@ -28,7 +28,7 @@ from .ensemble import EnsembleDirectionModel
 from .expert_lifecycle import evaluate_expert_lifecycle
 from .expert_pool import ExpertPoolStore, compute_budget_weights
 from .expert_uncertainty import measure_expert_uncertainty
-from .features import FEATURES, make_features, make_labels
+from .features import FEATURES
 from .global_allocator import GlobalAllocatorConfig, allocate_global_capital
 from .governor_state_store import GovernorState, GovernorStateStore
 from .lifecycle_log import LifecycleEventLog
