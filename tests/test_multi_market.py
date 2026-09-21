@@ -175,6 +175,8 @@ def test_multi_market_overview_scales_normalized_sleeves_to_100k() -> None:
         "DAX",
         "BTC / USD",
     ]
+    assert {row["freshness"] for row in snapshot["markets"]} == {"LIVE"}
+    assert all(row["heartbeat_age_seconds"] == 0.0 for row in snapshot["markets"])
 
 
 def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
@@ -224,6 +226,10 @@ def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
     assert "PAPER ONLY" in page
     assert "Cycle latency" in page
     assert "12.3s" in page
+    assert "Freshness" in page
+    assert "LIVE" in page
+    assert "Heartbeat age" in page
+    assert "0s" in page
     assert "MTF this cycle" in page
     assert "YES" in page
 
@@ -261,3 +267,37 @@ def test_multi_market_cycle_runs_markets_concurrently(monkeypatch) -> None:
 
     assert result.processed == 3
     assert "3 market(s)" in result.reason
+
+
+def test_multi_market_overview_marks_stale_heartbeat_as_delayed() -> None:
+    backend = FakeMultiPersistence(
+        equities={
+            "GC=F": 100_000.0,
+            "^GDAXI": 100_000.0,
+            "BTC-USD": 100_000.0,
+        }
+    )
+
+    original = backend.load_runtime_status
+
+    def stale_status(runtime_key: str) -> HostedRuntimeStatus:
+        status = original(runtime_key)
+        return HostedRuntimeStatus(
+            **{
+                **status.__dict__,
+                "updated_at_utc": "2000-01-01T00:00:00+00:00",
+            }
+        )
+
+    backend.load_runtime_status = stale_status  # type: ignore[method-assign]
+
+    snapshot = build_multi_market_overview(
+        backend,
+        DEFAULT_MARKETS,
+        interval="5m",
+        portfolio_cash=100_000.0,
+    )
+
+    assert {row["freshness"] for row in snapshot["markets"]} == {"DELAYED"}
+    assert snapshot["portfolio"]["stale_markets"] == 3
+    assert snapshot["portfolio"]["running_markets"] == 0
