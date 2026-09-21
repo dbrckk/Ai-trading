@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import isfinite
 
 from .config import RiskConfig
 
@@ -28,11 +29,22 @@ class PaperBroker:
         )
 
     def mark(self, price: float) -> None:
-        self.state.last_price = float(price)
+        price = float(price)
+        if not isfinite(price) or price <= 0:
+            raise ValueError("price must be finite and positive")
+        self.state.last_price = price
         equity = self.state.equity
         self.state.peak_equity = max(self.state.peak_equity, equity)
 
+    def reset_day_start(self) -> None:
+        self.state.day_start_equity = self.state.equity
+
     def rebalance(self, side: int, target_notional: float, price: float) -> None:
+        if side not in {-1, 0, 1}:
+            raise ValueError("side must be -1, 0, or 1")
+        target_notional = float(target_notional)
+        if not isfinite(target_notional) or target_notional < 0:
+            raise ValueError("target_notional must be finite and non-negative")
         self.mark(price)
         desired_units = 0.0 if side == 0 else side * target_notional / price
         delta_units = desired_units - self.state.units
