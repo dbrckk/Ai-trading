@@ -122,6 +122,40 @@ def btc_focused_benchmark_grid() -> tuple[MTFBenchmarkConfig, ...]:
     )
 
 
+def robustness_benchmark_grid() -> tuple[MTFBenchmarkConfig, ...]:
+    """Focused robustness check around the benchmark-validated candidates.
+
+    Keep the search compact enough for repeated CI validation while perturbing
+    threshold, ATR multiplier and confidence around the selected Gold/DAX
+    45-minute candidates and the BTC 90-minute candidate.
+    """
+
+    shared_45m = tuple(
+        MTFBenchmarkConfig(
+            horizon_bars=9,
+            minimum_threshold=minimum_threshold,
+            atr_multiplier=atr_multiplier,
+            max_train_rows=1000,
+            min_confidence=min_confidence,
+        )
+        for minimum_threshold in (0.0004, 0.0005)
+        for atr_multiplier in (0.15, 0.25)
+        for min_confidence in (0.56, 0.60)
+    )
+    btc_90m = tuple(
+        MTFBenchmarkConfig(
+            horizon_bars=18,
+            minimum_threshold=minimum_threshold,
+            atr_multiplier=atr_multiplier,
+            max_train_rows=1000,
+            min_confidence=0.60,
+        )
+        for minimum_threshold in (0.0003, 0.0004)
+        for atr_multiplier in (0.15, 0.25)
+    )
+    return (*shared_45m, *btc_90m)
+
+
 def market_selections(
     results: tuple[AggregateBenchmarkResult, ...],
 ) -> dict[str, dict[str, object] | None]:
@@ -533,7 +567,7 @@ def main() -> None:
     parser.add_argument("--folds", type=int, default=2)
     parser.add_argument(
         "--profile",
-        choices=("global", "btc-focused"),
+        choices=("global", "btc-focused", "robustness"),
         default="global",
     )
     parser.add_argument("--test-window-bars", type=int, default=48)
@@ -555,11 +589,12 @@ def main() -> None:
         symbol: load_history(symbol, args.period, args.interval)
         for symbol in symbols
     }
-    configs = (
-        btc_focused_benchmark_grid()
-        if args.profile == "btc-focused"
-        else default_benchmark_grid()
-    )
+    if args.profile == "btc-focused":
+        configs = btc_focused_benchmark_grid()
+    elif args.profile == "robustness":
+        configs = robustness_benchmark_grid()
+    else:
+        configs = default_benchmark_grid()
     results = run_parameter_benchmark(
         markets,
         configs=configs,
