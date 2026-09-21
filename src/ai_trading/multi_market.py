@@ -9,12 +9,12 @@ from math import isclose, isfinite
 from .market_freshness import classify_market_freshness
 from .operational_overview import build_operational_overview
 from .paper_cycle import PaperCycleResult
-from .performance_metrics import empty_performance_payload, performance_payload
 from .paper_cycle_service import (
     PaperCycleServiceError,
     ProductionPaperCycleSettings,
     run_production_paper_cycle,
 )
+from .performance_metrics import empty_performance_payload, performance_payload
 from .persistence import PaperPersistence, build_runtime_key
 from .persistence_factory import build_paper_persistence
 from .runtime_status import runtime_status_snapshot
@@ -208,7 +208,7 @@ def build_multi_market_overview(
             portfolio_performance = performance_payload(
                 load_portfolio_performance(runtime_keys)
             )
-        except Exception:
+        except Exception:  # noqa: BLE001 - optional observer must not break overview
             portfolio_performance = empty_performance_payload()
 
     for market in markets:
