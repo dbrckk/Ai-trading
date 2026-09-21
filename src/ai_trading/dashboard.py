@@ -467,6 +467,12 @@ def render_dashboard(
                 )
             )
             freshness = str(item.get("freshness") or "OFF")
+            session_open = item.get("session_open")
+            session_display = (
+                "OPEN" if session_open is True
+                else "CLOSED" if session_open is False
+                else "UNKNOWN"
+            )
             mtf_candidate = mtf_shadow.get("candidate_config")
             mtf_horizon = mtf_shadow.get("horizon_minutes")
             mtf_candidate_name = (
@@ -560,6 +566,7 @@ def render_dashboard(
                 f'<div><small>Processed bars</small><strong>{"-" if processed is None else processed}</strong></div>'
                 f'<div><small>Cycle latency</small><strong>{cycle_duration_display}</strong></div>'
                 f'<div><small>Freshness</small><strong>{html.escape(freshness)}</strong></div>'
+                f'<div><small>Session</small><strong>{session_display}</strong></div>'
                 f'<div><small>Heartbeat age</small><strong>{heartbeat_age_display}</strong></div>'
                 f'<div><small>MTF this cycle</small><strong>{mtf_cycle_display}</strong></div>'
                 f'<div><small>Shadow 5m</small><strong>{observations}</strong></div>'
@@ -602,6 +609,8 @@ def render_dashboard(
             f'<div><small>Storage healthy</small><strong>{portfolio["healthy_markets"]} / {portfolio["markets"]}</strong></div>'
             f'<div><small>Engines running</small><strong>{portfolio["running_markets"]} / {portfolio["markets"]}</strong></div>'
             f'<div><small>Markets with alerts</small><strong>{portfolio["alert_markets"]}</strong></div>'
+            f'<div><small>Sessions closed</small><strong>{portfolio["closed_markets"]}</strong></div>'
+            f'<div><small>Catch-up / provider gaps</small><strong>{portfolio["catching_up_markets"]} / {portfolio["provider_gap_markets"]}</strong></div>'
             '<div><small>Execution mode</small><strong>PAPER ONLY</strong></div>'
             '</div><div class="market-cards">'
             + "".join(cards)
@@ -671,7 +680,7 @@ small,.muted{{color:var(--muted)}}
 .alert-box{{margin-top:12px;padding:12px 13px;border-radius:12px;background:rgba(9,19,35,.72);border:1px solid var(--border);font-size:.82rem}}
 .alert-box.warn{{border-color:rgba(255,210,122,.27);background:rgba(87,62,9,.17);color:#ffe0a0}}
 .runtime-reason{{display:block;margin-top:7px;line-height:1.45;font-size:.75rem}}
-.portfolio-ribbon{{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1px;margin:2px 0 14px;padding:1px;border-radius:15px;overflow:hidden;background:linear-gradient(90deg,rgba(121,170,255,.22),rgba(93,224,223,.14),rgba(167,139,250,.16));box-shadow:var(--shadow-soft)}}
+.portfolio-ribbon{{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:1px;margin:2px 0 14px;padding:1px;border-radius:15px;overflow:hidden;background:linear-gradient(90deg,rgba(121,170,255,.22),rgba(93,224,223,.14),rgba(167,139,250,.16));box-shadow:var(--shadow-soft)}}
 .portfolio-ribbon>div{{padding:14px 15px;background:rgba(7,15,29,.94)}}
 .portfolio-ribbon small{{display:block;font-size:.64rem;text-transform:uppercase;letter-spacing:.09em;margin-bottom:4px}}
 .portfolio-ribbon strong{{font-size:1.04rem;letter-spacing:-.02em}}
