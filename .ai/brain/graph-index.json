@@ -59,6 +59,7 @@
         "tests/test_ensemble.py",
         "tests/test_evolution.py",
         "tests/test_evolution_manager.py",
+        "tests/test_execution_costs.py",
         "tests/test_expert_diversity.py",
         "tests/test_expert_factory.py",
         "tests/test_expert_horizon.py",
@@ -191,7 +192,7 @@
         "tests/test_watchdog_enforcer.py",
         "tests/test_worker_monitor.py"
       ],
-      "in_degree": 182,
+      "in_degree": 183,
       "out_degree": 0,
       "path": "src/ai_trading/__init__.py"
     },
@@ -445,6 +446,7 @@
         "src/ai_trading/continuous.py",
         "src/ai_trading/cost_stress.py",
         "src/ai_trading/engine.py",
+        "src/ai_trading/execution_costs.py",
         "src/ai_trading/multiasset_backtest.py",
         "src/ai_trading/multiasset_market_context.py",
         "src/ai_trading/multiasset_runtime.py",
@@ -458,6 +460,7 @@
         "tests/test_broker.py",
         "tests/test_config_validation.py",
         "tests/test_cost_stress.py",
+        "tests/test_execution_costs.py",
         "tests/test_multiasset_backtest.py",
         "tests/test_multiasset_market_context.py",
         "tests/test_multiasset_runtime.py",
@@ -470,9 +473,49 @@
         "tests/test_runtime_persistence.py",
         "tests/test_runtime_targeted_step.py"
       ],
-      "in_degree": 30,
+      "in_degree": 32,
       "out_degree": 0,
       "path": "src/ai_trading/config.py"
+    },
+    {
+      "dependencies": [
+        "src/ai_trading/audit.py",
+        "src/ai_trading/broker.py",
+        "src/ai_trading/config.py",
+        "src/ai_trading/execution_costs.py",
+        "src/ai_trading/features.py",
+        "src/ai_trading/file_persistence.py",
+        "src/ai_trading/model.py",
+        "src/ai_trading/model_codec.py",
+        "src/ai_trading/mtf_shadow_challenger.py",
+        "src/ai_trading/online.py",
+        "src/ai_trading/persistence.py",
+        "src/ai_trading/regime.py",
+        "src/ai_trading/risk.py",
+        "src/ai_trading/runtime_lock.py",
+        "src/ai_trading/runtime_state.py",
+        "src/ai_trading/shadow_challenger.py",
+        "src/ai_trading/trade_journal.py"
+      ],
+      "dependents": [
+        "src/ai_trading/cli.py",
+        "src/ai_trading/hosted_runtime.py",
+        "src/ai_trading/orchestrator.py",
+        "src/ai_trading/paper_cycle.py",
+        "tests/test_execution_costs.py",
+        "tests/test_hosted_persistence.py",
+        "tests/test_hosted_runtime.py",
+        "tests/test_orchestrator_trigger.py",
+        "tests/test_paper_cycle.py",
+        "tests/test_paper_cycle_materialized_fresh.py",
+        "tests/test_paper_cycle_postgres.py",
+        "tests/test_runtime.py",
+        "tests/test_runtime_persistence.py",
+        "tests/test_runtime_targeted_step.py"
+      ],
+      "in_degree": 14,
+      "out_degree": 17,
+      "path": "src/ai_trading/runtime.py"
     },
     {
       "dependencies": [],
@@ -547,44 +590,6 @@
       "in_degree": 29,
       "out_degree": 0,
       "path": "src/ai_trading/performance.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/audit.py",
-        "src/ai_trading/broker.py",
-        "src/ai_trading/config.py",
-        "src/ai_trading/features.py",
-        "src/ai_trading/file_persistence.py",
-        "src/ai_trading/model.py",
-        "src/ai_trading/model_codec.py",
-        "src/ai_trading/mtf_shadow_challenger.py",
-        "src/ai_trading/online.py",
-        "src/ai_trading/persistence.py",
-        "src/ai_trading/regime.py",
-        "src/ai_trading/risk.py",
-        "src/ai_trading/runtime_lock.py",
-        "src/ai_trading/runtime_state.py",
-        "src/ai_trading/shadow_challenger.py",
-        "src/ai_trading/trade_journal.py"
-      ],
-      "dependents": [
-        "src/ai_trading/cli.py",
-        "src/ai_trading/hosted_runtime.py",
-        "src/ai_trading/orchestrator.py",
-        "src/ai_trading/paper_cycle.py",
-        "tests/test_hosted_persistence.py",
-        "tests/test_hosted_runtime.py",
-        "tests/test_orchestrator_trigger.py",
-        "tests/test_paper_cycle.py",
-        "tests/test_paper_cycle_materialized_fresh.py",
-        "tests/test_paper_cycle_postgres.py",
-        "tests/test_runtime.py",
-        "tests/test_runtime_persistence.py",
-        "tests/test_runtime_targeted_step.py"
-      ],
-      "in_degree": 13,
-      "out_degree": 16,
-      "path": "src/ai_trading/runtime.py"
     },
     {
       "dependencies": [],
@@ -1816,8 +1821,8 @@
       "path": "src/ai_trading/specialist_experts.py"
     }
   ],
-  "edge_count": 1908,
+  "edge_count": 1917,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 351,
+  "node_count": 353,
   "schema_version": 1
 }

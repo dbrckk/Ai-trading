@@ -1,15 +1,15 @@
 # CI status
 
-Summary: 5 success / 1 failure / 2 active
+Summary: 2 success / 1 failure / 4 active
 
-- CI: in_progress / pending (5b9858aa)
-- CodeQL: in_progress / pending (5b9858aa)
-- CodeQL: completed / success (3f17d0fb)
-- CI: completed / success (3f17d0fb)
-- CI: completed / failure (c484b0db)
-- CodeQL: completed / success (c484b0db)
-- CodeQL: completed / success (49b239a2)
-- CI: completed / success (49b239a2)
+- CI: in_progress / pending (f1df4aab)
+- CodeQL: in_progress / pending (f1df4aab)
+- CI: in_progress / pending (97021bf3)
+- CodeQL: in_progress / pending (97021bf3)
+- CI: completed / success (8f4f53a9)
+- CodeQL: completed / success (8f4f53a9)
+- CI: completed / failure (513c5ac4)
+- CodeQL: completed / cancelled (513c5ac4)
 
 ## Latest failed run structure
 - Job: test

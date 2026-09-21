@@ -106,6 +106,7 @@ src/
     ensemble.py
     evolution_manager.py
     evolution.py
+    execution_costs.py
     experiments.py
     expert_diversity.py
     expert_factory.py
@@ -280,6 +281,7 @@ tests/
   test_ensemble.py
   test_evolution_manager.py
   test_evolution.py
+  test_execution_costs.py
   test_expert_diversity.py
   test_expert_factory.py
   test_expert_horizon.py
@@ -2925,6 +2927,26 @@ threshold = max(1e-5, parent.return_threshold * mult)
 dedup: dict[str, ExpertCandidate] = {m.name: m for m in mutations}
 ⋮----
 eligible = [
+````
+
+## File: src/ai_trading/execution_costs.py
+````python
+_ENV_NAME = "AI_TRADING_EXECUTION_COSTS_JSON"
+⋮----
+config = base or RiskConfig()
+payload_text = os.getenv(_ENV_NAME, "") if raw is None else raw
+payload_text = payload_text.strip()
+⋮----
+payload = json.loads(payload_text)
+⋮----
+override = payload.get(symbol)
+⋮----
+allowed = {"transaction_cost_bps", "slippage_bps"}
+unknown = set(override).difference(allowed)
+⋮----
+values: dict[str, float] = {}
+⋮----
+value = float(override[name])
 ````
 
 ## File: src/ai_trading/experiments.py
@@ -7162,6 +7184,8 @@ class PaperAutonomousRuntime
     real orders and never bypasses the independent risk engine.
     """
 ⋮----
+base_risk_config = risk_config or RiskConfig()
+⋮----
 def _broker_from_state(self, state: RuntimeState) -> PaperBroker
 ⋮----
 broker = PaperBroker(self.risk_config)
@@ -9109,6 +9133,31 @@ def test_mutation_generates_distinct_variants() -> None
 ⋮----
 parent = ExpertCandidate(
 children = mutate_expert(
+````
+
+## File: tests/test_execution_costs.py
+````python
+def test_execution_cost_override_is_symbol_specific() -> None
+⋮----
+raw = """
+base = RiskConfig(transaction_cost_bps=2.0, slippage_bps=1.0)
+⋮----
+gold = risk_config_for_symbol("GC=F", base, raw=raw)
+dax = risk_config_for_symbol("^GDAXI", base, raw=raw)
+⋮----
+def test_execution_cost_override_can_be_partial() -> None
+⋮----
+updated = risk_config_for_symbol(
+⋮----
+def test_execution_cost_overrides_fail_closed_on_invalid_configuration(raw: str) -> None
+⋮----
+def test_default_runtime_uses_symbol_cost_override(monkeypatch, tmp_path) -> None
+⋮----
+runtime = PaperAutonomousRuntime(
+⋮----
+def test_explicit_runtime_risk_config_has_priority(monkeypatch, tmp_path) -> None
+⋮----
+explicit = RiskConfig(transaction_cost_bps=9.0, slippage_bps=10.0)
 ````
 
 ## File: tests/test_expert_diversity.py
@@ -12116,6 +12165,17 @@ paper:GC=F:5m:online-river:v1
 ```
 
 A fresh durable runtime processes only the latest eligible execution bar. An existing runtime catches up missed eligible bars oldest-first, with at most 72 attempted bars per invocation (six hours of 5-minute bars) so delayed external triggers can recover without unbounded work. If the durable `last_processed` marker is outside the loaded history window, the cycle fails closed instead of guessing where to resume. Revision conflicts cause state to be reloaded so overlapping executors cannot overwrite newer durable progress.
+
+Per-market paper execution costs can be overridden without changing code by setting `AI_TRADING_EXECUTION_COSTS_JSON`. When unset, the existing global `RiskConfig` transaction-cost and slippage defaults are preserved exactly. Overrides are exact-symbol matches and malformed or negative values fail closed.
+
+```json
+{
+  "GC=F": {"transaction_cost_bps": 2.0, "slippage_bps": 1.0},
+  "BTC-USD": {"transaction_cost_bps": 3.0, "slippage_bps": 2.0}
+}
+```
+
+The example only demonstrates the configuration format; production values should be calibrated from observed execution/spread data rather than assumed from the example.
 
 ### Hosted dashboard
 

@@ -45,16 +45,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T16:44:15Z
+Generated: 2026-09-21T16:48:24Z
 
 ### Git
 - Branch: `main`
-- Head: `5b9858aaeb92`
-- Commit date: 2026-09-21T18:44:04+02:00
-- Commit: refactor: centralize paper execution calculations (#89)
-- Tracked files: 488
+- Head: `f1df4aabca7c`
+- Commit date: 2026-09-21T18:48:14+02:00
+- Commit: feat: support per-market paper execution costs (#90)
+- Tracked files: 490
 
 ### Recently changed files
+- `README.md`
+- `src/ai_trading/execution_costs.py`
+- `src/ai_trading/runtime.py`
+- `tests/test_execution_costs.py`
 - `src/ai_trading/broker.py`
 - `src/ai_trading/multiasset_backtest.py`
 - `src/ai_trading/multiasset_runtime.py`
@@ -64,13 +68,6 @@ Generated: 2026-09-21T16:44:15Z
 - `tests/test_multiasset_market_context.py`
 - `src/ai_trading/dashboard.py`
 - `tests/test_dashboard_persistence.py`
-- `README.md`
-- `src/ai_trading/backtest.py`
-- `src/ai_trading/engine.py`
-- `src/ai_trading/runtime.py`
-- `tests/test_backtest.py`
-- `tests/test_broker.py`
-- `tests/test_multiasset_backtest.py`
 
 ### Project signals
 - `pyproject.toml`
