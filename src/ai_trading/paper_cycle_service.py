@@ -59,6 +59,8 @@ def _safe_failure_detail(exc: Exception) -> str:
             return f"RuntimeError: {code}"
         if message.startswith("paper cycle did not process target:"):
             return "RuntimeError: target_processing_failed"
+        if message.startswith("market data failed quality gate:"):
+            return "RuntimeError: market_data_quality_failed"
     return f"{type(exc).__name__}: worker failure"
 
 
