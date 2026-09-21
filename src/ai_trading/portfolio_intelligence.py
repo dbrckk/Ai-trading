@@ -148,12 +148,16 @@ def apply_portfolio_intelligence(
     correlation_scale = _correlation_scale(max_pair_correlation, config)
 
     confidence_scale = float(confidence_multipliers.mean()) if len(confidence_multipliers) else 0.0
-    leverage = min(
+    base_leverage = min(
         config.max_leverage,
         max(
             config.min_leverage,
-            vol_scale * drawdown_scale * stress_scale * correlation_scale,
+            vol_scale * drawdown_scale * stress_scale,
         ),
+    )
+    leverage = max(
+        config.min_leverage,
+        min(base_leverage, correlation_scale),
     )
 
     intelligent_weights = weights * leverage
