@@ -36,6 +36,11 @@ class MultiAssetWalkForwardBacktester:
         min_train_bars: int = 252,
         test_window_bars: int = 63,
     ) -> None:
+        if min_train_bars < 2:
+            raise ValueError("min_train_bars must be at least 2")
+        if test_window_bars < 1:
+            raise ValueError("test_window_bars must be at least 1")
+
         self.risk_config = risk_config or RiskConfig()
         self.model_config = model_config or ModelConfig()
         self.allocation_config = allocation_config or AllocationConfig()
