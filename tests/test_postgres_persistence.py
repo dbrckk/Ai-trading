@@ -371,3 +371,40 @@ def test_trade_event_key_ignores_pnl_provenance_metadata() -> None:
     unknown = _trade(pnl=0.0, pnl_known=False)
 
     assert _trade_event_key(known) == _trade_event_key(unknown)
+
+
+
+def test_schema_upgrade_adds_pnl_accounting_columns_without_reset(backend) -> None:
+    with psycopg.connect(DATABASE_URL) as connection, connection.cursor() as cursor:
+        cursor.execute(
+            "ALTER TABLE paper_trade_performance "
+            "DROP COLUMN IF EXISTS pnl_observations"
+        )
+        cursor.execute("ALTER TABLE paper_trades DROP COLUMN IF EXISTS pnl_known")
+        cursor.execute(
+            "ALTER TABLE paper_runtime_state "
+            "DROP COLUMN IF EXISTS average_entry_price"
+        )
+
+    backend.initialize_schema()
+
+    with psycopg.connect(DATABASE_URL) as connection, connection.cursor() as cursor:
+        cursor.execute(
+            """
+            SELECT table_name, column_name
+            FROM information_schema.columns
+            WHERE (table_name, column_name) IN (
+                ('paper_runtime_state', 'average_entry_price'),
+                ('paper_trades', 'pnl_known'),
+                ('paper_trade_performance', 'pnl_observations')
+            )
+            ORDER BY table_name, column_name
+            """
+        )
+        columns = {(row[0], row[1]) for row in cursor.fetchall()}
+
+    assert columns == {
+        ("paper_runtime_state", "average_entry_price"),
+        ("paper_trade_performance", "pnl_observations"),
+        ("paper_trades", "pnl_known"),
+    }
