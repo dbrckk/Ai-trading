@@ -166,6 +166,10 @@ def test_multi_market_overview_scales_normalized_sleeves_to_100k() -> None:
     assert snapshot["portfolio"]["equity"] == pytest.approx(100_100.0)
     assert snapshot["portfolio"]["pnl"] == pytest.approx(100.0)
     assert snapshot["portfolio"]["healthy_markets"] == 3
+    assert snapshot["portfolio"]["running_markets"] == 3
+    assert snapshot["portfolio"]["stale_markets"] == 0
+    assert snapshot["portfolio"]["error_markets"] == 0
+    assert snapshot["portfolio"]["alert_markets"] == 3
     assert [row["label"] for row in snapshot["markets"]] == [
         "Gold",
         "DAX",
@@ -194,7 +198,9 @@ def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
     assert "Gold" in page
     assert "DAX" in page
     assert "BTC / USD" in page
-    assert "Healthy markets" in page
+    assert "Storage healthy" in page
+    assert "Engines running" in page
+    assert "Markets with alerts" in page
     assert "Signal" in page
     assert "Confidence" in page
     assert "LONG" in page
