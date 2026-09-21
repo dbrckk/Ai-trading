@@ -13,6 +13,7 @@ from .paper_cycle_service import (
 )
 from .persistence import PaperPersistence, build_runtime_key
 from .persistence_factory import build_paper_persistence
+from .runtime_status import runtime_status_snapshot
 
 _NORMALIZED_RUNTIME_CASH = 100_000.0
 
@@ -186,6 +187,8 @@ def build_multi_market_overview(
             market_reason = None
             cycle_duration_seconds = None
             market_mtf_evaluated = False
+            heartbeat_age_seconds = None
+            freshness = "OFF"
             if status is not None:
                 market_signal = (
                     {1: "LONG", -1: "SHORT", 0: "FLAT"}.get(status.side)
@@ -196,6 +199,16 @@ def build_multi_market_overview(
                 market_reason = status.reason
                 cycle_duration_seconds = status.cycle_duration_seconds
                 market_mtf_evaluated = status.mtf_evaluated
+                status_snapshot = runtime_status_snapshot(status)
+                heartbeat_age_seconds = status_snapshot.get("heartbeat_age_seconds")
+                effective_status = str(status_snapshot.get("engine_status") or "OFF").upper()
+                freshness = {
+                    "RUNNING": "LIVE",
+                    "STARTING": "STARTING",
+                    "STALE": "DELAYED",
+                    "ERROR": "ERROR",
+                    "OFF": "OFF",
+                }.get(effective_status, effective_status)
             healthy = bool(overview.get("storage_healthy"))
             if healthy:
                 healthy_markets += 1
@@ -226,6 +239,8 @@ def build_multi_market_overview(
                     "reason": market_reason,
                     "cycle_duration_seconds": cycle_duration_seconds,
                     "mtf_evaluated": market_mtf_evaluated,
+                    "heartbeat_age_seconds": heartbeat_age_seconds,
+                    "freshness": freshness,
                     "overview": overview,
                 }
             )
@@ -242,6 +257,8 @@ def build_multi_market_overview(
                     "pnl": None,
                     "normalized_equity": None,
                     "runtime_key": runtime_key,
+                    "heartbeat_age_seconds": None,
+                    "freshness": "ERROR",
                     "overview": {
                         "storage_healthy": False,
                         "engine_status": "ERROR",
