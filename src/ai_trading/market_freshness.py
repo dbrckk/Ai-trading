@@ -4,7 +4,6 @@ from datetime import UTC, datetime, time
 
 from .runtime_status import HostedRuntimeStatus
 
-
 _PROVIDER_GAP_ERRORS = {
     "RuntimeError: persisted_bar_outside_loaded_history",
     "RuntimeError: no_eligible_market_bar",
@@ -19,13 +18,13 @@ def _utc_now(now: datetime | None) -> datetime:
 
 
 def market_session_open(symbol: str, *, now: datetime | None = None) -> bool | None:
-    from zoneinfo import ZoneInfo
-
     """Return the expected weekly session state for supported paper markets.
 
     This intentionally models regular weekly sessions only. Exchange holidays are
     not guessed; unsupported symbols return None instead of a false precision.
     """
+
+    from zoneinfo import ZoneInfo
 
     current = _utc_now(now)
 
