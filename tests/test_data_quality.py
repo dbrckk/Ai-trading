@@ -89,3 +89,18 @@ def test_non_datetime_index_fails_cadence_quality() -> None:
 def test_data_quality_rejects_invalid_scoring_configuration(kwargs) -> None:
     with pytest.raises(ValueError):
         evaluate_market_data_quality(clean_market(), **kwargs)
+
+
+
+def test_single_session_break_in_recent_intraday_window_is_tolerated() -> None:
+    df = intraday_market(120)
+    before = df.iloc[:60].copy()
+    after = df.iloc[60:].copy()
+    after.index = after.index + pd.Timedelta(hours=8)
+    session_split = pd.concat([before, after])
+
+    report = evaluate_market_data_quality(session_split)
+
+    assert 0.0 < report.gap_fraction <= 0.05
+    assert "excessive cadence gaps" not in report.reasons
+    assert report.valid
