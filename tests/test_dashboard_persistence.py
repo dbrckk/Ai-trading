@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import socket
+from datetime import UTC, datetime, timedelta
 import time
 from threading import Thread
 from urllib.error import HTTPError, URLError
@@ -108,15 +109,16 @@ class DurablePersistence:
 
     def list_scheduler_deliveries(self, *, limit: int = 20):
         assert limit == 20
+        now = datetime.now(UTC)
         return tuple(
             SchedulerDelivery(
-                timestamp_utc=f"2026-09-21T16:{minute:02d}:00+00:00",
+                timestamp_utc=(now - timedelta(minutes=offset)).isoformat(),
                 source="cloudflare",
                 status_code=200,
                 ok=True,
                 processed=1,
             )
-            for minute in (0, 5, 10)
+            for offset in (10, 5, 0)
         )
 
 
@@ -294,7 +296,7 @@ def test_dashboard_surfaces_verified_scheduler_delivery(tmp_path) -> None:
     assert "VERIFIED" in page
     assert "3 / 3" in page
     assert "cloudflare" in page
-    assert "2026-09-21T16:10:00+00:00" in page
+    assert "Last delivery age" in page
     assert "Authentication material is never persisted or displayed." in page
 
 
