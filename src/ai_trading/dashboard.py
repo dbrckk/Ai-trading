@@ -30,7 +30,7 @@ from .persistence_factory import build_paper_persistence
 from .readiness import ReadinessCheck, ReadinessPolicy, ReadinessReport, evaluate_readiness
 from .runtime_state import RuntimeStateStore
 from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore, runtime_status_snapshot
-from .scheduler_endpoint import handle_scheduler_request
+from .scheduler_endpoint import handle_scheduler_request, scheduler_telemetry_payload
 from .trade_journal import TradeJournal
 
 _STORAGE_ERROR_STATUS: dict[str, object] = {
@@ -1098,6 +1098,11 @@ def serve_dashboard(
                 configured_token=effective_scheduler_token,
                 run_cycle=effective_cycle_executor,
             )
+            telemetry = scheduler_telemetry_payload(
+                response,
+                self.headers.get("X-Scheduler-Source"),
+            )
+            print(json.dumps(telemetry, sort_keys=True), flush=True)
             self._send_json(
                 response.payload,
                 status_code=response.status_code,
