@@ -160,6 +160,10 @@ def build_multi_market_overview(
     market_rows: list[dict[str, object]] = []
     portfolio_equity = 0.0
     healthy_markets = 0
+    running_markets = 0
+    stale_markets = 0
+    error_markets = 0
+    alert_markets = 0
 
     for market in markets:
         runtime_key = build_runtime_key(market.symbol, interval)
@@ -195,6 +199,17 @@ def build_multi_market_overview(
             healthy = bool(overview.get("storage_healthy"))
             if healthy:
                 healthy_markets += 1
+
+            engine_status = str(overview.get("engine_status") or "UNKNOWN").upper()
+            if engine_status == "RUNNING":
+                running_markets += 1
+            elif engine_status == "STALE":
+                stale_markets += 1
+            elif engine_status == "ERROR":
+                error_markets += 1
+            if overview.get("alerts"):
+                alert_markets += 1
+
             portfolio_equity += sleeve_equity
             market_rows.append(
                 {
@@ -215,6 +230,8 @@ def build_multi_market_overview(
                 }
             )
         except Exception:  # noqa: BLE001 - isolate one market from the dashboard
+            error_markets += 1
+            alert_markets += 1
             market_rows.append(
                 {
                     "symbol": market.symbol,
@@ -246,6 +263,10 @@ def build_multi_market_overview(
             "pnl": portfolio_equity - portfolio_cash,
             "markets": len(markets),
             "healthy_markets": healthy_markets,
+            "running_markets": running_markets,
+            "stale_markets": stale_markets,
+            "error_markets": error_markets,
+            "alert_markets": alert_markets,
         },
         "markets": market_rows,
     }
