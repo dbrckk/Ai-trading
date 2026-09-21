@@ -290,3 +290,43 @@ def test_service_propagates_separate_mtf_period() -> None:
 
     assert runner.shadow_challenger_enabled is True
     assert runner.mtf_period == "1mo"
+
+
+
+def test_known_runtime_failure_writes_safe_diagnostic_code() -> None:
+    backend = FakePersistence()
+
+    class BrokenRunner:
+        def run_once(self, **kwargs):
+            del kwargs
+            raise RuntimeError("persisted last_processed is outside loaded history")
+
+    with pytest.raises(PaperCycleServiceError):
+        run_production_paper_cycle(
+            ProductionPaperCycleSettings(),
+            persistence=backend,
+            runner_factory=lambda persistence: BrokenRunner(),
+        )
+
+    assert backend.statuses[-1].error == (
+        "RuntimeError: persisted_bar_outside_loaded_history"
+    )
+
+
+def test_unknown_runtime_failure_stays_sanitized() -> None:
+    backend = FakePersistence()
+
+    class BrokenRunner:
+        def run_once(self, **kwargs):
+            del kwargs
+            raise RuntimeError("token=super-secret-value")
+
+    with pytest.raises(PaperCycleServiceError):
+        run_production_paper_cycle(
+            ProductionPaperCycleSettings(),
+            persistence=backend,
+            runner_factory=lambda persistence: BrokenRunner(),
+        )
+
+    assert backend.statuses[-1].error == "RuntimeError: worker failure"
+    assert "super-secret-value" not in repr(backend.statuses[-1])
