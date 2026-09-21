@@ -21,7 +21,6 @@ from ai_trading.runtime_state import RuntimeState
 from ai_trading.runtime_status import HostedRuntimeStatus
 from ai_trading.trade_journal import TradeJournal
 
-
 TEST_MARKET_NOW = datetime(2026, 9, 21, 12, 0, tzinfo=UTC)
 
 
