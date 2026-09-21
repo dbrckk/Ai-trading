@@ -870,3 +870,41 @@ def test_pending_targets_reject_gap_beyond_three_days() -> None:
             eligible,
             market.index,
         )
+
+
+
+def test_paper_cycle_blocks_repeated_market_data_gaps_before_state_mutation(
+    tmp_path: Path,
+) -> None:
+    backend = FilePaperPersistence(tmp_path)
+    df = sample_market(120)
+    df = df.drop(index=df.index[10:110:10])
+    runner = build_runner(tmp_path, backend, df)
+
+    with pytest.raises(RuntimeError, match="market data failed quality gate"):
+        runner.run_once(
+            symbol="GC=F",
+            period="5d",
+            interval="5m",
+            max_catchup_bars=12,
+        )
+
+    assert backend.list_trades() == ()
+    assert not backend.state_store.path.exists()
+    assert not backend.audit_log.path.exists()
+
+
+def test_paper_cycle_accepts_single_tolerated_market_gap(tmp_path: Path) -> None:
+    backend = FilePaperPersistence(tmp_path)
+    df = sample_market(120)
+    df = df.drop(index=df.index[50])
+    runner = build_runner(tmp_path, backend, df)
+
+    result = runner.run_once(
+        symbol="GC=F",
+        period="5d",
+        interval="5m",
+        max_catchup_bars=12,
+    )
+
+    assert result.processed == 1
