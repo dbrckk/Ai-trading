@@ -250,8 +250,10 @@ _SCHEMA_STATEMENTS = (
 
 
 def _trade_event_key(trade: TradeSnapshot) -> str:
+    payload = asdict(trade)
+    payload.pop("pnl_known", None)
     canonical = json.dumps(
-        asdict(trade),
+        payload,
         sort_keys=True,
         separators=(",", ":"),
         default=str,
