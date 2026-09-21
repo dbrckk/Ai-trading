@@ -9,6 +9,7 @@ from math import isclose, isfinite
 from .market_freshness import classify_market_freshness
 from .operational_overview import build_operational_overview
 from .paper_cycle import PaperCycleResult
+from .performance_metrics import empty_performance_payload, performance_payload
 from .paper_cycle_service import (
     PaperCycleServiceError,
     ProductionPaperCycleSettings,
@@ -192,6 +193,23 @@ def build_multi_market_overview(
     closed_markets = 0
     catching_up_markets = 0
     provider_gap_markets = 0
+    runtime_keys = tuple(
+        build_runtime_key(market.symbol, interval)
+        for market in markets
+    )
+    portfolio_performance = empty_performance_payload()
+    load_portfolio_performance = getattr(
+        persistence,
+        "load_portfolio_trade_performance",
+        None,
+    )
+    if callable(load_portfolio_performance):
+        try:
+            portfolio_performance = performance_payload(
+                load_portfolio_performance(runtime_keys)
+            )
+        except Exception:
+            portfolio_performance = empty_performance_payload()
 
     for market in markets:
         runtime_key = build_runtime_key(market.symbol, interval)
@@ -322,6 +340,7 @@ def build_multi_market_overview(
             "closed_markets": closed_markets,
             "catching_up_markets": catching_up_markets,
             "provider_gap_markets": provider_gap_markets,
+            "performance": portfolio_performance,
         },
         "markets": market_rows,
     }
