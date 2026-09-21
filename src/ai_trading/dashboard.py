@@ -434,6 +434,55 @@ def render_dashboard(
         if engine_status == "RUNNING" and not operational_alerts
         else ("status-warn" if not storage_error else "status-error")
     )
+
+    scheduler_panel = ""
+    if persistence is not None:
+        try:
+            list_deliveries = getattr(persistence, "list_scheduler_deliveries", None)
+            deliveries = tuple(list_deliveries(limit=20)) if callable(list_deliveries) else ()
+            scheduler_overview = scheduler_delivery_overview(deliveries)
+            scheduler_verified = bool(scheduler_overview["cloudflare_delivery_verified"])
+            scheduler_delivery_count = int(scheduler_overview["delivery_count"])
+            scheduler_successes = int(
+                scheduler_overview["consecutive_cloudflare_successes"]
+            )
+            scheduler_last_source = str(scheduler_overview["last_source"] or "-")
+            scheduler_last_status = (
+                "-"
+                if scheduler_overview["last_status_code"] is None
+                else str(scheduler_overview["last_status_code"])
+            )
+            scheduler_last_delivery = str(
+                scheduler_overview["last_delivery_timestamp_utc"] or "-"
+            )
+            scheduler_state = (
+                "VERIFIED"
+                if scheduler_verified
+                else ("COLLECTING" if scheduler_delivery_count else "WAITING")
+            )
+            scheduler_state_class = "status-ok" if scheduler_verified else "status-warn"
+            scheduler_panel = f"""
+<section class="section" id="scheduler">
+<div class="section-head"><h2>Scheduler delivery</h2><small>durable external-trigger evidence</small></div>
+<div class="metrics">
+<div class="metric primary"><small>Cloudflare delivery</small><strong class="{scheduler_state_class}">{scheduler_state}</strong></div>
+<div class="metric"><small>Consecutive Cloudflare successes</small><strong>{scheduler_successes} / 3</strong></div>
+<div class="metric"><small>Recent deliveries</small><strong>{scheduler_delivery_count}</strong></div>
+<div class="metric"><small>Last source</small><strong>{html.escape(scheduler_last_source)}</strong></div>
+<div class="metric"><small>Last HTTP status</small><strong>{html.escape(scheduler_last_status)}</strong></div>
+<div class="metric"><small>Last delivery</small><strong>{html.escape(scheduler_last_delivery)}</strong></div>
+</div>
+<small class="runtime-reason">Verification requires at least three consecutive successful Cloudflare deliveries. Authentication material is never persisted or displayed.</small>
+</section>
+"""
+        except Exception:
+            scheduler_panel = """
+<section class="section" id="scheduler">
+<div class="section-head"><h2>Scheduler delivery</h2><small>durable external-trigger evidence</small></div>
+<div class="alert-box warn"><strong>Scheduler telemetry unavailable.</strong></div>
+</section>
+"""
+
     market_panel = ""
     if persistence is not None and markets and len(markets) > 1:
         snapshot = build_multi_market_overview(
@@ -762,6 +811,7 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
 <div class="brand"><span class="brand-mark">AI</span><span>Trading Terminal</span></div>
 <div class="nav-links">
 <a href="#overview">Overview</a>
+<a href="#scheduler">Scheduler</a>
 <a href="#markets">Markets</a>
 <a href="#performance">Performance</a>
 <a href="#burnin">Burn-in</a>
@@ -809,6 +859,7 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
 <small class="runtime-reason">Last processed: {html.escape(last_processed)} · Model checksum: {html.escape(model_checksum)}</small>
 </section>
 
+{scheduler_panel}
 <section class="section">
 <div class="section-head"><h2>Trading state</h2><small>paper execution state</small></div>
 <div class="metrics">
