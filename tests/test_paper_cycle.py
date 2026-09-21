@@ -870,3 +870,99 @@ def test_pending_targets_reject_gap_beyond_three_days() -> None:
             eligible,
             market.index,
         )
+
+
+
+def test_paper_cycle_blocks_repeated_market_data_gaps_before_state_mutation(
+    tmp_path: Path,
+) -> None:
+    backend = FilePaperPersistence(tmp_path)
+    df = sample_market(120)
+    df = df.drop(index=df.index[10:110:10])
+    runner = build_runner(tmp_path, backend, df)
+
+    with pytest.raises(RuntimeError, match="market data failed quality gate"):
+        runner.run_once(
+            symbol="GC=F",
+            period="5d",
+            interval="5m",
+            max_catchup_bars=12,
+        )
+
+    assert backend.list_trades() == ()
+    assert not backend.state_store.path.exists()
+    assert not backend.audit_log.path.exists()
+
+
+def test_paper_cycle_accepts_single_tolerated_market_gap(tmp_path: Path) -> None:
+    backend = FilePaperPersistence(tmp_path)
+    df = sample_market(120)
+    df = df.drop(index=df.index[50])
+    runner = build_runner(tmp_path, backend, df)
+
+    result = runner.run_once(
+        symbol="GC=F",
+        period="5d",
+        interval="5m",
+        max_catchup_bars=12,
+    )
+
+    assert result.processed == 1
+
+
+
+def test_degraded_mtf_history_is_skipped_without_disrupting_primary_cycle(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    backend = FilePaperPersistence(tmp_path)
+    primary = sample_market(217)
+    long_history = sample_market(900)
+    long_history = long_history.drop(index=long_history.index[10:810:10])
+    calls: list[str] = []
+    mtf_calls = 0
+
+    def loader(symbol: str, period: str, interval: str) -> pd.DataFrame:
+        del symbol, interval
+        calls.append(period)
+        return long_history if period == "1mo" else primary
+
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "evaluate_shadow_challenger",
+        lambda *args, **kwargs: None,
+    )
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "select_observable_execution_target",
+        lambda market, eligible, current_execution_idx, **kwargs: eligible[-3],
+    )
+
+    def fake_mtf(*args, **kwargs):
+        nonlocal mtf_calls
+        del args, kwargs
+        mtf_calls += 1
+
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "evaluate_multi_timeframe_shadow",
+        fake_mtf,
+    )
+
+    runner = PaperCycleRunner(
+        persistence=backend,
+        data_loader=loader,
+        runtime_factory=runtime_factory(tmp_path),
+    )
+    result = runner.run_once(
+        symbol="GC=F",
+        period="5d",
+        interval="5m",
+        shadow_challenger_enabled=True,
+        mtf_period="1mo",
+    )
+
+    assert result.processed == 1
+    assert calls == ["5d", "1mo"]
+    assert mtf_calls == 0
+    assert result.mtf_evaluated is False
