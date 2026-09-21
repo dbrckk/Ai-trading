@@ -330,3 +330,28 @@ def test_unknown_runtime_failure_stays_sanitized() -> None:
 
     assert backend.statuses[-1].error == "RuntimeError: worker failure"
     assert "super-secret-value" not in repr(backend.statuses[-1])
+
+
+
+def test_market_data_quality_failure_writes_safe_diagnostic_code() -> None:
+    backend = FakePersistence()
+
+    class BrokenRunner:
+        def run_once(self, **kwargs):
+            del kwargs
+            raise RuntimeError(
+                "market data failed quality gate: excessive cadence gaps,"
+                "non-positive prices"
+            )
+
+    with pytest.raises(PaperCycleServiceError) as caught:
+        run_production_paper_cycle(
+            ProductionPaperCycleSettings(),
+            persistence=backend,
+            runner_factory=lambda persistence: BrokenRunner(),
+        )
+
+    assert caught.value.code == "execution_failed"
+    assert backend.statuses[-1].engine_status == "ERROR"
+    assert backend.statuses[-1].error == "RuntimeError: market_data_quality_failed"
+    assert "cadence gaps" not in repr(backend.statuses[-1])
