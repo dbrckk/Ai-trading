@@ -79,7 +79,7 @@ def load_history(
                 threads=False,
             )
             return _normalize_history_frame(frame)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 - provider can raise backend-specific transport errors
             last_error = exc
             if attempt + 1 < max_attempts:
                 sleep(retry_backoff_seconds * (2**attempt))
