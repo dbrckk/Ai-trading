@@ -1,53 +1,63 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "b174d18726de8ca703a8f10ba66cf66512979941",
-  "head": "598410da76c8cafbe5715fdfc2a29c2a807ee75f",
+  "base": "598410da76c8cafbe5715fdfc2a29c2a807ee75f",
+  "head": "567839680eefe4848178d929237db1ff9a093aa5",
   "index_mode": "incremental",
   "changed_files": [
+    {
+      "path": "infra/cloudflare-paper-scheduler/README.md",
+      "status": "M"
+    },
+    {
+      "path": "infra/cloudflare-paper-scheduler/src/index.js",
+      "status": "M"
+    },
+    {
+      "path": "infra/cloudflare-paper-scheduler/test/index.test.js",
+      "status": "M"
+    },
     {
       "path": "src/ai_trading/dashboard.py",
       "status": "M"
     },
     {
-      "path": "src/ai_trading/market_freshness.py",
-      "status": "A"
-    },
-    {
-      "path": "src/ai_trading/multi_market.py",
+      "path": "src/ai_trading/scheduler_endpoint.py",
       "status": "M"
     },
     {
-      "path": "tests/test_market_freshness.py",
-      "status": "A"
-    },
-    {
-      "path": "tests/test_multi_market.py",
+      "path": "tests/test_scheduler_endpoint.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
+    "infra/cloudflare-paper-scheduler/src/index.js",
+    "infra/cloudflare-paper-scheduler/test/index.test.js",
     "src/ai_trading/dashboard.py",
-    "src/ai_trading/market_freshness.py",
-    "src/ai_trading/multi_market.py",
-    "tests/test_market_freshness.py",
-    "tests/test_multi_market.py"
+    "src/ai_trading/scheduler_endpoint.py",
+    "tests/test_scheduler_endpoint.py"
   ],
   "impacted_files": [
+    "infra/cloudflare-paper-scheduler/src/index.js",
+    "infra/cloudflare-paper-scheduler/test/index.test.js",
     "src/ai_trading/cli.py",
     "src/ai_trading/dashboard.py",
-    "src/ai_trading/market_freshness.py",
-    "src/ai_trading/multi_market.py",
+    "src/ai_trading/scheduler_endpoint.py",
     "tests/test_dashboard.py",
     "tests/test_dashboard_engine_status.py",
     "tests/test_dashboard_health.py",
     "tests/test_dashboard_overview.py",
     "tests/test_dashboard_persistence.py",
-    "tests/test_market_freshness.py",
     "tests/test_multi_market.py",
     "tests/test_scheduler_endpoint.py"
   ],
   "impacted_symbols": [
+    {
+      "name": "invokePaperCycle",
+      "kind": "function",
+      "file": "infra/cloudflare-paper-scheduler/src/index.js",
+      "line": 1
+    },
     {
       "name": "self_test",
       "kind": "function",
@@ -394,55 +404,31 @@
       "name": "log_message",
       "kind": "function",
       "file": "src/ai_trading/dashboard.py",
-      "line": 1106
+      "line": 1111
     },
     {
-      "name": "_utc_now",
-      "kind": "function",
-      "file": "src/ai_trading/market_freshness.py",
-      "line": 13
+      "name": "SchedulerHttpResponse",
+      "kind": "class",
+      "file": "src/ai_trading/scheduler_endpoint.py",
+      "line": 12
     },
     {
-      "name": "market_session_open",
+      "name": "scheduler_telemetry_payload",
       "kind": "function",
-      "file": "src/ai_trading/market_freshness.py",
+      "file": "src/ai_trading/scheduler_endpoint.py",
       "line": 20
     },
     {
-      "name": "classify_market_freshness",
+      "name": "_authorized",
       "kind": "function",
-      "file": "src/ai_trading/market_freshness.py",
-      "line": 56
+      "file": "src/ai_trading/scheduler_endpoint.py",
+      "line": 40
     },
     {
-      "name": "MarketSpec",
-      "kind": "class",
-      "file": "src/ai_trading/multi_market.py",
-      "line": 24
-    },
-    {
-      "name": "configured_markets_from_env",
+      "name": "handle_scheduler_request",
       "kind": "function",
-      "file": "src/ai_trading/multi_market.py",
-      "line": 37
-    },
-    {
-      "name": "run_multi_market_paper_cycle",
-      "kind": "function",
-      "file": "src/ai_trading/multi_market.py",
-      "line": 61
-    },
-    {
-      "name": "run_market",
-      "kind": "function",
-      "file": "src/ai_trading/multi_market.py",
-      "line": 92
-    },
-    {
-      "name": "build_multi_market_overview",
-      "kind": "function",
-      "file": "src/ai_trading/multi_market.py",
-      "line": 156
+      "file": "src/ai_trading/scheduler_endpoint.py",
+      "line": 49
     },
     {
       "name": "test_trade_journal_round_trip",
@@ -901,60 +887,6 @@
       "line": 327
     },
     {
-      "name": "_status",
-      "kind": "function",
-      "file": "tests/test_market_freshness.py",
-      "line": 10
-    },
-    {
-      "name": "test_btc_session_is_always_open",
-      "kind": "function",
-      "file": "tests/test_market_freshness.py",
-      "line": 27
-    },
-    {
-      "name": "test_dax_regular_weekday_session_is_dst_aware",
-      "kind": "function",
-      "file": "tests/test_market_freshness.py",
-      "line": 33
-    },
-    {
-      "name": "test_gold_daily_maintenance_window_is_closed",
-      "kind": "function",
-      "file": "tests/test_market_freshness.py",
-      "line": 41
-    },
-    {
-      "name": "test_gold_weekend_is_closed",
-      "kind": "function",
-      "file": "tests/test_market_freshness.py",
-      "line": 49
-    },
-    {
-      "name": "test_catch_up_takes_priority_over_live_state",
-      "kind": "function",
-      "file": "tests/test_market_freshness.py",
-      "line": 55
-    },
-    {
-      "name": "test_known_data_gap_is_exposed_as_provider_gap_while_market_open",
-      "kind": "function",
-      "file": "tests/test_market_freshness.py",
-      "line": 69
-    },
-    {
-      "name": "test_closed_session_is_not_misreported_as_delayed",
-      "kind": "function",
-      "file": "tests/test_market_freshness.py",
-      "line": 86
-    },
-    {
-      "name": "test_stale_heartbeat_during_open_session_is_delayed",
-      "kind": "function",
-      "file": "tests/test_market_freshness.py",
-      "line": 100
-    },
-    {
       "name": "FakeMultiPersistence",
       "kind": "class",
       "file": "tests/test_multi_market.py",
@@ -1060,143 +992,156 @@
       "name": "successful_result",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 16
+      "line": 20
     },
     {
       "name": "_free_port",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 30
+      "line": 34
     },
     {
       "name": "_request",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 36
+      "line": 40
     },
     {
       "name": "_start_scheduler_dashboard",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 51
+      "line": 55
     },
     {
       "name": "test_missing_server_token_fails_closed",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 83
+      "line": 87
     },
     {
       "name": "run_cycle",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 86
+      "line": 90
     },
     {
       "name": "test_missing_authorization_is_unauthorized",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 102
+      "line": 106
     },
     {
       "name": "test_wrong_scheme_is_unauthorized",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 113
+      "line": 117
     },
     {
       "name": "test_wrong_bearer_token_is_unauthorized",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 124
+      "line": 128
     },
     {
       "name": "test_valid_token_runs_exactly_one_cycle",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 135
+      "line": 139
     },
     {
       "name": "run_cycle",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 138
+      "line": 142
     },
     {
       "name": "test_concurrent_progress_is_successful_noop",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 154
+      "line": 158
     },
     {
       "name": "test_storage_failure_is_sanitized",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 168
+      "line": 172
     },
     {
       "name": "run_cycle",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 169
+      "line": 173
     },
     {
       "name": "test_execution_failure_is_sanitized",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 189
+      "line": 193
     },
     {
       "name": "run_cycle",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 190
+      "line": 194
     },
     {
       "name": "test_http_scheduler_rejects_missing_and_wrong_authorization",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 210
+      "line": 214
     },
     {
       "name": "test_http_scheduler_valid_token_runs_one_cycle_and_ignores_body",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 231
+      "line": 235
     },
     {
       "name": "fake_cycle",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 234
+      "line": 238
     },
     {
       "name": "test_http_scheduler_other_post_routes_are_not_exposed",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 259
+      "line": 263
     },
     {
       "name": "test_http_scheduler_failure_response_never_leaks_secrets",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 275
+      "line": 279
     },
     {
       "name": "fail_cycle",
       "kind": "function",
       "file": "tests/test_scheduler_endpoint.py",
-      "line": 276
+      "line": 280
+    },
+    {
+      "name": "test_scheduler_telemetry_is_sanitized_and_identifies_cloudflare",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 304
+    },
+    {
+      "name": "test_scheduler_telemetry_does_not_trust_arbitrary_source_headers",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 323
     }
   ],
   "selected_tests": [
+    "infra/cloudflare-paper-scheduler/test/index.test.js",
     "tests/test_dashboard.py",
     "tests/test_dashboard_engine_status.py",
     "tests/test_dashboard_health.py",
     "tests/test_dashboard_overview.py",
     "tests/test_dashboard_persistence.py",
-    "tests/test_market_freshness.py",
     "tests/test_multi_market.py",
+    "tests/test_scheduler.py",
     "tests/test_scheduler_endpoint.py"
   ]
 }

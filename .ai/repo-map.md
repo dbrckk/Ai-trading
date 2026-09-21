@@ -2332,6 +2332,7 @@ payload = render_dashboard(
 def do_POST(self) -> None
 ⋮----
 response = handle_scheduler_request(
+telemetry = scheduler_telemetry_payload(
 ⋮----
 def log_message(self, format: str, *args: object) -> None
 ````
@@ -7002,6 +7003,15 @@ class SchedulerHttpResponse
 status_code: int
 payload: dict[str, object]
 ⋮----
+_ALLOWED_SCHEDULER_SOURCES = {"cloudflare"}
+⋮----
+normalized_source = (source or "").strip().lower()
+⋮----
+normalized_source = "external"
+⋮----
+payload: dict[str, object] = {
+processed = response.payload.get("processed")
+⋮----
 def _authorized(authorization: str | None, configured_token: str) -> bool
 ⋮----
 provided = authorization.removeprefix("Bearer ")
@@ -10909,6 +10919,16 @@ def test_http_scheduler_other_post_routes_are_not_exposed(tmp_path) -> None
 def test_http_scheduler_failure_response_never_leaks_secrets(tmp_path) -> None
 ⋮----
 def fail_cycle() -> PaperCycleResult
+⋮----
+def test_scheduler_telemetry_is_sanitized_and_identifies_cloudflare() -> None
+⋮----
+response = SchedulerHttpResponse(
+⋮----
+payload = scheduler_telemetry_payload(response, "cloudflare")
+⋮----
+def test_scheduler_telemetry_does_not_trust_arbitrary_source_headers() -> None
+⋮----
+payload = scheduler_telemetry_payload(
 ````
 
 ## File: tests/test_scheduler_governor.py

@@ -45,17 +45,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T07:55:21Z
+Generated: 2026-09-21T07:59:38Z
 
 ### Git
 - Branch: `main`
-- Head: `598410da76c8`
-- Commit date: 2026-09-21T09:55:11+02:00
-- Commit: feat: add session-aware market freshness states (#75)
+- Head: `567839680eef`
+- Commit date: 2026-09-21T09:59:28+02:00
+- Commit: feat: add sanitized scheduler delivery telemetry (#76)
 - Tracked files: 479
 
 ### Recently changed files
+- `infra/cloudflare-paper-scheduler/README.md`
+- `infra/cloudflare-paper-scheduler/src/index.js`
+- `infra/cloudflare-paper-scheduler/test/index.test.js`
 - `src/ai_trading/dashboard.py`
+- `src/ai_trading/scheduler_endpoint.py`
+- `tests/test_scheduler_endpoint.py`
 - `src/ai_trading/market_freshness.py`
 - `src/ai_trading/multi_market.py`
 - `tests/test_market_freshness.py`
