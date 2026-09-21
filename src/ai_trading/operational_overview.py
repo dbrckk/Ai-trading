@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from math import isfinite
+
 from .burnin import BurnInSnapshot, calculate_burnin_metrics
 from .mtf_shadow_config import (
     ValidatedMTFShadowConfig,
@@ -23,6 +25,53 @@ def _empty_model_snapshot() -> dict[str, object]:
         "format": None,
         "version": None,
         "checksum": None,
+    }
+
+
+def _empty_performance_snapshot() -> dict[str, object]:
+    return {
+        "available": False,
+        "trade_count": 0,
+        "pnl_observations": 0,
+        "pnl_coverage": None,
+        "realized_pnl": None,
+        "average_pnl": None,
+        "gross_profit": None,
+        "gross_loss": None,
+        "profit_factor": None,
+        "profit_factor_infinite": False,
+        "max_drawdown": None,
+    }
+
+
+def _performance_snapshot(metrics) -> dict[str, object]:
+    trade_count = int(metrics.trade_count)
+    observations = int(metrics.pnl_observations)
+    available = observations > 0
+    profit_factor = metrics.profit_factor
+    profit_factor_infinite = (
+        profit_factor is not None and not isfinite(float(profit_factor))
+    )
+    return {
+        "available": available,
+        "trade_count": trade_count,
+        "pnl_observations": observations,
+        "pnl_coverage": (
+            observations / trade_count
+            if trade_count > 0
+            else None
+        ),
+        "realized_pnl": float(metrics.realized_pnl) if available else None,
+        "average_pnl": float(metrics.average_pnl) if available else None,
+        "gross_profit": float(metrics.gross_profit) if available else None,
+        "gross_loss": float(metrics.gross_loss) if available else None,
+        "profit_factor": (
+            None
+            if not available or profit_factor is None or profit_factor_infinite
+            else float(profit_factor)
+        ),
+        "profit_factor_infinite": profit_factor_infinite if available else False,
+        "max_drawdown": float(metrics.max_drawdown) if available else None,
     }
 
 
@@ -307,6 +356,7 @@ def build_operational_overview(
             "lag_detected": False,
             "consecutive_cycle_errors": None,
             "model": _empty_model_snapshot(),
+            "performance": _empty_performance_snapshot(),
             "burnin": {
                 "samples": 0,
                 "processed_bars": 0,
@@ -318,6 +368,14 @@ def build_operational_overview(
             "mtf_shadow_challenger": _empty_mtf_shadow_quality_snapshot(mtf_config),
             "alerts": ["storage unavailable"],
         }
+
+    performance = _empty_performance_snapshot()
+    performance_loader = getattr(persistence, "load_trade_performance", None)
+    if callable(performance_loader):
+        try:
+            performance = _performance_snapshot(performance_loader(runtime_key))
+        except Exception:  # noqa: BLE001 - optional observability must not break runtime status
+            performance = _empty_performance_snapshot()
 
     shadow_quality = _empty_shadow_quality_snapshot()
     shadow_loader = getattr(persistence, "load_shadow_quality", None)
@@ -380,6 +438,7 @@ def build_operational_overview(
         "lag_detected": lag_detected,
         "consecutive_cycle_errors": consecutive_cycle_errors,
         "model": model_snapshot,
+        "performance": performance,
         "burnin": burnin,
         "readiness": readiness,
         "shadow_challenger": shadow_quality,
