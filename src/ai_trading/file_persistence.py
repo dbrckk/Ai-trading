@@ -17,6 +17,7 @@ from .persistence import (
     PaperPersistence,
     PersistedRuntime,
     RuntimeStepCommit,
+    SchedulerDelivery,
 )
 from .runtime_state import RuntimeStateStore
 from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore
@@ -44,6 +45,7 @@ class FilePaperPersistence(PaperPersistence):
         self.status_store = status_store or HostedRuntimeStatusStore(root_path / "runtime_status.json")
         self.burnin_tracker = BurnInTracker(root_path / "burnin.jsonl")
         self.regimes_path = root_path / "regimes.txt"
+        self.scheduler_deliveries_path = root_path / "scheduler_deliveries.jsonl"
         self.model_path = Path(model_path) if model_path is not None else root_path / "models" / "online-river.joblib"
 
     def initialize_schema(self) -> None:
@@ -174,3 +176,53 @@ class FilePaperPersistence(PaperPersistence):
     def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:
         del runtime_key
         return self.status_store.load()
+
+
+    def record_scheduler_delivery(self, delivery: SchedulerDelivery) -> None:
+        self.scheduler_deliveries_path.parent.mkdir(parents=True, exist_ok=True)
+        with self.scheduler_deliveries_path.open("a", encoding="utf-8") as handle:
+            handle.write(
+                json.dumps(
+                    {
+                        "timestamp_utc": delivery.timestamp_utc,
+                        "source": delivery.source,
+                        "status_code": delivery.status_code,
+                        "ok": delivery.ok,
+                        "processed": delivery.processed,
+                    },
+                    sort_keys=True,
+                )
+                + "\n"
+            )
+
+    def list_scheduler_deliveries(
+        self,
+        *,
+        limit: int = 20,
+    ) -> tuple[SchedulerDelivery, ...]:
+        if limit <= 0 or not self.scheduler_deliveries_path.exists():
+            return ()
+
+        deliveries: list[SchedulerDelivery] = []
+        with self.scheduler_deliveries_path.open("r", encoding="utf-8") as handle:
+            for line in handle:
+                if not line.strip():
+                    continue
+                try:
+                    payload = json.loads(line)
+                    deliveries.append(
+                        SchedulerDelivery(
+                            timestamp_utc=str(payload["timestamp_utc"]),
+                            source=str(payload["source"]),
+                            status_code=int(payload["status_code"]),
+                            ok=bool(payload["ok"]),
+                            processed=(
+                                None
+                                if payload.get("processed") is None
+                                else int(payload["processed"])
+                            ),
+                        )
+                    )
+                except (KeyError, TypeError, ValueError, json.JSONDecodeError):
+                    continue
+        return tuple(deliveries[-limit:])
