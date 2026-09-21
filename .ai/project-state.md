@@ -45,16 +45,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T05:35:24Z
+Generated: 2026-09-21T07:38:26Z
 
 ### Git
 - Branch: `main`
-- Head: `2975068989f7`
-- Commit date: 2026-09-21T07:35:14+02:00
-- Commit: fix: tolerate bounded provider corrections in paper catch-up (#72)
+- Head: `b00460e67a88`
+- Commit date: 2026-09-21T09:38:14+02:00
+- Commit: feat: add multi-market runtime health telemetry (#73)
 - Tracked files: 477
 
 ### Recently changed files
+- `src/ai_trading/dashboard.py`
+- `src/ai_trading/multi_market.py`
+- `tests/test_multi_market.py`
 - `src/ai_trading/paper_cycle.py`
 - `src/ai_trading/paper_cycle_service.py`
 - `tests/test_paper_cycle.py`
@@ -62,10 +65,6 @@ Generated: 2026-09-21T05:35:24Z
 - `src/ai_trading/mtf_shadow_config.py`
 - `tests/test_dashboard_overview.py`
 - `tests/test_mtf_shadow_config.py`
-- `tests/test_multi_market.py`
-- `.github/workflows/mtf-parameter-benchmark.yml`
-- `src/ai_trading/mtf_parameter_benchmark.py`
-- `tests/test_mtf_parameter_benchmark.py`
 
 ### Project signals
 - `pyproject.toml`

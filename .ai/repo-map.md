@@ -4186,6 +4186,10 @@ reason = f"processed {processed} bar(s) across {len(markets) - len(failures)} ma
 market_rows: list[dict[str, object]] = []
 portfolio_equity = 0.0
 healthy_markets = 0
+running_markets = 0
+stale_markets = 0
+error_markets = 0
+alert_markets = 0
 ⋮----
 runtime_key = build_runtime_key(market.symbol, interval)
 allocated_cash = portfolio_cash * market.allocation
@@ -4207,6 +4211,8 @@ market_reason = status.reason
 cycle_duration_seconds = status.cycle_duration_seconds
 market_mtf_evaluated = status.mtf_evaluated
 healthy = bool(overview.get("storage_healthy"))
+⋮----
+engine_status = str(overview.get("engine_status") or "UNKNOWN").upper()
 ⋮----
 except Exception:  # noqa: BLE001 - isolate one market from the dashboard
 ````
