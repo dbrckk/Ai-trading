@@ -222,6 +222,7 @@ _SCHEMA_STATEMENTS = (
             runtime_key,
             id,
             pnl,
+            pnl_known,
             cumulative_pnl,
             MAX(GREATEST(cumulative_pnl, 0.0)) OVER (
                 PARTITION BY runtime_key
