@@ -12,7 +12,7 @@ def test_cloudflare_scheduler_deploy_workflow_is_fail_closed() -> None:
         'vars.CLOUDFLARE_SCHEDULER_ENABLED == \'true\'',
         "group: cloudflare-paper-scheduler-deploy",
         "cancel-in-progress: true",
-        "actions/checkout@v6",
+        "actions/checkout@v7",
         "cloudflare/wrangler-action@v4",
         "CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}",
         "CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}",
