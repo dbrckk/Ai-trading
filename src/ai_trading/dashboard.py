@@ -26,7 +26,7 @@ from .paper_cycle_service import (
 )
 from .paper_readiness_evidence import bootstrap_positive_probability
 from .performance_metrics import calculate_performance_metrics
-from .persistence import PaperPersistence, SchedulerDelivery
+from .persistence import PaperPersistence, SchedulerDelivery, build_runtime_key
 from .persistence_factory import build_paper_persistence
 from .readiness import ReadinessCheck, ReadinessPolicy, ReadinessReport, evaluate_readiness
 from .runtime_state import RuntimeStateStore
@@ -181,7 +181,21 @@ def render_dashboard(
             runtime_model = persisted.model
             runtime_status = persistence.load_runtime_status(runtime_key)
             load_performance = getattr(persistence, "load_trade_performance", None)
-            if multi_market_view:
+            load_portfolio_performance = getattr(
+                persistence,
+                "load_portfolio_trade_performance",
+                None,
+            )
+            if multi_market_view and callable(load_portfolio_performance):
+                multi_runtime_keys = tuple(
+                    build_runtime_key(market.symbol, market_interval)
+                    for market in markets or ()
+                )
+                trade_performance = load_portfolio_performance(
+                    multi_runtime_keys
+                )
+                performance_scope = "full persisted cross-market history"
+            elif multi_market_view:
                 trade_performance = calculate_performance_metrics(recent)
                 performance_scope = "latest 200 cross-market trade events"
             elif callable(load_performance):
