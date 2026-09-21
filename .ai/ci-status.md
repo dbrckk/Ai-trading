@@ -1,18 +1,18 @@
 # CI status
 
-Summary: 3 success / 3 failure / 2 active
+Summary: 4 success / 3 failure / 1 active
 
-- Deploy Cloudflare Paper Scheduler: in_progress / pending (56783968)
-- CI: queued / pending (56783968)
+- CI: in_progress / pending (196af4b1)
+- CI: completed / success (50bf678c)
+- CI: completed / failure (da297c3e)
+- CI: completed / failure (34810607)
+- CI: completed / failure (89beab89)
+- Deploy Cloudflare Paper Scheduler: completed / success (56783968)
+- CI: completed / success (56783968)
 - CI: completed / success (4fc881c6)
-- CI: completed / success (598410da)
-- CI: completed / success (91355bd5)
-- CI: completed / failure (40b0cb59)
-- CI: completed / failure (ee2338ee)
-- CI: completed / failure (877d6696)
 
 ## Latest failed run structure
 - Job: test
-  - Failed step: Ruff
+  - Failed step: Pytest
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

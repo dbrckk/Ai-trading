@@ -45,16 +45,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T07:59:38Z
+Generated: 2026-09-21T09:02:42Z
 
 ### Git
 - Branch: `main`
-- Head: `567839680eef`
-- Commit date: 2026-09-21T09:59:28+02:00
-- Commit: feat: add sanitized scheduler delivery telemetry (#76)
-- Tracked files: 479
+- Head: `196af4b15cb2`
+- Commit date: 2026-09-21T11:02:27+02:00
+- Commit: feat: make portfolio intelligence correlation-aware (#77)
+- Tracked files: 480
 
 ### Recently changed files
+- `src/ai_trading/multiasset_runtime.py`
+- `src/ai_trading/portfolio_intelligence.py`
+- `tests/test_multiasset_runtime.py`
+- `tests/test_portfolio_intelligence.py`
 - `infra/cloudflare-paper-scheduler/README.md`
 - `infra/cloudflare-paper-scheduler/src/index.js`
 - `infra/cloudflare-paper-scheduler/test/index.test.js`
@@ -65,10 +69,6 @@ Generated: 2026-09-21T07:59:38Z
 - `src/ai_trading/multi_market.py`
 - `tests/test_market_freshness.py`
 - `tests/test_multi_market.py`
-- `src/ai_trading/paper_cycle.py`
-- `src/ai_trading/paper_cycle_service.py`
-- `tests/test_paper_cycle.py`
-- `tests/test_paper_cycle_service.py`
 
 ### Project signals
 - `pyproject.toml`

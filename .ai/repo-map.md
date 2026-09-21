@@ -5453,6 +5453,8 @@ drawdown_hard_limit: float = 0.12
 stress_vol_multiplier: float = 1.75
 confidence_floor: float = 0.50
 confidence_power: float = 2.0
+correlation_soft_limit: float = 0.70
+correlation_hard_limit: float = 0.90
 ⋮----
 @dataclass(frozen=True)
 class PortfolioIntelligenceReport
@@ -5462,6 +5464,8 @@ estimated_annual_volatility: float
 drawdown_scale: float
 stress_scale: float
 confidence_scale: float
+correlation_scale: float
+max_pair_correlation: float
 stress_detected: bool
 ⋮----
 aligned = returns.loc[:, weights.index].dropna()
@@ -5469,6 +5473,21 @@ aligned = returns.loc[:, weights.index].dropna()
 cov = aligned.cov().to_numpy(dtype=float) * periods_per_year
 w = weights.to_numpy(dtype=float)
 variance = float(w.T @ cov @ w)
+⋮----
+active_assets = [asset for asset in weights.index if abs(float(weights.loc[asset])) > 1e-12]
+⋮----
+aligned = returns.loc[:, active_assets].dropna()
+⋮----
+corr = aligned.corr().abs()
+max_corr = 0.0
+⋮----
+value = corr.at[asset, other]
+⋮----
+max_corr = max(max_corr, float(value))
+⋮----
+span = config.correlation_hard_limit - config.correlation_soft_limit
+⋮----
+progress = (max_pair_correlation - config.correlation_soft_limit) / span
 ⋮----
 drawdown = max(0.0, 1.0 - current_equity / peak_equity)
 ⋮----
@@ -5497,9 +5516,12 @@ baseline_vol = returns.tail(120).std(ddof=1).mean()
 stress_detected = bool(
 stress_scale = 0.5 if stress_detected else 1.0
 drawdown_scale = _drawdown_scale(current_equity, peak_equity, config)
+max_pair_correlation = _active_max_pair_correlation(weights, returns)
+correlation_scale = _correlation_scale(max_pair_correlation, config)
 ⋮----
 confidence_scale = float(confidence_multipliers.mean()) if len(confidence_multipliers) else 0.0
-leverage = min(
+base_leverage = min(
+leverage = max(
 ⋮----
 intelligent_weights = weights * leverage
 ````
@@ -9606,6 +9628,10 @@ markets = {"A": market(1), "B": market(2)}
 first = runtime.step(markets)
 second = runtime.step(markets)
 ⋮----
+records = [
+step_record = next(record for record in records if record["event"] == "multiasset_runtime_step")
+intelligence = step_record["payload"]["intelligence"]
+⋮----
 drift_store = DriftRetrainStore(tmp_path / "drift_retrain.json")
 ⋮----
 def fail_batch_retrain(*_args, **_kwargs)
@@ -10040,6 +10066,13 @@ def test_drawdown_reduces_leverage() -> None
 base = pd.Series({"A": 0.5, "B": 0.5, "C": 0.0})
 ⋮----
 def test_low_confidence_asset_is_zeroed() -> None
+⋮----
+def test_high_correlation_reduces_leverage() -> None
+⋮----
+x = np.linspace(-0.02, 0.02, 300)
+returns = pd.DataFrame(
+⋮----
+def test_low_correlation_keeps_full_correlation_scale() -> None
 ````
 
 ## File: tests/test_portfolio_risk.py

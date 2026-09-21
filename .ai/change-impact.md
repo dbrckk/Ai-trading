@@ -1,24 +1,21 @@
 # Change impact
 
-Base: 4e75e899429bea57ef9daba0e8f5bedccc8d861b
-Head: 567839680eefe4848178d929237db1ff9a093aa5
+Base: 80974a48a2c567429617ac87b79ea7914bb264b8
+Head: 196af4b15cb22ffdddfeed29d16379af539302e5
 
 ## Changed files
-- M infra/cloudflare-paper-scheduler/README.md
-- M infra/cloudflare-paper-scheduler/src/index.js
-- M infra/cloudflare-paper-scheduler/test/index.test.js
-- M src/ai_trading/dashboard.py
-- M src/ai_trading/scheduler_endpoint.py
-- M tests/test_scheduler_endpoint.py
+- M src/ai_trading/multiasset_runtime.py
+- M src/ai_trading/portfolio_intelligence.py
+- M tests/test_multiasset_runtime.py
+- M tests/test_portfolio_intelligence.py
 
 ## Affected areas
-- infra
 - src
 - tests
 
 ## Related test candidates
-- tests/test_dashboard.py
-- tests/test_scheduler_endpoint.py
+- tests/test_multiasset_runtime.py
+- tests/test_portfolio_intelligence.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.
