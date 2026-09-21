@@ -10,9 +10,11 @@ from urllib.request import Request, urlopen
 from ai_trading.dashboard import serve_dashboard
 from ai_trading.paper_cycle import PaperCycleResult
 from ai_trading.paper_cycle_service import PaperCycleServiceError
+from ai_trading.persistence import SchedulerDelivery
 from ai_trading.scheduler_endpoint import (
     SchedulerHttpResponse,
     handle_scheduler_request,
+    scheduler_delivery_overview,
     scheduler_telemetry_payload,
 )
 
@@ -338,3 +340,52 @@ def test_scheduler_telemetry_does_not_trust_arbitrary_source_headers() -> None:
         "ok": False,
     }
     assert "super-secret" not in repr(payload)
+
+
+def test_scheduler_delivery_overview_verifies_three_consecutive_cloudflare_successes() -> None:
+    deliveries = tuple(
+        SchedulerDelivery(
+            timestamp_utc=f"2026-09-21T16:{minute:02d}:00+00:00",
+            source="cloudflare",
+            status_code=200,
+            ok=True,
+            processed=1,
+        )
+        for minute in (0, 5, 10)
+    )
+
+    overview = scheduler_delivery_overview(deliveries)
+
+    assert overview["consecutive_cloudflare_successes"] == 3
+    assert overview["cloudflare_delivery_verified"] is True
+    assert overview["last_source"] == "cloudflare"
+
+
+def test_http_scheduler_exposes_durable_cloudflare_delivery_evidence(tmp_path) -> None:
+    port = _start_scheduler_dashboard(
+        tmp_path,
+        scheduler_token="server-secret",
+        paper_cycle_executor=lambda: successful_result(processed=1),
+    )
+    url = f"http://127.0.0.1:{port}/internal/paper-cycle"
+    for _ in range(3):
+        status, body = _request(
+            url,
+            method="POST",
+            headers={
+                "Authorization": "Bearer server-secret",
+                "X-Scheduler-Source": "cloudflare",
+            },
+        )
+        assert status == 200
+        assert json.loads(body)["ok"] is True
+
+    status, body = _request(f"http://127.0.0.1:{port}/api/scheduler")
+    payload = json.loads(body)
+
+    assert status == 200
+    assert payload["delivery_count"] == 3
+    assert payload["consecutive_cloudflare_successes"] == 3
+    assert payload["cloudflare_delivery_verified"] is True
+    assert all(item["source"] == "cloudflare" for item in payload["deliveries"])
+    assert "server-secret" not in body
