@@ -13,6 +13,7 @@ from ai_trading.hosted_runtime import HostedPaperSettings
 from ai_trading.model_quality import ModelQuality
 from ai_trading.mtf_shadow_quality import MultiTimeframeShadowQuality
 from ai_trading.operational_overview import build_operational_overview
+from ai_trading.performance_metrics import performance_metrics_from_totals
 from ai_trading.persistence import ModelBlob, PersistedRuntime
 from ai_trading.runtime_state import RuntimeState
 from ai_trading.runtime_status import HostedRuntimeStatus
@@ -108,6 +109,17 @@ class OverviewPersistence:
     def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:
         assert runtime_key == RUNTIME_KEY
         return self.status
+
+    def load_trade_performance(self, runtime_key: str):
+        assert runtime_key == RUNTIME_KEY
+        return performance_metrics_from_totals(
+            trade_count=250,
+            pnl_observations=200,
+            realized_pnl=375.0,
+            gross_profit=500.0,
+            gross_loss=125.0,
+            max_drawdown=80.0,
+        )
 
     def load_shadow_quality(self, runtime_key: str) -> ShadowQualityComparison:
         assert runtime_key == RUNTIME_KEY
@@ -253,7 +265,22 @@ def test_operational_overview_exposes_model_and_runtime_metadata() -> None:
     }
     assert payload["lag_detected"] is False
     assert payload["consecutive_cycle_errors"] == 0
+    assert payload["performance"] == {
+        "available": True,
+        "trade_count": 250,
+        "pnl_observations": 200,
+        "pnl_coverage": 0.8,
+        "realized_pnl": 375.0,
+        "average_pnl": 1.875,
+        "gross_profit": 500.0,
+        "gross_loss": 125.0,
+        "profit_factor": 4.0,
+        "profit_factor_infinite": False,
+        "max_drawdown": 80.0,
+    }
     assert payload["burnin"]["samples"] == 2
+    assert payload["performance"]["pnl_observations"] == 200
+    assert payload["performance"]["pnl_coverage"] == 0.8
     assert payload["burnin"]["processed_bars"] == 7
     assert payload["burnin"]["total_return"] > 0.0
     assert payload["burnin"]["max_drawdown"] == 0.0
@@ -351,6 +378,19 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
             "format": None,
             "version": None,
             "checksum": None,
+        },
+        "performance": {
+            "available": False,
+            "trade_count": 0,
+            "pnl_observations": 0,
+            "pnl_coverage": None,
+            "realized_pnl": None,
+            "average_pnl": None,
+            "gross_profit": None,
+            "gross_loss": None,
+            "profit_factor": None,
+            "profit_factor_infinite": False,
+            "max_drawdown": None,
         },
         "burnin": {
             "samples": 0,
@@ -605,3 +645,34 @@ def test_btc_overview_exposes_validated_mtf_candidate() -> None:
     assert mtf["candidate_config"]["min_confidence"] == 0.60
     assert mtf["horizon_minutes"] == 90
     assert mtf["promotion_gate"]["eligible_for_review"] is False
+
+
+
+class NoMeasuredPnlOverviewPersistence(OverviewPersistence):
+    def load_trade_performance(self, runtime_key: str):
+        assert runtime_key == RUNTIME_KEY
+        return performance_metrics_from_totals(
+            trade_count=25,
+            pnl_observations=0,
+            realized_pnl=0.0,
+            gross_profit=0.0,
+            gross_loss=0.0,
+            max_drawdown=0.0,
+        )
+
+
+def test_operational_overview_does_not_expose_unknown_pnl_as_zero() -> None:
+    payload = build_operational_overview(
+        NoMeasuredPnlOverviewPersistence(),
+        RUNTIME_KEY,
+    )
+
+    performance = payload["performance"]
+    assert performance["available"] is False
+    assert performance["trade_count"] == 25
+    assert performance["pnl_observations"] == 0
+    assert performance["pnl_coverage"] == 0.0
+    assert performance["realized_pnl"] is None
+    assert performance["average_pnl"] is None
+    assert performance["profit_factor"] is None
+    assert performance["max_drawdown"] is None
