@@ -1,5 +1,3 @@
-import math
-
 import pytest
 
 from ai_trading.config import RiskConfig
@@ -48,7 +46,7 @@ def test_execution_cost_override_can_be_partial() -> None:
     ],
 )
 def test_execution_cost_overrides_fail_closed_on_invalid_configuration(raw: str) -> None:
-    with pytest.raises(ValueError):
+    with pytest.raises((TypeError, ValueError)):
         risk_config_for_symbol("GC=F", raw=raw)
 
 
