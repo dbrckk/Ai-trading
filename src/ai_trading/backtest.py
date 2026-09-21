@@ -9,7 +9,12 @@ from .config import ModelConfig, RiskConfig
 from .ensemble import EnsembleDirectionModel
 from .features import FEATURES, make_features, make_labels
 from .model import OnlineDirectionModel
-from .performance import PerformanceMetrics, buy_and_hold_equity, compute_metrics
+from .performance import (
+    PerformanceMetrics,
+    buy_and_hold_equity,
+    compute_metrics,
+    infer_periods_per_year,
+)
 from .regime import detect_regime
 from .risk import PortfolioSnapshot, RiskEngine
 
@@ -26,10 +31,10 @@ class WalkForwardConfig:
     min_train_bars: int = 252
     test_window_bars: int = 63
     max_train_bars: int | None = 1000
-    periods_per_year: int = 252
+    periods_per_year: float | None = None
     use_ensemble: bool = False
 
-    def as_dict(self) -> dict[str, int | None]:
+    def as_dict(self) -> dict[str, int | float | bool | None]:
         return asdict(self)
 
 
@@ -165,8 +170,13 @@ class WalkForwardBacktester:
             self.risk_config.starting_cash,
         )
 
-        metrics = compute_metrics(equity, self.config.periods_per_year)
-        benchmark_metrics = compute_metrics(benchmark, self.config.periods_per_year)
+        periods_per_year = (
+            self.config.periods_per_year
+            if self.config.periods_per_year is not None
+            else infer_periods_per_year(equity.index)
+        )
+        metrics = compute_metrics(equity, periods_per_year)
+        benchmark_metrics = compute_metrics(benchmark, periods_per_year)
 
         regime_returns = {
             name: _compound_step_returns(values)
