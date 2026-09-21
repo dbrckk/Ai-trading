@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import json
 import socket
-from datetime import UTC, datetime, timedelta
 import time
+from datetime import UTC, datetime, timedelta
 from threading import Thread
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
