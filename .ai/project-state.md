@@ -45,21 +45,27 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T16:01:03Z
+Generated: 2026-09-21T16:07:34Z
 
 ### Git
 - Branch: `main`
-- Head: `f724fd415c59`
-- Commit date: 2026-09-21T18:00:50+02:00
-- Commit: fix: preserve dashboard scroll position during refresh (#78)
-- Tracked files: 480
+- Head: `628734400be5`
+- Commit date: 2026-09-21T18:07:22+02:00
+- Commit: refactor: fail closed on invalid trading configuration (#80)
+- Tracked files: 481
 
 ### Recently changed files
+- `src/ai_trading/alpha_allocation.py`
+- `src/ai_trading/config.py`
+- `src/ai_trading/global_allocator.py`
+- `src/ai_trading/portfolio.py`
+- `src/ai_trading/portfolio_intelligence.py`
+- `src/ai_trading/portfolio_risk.py`
+- `tests/test_config_validation.py`
 - `src/ai_trading/dashboard.py`
 - `tests/test_dashboard.py`
 - `tests/test_multi_market.py`
 - `src/ai_trading/multiasset_runtime.py`
-- `src/ai_trading/portfolio_intelligence.py`
 - `tests/test_multiasset_runtime.py`
 - `tests/test_portfolio_intelligence.py`
 - `infra/cloudflare-paper-scheduler/README.md`
@@ -69,7 +75,6 @@ Generated: 2026-09-21T16:01:03Z
 - `tests/test_scheduler_endpoint.py`
 - `src/ai_trading/market_freshness.py`
 - `src/ai_trading/multi_market.py`
-- `tests/test_market_freshness.py`
 
 ### Project signals
 - `pyproject.toml`

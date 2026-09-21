@@ -33,6 +33,7 @@
         "tests/test_cli_self_test.py",
         "tests/test_compute_budget.py",
         "tests/test_confidence_calibration.py",
+        "tests/test_config_validation.py",
         "tests/test_control_plane.py",
         "tests/test_cost_stress.py",
         "tests/test_cost_stress_gate.py",
@@ -187,7 +188,7 @@
         "tests/test_watchdog_enforcer.py",
         "tests/test_worker_monitor.py"
       ],
-      "in_degree": 178,
+      "in_degree": 179,
       "out_degree": 0,
       "path": "src/ai_trading/__init__.py"
     },
@@ -505,6 +506,41 @@
     {
       "dependencies": [],
       "dependents": [
+        "src/ai_trading/backtest.py",
+        "src/ai_trading/broker.py",
+        "src/ai_trading/cli.py",
+        "src/ai_trading/continuous.py",
+        "src/ai_trading/cost_stress.py",
+        "src/ai_trading/engine.py",
+        "src/ai_trading/multiasset_backtest.py",
+        "src/ai_trading/multiasset_runtime.py",
+        "src/ai_trading/orchestrator.py",
+        "src/ai_trading/paper_cycle_service.py",
+        "src/ai_trading/risk.py",
+        "src/ai_trading/runtime.py",
+        "src/ai_trading/tuning.py",
+        "tests/test_backtest.py",
+        "tests/test_backtest_ensemble.py",
+        "tests/test_config_validation.py",
+        "tests/test_cost_stress.py",
+        "tests/test_multiasset_backtest.py",
+        "tests/test_multiasset_runtime.py",
+        "tests/test_orchestrator_trigger.py",
+        "tests/test_paper_cycle.py",
+        "tests/test_paper_cycle_materialized_fresh.py",
+        "tests/test_paper_cycle_postgres.py",
+        "tests/test_risk.py",
+        "tests/test_runtime.py",
+        "tests/test_runtime_persistence.py",
+        "tests/test_runtime_targeted_step.py"
+      ],
+      "in_degree": 27,
+      "out_degree": 0,
+      "path": "src/ai_trading/config.py"
+    },
+    {
+      "dependencies": [],
+      "dependents": [
         "src/ai_trading/allocator_tuning.py",
         "src/ai_trading/backtest.py",
         "src/ai_trading/burnin.py",
@@ -536,40 +572,6 @@
       "in_degree": 27,
       "out_degree": 0,
       "path": "src/ai_trading/performance.py"
-    },
-    {
-      "dependencies": [],
-      "dependents": [
-        "src/ai_trading/backtest.py",
-        "src/ai_trading/broker.py",
-        "src/ai_trading/cli.py",
-        "src/ai_trading/continuous.py",
-        "src/ai_trading/cost_stress.py",
-        "src/ai_trading/engine.py",
-        "src/ai_trading/multiasset_backtest.py",
-        "src/ai_trading/multiasset_runtime.py",
-        "src/ai_trading/orchestrator.py",
-        "src/ai_trading/paper_cycle_service.py",
-        "src/ai_trading/risk.py",
-        "src/ai_trading/runtime.py",
-        "src/ai_trading/tuning.py",
-        "tests/test_backtest.py",
-        "tests/test_backtest_ensemble.py",
-        "tests/test_cost_stress.py",
-        "tests/test_multiasset_backtest.py",
-        "tests/test_multiasset_runtime.py",
-        "tests/test_orchestrator_trigger.py",
-        "tests/test_paper_cycle.py",
-        "tests/test_paper_cycle_materialized_fresh.py",
-        "tests/test_paper_cycle_postgres.py",
-        "tests/test_risk.py",
-        "tests/test_runtime.py",
-        "tests/test_runtime_persistence.py",
-        "tests/test_runtime_targeted_step.py"
-      ],
-      "in_degree": 26,
-      "out_degree": 0,
-      "path": "src/ai_trading/config.py"
     },
     {
       "dependencies": [],
@@ -1661,6 +1663,23 @@
     {
       "dependencies": [],
       "dependents": [
+        "src/ai_trading/allocator_config_store.py",
+        "src/ai_trading/allocator_tuning.py",
+        "src/ai_trading/cli.py",
+        "src/ai_trading/multiasset_runtime.py",
+        "src/ai_trading/readiness_evidence.py",
+        "tests/test_allocator_config_store.py",
+        "tests/test_config_validation.py",
+        "tests/test_global_allocator.py",
+        "tests/test_readiness_evidence.py"
+      ],
+      "in_degree": 9,
+      "out_degree": 0,
+      "path": "src/ai_trading/global_allocator.py"
+    },
+    {
+      "dependencies": [],
+      "dependents": [
         "src/ai_trading/mtf_parameter_benchmark.py",
         "src/ai_trading/mtf_shadow_quality.py",
         "src/ai_trading/multiasset_runtime.py",
@@ -1781,28 +1800,10 @@
       "in_degree": 5,
       "out_degree": 4,
       "path": "src/ai_trading/specialist_experts.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/ensemble.py",
-        "src/ai_trading/features.py",
-        "src/ai_trading/model.py",
-        "src/ai_trading/multi_timeframe_features.py",
-        "src/ai_trading/regime.py"
-      ],
-      "dependents": [
-        "src/ai_trading/paper_cycle.py",
-        "src/ai_trading/runtime.py",
-        "tests/test_mtf_shadow_challenger.py",
-        "tests/test_paper_cycle.py"
-      ],
-      "in_degree": 4,
-      "out_degree": 5,
-      "path": "src/ai_trading/mtf_shadow_challenger.py"
     }
   ],
-  "edge_count": 1869,
+  "edge_count": 1882,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 345,
+  "node_count": 346,
   "schema_version": 1
 }

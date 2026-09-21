@@ -250,6 +250,7 @@ tests/
   test_cloudflare_scheduler_deploy_workflow.py
   test_compute_budget.py
   test_confidence_calibration.py
+  test_config_validation.py
   test_control_plane.py
   test_cost_stress_gate.py
   test_cost_stress.py
@@ -829,6 +830,8 @@ class AlphaAllocationConfig
 max_asset_weight: float = 0.35
 target_gross_exposure: float = 1.0
 min_signal_quality: float = 0.05
+⋮----
+def __post_init__(self) -> None
 ⋮----
 config = config or AlphaAllocationConfig()
 ⋮----
@@ -1837,6 +1840,10 @@ max_drawdown_fraction: float = 0.10
 min_confidence: float = 0.56
 transaction_cost_bps: float = 2.0
 slippage_bps: float = 1.0
+⋮----
+def __post_init__(self) -> None
+⋮----
+value = float(getattr(self, name))
 ⋮----
 @dataclass(frozen=True)
 class ModelConfig
@@ -3259,6 +3266,8 @@ target_gross_exposure: float = 1.0
 cost_penalty: float = 1.0
 turnover_penalty: float = 0.25
 ⋮----
+def __post_init__(self) -> None
+⋮----
 @dataclass(frozen=True)
 class GlobalAllocationReport
 ⋮----
@@ -3287,6 +3296,7 @@ proposal = (
 over = proposal[proposal > cap + 1e-12]
 ⋮----
 config = config or GlobalAllocatorConfig()
+⋮----
 columns = opportunity_returns.columns
 alpha = expected_alpha.reindex(columns).fillna(0.0).astype(float)
 q = quality.reindex(columns).fillna(0.0).clip(lower=0.0).astype(float)
@@ -5456,6 +5466,8 @@ confidence_power: float = 2.0
 correlation_soft_limit: float = 0.70
 correlation_hard_limit: float = 0.90
 ⋮----
+def __post_init__(self) -> None
+⋮----
 @dataclass(frozen=True)
 class PortfolioIntelligenceReport
 ⋮----
@@ -5536,6 +5548,8 @@ max_net_exposure: float = 0.75
 max_asset_exposure: float = 0.35
 max_pair_correlation: float = 0.90
 ⋮----
+def __post_init__(self) -> None
+⋮----
 @dataclass(frozen=True)
 class PortfolioRiskReport
 ⋮----
@@ -5581,6 +5595,8 @@ max_asset_weight: float = 0.35
 min_asset_weight: float = 0.0
 target_gross_exposure: float = 1.0
 correlation_penalty: float = 0.50
+⋮----
+def __post_init__(self) -> None
 ⋮----
 base = weights.clip(lower=0.0).astype(float)
 ⋮----
@@ -8224,6 +8240,18 @@ record = QualityRecord(
 prediction = Prediction(
 ⋮----
 def test_calibration_leaves_short_history_unchanged() -> None
+````
+
+## File: tests/test_config_validation.py
+````python
+def test_invalid_strategy_configuration_fails_closed(factory) -> None
+⋮----
+@pytest.mark.parametrize("alpha", [0.0, 1.0, -0.1, 1.1])
+def test_expected_shortfall_rejects_invalid_alpha(alpha: float) -> None
+⋮----
+def test_global_allocator_rejects_negative_transaction_costs() -> None
+⋮----
+returns = pd.DataFrame({"A": [0.01, -0.01, 0.02]})
 ````
 
 ## File: tests/test_control_plane.py
