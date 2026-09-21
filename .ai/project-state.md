@@ -45,16 +45,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T16:35:39Z
+Generated: 2026-09-21T16:38:10Z
 
 ### Git
 - Branch: `main`
-- Head: `81af7f4e96bf`
-- Commit date: 2026-09-21T18:35:28+02:00
-- Commit: security: harden hosted dashboard HTTP responses (#87)
-- Tracked files: 484
+- Head: `49b239a2ecca`
+- Commit date: 2026-09-21T18:37:58+02:00
+- Commit: refactor: extract multi-asset market preparation (#88)
+- Tracked files: 486
 
 ### Recently changed files
+- `src/ai_trading/multiasset_market_context.py`
+- `src/ai_trading/multiasset_runtime.py`
+- `tests/test_multiasset_market_context.py`
 - `src/ai_trading/dashboard.py`
 - `tests/test_dashboard_persistence.py`
 - `README.md`

@@ -146,6 +146,7 @@ src/
     multi_timeframe_features.py
     multiasset_backtest.py
     multiasset_evolution.py
+    multiasset_market_context.py
     multiasset_runtime.py
     multiasset_scheduler.py
     multiasset_state.py
@@ -318,6 +319,7 @@ tests/
   test_multi_timeframe_features.py
   test_multiasset_backtest.py
   test_multiasset_evolution.py
+  test_multiasset_market_context.py
   test_multiasset_runtime.py
   test_multiasset_scheduler.py
   test_multiasset_state.py
@@ -4648,6 +4650,37 @@ final_active = [
 final_snapshot = generations.snapshot(final_active, final_score)
 ````
 
+## File: src/ai_trading/multiasset_market_context.py
+````python
+@dataclass(frozen=True)
+class MultiAssetMarketContext
+⋮----
+closes: dict[str, pd.Series]
+opens: dict[str, pd.Series]
+features_by_symbol: dict[str, pd.DataFrame]
+labels_by_symbol: dict[str, pd.Series]
+execution_time: str
+returns: pd.DataFrame
+⋮----
+closes: dict[str, pd.Series] = {}
+opens: dict[str, pd.Series] = {}
+execution_times: set[str] = set()
+features_by_symbol: dict[str, pd.DataFrame] = {}
+labels_by_symbol: dict[str, pd.Series] = {}
+⋮----
+required_columns = {"Open", "High", "Low", "Close", "Volume"}
+⋮----
+missing_columns = required_columns.difference(market.columns)
+⋮----
+latest_open = float(market["Open"].iloc[-1])
+latest_close = float(market["Close"].iloc[-1])
+⋮----
+execution_time = next(iter(execution_times))
+⋮----
+close_frame = pd.DataFrame(closes).dropna()
+returns = close_frame.pct_change().dropna()
+````
+
 ## File: src/ai_trading/multiasset_runtime.py
 ````python
 @dataclass(frozen=True)
@@ -4694,20 +4727,17 @@ def _save_model(self, symbol: str, model: RiverDirectionModel) -> None
 ⋮----
 def step(self, markets: dict[str, pd.DataFrame]) -> MultiAssetStepResult
 ⋮----
-closes = {}
-opens = {}
-execution_times: set[str] = set()
-features_by_symbol: dict[str, pd.DataFrame] = {}
-labels_by_symbol: dict[str, pd.Series] = {}
-⋮----
-execution_time = next(iter(execution_times))
+market_context = prepare_multiasset_market_context(
+closes = market_context.closes
+opens = market_context.opens
+features_by_symbol = market_context.features_by_symbol
+labels_by_symbol = market_context.labels_by_symbol
+execution_time = market_context.execution_time
+returns = market_context.returns
 ⋮----
 state = self.state_store.load(self.risk_config.starting_cash)
 persisted_crisis = self.crisis_state_store.load()
 persisted_limits = limits_for_state(persisted_crisis)
-⋮----
-close_frame = pd.DataFrame(closes).dropna()
-returns = close_frame.pct_change().dropna()
 ⋮----
 base_weights = inverse_volatility_weights(returns, self.allocation_config)
 allowed_asset_count = max(
@@ -9887,6 +9917,35 @@ pool = ExpertPoolStore(tmp_path / "pool.json")
 generations = GenerationStore(
 ⋮----
 result = run_multiasset_evolution_cycle(
+````
+
+## File: tests/test_multiasset_market_context.py
+````python
+def market(seed: int, n: int = 120, *, offset_minutes: int = 0) -> pd.DataFrame
+⋮----
+rng = np.random.default_rng(seed)
+index = pd.date_range(
+returns = rng.normal(0.0003, 0.01, n)
+close = 100.0 * np.cumprod(1.0 + returns)
+open_ = close * (1.0 + rng.normal(0.0, 0.001, n))
+⋮----
+def test_prepare_multiasset_market_context_builds_aligned_inputs() -> None
+⋮----
+markets = {"A": market(1), "B": market(2)}
+⋮----
+context = prepare_multiasset_market_context(markets, ModelConfig())
+⋮----
+def test_prepare_multiasset_market_context_rejects_unaligned_latest_bar() -> None
+⋮----
+def test_prepare_multiasset_market_context_rejects_insufficient_assets() -> None
+⋮----
+def test_prepare_multiasset_market_context_rejects_short_history() -> None
+⋮----
+def test_prepare_multiasset_market_context_rejects_missing_columns() -> None
+⋮----
+broken = market(1).drop(columns=["Volume"])
+⋮----
+broken = market(1)
 ````
 
 ## File: tests/test_multiasset_runtime.py
