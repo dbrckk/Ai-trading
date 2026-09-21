@@ -11,7 +11,7 @@ from ai_trading.burnin import BurnInSnapshot
 from ai_trading.dashboard import render_dashboard, serve_dashboard
 from ai_trading.hosted_runtime import HostedPaperSettings
 from ai_trading.performance_metrics import performance_metrics_from_totals
-from ai_trading.persistence import PersistedRuntime
+from ai_trading.persistence import PersistedRuntime, SchedulerDelivery
 from ai_trading.runtime_state import RuntimeState
 from ai_trading.runtime_status import HostedRuntimeStatus
 from ai_trading.trade_journal import TradeJournal, TradeSnapshot
@@ -105,6 +105,19 @@ class DurablePersistence:
     def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:
         assert runtime_key == RUNTIME_KEY
         return self.status
+
+    def list_scheduler_deliveries(self, *, limit: int = 20):
+        assert limit == 20
+        return tuple(
+            SchedulerDelivery(
+                timestamp_utc=f"2026-09-21T16:{minute:02d}:00+00:00",
+                source="cloudflare",
+                status_code=200,
+                ok=True,
+                processed=1,
+            )
+            for minute in (0, 5, 10)
+        )
 
 
 class FailingPersistence:
@@ -233,6 +246,23 @@ def test_status_endpoints_fail_closed_without_leaking_storage_details() -> None:
     }
     assert "secret" not in health_body
     assert "example.invalid" not in health_body
+
+
+def test_dashboard_surfaces_verified_scheduler_delivery(tmp_path) -> None:
+    page = render_dashboard(
+        TradeJournal(tmp_path / "empty.jsonl"),
+        persistence=DurablePersistence(),
+        runtime_key=RUNTIME_KEY,
+    )
+
+    assert 'href="#scheduler"' in page
+    assert 'id="scheduler"' in page
+    assert "Scheduler delivery" in page
+    assert "VERIFIED" in page
+    assert "3 / 3" in page
+    assert "cloudflare" in page
+    assert "2026-09-21T16:10:00+00:00" in page
+    assert "Authentication material is never persisted or displayed." in page
 
 
 def test_dashboard_v2_groups_critical_sections_and_renders_equity_chart(tmp_path) -> None:
