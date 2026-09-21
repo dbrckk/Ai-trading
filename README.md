@@ -178,6 +178,17 @@ paper:GC=F:5m:online-river:v1
 
 A fresh durable runtime processes only the latest eligible execution bar. An existing runtime catches up missed eligible bars oldest-first, with at most 72 attempted bars per invocation (six hours of 5-minute bars) so delayed external triggers can recover without unbounded work. If the durable `last_processed` marker is outside the loaded history window, the cycle fails closed instead of guessing where to resume. Revision conflicts cause state to be reloaded so overlapping executors cannot overwrite newer durable progress.
 
+Per-market paper execution costs can be overridden without changing code by setting `AI_TRADING_EXECUTION_COSTS_JSON`. When unset, the existing global `RiskConfig` transaction-cost and slippage defaults are preserved exactly. Overrides are exact-symbol matches and malformed or negative values fail closed.
+
+```json
+{
+  "GC=F": {"transaction_cost_bps": 2.0, "slippage_bps": 1.0},
+  "BTC-USD": {"transaction_cost_bps": 3.0, "slippage_bps": 2.0}
+}
+```
+
+The example only demonstrates the configuration format; production values should be calibrated from observed execution/spread data rather than assumed from the example.
+
 ### Hosted dashboard
 
 The read-only production paper dashboard is available at:
