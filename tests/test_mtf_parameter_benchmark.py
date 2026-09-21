@@ -11,6 +11,7 @@ from ai_trading.mtf_parameter_benchmark import (
     btc_focused_benchmark_grid,
     evaluate_market_config,
     market_selections,
+    robustness_benchmark_grid,
     run_parameter_benchmark,
 )
 
@@ -235,3 +236,16 @@ def test_parameter_grid_uses_same_random_seed_for_every_config(monkeypatch) -> N
     )
 
     assert seen_random_states == [73, 73, 73, 73]
+
+
+
+def test_robustness_grid_is_compact_and_contains_validated_candidates() -> None:
+    grid = robustness_benchmark_grid()
+
+    assert len(grid) == 12
+    names = {config.name for config in grid}
+    assert "h45m-min5bp-atr0.25-train1000-conf56" in names
+    assert "h45m-min5bp-atr0.25-train1000-conf60" in names
+    assert "h90m-min3bp-atr0.15-train1000-conf60" in names
+    assert {config.max_train_rows for config in grid} == {1000}
+    assert {config.horizon_minutes for config in grid} == {45, 90}
