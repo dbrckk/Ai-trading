@@ -31,6 +31,18 @@ class MTFBenchmarkConfig:
     max_train_rows: int
     min_confidence: float
 
+    def __post_init__(self) -> None:
+        if self.horizon_bars < 1:
+            raise ValueError("horizon_bars must be at least 1")
+        if self.minimum_threshold < 0:
+            raise ValueError("minimum_threshold must be non-negative")
+        if self.atr_multiplier < 0:
+            raise ValueError("atr_multiplier must be non-negative")
+        if self.max_train_rows < 1:
+            raise ValueError("max_train_rows must be at least 1")
+        if not 0.0 <= self.min_confidence <= 1.0:
+            raise ValueError("min_confidence must be in [0, 1]")
+
     @property
     def horizon_minutes(self) -> int:
         return self.horizon_bars * 5

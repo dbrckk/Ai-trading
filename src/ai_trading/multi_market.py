@@ -4,6 +4,7 @@ import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from datetime import datetime
+from math import isclose, isfinite
 
 from .market_freshness import classify_market_freshness
 from .operational_overview import build_operational_overview
@@ -25,6 +26,25 @@ class MarketSpec:
     symbol: str
     label: str
     allocation: float
+
+    def __post_init__(self) -> None:
+        if not self.symbol.strip():
+            raise ValueError("market symbol must not be empty")
+        if not self.label.strip():
+            raise ValueError("market label must not be empty")
+        if not isfinite(self.allocation) or not 0.0 < self.allocation <= 1.0:
+            raise ValueError("market allocation must be finite and in (0, 1]")
+
+
+def _validate_market_bundle(markets: tuple[MarketSpec, ...]) -> None:
+    if not markets:
+        raise ValueError("markets must not be empty")
+    symbols = tuple(market.symbol for market in markets)
+    if len(set(symbols)) != len(symbols):
+        raise ValueError("market symbols must be unique")
+    total_allocation = sum(market.allocation for market in markets)
+    if not isclose(total_allocation, 1.0, rel_tol=0.0, abs_tol=1e-9):
+        raise ValueError("market allocations must sum to 1.0")
 
 
 DEFAULT_MARKETS: tuple[MarketSpec, ...] = (
@@ -69,8 +89,7 @@ def run_multi_market_paper_cycle(
     mtf_period: str = "1mo",
     persistence: PaperPersistence | None = None,
 ) -> PaperCycleResult:
-    if not markets:
-        raise ValueError("markets must not be empty")
+    _validate_market_bundle(markets)
 
     backend = persistence
     if backend is None:
@@ -161,6 +180,8 @@ def build_multi_market_overview(
     portfolio_cash: float = 100_000.0,
     now: datetime | None = None,
 ) -> dict[str, object]:
+    _validate_market_bundle(markets)
+
     market_rows: list[dict[str, object]] = []
     portfolio_equity = 0.0
     healthy_markets = 0
