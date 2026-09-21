@@ -204,6 +204,8 @@ https://ai-trading-dashboard-qyr2.onrender.com/api/overview
 https://ai-trading-dashboard-qyr2.onrender.com/api/markets
 https://ai-trading-dashboard-qyr2.onrender.com/api/scheduler
 https://ai-trading-dashboard-qyr2.onrender.com/api/status
+https://ai-trading-dashboard-qyr2.onrender.com/livez
+https://ai-trading-dashboard-qyr2.onrender.com/readyz
 https://ai-trading-dashboard-qyr2.onrender.com/healthz
 ```
 
@@ -220,6 +222,8 @@ AI_TRADING_HOSTED_INTERVAL=5m
 `AI_TRADING_EXTERNAL_SCHEDULER=1` explicitly suppresses the legacy in-process daemon worker. Render serves the dashboard and the authenticated cycle endpoint while external schedulers own delivery. The dashboard reads the shared durable state and exposes the last processed bar, processed-bar count, per-market freshness and durable scheduler evidence without exposing storage connection details.
 
 The scheduler verification endpoint reports recent sanitized deliveries, the current consecutive Cloudflare-success count and whether the three-delivery verification threshold has been reached. A successful HTTP trigger with zero newly processed bars is still a valid delivery: duplicate/overlapping invocations are intentionally benign and durable runtime revision protection prevents stale writers from overwriting newer state.
+
+Health probes intentionally have separate semantics: `/livez` checks only that the HTTP process is alive, `/readyz` returns HTTP 503 when durable storage is unavailable, and `/healthz` remains the backwards-compatible detailed runtime health view. Market/provider errors therefore do not masquerade as web-process failures.
 
 ## Walk-forward methodology
 
