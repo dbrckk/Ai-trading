@@ -16,6 +16,8 @@ class PortfolioIntelligenceConfig:
     stress_vol_multiplier: float = 1.75
     confidence_floor: float = 0.50
     confidence_power: float = 2.0
+    correlation_soft_limit: float = 0.70
+    correlation_hard_limit: float = 0.90
 
 
 @dataclass(frozen=True)
@@ -25,6 +27,8 @@ class PortfolioIntelligenceReport:
     drawdown_scale: float
     stress_scale: float
     confidence_scale: float
+    correlation_scale: float
+    max_pair_correlation: float
     stress_detected: bool
 
 
@@ -41,6 +45,44 @@ def estimate_portfolio_volatility(
     variance = float(w.T @ cov @ w)
     return float(np.sqrt(max(0.0, variance)))
 
+
+
+def _active_max_pair_correlation(
+    weights: pd.Series,
+    returns: pd.DataFrame,
+) -> float:
+    active_assets = [asset for asset in weights.index if abs(float(weights.loc[asset])) > 1e-12]
+    if len(active_assets) < 2:
+        return 0.0
+
+    aligned = returns.loc[:, active_assets].dropna()
+    if aligned.empty:
+        return 0.0
+
+    corr = aligned.corr().abs()
+    max_corr = 0.0
+    for i, asset in enumerate(corr.index):
+        for other in corr.columns[i + 1 :]:
+            value = corr.at[asset, other]
+            if pd.notna(value):
+                max_corr = max(max_corr, float(value))
+    return max_corr
+
+
+def _correlation_scale(
+    max_pair_correlation: float,
+    config: PortfolioIntelligenceConfig,
+) -> float:
+    if max_pair_correlation <= config.correlation_soft_limit:
+        return 1.0
+    if max_pair_correlation >= config.correlation_hard_limit:
+        return config.min_leverage
+
+    span = config.correlation_hard_limit - config.correlation_soft_limit
+    if span <= 0:
+        return config.min_leverage
+    progress = (max_pair_correlation - config.correlation_soft_limit) / span
+    return 1.0 - progress * (1.0 - config.min_leverage)
 
 def _drawdown_scale(
     current_equity: float,
@@ -102,13 +144,15 @@ def apply_portfolio_intelligence(
     )
     stress_scale = 0.5 if stress_detected else 1.0
     drawdown_scale = _drawdown_scale(current_equity, peak_equity, config)
+    max_pair_correlation = _active_max_pair_correlation(weights, returns)
+    correlation_scale = _correlation_scale(max_pair_correlation, config)
 
     confidence_scale = float(confidence_multipliers.mean()) if len(confidence_multipliers) else 0.0
     leverage = min(
         config.max_leverage,
         max(
             config.min_leverage,
-            vol_scale * drawdown_scale * stress_scale,
+            vol_scale * drawdown_scale * stress_scale * correlation_scale,
         ),
     )
 
@@ -119,5 +163,7 @@ def apply_portfolio_intelligence(
         drawdown_scale=float(drawdown_scale),
         stress_scale=float(stress_scale),
         confidence_scale=confidence_scale,
+        correlation_scale=float(correlation_scale),
+        max_pair_correlation=float(max_pair_correlation),
         stress_detected=stress_detected,
     )
