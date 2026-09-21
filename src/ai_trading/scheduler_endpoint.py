@@ -3,6 +3,7 @@ from __future__ import annotations
 import hmac
 from collections.abc import Callable
 from dataclasses import dataclass
+from datetime import UTC, datetime
 
 from .paper_cycle import PaperCycleResult
 from .paper_cycle_service import PaperCycleServiceError
@@ -16,6 +17,7 @@ class SchedulerHttpResponse:
 
 
 _ALLOWED_SCHEDULER_SOURCES = {"cloudflare"}
+_SCHEDULER_FRESHNESS_SECONDS = 12 * 60
 
 
 def scheduler_telemetry_payload(
@@ -38,9 +40,41 @@ def scheduler_telemetry_payload(
     return payload
 
 
+def _utc_now(now: datetime | None) -> datetime:
+    current = now or datetime.now(UTC)
+    if current.tzinfo is None:
+        return current.replace(tzinfo=UTC)
+    return current.astimezone(UTC)
+
+
+def _delivery_age_seconds(
+    timestamp_utc: str,
+    *,
+    now: datetime,
+) -> float | None:
+    try:
+        timestamp = datetime.fromisoformat(timestamp_utc)
+    except ValueError:
+        return None
+    if timestamp.tzinfo is None:
+        timestamp = timestamp.replace(tzinfo=UTC)
+    else:
+        timestamp = timestamp.astimezone(UTC)
+    age = (now - timestamp).total_seconds()
+    if age < -60.0:
+        return None
+    return max(0.0, age)
+
+
 def scheduler_delivery_overview(
     deliveries: tuple[SchedulerDelivery, ...],
+    *,
+    now: datetime | None = None,
+    freshness_seconds: float = _SCHEDULER_FRESHNESS_SECONDS,
 ) -> dict[str, object]:
+    if freshness_seconds <= 0:
+        raise ValueError("freshness_seconds must be positive")
+
     consecutive_cloudflare_successes = 0
     for delivery in reversed(deliveries):
         if (
@@ -53,10 +87,30 @@ def scheduler_delivery_overview(
         break
 
     latest = deliveries[-1] if deliveries else None
+    current = _utc_now(now)
+    latest_age_seconds = (
+        None
+        if latest is None
+        else _delivery_age_seconds(latest.timestamp_utc, now=current)
+    )
+    cloudflare_delivery_fresh = bool(
+        latest is not None
+        and latest.source == "cloudflare"
+        and latest.ok
+        and latest.status_code == 200
+        and latest_age_seconds is not None
+        and latest_age_seconds <= freshness_seconds
+    )
     return {
         "delivery_count": len(deliveries),
         "consecutive_cloudflare_successes": consecutive_cloudflare_successes,
-        "cloudflare_delivery_verified": consecutive_cloudflare_successes >= 3,
+        "cloudflare_delivery_fresh": cloudflare_delivery_fresh,
+        "cloudflare_delivery_verified": (
+            consecutive_cloudflare_successes >= 3
+            and cloudflare_delivery_fresh
+        ),
+        "freshness_seconds": float(freshness_seconds),
+        "last_delivery_age_seconds": latest_age_seconds,
         "last_delivery_timestamp_utc": None if latest is None else latest.timestamp_utc,
         "last_source": None if latest is None else latest.source,
         "last_status_code": None if latest is None else latest.status_code,
