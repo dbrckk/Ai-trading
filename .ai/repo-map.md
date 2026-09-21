@@ -242,6 +242,7 @@ tests/
   test_benchmark_gate.py
   test_bootstrap_gate.py
   test_bootstrap_robustness.py
+  test_broker.py
   test_burnin.py
   test_calibration_routing.py
   test_champion_probation.py
@@ -1070,16 +1071,20 @@ record = build_audit_record(event, payload, self._last_hash())
 
 ## File: src/ai_trading/backtest.py
 ````python
+def _compound_step_returns(step_returns: list[float]) -> float
+⋮----
+growth = 1.0
+⋮----
 @dataclass(frozen=True)
 class WalkForwardConfig
 ⋮----
 min_train_bars: int = 252
 test_window_bars: int = 63
 max_train_bars: int | None = 1000
-periods_per_year: int = 252
+periods_per_year: float | None = None
 use_ensemble: bool = False
 ⋮----
-def as_dict(self) -> dict[str, int | None]
+def as_dict(self) -> dict[str, int | float | bool | None]
 ⋮----
 @dataclass(frozen=True)
 class BacktestReport
@@ -1110,12 +1115,13 @@ minimum = self.config.min_train_bars + self.config.test_window_bars + 1
 broker = PaperBroker(self.risk_config)
 curve: dict[pd.Timestamp, float] = {}
 benchmark_prices: dict[pd.Timestamp, float] = {}
-regime_equities: dict[str, list[float]] = {}
+regime_step_returns: dict[str, list[float]] = {}
 trades = 0
 decisions = 0
 rejected = 0
 folds = 0
 previous_units = broker.state.units
+previous_execution_day = None
 ⋮----
 purge = max(1, self.model_config.horizon_bars)
 start = self.config.min_train_bars + purge
@@ -1139,6 +1145,10 @@ execution_idx = df.index[signal_pos + 1]
 execution_price = float(df.at[execution_idx, "Open"])
 close_price = float(df.at[execution_idx, "Close"])
 ⋮----
+execution_day = pd.Timestamp(execution_idx).date()
+⋮----
+previous_execution_day = execution_day
+equity_before_step = broker.state.equity
 feature_row = features.loc[signal_idx, FEATURES]
 regime = detect_regime(feature_row)
 ⋮----
@@ -1154,10 +1164,11 @@ equity = pd.Series(curve, dtype=float).sort_index()
 benchmark_price_series = pd.Series(benchmark_prices, dtype=float).sort_index()
 benchmark = buy_and_hold_equity(
 ⋮----
-metrics = compute_metrics(equity, self.config.periods_per_year)
-benchmark_metrics = compute_metrics(benchmark, self.config.periods_per_year)
+periods_per_year = (
+metrics = compute_metrics(equity, periods_per_year)
+benchmark_metrics = compute_metrics(benchmark, periods_per_year)
 ⋮----
-regime_returns = {}
+regime_returns = {
 ````
 
 ## File: src/ai_trading/benchmark_gate.py
@@ -1267,9 +1278,15 @@ def __init__(self, config: RiskConfig) -> None
 ⋮----
 def mark(self, price: float) -> None
 ⋮----
+price = float(price)
+⋮----
 equity = self.state.equity
 ⋮----
+def reset_day_start(self) -> None
+⋮----
 def rebalance(self, side: int, target_notional: float, price: float) -> None
+⋮----
+target_notional = float(target_notional)
 ⋮----
 desired_units = 0.0 if side == 0 else side * target_notional / price
 delta_units = desired_units - self.state.units
@@ -2755,8 +2772,13 @@ max_dd = 0.0
 trades = 0
 decisions = 0
 previous_units = broker.state.units
+previous_execution_day = None
 ⋮----
 price = float(df.at[idx, "Close"])
+⋮----
+execution_day = pd.Timestamp(idx).date()
+⋮----
+previous_execution_day = execution_day
 ⋮----
 prediction = self.model.predict_one(x.loc[idx, FEATURES])
 snapshot = PortfolioSnapshot(
@@ -8202,6 +8224,22 @@ open_ = close * (1.0 + 0.001 * np.sin(t / 5.0))
 def test_walk_forward_produces_out_of_sample_report() -> None
 ⋮----
 report = WalkForwardBacktester(
+⋮----
+def test_walk_forward_resets_daily_risk_baseline_between_dates(monkeypatch) -> None
+⋮----
+calls = 0
+original = PaperBroker.reset_day_start
+⋮----
+def tracked_reset(self) -> None
+⋮----
+def test_regime_step_returns_are_compounded_without_intervening_equity() -> None
+⋮----
+result = _compound_step_returns([0.10, -0.05, 0.02])
+⋮----
+def test_walk_forward_annualizes_from_actual_oos_timestamps_by_default() -> None
+⋮----
+periods = infer_periods_per_year(report.equity_curve.index)
+expected = compute_metrics(report.equity_curve, periods)
 ````
 
 ## File: tests/test_benchmark_gate.py
@@ -8244,6 +8282,22 @@ def test_bootstrap_positive_curve_has_positive_median() -> None
 curve = pd.Series([100.0, 101.0, 102.0, 103.0, 104.0, 105.0])
 ⋮----
 report = bootstrap_equity_curve(
+````
+
+## File: tests/test_broker.py
+````python
+def test_broker_resets_daily_loss_baseline_to_current_equity() -> None
+⋮----
+broker = PaperBroker(RiskConfig())
+⋮----
+@pytest.mark.parametrize("price", [0.0, -1.0, math.nan, math.inf, -math.inf])
+def test_broker_rejects_invalid_mark_prices(price: float) -> None
+⋮----
+@pytest.mark.parametrize("side", [-2, 2, 99])
+def test_broker_rejects_invalid_sides(side: int) -> None
+⋮----
+@pytest.mark.parametrize("notional", [-1.0, math.nan, math.inf])
+def test_broker_rejects_invalid_target_notional(notional: float) -> None
 ````
 
 ## File: tests/test_burnin.py
@@ -9798,6 +9852,13 @@ def test_multiasset_walk_forward_produces_portfolio_curve() -> None
 ⋮----
 backtester = MultiAssetWalkForwardBacktester(
 report = backtester.run(
+⋮----
+def test_multiasset_backtest_annualizes_from_actual_timestamps() -> None
+⋮----
+report = MultiAssetWalkForwardBacktester(
+⋮----
+periods = infer_periods_per_year(report.equity_curve.index)
+expected = compute_metrics(report.equity_curve, periods)
 ````
 
 ## File: tests/test_multiasset_evolution.py
@@ -11786,7 +11847,7 @@ Autonomous trading research platform focused on reproducible, risk-aware, out-of
 
 ## Current capabilities
 
-- OHLCV ingestion through `yfinance`
+- hardened OHLCV ingestion through `yfinance` with retries, sorting, timestamp deduplication and fail-closed OHLC validation
 - deterministic feature engineering
 - LONG / SHORT / FLAT probabilistic model
 - independent fail-closed risk engine
@@ -11798,7 +11859,12 @@ Autonomous trading research platform focused on reproducible, risk-aware, out-of
 - Sharpe, Sortino, Calmar, annualized return/volatility and max drawdown
 - append-only experiment registry
 - durable PostgreSQL persistence for hosted paper runtime state
+- Gold / DAX / BTC multi-market paper runtime with session-aware freshness telemetry
+- multi-timeframe evidence across 5m / 15m / 1h / 4h
+- correlation-aware portfolio de-risking and fail-closed configuration validation
 - bounded external paper-cycle scheduling with catch-up support
+- Cloudflare five-minute scheduler with authenticated Render endpoint and durable delivery evidence
+- GitHub Actions scheduler retained as operational fallback
 - read-only hosted dashboard backed by the same durable runtime state
 - CI with Ruff + Pytest + PostgreSQL 16 integration tests
 
@@ -11919,21 +11985,27 @@ This persistence layer does not enable live trading. Broker routing remains pape
 The production paper architecture separates execution from the hosted web process:
 
 ```text
-GitHub Actions (every 5 minutes)
+Cloudflare Worker (every 5 minutes)
         |
+        | authenticated POST
         v
-ai-trading paper-cycle
+Render /internal/paper-cycle
         |
         v
 Shared PostgreSQL durable state
         |
-        +----------------------+
-        |                      |
-        v                      v
-paper state/model/trades     Render dashboard
+        +---------------------------+
+        |                           |
+        v                           v
+paper state/model/trades         Render dashboard
+        ^
+        |
+GitHub Actions fallback scheduler
 ```
 
-The scheduled executor is defined in `.github/workflows/paper-cycle.yml`. It runs every five minutes and can also be invoked through `workflow_dispatch`. The database connection string is supplied only through the GitHub Actions secret named `AI_TRADING_DATABASE_URL`.
+The primary scheduler is the Cloudflare Worker under `infra/cloudflare-paper-scheduler/`. Its cron runs every five minutes and sends an authenticated POST to Render's `/internal/paper-cycle` endpoint. The Worker contains no database credentials and no trading logic. The existing `.github/workflows/paper-cycle.yml` schedule remains available as a fallback until external scheduler delivery has accumulated sufficient production evidence.
+
+Scheduler delivery telemetry is sanitized and persisted durably. The application never persists the bearer token or raw authorization headers. Three consecutive successful Cloudflare deliveries are treated as the minimum verification threshold exposed by `/api/scheduler`.
 
 The production cycle is:
 
@@ -11961,6 +12033,8 @@ Operational endpoints:
 
 ```text
 https://ai-trading-dashboard-qyr2.onrender.com/api/overview
+https://ai-trading-dashboard-qyr2.onrender.com/api/markets
+https://ai-trading-dashboard-qyr2.onrender.com/api/scheduler
 https://ai-trading-dashboard-qyr2.onrender.com/api/status
 https://ai-trading-dashboard-qyr2.onrender.com/healthz
 ```
@@ -11975,7 +12049,9 @@ AI_TRADING_HOSTED_PERIOD=5d
 AI_TRADING_HOSTED_INTERVAL=5m
 ```
 
-`AI_TRADING_EXTERNAL_SCHEDULER=1` explicitly suppresses the legacy in-process daemon worker. Render then serves the dashboard only, while GitHub Actions owns paper-cycle execution. The dashboard reads the shared durable state and exposes the last processed bar and processed-bar count without exposing storage connection details.
+`AI_TRADING_EXTERNAL_SCHEDULER=1` explicitly suppresses the legacy in-process daemon worker. Render serves the dashboard and the authenticated cycle endpoint while external schedulers own delivery. The dashboard reads the shared durable state and exposes the last processed bar, processed-bar count, per-market freshness and durable scheduler evidence without exposing storage connection details.
+
+The scheduler verification endpoint reports recent sanitized deliveries, the current consecutive Cloudflare-success count and whether the three-delivery verification threshold has been reached. A successful HTTP trigger with zero newly processed bars is still a valid delivery: duplicate/overlapping invocations are intentionally benign and durable runtime revision protection prevents stale writers from overwriting newer state.
 
 ## Walk-forward methodology
 

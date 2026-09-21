@@ -45,16 +45,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T16:16:53Z
+Generated: 2026-09-21T16:31:59Z
 
 ### Git
 - Branch: `main`
-- Head: `5193b51fe76f`
-- Commit date: 2026-09-21T18:16:05+02:00
-- Commit: ci: add supply-chain and CodeQL security coverage (#83)
-- Tracked files: 483
+- Head: `5ed24c787833`
+- Commit date: 2026-09-21T18:31:39+02:00
+- Commit: docs: align README with production scheduler and multi-market runtime (#84)
+- Tracked files: 484
 
 ### Recently changed files
+- `README.md`
+- `src/ai_trading/backtest.py`
+- `src/ai_trading/broker.py`
+- `src/ai_trading/engine.py`
+- `src/ai_trading/multiasset_backtest.py`
+- `src/ai_trading/runtime.py`
+- `tests/test_backtest.py`
+- `tests/test_broker.py`
+- `tests/test_multiasset_backtest.py`
 - `.github/dependabot.yml`
 - `.github/workflows/codeql.yml`
 - `src/ai_trading/dashboard.py`
@@ -66,15 +75,6 @@ Generated: 2026-09-21T16:16:53Z
 - `src/ai_trading/data.py`
 - `src/ai_trading/marginal_alpha.py`
 - `src/ai_trading/performance.py`
-- `tests/test_cloudflare_scheduler_deploy_workflow.py`
-- `tests/test_data.py`
-- `tests/test_performance.py`
-- `src/ai_trading/file_persistence.py`
-- `src/ai_trading/persistence.py`
-- `src/ai_trading/postgres_persistence.py`
-- `src/ai_trading/scheduler_endpoint.py`
-- `tests/test_file_persistence.py`
-- `tests/test_postgres_persistence.py`
 
 ### Project signals
 - `pyproject.toml`

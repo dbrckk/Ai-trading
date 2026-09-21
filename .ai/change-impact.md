@@ -1,14 +1,13 @@
 # Change impact
 
-Base: 374744b245900bcdffd6fb333c428f790d406d81
-Head: 5193b51fe76f60954d1a9b42092ffbbb637ff496
+Base: beeb6b823f67752c06687486a14d49343b0bd9d6
+Head: 5ed24c78783314f403d5d4a393691a0b6c382803
 
 ## Changed files
-- A .github/dependabot.yml
-- A .github/workflows/codeql.yml
+- M README.md
 
 ## Affected areas
-- .github
+- (root)
 
 ## Related test candidates
 - No direct filename-based test match detected.

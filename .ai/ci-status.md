@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 0 success / 0 failure / 8 active
+Summary: 3 success / 0 failure / 4 active
 
-- github_actions in /. - Update #1585941563: in_progress / pending (5193b51f)
-- docker in /. - Update #1585941545: in_progress / pending (5193b51f)
-- docker in /. - Update #1585941565: in_progress / pending (5193b51f)
-- npm_and_yarn in /infra/cloudflare-paper-scheduler - Update #1585941561: in_progress / pending (5193b51f)
-- pip in /. - Update #1585941558: in_progress / pending (5193b51f)
-- npm_and_yarn in /infra/cloudflare-paper-scheduler - Update #1585941542: in_progress / pending (5193b51f)
-- pip in /. - Update #1585941541: in_progress / pending (5193b51f)
-- github_actions in /. - Update #1585941543: in_progress / pending (5193b51f)
+- CodeQL: pending / pending (5ed24c78)
+- CI: in_progress / pending (5ed24c78)
+- CI: in_progress / pending (beeb6b82)
+- CodeQL: in_progress / pending (beeb6b82)
+- CodeQL: completed / success (ef7d182d)
+- CI: completed / success (ef7d182d)
+- CI: completed / success (13a89a41)
+- CodeQL: completed / cancelled (13a89a41)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
