@@ -1197,6 +1197,26 @@ def serve_dashboard(
             if path == "/api/status":
                 self._send_json(load_status_snapshot())
                 return
+            if path == "/livez":
+                self._send_json({"web_healthy": True})
+                return
+            if path == "/readyz":
+                snapshot = load_status_snapshot()
+                storage_healthy = snapshot.get("storage_healthy") is not False
+                self._send_json(
+                    {
+                        "ready": storage_healthy,
+                        "storage_healthy": storage_healthy,
+                    }
+                    if storage_healthy
+                    else {
+                        "ready": False,
+                        "storage_healthy": False,
+                        "error": "storage unavailable",
+                    },
+                    status_code=200 if storage_healthy else 503,
+                )
+                return
             if path == "/healthz":
                 snapshot = load_status_snapshot()
                 if snapshot.get("storage_healthy") is False:
