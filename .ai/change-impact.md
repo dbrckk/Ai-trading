@@ -1,27 +1,28 @@
 # Change impact
 
-Base: f79b8d927211bda55ca04a1ed6231bd184e61712
-Head: 628734400be5dfde57e03d3d51a1c53b6866d63e
+Base: eab62676deb322648b34711debc7c9a2d94d989a
+Head: d3715ced8ddb75e867dd412e2a038082a30c70bc
 
 ## Changed files
-- M src/ai_trading/alpha_allocation.py
-- M src/ai_trading/config.py
-- M src/ai_trading/global_allocator.py
-- M src/ai_trading/portfolio.py
-- M src/ai_trading/portfolio_intelligence.py
-- M src/ai_trading/portfolio_risk.py
-- A tests/test_config_validation.py
+- M src/ai_trading/dashboard.py
+- M src/ai_trading/file_persistence.py
+- M src/ai_trading/persistence.py
+- M src/ai_trading/postgres_persistence.py
+- M src/ai_trading/scheduler_endpoint.py
+- M tests/test_file_persistence.py
+- M tests/test_postgres_persistence.py
+- M tests/test_scheduler_endpoint.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_alpha_allocation.py
-- tests/test_global_allocator.py
-- tests/test_portfolio.py
-- tests/test_portfolio_intelligence.py
-- tests/test_portfolio_risk.py
+- tests/test_dashboard.py
+- tests/test_file_persistence.py
+- tests/test_persistence.py
+- tests/test_postgres_persistence.py
+- tests/test_scheduler_endpoint.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

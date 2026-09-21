@@ -1933,6 +1933,7 @@
         "src/ai_trading/persistence_factory.py",
         "src/ai_trading/postgres_persistence.py",
         "src/ai_trading/runtime.py",
+        "src/ai_trading/scheduler_endpoint.py",
         "tests/test_active_model.py",
         "tests/test_cumulative_performance_persistence.py",
         "tests/test_dashboard_overview.py",
@@ -1947,9 +1948,10 @@
         "tests/test_persistence_contract.py",
         "tests/test_postgres_persistence.py",
         "tests/test_rollback_model.py",
-        "tests/test_runtime_persistence.py"
+        "tests/test_runtime_persistence.py",
+        "tests/test_scheduler_endpoint.py"
       ],
-      "in_degree": 28,
+      "in_degree": 30,
       "out_degree": 5
     },
     "src/ai_trading/persistence_factory.py": {
@@ -2640,14 +2642,15 @@
     "src/ai_trading/scheduler_endpoint.py": {
       "dependencies": [
         "src/ai_trading/paper_cycle.py",
-        "src/ai_trading/paper_cycle_service.py"
+        "src/ai_trading/paper_cycle_service.py",
+        "src/ai_trading/persistence.py"
       ],
       "dependents": [
         "src/ai_trading/dashboard.py",
         "tests/test_scheduler_endpoint.py"
       ],
       "in_degree": 2,
-      "out_degree": 2
+      "out_degree": 3
     },
     "src/ai_trading/sensitivity_gate.py": {
       "dependencies": [
@@ -4595,11 +4598,12 @@
         "src/ai_trading/dashboard.py",
         "src/ai_trading/paper_cycle.py",
         "src/ai_trading/paper_cycle_service.py",
+        "src/ai_trading/persistence.py",
         "src/ai_trading/scheduler_endpoint.py"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 5
+      "out_degree": 6
     },
     "tests/test_scheduler_governor.py": {
       "dependencies": [

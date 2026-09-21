@@ -2332,6 +2332,8 @@ def do_GET(self) -> None
 ⋮----
 path = urlsplit(self.path).path.rstrip("/")
 ⋮----
+deliveries = backend.list_scheduler_deliveries(limit=20)
+⋮----
 snapshot = load_status_snapshot()
 ⋮----
 payload = render_dashboard(
@@ -3172,6 +3174,12 @@ payload = record.get("payload")
 def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None
 ⋮----
 def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None
+⋮----
+def record_scheduler_delivery(self, delivery: SchedulerDelivery) -> None
+⋮----
+deliveries: list[SchedulerDelivery] = []
+⋮----
+payload = json.loads(line)
 ````
 
 ## File: src/ai_trading/generation_progress.py
@@ -5367,6 +5375,15 @@ revision: int
 is_new: bool
 ⋮----
 @dataclass(frozen=True)
+class SchedulerDelivery
+⋮----
+timestamp_utc: str
+source: str
+status_code: int
+ok: bool
+processed: int | None = None
+⋮----
+@dataclass(frozen=True)
 class RuntimeStepCommit
 ⋮----
 expected_revision: int
@@ -5394,6 +5411,8 @@ def list_regimes(self, runtime_key: str) -> tuple[str, ...]: ...
 def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None: ...
 ⋮----
 def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None: ...
+⋮----
+def record_scheduler_delivery(self, delivery: SchedulerDelivery) -> None: ...
 ⋮----
 def build_runtime_key(symbol: str, interval: str) -> str
 ⋮----
@@ -5730,6 +5749,8 @@ def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> 
 payload = asdict(status)
 ⋮----
 def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None
+⋮----
+def record_scheduler_delivery(self, delivery: SchedulerDelivery) -> None
 ````
 
 ## File: src/ai_trading/process_watch.py
@@ -7049,6 +7070,10 @@ normalized_source = "external"
 ⋮----
 payload: dict[str, object] = {
 processed = response.payload.get("processed")
+⋮----
+consecutive_cloudflare_successes = 0
+⋮----
+latest = deliveries[-1] if deliveries else None
 ⋮----
 def _authorized(authorization: str | None, configured_token: str) -> bool
 ⋮----
@@ -9005,6 +9030,10 @@ def test_file_backend_loads_shadow_quality_from_audit(tmp_path) -> None
 payloads = [
 ⋮----
 comparison = backend.load_shadow_quality("paper:GC=F:5m:online-river:v1")
+⋮----
+def test_file_backend_persists_scheduler_deliveries(tmp_path) -> None
+⋮----
+delivery = SchedulerDelivery(
 ````
 
 ## File: tests/test_generation_progress.py
@@ -10208,6 +10237,12 @@ commit = _commit()
 shadow_commit = RuntimeStepCommit(
 ⋮----
 comparison = backend.load_shadow_quality(RUNTIME_KEY)
+⋮----
+def test_scheduler_deliveries_survive_postgres_restart(backend) -> None
+⋮----
+delivery = SchedulerDelivery(
+⋮----
+restored = PostgresPaperPersistence(DATABASE_URL)
 ````
 
 ## File: tests/test_process_watch.py
@@ -10990,6 +11025,16 @@ payload = scheduler_telemetry_payload(response, "cloudflare")
 def test_scheduler_telemetry_does_not_trust_arbitrary_source_headers() -> None
 ⋮----
 payload = scheduler_telemetry_payload(
+⋮----
+def test_scheduler_delivery_overview_verifies_three_consecutive_cloudflare_successes() -> None
+⋮----
+deliveries = tuple(
+⋮----
+overview = scheduler_delivery_overview(deliveries)
+⋮----
+def test_http_scheduler_exposes_durable_cloudflare_delivery_evidence(tmp_path) -> None
+⋮----
+payload = json.loads(body)
 ````
 
 ## File: tests/test_scheduler_governor.py

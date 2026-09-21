@@ -45,16 +45,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T16:07:34Z
+Generated: 2026-09-21T16:10:00Z
 
 ### Git
 - Branch: `main`
-- Head: `628734400be5`
-- Commit date: 2026-09-21T18:07:22+02:00
-- Commit: refactor: fail closed on invalid trading configuration (#80)
+- Head: `d3715ced8ddb`
+- Commit date: 2026-09-21T18:09:47+02:00
+- Commit: feat: add durable scheduler delivery observability (#81)
 - Tracked files: 481
 
 ### Recently changed files
+- `src/ai_trading/dashboard.py`
+- `src/ai_trading/file_persistence.py`
+- `src/ai_trading/persistence.py`
+- `src/ai_trading/postgres_persistence.py`
+- `src/ai_trading/scheduler_endpoint.py`
+- `tests/test_file_persistence.py`
+- `tests/test_postgres_persistence.py`
+- `tests/test_scheduler_endpoint.py`
 - `src/ai_trading/alpha_allocation.py`
 - `src/ai_trading/config.py`
 - `src/ai_trading/global_allocator.py`
@@ -62,19 +70,11 @@ Generated: 2026-09-21T16:07:34Z
 - `src/ai_trading/portfolio_intelligence.py`
 - `src/ai_trading/portfolio_risk.py`
 - `tests/test_config_validation.py`
-- `src/ai_trading/dashboard.py`
 - `tests/test_dashboard.py`
 - `tests/test_multi_market.py`
 - `src/ai_trading/multiasset_runtime.py`
 - `tests/test_multiasset_runtime.py`
 - `tests/test_portfolio_intelligence.py`
-- `infra/cloudflare-paper-scheduler/README.md`
-- `infra/cloudflare-paper-scheduler/src/index.js`
-- `infra/cloudflare-paper-scheduler/test/index.test.js`
-- `src/ai_trading/scheduler_endpoint.py`
-- `tests/test_scheduler_endpoint.py`
-- `src/ai_trading/market_freshness.py`
-- `src/ai_trading/multi_market.py`
 
 ### Project signals
 - `pyproject.toml`
