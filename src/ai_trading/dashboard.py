@@ -69,6 +69,19 @@ def _display_ratio(value: float | None) -> str:
     return f"{value:.2f}"
 
 
+def _trade_pnl_known(trade: object) -> bool:
+    marker = getattr(trade, "pnl_known", None)
+    if marker is None:
+        return float(getattr(trade, "pnl", 0.0)) != 0.0
+    return bool(marker)
+
+
+def _display_trade_pnl(trade: object) -> str:
+    if not _trade_pnl_known(trade):
+        return "—"
+    return f"{float(getattr(trade, 'pnl', 0.0)):.2f}"
+
+
 def _equity_chart_svg(snapshots: tuple[BurnInSnapshot, ...]) -> str:
     if len(snapshots) < 2:
         return '<div class="chart-empty">Need at least two burn-in points.</div>'
@@ -212,6 +225,9 @@ def render_dashboard(
     if storage_error:
         realized_pnl: float | None = None
         trade_count: int | None = None
+        pnl_observations: int | None = None
+        pnl_coverage_total: int | None = None
+        pnl_coverage_recent = False
         wins: int | None = None
         losses: int | None = None
         win_rate: float | None = None
@@ -223,8 +239,31 @@ def render_dashboard(
     else:
         realized_pnl = trade_performance.realized_pnl
         trade_count = trade_performance.trade_count
-        wins = sum(1 for trade in recent if trade.pnl > 0)
-        losses = sum(1 for trade in recent if trade.pnl < 0)
+        persisted_observations = getattr(
+            trade_performance,
+            "pnl_observations",
+            None,
+        )
+        if persisted_observations is None:
+            pnl_observations = sum(1 for trade in recent if _trade_pnl_known(trade))
+            pnl_coverage_total = len(recent)
+            pnl_coverage_recent = True
+        else:
+            pnl_observations = int(persisted_observations)
+            pnl_coverage_total = trade_count
+            pnl_coverage_recent = False
+            if pnl_observations == 0:
+                realized_pnl = None
+        wins = sum(
+            1
+            for trade in recent
+            if _trade_pnl_known(trade) and trade.pnl > 0
+        )
+        losses = sum(
+            1
+            for trade in recent
+            if _trade_pnl_known(trade) and trade.pnl < 0
+        )
         win_rate = (wins / (wins + losses)) if wins + losses else 0.0
         active_symbols = len({trade.symbol for trade in recent})
         cash = state.cash if state is not None else starting_cash
@@ -333,7 +372,7 @@ def render_dashboard(
             f"<td>{t.quantity:g}</td>"
             f"<td>{t.price:.4f}</td>"
             f"<td>{html.escape(t.status)}</td>"
-            f"<td>{t.pnl:.2f}</td>"
+            f"<td>{_display_trade_pnl(t)}</td>"
             f"<td>{'-' if t.confidence is None else f'{t.confidence:.1%}'}</td>"
             f"<td>{html.escape(t.strategy)}</td>"
             "</tr>"
@@ -344,17 +383,28 @@ def render_dashboard(
 
     trade_count_display = "-" if trade_count is None else str(trade_count)
     pnl_display = _display_money(realized_pnl)
+    if pnl_observations is None or pnl_coverage_total is None:
+        pnl_coverage_display = "-"
+    else:
+        recent_suffix = " recent" if pnl_coverage_recent else ""
+        pnl_coverage_display = (
+            f"{pnl_observations} / {pnl_coverage_total}{recent_suffix}"
+        )
     win_rate_display = "-" if win_rate is None else f"{win_rate:.1%}"
     wins_losses_display = "-" if wins is None or losses is None else f"{wins} / {losses}"
     active_symbols_display = "-" if active_symbols is None else str(active_symbols)
     average_pnl_display = _display_money(
-        None if trade_performance is None else trade_performance.average_pnl
+        None
+        if trade_performance is None or pnl_observations == 0
+        else trade_performance.average_pnl
     )
     profit_factor_display = _display_ratio(
         None if trade_performance is None else trade_performance.profit_factor
     )
     max_drawdown_display = _display_money(
-        None if trade_performance is None else trade_performance.max_drawdown
+        None
+        if trade_performance is None or pnl_observations == 0
+        else trade_performance.max_drawdown
     )
     burnin_bars = (
         burnin_snapshots[-1].processed_bars
@@ -880,7 +930,8 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
 <div class="metrics">
 <div class="metric primary"><small>Realized PnL</small><strong>{pnl_display}</strong></div>
 <div class="metric"><small>Trades</small><strong>{trade_count_display}</strong></div>
-<div class="metric"><small>Avg PnL / trade</small><strong>{average_pnl_display}</strong></div>
+<div class="metric"><small>PnL coverage</small><strong>{pnl_coverage_display}</strong></div>
+<div class="metric"><small>Avg PnL / observed</small><strong>{average_pnl_display}</strong></div>
 <div class="metric"><small>Profit factor</small><strong>{profit_factor_display}</strong></div>
 <div class="metric"><small>Max realized DD</small><strong>{max_drawdown_display}</strong></div>
 <div class="metric"><small>Recent win rate</small><strong>{win_rate_display}</strong></div>

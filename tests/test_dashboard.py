@@ -99,7 +99,8 @@ def test_dashboard_renders_recent_trade_performance_metrics(tmp_path) -> None:
 
     page = render_dashboard(journal)
 
-    assert '<small>Avg PnL / trade</small><strong>-1.25</strong>' in page
+    assert '<small>Avg PnL / observed</small><strong>-1.25</strong>' in page
+    assert '<small>PnL coverage</small><strong>4 / 4 recent</strong>' in page
     assert '<small>Profit factor</small><strong>0.86</strong>' in page
     assert '<small>Max realized DD</small><strong>35.00</strong>' in page
     assert "Performance window: latest 200 trade events" in page
@@ -127,3 +128,24 @@ def test_dashboard_live_refresh_preserves_scroll_without_meta_reload(tmp_path) -
     assert "window.scrollTo" not in page
     assert 'INTERACTION_GRACE_MS = 1800' in page
     assert 'touchmove' in page
+
+
+
+def test_dashboard_does_not_render_legacy_unknown_pnl_as_zero(tmp_path) -> None:
+    journal = TradeJournal(tmp_path / "trades.jsonl")
+    journal.append(
+        TradeSnapshot(
+            timestamp_utc="2026-09-15T10:00:00+00:00",
+            symbol="GC=F",
+            side="BUY",
+            quantity=0.25,
+            price=3650.5,
+            status="PAPER_FILLED",
+            pnl=0.0,
+        )
+    )
+
+    page = render_dashboard(journal)
+
+    assert "<td>—</td>" in page
+    assert '<small>PnL coverage</small><strong>0 / 1 recent</strong>' in page
