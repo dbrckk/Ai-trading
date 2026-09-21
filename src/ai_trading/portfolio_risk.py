@@ -12,6 +12,16 @@ class PortfolioRiskConfig:
     max_asset_exposure: float = 0.35
     max_pair_correlation: float = 0.90
 
+    def __post_init__(self) -> None:
+        if self.max_gross_exposure <= 0:
+            raise ValueError("max_gross_exposure must be positive")
+        if self.max_net_exposure <= 0 or self.max_net_exposure > self.max_gross_exposure:
+            raise ValueError("max_net_exposure must be in (0, max_gross_exposure]")
+        if self.max_asset_exposure <= 0 or self.max_asset_exposure > self.max_gross_exposure:
+            raise ValueError("max_asset_exposure must be in (0, max_gross_exposure]")
+        if not 0.0 <= self.max_pair_correlation <= 1.0:
+            raise ValueError("max_pair_correlation must be in [0, 1]")
+
 
 @dataclass(frozen=True)
 class PortfolioRiskReport:
