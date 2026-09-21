@@ -10,7 +10,11 @@ from urllib.request import Request, urlopen
 from ai_trading.dashboard import serve_dashboard
 from ai_trading.paper_cycle import PaperCycleResult
 from ai_trading.paper_cycle_service import PaperCycleServiceError
-from ai_trading.scheduler_endpoint import handle_scheduler_request
+from ai_trading.scheduler_endpoint import (
+    SchedulerHttpResponse,
+    handle_scheduler_request,
+    scheduler_telemetry_payload,
+)
 
 
 def successful_result(
@@ -295,3 +299,42 @@ def test_http_scheduler_failure_response_never_leaks_secrets(tmp_path) -> None:
     assert "server-secret" not in body
     assert "postgresql://" not in body
     assert "example.invalid" not in body
+
+
+def test_scheduler_telemetry_is_sanitized_and_identifies_cloudflare() -> None:
+    response = SchedulerHttpResponse(
+        status_code=200,
+        payload={"ok": True, "processed": 3, "status": "RUNNING"},
+    )
+
+    payload = scheduler_telemetry_payload(response, "cloudflare")
+
+    assert payload == {
+        "event": "scheduler_request",
+        "source": "cloudflare",
+        "status_code": 200,
+        "ok": True,
+        "processed": 3,
+    }
+    assert "Authorization" not in repr(payload)
+    assert "token" not in repr(payload).lower()
+
+
+def test_scheduler_telemetry_does_not_trust_arbitrary_source_headers() -> None:
+    response = SchedulerHttpResponse(
+        status_code=401,
+        payload={"ok": False, "error": "unauthorized"},
+    )
+
+    payload = scheduler_telemetry_payload(
+        response,
+        "cloudflare token=super-secret",
+    )
+
+    assert payload == {
+        "event": "scheduler_request",
+        "source": "external",
+        "status_code": 401,
+        "ok": False,
+    }
+    assert "super-secret" not in repr(payload)
