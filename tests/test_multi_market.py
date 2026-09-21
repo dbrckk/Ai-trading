@@ -4,9 +4,8 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from threading import Barrier
 
-import pytest
-
 import ai_trading.multi_market as multi_market_module
+import pytest
 from ai_trading.dashboard import render_dashboard
 from ai_trading.multi_market import (
     DEFAULT_MARKETS,
