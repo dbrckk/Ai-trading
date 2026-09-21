@@ -8,6 +8,7 @@ import pandas as pd
 from .audit import AuditLog
 from .broker import PaperBroker
 from .config import ModelConfig, RiskConfig
+from .execution_costs import risk_config_for_symbol
 from .features import FEATURES, make_features, make_labels
 from .file_persistence import FilePaperPersistence
 from .model import Prediction
@@ -68,7 +69,12 @@ class PaperAutonomousRuntime:
         persistence: PaperPersistence | None = None,
         runtime_key: str | None = None,
     ) -> None:
-        self.risk_config = risk_config or RiskConfig()
+        base_risk_config = risk_config or RiskConfig()
+        self.risk_config = (
+            base_risk_config
+            if risk_config is not None
+            else risk_config_for_symbol(symbol, base_risk_config)
+        )
         self.model_config = model_config or ModelConfig()
         self.state_store = state_store or RuntimeStateStore()
         self.audit = audit_log or AuditLog()
