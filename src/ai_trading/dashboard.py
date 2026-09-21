@@ -587,7 +587,9 @@ def render_dashboard(
             '<div class="portfolio-ribbon">'
             f'<div><small>Portfolio equity</small><strong>{_display_money(float(portfolio["equity"]))}</strong></div>'
             f'<div><small>Portfolio PnL</small><strong class="{portfolio_pnl_css}">{_display_money(portfolio_pnl)}</strong></div>'
-            f'<div><small>Healthy markets</small><strong>{portfolio["healthy_markets"]} / {portfolio["markets"]}</strong></div>'
+            f'<div><small>Storage healthy</small><strong>{portfolio["healthy_markets"]} / {portfolio["markets"]}</strong></div>'
+            f'<div><small>Engines running</small><strong>{portfolio["running_markets"]} / {portfolio["markets"]}</strong></div>'
+            f'<div><small>Markets with alerts</small><strong>{portfolio["alert_markets"]}</strong></div>'
             '<div><small>Execution mode</small><strong>PAPER ONLY</strong></div>'
             '</div><div class="market-cards">'
             + "".join(cards)
@@ -657,7 +659,7 @@ small,.muted{{color:var(--muted)}}
 .alert-box{{margin-top:12px;padding:12px 13px;border-radius:12px;background:rgba(9,19,35,.72);border:1px solid var(--border);font-size:.82rem}}
 .alert-box.warn{{border-color:rgba(255,210,122,.27);background:rgba(87,62,9,.17);color:#ffe0a0}}
 .runtime-reason{{display:block;margin-top:7px;line-height:1.45;font-size:.75rem}}
-.portfolio-ribbon{{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin:2px 0 14px;padding:1px;border-radius:15px;overflow:hidden;background:linear-gradient(90deg,rgba(121,170,255,.22),rgba(93,224,223,.14),rgba(167,139,250,.16));box-shadow:var(--shadow-soft)}}
+.portfolio-ribbon{{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1px;margin:2px 0 14px;padding:1px;border-radius:15px;overflow:hidden;background:linear-gradient(90deg,rgba(121,170,255,.22),rgba(93,224,223,.14),rgba(167,139,250,.16));box-shadow:var(--shadow-soft)}}
 .portfolio-ribbon>div{{padding:14px 15px;background:rgba(7,15,29,.94)}}
 .portfolio-ribbon small{{display:block;font-size:.64rem;text-transform:uppercase;letter-spacing:.09em;margin-bottom:4px}}
 .portfolio-ribbon strong{{font-size:1.04rem;letter-spacing:-.02em}}
