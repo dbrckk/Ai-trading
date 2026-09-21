@@ -28,13 +28,13 @@ def risk_config_for_symbol(
         raise ValueError(f"{_ENV_NAME} must be valid JSON") from exc
 
     if not isinstance(payload, dict):
-        raise ValueError(f"{_ENV_NAME} must contain a JSON object")
+        raise TypeError(f"{_ENV_NAME} must contain a JSON object")
 
     override = payload.get(symbol)
     if override is None:
         return config
     if not isinstance(override, dict):
-        raise ValueError(f"{_ENV_NAME}[{symbol!r}] must be a JSON object")
+        raise TypeError(f"{_ENV_NAME}[{symbol!r}] must be a JSON object")
 
     allowed = {"transaction_cost_bps", "slippage_bps"}
     unknown = set(override).difference(allowed)
