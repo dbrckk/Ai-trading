@@ -43,9 +43,11 @@ The content is organized as follows:
     ai-repo-map.yml
     ci.yml
     cloudflare-paper-scheduler-deploy.yml
+    codeql.yml
     mtf-parameter-benchmark.yml
     paper-cycle.yml
     semantic-refresh.yml
+  dependabot.yml
 .serena/
   project.yml
 infra/
@@ -545,6 +547,55 @@ jobs:
           SCHEDULER_TOKEN: ${{ secrets.AI_TRADING_SCHEDULER_TOKEN }}
 ````
 
+## File: .github/workflows/codeql.yml
+````yaml
+name: CodeQL
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    - cron: "19 4 * * 1"
+
+permissions:
+  contents: read
+  security-events: write
+  packages: read
+  actions: read
+
+concurrency:
+  group: codeql-${{ github.repository }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: Analyze ${{ matrix.language }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        language:
+          - python
+          - javascript-typescript
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v4
+
+      - name: Analyze
+        uses: github/codeql-action/analyze@v4
+````
+
 ## File: .github/workflows/mtf-parameter-benchmark.yml
 ````yaml
 name: MTF Parameter Benchmark
@@ -675,6 +726,43 @@ jobs:
     uses: dbrckk/repo-brain/.github/workflows/reusable-semantic.yml@main
     with:
       commit_changes: true
+````
+
+## File: .github/dependabot.yml
+````yaml
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+
+  - package-ecosystem: "npm"
+    directory: "/infra/cloudflare-paper-scheduler"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
 ````
 
 ## File: .serena/project.yml
@@ -2245,6 +2333,24 @@ sharpe_display = "-" if burnin_metrics is None else f"{burnin_metrics.sharpe:.2f
 sortino_display = "-" if burnin_metrics is None else f"{burnin_metrics.sortino:.2f}"
 readiness_panel = _readiness_panel(readiness_report)
 status_class = (
+⋮----
+scheduler_panel = ""
+⋮----
+list_deliveries = getattr(persistence, "list_scheduler_deliveries", None)
+deliveries = tuple(list_deliveries(limit=20)) if callable(list_deliveries) else ()
+scheduler_overview = scheduler_delivery_overview(deliveries)
+scheduler_verified = bool(scheduler_overview["cloudflare_delivery_verified"])
+scheduler_delivery_count = int(scheduler_overview["delivery_count"])
+scheduler_successes = int(
+scheduler_last_source = str(scheduler_overview["last_source"] or "-")
+scheduler_last_status = (
+scheduler_last_delivery = str(
+scheduler_state = (
+scheduler_state_class = "status-ok" if scheduler_verified else "status-warn"
+scheduler_panel = f"""
+⋮----
+scheduler_panel = """
+⋮----
 market_panel = ""
 ⋮----
 snapshot = build_multi_market_overview(
@@ -8566,6 +8672,8 @@ def list_regimes(self, runtime_key: str) -> tuple[str, ...]
 ⋮----
 def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None
 ⋮----
+def list_scheduler_deliveries(self, *, limit: int = 20)
+⋮----
 class FailingPersistence
 ⋮----
 def _fail(self)
@@ -8599,6 +8707,8 @@ port = _start_failure_dashboard()
 ⋮----
 status_payload = json.loads(status_body)
 health_payload = json.loads(health_body)
+⋮----
+def test_dashboard_surfaces_verified_scheduler_delivery(tmp_path) -> None
 ⋮----
 def test_dashboard_v2_groups_critical_sections_and_renders_equity_chart(tmp_path) -> None
 ⋮----

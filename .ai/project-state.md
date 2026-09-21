@@ -45,16 +45,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T16:11:47Z
+Generated: 2026-09-21T16:16:53Z
 
 ### Git
 - Branch: `main`
-- Head: `53cf19eb161a`
-- Commit date: 2026-09-21T18:11:36+02:00
-- Commit: refactor: harden core data, metrics, and CI foundations (#79)
-- Tracked files: 481
+- Head: `5193b51fe76f`
+- Commit date: 2026-09-21T18:16:05+02:00
+- Commit: ci: add supply-chain and CodeQL security coverage (#83)
+- Tracked files: 483
 
 ### Recently changed files
+- `.github/dependabot.yml`
+- `.github/workflows/codeql.yml`
+- `src/ai_trading/dashboard.py`
+- `tests/test_dashboard_persistence.py`
 - `.github/workflows/ci.yml`
 - `.github/workflows/cloudflare-paper-scheduler-deploy.yml`
 - `.github/workflows/mtf-parameter-benchmark.yml`
@@ -65,16 +69,12 @@ Generated: 2026-09-21T16:11:47Z
 - `tests/test_cloudflare_scheduler_deploy_workflow.py`
 - `tests/test_data.py`
 - `tests/test_performance.py`
-- `src/ai_trading/dashboard.py`
 - `src/ai_trading/file_persistence.py`
 - `src/ai_trading/persistence.py`
 - `src/ai_trading/postgres_persistence.py`
 - `src/ai_trading/scheduler_endpoint.py`
 - `tests/test_file_persistence.py`
 - `tests/test_postgres_persistence.py`
-- `tests/test_scheduler_endpoint.py`
-- `src/ai_trading/alpha_allocation.py`
-- `src/ai_trading/config.py`
 
 ### Project signals
 - `pyproject.toml`
