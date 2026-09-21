@@ -204,7 +204,8 @@ def test_dashboard_uses_durable_state_trades_and_status(tmp_path) -> None:
     assert ">7<" in page
     assert '<small>Trades</small><strong>250</strong>' in page
     assert '<small>Realized PnL</small><strong>375.00</strong>' in page
-    assert '<small>Avg PnL / trade</small><strong>1.50</strong>' in page
+    assert '<small>Avg PnL / observed</small><strong>1.50</strong>' in page
+    assert '<small>PnL coverage</small><strong>1 / 1 recent</strong>' in page
     assert '<small>Profit factor</small><strong>4.00</strong>' in page
     assert '<small>Max realized DD</small><strong>80.00</strong>' in page
     assert "Performance window: full persisted history" in page
