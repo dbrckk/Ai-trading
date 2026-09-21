@@ -45,16 +45,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T17:32:12Z
+Generated: 2026-09-21T17:37:05Z
 
 ### Git
 - Branch: `main`
-- Head: `bf094e8ca9d5`
-- Commit date: 2026-09-21T19:31:47+02:00
-- Commit: feat: separate dashboard liveness and readiness probes (#93)
+- Head: `84f8b241ebed`
+- Commit date: 2026-09-21T19:36:53+02:00
+- Commit: feat: detect repeated cadence gaps in market data quality (#92)
 - Tracked files: 492
 
 ### Recently changed files
+- `src/ai_trading/data_quality.py`
+- `tests/test_data_quality.py`
 - `README.md`
 - `src/ai_trading/dashboard.py`
 - `tests/test_dashboard_persistence.py`
@@ -71,8 +73,6 @@ Generated: 2026-09-21T17:32:12Z
 - `src/ai_trading/multiasset_runtime.py`
 - `src/ai_trading/paper_execution.py`
 - `tests/test_paper_execution.py`
-- `src/ai_trading/multiasset_market_context.py`
-- `tests/test_multiasset_market_context.py`
 
 ### Project signals
 - `pyproject.toml`

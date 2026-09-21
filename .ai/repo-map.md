@@ -2494,6 +2494,7 @@ ohlc_violation_fraction: float
 stale_fraction: float
 valid: bool
 reasons: tuple[str, ...]
+gap_fraction: float = 0.0
 ⋮----
 required_columns = ["Open", "High", "Low", "Close"]
 missing_columns = [column for column in required_columns if column not in df.columns]
@@ -2515,6 +2516,15 @@ ohlc_violation_fraction = float(violations.fillna(True).mean())
 ⋮----
 close_changes = close.pct_change().abs()
 stale_fraction = float((close_changes.fillna(0.0) == 0.0).mean())
+⋮----
+gap_fraction = 1.0
+⋮----
+deltas = sample.index.to_series().diff().dropna()
+positive = deltas[deltas > pd.Timedelta(0)]
+⋮----
+cadence = positive.median()
+⋮----
+gap_fraction = float((positive > cadence * 1.5).mean())
 ⋮----
 score = (
 ⋮----
@@ -8910,6 +8920,23 @@ report = evaluate_market_data_quality(df)
 def test_missing_required_column_fails_closed() -> None
 ⋮----
 report = evaluate_market_data_quality(clean_market().drop(columns=["Open"]))
+⋮----
+def intraday_market(n: int = 120) -> pd.DataFrame
+⋮----
+frame = clean_market(n)
+⋮----
+def test_occasional_cadence_gap_is_tolerated() -> None
+⋮----
+df = intraday_market().drop(index=intraday_market().index[50])
+⋮----
+def test_repeated_cadence_gaps_fail_quality_gate() -> None
+⋮----
+df = intraday_market()
+df = df.drop(index=df.index[10:110:10])
+⋮----
+def test_non_datetime_index_fails_cadence_quality() -> None
+⋮----
+def test_data_quality_rejects_invalid_scoring_configuration(kwargs) -> None
 ````
 
 ## File: tests/test_data.py

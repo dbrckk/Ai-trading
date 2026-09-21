@@ -1,20 +1,18 @@
 # Change impact
 
-Base: 22e2a96befbdb81d2f52d9658111321dcd0fcc62
-Head: bf094e8ca9d55bd9ceb77f1fecbe354136f4f81b
+Base: 5bb09e009dfa0126baf757d8a57d6028149e2b37
+Head: 84f8b241ebed242ecce59e4061e57ceae775c65c
 
 ## Changed files
-- M README.md
-- M src/ai_trading/dashboard.py
-- M tests/test_dashboard_persistence.py
+- M src/ai_trading/data_quality.py
+- M tests/test_data_quality.py
 
 ## Affected areas
-- (root)
 - src
 - tests
 
 ## Related test candidates
-- tests/test_dashboard.py
+- tests/test_data_quality.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.
