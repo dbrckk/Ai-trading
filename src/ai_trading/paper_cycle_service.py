@@ -38,6 +38,30 @@ def _default_runner_factory(persistence: PaperPersistence) -> PaperCycleRunner:
     return PaperCycleRunner(persistence=persistence)
 
 
+_SAFE_RUNTIME_FAILURES = {
+    "persisted last_processed is outside loaded history": (
+        "persisted_bar_outside_loaded_history"
+    ),
+    "persisted runtime is missing last_processed": (
+        "persisted_runtime_missing_last_processed"
+    ),
+    "market history contains no eligible execution bar": (
+        "no_eligible_market_bar"
+    ),
+}
+
+
+def _safe_failure_detail(exc: Exception) -> str:
+    if isinstance(exc, RuntimeError):
+        message = str(exc)
+        code = _SAFE_RUNTIME_FAILURES.get(message)
+        if code is not None:
+            return f"RuntimeError: {code}"
+        if message.startswith("paper cycle did not process target:"):
+            return "RuntimeError: target_processing_failed"
+    return f"{type(exc).__name__}: worker failure"
+
+
 def run_production_paper_cycle(
     settings: ProductionPaperCycleSettings,
     *,
@@ -137,7 +161,7 @@ def run_production_paper_cycle(
                     symbol=settings.symbol,
                     interval=settings.interval,
                     updated_at_utc=_now_utc(),
-                    error=f"{type(exc).__name__}: worker failure",
+                    error=_safe_failure_detail(exc),
                     poll_seconds=settings.poll_seconds,
                     consecutive_cycle_errors=previous_cycle_errors + 1,
                     cycle_duration_seconds=perf_counter() - cycle_started,

@@ -17,6 +17,14 @@ from .runtime import PaperAutonomousRuntime
 from .shadow_challenger import evaluate_shadow_challenger
 
 DEFAULT_MAX_CATCHUP_BARS = 72
+_MAX_PROVIDER_GAP_RESUME = pd.Timedelta(days=3)
+
+
+def _utc_timestamp(value: object) -> pd.Timestamp:
+    timestamp = pd.Timestamp(value)
+    if timestamp.tzinfo is None:
+        return timestamp.tz_localize("UTC")
+    return timestamp.tz_convert("UTC")
 
 
 def _is_mtf_evaluation_boundary(
@@ -98,13 +106,43 @@ class PaperCycleRunner:
             for index, value in enumerate(market_index)
         }
         market_position = market_positions.get(last_processed)
-        if market_position is None:
+        if market_position is not None:
+            return [
+                target
+                for target in eligible
+                if market_positions.get(str(target), -1) > market_position
+            ]
+
+        try:
+            persisted_time = _utc_timestamp(last_processed)
+            raw_times = tuple(_utc_timestamp(value) for value in market_index)
+            eligible_times = tuple(_utc_timestamp(value) for value in eligible)
+        except (TypeError, ValueError):
+            raise RuntimeError(
+                "persisted last_processed is outside loaded history"
+            ) from None
+
+        if not raw_times:
             raise RuntimeError("persisted last_processed is outside loaded history")
+
+        first_raw = raw_times[0]
+        last_raw = raw_times[-1]
+        if persisted_time < first_raw:
+            if first_raw - persisted_time > _MAX_PROVIDER_GAP_RESUME:
+                raise RuntimeError(
+                    "persisted last_processed is outside loaded history"
+                )
+        elif persisted_time > last_raw:
+            if persisted_time - last_raw > _MAX_PROVIDER_GAP_RESUME:
+                raise RuntimeError(
+                    "persisted last_processed is outside loaded history"
+                )
+            return []
 
         return [
             target
-            for target in eligible
-            if market_positions.get(str(target), -1) > market_position
+            for target, target_time in zip(eligible, eligible_times, strict=True)
+            if target_time > persisted_time
         ]
 
     def run_once(
