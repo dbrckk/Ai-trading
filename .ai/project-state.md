@@ -45,13 +45,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T19:15:42Z
+Generated: 2026-09-21T05:27:04Z
 
 ### Git
 - Branch: `main`
-- Head: `6c376ef15698`
-- Commit date: 2026-09-20T21:15:30+02:00
-- Commit: fix: align MTF evidence cadence with candidate horizon (#70)
+- Head: `66a25b3129d2`
+- Commit date: 2026-09-21T07:26:55+02:00
+- Commit: fix: resume paper cycle across session-gap feature windows (#71)
 - Tracked files: 477
 
 ### Recently changed files

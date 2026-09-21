@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 77286ac1fbd120abe6fb3154ec48fd6cf0677f42
-Head: 6c376ef15698a7e823de9c3fe775e3d3ad0d71d0
+Base: 099ab21d380c085123222860a543e19ef8071168
+Head: 66a25b3129d28f0bb216ecf325553bc377b31d4d
 
 ## Changed files
 - M src/ai_trading/paper_cycle.py

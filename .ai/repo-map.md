@@ -5073,6 +5073,9 @@ last_processed = snapshot.state.last_processed
 positions = {str(value): index for index, value in enumerate(eligible)}
 position = positions.get(last_processed)
 ⋮----
+market_positions = {
+market_position = market_positions.get(last_processed)
+⋮----
 runtime_key = build_runtime_key(symbol, interval)
 runtime = self.runtime_factory(
 market = self.data_loader(symbol, period, interval)
@@ -5080,7 +5083,7 @@ prepared = runtime.prepare_market(market)
 eligible = prepared.eligible
 ⋮----
 snapshot = self.persistence.load_runtime(
-pending = self._pending_targets(snapshot, eligible)
+pending = self._pending_targets(snapshot, eligible, market.index)
 ⋮----
 shadow_result = None
 shadow_target: str | None = None
@@ -9789,6 +9792,17 @@ long_history = sample_market(1400)
 captured: dict[str, object] = {}
 ⋮----
 long_history = sample_market(1600)
+⋮----
+def test_pending_targets_resume_when_last_processed_is_raw_market_bar() -> None
+⋮----
+market = sample_market(120)
+eligible = tuple(market.index[40:])
+state = RuntimeState(
+snapshot = PersistedRuntime(
+⋮----
+pending = PaperCycleRunner._pending_targets(
+⋮----
+def test_pending_targets_still_fail_when_persisted_bar_is_not_loaded() -> None
 ````
 
 ## File: tests/test_performance_metrics.py

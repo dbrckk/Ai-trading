@@ -21,7 +21,7 @@
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 156,
+          "line": 173,
           "preview": "if _is_mtf_evaluation_boundary(",
           "definition_candidate": false
         },
@@ -116,19 +116,19 @@
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 102,
+          "line": 119,
           "preview": ") -> PaperCycleResult:",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 124,
+          "line": 141,
           "preview": "return PaperCycleResult(",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 242,
+          "line": 259,
           "preview": "return PaperCycleResult(",
           "definition_candidate": false
         },
@@ -354,6 +354,18 @@
           "definition_candidate": false
         },
         {
+          "file": "tests/test_paper_cycle.py",
+          "line": 737,
+          "preview": "pending = PaperCycleRunner._pending_targets(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 770,
+          "preview": "PaperCycleRunner._pending_targets(",
+          "definition_candidate": false
+        },
+        {
           "file": "tests/test_paper_cycle_materialized_fresh.py",
           "line": 8,
           "preview": "from ai_trading.paper_cycle import PaperCycleRunner",
@@ -384,7 +396,7 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 17
+      "occurrence_count": 19
     },
     "__init__": {
       "definition": {
@@ -845,7 +857,7 @@
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 80,
+          "line": 81,
           "preview": "if cls._is_logically_fresh(snapshot):",
           "definition_candidate": false
         }
@@ -868,30 +880,42 @@
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 122,
-          "preview": "pending = self._pending_targets(snapshot, eligible)",
+          "line": 139,
+          "preview": "pending = self._pending_targets(snapshot, eligible, market.index)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 232,
-          "preview": "pending = self._pending_targets(snapshot, eligible)",
+          "line": 249,
+          "preview": "pending = self._pending_targets(snapshot, eligible, market.index)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 737,
+          "preview": "pending = PaperCycleRunner._pending_targets(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 770,
+          "preview": "PaperCycleRunner._pending_targets(",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 3
+      "occurrence_count": 5
     },
     "run_once": {
       "definition": {
         "file": "src/ai_trading/paper_cycle.py",
-        "line": 93,
+        "line": 110,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 93,
+          "line": 110,
           "preview": "def run_once(",
           "definition_candidate": true
         },
@@ -1291,6 +1315,18 @@
           "definition_candidate": false
         },
         {
+          "file": "tests/test_paper_cycle.py",
+          "line": 718,
+          "preview": "market = sample_market(120)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 747,
+          "preview": "market = sample_market(120)",
+          "definition_candidate": false
+        },
+        {
           "file": "tests/test_paper_cycle_materialized_fresh.py",
           "line": 13,
           "preview": "def sample_market(n: int = 110) -> pd.DataFrame:",
@@ -1417,7 +1453,7 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 62
+      "occurrence_count": 64
     },
     "runtime_factory": {
       "definition": {
@@ -1447,7 +1483,7 @@
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 107,
+          "line": 124,
           "preview": "runtime = self.runtime_factory(",
           "definition_candidate": false
         },
@@ -1960,7 +1996,7 @@
       "occurrences": [
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 113,
+          "line": 130,
           "preview": "prepared = runtime.prepare_market(market)",
           "definition_candidate": false
         },
@@ -2001,7 +2037,7 @@
       "occurrences": [
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 214,
+          "line": 231,
           "preview": "result = runtime.step_prepared(",
           "definition_candidate": false
         },
@@ -2311,6 +2347,40 @@
           "file": "tests/test_paper_cycle.py",
           "line": 657,
           "preview": "def test_validated_btc_mtf_config_is_forwarded_to_shadow_evaluator(",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_pending_targets_resume_when_last_processed_is_raw_market_bar": {
+      "definition": {
+        "file": "tests/test_paper_cycle.py",
+        "line": 717,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 717,
+          "preview": "def test_pending_targets_resume_when_last_processed_is_raw_market_bar() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_pending_targets_still_fail_when_persisted_bar_is_not_loaded": {
+      "definition": {
+        "file": "tests/test_paper_cycle.py",
+        "line": 746,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 746,
+          "preview": "def test_pending_targets_still_fail_when_persisted_bar_is_not_loaded() -> None:",
           "definition_candidate": true
         }
       ],
