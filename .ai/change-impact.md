@@ -1,11 +1,13 @@
 # Change impact
 
-Base: 099ab21d380c085123222860a543e19ef8071168
-Head: 66a25b3129d28f0bb216ecf325553bc377b31d4d
+Base: 40fd2ea0915c6de85d711f8e50c331454076f3b2
+Head: 2975068989f7980a5927b051a6b40b87be948b1b
 
 ## Changed files
 - M src/ai_trading/paper_cycle.py
+- M src/ai_trading/paper_cycle_service.py
 - M tests/test_paper_cycle.py
+- M tests/test_paper_cycle_service.py
 
 ## Affected areas
 - src
@@ -13,6 +15,7 @@ Head: 66a25b3129d28f0bb216ecf325553bc377b31d4d
 
 ## Related test candidates
 - tests/test_paper_cycle.py
+- tests/test_paper_cycle_service.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

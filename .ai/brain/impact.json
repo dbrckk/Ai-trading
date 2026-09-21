@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "6c376ef15698a7e823de9c3fe775e3d3ad0d71d0",
-  "head": "66a25b3129d28f0bb216ecf325553bc377b31d4d",
+  "base": "66a25b3129d28f0bb216ecf325553bc377b31d4d",
+  "head": "2975068989f7980a5927b051a6b40b87be948b1b",
   "index_mode": "incremental",
   "changed_files": [
     {
@@ -10,13 +10,23 @@
       "status": "M"
     },
     {
+      "path": "src/ai_trading/paper_cycle_service.py",
+      "status": "M"
+    },
+    {
       "path": "tests/test_paper_cycle.py",
+      "status": "M"
+    },
+    {
+      "path": "tests/test_paper_cycle_service.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
     "src/ai_trading/paper_cycle.py",
-    "tests/test_paper_cycle.py"
+    "src/ai_trading/paper_cycle_service.py",
+    "tests/test_paper_cycle.py",
+    "tests/test_paper_cycle_service.py"
   ],
   "impacted_files": [
     "src/ai_trading/command_app.py",
@@ -167,46 +177,52 @@
       "line": 153
     },
     {
+      "name": "_utc_timestamp",
+      "kind": "function",
+      "file": "src/ai_trading/paper_cycle.py",
+      "line": 23
+    },
+    {
       "name": "_is_mtf_evaluation_boundary",
       "kind": "function",
       "file": "src/ai_trading/paper_cycle.py",
-      "line": 22
+      "line": 30
     },
     {
       "name": "PaperCycleResult",
       "kind": "class",
       "file": "src/ai_trading/paper_cycle.py",
-      "line": 38
+      "line": 46
     },
     {
       "name": "PaperCycleRunner",
       "kind": "class",
       "file": "src/ai_trading/paper_cycle.py",
-      "line": 47
+      "line": 55
     },
     {
       "name": "__init__",
       "kind": "function",
       "file": "src/ai_trading/paper_cycle.py",
-      "line": 50
+      "line": 58
     },
     {
       "name": "_is_logically_fresh",
       "kind": "function",
       "file": "src/ai_trading/paper_cycle.py",
-      "line": 62
+      "line": 70
     },
     {
       "name": "_pending_targets",
       "kind": "function",
       "file": "src/ai_trading/paper_cycle.py",
-      "line": 75
+      "line": 83
     },
     {
       "name": "run_once",
       "kind": "function",
       "file": "src/ai_trading/paper_cycle.py",
-      "line": 110
+      "line": 148
     },
     {
       "name": "ProductionPaperCycleSettings",
@@ -239,10 +255,16 @@
       "line": 37
     },
     {
+      "name": "_safe_failure_detail",
+      "kind": "function",
+      "file": "src/ai_trading/paper_cycle_service.py",
+      "line": 54
+    },
+    {
       "name": "run_production_paper_cycle",
       "kind": "function",
       "file": "src/ai_trading/paper_cycle_service.py",
-      "line": 41
+      "line": 65
     },
     {
       "name": "SchedulerHttpResponse",
@@ -563,6 +585,24 @@
       "line": 746
     },
     {
+      "name": "test_pending_targets_resume_when_provider_removed_persisted_bar",
+      "kind": "function",
+      "file": "tests/test_paper_cycle.py",
+      "line": 778
+    },
+    {
+      "name": "test_pending_targets_allow_bounded_gap_before_loaded_history",
+      "kind": "function",
+      "file": "tests/test_paper_cycle.py",
+      "line": 813
+    },
+    {
+      "name": "test_pending_targets_reject_gap_beyond_three_days",
+      "kind": "function",
+      "file": "tests/test_paper_cycle.py",
+      "line": 843
+    },
+    {
       "name": "test_cli_calls_shared_production_service",
       "kind": "function",
       "file": "tests/test_paper_cycle_cli.py",
@@ -789,6 +829,42 @@
       "kind": "function",
       "file": "tests/test_paper_cycle_service.py",
       "line": 278
+    },
+    {
+      "name": "test_known_runtime_failure_writes_safe_diagnostic_code",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 296
+    },
+    {
+      "name": "BrokenRunner",
+      "kind": "class",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 299
+    },
+    {
+      "name": "run_once",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 300
+    },
+    {
+      "name": "test_unknown_runtime_failure_stays_sanitized",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 316
+    },
+    {
+      "name": "BrokenRunner",
+      "kind": "class",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 319
+    },
+    {
+      "name": "run_once",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_service.py",
+      "line": 320
     },
     {
       "name": "successful_result",

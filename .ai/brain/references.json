@@ -5,23 +5,58 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "_is_mtf_evaluation_boundary": {
+    "_utc_timestamp": {
       "definition": {
         "file": "src/ai_trading/paper_cycle.py",
-        "line": 22,
+        "line": 23,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 22,
+          "line": 23,
+          "preview": "def _utc_timestamp(value: object) -> pd.Timestamp:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/paper_cycle.py",
+          "line": 117,
+          "preview": "persisted_time = _utc_timestamp(last_processed)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle.py",
+          "line": 118,
+          "preview": "raw_times = tuple(_utc_timestamp(value) for value in market_index)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle.py",
+          "line": 119,
+          "preview": "eligible_times = tuple(_utc_timestamp(value) for value in eligible)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "_is_mtf_evaluation_boundary": {
+      "definition": {
+        "file": "src/ai_trading/paper_cycle.py",
+        "line": 30,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/paper_cycle.py",
+          "line": 30,
           "preview": "def _is_mtf_evaluation_boundary(",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 173,
+          "line": 211,
           "preview": "if _is_mtf_evaluation_boundary(",
           "definition_candidate": false
         },
@@ -67,7 +102,7 @@
     "PaperCycleResult": {
       "definition": {
         "file": "src/ai_trading/paper_cycle.py",
-        "line": 38,
+        "line": 46,
         "kind": "class",
         "language": "python"
       },
@@ -110,25 +145,25 @@
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 38,
+          "line": 46,
           "preview": "class PaperCycleResult:",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 119,
+          "line": 157,
           "preview": ") -> PaperCycleResult:",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 141,
+          "line": 179,
           "preview": "return PaperCycleResult(",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 259,
+          "line": 297,
           "preview": "return PaperCycleResult(",
           "definition_candidate": false
         },
@@ -140,7 +175,7 @@
         },
         {
           "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 47,
+          "line": 71,
           "preview": ") -> PaperCycleResult:",
           "definition_candidate": false
         },
@@ -276,14 +311,14 @@
     "PaperCycleRunner": {
       "definition": {
         "file": "src/ai_trading/paper_cycle.py",
-        "line": 47,
+        "line": 55,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 47,
+          "line": 55,
           "preview": "class PaperCycleRunner:",
           "definition_candidate": true
         },
@@ -307,7 +342,7 @@
         },
         {
           "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 46,
+          "line": 70,
           "preview": "runner_factory: Callable[[PaperPersistence], PaperCycleRunner] = _default_runner_factory,",
           "definition_candidate": false
         },
@@ -366,6 +401,24 @@
           "definition_candidate": false
         },
         {
+          "file": "tests/test_paper_cycle.py",
+          "line": 800,
+          "preview": "pending = PaperCycleRunner._pending_targets(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 834,
+          "preview": "pending = PaperCycleRunner._pending_targets(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 868,
+          "preview": "PaperCycleRunner._pending_targets(",
+          "definition_candidate": false
+        },
+        {
           "file": "tests/test_paper_cycle_materialized_fresh.py",
           "line": 8,
           "preview": "from ai_trading.paper_cycle import PaperCycleRunner",
@@ -396,12 +449,12 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 19
+      "occurrence_count": 22
     },
     "__init__": {
       "definition": {
         "file": "src/ai_trading/paper_cycle.py",
-        "line": 50,
+        "line": 58,
         "kind": "function",
         "language": "python"
       },
@@ -594,7 +647,7 @@
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 50,
+          "line": 58,
           "preview": "def __init__(",
           "definition_candidate": true
         },
@@ -844,20 +897,20 @@
     "_is_logically_fresh": {
       "definition": {
         "file": "src/ai_trading/paper_cycle.py",
-        "line": 62,
+        "line": 70,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 62,
+          "line": 70,
           "preview": "def _is_logically_fresh(snapshot: PersistedRuntime) -> bool:",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 81,
+          "line": 89,
           "preview": "if cls._is_logically_fresh(snapshot):",
           "definition_candidate": false
         }
@@ -867,26 +920,26 @@
     "_pending_targets": {
       "definition": {
         "file": "src/ai_trading/paper_cycle.py",
-        "line": 75,
+        "line": 83,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 75,
+          "line": 83,
           "preview": "def _pending_targets(",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 139,
+          "line": 177,
           "preview": "pending = self._pending_targets(snapshot, eligible, market.index)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 249,
+          "line": 287,
           "preview": "pending = self._pending_targets(snapshot, eligible, market.index)",
           "definition_candidate": false
         },
@@ -901,33 +954,51 @@
           "line": 770,
           "preview": "PaperCycleRunner._pending_targets(",
           "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 800,
+          "preview": "pending = PaperCycleRunner._pending_targets(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 834,
+          "preview": "pending = PaperCycleRunner._pending_targets(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 868,
+          "preview": "PaperCycleRunner._pending_targets(",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 5
+      "occurrence_count": 8
     },
     "run_once": {
       "definition": {
         "file": "src/ai_trading/paper_cycle.py",
-        "line": 110,
+        "line": 148,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 110,
+          "line": 148,
           "preview": "def run_once(",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 93,
+          "line": 117,
           "preview": "result = runner.run_once(",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 102,
+          "line": 126,
           "preview": "result = runner.run_once(",
           "definition_candidate": false
         },
@@ -1056,9 +1127,621 @@
           "line": 243,
           "preview": "def run_once(self, **kwargs):",
           "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 300,
+          "preview": "def run_once(self, **kwargs):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 320,
+          "preview": "def run_once(self, **kwargs):",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 24
+      "occurrence_count": 26
+    },
+    "ProductionPaperCycleSettings": {
+      "definition": {
+        "file": "src/ai_trading/paper_cycle_service.py",
+        "line": 16,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/command_app.py",
+          "line": 9,
+          "preview": "ProductionPaperCycleSettings,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/command_app.py",
+          "line": 27,
+          "preview": "settings = ProductionPaperCycleSettings(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 23,
+          "preview": "ProductionPaperCycleSettings,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 948,
+          "preview": "cycle_settings = ProductionPaperCycleSettings(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 11,
+          "preview": "ProductionPaperCycleSettings,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 91,
+          "preview": "ProductionPaperCycleSettings(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 16,
+          "preview": "class ProductionPaperCycleSettings:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 66,
+          "preview": "settings: ProductionPaperCycleSettings,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_cli.py",
+          "line": 7,
+          "preview": "ProductionPaperCycleSettings,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_cli.py",
+          "line": 14,
+          "preview": "seen: list[ProductionPaperCycleSettings] = []",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_cli.py",
+          "line": 16,
+          "preview": "def fake_service(settings: ProductionPaperCycleSettings) -> PaperCycleResult:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_cli.py",
+          "line": 44,
+          "preview": "ProductionPaperCycleSettings(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_cli.py",
+          "line": 57,
+          "preview": "def fail(settings: ProductionPaperCycleSettings) -> PaperCycleResult:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 8,
+          "preview": "ProductionPaperCycleSettings,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 82,
+          "preview": "ProductionPaperCycleSettings(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 109,
+          "preview": "ProductionPaperCycleSettings(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 140,
+          "preview": "ProductionPaperCycleSettings(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 160,
+          "preview": "ProductionPaperCycleSettings(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 194,
+          "preview": "ProductionPaperCycleSettings(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 218,
+          "preview": "ProductionPaperCycleSettings(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 249,
+          "preview": "ProductionPaperCycleSettings(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 266,
+          "preview": "ProductionPaperCycleSettings(shadow_challenger_enabled=True),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 283,
+          "preview": "ProductionPaperCycleSettings(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 306,
+          "preview": "ProductionPaperCycleSettings(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 326,
+          "preview": "ProductionPaperCycleSettings(),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 25
+    },
+    "PaperCycleServiceError": {
+      "definition": {
+        "file": "src/ai_trading/paper_cycle_service.py",
+        "line": 26,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/command_app.py",
+          "line": 8,
+          "preview": "PaperCycleServiceError,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/command_app.py",
+          "line": 37,
+          "preview": "except PaperCycleServiceError as exc:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 10,
+          "preview": "PaperCycleServiceError,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 77,
+          "preview": "raise PaperCycleServiceError(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 112,
+          "preview": "except PaperCycleServiceError as exc:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 134,
+          "preview": "raise PaperCycleServiceError(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 26,
+          "preview": "class PaperCycleServiceError(RuntimeError):",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 84,
+          "preview": "raise PaperCycleServiceError(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 109,
+          "preview": "raise PaperCycleServiceError(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 172,
+          "preview": "raise PaperCycleServiceError(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/scheduler_endpoint.py",
+          "line": 8,
+          "preview": "from .paper_cycle_service import PaperCycleServiceError",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/scheduler_endpoint.py",
+          "line": 45,
+          "preview": "except PaperCycleServiceError as exc:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 17,
+          "preview": "from ai_trading.paper_cycle_service import PaperCycleServiceError",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 115,
+          "preview": "raise PaperCycleServiceError(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_cli.py",
+          "line": 6,
+          "preview": "PaperCycleServiceError,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_cli.py",
+          "line": 59,
+          "preview": "raise PaperCycleServiceError(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 7,
+          "preview": "PaperCycleServiceError,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 107,
+          "preview": "with pytest.raises(PaperCycleServiceError) as caught:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 138,
+          "preview": "with pytest.raises(PaperCycleServiceError) as caught:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 158,
+          "preview": "with pytest.raises(PaperCycleServiceError) as caught:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 192,
+          "preview": "with pytest.raises(PaperCycleServiceError) as caught:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 247,
+          "preview": "with pytest.raises(PaperCycleServiceError):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 304,
+          "preview": "with pytest.raises(PaperCycleServiceError):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 324,
+          "preview": "with pytest.raises(PaperCycleServiceError):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_scheduler_endpoint.py",
+          "line": 12,
+          "preview": "from ai_trading.paper_cycle_service import PaperCycleServiceError",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_scheduler_endpoint.py",
+          "line": 170,
+          "preview": "raise PaperCycleServiceError(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_scheduler_endpoint.py",
+          "line": 191,
+          "preview": "raise PaperCycleServiceError(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_scheduler_endpoint.py",
+          "line": 277,
+          "preview": "raise PaperCycleServiceError(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 28
+    },
+    "_now_utc": {
+      "definition": {
+        "file": "src/ai_trading/paper_cycle_service.py",
+        "line": 33,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 78,
+          "preview": "def _now_utc() -> str:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 105,
+          "preview": "updated_at_utc=_now_utc(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 121,
+          "preview": "updated_at_utc=_now_utc(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 165,
+          "preview": "updated_at_utc=_now_utc(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 173,
+          "preview": "updated_at_utc=_now_utc(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 33,
+          "preview": "def _now_utc() -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 102,
+          "preview": "updated_at_utc=_now_utc(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 141,
+          "preview": "updated_at_utc=_now_utc(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 163,
+          "preview": "updated_at_utc=_now_utc(),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 9
+    },
+    "_default_runner_factory": {
+      "definition": {
+        "file": "src/ai_trading/paper_cycle_service.py",
+        "line": 37,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 37,
+          "preview": "def _default_runner_factory(persistence: PaperPersistence) -> PaperCycleRunner:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 70,
+          "preview": "runner_factory: Callable[[PaperPersistence], PaperCycleRunner] = _default_runner_factory,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_safe_failure_detail": {
+      "definition": {
+        "file": "src/ai_trading/paper_cycle_service.py",
+        "line": 54,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 54,
+          "preview": "def _safe_failure_detail(exc: Exception) -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 164,
+          "preview": "error=_safe_failure_detail(exc),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "run_production_paper_cycle": {
+      "definition": {
+        "file": "src/ai_trading/paper_cycle_service.py",
+        "line": 65,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/command_app.py",
+          "line": 10,
+          "preview": "run_production_paper_cycle,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/command_app.py",
+          "line": 36,
+          "preview": "result = run_production_paper_cycle(settings)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 24,
+          "preview": "run_production_paper_cycle,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 970,
+          "preview": "return run_production_paper_cycle(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 12,
+          "preview": "run_production_paper_cycle,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 90,
+          "preview": "return run_production_paper_cycle(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 65,
+          "preview": "def run_production_paper_cycle(",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 129,
+          "preview": "\"run_production_paper_cycle\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 242,
+          "preview": "\"run_production_paper_cycle\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_cli.py",
+          "line": 26,
+          "preview": "monkeypatch.setattr(command_app, \"run_production_paper_cycle\", fake_service)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_cli.py",
+          "line": 64,
+          "preview": "monkeypatch.setattr(command_app, \"run_production_paper_cycle\", fail)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 9,
+          "preview": "run_production_paper_cycle,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 81,
+          "preview": "result = run_production_paper_cycle(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 108,
+          "preview": "run_production_paper_cycle(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 139,
+          "preview": "run_production_paper_cycle(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 159,
+          "preview": "run_production_paper_cycle(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 193,
+          "preview": "run_production_paper_cycle(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 217,
+          "preview": "run_production_paper_cycle(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 248,
+          "preview": "run_production_paper_cycle(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 265,
+          "preview": "result = run_production_paper_cycle(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 282,
+          "preview": "run_production_paper_cycle(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 305,
+          "preview": "run_production_paper_cycle(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 325,
+          "preview": "run_production_paper_cycle(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 23
     },
     "sample_market": {
       "definition": {
@@ -1327,6 +2010,24 @@
           "definition_candidate": false
         },
         {
+          "file": "tests/test_paper_cycle.py",
+          "line": 779,
+          "preview": "market = sample_market(120)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 814,
+          "preview": "market = sample_market(120)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 844,
+          "preview": "market = sample_market(120)",
+          "definition_candidate": false
+        },
+        {
           "file": "tests/test_paper_cycle_materialized_fresh.py",
           "line": 13,
           "preview": "def sample_market(n: int = 110) -> pd.DataFrame:",
@@ -1453,7 +2154,7 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 64
+      "occurrence_count": 67
     },
     "runtime_factory": {
       "definition": {
@@ -1471,19 +2172,19 @@
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 55,
+          "line": 63,
           "preview": "runtime_factory: Callable[..., PaperAutonomousRuntime] = PaperAutonomousRuntime,",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 59,
+          "line": 67,
           "preview": "self.runtime_factory = runtime_factory",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 124,
+          "line": 162,
           "preview": "runtime = self.runtime_factory(",
           "definition_candidate": false
         },
@@ -1996,7 +2697,7 @@
       "occurrences": [
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 130,
+          "line": 168,
           "preview": "prepared = runtime.prepare_market(market)",
           "definition_candidate": false
         },
@@ -2037,7 +2738,7 @@
       "occurrences": [
         {
           "file": "src/ai_trading/paper_cycle.py",
-          "line": 231,
+          "line": 269,
           "preview": "result = runtime.step_prepared(",
           "definition_candidate": false
         },
@@ -2381,6 +3082,1152 @@
           "file": "tests/test_paper_cycle.py",
           "line": 746,
           "preview": "def test_pending_targets_still_fail_when_persisted_bar_is_not_loaded() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_pending_targets_resume_when_provider_removed_persisted_bar": {
+      "definition": {
+        "file": "tests/test_paper_cycle.py",
+        "line": 778,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 778,
+          "preview": "def test_pending_targets_resume_when_provider_removed_persisted_bar() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_pending_targets_allow_bounded_gap_before_loaded_history": {
+      "definition": {
+        "file": "tests/test_paper_cycle.py",
+        "line": 813,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 813,
+          "preview": "def test_pending_targets_allow_bounded_gap_before_loaded_history() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_pending_targets_reject_gap_beyond_three_days": {
+      "definition": {
+        "file": "tests/test_paper_cycle.py",
+        "line": 843,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 843,
+          "preview": "def test_pending_targets_reject_gap_beyond_three_days() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "FakePersistence": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 16,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_hosted_runtime.py",
+          "line": 68,
+          "preview": "class FakePersistence:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_runtime.py",
+          "line": 110,
+          "preview": "persistence=FakePersistence(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 16,
+          "preview": "class FakePersistence:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 46,
+          "preview": "def __init__(self, persistence: FakePersistence) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 80,
+          "preview": "backend = FakePersistence()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 123,
+          "preview": "backend = FakePersistence()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 151,
+          "preview": "backend = FakePersistence()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 174,
+          "preview": "backend = FakePersistence()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 205,
+          "preview": "backend = FakePersistence(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 230,
+          "preview": "backend = FakePersistence(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 262,
+          "preview": "backend = FakePersistence()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 279,
+          "preview": "backend = FakePersistence()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 297,
+          "preview": "backend = FakePersistence()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 317,
+          "preview": "backend = FakePersistence()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 14
+    },
+    "save_runtime_status": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 31,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 170,
+          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 99,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 115,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 168,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 96,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 135,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 157,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/persistence.py",
+          "line": 70,
+          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None: ...",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 732,
+          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_persistence.py",
+          "line": 18,
+          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_runtime.py",
+          "line": 72,
+          "preview": "def save_runtime_status(self, runtime_key, status) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 31,
+          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 130,
+          "preview": "backend.save_runtime_status = broken_save",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 175,
+          "preview": "original_save = backend.save_runtime_status",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 185,
+          "preview": "backend.save_runtime_status = flaky_save",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 208,
+          "preview": "backend.save_runtime_status(RUNTIME_KEY, status)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 68,
+          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 17
+    },
+    "load_runtime_status": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 35,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 164,
+          "preview": "runtime_status = persistence.load_runtime_status(runtime_key)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 984,
+          "preview": "return _public_runtime_snapshot(backend.load_runtime_status(runtime_key))",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 174,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 161,
+          "preview": "current = backend.load_runtime_status(settings.runtime_key) or HostedRuntimeStatus(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 179,
+          "preview": "status = persistence.load_runtime_status(runtime_key)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/operational_overview.py",
+          "line": 289,
+          "preview": "status = persistence.load_runtime_status(runtime_key)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 90,
+          "preview": "previous_status = backend.load_runtime_status(runtime_key)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/persistence.py",
+          "line": 72,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None: ...",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 758,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 108,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 202,
+          "preview": "def load_runtime_status(self, runtime_key: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 563,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 105,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 122,
+          "preview": "def load_runtime_status(self, runtime_key: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_persistence.py",
+          "line": 21,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_persistence.py",
+          "line": 122,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_runtime.py",
+          "line": 76,
+          "preview": "def load_runtime_status(self, runtime_key):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 47,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 35,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 210,
+          "preview": "restored = PostgresPaperPersistence(DATABASE_URL).load_runtime_status(RUNTIME_KEY)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 71,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 21
+    },
+    "load_runtime": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 39,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 159,
+          "preview": "persisted = persistence.load_runtime(runtime_key, starting_cash)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 52,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 168,
+          "preview": "persisted = persistence.load_runtime(runtime_key, _NORMALIZED_RUNTIME_CASH)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/operational_overview.py",
+          "line": 288,
+          "preview": "persisted = persistence.load_runtime(runtime_key, starting_cash)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle.py",
+          "line": 173,
+          "preview": "snapshot = self.persistence.load_runtime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle.py",
+          "line": 283,
+          "preview": "snapshot = self.persistence.load_runtime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 132,
+          "preview": "state = backend.load_runtime(runtime_key, starting_cash).state",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/persistence.py",
+          "line": 53,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime: ...",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 265,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 225,
+          "preview": "persisted = self.persistence.load_runtime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 76,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 97,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 118,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 73,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 198,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 558,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 60,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 114,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 54,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 77,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 100,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 12,
+          "preview": "loaded = backend.load_runtime(key, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 38,
+          "preview": "restored = FilePaperPersistence(root=tmp_path).load_runtime(key, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 49,
+          "preview": "backend.load_runtime(key, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 74,
+          "preview": "backend.load_runtime(key, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 28,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 88,
+          "preview": "state = backend.load_runtime(runtime.runtime_key, 100_000.0).state",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 274,
+          "preview": "state = backend.load_runtime(primary.runtime_key, 100_000.0).state",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 302,
+          "preview": "final = backend.load_runtime(primary.runtime_key, 100_000.0).state",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 70,
+          "preview": "first_snapshot = first_persistence.load_runtime(runtime_key, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 92,
+          "preview": "final = second_persistence.load_runtime(runtime_key, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 39,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 90,
+          "preview": "fresh = backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 96,
+          "preview": "restored = PostgresPaperPersistence(DATABASE_URL).load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 107,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 111,
+          "preview": "after_restart = restarted.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 124,
+          "preview": "restored_again = PostgresPaperPersistence(DATABASE_URL).load_runtime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 135,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 142,
+          "preview": "restored = backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 150,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 166,
+          "preview": "restored = backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 175,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 184,
+          "preview": "restored = backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 215,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 257,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 51,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 46
+    },
+    "FakeRunner": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 45,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 45,
+          "preview": "class FakeRunner:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 84,
+          "preview": "runner_factory=lambda persistence: FakeRunner(persistence),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 136,
+          "preview": "return FakeRunner(backend)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 220,
+          "preview": "runner_factory=lambda persistence: FakeRunner(persistence),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 263,
+          "preview": "runner = FakeRunner(backend)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 280,
+          "preview": "runner = FakeRunner(backend)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "test_service_persists_starting_and_running_status": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 79,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 79,
+          "preview": "def test_service_persists_starting_and_running_status() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_persistence_factory_failure_is_sanitized": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 103,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 103,
+          "preview": "def test_persistence_factory_failure_is_sanitized() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "broken_factory": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 104,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 104,
+          "preview": "def broken_factory():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 110,
+          "preview": "persistence_factory=broken_factory,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "test_starting_status_failure_never_runs_worker": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 122,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 122,
+          "preview": "def test_starting_status_failure_never_runs_worker() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "broken_save": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 126,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 126,
+          "preview": "def broken_save(runtime_key, status):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 130,
+          "preview": "backend.save_runtime_status = broken_save",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "runner_factory": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 132,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 70,
+          "preview": "runner_factory: Callable[[PaperPersistence], PaperCycleRunner] = _default_runner_factory,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 115,
+          "preview": "runner = runner_factory(backend)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 84,
+          "preview": "runner_factory=lambda persistence: FakeRunner(persistence),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 132,
+          "preview": "def runner_factory(persistence):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 142,
+          "preview": "runner_factory=runner_factory,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 162,
+          "preview": "runner_factory=lambda persistence: BrokenRunner(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 196,
+          "preview": "runner_factory=lambda persistence: BrokenRunner(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 220,
+          "preview": "runner_factory=lambda persistence: FakeRunner(persistence),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 251,
+          "preview": "runner_factory=lambda persistence: BrokenRunner(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 268,
+          "preview": "runner_factory=lambda persistence: runner,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 288,
+          "preview": "runner_factory=lambda persistence: runner,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 308,
+          "preview": "runner_factory=lambda persistence: BrokenRunner(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 328,
+          "preview": "runner_factory=lambda persistence: BrokenRunner(),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 13
+    },
+    "test_worker_failure_writes_sanitized_error_status": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 150,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 150,
+          "preview": "def test_worker_failure_writes_sanitized_error_status() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "BrokenRunner": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 153,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 153,
+          "preview": "class BrokenRunner:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 162,
+          "preview": "runner_factory=lambda persistence: BrokenRunner(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 187,
+          "preview": "class BrokenRunner:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 196,
+          "preview": "runner_factory=lambda persistence: BrokenRunner(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 242,
+          "preview": "class BrokenRunner:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 251,
+          "preview": "runner_factory=lambda persistence: BrokenRunner(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 299,
+          "preview": "class BrokenRunner:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 308,
+          "preview": "runner_factory=lambda persistence: BrokenRunner(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 319,
+          "preview": "class BrokenRunner:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 328,
+          "preview": "runner_factory=lambda persistence: BrokenRunner(),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 10
+    },
+    "test_error_status_failure_does_not_mask_worker_failure": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 173,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 173,
+          "preview": "def test_error_status_failure_does_not_mask_worker_failure() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "flaky_save": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 178,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 178,
+          "preview": "def flaky_save(runtime_key, status):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 185,
+          "preview": "backend.save_runtime_status = flaky_save",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "test_success_resets_consecutive_cycle_errors": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 204,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 204,
+          "preview": "def test_success_resets_consecutive_cycle_errors() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_failure_increments_consecutive_cycle_errors": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 229,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 229,
+          "preview": "def test_failure_increments_consecutive_cycle_errors() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_service_propagates_shadow_challenger_when_enabled": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 261,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 261,
+          "preview": "def test_service_propagates_shadow_challenger_when_enabled() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_service_propagates_separate_mtf_period": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 278,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 278,
+          "preview": "def test_service_propagates_separate_mtf_period() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_known_runtime_failure_writes_safe_diagnostic_code": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 296,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 296,
+          "preview": "def test_known_runtime_failure_writes_safe_diagnostic_code() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_unknown_runtime_failure_stays_sanitized": {
+      "definition": {
+        "file": "tests/test_paper_cycle_service.py",
+        "line": 316,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 316,
+          "preview": "def test_unknown_runtime_failure_stays_sanitized() -> None:",
           "definition_candidate": true
         }
       ],

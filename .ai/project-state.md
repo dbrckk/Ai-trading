@@ -45,18 +45,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T05:27:04Z
+Generated: 2026-09-21T05:35:24Z
 
 ### Git
 - Branch: `main`
-- Head: `66a25b3129d2`
-- Commit date: 2026-09-21T07:26:55+02:00
-- Commit: fix: resume paper cycle across session-gap feature windows (#71)
+- Head: `2975068989f7`
+- Commit date: 2026-09-21T07:35:14+02:00
+- Commit: fix: tolerate bounded provider corrections in paper catch-up (#72)
 - Tracked files: 477
 
 ### Recently changed files
 - `src/ai_trading/paper_cycle.py`
+- `src/ai_trading/paper_cycle_service.py`
 - `tests/test_paper_cycle.py`
+- `tests/test_paper_cycle_service.py`
 - `src/ai_trading/mtf_shadow_config.py`
 - `tests/test_dashboard_overview.py`
 - `tests/test_mtf_shadow_config.py`
@@ -64,14 +66,6 @@ Generated: 2026-09-21T05:27:04Z
 - `.github/workflows/mtf-parameter-benchmark.yml`
 - `src/ai_trading/mtf_parameter_benchmark.py`
 - `tests/test_mtf_parameter_benchmark.py`
-- `src/ai_trading/dashboard.py`
-- `src/ai_trading/file_persistence.py`
-- `src/ai_trading/mtf_shadow_challenger.py`
-- `src/ai_trading/mtf_shadow_quality.py`
-- `src/ai_trading/operational_overview.py`
-- `src/ai_trading/postgres_persistence.py`
-- `tests/test_mtf_shadow_challenger.py`
-- `tests/test_mtf_shadow_quality.py`
 
 ### Project signals
 - `pyproject.toml`

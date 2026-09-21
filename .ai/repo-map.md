@@ -5015,6 +5015,13 @@ def _now_utc() -> str
 ⋮----
 def _default_runner_factory(persistence: PaperPersistence) -> PaperCycleRunner
 ⋮----
+_SAFE_RUNTIME_FAILURES = {
+⋮----
+def _safe_failure_detail(exc: Exception) -> str
+⋮----
+message = str(exc)
+code = _SAFE_RUNTIME_FAILURES.get(message)
+⋮----
 runtime_key = build_runtime_key(settings.symbol, settings.interval)
 starting_cash = RiskConfig().starting_cash
 cycle_started = perf_counter()
@@ -5045,6 +5052,11 @@ except Exception:  # noqa: BLE001, S110 - best-effort failure reporting
 ## File: src/ai_trading/paper_cycle.py
 ````python
 DEFAULT_MAX_CATCHUP_BARS = 72
+_MAX_PROVIDER_GAP_RESUME = pd.Timedelta(days=3)
+⋮----
+def _utc_timestamp(value: object) -> pd.Timestamp
+⋮----
+timestamp = pd.Timestamp(value)
 ⋮----
 timestamp = pd.Timestamp(execution_idx)
 epoch_minutes = timestamp.value // (60 * 1_000_000_000)
@@ -5075,6 +5087,13 @@ position = positions.get(last_processed)
 ⋮----
 market_positions = {
 market_position = market_positions.get(last_processed)
+⋮----
+persisted_time = _utc_timestamp(last_processed)
+raw_times = tuple(_utc_timestamp(value) for value in market_index)
+eligible_times = tuple(_utc_timestamp(value) for value in eligible)
+⋮----
+first_raw = raw_times[0]
+last_raw = raw_times[-1]
 ⋮----
 runtime_key = build_runtime_key(symbol, interval)
 runtime = self.runtime_factory(
@@ -9679,6 +9698,10 @@ def test_service_propagates_shadow_challenger_when_enabled() -> None
 runner = FakeRunner(backend)
 ⋮----
 def test_service_propagates_separate_mtf_period() -> None
+⋮----
+def test_known_runtime_failure_writes_safe_diagnostic_code() -> None
+⋮----
+def test_unknown_runtime_failure_stays_sanitized() -> None
 ````
 
 ## File: tests/test_paper_cycle_workflow.py
@@ -9803,6 +9826,19 @@ snapshot = PersistedRuntime(
 pending = PaperCycleRunner._pending_targets(
 ⋮----
 def test_pending_targets_still_fail_when_persisted_bar_is_not_loaded() -> None
+⋮----
+def test_pending_targets_resume_when_provider_removed_persisted_bar() -> None
+⋮----
+missing_bar = market.index[60]
+provider_index = market.index.delete(60)
+⋮----
+def test_pending_targets_allow_bounded_gap_before_loaded_history() -> None
+⋮----
+persisted = market.index[0] - pd.Timedelta(days=2)
+⋮----
+def test_pending_targets_reject_gap_beyond_three_days() -> None
+⋮----
+persisted = market.index[0] - pd.Timedelta(days=4)
 ````
 
 ## File: tests/test_performance_metrics.py
