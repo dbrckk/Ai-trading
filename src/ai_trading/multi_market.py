@@ -3,7 +3,9 @@ from __future__ import annotations
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
+from datetime import datetime
 
+from .market_freshness import classify_market_freshness
 from .operational_overview import build_operational_overview
 from .paper_cycle import PaperCycleResult
 from .paper_cycle_service import (
@@ -157,6 +159,7 @@ def build_multi_market_overview(
     *,
     interval: str,
     portfolio_cash: float = 100_000.0,
+    now: datetime | None = None,
 ) -> dict[str, object]:
     market_rows: list[dict[str, object]] = []
     portfolio_equity = 0.0
@@ -165,6 +168,9 @@ def build_multi_market_overview(
     stale_markets = 0
     error_markets = 0
     alert_markets = 0
+    closed_markets = 0
+    catching_up_markets = 0
+    provider_gap_markets = 0
 
     for market in markets:
         runtime_key = build_runtime_key(market.symbol, interval)
@@ -199,16 +205,16 @@ def build_multi_market_overview(
                 market_reason = status.reason
                 cycle_duration_seconds = status.cycle_duration_seconds
                 market_mtf_evaluated = status.mtf_evaluated
-                status_snapshot = runtime_status_snapshot(status)
+                status_snapshot = runtime_status_snapshot(status, now=now)
                 heartbeat_age_seconds = status_snapshot.get("heartbeat_age_seconds")
-                effective_status = str(status_snapshot.get("engine_status") or "OFF").upper()
-                freshness = {
-                    "RUNNING": "LIVE",
-                    "STARTING": "STARTING",
-                    "STALE": "DELAYED",
-                    "ERROR": "ERROR",
-                    "OFF": "OFF",
-                }.get(effective_status, effective_status)
+                freshness, session_open = classify_market_freshness(
+                    market.symbol,
+                    status,
+                    status_snapshot,
+                    now=now,
+                )
+            else:
+                session_open = None
             healthy = bool(overview.get("storage_healthy"))
             if healthy:
                 healthy_markets += 1
@@ -222,6 +228,12 @@ def build_multi_market_overview(
                 error_markets += 1
             if overview.get("alerts"):
                 alert_markets += 1
+            if freshness == "MARKET_CLOSED":
+                closed_markets += 1
+            elif freshness == "CATCHING_UP":
+                catching_up_markets += 1
+            elif freshness == "PROVIDER_GAP":
+                provider_gap_markets += 1
 
             portfolio_equity += sleeve_equity
             market_rows.append(
@@ -241,6 +253,7 @@ def build_multi_market_overview(
                     "mtf_evaluated": market_mtf_evaluated,
                     "heartbeat_age_seconds": heartbeat_age_seconds,
                     "freshness": freshness,
+                    "session_open": session_open,
                     "overview": overview,
                 }
             )
@@ -259,6 +272,7 @@ def build_multi_market_overview(
                     "runtime_key": runtime_key,
                     "heartbeat_age_seconds": None,
                     "freshness": "ERROR",
+                    "session_open": None,
                     "overview": {
                         "storage_healthy": False,
                         "engine_status": "ERROR",
@@ -284,6 +298,9 @@ def build_multi_market_overview(
             "stale_markets": stale_markets,
             "error_markets": error_markets,
             "alert_markets": alert_markets,
+            "closed_markets": closed_markets,
+            "catching_up_markets": catching_up_markets,
+            "provider_gap_markets": provider_gap_markets,
         },
         "markets": market_rows,
     }
