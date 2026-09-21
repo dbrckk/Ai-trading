@@ -70,3 +70,50 @@ def test_low_confidence_asset_is_zeroed() -> None:
         peak_equity=100_000.0,
     )
     assert weights["B"] == 0.0
+
+
+def test_high_correlation_reduces_leverage() -> None:
+    x = np.linspace(-0.02, 0.02, 300)
+    returns = pd.DataFrame(
+        {
+            "A": x,
+            "B": x * 1.01,
+            "C": np.sin(np.linspace(0, 12, 300)) * 0.005,
+        }
+    )
+    base = pd.Series({"A": 0.5, "B": 0.5, "C": 0.0})
+
+    _, report = apply_portfolio_intelligence(
+        base,
+        returns,
+        {"A": 0.9, "B": 0.9, "C": 0.9},
+        current_equity=100_000.0,
+        peak_equity=100_000.0,
+        config=PortfolioIntelligenceConfig(
+            target_annual_volatility=1.0,
+            min_leverage=0.10,
+            max_leverage=1.0,
+            correlation_soft_limit=0.70,
+            correlation_hard_limit=0.90,
+        ),
+    )
+
+    assert report.max_pair_correlation > 0.90
+    assert report.correlation_scale == 0.10
+    assert report.leverage == 0.10
+
+
+def test_low_correlation_keeps_full_correlation_scale() -> None:
+    returns = sample_returns()
+    base = pd.Series({"A": 0.5, "B": 0.5, "C": 0.0})
+
+    _, report = apply_portfolio_intelligence(
+        base,
+        returns,
+        {"A": 0.9, "B": 0.9, "C": 0.9},
+        current_equity=100_000.0,
+        peak_equity=100_000.0,
+    )
+
+    assert report.max_pair_correlation < 0.70
+    assert report.correlation_scale == 1.0
