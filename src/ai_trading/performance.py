@@ -38,6 +38,19 @@ def infer_periods_per_year(index: pd.Index) -> float:
     return float((len(timestamps) - 1) / elapsed_years)
 
 
+def _annualized_return(start: float, end: float, years: float) -> float:
+    if start <= 0 or end <= 0 or years <= 0:
+        return 0.0
+    log_growth = float(np.log(end / start) / years)
+    max_log = float(np.log(np.finfo(float).max))
+    min_log = float(np.log(np.finfo(float).tiny))
+    if log_growth >= max_log:
+        return float(np.finfo(float).max)
+    if log_growth <= min_log:
+        return -1.0
+    return float(np.expm1(log_growth))
+
+
 def compute_metrics(equity: pd.Series, periods_per_year: float = 252.0) -> PerformanceMetrics:
     clean = equity.astype(float).dropna()
     if len(clean) < 2:
@@ -49,10 +62,11 @@ def compute_metrics(equity: pd.Series, periods_per_year: float = 252.0) -> Perfo
     if periods_per_year <= 0 or not np.isfinite(periods_per_year):
         raise ValueError("periods_per_year must be positive and finite")
     years = max((len(returns) / periods_per_year), 1.0 / periods_per_year)
-    if clean.iloc[0] > 0 and clean.iloc[-1] > 0:
-        annualized_return = float((clean.iloc[-1] / clean.iloc[0]) ** (1.0 / years) - 1.0)
-    else:
-        annualized_return = 0.0
+    annualized_return = _annualized_return(
+        float(clean.iloc[0]),
+        float(clean.iloc[-1]),
+        years,
+    )
 
     volatility = float(returns.std(ddof=1) * np.sqrt(periods_per_year)) if len(returns) > 1 else 0.0
     mean_ann = float(returns.mean() * periods_per_year) if len(returns) else 0.0
