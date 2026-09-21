@@ -61,3 +61,26 @@ def test_prepare_multiasset_market_context_rejects_short_history() -> None:
             {"A": market(1, n=39), "B": market(2, n=39)},
             ModelConfig(),
         )
+
+
+def test_prepare_multiasset_market_context_rejects_missing_columns() -> None:
+    broken = market(1).drop(columns=["Volume"])
+    with pytest.raises(ValueError, match="Missing market columns"):
+        prepare_multiasset_market_context(
+            {"A": broken, "B": market(2)},
+            ModelConfig(),
+        )
+
+
+@pytest.mark.parametrize("invalid_price", [0.0, -1.0, np.nan, np.inf])
+def test_prepare_multiasset_market_context_rejects_invalid_latest_prices(
+    invalid_price: float,
+) -> None:
+    broken = market(1)
+    broken.loc[broken.index[-1], "Open"] = invalid_price
+
+    with pytest.raises(ValueError, match="Invalid latest execution prices"):
+        prepare_multiasset_market_context(
+            {"A": broken, "B": market(2)},
+            ModelConfig(),
+        )
