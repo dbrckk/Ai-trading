@@ -13,6 +13,7 @@ class DataQualityReport:
     invalid_price_fraction: float
     ohlc_violation_fraction: float
     stale_fraction: float
+    gap_fraction: float
     valid: bool
     reasons: tuple[str, ...]
 
@@ -33,6 +34,7 @@ def evaluate_market_data_quality(
             invalid_price_fraction=1.0,
             ohlc_violation_fraction=1.0,
             stale_fraction=1.0,
+            gap_fraction=1.0,
             valid=False,
             reasons=(f"missing columns: {', '.join(missing_columns)}",),
         )
@@ -46,6 +48,7 @@ def evaluate_market_data_quality(
             invalid_price_fraction=1.0,
             ohlc_violation_fraction=1.0,
             stale_fraction=1.0,
+            gap_fraction=1.0,
             valid=False,
             reasons=("empty market data",),
         )
@@ -72,12 +75,22 @@ def evaluate_market_data_quality(
     close_changes = close.pct_change().abs()
     stale_fraction = float((close_changes.fillna(0.0) == 0.0).mean())
 
+    gap_fraction = 1.0
+    if isinstance(sample.index, pd.DatetimeIndex) and len(sample.index) >= 3:
+        deltas = sample.index.to_series().diff().dropna()
+        positive = deltas[deltas > pd.Timedelta(0)]
+        if not positive.empty:
+            cadence = positive.median()
+            if cadence > pd.Timedelta(0):
+                gap_fraction = float((positive > cadence * 3).mean())
+
     score = (
-        0.45 * completeness
+        0.40 * completeness
         + 0.15 * (1.0 - min(1.0, duplicate_fraction))
         + 0.15 * (1.0 - min(1.0, invalid_price_fraction))
         + 0.15 * (1.0 - min(1.0, ohlc_violation_fraction))
         + 0.10 * (1.0 - min(1.0, stale_fraction))
+        + 0.05 * (1.0 - min(1.0, gap_fraction))
     )
 
     reasons: list[str] = []
@@ -91,6 +104,8 @@ def evaluate_market_data_quality(
         reasons.append("OHLC consistency violations")
     if stale_fraction > 0.20:
         reasons.append("excessive stale closes")
+    if gap_fraction > 0.05:
+        reasons.append("excessive cadence gaps")
 
     return DataQualityReport(
         score=float(max(0.0, min(1.0, score))),
@@ -99,6 +114,7 @@ def evaluate_market_data_quality(
         invalid_price_fraction=invalid_price_fraction,
         ohlc_violation_fraction=ohlc_violation_fraction,
         stale_fraction=stale_fraction,
+        gap_fraction=gap_fraction,
         valid=score >= min_score and not reasons,
         reasons=tuple(reasons),
     )
