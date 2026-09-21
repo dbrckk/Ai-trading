@@ -151,6 +151,7 @@
         "tests/test_readiness_revocation.py",
         "tests/test_readiness_score.py",
         "tests/test_readiness_trend.py",
+        "tests/test_realized_pnl_accounting.py",
         "tests/test_recovery.py",
         "tests/test_recovery_health.py",
         "tests/test_regime.py",
@@ -204,7 +205,7 @@
         "tests/test_watchdog_enforcer.py",
         "tests/test_worker_monitor.py"
       ],
-      "in_degree": 184,
+      "in_degree": 185,
       "out_degree": 0
     },
     "src/ai_trading/allocation_state.py": {
@@ -638,12 +639,13 @@
         "tests/test_paper_cycle.py",
         "tests/test_paper_cycle_materialized_fresh.py",
         "tests/test_paper_cycle_postgres.py",
+        "tests/test_realized_pnl_accounting.py",
         "tests/test_risk.py",
         "tests/test_runtime.py",
         "tests/test_runtime_persistence.py",
         "tests/test_runtime_targeted_step.py"
       ],
-      "in_degree": 32,
+      "in_degree": 33,
       "out_degree": 0
     },
     "src/ai_trading/continuous.py": {
@@ -1887,9 +1889,10 @@
         "src/ai_trading/broker.py",
         "src/ai_trading/multiasset_backtest.py",
         "src/ai_trading/multiasset_runtime.py",
-        "tests/test_paper_execution.py"
+        "tests/test_paper_execution.py",
+        "tests/test_realized_pnl_accounting.py"
       ],
-      "in_degree": 4,
+      "in_degree": 5,
       "out_degree": 0
     },
     "src/ai_trading/paper_readiness_evidence.py": {
@@ -1962,9 +1965,10 @@
         "src/ai_trading/postgres_persistence.py",
         "tests/test_dashboard_persistence.py",
         "tests/test_multi_market.py",
-        "tests/test_performance_metrics.py"
+        "tests/test_performance_metrics.py",
+        "tests/test_realized_pnl_accounting.py"
       ],
-      "in_degree": 7,
+      "in_degree": 8,
       "out_degree": 1
     },
     "src/ai_trading/persistence.py": {
@@ -2645,12 +2649,13 @@
         "tests/test_paper_cycle_materialized_fresh.py",
         "tests/test_paper_cycle_service.py",
         "tests/test_postgres_persistence.py",
+        "tests/test_realized_pnl_accounting.py",
         "tests/test_runtime.py",
         "tests/test_runtime_persistence.py",
         "tests/test_runtime_state.py",
         "tests/test_runtime_targeted_step.py"
       ],
-      "in_degree": 22,
+      "in_degree": 23,
       "out_degree": 0
     },
     "src/ai_trading/runtime_status.py": {
@@ -2969,9 +2974,10 @@
         "tests/test_multi_market.py",
         "tests/test_performance_metrics.py",
         "tests/test_postgres_persistence.py",
+        "tests/test_realized_pnl_accounting.py",
         "tests/test_runtime_persistence.py"
       ],
-      "in_degree": 16,
+      "in_degree": 17,
       "out_degree": 0
     },
     "src/ai_trading/tuning.py": {
@@ -4451,6 +4457,19 @@
       "dependents": [],
       "in_degree": 0,
       "out_degree": 3
+    },
+    "tests/test_realized_pnl_accounting.py": {
+      "dependencies": [
+        "src/ai_trading/__init__.py",
+        "src/ai_trading/config.py",
+        "src/ai_trading/paper_execution.py",
+        "src/ai_trading/performance_metrics.py",
+        "src/ai_trading/runtime_state.py",
+        "src/ai_trading/trade_journal.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 6
     },
     "tests/test_recovery.py": {
       "dependencies": [

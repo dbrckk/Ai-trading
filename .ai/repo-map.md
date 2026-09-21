@@ -363,6 +363,7 @@ tests/
   test_readiness_score.py
   test_readiness_trend.py
   test_readiness.py
+  test_realized_pnl_accounting.py
   test_recovery_health.py
   test_recovery.py
   test_regime_gate.py
@@ -1277,6 +1278,7 @@ units: float = 0.0
 last_price: float = 0.0
 peak_equity: float = 0.0
 day_start_equity: float = 0.0
+average_entry_price: float = 0.0
 ⋮----
 @property
     def equity(self) -> float
@@ -1293,7 +1295,7 @@ equity = self.state.equity
 ⋮----
 def reset_day_start(self) -> None
 ⋮----
-def rebalance(self, side: int, target_notional: float, price: float) -> None
+def rebalance(self, side: int, target_notional: float, price: float) -> RebalanceFill
 ⋮----
 target_notional = float(target_notional)
 ⋮----
@@ -5445,6 +5447,9 @@ desired_units: float
 delta_units: float
 gross_turnover: float
 costs: float
+realized_gross_pnl: float | None
+realized_net_pnl: float | None
+next_average_entry_price: float
 ⋮----
 values = {
 ⋮----
@@ -5452,6 +5457,31 @@ desired_units = values["target_notional"] / values["price"]
 delta_units = desired_units - values["current_units"]
 gross_turnover = abs(delta_units) * values["price"]
 costs = gross_turnover * (
+⋮----
+current = values["current_units"]
+average = values["current_average_entry_price"]
+epsilon = 1e-12
+closing_units = 0.0
+⋮----
+closing_units = min(abs(delta_units), abs(current))
+⋮----
+direction = 1.0 if current > 0 else -1.0
+realized_gross_pnl: float | None = (
+⋮----
+realized_gross_pnl = None
+⋮----
+realized_gross_pnl = 0.0
+⋮----
+next_average_entry_price = 0.0
+⋮----
+next_average_entry_price = values["price"]
+⋮----
+added_units = abs(desired_units) - abs(current)
+next_average_entry_price = (
+⋮----
+next_average_entry_price = average
+⋮----
+realized_net_pnl = (
 ````
 
 ## File: src/ai_trading/paper_readiness_evidence.py
@@ -5499,6 +5529,7 @@ def _bounded(value: float, lower: float, upper: float) -> float
 class TradePerformanceMetrics
 ⋮----
 trade_count: int
+pnl_observations: int
 realized_pnl: float
 average_pnl: float
 gross_profit: float
@@ -5506,15 +5537,18 @@ gross_loss: float
 profit_factor: float | None
 max_drawdown: float
 ⋮----
-average_pnl = realized_pnl / trade_count if trade_count else 0.0
+observations = trade_count if pnl_observations is None else pnl_observations
 ⋮----
-profit_factor: float | None = gross_profit / gross_loss
-⋮----
-profit_factor = float("inf")
+average_pnl = realized_pnl / observations if observations else 0.0
 ⋮----
 profit_factor = None
 ⋮----
-pnls = tuple(trade.pnl for trade in trades)
+profit_factor = gross_profit / gross_loss
+⋮----
+profit_factor = float("inf")
+⋮----
+snapshots = tuple(trades)
+pnls = tuple(trade.pnl for trade in snapshots if trade.pnl_known is True)
 realized_pnl = sum(pnls)
 gross_profit = sum(pnl for pnl in pnls if pnl > 0.0)
 gross_loss = -sum(pnl for pnl in pnls if pnl < 0.0)
@@ -5924,6 +5958,8 @@ _SCHEMA_STATEMENTS = (
 ⋮----
 def _trade_event_key(trade: TradeSnapshot) -> str
 ⋮----
+payload = asdict(trade)
+⋮----
 canonical = json.dumps(
 ⋮----
 class PostgresPaperPersistence(PaperPersistence)
@@ -5953,7 +5989,9 @@ trade = commit.trade
 ⋮----
 trade_inserted = cursor.fetchone() is not None
 ⋮----
-pnl = float(trade.pnl)
+pnl_known = bool(trade.pnl_known)
+pnl = float(trade.pnl) if pnl_known else 0.0
+pnl_observations = 1 if pnl_known else 0
 ⋮----
 previous = cursor.fetchone()
 previous_hash = "GENESIS" if previous is None else str(previous["hash"])
@@ -7098,6 +7136,7 @@ units: float
 last_price: float
 peak_equity: float
 day_start_equity: float
+average_entry_price: float = 0.0
 last_processed: str | None = None
 processed_bars: int = 0
 last_learning_cycle_bar: int = 0
@@ -7283,6 +7322,7 @@ decision = self.risk.evaluate(prediction, snapshot)
 trade: TradeSnapshot | None = None
 previous_units = broker.state.units
 ⋮----
+fill = broker.rebalance(
 delta_units = broker.state.units - previous_units
 ⋮----
 trade = TradeSnapshot(
@@ -8052,8 +8092,11 @@ quantity: float
 price: float
 status: str
 pnl: float = 0.0
+pnl_known: bool | None = None
 confidence: float | None = None
 strategy: str = ""
+⋮----
+def __post_init__(self) -> None
 ⋮----
 class TradeJournal
 ⋮----
@@ -10590,10 +10633,6 @@ RUNTIME_KEY = "paper:GC=F:5m:online-river:v1"
 ⋮----
 def test_postgres_16_is_reachable() -> None
 ⋮----
-def _state(*, cash: float = 99_900.0, processed_bars: int = 1) -> RuntimeState
-⋮----
-def _trade(*, side: str = "BUY") -> TradeSnapshot
-⋮----
 commit_state = state or _state()
 ⋮----
 @pytest.fixture
@@ -10659,6 +10698,22 @@ def test_scheduler_deliveries_survive_postgres_restart(backend) -> None
 delivery = SchedulerDelivery(
 ⋮----
 restored = PostgresPaperPersistence(DATABASE_URL)
+⋮----
+def test_postgres_persists_pnl_provenance_and_performance_coverage(backend) -> None
+⋮----
+known = _trade(side="BUY", pnl=5.0, pnl_known=True)
+unknown = _trade(side="SELL", pnl=0.0, pnl_known=False)
+⋮----
+metrics = backend.load_trade_performance(RUNTIME_KEY)
+⋮----
+def test_trade_event_key_ignores_pnl_provenance_metadata() -> None
+⋮----
+known = _trade(pnl=0.0, pnl_known=True)
+unknown = _trade(pnl=0.0, pnl_known=False)
+⋮----
+def test_schema_upgrade_adds_pnl_accounting_columns_without_reset(backend) -> None
+⋮----
+columns = {(row[0], row[1]) for row in cursor.fetchall()}
 ````
 
 ## File: tests/test_process_watch.py
@@ -10943,6 +10998,37 @@ def test_readiness_rejects_short_burn_in() -> None
 def test_readiness_report_exposes_all_structured_checks() -> None
 ⋮----
 by_name = {check.name: check for check in report.checks}
+````
+
+## File: tests/test_realized_pnl_accounting.py
+````python
+def trade(pnl: float, *, pnl_known: bool | None = None) -> TradeSnapshot
+⋮----
+def test_opening_position_sets_cost_basis_and_realizes_only_costs() -> None
+⋮----
+fill = calculate_rebalance_fill(
+⋮----
+def test_adding_to_position_updates_weighted_average_entry() -> None
+⋮----
+def test_reducing_long_realizes_price_move_less_costs() -> None
+⋮----
+def test_reducing_short_realizes_short_profit() -> None
+⋮----
+def test_position_flip_realizes_old_side_and_resets_cost_basis() -> None
+⋮----
+def test_legacy_position_without_cost_basis_marks_realized_pnl_unknown() -> None
+⋮----
+def test_performance_excludes_unknown_legacy_pnl_but_counts_trade() -> None
+⋮----
+metrics = calculate_performance_metrics(
+⋮----
+def test_trade_snapshot_defaults_legacy_zero_pnl_to_unknown() -> None
+⋮----
+def test_runtime_state_loads_legacy_json_without_cost_basis(tmp_path) -> None
+⋮----
+path = tmp_path / "state.json"
+⋮----
+state = RuntimeStateStore(path).load(RiskConfig().starting_cash)
 ````
 
 ## File: tests/test_recovery_health.py

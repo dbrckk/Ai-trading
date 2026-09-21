@@ -1,15 +1,15 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 356
-- Files reparsed this run: 2
-- Symbols: 1643
-- Internal import edges: 1177
-- Impacted files: 5
-- Selected tests: 3
+- Files indexed: 357
+- Files reparsed this run: 10
+- Symbols: 1657
+- Internal import edges: 1183
+- Impacted files: 44
+- Selected tests: 33
 
 ## Languages
-- python: 354 files
+- python: 355 files
 - javascript: 2 files
 
 ## Highest-density symbol files
@@ -22,11 +22,11 @@
 - tests/test_scheduler_endpoint.py: 26 symbols
 - tests/test_hosted_persistence.py: 22 symbols
 - tests/test_multi_market.py: 20 symbols
+- tests/test_postgres_persistence.py: 19 symbols
 - src/ai_trading/dashboard.py: 17 symbols
 - src/ai_trading/mtf_parameter_benchmark.py: 17 symbols
 - src/ai_trading/postgres_persistence.py: 17 symbols
 - tests/test_deployment_readiness.py: 17 symbols
-- tests/test_postgres_persistence.py: 16 symbols
 - tests/test_runtime_persistence.py: 16 symbols
 - src/ai_trading/file_persistence.py: 15 symbols
 - tests/test_mtf_shadow_challenger.py: 15 symbols
@@ -43,10 +43,10 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 2
-- outline files retained: 356
-- top-level items retained: 2934
-- direct members retained: 1483
+- AST files reparsed this run: 10
+- outline files retained: 357
+- top-level items retained: 2954
+- direct members retained: 1491
 - symbol shards: 25
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 

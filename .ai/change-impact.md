@@ -1,18 +1,31 @@
 # Change impact
 
-Base: 5bb09e009dfa0126baf757d8a57d6028149e2b37
-Head: 84f8b241ebed242ecce59e4061e57ceae775c65c
+Base: 50438766084503b1667896fce1337935cc6e1f69
+Head: e3ec0bfb17445d07e0bad60ae56f36da333f131c
 
 ## Changed files
-- M src/ai_trading/data_quality.py
-- M tests/test_data_quality.py
+- M src/ai_trading/broker.py
+- M src/ai_trading/paper_execution.py
+- M src/ai_trading/performance_metrics.py
+- M src/ai_trading/postgres_persistence.py
+- M src/ai_trading/runtime.py
+- M src/ai_trading/runtime_state.py
+- M src/ai_trading/trade_journal.py
+- M tests/test_performance_metrics.py
+- M tests/test_postgres_persistence.py
+- A tests/test_realized_pnl_accounting.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_data_quality.py
+- tests/test_broker.py
+- tests/test_paper_execution.py
+- tests/test_performance_metrics.py
+- tests/test_postgres_persistence.py
+- tests/test_runtime.py
+- tests/test_runtime_state.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

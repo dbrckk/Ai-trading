@@ -45,16 +45,26 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T17:37:05Z
+Generated: 2026-09-21T17:43:31Z
 
 ### Git
 - Branch: `main`
-- Head: `84f8b241ebed`
-- Commit date: 2026-09-21T19:36:53+02:00
-- Commit: feat: detect repeated cadence gaps in market data quality (#92)
-- Tracked files: 492
+- Head: `e3ec0bfb1744`
+- Commit date: 2026-09-21T19:43:19+02:00
+- Commit: fix: calculate and persist realized paper PnL (#94)
+- Tracked files: 493
 
 ### Recently changed files
+- `src/ai_trading/broker.py`
+- `src/ai_trading/paper_execution.py`
+- `src/ai_trading/performance_metrics.py`
+- `src/ai_trading/postgres_persistence.py`
+- `src/ai_trading/runtime.py`
+- `src/ai_trading/runtime_state.py`
+- `src/ai_trading/trade_journal.py`
+- `tests/test_performance_metrics.py`
+- `tests/test_postgres_persistence.py`
+- `tests/test_realized_pnl_accounting.py`
 - `src/ai_trading/data_quality.py`
 - `tests/test_data_quality.py`
 - `README.md`
@@ -65,14 +75,6 @@ Generated: 2026-09-21T17:37:05Z
 - `src/ai_trading/multi_market.py`
 - `src/ai_trading/multiasset_backtest.py`
 - `tests/test_multi_market.py`
-- `tests/test_research_config_validation.py`
-- `src/ai_trading/execution_costs.py`
-- `src/ai_trading/runtime.py`
-- `tests/test_execution_costs.py`
-- `src/ai_trading/broker.py`
-- `src/ai_trading/multiasset_runtime.py`
-- `src/ai_trading/paper_execution.py`
-- `tests/test_paper_execution.py`
 
 ### Project signals
 - `pyproject.toml`
