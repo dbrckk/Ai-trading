@@ -475,6 +475,13 @@ def render_dashboard(
 <small class="runtime-reason">Verification requires at least three consecutive successful Cloudflare deliveries. Authentication material is never persisted or displayed.</small>
 </section>
 """
+        except Exception:
+            scheduler_panel = """
+<section class="section" id="scheduler">
+<div class="section-head"><h2>Scheduler delivery</h2><small>durable external-trigger evidence</small></div>
+<div class="alert-box warn"><strong>Scheduler telemetry unavailable.</strong></div>
+</section>
+"""
 
     market_panel = ""
     if persistence is not None and markets and len(markets) > 1:
