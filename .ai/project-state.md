@@ -45,16 +45,26 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T16:10:00Z
+Generated: 2026-09-21T16:11:47Z
 
 ### Git
 - Branch: `main`
-- Head: `d3715ced8ddb`
-- Commit date: 2026-09-21T18:09:47+02:00
-- Commit: feat: add durable scheduler delivery observability (#81)
+- Head: `53cf19eb161a`
+- Commit date: 2026-09-21T18:11:36+02:00
+- Commit: refactor: harden core data, metrics, and CI foundations (#79)
 - Tracked files: 481
 
 ### Recently changed files
+- `.github/workflows/ci.yml`
+- `.github/workflows/cloudflare-paper-scheduler-deploy.yml`
+- `.github/workflows/mtf-parameter-benchmark.yml`
+- `.github/workflows/paper-cycle.yml`
+- `src/ai_trading/data.py`
+- `src/ai_trading/marginal_alpha.py`
+- `src/ai_trading/performance.py`
+- `tests/test_cloudflare_scheduler_deploy_workflow.py`
+- `tests/test_data.py`
+- `tests/test_performance.py`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/file_persistence.py`
 - `src/ai_trading/persistence.py`
@@ -65,16 +75,6 @@ Generated: 2026-09-21T16:10:00Z
 - `tests/test_scheduler_endpoint.py`
 - `src/ai_trading/alpha_allocation.py`
 - `src/ai_trading/config.py`
-- `src/ai_trading/global_allocator.py`
-- `src/ai_trading/portfolio.py`
-- `src/ai_trading/portfolio_intelligence.py`
-- `src/ai_trading/portfolio_risk.py`
-- `tests/test_config_validation.py`
-- `tests/test_dashboard.py`
-- `tests/test_multi_market.py`
-- `src/ai_trading/multiasset_runtime.py`
-- `tests/test_multiasset_runtime.py`
-- `tests/test_portfolio_intelligence.py`
 
 ### Project signals
 - `pyproject.toml`

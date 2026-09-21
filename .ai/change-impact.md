@@ -1,28 +1,29 @@
 # Change impact
 
-Base: eab62676deb322648b34711debc7c9a2d94d989a
-Head: d3715ced8ddb75e867dd412e2a038082a30c70bc
+Base: a9187665403c5ca3f333c4bb6c75460208064305
+Head: 53cf19eb161a2893475a793af4a5c339bf2b1370
 
 ## Changed files
-- M src/ai_trading/dashboard.py
-- M src/ai_trading/file_persistence.py
-- M src/ai_trading/persistence.py
-- M src/ai_trading/postgres_persistence.py
-- M src/ai_trading/scheduler_endpoint.py
-- M tests/test_file_persistence.py
-- M tests/test_postgres_persistence.py
-- M tests/test_scheduler_endpoint.py
+- M .github/workflows/ci.yml
+- M .github/workflows/cloudflare-paper-scheduler-deploy.yml
+- M .github/workflows/mtf-parameter-benchmark.yml
+- M .github/workflows/paper-cycle.yml
+- M src/ai_trading/data.py
+- M src/ai_trading/marginal_alpha.py
+- M src/ai_trading/performance.py
+- M tests/test_cloudflare_scheduler_deploy_workflow.py
+- M tests/test_data.py
+- M tests/test_performance.py
 
 ## Affected areas
+- .github
 - src
 - tests
 
 ## Related test candidates
-- tests/test_dashboard.py
-- tests/test_file_persistence.py
-- tests/test_persistence.py
-- tests/test_postgres_persistence.py
-- tests/test_scheduler_endpoint.py
+- tests/test_data.py
+- tests/test_marginal_alpha.py
+- tests/test_performance.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

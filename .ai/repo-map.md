@@ -473,12 +473,12 @@ jobs:
     env:
       TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/ai_trading_test
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
           cache: pip
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "22"
       - name: Install
@@ -516,7 +516,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Require Cloudflare deployment configuration
         shell: bash
         env:
@@ -568,8 +568,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
           cache: pip
@@ -605,7 +605,7 @@ jobs:
           if [ -f artifacts/mtf_benchmark/btc-report.md ]; then
             cat artifacts/mtf_benchmark/btc-report.md
           fi
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: mtf-parameter-benchmark
@@ -636,8 +636,8 @@ jobs:
     env:
       AI_TRADING_DATABASE_URL: ${{ secrets.AI_TRADING_DATABASE_URL }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
           cache: pip
@@ -2388,14 +2388,33 @@ reasons: list[str] = []
 
 ## File: src/ai_trading/data.py
 ````python
-def load_history(symbol: str, period: str = "5y", interval: str = "1d") -> pd.DataFrame
+_OHLC_COLUMNS = ("Open", "High", "Low", "Close")
+_HISTORY_COLUMNS = (*_OHLC_COLUMNS, "Volume")
 ⋮----
-df = yf.download(
+def _normalize_history_frame(df: pd.DataFrame) -> pd.DataFrame
 ⋮----
-required = {"Open", "High", "Low", "Close", "Volume"}
-missing = required.difference(df.columns)
+frame = df.copy()
 ⋮----
-result = df.loc[:, ["Open", "High", "Low", "Close", "Volume"]].copy()
+missing = set(_HISTORY_COLUMNS).difference(frame.columns)
+⋮----
+result = frame.loc[:, list(_HISTORY_COLUMNS)].copy()
+⋮----
+result = result.dropna(subset=list(_OHLC_COLUMNS))
+⋮----
+result = result.sort_index()
+⋮----
+result = result.loc[~result.index.duplicated(keep="last")].copy()
+⋮----
+prices = result.loc[:, list(_OHLC_COLUMNS)]
+⋮----
+violations = (
+⋮----
+last_error: Exception | None = None
+⋮----
+frame = yf.download(
+⋮----
+except Exception as exc:  # noqa: BLE001 - provider can raise backend-specific transport errors
+last_error = exc
 ````
 
 ## File: src/ai_trading/dataset_evidence.py
@@ -5315,6 +5334,12 @@ elapsed_seconds = float((timestamps[-1] - timestamps[0]).total_seconds())
 ⋮----
 elapsed_years = elapsed_seconds / (365.25 * 24 * 60 * 60)
 ⋮----
+def _annualized_return(start: float, end: float, years: float) -> float
+⋮----
+log_growth = float(np.log(end / start) / years)
+max_log = float(np.log(np.finfo(float).max))
+min_log = float(np.log(np.finfo(float).tiny))
+⋮----
 def compute_metrics(equity: pd.Series, periods_per_year: float = 252.0) -> PerformanceMetrics
 ⋮----
 clean = equity.astype(float).dropna()
@@ -5323,10 +5348,7 @@ returns = clean.pct_change().dropna()
 total_return = float(clean.iloc[-1] / clean.iloc[0] - 1.0)
 ⋮----
 years = max((len(returns) / periods_per_year), 1.0 / periods_per_year)
-⋮----
-annualized_return = float((clean.iloc[-1] / clean.iloc[0]) ** (1.0 / years) - 1.0)
-⋮----
-annualized_return = 0.0
+annualized_return = _annualized_return(
 ⋮----
 volatility = float(returns.std(ddof=1) * np.sqrt(periods_per_year)) if len(returns) > 1 else 0.0
 mean_ann = float(returns.mean() * periods_per_year) if len(returns) else 0.0
@@ -8643,6 +8665,26 @@ index = pd.date_range("2026-09-18 08:00", periods=60, freq="5min")
 frame = pd.DataFrame(
 ⋮----
 loaded = data_module.load_history("^GDAXI", period="5d", interval="5m")
+⋮----
+def test_load_history_retries_transient_provider_failure(monkeypatch) -> None
+⋮----
+index = pd.date_range("2026-09-18 08:00", periods=3, freq="5min")
+⋮----
+calls = {"count": 0}
+⋮----
+def flaky_download(*args, **kwargs)
+⋮----
+loaded = data_module.load_history(
+⋮----
+def test_load_history_sorts_and_deduplicates_provider_rows(monkeypatch) -> None
+⋮----
+index = pd.to_datetime(
+⋮----
+loaded = data_module.load_history("GC=F", max_attempts=1)
+⋮----
+def test_load_history_rejects_inconsistent_ohlc(monkeypatch) -> None
+⋮----
+index = pd.date_range("2026-09-18 08:00", periods=2, freq="5min")
 ````
 
 ## File: tests/test_dataset_evidence.py
@@ -10065,6 +10107,11 @@ def test_infer_periods_per_year_from_elapsed_timestamps() -> None
 ⋮----
 index = pd.date_range("2026-01-01", periods=13, freq="30D", tz="UTC")
 periods = infer_periods_per_year(index)
+⋮----
+def test_extreme_short_window_annualization_stays_finite() -> None
+⋮----
+equity = pd.Series([1.0, 1e100])
+metrics = compute_metrics(equity, periods_per_year=525_600.0)
 ````
 
 ## File: tests/test_persistence_contract.py
