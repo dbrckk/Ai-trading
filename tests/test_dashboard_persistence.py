@@ -4,7 +4,7 @@ import json
 import socket
 import time
 from threading import Thread
-from urllib.error import URLError
+from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
 from ai_trading.burnin import BurnInSnapshot
@@ -144,8 +144,11 @@ def _free_port() -> int:
 
 
 def _get(url: str) -> tuple[int, str]:
-    with urlopen(url, timeout=2) as response:
-        return response.status, response.read().decode()
+    try:
+        with urlopen(url, timeout=2) as response:
+            return response.status, response.read().decode()
+    except HTTPError as exc:
+        return exc.code, exc.read().decode()
 
 
 def _get_with_headers(url: str):
@@ -222,6 +225,30 @@ def test_dashboard_storage_failure_is_sanitized(tmp_path) -> None:
     assert "100,000.00" not in page
     assert "secret" not in page
     assert "example.invalid" not in page
+
+
+def test_liveness_stays_healthy_when_storage_is_unavailable() -> None:
+    port = _start_failure_dashboard()
+
+    status_code, body = _get(f"http://127.0.0.1:{port}/livez")
+
+    assert status_code == 200
+    assert json.loads(body) == {"web_healthy": True}
+
+
+def test_readiness_fails_when_durable_storage_is_unavailable() -> None:
+    port = _start_failure_dashboard()
+
+    status_code, body = _get(f"http://127.0.0.1:{port}/readyz")
+
+    assert status_code == 503
+    assert json.loads(body) == {
+        "ready": False,
+        "storage_healthy": False,
+        "error": "storage unavailable",
+    }
+    assert "secret" not in body
+    assert "example.invalid" not in body
 
 
 def test_status_endpoints_fail_closed_without_leaking_storage_details() -> None:
