@@ -12,7 +12,7 @@ from ai_trading.file_persistence import FilePaperPersistence
 from ai_trading.model import Prediction
 from ai_trading.mtf_shadow_challenger import MultiTimeframeShadowResult
 from ai_trading.paper_cycle import PaperCycleRunner
-from ai_trading.persistence import build_runtime_key
+from ai_trading.persistence import PersistedRuntime, build_runtime_key
 from ai_trading.runtime import PaperAutonomousRuntime, RuntimeStepResult
 from ai_trading.runtime_state import RuntimeState
 from ai_trading.shadow_challenger import ShadowChallengerResult
@@ -711,3 +711,64 @@ def test_validated_btc_mtf_config_is_forwarded_to_shadow_evaluator(
     assert captured["atr_multiplier"] == 0.15
     assert captured["min_confidence"] == 0.60
     assert captured["config_name"] == "h90m-min3bp-atr0.15-train1000-conf60"
+
+
+
+def test_pending_targets_resume_when_last_processed_is_raw_market_bar() -> None:
+    market = sample_market(120)
+    eligible = tuple(market.index[40:])
+    state = RuntimeState(
+        cash=100_000.0,
+        units=0.0,
+        last_price=100.0,
+        peak_equity=100_000.0,
+        day_start_equity=100_000.0,
+        last_processed=str(market.index[20]),
+        processed_bars=1,
+        last_learning_cycle_bar=0,
+    )
+    snapshot = PersistedRuntime(
+        state=state,
+        model=None,
+        revision=1,
+        is_new=False,
+    )
+
+    pending = PaperCycleRunner._pending_targets(
+        snapshot,
+        eligible,
+        market.index,
+    )
+
+    assert pending == list(eligible)
+
+
+def test_pending_targets_still_fail_when_persisted_bar_is_not_loaded() -> None:
+    market = sample_market(120)
+    eligible = tuple(market.index[40:])
+    state = RuntimeState(
+        cash=100_000.0,
+        units=0.0,
+        last_price=100.0,
+        peak_equity=100_000.0,
+        day_start_equity=100_000.0,
+        last_processed="2020-01-01 00:00:00+00:00",
+        processed_bars=1,
+        last_learning_cycle_bar=0,
+    )
+    snapshot = PersistedRuntime(
+        state=state,
+        model=None,
+        revision=1,
+        is_new=False,
+    )
+
+    with pytest.raises(
+        RuntimeError,
+        match="persisted last_processed is outside loaded history",
+    ):
+        PaperCycleRunner._pending_targets(
+            snapshot,
+            eligible,
+            market.index,
+        )

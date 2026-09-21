@@ -76,6 +76,7 @@ class PaperCycleRunner:
         cls,
         snapshot: PersistedRuntime,
         eligible: tuple[object, ...],
+        market_index: pd.Index | None = None,
     ) -> list[object]:
         if cls._is_logically_fresh(snapshot):
             return list(eligible[-1:])
@@ -86,9 +87,25 @@ class PaperCycleRunner:
 
         positions = {str(value): index for index, value in enumerate(eligible)}
         position = positions.get(last_processed)
-        if position is None:
+        if position is not None:
+            return list(eligible[position + 1 :])
+
+        if market_index is None:
             raise RuntimeError("persisted last_processed is outside loaded history")
-        return list(eligible[position + 1 :])
+
+        market_positions = {
+            str(value): index
+            for index, value in enumerate(market_index)
+        }
+        market_position = market_positions.get(last_processed)
+        if market_position is None:
+            raise RuntimeError("persisted last_processed is outside loaded history")
+
+        return [
+            target
+            for target in eligible
+            if market_positions.get(str(target), -1) > market_position
+        ]
 
     def run_once(
         self,
@@ -119,7 +136,7 @@ class PaperCycleRunner:
             runtime_key,
             runtime.risk_config.starting_cash,
         )
-        pending = self._pending_targets(snapshot, eligible)
+        pending = self._pending_targets(snapshot, eligible, market.index)
         if not pending:
             return PaperCycleResult(
                 processed=0,
@@ -229,7 +246,7 @@ class PaperCycleRunner:
                 runtime_key,
                 runtime.risk_config.starting_cash,
             )
-            pending = self._pending_targets(snapshot, eligible)
+            pending = self._pending_targets(snapshot, eligible, market.index)
 
         remaining_backlog = bool(pending)
         if remaining_backlog:
