@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "b00460e67a88ba17cecd5f2174533b5d26e9aa00",
-  "head": "b174d18726de8ca703a8f10ba66cf66512979941",
+  "base": "b174d18726de8ca703a8f10ba66cf66512979941",
+  "head": "598410da76c8cafbe5715fdfc2a29c2a807ee75f",
   "index_mode": "incremental",
   "changed_files": [
     {
@@ -10,8 +10,16 @@
       "status": "M"
     },
     {
+      "path": "src/ai_trading/market_freshness.py",
+      "status": "A"
+    },
+    {
       "path": "src/ai_trading/multi_market.py",
       "status": "M"
+    },
+    {
+      "path": "tests/test_market_freshness.py",
+      "status": "A"
     },
     {
       "path": "tests/test_multi_market.py",
@@ -20,18 +28,22 @@
   ],
   "changed_source_files": [
     "src/ai_trading/dashboard.py",
+    "src/ai_trading/market_freshness.py",
     "src/ai_trading/multi_market.py",
+    "tests/test_market_freshness.py",
     "tests/test_multi_market.py"
   ],
   "impacted_files": [
     "src/ai_trading/cli.py",
     "src/ai_trading/dashboard.py",
+    "src/ai_trading/market_freshness.py",
     "src/ai_trading/multi_market.py",
     "tests/test_dashboard.py",
     "tests/test_dashboard_engine_status.py",
     "tests/test_dashboard_health.py",
     "tests/test_dashboard_overview.py",
     "tests/test_dashboard_persistence.py",
+    "tests/test_market_freshness.py",
     "tests/test_multi_market.py",
     "tests/test_scheduler_endpoint.py"
   ],
@@ -340,79 +352,97 @@
       "name": "serve_dashboard",
       "kind": "function",
       "file": "src/ai_trading/dashboard.py",
-      "line": 921
+      "line": 930
     },
     {
       "name": "execute_paper_cycle",
       "kind": "function",
       "file": "src/ai_trading/dashboard.py",
-      "line": 972
+      "line": 981
     },
     {
       "name": "load_status_snapshot",
       "kind": "function",
       "file": "src/ai_trading/dashboard.py",
-      "line": 996
+      "line": 1005
     },
     {
       "name": "Handler",
       "kind": "class",
       "file": "src/ai_trading/dashboard.py",
-      "line": 1002
+      "line": 1011
     },
     {
       "name": "_send_json",
       "kind": "function",
       "file": "src/ai_trading/dashboard.py",
-      "line": 1003
+      "line": 1012
     },
     {
       "name": "do_GET",
       "kind": "function",
       "file": "src/ai_trading/dashboard.py",
-      "line": 1017
+      "line": 1026
     },
     {
       "name": "do_POST",
       "kind": "function",
       "file": "src/ai_trading/dashboard.py",
-      "line": 1082
+      "line": 1091
     },
     {
       "name": "log_message",
       "kind": "function",
       "file": "src/ai_trading/dashboard.py",
-      "line": 1097
+      "line": 1106
+    },
+    {
+      "name": "_utc_now",
+      "kind": "function",
+      "file": "src/ai_trading/market_freshness.py",
+      "line": 13
+    },
+    {
+      "name": "market_session_open",
+      "kind": "function",
+      "file": "src/ai_trading/market_freshness.py",
+      "line": 20
+    },
+    {
+      "name": "classify_market_freshness",
+      "kind": "function",
+      "file": "src/ai_trading/market_freshness.py",
+      "line": 56
     },
     {
       "name": "MarketSpec",
       "kind": "class",
       "file": "src/ai_trading/multi_market.py",
-      "line": 22
+      "line": 24
     },
     {
       "name": "configured_markets_from_env",
       "kind": "function",
       "file": "src/ai_trading/multi_market.py",
-      "line": 35
+      "line": 37
     },
     {
       "name": "run_multi_market_paper_cycle",
       "kind": "function",
       "file": "src/ai_trading/multi_market.py",
-      "line": 59
+      "line": 61
     },
     {
       "name": "run_market",
       "kind": "function",
       "file": "src/ai_trading/multi_market.py",
-      "line": 90
+      "line": 92
     },
     {
       "name": "build_multi_market_overview",
       "kind": "function",
       "file": "src/ai_trading/multi_market.py",
-      "line": 154
+      "line": 156
     },
     {
       "name": "test_trade_journal_round_trip",
@@ -871,106 +901,160 @@
       "line": 327
     },
     {
+      "name": "_status",
+      "kind": "function",
+      "file": "tests/test_market_freshness.py",
+      "line": 10
+    },
+    {
+      "name": "test_btc_session_is_always_open",
+      "kind": "function",
+      "file": "tests/test_market_freshness.py",
+      "line": 27
+    },
+    {
+      "name": "test_dax_regular_weekday_session_is_dst_aware",
+      "kind": "function",
+      "file": "tests/test_market_freshness.py",
+      "line": 33
+    },
+    {
+      "name": "test_gold_daily_maintenance_window_is_closed",
+      "kind": "function",
+      "file": "tests/test_market_freshness.py",
+      "line": 41
+    },
+    {
+      "name": "test_gold_weekend_is_closed",
+      "kind": "function",
+      "file": "tests/test_market_freshness.py",
+      "line": 49
+    },
+    {
+      "name": "test_catch_up_takes_priority_over_live_state",
+      "kind": "function",
+      "file": "tests/test_market_freshness.py",
+      "line": 55
+    },
+    {
+      "name": "test_known_data_gap_is_exposed_as_provider_gap_while_market_open",
+      "kind": "function",
+      "file": "tests/test_market_freshness.py",
+      "line": 69
+    },
+    {
+      "name": "test_closed_session_is_not_misreported_as_delayed",
+      "kind": "function",
+      "file": "tests/test_market_freshness.py",
+      "line": 86
+    },
+    {
+      "name": "test_stale_heartbeat_during_open_session_is_delayed",
+      "kind": "function",
+      "file": "tests/test_market_freshness.py",
+      "line": 100
+    },
+    {
       "name": "FakeMultiPersistence",
       "kind": "class",
       "file": "tests/test_multi_market.py",
-      "line": 25
+      "line": 28
     },
     {
       "name": "load_runtime",
       "kind": "function",
       "file": "tests/test_multi_market.py",
-      "line": 28
+      "line": 31
     },
     {
       "name": "load_runtime_status",
       "kind": "function",
       "file": "tests/test_multi_market.py",
-      "line": 47
+      "line": 50
     },
     {
       "name": "list_burnin_snapshots",
       "kind": "function",
       "file": "tests/test_multi_market.py",
-      "line": 65
+      "line": 68
     },
     {
       "name": "list_regimes",
       "kind": "function",
       "file": "tests/test_multi_market.py",
-      "line": 69
+      "line": 72
     },
     {
       "name": "list_trades",
       "kind": "function",
       "file": "tests/test_multi_market.py",
-      "line": 73
+      "line": 76
     },
     {
       "name": "load_trade_performance",
       "kind": "function",
       "file": "tests/test_multi_market.py",
-      "line": 77
+      "line": 80
     },
     {
       "name": "test_configured_markets_default_to_gold",
       "kind": "function",
       "file": "tests/test_multi_market.py",
-      "line": 90
+      "line": 93
     },
     {
       "name": "test_configured_default_bundle_uses_34_33_33",
       "kind": "function",
       "file": "tests/test_multi_market.py",
-      "line": 99
+      "line": 102
     },
     {
       "name": "test_multi_market_cycle_isolates_one_market_failure",
       "kind": "function",
       "file": "tests/test_multi_market.py",
-      "line": 108
+      "line": 111
     },
     {
       "name": "fake_cycle",
       "kind": "function",
       "file": "tests/test_multi_market.py",
-      "line": 111
+      "line": 114
     },
     {
       "name": "test_multi_market_overview_scales_normalized_sleeves_to_100k",
       "kind": "function",
       "file": "tests/test_multi_market.py",
-      "line": 150
+      "line": 153
     },
     {
       "name": "test_dashboard_renders_multi_market_cards",
       "kind": "function",
       "file": "tests/test_multi_market.py",
-      "line": 182
+      "line": 190
     },
     {
       "name": "test_multi_market_cycle_runs_markets_concurrently",
       "kind": "function",
       "file": "tests/test_multi_market.py",
-      "line": 238
+      "line": 247
     },
     {
       "name": "fake_cycle",
       "kind": "function",
       "file": "tests/test_multi_market.py",
-      "line": 241
+      "line": 250
     },
     {
       "name": "test_multi_market_overview_marks_stale_heartbeat_as_delayed",
       "kind": "function",
       "file": "tests/test_multi_market.py",
-      "line": 272
+      "line": 281
     },
     {
       "name": "stale_status",
       "kind": "function",
       "file": "tests/test_multi_market.py",
-      "line": 283
+      "line": 292
     },
     {
       "name": "successful_result",
@@ -1111,6 +1195,7 @@
     "tests/test_dashboard_health.py",
     "tests/test_dashboard_overview.py",
     "tests/test_dashboard_persistence.py",
+    "tests/test_market_freshness.py",
     "tests/test_multi_market.py",
     "tests/test_scheduler_endpoint.py"
   ]

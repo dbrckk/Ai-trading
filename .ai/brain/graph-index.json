@@ -80,6 +80,7 @@
         "tests/test_lifecycle_log.py",
         "tests/test_maintenance.py",
         "tests/test_marginal_alpha.py",
+        "tests/test_market_freshness.py",
         "tests/test_meta_router.py",
         "tests/test_meta_store.py",
         "tests/test_metrics.py",
@@ -186,7 +187,7 @@
         "tests/test_watchdog_enforcer.py",
         "tests/test_worker_monitor.py"
       ],
-      "in_degree": 177,
+      "in_degree": 178,
       "out_degree": 0,
       "path": "src/ai_trading/__init__.py"
     },
@@ -730,6 +731,34 @@
     {
       "dependencies": [],
       "dependents": [
+        "src/ai_trading/dashboard.py",
+        "src/ai_trading/file_persistence.py",
+        "src/ai_trading/hosted_runtime.py",
+        "src/ai_trading/market_freshness.py",
+        "src/ai_trading/multi_market.py",
+        "src/ai_trading/operational_overview.py",
+        "src/ai_trading/paper_cycle_service.py",
+        "src/ai_trading/persistence.py",
+        "src/ai_trading/postgres_persistence.py",
+        "tests/test_dashboard_engine_status.py",
+        "tests/test_dashboard_health.py",
+        "tests/test_dashboard_overview.py",
+        "tests/test_dashboard_persistence.py",
+        "tests/test_hosted_persistence.py",
+        "tests/test_market_freshness.py",
+        "tests/test_multi_market.py",
+        "tests/test_paper_cycle_service.py",
+        "tests/test_postgres_persistence.py",
+        "tests/test_runtime_persistence.py",
+        "tests/test_runtime_status.py"
+      ],
+      "in_degree": 20,
+      "out_degree": 0,
+      "path": "src/ai_trading/runtime_status.py"
+    },
+    {
+      "dependencies": [],
+      "dependents": [
         "src/ai_trading/cli.py",
         "src/ai_trading/dashboard.py",
         "src/ai_trading/health_server.py",
@@ -865,32 +894,6 @@
       "in_degree": 18,
       "out_degree": 0,
       "path": "src/ai_trading/expert_pool.py"
-    },
-    {
-      "dependencies": [],
-      "dependents": [
-        "src/ai_trading/dashboard.py",
-        "src/ai_trading/file_persistence.py",
-        "src/ai_trading/hosted_runtime.py",
-        "src/ai_trading/multi_market.py",
-        "src/ai_trading/operational_overview.py",
-        "src/ai_trading/paper_cycle_service.py",
-        "src/ai_trading/persistence.py",
-        "src/ai_trading/postgres_persistence.py",
-        "tests/test_dashboard_engine_status.py",
-        "tests/test_dashboard_health.py",
-        "tests/test_dashboard_overview.py",
-        "tests/test_dashboard_persistence.py",
-        "tests/test_hosted_persistence.py",
-        "tests/test_multi_market.py",
-        "tests/test_paper_cycle_service.py",
-        "tests/test_postgres_persistence.py",
-        "tests/test_runtime_persistence.py",
-        "tests/test_runtime_status.py"
-      ],
-      "in_degree": 18,
-      "out_degree": 0,
-      "path": "src/ai_trading/runtime_status.py"
     },
     {
       "dependencies": [
@@ -1798,8 +1801,8 @@
       "path": "src/ai_trading/mtf_shadow_challenger.py"
     }
   ],
-  "edge_count": 1861,
+  "edge_count": 1868,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 343,
+  "node_count": 345,
   "schema_version": 1
 }

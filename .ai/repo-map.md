@@ -127,6 +127,7 @@ src/
     lifecycle_log.py
     maintenance.py
     marginal_alpha.py
+    market_freshness.py
     meta_router.py
     meta_store.py
     metrics.py
@@ -296,6 +297,7 @@ tests/
   test_lifecycle_log.py
   test_maintenance.py
   test_marginal_alpha.py
+  test_market_freshness.py
   test_meta_router.py
   test_meta_store.py
   test_metrics.py
@@ -2257,6 +2259,8 @@ cycle_duration_display = (
 heartbeat_age_seconds = item.get("heartbeat_age_seconds")
 heartbeat_age_display = (
 freshness = str(item.get("freshness") or "OFF")
+session_open = item.get("session_open")
+session_display = (
 mtf_candidate = mtf_shadow.get("candidate_config")
 mtf_horizon = mtf_shadow.get("horizon_minutes")
 mtf_candidate_name = (
@@ -3529,6 +3533,35 @@ marginal_drawdown = blended.max_drawdown - base.max_drawdown
 improves = (
 ````
 
+## File: src/ai_trading/market_freshness.py
+````python
+_PROVIDER_GAP_ERRORS = {
+⋮----
+def _utc_now(now: datetime | None) -> datetime
+⋮----
+current = now or datetime.now(UTC)
+⋮----
+def market_session_open(symbol: str, *, now: datetime | None = None) -> bool | None
+⋮----
+"""Return the expected weekly session state for supported paper markets.
+
+    This intentionally models regular weekly sessions only. Exchange holidays are
+    not guessed; unsupported symbols return None instead of a false precision.
+    """
+⋮----
+current = _utc_now(now)
+⋮----
+local = current.astimezone(ZoneInfo("Europe/Berlin"))
+⋮----
+local = current.astimezone(ZoneInfo("America/New_York"))
+weekday = local.weekday()
+local_time = local.time().replace(tzinfo=None)
+⋮----
+session_open = market_session_open(symbol, now=now)
+⋮----
+engine_status = str(status_snapshot.get("engine_status") or "OFF").upper()
+````
+
 ## File: src/ai_trading/meta_router.py
 ````python
 @dataclass(frozen=True)
@@ -4193,6 +4226,9 @@ running_markets = 0
 stale_markets = 0
 error_markets = 0
 alert_markets = 0
+closed_markets = 0
+catching_up_markets = 0
+provider_gap_markets = 0
 ⋮----
 runtime_key = build_runtime_key(market.symbol, interval)
 allocated_cash = portfolio_cash * market.allocation
@@ -4215,10 +4251,10 @@ market_confidence = status.confidence if status.processed else None
 market_reason = status.reason
 cycle_duration_seconds = status.cycle_duration_seconds
 market_mtf_evaluated = status.mtf_evaluated
-status_snapshot = runtime_status_snapshot(status)
+status_snapshot = runtime_status_snapshot(status, now=now)
 heartbeat_age_seconds = status_snapshot.get("heartbeat_age_seconds")
-effective_status = str(status_snapshot.get("engine_status") or "OFF").upper()
-freshness = {
+⋮----
+session_open = None
 healthy = bool(overview.get("storage_healthy"))
 ⋮----
 engine_status = str(overview.get("engine_status") or "UNKNOWN").upper()
@@ -9143,6 +9179,39 @@ rng = np.random.default_rng(4)
 portfolio = pd.Series(rng.normal(0.0004, 0.01, 300))
 ````
 
+## File: tests/test_market_freshness.py
+````python
+def test_btc_session_is_always_open() -> None
+⋮----
+saturday = datetime(2026, 9, 19, 12, 0, tzinfo=UTC)
+⋮----
+def test_dax_regular_weekday_session_is_dst_aware() -> None
+⋮----
+opening = datetime(2026, 9, 21, 7, 0, tzinfo=UTC)
+after_close = datetime(2026, 9, 21, 16, 0, tzinfo=UTC)
+⋮----
+def test_gold_daily_maintenance_window_is_closed() -> None
+⋮----
+maintenance = datetime(2026, 9, 21, 21, 30, tzinfo=UTC)
+reopened = datetime(2026, 9, 21, 22, 30, tzinfo=UTC)
+⋮----
+def test_gold_weekend_is_closed() -> None
+⋮----
+def test_catch_up_takes_priority_over_live_state() -> None
+⋮----
+status = _status(reason="catch-up pending")
+⋮----
+def test_known_data_gap_is_exposed_as_provider_gap_while_market_open() -> None
+⋮----
+status = _status(
+⋮----
+def test_closed_session_is_not_misreported_as_delayed() -> None
+⋮----
+status = _status()
+⋮----
+def test_stale_heartbeat_during_open_session_is_delayed() -> None
+````
+
 ## File: tests/test_meta_router.py
 ````python
 def test_meta_router_prefers_contextually_better_model() -> None
@@ -9372,6 +9441,8 @@ comparison = compare_mtf_shadow_audit_payloads(
 
 ## File: tests/test_multi_market.py
 ````python
+TEST_MARKET_NOW = datetime(2026, 9, 21, 12, 0, tzinfo=UTC)
+⋮----
 @dataclass
 class FakeMultiPersistence
 ⋮----

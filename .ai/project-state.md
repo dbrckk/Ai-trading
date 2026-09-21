@@ -45,18 +45,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T07:43:19Z
+Generated: 2026-09-21T07:55:21Z
 
 ### Git
 - Branch: `main`
-- Head: `b174d18726de`
-- Commit date: 2026-09-21T09:43:09+02:00
-- Commit: feat: add per-market freshness telemetry (#74)
-- Tracked files: 477
+- Head: `598410da76c8`
+- Commit date: 2026-09-21T09:55:11+02:00
+- Commit: feat: add session-aware market freshness states (#75)
+- Tracked files: 479
 
 ### Recently changed files
 - `src/ai_trading/dashboard.py`
+- `src/ai_trading/market_freshness.py`
 - `src/ai_trading/multi_market.py`
+- `tests/test_market_freshness.py`
 - `tests/test_multi_market.py`
 - `src/ai_trading/paper_cycle.py`
 - `src/ai_trading/paper_cycle_service.py`
