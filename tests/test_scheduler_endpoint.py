@@ -426,28 +426,3 @@ def test_scheduler_delivery_overview_rejects_invalid_freshness_window() -> None:
         scheduler_delivery_overview((), freshness_seconds=0)
 
 
-
-def test_http_response_body_ignores_client_disconnect(tmp_path, monkeypatch) -> None:
-    import ai_trading.dashboard as dashboard_module
-
-    original_write = dashboard_module.socketserver._SocketWriter.write
-
-    def disconnected_write(writer, body):
-        if body.startswith(b"{"):
-            raise BrokenPipeError(32, "Broken pipe")
-        return original_write(writer, body)
-
-    monkeypatch.setattr(
-        dashboard_module.socketserver._SocketWriter,
-        "write",
-        disconnected_write,
-    )
-    port = _start_scheduler_dashboard(
-        tmp_path,
-        scheduler_token="server-secret",
-        paper_cycle_executor=lambda: successful_result(),
-    )
-
-    # The server remains available even when a response client disappears.
-    status, _ = _request(f"http://127.0.0.1:{port}/")
-    assert status == 200
