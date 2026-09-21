@@ -908,10 +908,14 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
     const marketLabel = best.classList.contains("market-card")
       ? best.querySelector(".market-card-head h3")?.textContent?.trim() || null
       : null;
+    const sectionLabel = best.classList.contains("section")
+      ? best.querySelector(".section-head h2")?.textContent?.trim() || null
+      : null;
 
     return {{
       id,
       marketLabel,
+      sectionLabel,
       top: best.getBoundingClientRect().top,
     }};
   }}
@@ -926,6 +930,11 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
     if (!element && anchor.marketLabel) {{
       element = Array.from(document.querySelectorAll(".market-card")).find(
         (card) => card.querySelector(".market-card-head h3")?.textContent?.trim() === anchor.marketLabel
+      ) || null;
+    }}
+    if (!element && anchor.sectionLabel) {{
+      element = Array.from(document.querySelectorAll(".section")).find(
+        (section) => section.querySelector(".section-head h2")?.textContent?.trim() === anchor.sectionLabel
       ) || null;
     }}
     if (!element) return;
@@ -949,13 +958,13 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
         cache: "no-store",
         headers: {{"X-Dashboard-Refresh": "1"}},
       }});
-      if (!response.ok) return;
+      if (!response.ok) throw new Error("dashboard refresh failed");
 
       const source = await response.text();
       const nextDocument = new DOMParser().parseFromString(source, "text/html");
       const currentCard = document.querySelector(".card");
       const nextCard = nextDocument.querySelector(".card");
-      if (!currentCard || !nextCard) return;
+      if (!currentCard || !nextCard) throw new Error("dashboard refresh markup missing");
 
       currentCard.replaceChildren(
         ...Array.from(nextCard.childNodes).map((node) => document.importNode(node, true))
