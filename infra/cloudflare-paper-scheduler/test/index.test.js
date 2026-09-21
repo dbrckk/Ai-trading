@@ -27,6 +27,10 @@ test("invokePaperCycle sends only authenticated POST to configured target", asyn
     calls[0].options.headers["User-Agent"],
     "ai-trading-cloudflare-scheduler/1",
   );
+  assert.equal(
+    calls[0].options.headers["X-Scheduler-Source"],
+    "cloudflare",
+  );
   assert.equal("body" in calls[0].options, false);
 });
 
