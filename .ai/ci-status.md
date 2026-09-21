@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 3 success / 0 failure / 4 active
+Summary: 0 success / 0 failure / 7 active
 
-- CodeQL: pending / pending (5ed24c78)
-- CI: in_progress / pending (5ed24c78)
-- CI: in_progress / pending (beeb6b82)
-- CodeQL: in_progress / pending (beeb6b82)
-- CodeQL: completed / success (ef7d182d)
-- CI: completed / success (ef7d182d)
-- CI: completed / success (13a89a41)
-- CodeQL: completed / cancelled (13a89a41)
+- CI: in_progress / pending (81af7f4e)
+- CodeQL: queued / pending (81af7f4e)
+- CodeQL: pending / pending (9013a11e)
+- CI: in_progress / pending (9013a11e)
+- CodeQL: completed / cancelled (50b5d76e)
+- CI: in_progress / pending (50b5d76e)
+- CodeQL: in_progress / pending (55566f7d)
+- CI: in_progress / pending (55566f7d)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

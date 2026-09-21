@@ -2449,6 +2449,11 @@ def load_status_snapshot() -> dict[str, object]
 ⋮----
 class Handler(BaseHTTPRequestHandler)
 ⋮----
+server_version = "AITrading"
+sys_version = ""
+⋮----
+def end_headers(self) -> None
+⋮----
 body = json.dumps(payload, sort_keys=True).encode()
 ⋮----
 def do_GET(self) -> None
@@ -8740,6 +8745,8 @@ def _free_port() -> int
 ⋮----
 def _get(url: str) -> tuple[int, str]
 ⋮----
+def _get_with_headers(url: str)
+⋮----
 def _start_failure_dashboard() -> int
 ⋮----
 port = _free_port()
@@ -8763,6 +8770,8 @@ status_payload = json.loads(status_body)
 health_payload = json.loads(health_body)
 ⋮----
 def test_dashboard_surfaces_verified_scheduler_delivery(tmp_path) -> None
+⋮----
+def test_dashboard_http_responses_include_security_headers() -> None
 ⋮----
 def test_dashboard_v2_groups_critical_sections_and_renders_equity_chart(tmp_path) -> None
 ⋮----

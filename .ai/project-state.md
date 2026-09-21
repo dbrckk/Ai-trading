@@ -45,16 +45,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T16:31:59Z
+Generated: 2026-09-21T16:35:39Z
 
 ### Git
 - Branch: `main`
-- Head: `5ed24c787833`
-- Commit date: 2026-09-21T18:31:39+02:00
-- Commit: docs: align README with production scheduler and multi-market runtime (#84)
+- Head: `81af7f4e96bf`
+- Commit date: 2026-09-21T18:35:28+02:00
+- Commit: security: harden hosted dashboard HTTP responses (#87)
 - Tracked files: 484
 
 ### Recently changed files
+- `src/ai_trading/dashboard.py`
+- `tests/test_dashboard_persistence.py`
 - `README.md`
 - `src/ai_trading/backtest.py`
 - `src/ai_trading/broker.py`
@@ -66,15 +68,6 @@ Generated: 2026-09-21T16:31:59Z
 - `tests/test_multiasset_backtest.py`
 - `.github/dependabot.yml`
 - `.github/workflows/codeql.yml`
-- `src/ai_trading/dashboard.py`
-- `tests/test_dashboard_persistence.py`
-- `.github/workflows/ci.yml`
-- `.github/workflows/cloudflare-paper-scheduler-deploy.yml`
-- `.github/workflows/mtf-parameter-benchmark.yml`
-- `.github/workflows/paper-cycle.yml`
-- `src/ai_trading/data.py`
-- `src/ai_trading/marginal_alpha.py`
-- `src/ai_trading/performance.py`
 
 ### Project signals
 - `pyproject.toml`

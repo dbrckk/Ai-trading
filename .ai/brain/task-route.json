@@ -9,10 +9,10 @@
     "top_score": 26
   },
   "cache": {
-    "fingerprint": "8581c09cfd03b0b7ada8b0ec3f7a8b94620e54e6767047dd797290044f66af0e",
+    "fingerprint": "4fc4cab6c5484261434a0e32196216f59772252174cf7bf28abf3ac537605d6a",
     "hit": false
   },
-  "candidate_count": 35,
+  "candidate_count": 15,
   "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
   "files": [
     {
@@ -20,7 +20,7 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/runtime.py",
+      "path": "src/ai_trading/dashboard.py",
       "reasons": [
         "impact",
         "recently-changed",
@@ -28,18 +28,23 @@
       ],
       "score": 26,
       "symbols": [
-        "PaperAutonomousRuntime",
-        "PreparedRuntimeMarket",
-        "RuntimeStepResult",
-        "_broker_from_state",
-        "_eligible_execution_indices",
-        "_prepare_market_features",
-        "_state_from_broker",
-        "_step_prepared_locked",
-        "prepare_market",
-        "step",
-        "step_at",
-        "step_prepared"
+        "Handler",
+        "_display_money",
+        "_display_ratio",
+        "_display_units",
+        "_equity_chart_svg",
+        "_public_runtime_snapshot",
+        "_readiness_number",
+        "_readiness_panel",
+        "_send_json",
+        "do_GET",
+        "do_POST",
+        "end_headers",
+        "execute_paper_cycle",
+        "load_status_snapshot",
+        "log_message",
+        "render_dashboard",
+        "serve_dashboard"
       ]
     },
     {
@@ -81,47 +86,24 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/engine.py",
-      "reasons": [
-        "impact",
-        "recently-changed"
-      ],
-      "score": 19,
-      "symbols": [
-        "RunResult",
-        "TradingEngine",
-        "__init__",
-        "paper_run",
-        "train"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "engine"
-      ],
-      "path": "src/ai_trading/dashboard.py",
+      "path": "src/ai_trading/runtime.py",
       "reasons": [
         "search-index"
       ],
       "score": 17,
       "symbols": [
-        "Handler",
-        "_display_money",
-        "_display_ratio",
-        "_display_units",
-        "_equity_chart_svg",
-        "_public_runtime_snapshot",
-        "_readiness_number",
-        "_readiness_panel",
-        "_send_json",
-        "do_GET",
-        "do_POST",
-        "execute_paper_cycle",
-        "load_status_snapshot",
-        "log_message",
-        "render_dashboard",
-        "serve_dashboard"
+        "PaperAutonomousRuntime",
+        "PreparedRuntimeMarket",
+        "RuntimeStepResult",
+        "_broker_from_state",
+        "_eligible_execution_indices",
+        "_prepare_market_features",
+        "_state_from_broker",
+        "_step_prepared_locked",
+        "prepare_market",
+        "step",
+        "step_at",
+        "step_prepared"
       ]
     },
     {
@@ -144,15 +126,29 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/stress_engine.py",
+      "path": "tests/test_dashboard_engine_status.py",
+      "reasons": [
+        "impact"
+      ],
+      "score": 16,
+      "symbols": [
+        "test_dashboard_shows_engine_and_latest_decision"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "engine"
+      ],
+      "path": "src/ai_trading/engine.py",
       "reasons": [],
       "score": 10,
       "symbols": [
-        "StressPolicy",
-        "StressReport",
-        "StressScenario",
-        "_stressed_covariance",
-        "run_stress_test"
+        "RunResult",
+        "TradingEngine",
+        "__init__",
+        "paper_run",
+        "train"
       ]
     }
   ],

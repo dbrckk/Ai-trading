@@ -1,16 +1,18 @@
 # Change impact
 
-Base: beeb6b823f67752c06687486a14d49343b0bd9d6
-Head: 5ed24c78783314f403d5d4a393691a0b6c382803
+Base: 547cd99aed1c19666a6824d67c42a099365f7db0
+Head: 81af7f4e96bf8d96fcd4e259dfb200171292132b
 
 ## Changed files
-- M README.md
+- M src/ai_trading/dashboard.py
+- M tests/test_dashboard_persistence.py
 
 ## Affected areas
-- (root)
+- src
+- tests
 
 ## Related test candidates
-- No direct filename-based test match detected.
+- tests/test_dashboard.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.
