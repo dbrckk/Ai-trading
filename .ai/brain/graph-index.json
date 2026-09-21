@@ -839,6 +839,35 @@
     },
     {
       "dependencies": [
+        "src/ai_trading/data.py",
+        "src/ai_trading/data_quality.py",
+        "src/ai_trading/features.py",
+        "src/ai_trading/mtf_shadow_challenger.py",
+        "src/ai_trading/mtf_shadow_config.py",
+        "src/ai_trading/persistence.py",
+        "src/ai_trading/runtime.py",
+        "src/ai_trading/shadow_challenger.py"
+      ],
+      "dependents": [
+        "src/ai_trading/command_app.py",
+        "src/ai_trading/dashboard.py",
+        "src/ai_trading/multi_market.py",
+        "src/ai_trading/paper_cycle_service.py",
+        "src/ai_trading/scheduler_endpoint.py",
+        "tests/test_multi_market.py",
+        "tests/test_paper_cycle.py",
+        "tests/test_paper_cycle_cli.py",
+        "tests/test_paper_cycle_materialized_fresh.py",
+        "tests/test_paper_cycle_postgres.py",
+        "tests/test_paper_cycle_service.py",
+        "tests/test_scheduler_endpoint.py"
+      ],
+      "in_degree": 12,
+      "out_degree": 8,
+      "path": "src/ai_trading/paper_cycle.py"
+    },
+    {
+      "dependencies": [
         "src/ai_trading/governor_state_store.py",
         "src/ai_trading/lifecycle_log.py",
         "src/ai_trading/maintenance.py",
@@ -865,34 +894,6 @@
       "in_degree": 5,
       "out_degree": 15,
       "path": "src/ai_trading/supervisor.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/data.py",
-        "src/ai_trading/features.py",
-        "src/ai_trading/mtf_shadow_challenger.py",
-        "src/ai_trading/mtf_shadow_config.py",
-        "src/ai_trading/persistence.py",
-        "src/ai_trading/runtime.py",
-        "src/ai_trading/shadow_challenger.py"
-      ],
-      "dependents": [
-        "src/ai_trading/command_app.py",
-        "src/ai_trading/dashboard.py",
-        "src/ai_trading/multi_market.py",
-        "src/ai_trading/paper_cycle_service.py",
-        "src/ai_trading/scheduler_endpoint.py",
-        "tests/test_multi_market.py",
-        "tests/test_paper_cycle.py",
-        "tests/test_paper_cycle_cli.py",
-        "tests/test_paper_cycle_materialized_fresh.py",
-        "tests/test_paper_cycle_postgres.py",
-        "tests/test_paper_cycle_service.py",
-        "tests/test_scheduler_endpoint.py"
-      ],
-      "in_degree": 12,
-      "out_degree": 7,
-      "path": "src/ai_trading/paper_cycle.py"
     },
     {
       "dependencies": [],
@@ -1341,6 +1342,27 @@
     },
     {
       "dependencies": [
+        "src/ai_trading/trade_journal.py"
+      ],
+      "dependents": [
+        "src/ai_trading/dashboard.py",
+        "src/ai_trading/file_persistence.py",
+        "src/ai_trading/multi_market.py",
+        "src/ai_trading/operational_overview.py",
+        "src/ai_trading/persistence.py",
+        "src/ai_trading/postgres_persistence.py",
+        "tests/test_dashboard_overview.py",
+        "tests/test_dashboard_persistence.py",
+        "tests/test_multi_market.py",
+        "tests/test_performance_metrics.py",
+        "tests/test_realized_pnl_accounting.py"
+      ],
+      "in_degree": 11,
+      "out_degree": 1,
+      "path": "src/ai_trading/performance_metrics.py"
+    },
+    {
+      "dependencies": [
         "src/ai_trading/data.py",
         "src/ai_trading/orchestrator.py",
         "src/ai_trading/persistence.py",
@@ -1380,6 +1402,27 @@
       "in_degree": 3,
       "out_degree": 9,
       "path": "src/ai_trading/multiasset_scheduler.py"
+    },
+    {
+      "dependencies": [
+        "src/ai_trading/burnin.py",
+        "src/ai_trading/mtf_shadow_config.py",
+        "src/ai_trading/paper_readiness_evidence.py",
+        "src/ai_trading/performance_metrics.py",
+        "src/ai_trading/persistence.py",
+        "src/ai_trading/readiness.py",
+        "src/ai_trading/runtime_status.py",
+        "src/ai_trading/shadow_promotion_gate.py",
+        "src/ai_trading/watchdog.py"
+      ],
+      "dependents": [
+        "src/ai_trading/dashboard.py",
+        "src/ai_trading/multi_market.py",
+        "tests/test_dashboard_overview.py"
+      ],
+      "in_degree": 3,
+      "out_degree": 9,
+      "path": "src/ai_trading/operational_overview.py"
     },
     {
       "dependencies": [],
@@ -1482,26 +1525,6 @@
     },
     {
       "dependencies": [
-        "src/ai_trading/burnin.py",
-        "src/ai_trading/mtf_shadow_config.py",
-        "src/ai_trading/paper_readiness_evidence.py",
-        "src/ai_trading/persistence.py",
-        "src/ai_trading/readiness.py",
-        "src/ai_trading/runtime_status.py",
-        "src/ai_trading/shadow_promotion_gate.py",
-        "src/ai_trading/watchdog.py"
-      ],
-      "dependents": [
-        "src/ai_trading/dashboard.py",
-        "src/ai_trading/multi_market.py",
-        "tests/test_dashboard_overview.py"
-      ],
-      "in_degree": 3,
-      "out_degree": 8,
-      "path": "src/ai_trading/operational_overview.py"
-    },
-    {
-      "dependencies": [
         "src/ai_trading/governor_state_store.py",
         "src/ai_trading/qualification_guard.py",
         "src/ai_trading/qualification_store.py",
@@ -1597,25 +1620,6 @@
     },
     {
       "dependencies": [
-        "src/ai_trading/trade_journal.py"
-      ],
-      "dependents": [
-        "src/ai_trading/dashboard.py",
-        "src/ai_trading/file_persistence.py",
-        "src/ai_trading/persistence.py",
-        "src/ai_trading/postgres_persistence.py",
-        "tests/test_dashboard_overview.py",
-        "tests/test_dashboard_persistence.py",
-        "tests/test_multi_market.py",
-        "tests/test_performance_metrics.py",
-        "tests/test_realized_pnl_accounting.py"
-      ],
-      "in_degree": 9,
-      "out_degree": 1,
-      "path": "src/ai_trading/performance_metrics.py"
-    },
-    {
-      "dependencies": [
         "src/ai_trading/crisis_state_store.py",
         "src/ai_trading/governor_state_store.py",
         "src/ai_trading/lifecycle_log.py",
@@ -1651,6 +1655,25 @@
       "in_degree": 3,
       "out_degree": 7,
       "path": "src/ai_trading/startup_check.py"
+    },
+    {
+      "dependencies": [
+        "src/ai_trading/market_freshness.py",
+        "src/ai_trading/operational_overview.py",
+        "src/ai_trading/paper_cycle.py",
+        "src/ai_trading/paper_cycle_service.py",
+        "src/ai_trading/performance_metrics.py",
+        "src/ai_trading/persistence.py",
+        "src/ai_trading/persistence_factory.py",
+        "src/ai_trading/runtime_status.py"
+      ],
+      "dependents": [
+        "src/ai_trading/dashboard.py",
+        "tests/test_multi_market.py"
+      ],
+      "in_degree": 2,
+      "out_degree": 8,
+      "path": "src/ai_trading/multi_market.py"
     },
     {
       "dependencies": [
@@ -1810,27 +1833,9 @@
       "in_degree": 7,
       "out_degree": 2,
       "path": "src/ai_trading/soak.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/crisis_gate.py",
-        "src/ai_trading/expert_pool.py",
-        "src/ai_trading/expert_sandbox.py"
-      ],
-      "dependents": [
-        "src/ai_trading/cli.py",
-        "src/ai_trading/evolution.py",
-        "src/ai_trading/evolution_manager.py",
-        "tests/test_evolution.py",
-        "tests/test_expert_factory.py",
-        "tests/test_expert_horizon.py"
-      ],
-      "in_degree": 6,
-      "out_degree": 3,
-      "path": "src/ai_trading/expert_factory.py"
     }
   ],
-  "edge_count": 1936,
+  "edge_count": 1939,
   "generated_by": "dbrckk/repo-brain-v7-graph",
   "node_count": 355,
   "schema_version": 1

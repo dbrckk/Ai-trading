@@ -2232,14 +2232,22 @@ runtime_revision = persisted.revision
 runtime_model = persisted.model
 runtime_status = persistence.load_runtime_status(runtime_key)
 load_performance = getattr(persistence, "load_trade_performance", None)
+load_portfolio_performance = getattr(
+⋮----
+multi_runtime_keys = tuple(
+trade_performance = load_portfolio_performance(
+performance_scope = "full persisted cross-market history"
+performance_is_recent = False
 ⋮----
 trade_performance = calculate_performance_metrics(recent)
 performance_scope = "latest 200 cross-market trade events"
+performance_is_recent = True
 ⋮----
 trade_performance = load_performance(runtime_key)
 performance_scope = "full persisted history"
 ⋮----
 performance_scope = "latest 200 trade events"
+⋮----
 load_burnin = getattr(persistence, "list_burnin_snapshots", None)
 burnin_snapshots = tuple(load_burnin(runtime_key)) if callable(load_burnin) else ()
 load_regimes = getattr(persistence, "list_regimes", None)
@@ -2281,11 +2289,10 @@ trade_count = trade_performance.trade_count
 persisted_observations = getattr(
 ⋮----
 pnl_observations = sum(1 for trade in recent if _trade_pnl_known(trade))
-pnl_coverage_total = len(recent)
-pnl_coverage_recent = True
 ⋮----
 pnl_observations = int(persisted_observations)
-pnl_coverage_total = trade_count
+pnl_coverage_total = len(recent) if performance_is_recent else trade_count
+pnl_coverage_recent = performance_is_recent
 ⋮----
 realized_pnl = None
 wins = sum(
@@ -4473,6 +4480,12 @@ alert_markets = 0
 closed_markets = 0
 catching_up_markets = 0
 provider_gap_markets = 0
+runtime_keys = tuple(
+portfolio_performance = empty_performance_payload()
+load_portfolio_performance = getattr(
+⋮----
+portfolio_performance = performance_payload(
+except Exception:  # noqa: BLE001 - optional observer must not break overview
 ⋮----
 runtime_key = build_runtime_key(market.symbol, interval)
 allocated_cash = portfolio_cash * market.allocation
@@ -5163,16 +5176,6 @@ _MTF_MIN_DIRECTIONAL_OBSERVATIONS = 100
 ⋮----
 def _empty_model_snapshot() -> dict[str, object]
 ⋮----
-def _empty_performance_snapshot() -> dict[str, object]
-⋮----
-def _performance_snapshot(metrics) -> dict[str, object]
-⋮----
-trade_count = int(metrics.trade_count)
-observations = int(metrics.pnl_observations)
-available = observations > 0
-profit_factor = metrics.profit_factor
-profit_factor_infinite = (
-⋮----
 def _empty_shadow_quality_snapshot() -> dict[str, object]
 ⋮----
 policy = ShadowPromotionPolicy()
@@ -5236,10 +5239,10 @@ burnin = _burnin_snapshot(snapshots)
 readiness = _readiness_snapshot(snapshots, regimes, status)
 except Exception:  # noqa: BLE001 - observability boundary must sanitize backend failures
 ⋮----
-performance = _empty_performance_snapshot()
+performance = empty_performance_payload()
 performance_loader = getattr(persistence, "load_trade_performance", None)
 ⋮----
-performance = _performance_snapshot(performance_loader(runtime_key))
+performance = performance_payload(performance_loader(runtime_key))
 except Exception:  # noqa: BLE001 - optional observability must not break runtime status
 ⋮----
 shadow_quality = _empty_shadow_quality_snapshot()
@@ -5429,6 +5432,10 @@ last_raw = raw_times[-1]
 runtime_key = build_runtime_key(symbol, interval)
 runtime = self.runtime_factory(
 market = self.data_loader(symbol, period, interval)
+quality = evaluate_market_data_quality(market)
+⋮----
+reasons = ",".join(quality.reasons) or "score below threshold"
+⋮----
 prepared = runtime.prepare_market(market)
 eligible = prepared.eligible
 ⋮----
@@ -5450,6 +5457,8 @@ mtf_config = validated_mtf_shadow_config(symbol)
 mtf_candidate = (
 ⋮----
 mtf_market = (
+mtf_quality = evaluate_market_data_quality(mtf_market)
+⋮----
 mtf_current = {
 ⋮----
 mtf_execution = select_observable_execution_target(
@@ -5598,6 +5607,16 @@ max_drawdown = 0.0
 ⋮----
 peak_pnl = max(peak_pnl, cumulative_pnl)
 max_drawdown = max(max_drawdown, peak_pnl - cumulative_pnl)
+⋮----
+def empty_performance_payload() -> dict[str, object]
+⋮----
+def performance_payload(metrics: TradePerformanceMetrics) -> dict[str, object]
+⋮----
+trade_count = int(metrics.trade_count)
+observations = int(metrics.pnl_observations)
+available = observations > 0
+profit_factor = metrics.profit_factor
+profit_factor_infinite = (
 ````
 
 ## File: src/ai_trading/performance.py
@@ -7385,6 +7404,7 @@ status_code: int
 payload: dict[str, object]
 ⋮----
 _ALLOWED_SCHEDULER_SOURCES = {"cloudflare"}
+_SCHEDULER_FRESHNESS_SECONDS = 12 * 60
 ⋮----
 normalized_source = (source or "").strip().lower()
 ⋮----
@@ -7393,9 +7413,23 @@ normalized_source = "external"
 payload: dict[str, object] = {
 processed = response.payload.get("processed")
 ⋮----
+def _utc_now(now: datetime | None) -> datetime
+⋮----
+current = now or datetime.now(UTC)
+⋮----
+timestamp = datetime.fromisoformat(timestamp_utc)
+⋮----
+timestamp = timestamp.replace(tzinfo=UTC)
+⋮----
+timestamp = timestamp.astimezone(UTC)
+age = (now - timestamp).total_seconds()
+⋮----
 consecutive_cloudflare_successes = 0
 ⋮----
 latest = deliveries[-1] if deliveries else None
+current = _utc_now(now)
+latest_age_seconds = (
+cloudflare_delivery_fresh = bool(
 ⋮----
 def _authorized(authorization: str | None, configured_token: str) -> bool
 ⋮----
@@ -9029,6 +9063,16 @@ df = df.drop(index=df.index[10:110:10])
 def test_non_datetime_index_fails_cadence_quality() -> None
 ⋮----
 def test_data_quality_rejects_invalid_scoring_configuration(kwargs) -> None
+⋮----
+def test_single_session_break_in_recent_intraday_window_is_tolerated() -> None
+⋮----
+df = intraday_market(120)
+before = df.iloc[:60].copy()
+after = df.iloc[60:].copy()
+⋮----
+session_split = pd.concat([before, after])
+⋮----
+report = evaluate_market_data_quality(session_split)
 ````
 
 ## File: tests/test_data.py
@@ -9993,6 +10037,8 @@ def list_trades(self, runtime_key: str | None = None, *, limit: int | None = Non
 ⋮----
 def load_trade_performance(self, runtime_key: str)
 ⋮----
+def load_portfolio_trade_performance(self, runtime_keys: tuple[str, ...])
+⋮----
 def test_configured_markets_default_to_gold(monkeypatch) -> None
 ⋮----
 markets = configured_markets_from_env()
@@ -10376,6 +10422,8 @@ def test_service_propagates_separate_mtf_period() -> None
 def test_known_runtime_failure_writes_safe_diagnostic_code() -> None
 ⋮----
 def test_unknown_runtime_failure_stays_sanitized() -> None
+⋮----
+def test_market_data_quality_failure_writes_safe_diagnostic_code() -> None
 ````
 
 ## File: tests/test_paper_cycle_workflow.py
@@ -10513,6 +10561,19 @@ persisted = market.index[0] - pd.Timedelta(days=2)
 def test_pending_targets_reject_gap_beyond_three_days() -> None
 ⋮----
 persisted = market.index[0] - pd.Timedelta(days=4)
+⋮----
+df = sample_market(120)
+df = df.drop(index=df.index[10:110:10])
+⋮----
+def test_paper_cycle_accepts_single_tolerated_market_gap(tmp_path: Path) -> None
+⋮----
+df = df.drop(index=df.index[50])
+⋮----
+long_history = long_history.drop(index=long_history.index[10:810:10])
+⋮----
+mtf_calls = 0
+⋮----
+def fake_mtf(*args, **kwargs)
 ````
 
 ## File: tests/test_paper_execution.py
@@ -10550,6 +10611,14 @@ def test_performance_metrics_max_drawdown_uses_cumulative_realized_pnl() -> None
 def test_performance_metrics_profit_factor_is_infinite_without_losses() -> None
 ⋮----
 metrics = calculate_performance_metrics((_trade(5.0), _trade(7.0)))
+⋮----
+def test_performance_payload_marks_unmeasured_history_unavailable() -> None
+⋮----
+metrics = performance_metrics_from_totals(
+⋮----
+def test_performance_payload_serializes_infinite_profit_factor_explicitly() -> None
+⋮----
+payload = performance_payload(metrics)
 ````
 
 ## File: tests/test_performance.py
@@ -10679,6 +10748,8 @@ notionals = target_notionals(100_000.0, weights)
 ````python
 DATABASE_URL = os.environ["TEST_DATABASE_URL"]
 RUNTIME_KEY = "paper:GC=F:5m:online-river:v1"
+BTC_RUNTIME_KEY = "paper:BTC-USD:5m:online-river:v1"
+DAX_RUNTIME_KEY = "paper:^GDAXI:5m:online-river:v1"
 ⋮----
 def test_postgres_16_is_reachable() -> None
 ⋮----
@@ -10763,6 +10834,14 @@ unknown = _trade(pnl=0.0, pnl_known=False)
 def test_schema_upgrade_adds_pnl_accounting_columns_without_reset(backend) -> None
 ⋮----
 columns = {(row[0], row[1]) for row in cursor.fetchall()}
+⋮----
+def test_postgres_portfolio_performance_uses_global_trade_chronology(backend) -> None
+⋮----
+metrics = backend.load_portfolio_trade_performance(
+⋮----
+def test_postgres_portfolio_performance_empty_runtime_set_is_empty(backend) -> None
+⋮----
+metrics = backend.load_portfolio_trade_performance(())
 ````
 
 ## File: tests/test_process_watch.py
@@ -11592,11 +11671,19 @@ def test_scheduler_delivery_overview_verifies_three_consecutive_cloudflare_succe
 ⋮----
 deliveries = tuple(
 ⋮----
-overview = scheduler_delivery_overview(deliveries)
+overview = scheduler_delivery_overview(
 ⋮----
 def test_http_scheduler_exposes_durable_cloudflare_delivery_evidence(tmp_path) -> None
 ⋮----
 payload = json.loads(body)
+⋮----
+def test_scheduler_delivery_verification_expires_when_latest_success_is_stale() -> None
+⋮----
+now = datetime(2026, 9, 21, 17, 0, tzinfo=UTC)
+⋮----
+overview = scheduler_delivery_overview(deliveries, now=now)
+⋮----
+def test_scheduler_delivery_overview_rejects_invalid_freshness_window() -> None
 ````
 
 ## File: tests/test_scheduler_governor.py

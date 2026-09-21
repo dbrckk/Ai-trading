@@ -45,34 +45,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T17:47:59Z
+Generated: 2026-09-21T18:32:41Z
 
 ### Git
 - Branch: `main`
-- Head: `ff7a389dda99`
-- Commit date: 2026-09-21T19:47:44+02:00
-- Commit: feat: expose measured PnL coverage in operational overview (#96)
+- Head: `0d6b0a25bff2`
+- Commit date: 2026-09-21T20:31:43+02:00
+- Commit: fix: enforce production market data quality
 - Tracked files: 493
 
 ### Recently changed files
-- `src/ai_trading/operational_overview.py`
-- `tests/test_dashboard_overview.py`
-- `src/ai_trading/dashboard.py`
-- `tests/test_dashboard.py`
-- `tests/test_dashboard_persistence.py`
-- `src/ai_trading/broker.py`
-- `src/ai_trading/paper_execution.py`
-- `src/ai_trading/performance_metrics.py`
-- `src/ai_trading/postgres_persistence.py`
-- `src/ai_trading/runtime.py`
-- `src/ai_trading/runtime_state.py`
-- `src/ai_trading/trade_journal.py`
-- `tests/test_performance_metrics.py`
-- `tests/test_postgres_persistence.py`
-- `tests/test_realized_pnl_accounting.py`
-- `src/ai_trading/data_quality.py`
 - `tests/test_data_quality.py`
-- `README.md`
+- `tests/test_paper_cycle_service.py`
+- `tests/test_paper_cycle.py`
+- `src/ai_trading/paper_cycle_service.py`
+- `src/ai_trading/paper_cycle.py`
 
 ### Project signals
 - `pyproject.toml`

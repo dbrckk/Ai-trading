@@ -1,14 +1,12 @@
 # Change impact
 
-Base: dba45ff47cf91906b4ff2195ff250b23df957582
-Head: ff7a389dda99aa97a8b1286f6a51be15a30c3101
+Base: d0d305ea10440fd5efd440eda402bbf236e132ef
+Head: 0d6b0a25bff23ea9b7420456c8735a851c976dab
 
 ## Changed files
-- M src/ai_trading/operational_overview.py
-- M tests/test_dashboard_overview.py
+- M tests/test_data_quality.py
 
 ## Affected areas
-- src
 - tests
 
 ## Related test candidates
