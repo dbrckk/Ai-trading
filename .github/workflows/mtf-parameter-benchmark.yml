@@ -6,6 +6,7 @@ on:
       - "feat/mtf-parameter-benchmark"
       - "feat/per-market-mtf-parameter-selection"
       - "fix/mtf-benchmark-common-seed"
+      - "benchmark/mtf-robustness-validation"
     paths:
       - "src/ai_trading/mtf_parameter_benchmark.py"
       - ".github/workflows/mtf-parameter-benchmark.yml"
@@ -47,6 +48,17 @@ jobs:
           --test-window-bars 96
           --json-output artifacts/mtf_benchmark/btc-results.json
           --markdown-output artifacts/mtf_benchmark/btc-report.md
+      - name: Run robustness validation
+        run: >-
+          python -m ai_trading.mtf_parameter_benchmark
+          --profile robustness
+          --symbols "GC=F,^GDAXI,BTC-USD"
+          --period 1mo
+          --interval 5m
+          --folds 6
+          --test-window-bars 192
+          --json-output artifacts/mtf_benchmark/robustness-results.json
+          --markdown-output artifacts/mtf_benchmark/robustness-report.md
       - name: Print report
         if: always()
         run: |
@@ -55,6 +67,9 @@ jobs:
           fi
           if [ -f artifacts/mtf_benchmark/btc-report.md ]; then
             cat artifacts/mtf_benchmark/btc-report.md
+          fi
+          if [ -f artifacts/mtf_benchmark/robustness-report.md ]; then
+            cat artifacts/mtf_benchmark/robustness-report.md
           fi
       - uses: actions/upload-artifact@v4
         if: always()
