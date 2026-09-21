@@ -8,6 +8,7 @@ export async function invokePaperCycle(env, fetchImpl = fetch) {
     headers: {
       Authorization: `Bearer ${env.SCHEDULER_TOKEN}`,
       "User-Agent": "ai-trading-cloudflare-scheduler/1",
+      "X-Scheduler-Source": "cloudflare",
     },
   });
 

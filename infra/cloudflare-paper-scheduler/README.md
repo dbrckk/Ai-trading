@@ -13,6 +13,14 @@ This Worker is the external five-minute trigger for the `Ai-trading` paper execu
 
 Cloudflare does not receive `AI_TRADING_DATABASE_URL`, Neon credentials, symbols, intervals, risk settings, or order instructions. Its only job is to send an authenticated POST to Render.
 
+Each request also sends the fixed non-secret header `X-Scheduler-Source: cloudflare`. Render emits one sanitized app-log event after handling the request, for example:
+
+```json
+{"event":"scheduler_request","ok":true,"processed":1,"source":"cloudflare","status_code":200}
+```
+
+The telemetry never includes the Authorization header, scheduler token, request body/query, database URL, or provider credentials. Three consecutive `source=cloudflare`, `ok=true`, `status_code=200` events provide the production delivery evidence required by issue #40.
+
 ## Tests
 
 The Worker uses only Node built-ins for its test harness:
