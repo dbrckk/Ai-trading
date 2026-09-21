@@ -14,6 +14,13 @@ from .regime import detect_regime
 from .risk import PortfolioSnapshot, RiskEngine
 
 
+def _compound_step_returns(step_returns: list[float]) -> float:
+    growth = 1.0
+    for value in step_returns:
+        growth *= 1.0 + float(value)
+    return float(growth - 1.0)
+
+
 @dataclass(frozen=True)
 class WalkForwardConfig:
     min_train_bars: int = 252
@@ -71,7 +78,7 @@ class WalkForwardBacktester:
         broker = PaperBroker(self.risk_config)
         curve: dict[pd.Timestamp, float] = {}
         benchmark_prices: dict[pd.Timestamp, float] = {}
-        regime_equities: dict[str, list[float]] = {}
+        regime_step_returns: dict[str, list[float]] = {}
         trades = 0
         decisions = 0
         rejected = 0
@@ -114,6 +121,7 @@ class WalkForwardBacktester:
                 if execution_day != previous_execution_day:
                     broker.reset_day_start()
                     previous_execution_day = execution_day
+                equity_before_step = broker.state.equity
                 feature_row = features.loc[signal_idx, FEATURES]
                 regime = detect_regime(feature_row)
                 if self.config.use_ensemble:
@@ -140,7 +148,10 @@ class WalkForwardBacktester:
                 broker.mark(close_price)
                 curve[execution_idx] = broker.state.equity
                 benchmark_prices[execution_idx] = close_price
-                regime_equities.setdefault(regime.name, []).append(broker.state.equity)
+                if equity_before_step > 0:
+                    regime_step_returns.setdefault(regime.name, []).append(
+                        broker.state.equity / equity_before_step - 1.0
+                    )
 
             start = test_end
 
@@ -157,10 +168,11 @@ class WalkForwardBacktester:
         metrics = compute_metrics(equity, self.config.periods_per_year)
         benchmark_metrics = compute_metrics(benchmark, self.config.periods_per_year)
 
-        regime_returns = {}
-        for name, values in regime_equities.items():
-            if len(values) >= 2 and values[0] != 0:
-                regime_returns[name] = float(values[-1] / values[0] - 1.0)
+        regime_returns = {
+            name: _compound_step_returns(values)
+            for name, values in regime_step_returns.items()
+            if values
+        }
 
         return BacktestReport(
             metrics=metrics,
