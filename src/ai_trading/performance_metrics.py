@@ -9,6 +9,7 @@ from .trade_journal import TradeSnapshot
 @dataclass(frozen=True)
 class TradePerformanceMetrics:
     trade_count: int
+    pnl_observations: int
     realized_pnl: float
     average_pnl: float
     gross_profit: float
@@ -20,13 +21,19 @@ class TradePerformanceMetrics:
 def performance_metrics_from_totals(
     *,
     trade_count: int,
+    pnl_observations: int | None = None,
     realized_pnl: float,
     gross_profit: float,
     gross_loss: float,
     max_drawdown: float,
 ) -> TradePerformanceMetrics:
-    average_pnl = realized_pnl / trade_count if trade_count else 0.0
-    if gross_loss > 0.0:
+    observations = trade_count if pnl_observations is None else pnl_observations
+    if observations < 0 or observations > trade_count:
+        raise ValueError("pnl_observations must be between 0 and trade_count")
+    average_pnl = realized_pnl / observations if observations else 0.0
+    if observations == 0:
+        profit_factor: float | None = None
+    elif gross_loss > 0.0:
         profit_factor: float | None = gross_profit / gross_loss
     elif gross_profit > 0.0:
         profit_factor = float("inf")
@@ -34,6 +41,7 @@ def performance_metrics_from_totals(
         profit_factor = None
     return TradePerformanceMetrics(
         trade_count=trade_count,
+        pnl_observations=observations,
         realized_pnl=realized_pnl,
         average_pnl=average_pnl,
         gross_profit=gross_profit,
@@ -46,7 +54,8 @@ def performance_metrics_from_totals(
 def calculate_performance_metrics(
     trades: Iterable[TradeSnapshot],
 ) -> TradePerformanceMetrics:
-    pnls = tuple(trade.pnl for trade in trades)
+    snapshots = tuple(trades)
+    pnls = tuple(trade.pnl for trade in snapshots if trade.pnl_known is True)
     realized_pnl = sum(pnls)
     gross_profit = sum(pnl for pnl in pnls if pnl > 0.0)
     gross_loss = -sum(pnl for pnl in pnls if pnl < 0.0)
@@ -60,7 +69,8 @@ def calculate_performance_metrics(
         max_drawdown = max(max_drawdown, peak_pnl - cumulative_pnl)
 
     return performance_metrics_from_totals(
-        trade_count=len(pnls),
+        trade_count=len(snapshots),
+        pnl_observations=len(pnls),
         realized_pnl=realized_pnl,
         gross_profit=gross_profit,
         gross_loss=gross_loss,
