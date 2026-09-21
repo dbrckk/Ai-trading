@@ -37,6 +37,7 @@ from .meta_store import MetaRouterStore
 from .model_blend import BlendComponent, blend_predictions
 from .model_quality import evaluate_model_quality
 from .model_quarantine import ModelQuarantineStore
+from .multiasset_market_context import prepare_multiasset_market_context
 from .multiasset_state import AssetPosition, MultiAssetStateStore
 from .online import RiverDirectionModel
 from .pnl_attribution import attribute_pnl
@@ -230,32 +231,17 @@ class MultiAssetPaperRuntime:
         temp.replace(path)
 
     def step(self, markets: dict[str, pd.DataFrame]) -> MultiAssetStepResult:
-        if len(markets) < 2:
-            raise ValueError("Need at least two assets")
-
         with RuntimeLock(self.lock_path):
-            closes = {}
-            opens = {}
-            execution_times: set[str] = set()
-            features_by_symbol: dict[str, pd.DataFrame] = {}
-            labels_by_symbol: dict[str, pd.Series] = {}
-
-            for symbol, df in markets.items():
-                if len(df) < 40:
-                    raise ValueError(f"Insufficient data for {symbol}")
-                closes[symbol] = df["Close"].astype(float)
-                opens[symbol] = df["Open"].astype(float)
-                execution_times.add(str(df.index[-1]))
-                features_by_symbol[symbol] = make_features(df)
-                labels_by_symbol[symbol] = make_labels(
-                    df,
-                    horizon_bars=self.model_config.horizon_bars,
-                    return_threshold=self.model_config.return_threshold,
-                )
-
-            if len(execution_times) != 1:
-                raise ValueError("Assets are not aligned on the same latest bar")
-            execution_time = next(iter(execution_times))
+            market_context = prepare_multiasset_market_context(
+                markets,
+                self.model_config,
+            )
+            closes = market_context.closes
+            opens = market_context.opens
+            features_by_symbol = market_context.features_by_symbol
+            labels_by_symbol = market_context.labels_by_symbol
+            execution_time = market_context.execution_time
+            returns = market_context.returns
 
             state = self.state_store.load(self.risk_config.starting_cash)
             persisted_crisis = self.crisis_state_store.load()
@@ -273,11 +259,6 @@ class MultiAssetPaperRuntime:
                     risk_approved=False,
                     risk_reasons=("bar already processed",),
                 )
-
-            close_frame = pd.DataFrame(closes).dropna()
-            returns = close_frame.pct_change().dropna()
-            if len(returns) < 20:
-                raise ValueError("Insufficient aligned return history")
 
             base_weights = inverse_volatility_weights(returns, self.allocation_config)
             allowed_asset_count = max(
