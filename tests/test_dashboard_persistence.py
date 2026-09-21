@@ -296,7 +296,7 @@ def test_dashboard_surfaces_verified_scheduler_delivery(tmp_path) -> None:
     assert "VERIFIED" in page
     assert "3 / 3" in page
     assert "cloudflare" in page
-    assert "Last delivery age" in page
+    assert "fresh delivery within 12 minutes" in page
     assert "Authentication material is never persisted or displayed." in page
 
 
