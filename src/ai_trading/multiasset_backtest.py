@@ -10,6 +10,7 @@ from .features import FEATURES, make_features, make_labels
 from .performance import PerformanceMetrics, compute_metrics, infer_periods_per_year
 from .portfolio import AllocationConfig, inverse_volatility_weights, target_notionals
 from .portfolio_intelligence import PortfolioIntelligenceConfig, apply_portfolio_intelligence
+from .paper_execution import calculate_rebalance_fill
 from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
 from .regime import detect_regime
 
@@ -137,15 +138,18 @@ class MultiAssetWalkForwardBacktester:
                 if risk.approved:
                     for symbol in intelligent.index:
                         price = float(aligned[symbol].at[execution_idx, "Open"])
-                        desired_units = float(notionals[symbol]) / price
-                        delta_units = desired_units - units[symbol]
-                        gross = abs(delta_units) * price
-                        bps = self.risk_config.transaction_cost_bps + self.risk_config.slippage_bps
-                        cash -= delta_units * price
-                        cash -= gross * bps / 10_000.0
-                        if abs(delta_units) > 1e-12:
+                        fill = calculate_rebalance_fill(
+                            current_units=units[symbol],
+                            target_notional=float(notionals[symbol]),
+                            price=price,
+                            transaction_cost_bps=self.risk_config.transaction_cost_bps,
+                            slippage_bps=self.risk_config.slippage_bps,
+                        )
+                        cash -= fill.delta_units * price
+                        cash -= fill.costs
+                        if abs(fill.delta_units) > 1e-12:
                             trades += 1
-                        units[symbol] = desired_units
+                        units[symbol] = fill.desired_units
                 else:
                     rejected += 1
 
