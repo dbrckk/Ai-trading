@@ -241,6 +241,10 @@ def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
     assert "Catch-up / provider gaps" in page
     assert "MTF this cycle" in page
     assert "YES" in page
+    assert "captureViewportAnchor" in page
+    assert "restoreViewportAnchor" in page
+    assert "overflow-anchor: none" in page
+    assert "window.scrollTo" not in page
 
 
 
