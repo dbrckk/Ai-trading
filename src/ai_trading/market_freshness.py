@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime, time
-from zoneinfo import ZoneInfo
-
 from .runtime_status import HostedRuntimeStatus
 
 
@@ -20,6 +18,8 @@ def _utc_now(now: datetime | None) -> datetime:
 
 
 def market_session_open(symbol: str, *, now: datetime | None = None) -> bool | None:
+    from zoneinfo import ZoneInfo
+
     """Return the expected weekly session state for supported paper markets.
 
     This intentionally models regular weekly sessions only. Exchange holidays are
