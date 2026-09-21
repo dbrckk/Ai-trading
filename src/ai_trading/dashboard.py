@@ -1075,6 +1075,26 @@ def serve_dashboard(
             return dict(_STORAGE_ERROR_STATUS)
 
     class Handler(BaseHTTPRequestHandler):
+        server_version = "AITrading"
+        sys_version = ""
+
+        def end_headers(self) -> None:
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.send_header("X-Frame-Options", "DENY")
+            self.send_header("Referrer-Policy", "no-referrer")
+            self.send_header(
+                "Permissions-Policy",
+                "camera=(), microphone=(), geolocation=()",
+            )
+            self.send_header(
+                "Content-Security-Policy",
+                "default-src 'self'; base-uri 'none'; frame-ancestors 'none'; "
+                "form-action 'none'; object-src 'none'; img-src 'self' data:; "
+                "style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; "
+                "connect-src 'self'",
+            )
+            super().end_headers()
+
         def _send_json(
             self,
             payload: dict[str, object],
