@@ -39,6 +39,7 @@ from .model_quality import evaluate_model_quality
 from .model_quarantine import ModelQuarantineStore
 from .multiasset_state import AssetPosition, MultiAssetStateStore
 from .online import RiverDirectionModel
+from .paper_execution import calculate_rebalance_fill
 from .pnl_attribution import attribute_pnl
 from .portfolio import AllocationConfig, inverse_volatility_weights, target_notionals
 from .portfolio_intelligence import (
@@ -915,16 +916,18 @@ class MultiAssetPaperRuntime:
                 for symbol in intelligent_weights.index:
                     price = float(opens[symbol].iloc[-1])
                     position = state.positions.setdefault(symbol, AssetPosition())
-                    desired_units = float(notionals[symbol]) / price
-                    delta_units = desired_units - position.units
-                    gross = abs(delta_units) * price
-                    bps = self.risk_config.transaction_cost_bps + self.risk_config.slippage_bps
-                    symbol_costs = gross * bps / 10_000.0
-                    total_costs += symbol_costs
-                    turnover_by_symbol[symbol] = gross
-                    costs_by_symbol[symbol] = symbol_costs
-                    state.cash -= delta_units * price
-                    position.units = desired_units
+                    fill = calculate_rebalance_fill(
+                        current_units=position.units,
+                        target_notional=float(notionals[symbol]),
+                        price=price,
+                        transaction_cost_bps=self.risk_config.transaction_cost_bps,
+                        slippage_bps=self.risk_config.slippage_bps,
+                    )
+                    total_costs += fill.costs
+                    turnover_by_symbol[symbol] = fill.gross_turnover
+                    costs_by_symbol[symbol] = fill.costs
+                    state.cash -= fill.delta_units * price
+                    position.units = fill.desired_units
                     position.last_price = float(closes[symbol].iloc[-1])
 
                 state.cash -= total_costs
