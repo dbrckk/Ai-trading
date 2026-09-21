@@ -2178,6 +2178,12 @@ def _display_units(value: float | None) -> str
 ⋮----
 def _display_ratio(value: float | None) -> str
 ⋮----
+def _trade_pnl_known(trade: object) -> bool
+⋮----
+marker = getattr(trade, "pnl_known", None)
+⋮----
+def _display_trade_pnl(trade: object) -> str
+⋮----
 def _equity_chart_svg(snapshots: tuple[BurnInSnapshot, ...]) -> str
 ⋮----
 values = [float(snapshot.equity) for snapshot in snapshots]
@@ -2258,6 +2264,9 @@ trades = reversed(recent)
 ⋮----
 realized_pnl: float | None = None
 trade_count: int | None = None
+pnl_observations: int | None = None
+pnl_coverage_total: int | None = None
+pnl_coverage_recent = False
 wins: int | None = None
 losses: int | None = None
 win_rate: float | None = None
@@ -2269,8 +2278,18 @@ position_value: float | None = None
 ⋮----
 realized_pnl = trade_performance.realized_pnl
 trade_count = trade_performance.trade_count
-wins = sum(1 for trade in recent if trade.pnl > 0)
-losses = sum(1 for trade in recent if trade.pnl < 0)
+persisted_observations = getattr(
+⋮----
+pnl_observations = sum(1 for trade in recent if _trade_pnl_known(trade))
+pnl_coverage_total = len(recent)
+pnl_coverage_recent = True
+⋮----
+pnl_observations = int(persisted_observations)
+pnl_coverage_total = trade_count
+⋮----
+realized_pnl = None
+wins = sum(
+losses = sum(
 win_rate = (wins / (wins + losses)) if wins + losses else 0.0
 active_symbols = len({trade.symbol for trade in recent})
 cash = state.cash if state is not None else starting_cash
@@ -2325,6 +2344,11 @@ rows = '<tr><td colspan="9">No trades recorded yet.</td></tr>'
 ⋮----
 trade_count_display = "-" if trade_count is None else str(trade_count)
 pnl_display = _display_money(realized_pnl)
+⋮----
+pnl_coverage_display = "-"
+⋮----
+recent_suffix = " recent" if pnl_coverage_recent else ""
+pnl_coverage_display = (
 win_rate_display = "-" if win_rate is None else f"{win_rate:.1%}"
 wins_losses_display = "-" if wins is None or losses is None else f"{wins} / {losses}"
 active_symbols_display = "-" if active_symbols is None else str(active_symbols)
@@ -5139,6 +5163,16 @@ _MTF_MIN_DIRECTIONAL_OBSERVATIONS = 100
 ⋮----
 def _empty_model_snapshot() -> dict[str, object]
 ⋮----
+def _empty_performance_snapshot() -> dict[str, object]
+⋮----
+def _performance_snapshot(metrics) -> dict[str, object]
+⋮----
+trade_count = int(metrics.trade_count)
+observations = int(metrics.pnl_observations)
+available = observations > 0
+profit_factor = metrics.profit_factor
+profit_factor_infinite = (
+⋮----
 def _empty_shadow_quality_snapshot() -> dict[str, object]
 ⋮----
 policy = ShadowPromotionPolicy()
@@ -5202,11 +5236,16 @@ burnin = _burnin_snapshot(snapshots)
 readiness = _readiness_snapshot(snapshots, regimes, status)
 except Exception:  # noqa: BLE001 - observability boundary must sanitize backend failures
 ⋮----
+performance = _empty_performance_snapshot()
+performance_loader = getattr(persistence, "load_trade_performance", None)
+⋮----
+performance = _performance_snapshot(performance_loader(runtime_key))
+except Exception:  # noqa: BLE001 - optional observability must not break runtime status
+⋮----
 shadow_quality = _empty_shadow_quality_snapshot()
 shadow_loader = getattr(persistence, "load_shadow_quality", None)
 ⋮----
 shadow_quality = _shadow_quality_snapshot(shadow_loader(runtime_key))
-except Exception:  # noqa: BLE001 - optional observability must not break runtime status
 ⋮----
 mtf_shadow_quality = _empty_mtf_shadow_quality_snapshot(mtf_config)
 mtf_shadow_loader = getattr(persistence, "load_mtf_shadow_quality", None)
@@ -8755,6 +8794,8 @@ def list_regimes(self, runtime_key: str) -> tuple[str, ...]
 ⋮----
 def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None
 ⋮----
+def load_trade_performance(self, runtime_key: str)
+⋮----
 def load_shadow_quality(self, runtime_key: str) -> ShadowQualityComparison
 ⋮----
 river = ModelQuality(
@@ -8840,6 +8881,12 @@ def load_mtf_shadow_quality(self, runtime_key: str, **kwargs)
 def test_btc_overview_exposes_validated_mtf_candidate() -> None
 ⋮----
 mtf = payload["mtf_shadow_challenger"]
+⋮----
+class NoMeasuredPnlOverviewPersistence(OverviewPersistence)
+⋮----
+def test_operational_overview_does_not_expose_unknown_pnl_as_zero() -> None
+⋮----
+performance = payload["performance"]
 ````
 
 ## File: tests/test_dashboard_persistence.py
@@ -8941,6 +8988,8 @@ def test_dashboard_renders_premium_terminal_shell(tmp_path) -> None
 page = render_dashboard(TradeJournal(tmp_path / "empty.jsonl"))
 ⋮----
 def test_dashboard_live_refresh_preserves_scroll_without_meta_reload(tmp_path) -> None
+⋮----
+def test_dashboard_does_not_render_legacy_unknown_pnl_as_zero(tmp_path) -> None
 ````
 
 ## File: tests/test_data_quality.py

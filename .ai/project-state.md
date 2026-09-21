@@ -45,16 +45,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T17:43:31Z
+Generated: 2026-09-21T17:47:59Z
 
 ### Git
 - Branch: `main`
-- Head: `e3ec0bfb1744`
-- Commit date: 2026-09-21T19:43:19+02:00
-- Commit: fix: calculate and persist realized paper PnL (#94)
+- Head: `ff7a389dda99`
+- Commit date: 2026-09-21T19:47:44+02:00
+- Commit: feat: expose measured PnL coverage in operational overview (#96)
 - Tracked files: 493
 
 ### Recently changed files
+- `src/ai_trading/operational_overview.py`
+- `tests/test_dashboard_overview.py`
+- `src/ai_trading/dashboard.py`
+- `tests/test_dashboard.py`
+- `tests/test_dashboard_persistence.py`
 - `src/ai_trading/broker.py`
 - `src/ai_trading/paper_execution.py`
 - `src/ai_trading/performance_metrics.py`
@@ -68,13 +73,6 @@ Generated: 2026-09-21T17:43:31Z
 - `src/ai_trading/data_quality.py`
 - `tests/test_data_quality.py`
 - `README.md`
-- `src/ai_trading/dashboard.py`
-- `tests/test_dashboard_persistence.py`
-- `src/ai_trading/backtest.py`
-- `src/ai_trading/mtf_parameter_benchmark.py`
-- `src/ai_trading/multi_market.py`
-- `src/ai_trading/multiasset_backtest.py`
-- `tests/test_multi_market.py`
 
 ### Project signals
 - `pyproject.toml`

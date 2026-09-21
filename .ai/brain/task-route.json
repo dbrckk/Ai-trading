@@ -9,10 +9,10 @@
     "top_score": 26
   },
   "cache": {
-    "fingerprint": "a91d06f61bb99f8e5cf16ce983d8e4cb4fb81754b4d361faefce705d20f91900",
+    "fingerprint": "92968648a5e72e8c6ce6331e6cc9893f1c5a65ee3c975dbc08c9d82aaea73448",
     "hit": false
   },
-  "candidate_count": 48,
+  "candidate_count": 17,
   "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
   "files": [
     {
@@ -20,7 +20,7 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/runtime.py",
+      "path": "src/ai_trading/dashboard.py",
       "reasons": [
         "impact",
         "recently-changed",
@@ -28,18 +28,25 @@
       ],
       "score": 26,
       "symbols": [
-        "PaperAutonomousRuntime",
-        "PreparedRuntimeMarket",
-        "RuntimeStepResult",
-        "_broker_from_state",
-        "_eligible_execution_indices",
-        "_prepare_market_features",
-        "_state_from_broker",
-        "_step_prepared_locked",
-        "prepare_market",
-        "step",
-        "step_at",
-        "step_prepared"
+        "Handler",
+        "_display_money",
+        "_display_ratio",
+        "_display_trade_pnl",
+        "_display_units",
+        "_equity_chart_svg",
+        "_public_runtime_snapshot",
+        "_readiness_number",
+        "_readiness_panel",
+        "_send_json",
+        "_trade_pnl_known",
+        "do_GET",
+        "do_POST",
+        "end_headers",
+        "execute_paper_cycle",
+        "load_status_snapshot",
+        "log_message",
+        "render_dashboard",
+        "serve_dashboard"
       ]
     },
     {
@@ -81,30 +88,24 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/dashboard.py",
+      "path": "src/ai_trading/runtime.py",
       "reasons": [
-        "impact",
         "search-index"
       ],
-      "score": 23,
+      "score": 17,
       "symbols": [
-        "Handler",
-        "_display_money",
-        "_display_ratio",
-        "_display_units",
-        "_equity_chart_svg",
-        "_public_runtime_snapshot",
-        "_readiness_number",
-        "_readiness_panel",
-        "_send_json",
-        "do_GET",
-        "do_POST",
-        "end_headers",
-        "execute_paper_cycle",
-        "load_status_snapshot",
-        "log_message",
-        "render_dashboard",
-        "serve_dashboard"
+        "PaperAutonomousRuntime",
+        "PreparedRuntimeMarket",
+        "RuntimeStepResult",
+        "_broker_from_state",
+        "_eligible_execution_indices",
+        "_prepare_market_features",
+        "_state_from_broker",
+        "_step_prepared_locked",
+        "prepare_market",
+        "step",
+        "step_at",
+        "step_prepared"
       ]
     },
     {
@@ -127,24 +128,6 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/engine.py",
-      "reasons": [
-        "impact"
-      ],
-      "score": 16,
-      "symbols": [
-        "RunResult",
-        "TradingEngine",
-        "__init__",
-        "paper_run",
-        "train"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "engine"
-      ],
       "path": "tests/test_dashboard_engine_status.py",
       "reasons": [
         "impact"
@@ -152,6 +135,22 @@
       "score": 16,
       "symbols": [
         "test_dashboard_shows_engine_and_latest_decision"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "engine"
+      ],
+      "path": "src/ai_trading/engine.py",
+      "reasons": [],
+      "score": 10,
+      "symbols": [
+        "RunResult",
+        "TradingEngine",
+        "__init__",
+        "paper_run",
+        "train"
       ]
     }
   ],
