@@ -76,6 +76,12 @@ def _trade_pnl_known(trade: object) -> bool:
     return bool(marker)
 
 
+def _display_trade_pnl(trade: object) -> str:
+    if not _trade_pnl_known(trade):
+        return "—"
+    return f"{float(getattr(trade, 'pnl', 0.0)):.2f}"
+
+
 def _equity_chart_svg(snapshots: tuple[BurnInSnapshot, ...]) -> str:
     if len(snapshots) < 2:
         return '<div class="chart-empty">Need at least two burn-in points.</div>'
@@ -366,7 +372,7 @@ def render_dashboard(
             f"<td>{t.quantity:g}</td>"
             f"<td>{t.price:.4f}</td>"
             f"<td>{html.escape(t.status)}</td>"
-            f"<td>{f'{t.pnl:.2f}' if _trade_pnl_known(t) else '—'}</td>"
+            f"<td>{_display_trade_pnl(t)}</td>"
             f"<td>{'-' if t.confidence is None else f'{t.confidence:.1%}'}</td>"
             f"<td>{html.escape(t.strategy)}</td>"
             "</tr>"
