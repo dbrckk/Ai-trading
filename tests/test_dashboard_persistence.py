@@ -148,6 +148,11 @@ def _get(url: str) -> tuple[int, str]:
         return response.status, response.read().decode()
 
 
+def _get_with_headers(url: str):
+    with urlopen(url, timeout=2) as response:
+        return response.status, response.headers, response.read().decode()
+
+
 def _start_failure_dashboard() -> int:
     port = _free_port()
     thread = Thread(
@@ -263,6 +268,19 @@ def test_dashboard_surfaces_verified_scheduler_delivery(tmp_path) -> None:
     assert "cloudflare" in page
     assert "2026-09-21T16:10:00+00:00" in page
     assert "Authentication material is never persisted or displayed." in page
+
+
+def test_dashboard_http_responses_include_security_headers() -> None:
+    port = _start_failure_dashboard()
+    status, headers, _ = _get_with_headers(f"http://127.0.0.1:{port}/healthz")
+
+    assert status == 200
+    assert headers["X-Content-Type-Options"] == "nosniff"
+    assert headers["X-Frame-Options"] == "DENY"
+    assert headers["Referrer-Policy"] == "no-referrer"
+    assert headers["Permissions-Policy"] == "camera=(), microphone=(), geolocation=()"
+    assert "frame-ancestors 'none'" in headers["Content-Security-Policy"]
+    assert "Python" not in headers["Server"]
 
 
 def test_dashboard_v2_groups_critical_sections_and_renders_equity_chart(tmp_path) -> None:
