@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import pytest
 
 from ai_trading.performance import buy_and_hold_equity, compute_metrics, infer_periods_per_year
 
@@ -19,10 +20,14 @@ def test_buy_and_hold_is_normalized_to_starting_equity() -> None:
     assert curve.iloc[-1] == 120_000.0
 
 
-import pytest
-
 
 def test_infer_periods_per_year_from_elapsed_timestamps() -> None:
     index = pd.date_range("2026-01-01", periods=13, freq="30D", tz="UTC")
     periods = infer_periods_per_year(index)
     assert periods == pytest.approx(12.175, rel=0.02)
+
+
+def test_extreme_short_window_annualization_stays_finite() -> None:
+    equity = pd.Series([1.0, 1e100])
+    metrics = compute_metrics(equity, periods_per_year=525_600.0)
+    assert np.isfinite(metrics.annualized_return)

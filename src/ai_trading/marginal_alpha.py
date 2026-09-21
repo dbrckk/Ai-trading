@@ -29,6 +29,7 @@ def evaluate_marginal_alpha(
             candidate_returns.rename("candidate"),
         ],
         axis=1,
+        sort=False,
     ).dropna()
     if len(frame) < 20:
         raise ValueError("Need at least 20 aligned observations")
