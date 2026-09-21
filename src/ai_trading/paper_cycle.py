@@ -231,6 +231,9 @@ class PaperCycleRunner:
                         if not mtf_period or mtf_period == period
                         else self.data_loader(symbol, mtf_period, interval)
                     )
+                    mtf_quality = evaluate_market_data_quality(mtf_market)
+                    if not mtf_quality.valid:
+                        raise RuntimeError("MTF market data failed quality gate")
                     mtf_current = {
                         str(index): index
                         for index in mtf_market.index
