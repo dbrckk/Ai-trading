@@ -492,6 +492,7 @@ def render_dashboard(
             deliveries = tuple(list_deliveries(limit=20)) if callable(list_deliveries) else ()
             scheduler_overview = scheduler_delivery_overview(deliveries)
             scheduler_verified = bool(scheduler_overview["cloudflare_delivery_verified"])
+            scheduler_fresh = bool(scheduler_overview["cloudflare_delivery_fresh"])
             scheduler_delivery_count = int(scheduler_overview["delivery_count"])
             scheduler_successes = int(
                 scheduler_overview["consecutive_cloudflare_successes"]
@@ -505,10 +506,24 @@ def render_dashboard(
             scheduler_last_delivery = str(
                 scheduler_overview["last_delivery_timestamp_utc"] or "-"
             )
+            scheduler_age = scheduler_overview["last_delivery_age_seconds"]
+            scheduler_age_display = (
+                "-"
+                if scheduler_age is None
+                else (
+                    f"{float(scheduler_age):.0f}s"
+                    if float(scheduler_age) < 120.0
+                    else f"{float(scheduler_age) / 60.0:.1f}m"
+                )
+            )
             scheduler_state = (
                 "VERIFIED"
                 if scheduler_verified
-                else ("COLLECTING" if scheduler_delivery_count else "WAITING")
+                else (
+                    "STALE"
+                    if scheduler_successes >= 3 and not scheduler_fresh
+                    else ("COLLECTING" if scheduler_delivery_count else "WAITING")
+                )
             )
             scheduler_state_class = "status-ok" if scheduler_verified else "status-warn"
             scheduler_panel = f"""
@@ -521,8 +536,9 @@ def render_dashboard(
 <div class="metric"><small>Last source</small><strong>{html.escape(scheduler_last_source)}</strong></div>
 <div class="metric"><small>Last HTTP status</small><strong>{html.escape(scheduler_last_status)}</strong></div>
 <div class="metric"><small>Last delivery</small><strong>{html.escape(scheduler_last_delivery)}</strong></div>
+<div class="metric"><small>Last delivery age</small><strong>{html.escape(scheduler_age_display)}</strong></div>
 </div>
-<small class="runtime-reason">Verification requires at least three consecutive successful Cloudflare deliveries. Authentication material is never persisted or displayed.</small>
+<small class="runtime-reason">Verification requires at least three consecutive successful Cloudflare deliveries and a fresh delivery within 12 minutes. Authentication material is never persisted or displayed.</small>
 </section>
 """
         except Exception:
