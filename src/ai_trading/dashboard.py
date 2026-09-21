@@ -195,15 +195,19 @@ def render_dashboard(
                     multi_runtime_keys
                 )
                 performance_scope = "full persisted cross-market history"
+                performance_is_recent = False
             elif multi_market_view:
                 trade_performance = calculate_performance_metrics(recent)
                 performance_scope = "latest 200 cross-market trade events"
+                performance_is_recent = True
             elif callable(load_performance):
                 trade_performance = load_performance(runtime_key)
                 performance_scope = "full persisted history"
+                performance_is_recent = False
             else:
                 trade_performance = calculate_performance_metrics(recent)
                 performance_scope = "latest 200 trade events"
+                performance_is_recent = True
             load_burnin = getattr(persistence, "list_burnin_snapshots", None)
             burnin_snapshots = tuple(load_burnin(runtime_key)) if callable(load_burnin) else ()
             load_regimes = getattr(persistence, "list_regimes", None)
@@ -230,6 +234,7 @@ def render_dashboard(
             runtime_status_store.load() if runtime_status_store is not None else None
         )
         trade_performance = calculate_performance_metrics(recent)
+        performance_is_recent = True
         burnin_snapshots = ()
         regimes = ()
         burnin_metrics = None
@@ -260,14 +265,12 @@ def render_dashboard(
         )
         if persisted_observations is None:
             pnl_observations = sum(1 for trade in recent if _trade_pnl_known(trade))
-            pnl_coverage_total = len(recent)
-            pnl_coverage_recent = True
         else:
             pnl_observations = int(persisted_observations)
-            pnl_coverage_total = trade_count
-            pnl_coverage_recent = False
-            if pnl_observations == 0:
-                realized_pnl = None
+        pnl_coverage_total = len(recent) if performance_is_recent else trade_count
+        pnl_coverage_recent = performance_is_recent
+        if pnl_observations == 0:
+            realized_pnl = None
         wins = sum(
             1
             for trade in recent
