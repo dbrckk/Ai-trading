@@ -17,6 +17,22 @@ class GlobalAllocatorConfig:
     cost_penalty: float = 1.0
     turnover_penalty: float = 0.25
 
+    def __post_init__(self) -> None:
+        if not 0.0 < self.cvar_alpha < 1.0:
+            raise ValueError("cvar_alpha must be in (0, 1)")
+        if self.max_cvar < 0:
+            raise ValueError("max_cvar must be non-negative")
+        if not 0.0 < self.max_asset_weight <= 1.0:
+            raise ValueError("max_asset_weight must be in (0, 1]")
+        if not 0.0 < self.max_expert_weight <= 1.0:
+            raise ValueError("max_expert_weight must be in (0, 1]")
+        if self.max_turnover < 0:
+            raise ValueError("max_turnover must be non-negative")
+        if self.target_gross_exposure <= 0:
+            raise ValueError("target_gross_exposure must be positive")
+        if self.cost_penalty < 0 or self.turnover_penalty < 0:
+            raise ValueError("allocator penalties must be non-negative")
+
 
 @dataclass(frozen=True)
 class GlobalAllocationReport:
@@ -34,6 +50,8 @@ def expected_shortfall(
     *,
     alpha: float = 0.95,
 ) -> float:
+    if not 0.0 < alpha < 1.0:
+        raise ValueError("alpha must be in (0, 1)")
     clean = returns.astype(float).dropna()
     if clean.empty:
         return 0.0
@@ -88,6 +106,8 @@ def allocate_global_capital(
     config: GlobalAllocatorConfig | None = None,
 ) -> GlobalAllocationReport:
     config = config or GlobalAllocatorConfig()
+    if transaction_cost_bps < 0:
+        raise ValueError("transaction_cost_bps must be non-negative")
     columns = opportunity_returns.columns
     alpha = expected_alpha.reindex(columns).fillna(0.0).astype(float)
     q = quality.reindex(columns).fillna(0.0).clip(lower=0.0).astype(float)

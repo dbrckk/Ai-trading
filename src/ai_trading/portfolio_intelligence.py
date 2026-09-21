@@ -19,6 +19,22 @@ class PortfolioIntelligenceConfig:
     correlation_soft_limit: float = 0.70
     correlation_hard_limit: float = 0.90
 
+    def __post_init__(self) -> None:
+        if self.target_annual_volatility <= 0:
+            raise ValueError("target_annual_volatility must be positive")
+        if self.min_leverage <= 0 or self.max_leverage < self.min_leverage:
+            raise ValueError("leverage bounds must satisfy 0 < min_leverage <= max_leverage")
+        if not 0.0 <= self.drawdown_soft_limit < self.drawdown_hard_limit <= 1.0:
+            raise ValueError("drawdown limits must satisfy 0 <= soft < hard <= 1")
+        if self.stress_vol_multiplier <= 0:
+            raise ValueError("stress_vol_multiplier must be positive")
+        if not 0.0 <= self.confidence_floor < 1.0:
+            raise ValueError("confidence_floor must be in [0, 1)")
+        if self.confidence_power <= 0:
+            raise ValueError("confidence_power must be positive")
+        if not 0.0 <= self.correlation_soft_limit < self.correlation_hard_limit <= 1.0:
+            raise ValueError("correlation limits must satisfy 0 <= soft < hard <= 1")
+
 
 @dataclass(frozen=True)
 class PortfolioIntelligenceReport:

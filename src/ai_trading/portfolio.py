@@ -13,6 +13,16 @@ class AllocationConfig:
     target_gross_exposure: float = 1.0
     correlation_penalty: float = 0.50
 
+    def __post_init__(self) -> None:
+        if not 0.0 < self.max_asset_weight <= 1.0:
+            raise ValueError("max_asset_weight must be in (0, 1]")
+        if self.min_asset_weight < 0 or self.min_asset_weight > self.max_asset_weight:
+            raise ValueError("min_asset_weight must be between 0 and max_asset_weight")
+        if self.target_gross_exposure <= 0:
+            raise ValueError("target_gross_exposure must be positive")
+        if not 0.0 <= self.correlation_penalty <= 1.0:
+            raise ValueError("correlation_penalty must be in [0, 1]")
+
 
 def _cap_and_normalize(
     weights: pd.Series,

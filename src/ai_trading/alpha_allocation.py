@@ -12,6 +12,14 @@ class AlphaAllocationConfig:
     target_gross_exposure: float = 1.0
     min_signal_quality: float = 0.05
 
+    def __post_init__(self) -> None:
+        if not 0.0 < self.max_asset_weight <= 1.0:
+            raise ValueError("max_asset_weight must be in (0, 1]")
+        if self.target_gross_exposure <= 0:
+            raise ValueError("target_gross_exposure must be positive")
+        if not 0.0 <= self.min_signal_quality <= 1.0:
+            raise ValueError("min_signal_quality must be in [0, 1]")
+
 
 def alpha_risk_weights(
     expected_alpha: pd.Series,
