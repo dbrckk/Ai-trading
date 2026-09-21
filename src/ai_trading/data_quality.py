@@ -13,9 +13,9 @@ class DataQualityReport:
     invalid_price_fraction: float
     ohlc_violation_fraction: float
     stale_fraction: float
-    gap_fraction: float
     valid: bool
     reasons: tuple[str, ...]
+    gap_fraction: float = 0.0
 
 
 def evaluate_market_data_quality(
@@ -87,7 +87,7 @@ def evaluate_market_data_quality(
         if not positive.empty:
             cadence = positive.median()
             if cadence > pd.Timedelta(0):
-                gap_fraction = float((positive > cadence * 3).mean())
+                gap_fraction = float((positive > cadence * 1.5).mean())
 
     score = (
         0.40 * completeness
