@@ -24,6 +24,11 @@ def evaluate_market_data_quality(
     lookback: int = 100,
     min_score: float = 0.95,
 ) -> DataQualityReport:
+    if lookback < 3:
+        raise ValueError("lookback must be at least 3")
+    if not 0.0 <= min_score <= 1.0:
+        raise ValueError("min_score must be in [0, 1]")
+
     required_columns = ["Open", "High", "Low", "Close"]
     missing_columns = [column for column in required_columns if column not in df.columns]
     if missing_columns:
