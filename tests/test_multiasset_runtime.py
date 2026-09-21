@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import numpy as np
@@ -56,6 +57,16 @@ def test_multiasset_runtime_is_persistent_and_idempotent(tmp_path: Path) -> None
     assert sum(abs(v) for v in first.weights.values()) <= 1.0 + 1e-9
     assert not second.processed
     assert "bar already processed" in second.risk_reasons
+
+    records = [
+        json.loads(line)
+        for line in (tmp_path / "audit.jsonl").read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    step_record = next(record for record in records if record["event"] == "multiasset_runtime_step")
+    intelligence = step_record["payload"]["intelligence"]
+    assert 0.0 <= intelligence["max_pair_correlation"] <= 1.0
+    assert 0.0 < intelligence["correlation_scale"] <= 1.0
 
 
 

@@ -1002,6 +1002,8 @@ class MultiAssetPaperRuntime:
                         "drawdown_scale": intelligence.drawdown_scale,
                         "stress_scale": intelligence.stress_scale,
                         "confidence_scale": intelligence.confidence_scale,
+                        "correlation_scale": intelligence.correlation_scale,
+                        "max_pair_correlation": intelligence.max_pair_correlation,
                         "stress_detected": intelligence.stress_detected,
                     },
                     "signals": signals,
