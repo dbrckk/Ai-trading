@@ -1,15 +1,15 @@
 # CI status
 
-Summary: 4 success / 3 failure / 1 active
+Summary: 4 success / 2 failure / 2 active
 
-- CI: in_progress / pending (196af4b1)
-- CI: completed / success (50bf678c)
-- CI: completed / failure (da297c3e)
-- CI: completed / failure (34810607)
-- CI: completed / failure (89beab89)
-- Deploy Cloudflare Paper Scheduler: completed / success (56783968)
-- CI: completed / success (56783968)
-- CI: completed / success (4fc881c6)
+- CI: in_progress / pending (f724fd41)
+- CI: in_progress / pending (2bd22522)
+- CI: completed / success (aae21630)
+- Paper Cycle: completed / success (116abfda)
+- CI: completed / failure (7d118ad7)
+- Precise semantic refresh: completed / success (116abfda)
+- CI: completed / failure (d328f9d3)
+- CI: completed / success (196af4b1)
 
 ## Latest failed run structure
 - Job: test

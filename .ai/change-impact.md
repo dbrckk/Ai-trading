@@ -1,21 +1,19 @@
 # Change impact
 
-Base: 80974a48a2c567429617ac87b79ea7914bb264b8
-Head: 196af4b15cb22ffdddfeed29d16379af539302e5
+Base: 116abfda5b959ba2a6a633f122f01b5eb8b8a66c
+Head: f724fd415c598e992dfdc7858f826731ad4123cf
 
 ## Changed files
-- M src/ai_trading/multiasset_runtime.py
-- M src/ai_trading/portfolio_intelligence.py
-- M tests/test_multiasset_runtime.py
-- M tests/test_portfolio_intelligence.py
+- M src/ai_trading/dashboard.py
+- M tests/test_dashboard.py
+- M tests/test_multi_market.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_multiasset_runtime.py
-- tests/test_portfolio_intelligence.py
+- tests/test_dashboard.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

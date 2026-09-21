@@ -45,16 +45,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T09:02:42Z
+Generated: 2026-09-21T16:01:03Z
 
 ### Git
 - Branch: `main`
-- Head: `196af4b15cb2`
-- Commit date: 2026-09-21T11:02:27+02:00
-- Commit: feat: make portfolio intelligence correlation-aware (#77)
+- Head: `f724fd415c59`
+- Commit date: 2026-09-21T18:00:50+02:00
+- Commit: fix: preserve dashboard scroll position during refresh (#78)
 - Tracked files: 480
 
 ### Recently changed files
+- `src/ai_trading/dashboard.py`
+- `tests/test_dashboard.py`
+- `tests/test_multi_market.py`
 - `src/ai_trading/multiasset_runtime.py`
 - `src/ai_trading/portfolio_intelligence.py`
 - `tests/test_multiasset_runtime.py`
@@ -62,13 +65,11 @@ Generated: 2026-09-21T09:02:42Z
 - `infra/cloudflare-paper-scheduler/README.md`
 - `infra/cloudflare-paper-scheduler/src/index.js`
 - `infra/cloudflare-paper-scheduler/test/index.test.js`
-- `src/ai_trading/dashboard.py`
 - `src/ai_trading/scheduler_endpoint.py`
 - `tests/test_scheduler_endpoint.py`
 - `src/ai_trading/market_freshness.py`
 - `src/ai_trading/multi_market.py`
 - `tests/test_market_freshness.py`
-- `tests/test_multi_market.py`
 
 ### Project signals
 - `pyproject.toml`
