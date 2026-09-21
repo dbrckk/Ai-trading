@@ -110,6 +110,7 @@
         "tests/test_paper_cycle_materialized_fresh.py",
         "tests/test_paper_cycle_postgres.py",
         "tests/test_paper_cycle_service.py",
+        "tests/test_paper_execution.py",
         "tests/test_performance.py",
         "tests/test_performance_metrics.py",
         "tests/test_persistence.py",
@@ -190,7 +191,7 @@
         "tests/test_watchdog_enforcer.py",
         "tests/test_worker_monitor.py"
       ],
-      "in_degree": 181,
+      "in_degree": 182,
       "out_degree": 0,
       "path": "src/ai_trading/__init__.py"
     },
@@ -318,6 +319,7 @@
         "src/ai_trading/multiasset_market_context.py",
         "src/ai_trading/multiasset_state.py",
         "src/ai_trading/online.py",
+        "src/ai_trading/paper_execution.py",
         "src/ai_trading/pnl_attribution.py",
         "src/ai_trading/portfolio.py",
         "src/ai_trading/portfolio_intelligence.py",
@@ -342,7 +344,7 @@
         "tests/test_multiasset_scheduler.py"
       ],
       "in_degree": 6,
-      "out_degree": 49,
+      "out_degree": 50,
       "path": "src/ai_trading/multiasset_runtime.py"
     },
     {
@@ -1346,6 +1348,27 @@
       "path": "src/ai_trading/multiasset_scheduler.py"
     },
     {
+      "dependencies": [
+        "src/ai_trading/config.py",
+        "src/ai_trading/ensemble.py",
+        "src/ai_trading/features.py",
+        "src/ai_trading/model.py",
+        "src/ai_trading/paper_execution.py",
+        "src/ai_trading/performance.py",
+        "src/ai_trading/portfolio.py",
+        "src/ai_trading/portfolio_intelligence.py",
+        "src/ai_trading/portfolio_risk.py",
+        "src/ai_trading/regime.py"
+      ],
+      "dependents": [
+        "src/ai_trading/cli.py",
+        "tests/test_multiasset_backtest.py"
+      ],
+      "in_degree": 2,
+      "out_degree": 10,
+      "path": "src/ai_trading/multiasset_backtest.py"
+    },
+    {
       "dependencies": [],
       "dependents": [
         "src/ai_trading/backtest.py",
@@ -1483,26 +1506,6 @@
       "in_degree": 2,
       "out_degree": 9,
       "path": "src/ai_trading/deployment_readiness.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/config.py",
-        "src/ai_trading/ensemble.py",
-        "src/ai_trading/features.py",
-        "src/ai_trading/model.py",
-        "src/ai_trading/performance.py",
-        "src/ai_trading/portfolio.py",
-        "src/ai_trading/portfolio_intelligence.py",
-        "src/ai_trading/portfolio_risk.py",
-        "src/ai_trading/regime.py"
-      ],
-      "dependents": [
-        "src/ai_trading/cli.py",
-        "tests/test_multiasset_backtest.py"
-      ],
-      "in_degree": 2,
-      "out_degree": 9,
-      "path": "src/ai_trading/multiasset_backtest.py"
     },
     {
       "dependencies": [
@@ -1813,8 +1816,8 @@
       "path": "src/ai_trading/specialist_experts.py"
     }
   ],
-  "edge_count": 1903,
+  "edge_count": 1908,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 349,
+  "node_count": 351,
   "schema_version": 1
 }

@@ -155,6 +155,7 @@ src/
     orchestrator.py
     paper_cycle_service.py
     paper_cycle.py
+    paper_execution.py
     paper_readiness_evidence.py
     parameter_sensitivity.py
     performance_metrics.py
@@ -331,6 +332,7 @@ tests/
   test_paper_cycle_service.py
   test_paper_cycle_workflow.py
   test_paper_cycle.py
+  test_paper_execution.py
   test_performance_metrics.py
   test_performance.py
   test_persistence_contract.py
@@ -1290,11 +1292,8 @@ def rebalance(self, side: int, target_notional: float, price: float) -> None
 ⋮----
 target_notional = float(target_notional)
 ⋮----
-desired_units = 0.0 if side == 0 else side * target_notional / price
-delta_units = desired_units - self.state.units
-gross = abs(delta_units) * price
-bps = self.config.transaction_cost_bps + self.config.slippage_bps
-costs = gross * bps / 10_000.0
+signed_target_notional = 0.0 if side == 0 else side * target_notional
+fill = calculate_rebalance_fill(
 ````
 
 ## File: src/ai_trading/burnin.py
@@ -4568,10 +4567,7 @@ notionals = target_notionals(equity, intelligent)
 risk = evaluate_portfolio_risk(
 ⋮----
 price = float(aligned[symbol].at[execution_idx, "Open"])
-desired_units = float(notionals[symbol]) / price
-delta_units = desired_units - units[symbol]
-gross = abs(delta_units) * price
-bps = self.risk_config.transaction_cost_bps + self.risk_config.slippage_bps
+fill = calculate_rebalance_fill(
 ⋮----
 peak_equity = max(peak_equity, equity)
 ⋮----
@@ -4938,11 +4934,7 @@ costs_by_symbol = {symbol: 0.0 for symbol in intelligent_weights.index}
 ⋮----
 price = float(opens[symbol].iloc[-1])
 position = state.positions.setdefault(symbol, AssetPosition())
-desired_units = float(notionals[symbol]) / price
-delta_units = desired_units - position.units
-gross = abs(delta_units) * price
-bps = self.risk_config.transaction_cost_bps + self.risk_config.slippage_bps
-symbol_costs = gross * bps / 10_000.0
+fill = calculate_rebalance_fill(
 ⋮----
 current_prices = {
 attribution = attribute_pnl(
@@ -5396,6 +5388,24 @@ reason = "catch-up pending"
 reason = f"processed {processed} bar(s)"
 ⋮----
 reason = "concurrent progress observed"
+````
+
+## File: src/ai_trading/paper_execution.py
+````python
+@dataclass(frozen=True)
+class RebalanceFill
+⋮----
+desired_units: float
+delta_units: float
+gross_turnover: float
+costs: float
+⋮----
+values = {
+⋮----
+desired_units = values["target_notional"] / values["price"]
+delta_units = desired_units - values["current_units"]
+gross_turnover = abs(delta_units) * values["price"]
+costs = gross_turnover * (
 ````
 
 ## File: src/ai_trading/paper_readiness_evidence.py
@@ -10309,6 +10319,24 @@ persisted = market.index[0] - pd.Timedelta(days=2)
 def test_pending_targets_reject_gap_beyond_three_days() -> None
 ⋮----
 persisted = market.index[0] - pd.Timedelta(days=4)
+````
+
+## File: tests/test_paper_execution.py
+````python
+def test_rebalance_fill_handles_signed_target_and_flip() -> None
+⋮----
+fill = calculate_rebalance_fill(
+⋮----
+def test_rebalance_fill_flattening_charges_turnover_costs() -> None
+⋮----
+@pytest.mark.parametrize("price", [0.0, -1.0])
+def test_rebalance_fill_rejects_non_positive_prices(price: float) -> None
+⋮----
+def test_rebalance_fill_rejects_non_finite_inputs(field: str, value: float) -> None
+⋮----
+kwargs = {
+⋮----
+def test_rebalance_fill_rejects_negative_execution_costs() -> None
 ````
 
 ## File: tests/test_performance_metrics.py

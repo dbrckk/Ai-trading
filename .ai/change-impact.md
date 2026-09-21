@@ -1,20 +1,24 @@
 # Change impact
 
-Base: 9c535f870b9737b9c59ba5a4a55c7c6c901ccb35
-Head: 49b239a2ecca35931797bd8b8248370580bf7a45
+Base: 7503f04aaa8b56b2ca09e72110d643b21300642d
+Head: 5b9858aaeb928322752e925785e5a242ee2d675f
 
 ## Changed files
-- A src/ai_trading/multiasset_market_context.py
+- M src/ai_trading/broker.py
+- M src/ai_trading/multiasset_backtest.py
 - M src/ai_trading/multiasset_runtime.py
-- A tests/test_multiasset_market_context.py
+- A src/ai_trading/paper_execution.py
+- A tests/test_paper_execution.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_multiasset_market_context.py
+- tests/test_broker.py
+- tests/test_multiasset_backtest.py
 - tests/test_multiasset_runtime.py
+- tests/test_paper_execution.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

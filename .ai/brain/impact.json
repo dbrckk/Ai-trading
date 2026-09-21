@@ -1,40 +1,142 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "81af7f4e96bf8d96fcd4e259dfb200171292132b",
-  "head": "49b239a2ecca35931797bd8b8248370580bf7a45",
+  "base": "49b239a2ecca35931797bd8b8248370580bf7a45",
+  "head": "5b9858aaeb928322752e925785e5a242ee2d675f",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "src/ai_trading/multiasset_market_context.py",
-      "status": "A"
+      "path": "src/ai_trading/broker.py",
+      "status": "M"
+    },
+    {
+      "path": "src/ai_trading/multiasset_backtest.py",
+      "status": "M"
     },
     {
       "path": "src/ai_trading/multiasset_runtime.py",
       "status": "M"
     },
     {
-      "path": "tests/test_multiasset_market_context.py",
+      "path": "src/ai_trading/paper_execution.py",
+      "status": "A"
+    },
+    {
+      "path": "tests/test_paper_execution.py",
       "status": "A"
     }
   ],
   "changed_source_files": [
-    "src/ai_trading/multiasset_market_context.py",
+    "src/ai_trading/broker.py",
+    "src/ai_trading/multiasset_backtest.py",
     "src/ai_trading/multiasset_runtime.py",
-    "tests/test_multiasset_market_context.py"
+    "src/ai_trading/paper_execution.py",
+    "tests/test_paper_execution.py"
   ],
   "impacted_files": [
+    "src/ai_trading/backtest.py",
+    "src/ai_trading/broker.py",
     "src/ai_trading/cli.py",
-    "src/ai_trading/multiasset_market_context.py",
+    "src/ai_trading/engine.py",
+    "src/ai_trading/multiasset_backtest.py",
     "src/ai_trading/multiasset_runtime.py",
     "src/ai_trading/multiasset_scheduler.py",
+    "src/ai_trading/paper_execution.py",
+    "src/ai_trading/runtime.py",
     "src/ai_trading/runtime_factory.py",
     "src/ai_trading/soak.py",
-    "tests/test_multiasset_market_context.py",
+    "tests/test_backtest.py",
+    "tests/test_broker.py",
+    "tests/test_multiasset_backtest.py",
     "tests/test_multiasset_runtime.py",
-    "tests/test_multiasset_scheduler.py"
+    "tests/test_multiasset_scheduler.py",
+    "tests/test_paper_execution.py"
   ],
   "impacted_symbols": [
+    {
+      "name": "_compound_step_returns",
+      "kind": "function",
+      "file": "src/ai_trading/backtest.py",
+      "line": 22
+    },
+    {
+      "name": "WalkForwardConfig",
+      "kind": "class",
+      "file": "src/ai_trading/backtest.py",
+      "line": 30
+    },
+    {
+      "name": "as_dict",
+      "kind": "function",
+      "file": "src/ai_trading/backtest.py",
+      "line": 37
+    },
+    {
+      "name": "BacktestReport",
+      "kind": "class",
+      "file": "src/ai_trading/backtest.py",
+      "line": 42
+    },
+    {
+      "name": "WalkForwardBacktester",
+      "kind": "class",
+      "file": "src/ai_trading/backtest.py",
+      "line": 55
+    },
+    {
+      "name": "__init__",
+      "kind": "function",
+      "file": "src/ai_trading/backtest.py",
+      "line": 58
+    },
+    {
+      "name": "run",
+      "kind": "function",
+      "file": "src/ai_trading/backtest.py",
+      "line": 70
+    },
+    {
+      "name": "BrokerState",
+      "kind": "class",
+      "file": "src/ai_trading/broker.py",
+      "line": 11
+    },
+    {
+      "name": "equity",
+      "kind": "function",
+      "file": "src/ai_trading/broker.py",
+      "line": 19
+    },
+    {
+      "name": "PaperBroker",
+      "kind": "class",
+      "file": "src/ai_trading/broker.py",
+      "line": 23
+    },
+    {
+      "name": "__init__",
+      "kind": "function",
+      "file": "src/ai_trading/broker.py",
+      "line": 24
+    },
+    {
+      "name": "mark",
+      "kind": "function",
+      "file": "src/ai_trading/broker.py",
+      "line": 32
+    },
+    {
+      "name": "reset_day_start",
+      "kind": "function",
+      "file": "src/ai_trading/broker.py",
+      "line": 40
+    },
+    {
+      "name": "rebalance",
+      "kind": "function",
+      "file": "src/ai_trading/broker.py",
+      "line": 43
+    },
     {
       "name": "self_test",
       "kind": "function",
@@ -288,82 +390,124 @@
       "line": 1882
     },
     {
-      "name": "MultiAssetMarketContext",
+      "name": "RunResult",
       "kind": "class",
-      "file": "src/ai_trading/multiasset_market_context.py",
-      "line": 13
+      "file": "src/ai_trading/engine.py",
+      "line": 15
     },
     {
-      "name": "prepare_multiasset_market_context",
+      "name": "TradingEngine",
+      "kind": "class",
+      "file": "src/ai_trading/engine.py",
+      "line": 24
+    },
+    {
+      "name": "__init__",
       "kind": "function",
-      "file": "src/ai_trading/multiasset_market_context.py",
-      "line": 22
+      "file": "src/ai_trading/engine.py",
+      "line": 25
+    },
+    {
+      "name": "train",
+      "kind": "function",
+      "file": "src/ai_trading/engine.py",
+      "line": 35
+    },
+    {
+      "name": "paper_run",
+      "kind": "function",
+      "file": "src/ai_trading/engine.py",
+      "line": 44
+    },
+    {
+      "name": "MultiAssetBacktestReport",
+      "kind": "class",
+      "file": "src/ai_trading/multiasset_backtest.py",
+      "line": 19
+    },
+    {
+      "name": "MultiAssetWalkForwardBacktester",
+      "kind": "class",
+      "file": "src/ai_trading/multiasset_backtest.py",
+      "line": 27
+    },
+    {
+      "name": "__init__",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_backtest.py",
+      "line": 28
+    },
+    {
+      "name": "run",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_backtest.py",
+      "line": 47
     },
     {
       "name": "MultiAssetStepResult",
       "kind": "class",
       "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 71
+      "line": 72
     },
     {
       "name": "MultiAssetPaperRuntime",
       "kind": "class",
       "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 84
+      "line": 85
     },
     {
       "name": "__init__",
       "kind": "function",
       "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 85
+      "line": 86
     },
     {
       "name": "_specialist_path",
       "kind": "function",
       "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 162
+      "line": 163
     },
     {
       "name": "_load_or_train_specialist",
       "kind": "function",
       "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 166
+      "line": 167
     },
     {
       "name": "_batch_model_path",
       "kind": "function",
       "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 188
+      "line": 189
     },
     {
       "name": "_load_or_train_batch_model",
       "kind": "function",
       "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 192
+      "line": 193
     },
     {
       "name": "_model_path",
       "kind": "function",
       "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 216
+      "line": 217
     },
     {
       "name": "_load_model",
       "kind": "function",
       "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 220
+      "line": 221
     },
     {
       "name": "_save_model",
       "kind": "function",
       "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 226
+      "line": 227
     },
     {
       "name": "step",
       "kind": "function",
       "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 233
+      "line": 234
     },
     {
       "name": "MultiAssetSchedulerConfig",
@@ -432,6 +576,96 @@
       "line": 127
     },
     {
+      "name": "RebalanceFill",
+      "kind": "class",
+      "file": "src/ai_trading/paper_execution.py",
+      "line": 8
+    },
+    {
+      "name": "calculate_rebalance_fill",
+      "kind": "function",
+      "file": "src/ai_trading/paper_execution.py",
+      "line": 15
+    },
+    {
+      "name": "RuntimeStepResult",
+      "kind": "class",
+      "file": "src/ai_trading/runtime.py",
+      "line": 27
+    },
+    {
+      "name": "PreparedRuntimeMarket",
+      "kind": "class",
+      "file": "src/ai_trading/runtime.py",
+      "line": 41
+    },
+    {
+      "name": "PaperAutonomousRuntime",
+      "kind": "class",
+      "file": "src/ai_trading/runtime.py",
+      "line": 49
+    },
+    {
+      "name": "__init__",
+      "kind": "function",
+      "file": "src/ai_trading/runtime.py",
+      "line": 56
+    },
+    {
+      "name": "_broker_from_state",
+      "kind": "function",
+      "file": "src/ai_trading/runtime.py",
+      "line": 89
+    },
+    {
+      "name": "_state_from_broker",
+      "kind": "function",
+      "file": "src/ai_trading/runtime.py",
+      "line": 99
+    },
+    {
+      "name": "_prepare_market_features",
+      "kind": "function",
+      "file": "src/ai_trading/runtime.py",
+      "line": 117
+    },
+    {
+      "name": "_eligible_execution_indices",
+      "kind": "function",
+      "file": "src/ai_trading/runtime.py",
+      "line": 138
+    },
+    {
+      "name": "prepare_market",
+      "kind": "function",
+      "file": "src/ai_trading/runtime.py",
+      "line": 142
+    },
+    {
+      "name": "step",
+      "kind": "function",
+      "file": "src/ai_trading/runtime.py",
+      "line": 157
+    },
+    {
+      "name": "step_at",
+      "kind": "function",
+      "file": "src/ai_trading/runtime.py",
+      "line": 163
+    },
+    {
+      "name": "step_prepared",
+      "kind": "function",
+      "file": "src/ai_trading/runtime.py",
+      "line": 181
+    },
+    {
+      "name": "_step_prepared_locked",
+      "kind": "function",
+      "file": "src/ai_trading/runtime.py",
+      "line": 200
+    },
+    {
       "name": "isolated_multiasset_runtime",
       "kind": "function",
       "file": "src/ai_trading/runtime_factory.py",
@@ -450,46 +684,82 @@
       "line": 28
     },
     {
-      "name": "market",
+      "name": "sample_market",
       "kind": "function",
-      "file": "tests/test_multiasset_market_context.py",
+      "file": "tests/test_backtest.py",
+      "line": 15
+    },
+    {
+      "name": "test_walk_forward_produces_out_of_sample_report",
+      "kind": "function",
+      "file": "tests/test_backtest.py",
+      "line": 32
+    },
+    {
+      "name": "test_walk_forward_resets_daily_risk_baseline_between_dates",
+      "kind": "function",
+      "file": "tests/test_backtest.py",
+      "line": 51
+    },
+    {
+      "name": "tracked_reset",
+      "kind": "function",
+      "file": "tests/test_backtest.py",
+      "line": 55
+    },
+    {
+      "name": "test_regime_step_returns_are_compounded_without_intervening_equity",
+      "kind": "function",
+      "file": "tests/test_backtest.py",
+      "line": 76
+    },
+    {
+      "name": "test_walk_forward_annualizes_from_actual_oos_timestamps_by_default",
+      "kind": "function",
+      "file": "tests/test_backtest.py",
+      "line": 81
+    },
+    {
+      "name": "test_broker_resets_daily_loss_baseline_to_current_equity",
+      "kind": "function",
+      "file": "tests/test_broker.py",
       "line": 9
     },
     {
-      "name": "test_prepare_multiasset_market_context_builds_aligned_inputs",
+      "name": "test_broker_rejects_invalid_mark_prices",
       "kind": "function",
-      "file": "tests/test_multiasset_market_context.py",
-      "line": 31
+      "file": "tests/test_broker.py",
+      "line": 22
     },
     {
-      "name": "test_prepare_multiasset_market_context_rejects_unaligned_latest_bar",
+      "name": "test_broker_rejects_invalid_sides",
       "kind": "function",
-      "file": "tests/test_multiasset_market_context.py",
-      "line": 45
+      "file": "tests/test_broker.py",
+      "line": 29
     },
     {
-      "name": "test_prepare_multiasset_market_context_rejects_insufficient_assets",
+      "name": "test_broker_rejects_invalid_target_notional",
       "kind": "function",
-      "file": "tests/test_multiasset_market_context.py",
-      "line": 53
+      "file": "tests/test_broker.py",
+      "line": 36
     },
     {
-      "name": "test_prepare_multiasset_market_context_rejects_short_history",
+      "name": "market",
       "kind": "function",
-      "file": "tests/test_multiasset_market_context.py",
-      "line": 58
+      "file": "tests/test_multiasset_backtest.py",
+      "line": 12
     },
     {
-      "name": "test_prepare_multiasset_market_context_rejects_missing_columns",
+      "name": "test_multiasset_walk_forward_produces_portfolio_curve",
       "kind": "function",
-      "file": "tests/test_multiasset_market_context.py",
-      "line": 66
+      "file": "tests/test_multiasset_backtest.py",
+      "line": 30
     },
     {
-      "name": "test_prepare_multiasset_market_context_rejects_invalid_latest_prices",
+      "name": "test_multiasset_backtest_annualizes_from_actual_timestamps",
       "kind": "function",
-      "file": "tests/test_multiasset_market_context.py",
-      "line": 76
+      "file": "tests/test_multiasset_backtest.py",
+      "line": 55
     },
     {
       "name": "market",
@@ -526,12 +796,45 @@
       "kind": "function",
       "file": "tests/test_multiasset_scheduler.py",
       "line": 32
+    },
+    {
+      "name": "test_rebalance_fill_handles_signed_target_and_flip",
+      "kind": "function",
+      "file": "tests/test_paper_execution.py",
+      "line": 8
+    },
+    {
+      "name": "test_rebalance_fill_flattening_charges_turnover_costs",
+      "kind": "function",
+      "file": "tests/test_paper_execution.py",
+      "line": 23
+    },
+    {
+      "name": "test_rebalance_fill_rejects_non_positive_prices",
+      "kind": "function",
+      "file": "tests/test_paper_execution.py",
+      "line": 39
+    },
+    {
+      "name": "test_rebalance_fill_rejects_non_finite_inputs",
+      "kind": "function",
+      "file": "tests/test_paper_execution.py",
+      "line": 60
+    },
+    {
+      "name": "test_rebalance_fill_rejects_negative_execution_costs",
+      "kind": "function",
+      "file": "tests/test_paper_execution.py",
+      "line": 74
     }
   ],
   "selected_tests": [
-    "tests/test_multiasset_market_context.py",
+    "tests/test_backtest.py",
+    "tests/test_broker.py",
+    "tests/test_multiasset_backtest.py",
     "tests/test_multiasset_runtime.py",
     "tests/test_multiasset_scheduler.py",
+    "tests/test_paper_execution.py",
     "tests/test_runtime.py"
   ]
 }

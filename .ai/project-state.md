@@ -45,32 +45,32 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T16:38:10Z
+Generated: 2026-09-21T16:44:15Z
 
 ### Git
 - Branch: `main`
-- Head: `49b239a2ecca`
-- Commit date: 2026-09-21T18:37:58+02:00
-- Commit: refactor: extract multi-asset market preparation (#88)
-- Tracked files: 486
+- Head: `5b9858aaeb92`
+- Commit date: 2026-09-21T18:44:04+02:00
+- Commit: refactor: centralize paper execution calculations (#89)
+- Tracked files: 488
 
 ### Recently changed files
-- `src/ai_trading/multiasset_market_context.py`
+- `src/ai_trading/broker.py`
+- `src/ai_trading/multiasset_backtest.py`
 - `src/ai_trading/multiasset_runtime.py`
+- `src/ai_trading/paper_execution.py`
+- `tests/test_paper_execution.py`
+- `src/ai_trading/multiasset_market_context.py`
 - `tests/test_multiasset_market_context.py`
 - `src/ai_trading/dashboard.py`
 - `tests/test_dashboard_persistence.py`
 - `README.md`
 - `src/ai_trading/backtest.py`
-- `src/ai_trading/broker.py`
 - `src/ai_trading/engine.py`
-- `src/ai_trading/multiasset_backtest.py`
 - `src/ai_trading/runtime.py`
 - `tests/test_backtest.py`
 - `tests/test_broker.py`
 - `tests/test_multiasset_backtest.py`
-- `.github/dependabot.yml`
-- `.github/workflows/codeql.yml`
 
 ### Project signals
 - `pyproject.toml`
