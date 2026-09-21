@@ -13,6 +13,7 @@ from ai_trading.trade_journal import TradeSnapshot
 DATABASE_URL = os.environ["TEST_DATABASE_URL"]
 RUNTIME_KEY = "paper:GC=F:5m:online-river:v1"
 BTC_RUNTIME_KEY = "paper:BTC-USD:5m:online-river:v1"
+DAX_RUNTIME_KEY = "paper:^GDAXI:5m:online-river:v1"
 
 
 def test_postgres_16_is_reachable() -> None:
@@ -415,6 +416,7 @@ def test_schema_upgrade_adds_pnl_accounting_columns_without_reset(backend) -> No
 def test_postgres_portfolio_performance_uses_global_trade_chronology(backend) -> None:
     backend.load_runtime(RUNTIME_KEY, 100_000.0)
     backend.load_runtime(BTC_RUNTIME_KEY, 100_000.0)
+    backend.load_runtime(DAX_RUNTIME_KEY, 100_000.0)
 
     assert (
         backend.commit_step(
@@ -456,6 +458,17 @@ def test_postgres_portfolio_performance_uses_global_trade_chronology(backend) ->
                 expected_revision=1,
                 state=_state(cash=99_800.0, processed_bars=2),
                 trade=_trade(pnl=0.0, pnl_known=False),
+            ),
+        )
+        is CommitOutcome.COMMITTED
+    )
+    assert (
+        backend.commit_step(
+            DAX_RUNTIME_KEY,
+            _commit(
+                expected_revision=0,
+                state=_state(processed_bars=1),
+                trade=_trade(pnl=1000.0, pnl_known=True),
             ),
         )
         is CommitOutcome.COMMITTED
