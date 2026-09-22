@@ -37,7 +37,7 @@ class MultiAssetCheckpointStore:
     def commit(
         self,
         state: MultiAssetState,
-        models: Mapping[str, object],
+        models: dict[str, object],
     ) -> str:
         generation = f"step-{state.processed_bars:012d}"
         final_dir = self._generation_dir(generation)
