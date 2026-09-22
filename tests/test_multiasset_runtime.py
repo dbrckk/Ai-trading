@@ -190,3 +190,70 @@ def test_multiasset_runtime_prefers_checkpoint_over_stale_legacy_state(
 
     assert not second.processed
     assert second.risk_reasons == ("bar already processed",)
+
+
+
+def test_multiasset_runtime_applies_symbol_specific_execution_costs(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    from ai_trading.paper_execution import calculate_rebalance_fill as real_fill
+
+    monkeypatch.setenv(
+        "AI_TRADING_EXECUTION_COSTS_JSON",
+        '{"A":{"transaction_cost_bps":1.5,"slippage_bps":2.5},'
+        '"B":{"transaction_cost_bps":7.0,"slippage_bps":8.0}}',
+    )
+    observed: dict[str, tuple[float, float]] = {}
+    current_symbol = {"value": ""}
+
+    def capture_fill(**kwargs):
+        observed[current_symbol["value"]] = (
+            float(kwargs["transaction_cost_bps"]),
+            float(kwargs["slippage_bps"]),
+        )
+        return real_fill(**kwargs)
+
+    runtime = MultiAssetPaperRuntime(
+        risk_config=RiskConfig(),
+        allocation_config=AllocationConfig(max_asset_weight=0.6),
+        portfolio_risk_config=PortfolioRiskConfig(
+            max_gross_exposure=1.0,
+            max_net_exposure=1.0,
+            max_asset_exposure=0.6,
+            max_pair_correlation=0.99,
+        ),
+        state_store=MultiAssetStateStore(tmp_path / "state.json"),
+        audit_log=AuditLog(tmp_path / "audit.jsonl"),
+        lock_path=str(tmp_path / "lock"),
+        model_root=tmp_path / "online_models",
+        batch_model_root=tmp_path / "batch_models",
+        specialist_model_root=tmp_path / "specialists",
+    )
+
+    original_positions = runtime.step
+
+    def run_with_symbol_tracking(markets):
+        original = __import__(
+            "ai_trading.multiasset_runtime",
+            fromlist=["calculate_rebalance_fill"],
+        )
+        original_fill = original.calculate_rebalance_fill
+
+        def tracked_fill(**kwargs):
+            price = float(kwargs["price"])
+            symbol = min(
+                markets,
+                key=lambda name: abs(float(markets[name]["Open"].iloc[-1]) - price),
+            )
+            current_symbol["value"] = symbol
+            return capture_fill(**kwargs)
+
+        monkeypatch.setattr(original, "calculate_rebalance_fill", tracked_fill)
+        return original_positions(markets)
+
+    result = run_with_symbol_tracking({"A": market(41), "B": market(42)})
+
+    assert result.processed
+    assert observed["A"] == (1.5, 2.5)
+    assert observed["B"] == (7.0, 8.0)
