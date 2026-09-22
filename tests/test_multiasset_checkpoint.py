@@ -172,6 +172,38 @@ def test_checkpoint_ignores_invalid_newer_unpublished_generation(
     assert store.current_path.read_text(encoding="utf-8") == "step-000000000003"
 
 
+def test_checkpoint_ignores_corrupt_compressed_unpublished_model(tmp_path: Path) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.commit(state(3), {"A": {"learned": 3}})
+
+    orphan = store.root / "step-000000000004"
+    orphan.mkdir()
+    state_path = orphan / "state.json"
+    state_path.write_text(json.dumps(asdict(state(4)), sort_keys=True), encoding="utf-8")
+    model_path = orphan / "A.joblib"
+    model_path.write_bytes(b"\x78\x9cBADBADBAD")
+    manifest = {
+        "generation": orphan.name,
+        "processed_bars": 4,
+        "last_processed": "bar-4",
+        "state": {"file": state_path.name, "sha256": store._sha256(state_path)},
+        "models": {
+            "A": {"file": model_path.name, "sha256": store._sha256(model_path)}
+        },
+    }
+    (orphan / "manifest.json").write_text(
+        json.dumps(manifest, sort_keys=True), encoding="utf-8"
+    )
+
+    loaded = store.load()
+
+    assert loaded is not None
+    loaded_state, models = loaded
+    assert loaded_state.processed_bars == 3
+    assert models == {"A": {"learned": 3}}
+    assert store.current_path.read_text(encoding="utf-8") == "step-000000000003"
+
+
 
 def test_checkpoint_rejects_pointer_path_traversal(tmp_path: Path) -> None:
     store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
