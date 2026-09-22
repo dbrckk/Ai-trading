@@ -1,20 +1,18 @@
 # Change impact
 
-Base: f68b90fcaec0a6cc038c5b6dbec41959d999f50f
-Head: 9481113c835eb0402519808cd2d1d63996cf9072
+Base: 5d547ebef697c3948143bd832b15232e5d93fdc2
+Head: 6e663e5ff1e37f2358a7f3d3c1ab0a0d4b8dfd1b
 
 ## Changed files
-- M src/ai_trading/dashboard.py
-- M tests/test_dashboard_persistence.py
-- M tests/test_paper_cycle.py
-- M tests/test_scheduler_endpoint.py
+- M src/ai_trading/data.py
+- M tests/test_data.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_dashboard.py
+- tests/test_data.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

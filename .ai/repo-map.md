@@ -2568,6 +2568,23 @@ reasons: list[str] = []
 
 ## File: src/ai_trading/data.py
 ````python
+class MarketDataProvider(Protocol)
+⋮----
+"""Minimal provider contract used by the trading runtime."""
+⋮----
+name: str
+⋮----
+def download(self, symbol: str, *, period: str, interval: str) -> pd.DataFrame: ...
+⋮----
+@dataclass(frozen=True)
+class YahooFinanceProvider
+⋮----
+name: str = "yahoo"
+⋮----
+def download(self, symbol: str, *, period: str, interval: str) -> pd.DataFrame
+⋮----
+DEFAULT_MARKET_DATA_PROVIDERS: tuple[MarketDataProvider, ...] = (YahooFinanceProvider(),)
+⋮----
 _OHLC_COLUMNS = ("Open", "High", "Low", "Close")
 _HISTORY_COLUMNS = (*_OHLC_COLUMNS, "Volume")
 ⋮----
@@ -2589,11 +2606,14 @@ prices = result.loc[:, list(_OHLC_COLUMNS)]
 ⋮----
 violations = (
 ⋮----
+provider_chain = DEFAULT_MARKET_DATA_PROVIDERS if providers is None else providers
+⋮----
 last_error: Exception | None = None
+attempts = 0
 ⋮----
-frame = yf.download(
+frame = provider.download(symbol, period=period, interval=interval)
 ⋮----
-except Exception as exc:  # noqa: BLE001 - provider can raise backend-specific transport errors
+except Exception as exc:  # noqa: BLE001 - providers raise backend-specific errors
 last_error = exc
 ````
 
@@ -9107,6 +9127,19 @@ loaded = data_module.load_history("GC=F", max_attempts=1)
 def test_load_history_rejects_inconsistent_ohlc(monkeypatch) -> None
 ⋮----
 index = pd.date_range("2026-09-18 08:00", periods=2, freq="5min")
+⋮----
+class _Provider
+⋮----
+def __init__(self, name: str, result) -> None
+⋮----
+def download(self, symbol: str, *, period: str, interval: str) -> pd.DataFrame
+⋮----
+def test_load_history_falls_back_to_next_provider_after_primary_exhaustion(monkeypatch) -> None
+⋮----
+primary = _Provider("primary", RuntimeError("provider unavailable"))
+fallback = _Provider("fallback", frame)
+⋮----
+def test_load_history_rejects_empty_provider_chain() -> None
 ````
 
 ## File: tests/test_dataset_evidence.py

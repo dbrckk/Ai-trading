@@ -45,23 +45,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T05:20:32Z
+Generated: 2026-09-22T13:04:56Z
 
 ### Git
 - Branch: `main`
-- Head: `9481113c835e`
-- Commit date: 2026-09-22T07:20:20+02:00
-- Commit: fix: suppress harmless dashboard disconnect tracebacks (#100)
+- Head: `6e663e5ff1e3`
+- Commit date: 2026-09-22T15:04:41+02:00
+- Commit: refactor: add market data provider fallback boundary (#101)
 - Tracked files: 493
 
 ### Recently changed files
+- `src/ai_trading/data.py`
+- `tests/test_data.py`
 - `src/ai_trading/dashboard.py`
 - `tests/test_dashboard_persistence.py`
 - `tests/test_paper_cycle.py`
 - `tests/test_scheduler_endpoint.py`
 - `tests/test_data_quality.py`
 - `tests/test_paper_cycle_service.py`
-- `src/ai_trading/paper_cycle_service.py`
 
 ### Project signals
 - `pyproject.toml`

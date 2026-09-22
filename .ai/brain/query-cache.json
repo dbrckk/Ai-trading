@@ -290,6 +290,164 @@
       },
       "task": "income progression"
     },
+    "04815d2efab6a656aa4579540b5cbce9018faf008ea070076fc06e45c8a84f2e": {
+      "route": {
+        "budget": {
+          "confidence": "low",
+          "expand_to": 12,
+          "max_files": 6,
+          "requested_max_files": 12,
+          "score_margin": 0,
+          "tier": "broad",
+          "top_score": 9
+        },
+        "candidate_count": 6,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "src/ai_trading/data.py",
+            "reasons": [
+              "impact",
+              "recently-changed"
+            ],
+            "score": 9,
+            "symbols": [
+              "MarketDataProvider",
+              "YahooFinanceProvider",
+              "_normalize_history_frame",
+              "download",
+              "load_history"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "tests/test_data.py",
+            "reasons": [
+              "impact",
+              "recently-changed"
+            ],
+            "score": 9,
+            "symbols": [
+              "_Provider",
+              "download",
+              "flaky_download",
+              "test_load_history_falls_back_to_next_provider_after_primary_exhaustion",
+              "test_load_history_keeps_price_rows_when_volume_is_missing",
+              "test_load_history_rejects_empty_provider_chain",
+              "test_load_history_rejects_inconsistent_ohlc",
+              "test_load_history_retries_transient_provider_failure",
+              "test_load_history_sorts_and_deduplicates_provider_rows"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "src/ai_trading/cli.py",
+            "reasons": [
+              "impact"
+            ],
+            "score": 6,
+            "symbols": [
+              "compare_models",
+              "create_readiness_release_command",
+              "crisis_status",
+              "dashboard",
+              "deployment_readiness",
+              "expert_evolve",
+              "expert_factory_run",
+              "expert_pool_refresh",
+              "expert_sandbox",
+              "generation_rollback",
+              "global_allocation_check",
+              "global_allocation_tune",
+              "health_check",
+              "health_serve",
+              "learning_cycle",
+              "loader",
+              "maintenance",
+              "metrics",
+              "multiasset_backtest",
+              "multiasset_evolve"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "src/ai_trading/hosted_runtime.py",
+            "reasons": [
+              "impact"
+            ],
+            "score": 6,
+            "symbols": [
+              "HostedPaperSettings",
+              "_now_utc",
+              "from_env",
+              "report_iteration",
+              "run_hosted_paper_loop",
+              "runtime_key",
+              "start_hosted_paper_runtime"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "src/ai_trading/mtf_parameter_benchmark.py",
+            "reasons": [
+              "impact"
+            ],
+            "score": 6,
+            "symbols": [
+              "AggregateBenchmarkResult",
+              "MTFBenchmarkConfig",
+              "MarketBenchmarkResult",
+              "__post_init__",
+              "_fold_test_windows",
+              "_macro_recall",
+              "_selection_score",
+              "benchmark_payload",
+              "btc_focused_benchmark_grid",
+              "default_benchmark_grid",
+              "evaluate_market_config",
+              "horizon_minutes",
+              "main",
+              "market_selections",
+              "name",
+              "run_parameter_benchmark",
+              "write_benchmark_report"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "src/ai_trading/paper_cycle.py",
+            "reasons": [
+              "impact"
+            ],
+            "score": 6,
+            "symbols": [
+              "PaperCycleResult",
+              "PaperCycleRunner",
+              "_is_logically_fresh",
+              "_is_mtf_evaluation_boundary",
+              "_pending_targets",
+              "_utc_timestamp",
+              "run_once"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "privacy consent",
+        "terms": [
+          "privacy",
+          "consent"
+        ]
+      },
+      "task": "privacy consent"
+    },
     "059f3b39180f2402b138c571d0edf13f19cfb834c97ca06da1c579134a272226": {
       "route": {
         "budget": {
@@ -9027,325 +9185,6 @@
       },
       "task": "offline progress"
     },
-    "7a04342eb12fff9acd35f14b0baaa32072c8c74a7993fd3709c0f8ba56695c36": {
-      "route": {
-        "budget": {
-          "confidence": "low",
-          "expand_to": 12,
-          "max_files": 6,
-          "requested_max_files": 12,
-          "score_margin": 0,
-          "tier": "broad",
-          "top_score": 9
-        },
-        "candidate_count": 7,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "src/ai_trading/mtf_shadow_config.py",
-            "reasons": [
-              "impact",
-              "recently-changed"
-            ],
-            "score": 9,
-            "symbols": [
-              "ValidatedMTFShadowConfig",
-              "as_dict",
-              "horizon_minutes",
-              "validated_mtf_shadow_config"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "tests/test_dashboard_overview.py",
-            "reasons": [
-              "impact",
-              "recently-changed"
-            ],
-            "score": 9,
-            "symbols": [
-              "BtcOverviewPersistence",
-              "FailingOverviewPersistence",
-              "OverviewPersistence",
-              "ReadinessOverviewPersistence",
-              "_free_port",
-              "_start_overview_dashboard",
-              "list_burnin_snapshots",
-              "list_regimes",
-              "list_trades",
-              "load_mtf_shadow_quality",
-              "load_runtime",
-              "load_runtime_status",
-              "load_shadow_quality",
-              "test_btc_overview_exposes_validated_mtf_candidate",
-              "test_dashboard_exposes_operational_overview_endpoint",
-              "test_dashboard_renders_cycle_reliability_alert",
-              "test_dashboard_renders_inconsistent_runtime_alert",
-              "test_dashboard_renders_model_and_revision_metadata",
-              "test_dashboard_renders_operational_alerts",
-              "test_operational_overview_exposes_model_and_runtime_metadata"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "tests/test_mtf_shadow_config.py",
-            "reasons": [
-              "impact",
-              "recently-changed"
-            ],
-            "score": 9,
-            "symbols": [
-              "test_btc_uses_validated_90m_candidate",
-              "test_dax_uses_validated_45m_candidate",
-              "test_gold_uses_validated_45m_candidate"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "tests/test_multi_market.py",
-            "reasons": [
-              "impact",
-              "recently-changed"
-            ],
-            "score": 9,
-            "symbols": [
-              "FakeMultiPersistence",
-              "fake_cycle",
-              "list_burnin_snapshots",
-              "list_regimes",
-              "list_trades",
-              "load_runtime",
-              "load_runtime_status",
-              "load_trade_performance",
-              "test_configured_default_bundle_uses_34_33_33",
-              "test_configured_markets_default_to_gold",
-              "test_dashboard_renders_multi_market_cards",
-              "test_multi_market_cycle_isolates_one_market_failure",
-              "test_multi_market_cycle_runs_markets_concurrently",
-              "test_multi_market_overview_scales_normalized_sleeves_to_100k"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "tests/test_paper_cycle.py",
-            "reasons": [
-              "impact",
-              "recently-changed"
-            ],
-            "score": 9,
-            "symbols": [
-              "ConflictOnceRuntime",
-              "build",
-              "build_runner",
-              "build_runtime",
-              "counted_make_features",
-              "counted_make_labels",
-              "fake_mtf",
-              "fake_shadow",
-              "loader",
-              "prepare_market",
-              "runtime_factory",
-              "sample_market",
-              "step_prepared",
-              "test_catchup_cap_leaves_remaining_backlog",
-              "test_catchup_prepares_features_and_labels_once",
-              "test_existing_runtime_catches_up_oldest_first",
-              "test_fresh_runtime_processes_only_latest_eligible_bar",
-              "test_max_catchup_bars_must_be_positive",
-              "test_missing_last_processed_in_history_fails_closed",
-              "test_mtf_boundary_runs_only_on_quarter_hour"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "src/ai_trading/operational_overview.py",
-            "reasons": [
-              "impact"
-            ],
-            "score": 6,
-            "symbols": [
-              "_burnin_snapshot",
-              "_empty_model_snapshot",
-              "_empty_mtf_shadow_quality_snapshot",
-              "_empty_readiness_snapshot",
-              "_empty_shadow_quality_snapshot",
-              "_mtf_shadow_quality_snapshot",
-              "_readiness_snapshot",
-              "_shadow_quality_snapshot",
-              "build_operational_overview",
-              "quality_payload",
-              "runtime_is_consistent"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "purchase billing",
-        "terms": [
-          "purchase",
-          "billing"
-        ]
-      },
-      "task": "purchase billing"
-    },
-    "7b43c3fad7ec8eb3e1c3c957c5f0d1c9ab76f616bf63307f257d3e26b91fdfd9": {
-      "route": {
-        "budget": {
-          "confidence": "medium",
-          "expand_to": 12,
-          "max_files": 6,
-          "requested_max_files": 12,
-          "score_margin": 6,
-          "tier": "bounded",
-          "top_score": 27
-        },
-        "candidate_count": 16,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progress"
-            ],
-            "path": "tests/test_generation_progress.py",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "test_generation_progress_detects_improvement"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progress"
-            ],
-            "path": "tests/test_scheduler_endpoint.py",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 21,
-            "symbols": [
-              "_free_port",
-              "_request",
-              "_start_scheduler_dashboard",
-              "fail_cycle",
-              "fake_cycle",
-              "run_cycle",
-              "successful_result",
-              "test_concurrent_progress_is_successful_noop",
-              "test_execution_failure_is_sanitized",
-              "test_http_scheduler_failure_response_never_leaks_secrets",
-              "test_http_scheduler_other_post_routes_are_not_exposed",
-              "test_http_scheduler_rejects_missing_and_wrong_authorization",
-              "test_http_scheduler_valid_token_runs_one_cycle_and_ignores_body",
-              "test_missing_authorization_is_unauthorized",
-              "test_missing_server_token_fails_closed",
-              "test_storage_failure_is_sanitized",
-              "test_valid_token_runs_exactly_one_cycle",
-              "test_wrong_bearer_token_is_unauthorized",
-              "test_wrong_scheme_is_unauthorized"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progress"
-            ],
-            "path": "src/ai_trading/dashboard.py",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 17,
-            "symbols": [
-              "Handler",
-              "_display_money",
-              "_display_ratio",
-              "_display_units",
-              "_equity_chart_svg",
-              "_public_runtime_snapshot",
-              "_readiness_number",
-              "_readiness_panel",
-              "_send_json",
-              "do_GET",
-              "do_POST",
-              "execute_paper_cycle",
-              "load_status_snapshot",
-              "log_message",
-              "render_dashboard",
-              "serve_dashboard"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progress"
-            ],
-            "path": "src/ai_trading/data.py",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 17,
-            "symbols": [
-              "load_history"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progress"
-            ],
-            "path": "src/ai_trading/evolution_manager.py",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 17,
-            "symbols": [
-              "EvolutionCycleResult",
-              "_active_pool_returns",
-              "_portfolio_score",
-              "_record_to_candidate",
-              "run_evolution_cycle"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progress"
-            ],
-            "path": "src/ai_trading/paper_cycle.py",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 17,
-            "symbols": [
-              "PaperCycleResult",
-              "PaperCycleRunner",
-              "_is_logically_fresh",
-              "_is_mtf_evaluation_boundary",
-              "_pending_targets",
-              "run_once"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "offline progress",
-        "terms": [
-          "offline",
-          "progress"
-        ]
-      },
-      "task": "offline progress"
-    },
     "7c7821a657dad9ff853610022558c4fc5ca2b23f80dc2d0723cb4d0556e458d3": {
       "route": {
         "budget": {
@@ -12628,165 +12467,6 @@
         ]
       },
       "task": "privacy consent"
-    },
-    "a3bacfe767d81f8a9d0ebf1635cae91687ce7aac25ed56416ed04bb1b7e66016": {
-      "route": {
-        "budget": {
-          "confidence": "medium",
-          "expand_to": 12,
-          "max_files": 6,
-          "requested_max_files": 12,
-          "score_margin": 0,
-          "tier": "bounded",
-          "top_score": 17
-        },
-        "candidate_count": 13,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine"
-            ],
-            "path": "src/ai_trading/cli.py",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 17,
-            "symbols": [
-              "compare_models",
-              "create_readiness_release_command",
-              "crisis_status",
-              "dashboard",
-              "deployment_readiness",
-              "expert_evolve",
-              "expert_factory_run",
-              "expert_pool_refresh",
-              "expert_sandbox",
-              "generation_rollback",
-              "global_allocation_check",
-              "global_allocation_tune",
-              "health_check",
-              "health_serve",
-              "learning_cycle",
-              "loader",
-              "maintenance",
-              "metrics",
-              "multiasset_backtest",
-              "multiasset_evolve"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine"
-            ],
-            "path": "src/ai_trading/dashboard.py",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 17,
-            "symbols": [
-              "Handler",
-              "_display_money",
-              "_display_ratio",
-              "_display_units",
-              "_equity_chart_svg",
-              "_public_runtime_snapshot",
-              "_readiness_number",
-              "_readiness_panel",
-              "_send_json",
-              "do_GET",
-              "do_POST",
-              "execute_paper_cycle",
-              "load_status_snapshot",
-              "log_message",
-              "render_dashboard",
-              "serve_dashboard"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine"
-            ],
-            "path": "src/ai_trading/runtime.py",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 17,
-            "symbols": [
-              "PaperAutonomousRuntime",
-              "PreparedRuntimeMarket",
-              "RuntimeStepResult",
-              "_broker_from_state",
-              "_eligible_execution_indices",
-              "_prepare_market_features",
-              "_state_from_broker",
-              "_step_prepared_locked",
-              "prepare_market",
-              "step",
-              "step_at",
-              "step_prepared"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine"
-            ],
-            "path": "tests/test_risk.py",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 17,
-            "symbols": [
-              "test_drawdown_limit_is_fail_closed",
-              "test_low_confidence_is_rejected"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine"
-            ],
-            "path": "src/ai_trading/engine.py",
-            "reasons": [],
-            "score": 10,
-            "symbols": [
-              "RunResult",
-              "TradingEngine",
-              "__init__",
-              "paper_run",
-              "train"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine"
-            ],
-            "path": "src/ai_trading/stress_engine.py",
-            "reasons": [],
-            "score": 10,
-            "symbols": [
-              "StressPolicy",
-              "StressReport",
-              "StressScenario",
-              "_stressed_covariance",
-              "run_stress_test"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "game engine",
-        "terms": [
-          "game",
-          "engine"
-        ]
-      },
-      "task": "game engine"
     },
     "a89b5fe0c84818bbd7a65a9d6d33d2f0ab173a5b2e60337bc2b386fecd99be6b": {
       "route": {
@@ -16162,6 +15842,170 @@
       },
       "task": "income progression"
     },
+    "c45be8345f32082ac0ffa501ff74be5135efc15211875cfc1579e0487279df76": {
+      "route": {
+        "budget": {
+          "confidence": "medium",
+          "expand_to": 12,
+          "max_files": 6,
+          "requested_max_files": 12,
+          "score_margin": 6,
+          "tier": "bounded",
+          "top_score": 23
+        },
+        "candidate_count": 15,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine"
+            ],
+            "path": "src/ai_trading/cli.py",
+            "reasons": [
+              "impact",
+              "search-index"
+            ],
+            "score": 23,
+            "symbols": [
+              "compare_models",
+              "create_readiness_release_command",
+              "crisis_status",
+              "dashboard",
+              "deployment_readiness",
+              "expert_evolve",
+              "expert_factory_run",
+              "expert_pool_refresh",
+              "expert_sandbox",
+              "generation_rollback",
+              "global_allocation_check",
+              "global_allocation_tune",
+              "health_check",
+              "health_serve",
+              "learning_cycle",
+              "loader",
+              "maintenance",
+              "metrics",
+              "multiasset_backtest",
+              "multiasset_evolve"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine"
+            ],
+            "path": "src/ai_trading/dashboard.py",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 17,
+            "symbols": [
+              "Handler",
+              "_display_money",
+              "_display_ratio",
+              "_display_trade_pnl",
+              "_display_units",
+              "_equity_chart_svg",
+              "_public_runtime_snapshot",
+              "_readiness_number",
+              "_readiness_panel",
+              "_send_json",
+              "_trade_pnl_known",
+              "_write_response_body",
+              "do_GET",
+              "do_POST",
+              "end_headers",
+              "execute_paper_cycle",
+              "load_status_snapshot",
+              "log_message",
+              "render_dashboard",
+              "serve_dashboard"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine"
+            ],
+            "path": "src/ai_trading/runtime.py",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 17,
+            "symbols": [
+              "PaperAutonomousRuntime",
+              "PreparedRuntimeMarket",
+              "RuntimeStepResult",
+              "_broker_from_state",
+              "_eligible_execution_indices",
+              "_prepare_market_features",
+              "_state_from_broker",
+              "_step_prepared_locked",
+              "prepare_market",
+              "step",
+              "step_at",
+              "step_prepared"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine"
+            ],
+            "path": "tests/test_risk.py",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 17,
+            "symbols": [
+              "test_drawdown_limit_is_fail_closed",
+              "test_low_confidence_is_rejected"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine"
+            ],
+            "path": "src/ai_trading/engine.py",
+            "reasons": [],
+            "score": 10,
+            "symbols": [
+              "RunResult",
+              "TradingEngine",
+              "__init__",
+              "paper_run",
+              "train"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine"
+            ],
+            "path": "src/ai_trading/stress_engine.py",
+            "reasons": [],
+            "score": 10,
+            "symbols": [
+              "StressPolicy",
+              "StressReport",
+              "StressScenario",
+              "_stressed_covariance",
+              "run_stress_test"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "game engine",
+        "terms": [
+          "game",
+          "engine"
+        ]
+      },
+      "task": "game engine"
+    },
     "c472463065310f1088addf6d007e8c50717dc4749961adad1fee20e0074a0285": {
       "route": {
         "budget": {
@@ -16448,7 +16292,7 @@
       },
       "task": "privacy consent"
     },
-    "ca2623da1706ac857cfcc9da904933eb3aae25f24ece5f32d165ed6ea24288cf": {
+    "cb51fe60e27a5bc42589f5cd71e34258793aa120c36250feaeb38ef33ddec214": {
       "route": {
         "budget": {
           "confidence": "low",
@@ -16459,22 +16303,109 @@
           "tier": "broad",
           "top_score": 9
         },
-        "candidate_count": 3,
+        "candidate_count": 6,
         "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
         "files": [
           {
             "learning_score": 0,
             "matched_terms": [],
-            "path": "src/ai_trading/mtf_parameter_benchmark.py",
+            "path": "src/ai_trading/data.py",
             "reasons": [
               "impact",
               "recently-changed"
             ],
             "score": 9,
             "symbols": [
+              "MarketDataProvider",
+              "YahooFinanceProvider",
+              "_normalize_history_frame",
+              "download",
+              "load_history"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "tests/test_data.py",
+            "reasons": [
+              "impact",
+              "recently-changed"
+            ],
+            "score": 9,
+            "symbols": [
+              "_Provider",
+              "download",
+              "flaky_download",
+              "test_load_history_falls_back_to_next_provider_after_primary_exhaustion",
+              "test_load_history_keeps_price_rows_when_volume_is_missing",
+              "test_load_history_rejects_empty_provider_chain",
+              "test_load_history_rejects_inconsistent_ohlc",
+              "test_load_history_retries_transient_provider_failure",
+              "test_load_history_sorts_and_deduplicates_provider_rows"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "src/ai_trading/cli.py",
+            "reasons": [
+              "impact"
+            ],
+            "score": 6,
+            "symbols": [
+              "compare_models",
+              "create_readiness_release_command",
+              "crisis_status",
+              "dashboard",
+              "deployment_readiness",
+              "expert_evolve",
+              "expert_factory_run",
+              "expert_pool_refresh",
+              "expert_sandbox",
+              "generation_rollback",
+              "global_allocation_check",
+              "global_allocation_tune",
+              "health_check",
+              "health_serve",
+              "learning_cycle",
+              "loader",
+              "maintenance",
+              "metrics",
+              "multiasset_backtest",
+              "multiasset_evolve"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "src/ai_trading/hosted_runtime.py",
+            "reasons": [
+              "impact"
+            ],
+            "score": 6,
+            "symbols": [
+              "HostedPaperSettings",
+              "_now_utc",
+              "from_env",
+              "report_iteration",
+              "run_hosted_paper_loop",
+              "runtime_key",
+              "start_hosted_paper_runtime"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "src/ai_trading/mtf_parameter_benchmark.py",
+            "reasons": [
+              "impact"
+            ],
+            "score": 6,
+            "symbols": [
               "AggregateBenchmarkResult",
               "MTFBenchmarkConfig",
               "MarketBenchmarkResult",
+              "__post_init__",
               "_fold_test_windows",
               "_macro_recall",
               "_selection_score",
@@ -16493,44 +16424,31 @@
           {
             "learning_score": 0,
             "matched_terms": [],
-            "path": "tests/test_mtf_parameter_benchmark.py",
+            "path": "src/ai_trading/paper_cycle.py",
             "reasons": [
-              "impact",
-              "recently-changed"
+              "impact"
             ],
-            "score": 9,
+            "score": 6,
             "symbols": [
-              "fake_evaluate_market_config",
-              "sample_market",
-              "test_benchmark_payload_is_reproducible_and_explicit",
-              "test_btc_focused_grid_is_bounded_and_longer_horizon",
-              "test_market_benchmark_is_purged_and_reports_directional_evidence",
-              "test_market_selections_choose_gate_passing_config_per_symbol",
-              "test_parameter_benchmark_ranks_configs_across_markets",
-              "test_parameter_grid_uses_same_random_seed_for_every_config",
-              "test_payload_exposes_per_market_selection"
+              "PaperCycleResult",
+              "PaperCycleRunner",
+              "_is_logically_fresh",
+              "_is_mtf_evaluation_boundary",
+              "_pending_targets",
+              "_utc_timestamp",
+              "run_once"
             ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": ".github/workflows/mtf-parameter-benchmark.yml",
-            "reasons": [
-              "recently-changed"
-            ],
-            "score": 3,
-            "symbols": []
           }
         ],
         "generated_by": "dbrckk/repo-brain-v8",
         "schema_version": 1,
-        "task": "privacy consent",
+        "task": "purchase billing",
         "terms": [
-          "privacy",
-          "consent"
+          "purchase",
+          "billing"
         ]
       },
-      "task": "privacy consent"
+      "task": "purchase billing"
     },
     "ce6f2a3fa643c6f89838e60506643d43aa8487e67612a864b72fa91e38785349": {
       "route": {
@@ -16884,174 +16802,6 @@
         ]
       },
       "task": "purchase billing"
-    },
-    "d3c344e3aaeb6100865242d0a0f1e480767739cbbb1656f84286362bb77c282d": {
-      "route": {
-        "budget": {
-          "confidence": "low",
-          "expand_to": 12,
-          "max_files": 6,
-          "requested_max_files": 12,
-          "score_margin": 0,
-          "tier": "broad",
-          "top_score": 9
-        },
-        "candidate_count": 7,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "src/ai_trading/mtf_shadow_config.py",
-            "reasons": [
-              "impact",
-              "recently-changed"
-            ],
-            "score": 9,
-            "symbols": [
-              "ValidatedMTFShadowConfig",
-              "as_dict",
-              "horizon_minutes",
-              "validated_mtf_shadow_config"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "tests/test_dashboard_overview.py",
-            "reasons": [
-              "impact",
-              "recently-changed"
-            ],
-            "score": 9,
-            "symbols": [
-              "BtcOverviewPersistence",
-              "FailingOverviewPersistence",
-              "OverviewPersistence",
-              "ReadinessOverviewPersistence",
-              "_free_port",
-              "_start_overview_dashboard",
-              "list_burnin_snapshots",
-              "list_regimes",
-              "list_trades",
-              "load_mtf_shadow_quality",
-              "load_runtime",
-              "load_runtime_status",
-              "load_shadow_quality",
-              "test_btc_overview_exposes_validated_mtf_candidate",
-              "test_dashboard_exposes_operational_overview_endpoint",
-              "test_dashboard_renders_cycle_reliability_alert",
-              "test_dashboard_renders_inconsistent_runtime_alert",
-              "test_dashboard_renders_model_and_revision_metadata",
-              "test_dashboard_renders_operational_alerts",
-              "test_operational_overview_exposes_model_and_runtime_metadata"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "tests/test_mtf_shadow_config.py",
-            "reasons": [
-              "impact",
-              "recently-changed"
-            ],
-            "score": 9,
-            "symbols": [
-              "test_btc_uses_validated_90m_candidate",
-              "test_dax_uses_validated_45m_candidate",
-              "test_gold_uses_validated_45m_candidate"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "tests/test_multi_market.py",
-            "reasons": [
-              "impact",
-              "recently-changed"
-            ],
-            "score": 9,
-            "symbols": [
-              "FakeMultiPersistence",
-              "fake_cycle",
-              "list_burnin_snapshots",
-              "list_regimes",
-              "list_trades",
-              "load_runtime",
-              "load_runtime_status",
-              "load_trade_performance",
-              "test_configured_default_bundle_uses_34_33_33",
-              "test_configured_markets_default_to_gold",
-              "test_dashboard_renders_multi_market_cards",
-              "test_multi_market_cycle_isolates_one_market_failure",
-              "test_multi_market_cycle_runs_markets_concurrently",
-              "test_multi_market_overview_scales_normalized_sleeves_to_100k"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "tests/test_paper_cycle.py",
-            "reasons": [
-              "impact",
-              "recently-changed"
-            ],
-            "score": 9,
-            "symbols": [
-              "ConflictOnceRuntime",
-              "build",
-              "build_runner",
-              "build_runtime",
-              "counted_make_features",
-              "counted_make_labels",
-              "fake_mtf",
-              "fake_shadow",
-              "loader",
-              "prepare_market",
-              "runtime_factory",
-              "sample_market",
-              "step_prepared",
-              "test_catchup_cap_leaves_remaining_backlog",
-              "test_catchup_prepares_features_and_labels_once",
-              "test_existing_runtime_catches_up_oldest_first",
-              "test_fresh_runtime_processes_only_latest_eligible_bar",
-              "test_max_catchup_bars_must_be_positive",
-              "test_missing_last_processed_in_history_fails_closed",
-              "test_mtf_boundary_runs_only_on_quarter_hour"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "src/ai_trading/operational_overview.py",
-            "reasons": [
-              "impact"
-            ],
-            "score": 6,
-            "symbols": [
-              "_burnin_snapshot",
-              "_empty_model_snapshot",
-              "_empty_mtf_shadow_quality_snapshot",
-              "_empty_readiness_snapshot",
-              "_empty_shadow_quality_snapshot",
-              "_mtf_shadow_quality_snapshot",
-              "_readiness_snapshot",
-              "_shadow_quality_snapshot",
-              "build_operational_overview",
-              "quality_payload",
-              "runtime_is_consistent"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "income progression",
-        "terms": [
-          "income",
-          "progression"
-        ]
-      },
-      "task": "income progression"
     },
     "d6b5312808924e87fb43d9a79a9cb6764f90091498050e95308cfe77d141ad38": {
       "route": {
@@ -19761,6 +19511,328 @@
       },
       "task": "income progression"
     },
+    "f4e09e6faa98f80b454ef1a30603663f3259fb214b4c4a12e8f713cfe5a79970": {
+      "route": {
+        "budget": {
+          "confidence": "medium",
+          "expand_to": 12,
+          "max_files": 6,
+          "requested_max_files": 12,
+          "score_margin": 1,
+          "tier": "bounded",
+          "top_score": 27
+        },
+        "candidate_count": 17,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "tests/test_generation_progress.py",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 27,
+            "symbols": [
+              "test_generation_progress_detects_improvement"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "src/ai_trading/data.py",
+            "reasons": [
+              "impact",
+              "recently-changed",
+              "search-index"
+            ],
+            "score": 26,
+            "symbols": [
+              "MarketDataProvider",
+              "YahooFinanceProvider",
+              "_normalize_history_frame",
+              "download",
+              "load_history"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "src/ai_trading/paper_cycle.py",
+            "reasons": [
+              "impact",
+              "search-index"
+            ],
+            "score": 23,
+            "symbols": [
+              "PaperCycleResult",
+              "PaperCycleRunner",
+              "_is_logically_fresh",
+              "_is_mtf_evaluation_boundary",
+              "_pending_targets",
+              "_utc_timestamp",
+              "run_once"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "tests/test_scheduler_endpoint.py",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 21,
+            "symbols": [
+              "_free_port",
+              "_request",
+              "_start_scheduler_dashboard",
+              "fail_cycle",
+              "fake_cycle",
+              "run_cycle",
+              "successful_result",
+              "test_concurrent_progress_is_successful_noop",
+              "test_execution_failure_is_sanitized",
+              "test_http_scheduler_exposes_durable_cloudflare_delivery_evidence",
+              "test_http_scheduler_failure_response_never_leaks_secrets",
+              "test_http_scheduler_other_post_routes_are_not_exposed",
+              "test_http_scheduler_rejects_missing_and_wrong_authorization",
+              "test_http_scheduler_valid_token_runs_one_cycle_and_ignores_body",
+              "test_missing_authorization_is_unauthorized",
+              "test_missing_server_token_fails_closed",
+              "test_scheduler_delivery_overview_rejects_invalid_freshness_window",
+              "test_scheduler_delivery_overview_verifies_three_consecutive_cloudflare_successes",
+              "test_scheduler_delivery_verification_expires_when_latest_success_is_stale",
+              "test_scheduler_telemetry_does_not_trust_arbitrary_source_headers"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "src/ai_trading/dashboard.py",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 17,
+            "symbols": [
+              "Handler",
+              "_display_money",
+              "_display_ratio",
+              "_display_trade_pnl",
+              "_display_units",
+              "_equity_chart_svg",
+              "_public_runtime_snapshot",
+              "_readiness_number",
+              "_readiness_panel",
+              "_send_json",
+              "_trade_pnl_known",
+              "_write_response_body",
+              "do_GET",
+              "do_POST",
+              "end_headers",
+              "execute_paper_cycle",
+              "load_status_snapshot",
+              "log_message",
+              "render_dashboard",
+              "serve_dashboard"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "src/ai_trading/evolution_manager.py",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 17,
+            "symbols": [
+              "EvolutionCycleResult",
+              "_active_pool_returns",
+              "_portfolio_score",
+              "_record_to_candidate",
+              "run_evolution_cycle"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "offline progress",
+        "terms": [
+          "offline",
+          "progress"
+        ]
+      },
+      "task": "offline progress"
+    },
+    "f682be950fe900ff2723b8d098a5833ebdb0b4a737de01e26fcd72d928b1a036": {
+      "route": {
+        "budget": {
+          "confidence": "low",
+          "expand_to": 12,
+          "max_files": 6,
+          "requested_max_files": 12,
+          "score_margin": 0,
+          "tier": "broad",
+          "top_score": 9
+        },
+        "candidate_count": 6,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "src/ai_trading/data.py",
+            "reasons": [
+              "impact",
+              "recently-changed"
+            ],
+            "score": 9,
+            "symbols": [
+              "MarketDataProvider",
+              "YahooFinanceProvider",
+              "_normalize_history_frame",
+              "download",
+              "load_history"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "tests/test_data.py",
+            "reasons": [
+              "impact",
+              "recently-changed"
+            ],
+            "score": 9,
+            "symbols": [
+              "_Provider",
+              "download",
+              "flaky_download",
+              "test_load_history_falls_back_to_next_provider_after_primary_exhaustion",
+              "test_load_history_keeps_price_rows_when_volume_is_missing",
+              "test_load_history_rejects_empty_provider_chain",
+              "test_load_history_rejects_inconsistent_ohlc",
+              "test_load_history_retries_transient_provider_failure",
+              "test_load_history_sorts_and_deduplicates_provider_rows"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "src/ai_trading/cli.py",
+            "reasons": [
+              "impact"
+            ],
+            "score": 6,
+            "symbols": [
+              "compare_models",
+              "create_readiness_release_command",
+              "crisis_status",
+              "dashboard",
+              "deployment_readiness",
+              "expert_evolve",
+              "expert_factory_run",
+              "expert_pool_refresh",
+              "expert_sandbox",
+              "generation_rollback",
+              "global_allocation_check",
+              "global_allocation_tune",
+              "health_check",
+              "health_serve",
+              "learning_cycle",
+              "loader",
+              "maintenance",
+              "metrics",
+              "multiasset_backtest",
+              "multiasset_evolve"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "src/ai_trading/hosted_runtime.py",
+            "reasons": [
+              "impact"
+            ],
+            "score": 6,
+            "symbols": [
+              "HostedPaperSettings",
+              "_now_utc",
+              "from_env",
+              "report_iteration",
+              "run_hosted_paper_loop",
+              "runtime_key",
+              "start_hosted_paper_runtime"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "src/ai_trading/mtf_parameter_benchmark.py",
+            "reasons": [
+              "impact"
+            ],
+            "score": 6,
+            "symbols": [
+              "AggregateBenchmarkResult",
+              "MTFBenchmarkConfig",
+              "MarketBenchmarkResult",
+              "__post_init__",
+              "_fold_test_windows",
+              "_macro_recall",
+              "_selection_score",
+              "benchmark_payload",
+              "btc_focused_benchmark_grid",
+              "default_benchmark_grid",
+              "evaluate_market_config",
+              "horizon_minutes",
+              "main",
+              "market_selections",
+              "name",
+              "run_parameter_benchmark",
+              "write_benchmark_report"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "src/ai_trading/paper_cycle.py",
+            "reasons": [
+              "impact"
+            ],
+            "score": 6,
+            "symbols": [
+              "PaperCycleResult",
+              "PaperCycleRunner",
+              "_is_logically_fresh",
+              "_is_mtf_evaluation_boundary",
+              "_pending_targets",
+              "_utc_timestamp",
+              "run_once"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "income progression",
+        "terms": [
+          "income",
+          "progression"
+        ]
+      },
+      "task": "income progression"
+    },
     "fa5b9a1d89d5d4f528c61fdd80c70b61f9c377874716b908e190eee8eee7d2d3": {
       "route": {
         "budget": {
@@ -20095,11 +20167,6 @@
   },
   "generated_by": "dbrckk/repo-brain-query-cache-v2",
   "order": [
-    "ca2623da1706ac857cfcc9da904933eb3aae25f24ece5f32d165ed6ea24288cf",
-    "7b43c3fad7ec8eb3e1c3c957c5f0d1c9ab76f616bf63307f257d3e26b91fdfd9",
-    "a3bacfe767d81f8a9d0ebf1635cae91687ce7aac25ed56416ed04bb1b7e66016",
-    "7a04342eb12fff9acd35f14b0baaa32072c8c74a7993fd3709c0f8ba56695c36",
-    "d3c344e3aaeb6100865242d0a0f1e480767739cbbb1656f84286362bb77c282d",
     "c472463065310f1088addf6d007e8c50717dc4749961adad1fee20e0074a0285",
     "69d405b8723b98b27c27b132075d967738e423c950d84205f4541dfa4d12b0a6",
     "5d52fe918f76279729169c99e4ec88758c94522b0f9adfe55e707b141ceadc67",
@@ -20222,7 +20289,12 @@
     "22a46073b18268b1e53c0d00397a92e2251e91b197cdf09743d60e3c1a0d4126",
     "50c489978e3b81c49848e68f9c0bc1c903599effd027f3f981ed5274af941a98",
     "927b4811f9ed985416be04f479194eef8e0b9c455641c63761f4aeb6b7d6c741",
-    "2eb1382880deeea19f756635bea46246b592fc35cf58cf01e72358ff24d4d81c"
+    "2eb1382880deeea19f756635bea46246b592fc35cf58cf01e72358ff24d4d81c",
+    "cb51fe60e27a5bc42589f5cd71e34258793aa120c36250feaeb38ef33ddec214",
+    "f682be950fe900ff2723b8d098a5833ebdb0b4a737de01e26fcd72d928b1a036",
+    "04815d2efab6a656aa4579540b5cbce9018faf008ea070076fc06e45c8a84f2e",
+    "f4e09e6faa98f80b454ef1a30603663f3259fb214b4c4a12e8f713cfe5a79970",
+    "c45be8345f32082ac0ffa501ff74be5135efc15211875cfc1579e0487279df76"
   ],
   "schema_version": 1
 }
