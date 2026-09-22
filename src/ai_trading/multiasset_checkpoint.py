@@ -81,11 +81,14 @@ class MultiAssetCheckpointStore:
             raise ValueError(f"multiasset checkpoint already exists: {generation}")
         temp_dir.replace(final_dir)
 
+        self._publish_current(generation)
+        self._prune_old_generations(current=generation)
+        return generation
+
+    def _publish_current(self, generation: str) -> None:
         pointer_tmp = self.current_path.with_suffix(".tmp")
         pointer_tmp.write_text(generation, encoding="utf-8")
         pointer_tmp.replace(self.current_path)
-        self._prune_old_generations(current=generation)
-        return generation
 
     def _prune_old_generations(self, *, current: str) -> None:
         generations = sorted(
@@ -97,12 +100,10 @@ class MultiAssetCheckpointStore:
         for path in generations[:removable]:
             shutil.rmtree(path)
 
-    def load(self) -> tuple[MultiAssetState, dict[str, object]] | None:
-        if not self.current_path.exists():
-            return None
-        generation = self.current_path.read_text(encoding="utf-8").strip()
-        if not generation:
-            raise ValueError("multiasset checkpoint pointer is empty")
+    def _load_generation(
+        self,
+        generation: str,
+    ) -> tuple[MultiAssetState, dict[str, object]]:
         directory = self._generation_dir(generation)
         manifest_path = directory / "manifest.json"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -129,3 +130,35 @@ class MultiAssetCheckpointStore:
                 )
             models[symbol] = joblib.load(path)
         return state, models
+
+    def _newer_valid_generation(self, current: str | None) -> str | None:
+        candidates = sorted(
+            path.name
+            for path in self.root.glob("step-*")
+            if path.is_dir() and (current is None or path.name > current)
+        )
+        for generation in reversed(candidates):
+            try:
+                self._load_generation(generation)
+            except (FileNotFoundError, KeyError, ValueError, json.JSONDecodeError):
+                continue
+            return generation
+        return None
+
+    def load(self) -> tuple[MultiAssetState, dict[str, object]] | None:
+        current: str | None = None
+        if self.current_path.exists():
+            current = self.current_path.read_text(encoding="utf-8").strip()
+            if not current:
+                raise ValueError("multiasset checkpoint pointer is empty")
+            loaded = self._load_generation(current)
+        else:
+            loaded = None
+
+        recovered = self._newer_valid_generation(current)
+        if recovered is not None:
+            self._publish_current(recovered)
+            self._prune_old_generations(current=recovered)
+            return self._load_generation(recovered)
+
+        return loaded
