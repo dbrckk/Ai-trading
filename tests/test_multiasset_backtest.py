@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from ai_trading import multiasset_backtest as backtest_module
 from ai_trading.config import RiskConfig
 from ai_trading.multiasset_backtest import MultiAssetWalkForwardBacktester
 from ai_trading.performance import compute_metrics, infer_periods_per_year
@@ -73,3 +74,35 @@ def test_multiasset_backtest_annualizes_from_actual_timestamps() -> None:
     assert report.metrics.annualized_volatility == pytest.approx(
         expected.annualized_volatility
     )
+
+def test_multiasset_backtest_uses_symbol_specific_execution_costs(monkeypatch) -> None:
+    seen: list[tuple[str, float, float]] = []
+    real_config = backtest_module.risk_config_for_symbol
+
+    def capture(symbol: str, base: RiskConfig):
+        config = real_config(
+            symbol,
+            base,
+            raw='{"A":{"transaction_cost_bps":1.0,"slippage_bps":2.0},'
+            '"B":{"transaction_cost_bps":7.0,"slippage_bps":8.0}}',
+        )
+        seen.append((symbol, config.transaction_cost_bps, config.slippage_bps))
+        return config
+
+    monkeypatch.setattr(backtest_module, "risk_config_for_symbol", capture)
+    report = MultiAssetWalkForwardBacktester(
+        risk_config=RiskConfig(min_confidence=0.0),
+        allocation_config=AllocationConfig(max_asset_weight=0.6),
+        portfolio_risk_config=PortfolioRiskConfig(
+            max_gross_exposure=1.0,
+            max_net_exposure=1.0,
+            max_asset_exposure=0.6,
+            max_pair_correlation=0.999,
+        ),
+        min_train_bars=140,
+        test_window_bars=40,
+    ).run({"A": market(5), "B": market(6)})
+
+    assert report.decisions > 0
+    assert ("A", 1.0, 2.0) in seen
+    assert ("B", 7.0, 8.0) in seen

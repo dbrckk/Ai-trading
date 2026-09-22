@@ -6,6 +6,7 @@ import pandas as pd
 
 from .config import ModelConfig, RiskConfig
 from .ensemble import EnsembleDirectionModel
+from .execution_costs import risk_config_for_symbol
 from .features import FEATURES, make_features, make_labels
 from .paper_execution import calculate_rebalance_fill
 from .performance import PerformanceMetrics, compute_metrics, infer_periods_per_year
@@ -143,12 +144,16 @@ class MultiAssetWalkForwardBacktester:
                 if risk.approved:
                     for symbol in intelligent.index:
                         price = float(aligned[symbol].at[execution_idx, "Open"])
+                        symbol_risk_config = risk_config_for_symbol(
+                            symbol,
+                            self.risk_config,
+                        )
                         fill = calculate_rebalance_fill(
                             current_units=units[symbol],
                             target_notional=float(notionals[symbol]),
                             price=price,
-                            transaction_cost_bps=self.risk_config.transaction_cost_bps,
-                            slippage_bps=self.risk_config.slippage_bps,
+                            transaction_cost_bps=symbol_risk_config.transaction_cost_bps,
+                            slippage_bps=symbol_risk_config.slippage_bps,
                         )
                         cash -= fill.delta_units * price
                         cash -= fill.costs
