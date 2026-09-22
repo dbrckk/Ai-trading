@@ -303,6 +303,11 @@ class MultiAssetPaperRuntime:
             opportunity_quality: dict[str, float] = {}
             signed_weights = base_weights.copy()
             pending_online_models: dict[str, RiverDirectionModel] = {}
+            pending_drift_marks: list[tuple[str, int, float, float]] = []
+            pending_quality_updates: list[tuple[str, int, float, int]] = []
+            pending_meta_updates: list[tuple[MetaContext, str, bool, float]] = []
+            pending_lifecycle_events: list[dict[str, object]] = []
+            pending_economic_updates: list[tuple[str, float, float, float, float, float]] = []
 
             for symbol in base_weights.index:
                 features = features_by_symbol[symbol]
@@ -378,11 +383,13 @@ class MultiAssetPaperRuntime:
                     )
                     batch_prediction = batch_model.predict_one(signal_row, regime)
                     if retrain_triggered and distribution_drift is not None:
-                        self.drift_retrain_store.mark(
-                            symbol,
-                            processed_bar=state.processed_bars,
-                            max_psi=distribution_drift.max_psi,
-                            correlation_shift=distribution_drift.correlation_shift,
+                        pending_drift_marks.append(
+                            (
+                                symbol,
+                                state.processed_bars,
+                                distribution_drift.max_psi,
+                                distribution_drift.correlation_shift,
+                            )
                         )
                         drift_by_symbol[symbol]["retrain_completed"] = True
                 except ValueError:
@@ -592,11 +599,13 @@ class MultiAssetPaperRuntime:
                 if pd.notna(realized):
                     realized_int = int(realized)
                     river_key = f"{symbol}:river"
-                    self.quality_store.append(
-                        river_key,
-                        prediction=evaluation_prediction.side,
-                        confidence=evaluation_prediction.confidence,
-                        label=realized_int,
+                    pending_quality_updates.append(
+                        (
+                            river_key,
+                            evaluation_prediction.side,
+                            evaluation_prediction.confidence,
+                            realized_int,
+                        )
                     )
 
                     evaluations = [("river", evaluation_prediction)]
@@ -607,11 +616,13 @@ class MultiAssetPaperRuntime:
                             detect_regime(batch_eval_row),
                         )
                         ensemble_key = f"{symbol}:ensemble"
-                        self.quality_store.append(
-                            ensemble_key,
-                            prediction=batch_eval_prediction.side,
-                            confidence=batch_eval_prediction.confidence,
-                            label=realized_int,
+                        pending_quality_updates.append(
+                            (
+                                ensemble_key,
+                                batch_eval_prediction.side,
+                                batch_eval_prediction.confidence,
+                                realized_int,
+                            )
                         )
                         evaluations.append(("ensemble", batch_eval_prediction))
 
@@ -624,11 +635,8 @@ class MultiAssetPaperRuntime:
                             if evaluation.side != 0
                             else 0.0
                         )
-                        self.meta_store.update(
-                            context,
-                            model_name,
-                            correct=correct,
-                            edge=edge,
+                        pending_meta_updates.append(
+                            (context, model_name, correct, edge)
                         )
 
                 signals[symbol] = side
@@ -831,47 +839,51 @@ class MultiAssetPaperRuntime:
             )
             pending_resilience_state = persisted_resilience_state
             if stability.status != previous_resilience_state.instability_status:
-                self.lifecycle_log.append(
-                    event="resilience_instability",
-                    version="",
-                    model_name="",
-                    reason="; ".join(stability.reasons),
-                    failure_type=(
-                        "technical_failure"
-                        if stability.status != "stable"
-                        else ""
-                    ),
-                    processed_bar=state.processed_bars,
-                    metadata={
-                        "from_status": previous_resilience_state.instability_status,
-                        "to_status": stability.status,
-                        "oscillations": stability.oscillations,
-                        "recovery_streak_events": stability.recovery_streak_events,
-                        "cooldown_count": stability.cooldown_count,
-                        "reasons": list(stability.reasons),
-                    },
+                pending_lifecycle_events.append(
+                    {
+                        "event": "resilience_instability",
+                        "version": "",
+                        "model_name": "",
+                        "reason": "; ".join(stability.reasons),
+                        "failure_type": (
+                            "technical_failure"
+                            if stability.status != "stable"
+                            else ""
+                        ),
+                        "processed_bar": state.processed_bars,
+                        "metadata": {
+                            "from_status": previous_resilience_state.instability_status,
+                            "to_status": stability.status,
+                            "oscillations": stability.oscillations,
+                            "recovery_streak_events": stability.recovery_streak_events,
+                            "cooldown_count": stability.cooldown_count,
+                            "reasons": list(stability.reasons),
+                        },
+                    }
                 )
             if resilience.state.mode != previous_resilience_state.mode:
-                self.lifecycle_log.append(
-                    event="resilience_transition",
-                    version="",
-                    model_name="",
-                    reason=resilience.state.reason,
-                    failure_type=(
-                        "technical_failure"
-                        if stability_degraded
-                        else ""
-                    ),
-                    processed_bar=state.processed_bars,
-                    metadata={
-                        "from_mode": previous_resilience_state.mode,
-                        "to_mode": resilience.state.mode,
-                        "stability_status": stability.status,
-                        "oscillations": stability.oscillations,
-                        "recovery_streak_events": stability.recovery_streak_events,
-                        "cooldown_count": stability.cooldown_count,
-                        "stability_reasons": list(stability.reasons),
-                    },
+                pending_lifecycle_events.append(
+                    {
+                        "event": "resilience_transition",
+                        "version": "",
+                        "model_name": "",
+                        "reason": resilience.state.reason,
+                        "failure_type": (
+                            "technical_failure"
+                            if stability_degraded
+                            else ""
+                        ),
+                        "processed_bar": state.processed_bars,
+                        "metadata": {
+                            "from_mode": previous_resilience_state.mode,
+                            "to_mode": resilience.state.mode,
+                            "stability_status": stability.status,
+                            "oscillations": stability.oscillations,
+                            "recovery_streak_events": stability.recovery_streak_events,
+                            "cooldown_count": stability.cooldown_count,
+                            "stability_reasons": list(stability.reasons),
+                        },
+                    }
                 )
             intelligent_weights = intelligent_weights * resilience.exposure_cap
 
@@ -973,13 +985,15 @@ class MultiAssetPaperRuntime:
                         f"{'high' if drawdown_now >= 0.10 else 'medium' if drawdown_now >= 0.05 else 'low'}"
                     )
                     route_weight = route_weights_by_symbol.get(symbol, {}).get(model_name, 0.0)
-                    self.economic_meta_store.update(
-                        economic_key,
-                        pnl=float(values["pnl"]),
-                        turnover=float(turnover_by_symbol.get(symbol, 0.0)) * route_weight,
-                        costs=float(costs_by_symbol.get(symbol, 0.0)) * route_weight,
-                        drawdown=drawdown_now,
-                        equity=max(equity, 1e-12),
+                    pending_economic_updates.append(
+                        (
+                            economic_key,
+                            float(values["pnl"]),
+                            float(turnover_by_symbol.get(symbol, 0.0)) * route_weight,
+                            float(costs_by_symbol.get(symbol, 0.0)) * route_weight,
+                            drawdown_now,
+                            max(equity, 1e-12),
+                        )
                     )
 
             state.processed_bars += 1
@@ -992,6 +1006,45 @@ class MultiAssetPaperRuntime:
             self.crisis_state_store.save(pending_crisis_state)
             self.resilience_state_store.save(pending_resilience_state)
             self.governor_state_store.save(pending_governor_state)
+            for symbol, processed_bar, max_psi, correlation_shift in pending_drift_marks:
+                self.drift_retrain_store.mark(
+                    symbol,
+                    processed_bar=processed_bar,
+                    max_psi=max_psi,
+                    correlation_shift=correlation_shift,
+                )
+            for key, prediction, confidence, label in pending_quality_updates:
+                self.quality_store.append(
+                    key,
+                    prediction=prediction,
+                    confidence=confidence,
+                    label=label,
+                )
+            for context, model_name, correct, edge in pending_meta_updates:
+                self.meta_store.update(
+                    context,
+                    model_name,
+                    correct=correct,
+                    edge=edge,
+                )
+            for event in pending_lifecycle_events:
+                self.lifecycle_log.append(**event)
+            for (
+                economic_key,
+                pnl,
+                turnover,
+                costs,
+                drawdown,
+                update_equity,
+            ) in pending_economic_updates:
+                self.economic_meta_store.update(
+                    economic_key,
+                    pnl=pnl,
+                    turnover=turnover,
+                    costs=costs,
+                    drawdown=drawdown,
+                    equity=update_equity,
+                )
             self.state_store.save(state)
             for symbol, model in pending_online_models.items():
                 self._save_model(symbol, model)
