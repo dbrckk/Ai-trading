@@ -291,6 +291,7 @@ class MultiAssetPaperRuntime:
             opportunity_alpha: dict[str, float] = {}
             opportunity_quality: dict[str, float] = {}
             signed_weights = base_weights.copy()
+            pending_online_models: dict[str, RiverDirectionModel] = {}
 
             for symbol in base_weights.index:
                 features = features_by_symbol[symbol]
@@ -354,7 +355,7 @@ class MultiAssetPaperRuntime:
 
                 signal_row = features.loc[signal_idx, FEATURES]
                 river_prediction = model.predict_one(signal_row)
-                self._save_model(symbol, model)
+                pending_online_models[symbol] = model
 
                 regime = detect_regime(signal_row)
                 try:
@@ -972,6 +973,8 @@ class MultiAssetPaperRuntime:
             current_equity = state.equity()
             state.peak_equity = max(state.peak_equity, current_equity)
             self.state_store.save(state)
+            for symbol, model in pending_online_models.items():
+                self._save_model(symbol, model)
 
             self.audit.append(
                 "multiasset_runtime_step",

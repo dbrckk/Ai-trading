@@ -117,3 +117,38 @@ def test_failed_drift_retrain_does_not_start_cooldown(
     assert drift_store.load() == {}
     assert drift_store.should_retrain("A", processed_bar=1)
     assert drift_store.should_retrain("B", processed_bar=1)
+
+
+
+def test_multiasset_runtime_does_not_persist_online_models_before_state_commit(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    state_store = MultiAssetStateStore(tmp_path / "state.json")
+    runtime = MultiAssetPaperRuntime(
+        risk_config=RiskConfig(),
+        allocation_config=AllocationConfig(max_asset_weight=0.6),
+        portfolio_risk_config=PortfolioRiskConfig(
+            max_gross_exposure=1.0,
+            max_net_exposure=1.0,
+            max_asset_exposure=0.6,
+            max_pair_correlation=0.99,
+        ),
+        state_store=state_store,
+        audit_log=AuditLog(tmp_path / "audit.jsonl"),
+        lock_path=str(tmp_path / "lock"),
+        model_root=tmp_path / "online_models",
+        batch_model_root=tmp_path / "batch_models",
+        specialist_model_root=tmp_path / "specialists",
+    )
+
+    def fail_state_save(_state) -> None:
+        raise RuntimeError("synthetic state commit failure")
+
+    monkeypatch.setattr(state_store, "save", fail_state_save)
+
+    with np.testing.assert_raises_regex(RuntimeError, "state commit failure"):
+        runtime.step({"A": market(21), "B": market(22)})
+
+    assert not (tmp_path / "online_models" / "A.joblib").exists()
+    assert not (tmp_path / "online_models" / "B.joblib").exists()
