@@ -45,16 +45,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T13:04:56Z
+Generated: 2026-09-22T15:51:12Z
 
 ### Git
 - Branch: `main`
-- Head: `6e663e5ff1e3`
-- Commit date: 2026-09-22T15:04:41+02:00
-- Commit: refactor: add market data provider fallback boundary (#101)
+- Head: `7f1797502e77`
+- Commit date: 2026-09-22T17:51:01+02:00
+- Commit: fix: harden portfolio intelligence against invalid inputs
 - Tracked files: 493
 
 ### Recently changed files
+- `src/ai_trading/portfolio_intelligence.py`
+- `tests/test_portfolio_intelligence.py`
 - `src/ai_trading/data.py`
 - `tests/test_data.py`
 - `src/ai_trading/dashboard.py`

@@ -1,576 +1,245 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "9481113c835eb0402519808cd2d1d63996cf9072",
-  "head": "6e663e5ff1e37f2358a7f3d3c1ab0a0d4b8dfd1b",
+  "base": "6e663e5ff1e37f2358a7f3d3c1ab0a0d4b8dfd1b",
+  "head": "7f1797502e7723c424a91eabe7a59d0797683c29",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "src/ai_trading/data.py",
+      "path": "src/ai_trading/portfolio_intelligence.py",
       "status": "M"
     },
     {
-      "path": "tests/test_data.py",
+      "path": "tests/test_portfolio_intelligence.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "src/ai_trading/data.py",
-    "tests/test_data.py"
+    "src/ai_trading/portfolio_intelligence.py",
+    "tests/test_portfolio_intelligence.py"
   ],
   "impacted_files": [
-    "src/ai_trading/cli.py",
-    "src/ai_trading/data.py",
-    "src/ai_trading/hosted_runtime.py",
-    "src/ai_trading/mtf_parameter_benchmark.py",
-    "src/ai_trading/paper_cycle.py",
-    "tests/test_data.py"
+    "src/ai_trading/multiasset_backtest.py",
+    "src/ai_trading/multiasset_runtime.py",
+    "src/ai_trading/portfolio_intelligence.py",
+    "tests/test_config_validation.py",
+    "tests/test_portfolio_intelligence.py"
   ],
   "impacted_symbols": [
     {
-      "name": "self_test",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 107
-    },
-    {
-      "name": "synthetic_market",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 113
-    },
-    {
-      "name": "train",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 179
-    },
-    {
-      "name": "paper",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 191
-    },
-    {
-      "name": "walk_forward",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 212
-    },
-    {
-      "name": "compare_models",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 433
-    },
-    {
-      "name": "robustness",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 507
-    },
-    {
-      "name": "tune",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 538
-    },
-    {
-      "name": "health_check",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 558
-    },
-    {
-      "name": "learning_cycle",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 615
-    },
-    {
-      "name": "runtime_step",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 660
-    },
-    {
-      "name": "paper_loop",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 689
-    },
-    {
-      "name": "portfolio_analyze",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 738
-    },
-    {
-      "name": "readiness_check",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 784
-    },
-    {
-      "name": "multiasset_step",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 822
-    },
-    {
-      "name": "multiasset_backtest",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 866
-    },
-    {
-      "name": "expert_sandbox",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 894
-    },
-    {
-      "name": "expert_pool_refresh",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 937
-    },
-    {
-      "name": "expert_factory_run",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 966
-    },
-    {
-      "name": "expert_evolve",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 993
-    },
-    {
-      "name": "generation_rollback",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1018
-    },
-    {
-      "name": "multiasset_evolve",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1033
-    },
-    {
-      "name": "global_allocation_check",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1067
-    },
-    {
-      "name": "global_allocation_tune",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1114
-    },
-    {
-      "name": "crisis_status",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1153
-    },
-    {
-      "name": "risk_governor_status",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1173
-    },
-    {
-      "name": "system_status",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1186
-    },
-    {
-      "name": "create_readiness_release_command",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1208
-    },
-    {
-      "name": "revoke_readiness_release",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1322
-    },
-    {
-      "name": "deployment_readiness",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1342
-    },
-    {
-      "name": "multiasset_loop",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1519
-    },
-    {
-      "name": "loader",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1530
-    },
-    {
-      "name": "watchdog_status",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1559
-    },
-    {
-      "name": "watchdog_enforce",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1590
-    },
-    {
-      "name": "maintenance",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1615
-    },
-    {
-      "name": "supervisor_status",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1628
-    },
-    {
-      "name": "metrics",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1651
-    },
-    {
-      "name": "health_serve",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1656
-    },
-    {
-      "name": "supervisor_run",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1673
-    },
-    {
-      "name": "paper_soak",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1747
-    },
-    {
-      "name": "paper_qualification_suite",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1831
-    },
-    {
-      "name": "dashboard",
-      "kind": "function",
-      "file": "src/ai_trading/cli.py",
-      "line": 1882
-    },
-    {
-      "name": "MarketDataProvider",
+      "name": "MultiAssetBacktestReport",
       "kind": "class",
-      "file": "src/ai_trading/data.py",
-      "line": 12
-    },
-    {
-      "name": "download",
-      "kind": "function",
-      "file": "src/ai_trading/data.py",
-      "line": 17
-    },
-    {
-      "name": "YahooFinanceProvider",
-      "kind": "class",
-      "file": "src/ai_trading/data.py",
-      "line": 21
-    },
-    {
-      "name": "download",
-      "kind": "function",
-      "file": "src/ai_trading/data.py",
-      "line": 24
-    },
-    {
-      "name": "_normalize_history_frame",
-      "kind": "function",
-      "file": "src/ai_trading/data.py",
-      "line": 41
-    },
-    {
-      "name": "load_history",
-      "kind": "function",
-      "file": "src/ai_trading/data.py",
-      "line": 85
-    },
-    {
-      "name": "HostedPaperSettings",
-      "kind": "class",
-      "file": "src/ai_trading/hosted_runtime.py",
+      "file": "src/ai_trading/multiasset_backtest.py",
       "line": 19
     },
     {
-      "name": "runtime_key",
-      "kind": "function",
-      "file": "src/ai_trading/hosted_runtime.py",
-      "line": 30
-    },
-    {
-      "name": "from_env",
-      "kind": "function",
-      "file": "src/ai_trading/hosted_runtime.py",
-      "line": 34
-    },
-    {
-      "name": "_now_utc",
-      "kind": "function",
-      "file": "src/ai_trading/hosted_runtime.py",
-      "line": 78
-    },
-    {
-      "name": "run_hosted_paper_loop",
-      "kind": "function",
-      "file": "src/ai_trading/hosted_runtime.py",
-      "line": 82
-    },
-    {
-      "name": "report_iteration",
-      "kind": "function",
-      "file": "src/ai_trading/hosted_runtime.py",
-      "line": 113
-    },
-    {
-      "name": "start_hosted_paper_runtime",
-      "kind": "function",
-      "file": "src/ai_trading/hosted_runtime.py",
-      "line": 190
-    },
-    {
-      "name": "MTFBenchmarkConfig",
+      "name": "MultiAssetWalkForwardBacktester",
       "kind": "class",
-      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "file": "src/ai_trading/multiasset_backtest.py",
       "line": 27
+    },
+    {
+      "name": "__init__",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_backtest.py",
+      "line": 28
+    },
+    {
+      "name": "run",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_backtest.py",
+      "line": 52
+    },
+    {
+      "name": "MultiAssetStepResult",
+      "kind": "class",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 72
+    },
+    {
+      "name": "MultiAssetPaperRuntime",
+      "kind": "class",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 85
+    },
+    {
+      "name": "__init__",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 86
+    },
+    {
+      "name": "_specialist_path",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 163
+    },
+    {
+      "name": "_load_or_train_specialist",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 167
+    },
+    {
+      "name": "_batch_model_path",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 189
+    },
+    {
+      "name": "_load_or_train_batch_model",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 193
+    },
+    {
+      "name": "_model_path",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 217
+    },
+    {
+      "name": "_load_model",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 221
+    },
+    {
+      "name": "_save_model",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 227
+    },
+    {
+      "name": "step",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 234
+    },
+    {
+      "name": "PortfolioIntelligenceConfig",
+      "kind": "class",
+      "file": "src/ai_trading/portfolio_intelligence.py",
+      "line": 10
     },
     {
       "name": "__post_init__",
       "kind": "function",
-      "file": "src/ai_trading/mtf_parameter_benchmark.py",
-      "line": 34
+      "file": "src/ai_trading/portfolio_intelligence.py",
+      "line": 22
     },
     {
-      "name": "horizon_minutes",
-      "kind": "function",
-      "file": "src/ai_trading/mtf_parameter_benchmark.py",
-      "line": 47
+      "name": "PortfolioIntelligenceReport",
+      "kind": "class",
+      "file": "src/ai_trading/portfolio_intelligence.py",
+      "line": 40
     },
     {
-      "name": "name",
+      "name": "estimate_portfolio_volatility",
       "kind": "function",
-      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "file": "src/ai_trading/portfolio_intelligence.py",
       "line": 51
     },
     {
-      "name": "MarketBenchmarkResult",
-      "kind": "class",
-      "file": "src/ai_trading/mtf_parameter_benchmark.py",
+      "name": "_active_max_pair_correlation",
+      "kind": "function",
+      "file": "src/ai_trading/portfolio_intelligence.py",
+      "line": 72
+    },
+    {
+      "name": "_correlation_scale",
+      "kind": "function",
+      "file": "src/ai_trading/portfolio_intelligence.py",
+      "line": 94
+    },
+    {
+      "name": "_drawdown_scale",
+      "kind": "function",
+      "file": "src/ai_trading/portfolio_intelligence.py",
+      "line": 109
+    },
+    {
+      "name": "apply_portfolio_intelligence",
+      "kind": "function",
+      "file": "src/ai_trading/portfolio_intelligence.py",
+      "line": 127
+    },
+    {
+      "name": "test_invalid_strategy_configuration_fails_closed",
+      "kind": "function",
+      "file": "tests/test_config_validation.py",
+      "line": 38
+    },
+    {
+      "name": "test_expected_shortfall_rejects_invalid_alpha",
+      "kind": "function",
+      "file": "tests/test_config_validation.py",
+      "line": 44
+    },
+    {
+      "name": "test_global_allocator_rejects_negative_transaction_costs",
+      "kind": "function",
+      "file": "tests/test_config_validation.py",
+      "line": 49
+    },
+    {
+      "name": "sample_returns",
+      "kind": "function",
+      "file": "tests/test_portfolio_intelligence.py",
+      "line": 12
+    },
+    {
+      "name": "test_volatility_targeting_scales_weights",
+      "kind": "function",
+      "file": "tests/test_portfolio_intelligence.py",
+      "line": 23
+    },
+    {
+      "name": "test_drawdown_reduces_leverage",
+      "kind": "function",
+      "file": "tests/test_portfolio_intelligence.py",
+      "line": 42
+    },
+    {
+      "name": "test_low_confidence_asset_is_zeroed",
+      "kind": "function",
+      "file": "tests/test_portfolio_intelligence.py",
       "line": 63
     },
     {
-      "name": "AggregateBenchmarkResult",
-      "kind": "class",
-      "file": "src/ai_trading/mtf_parameter_benchmark.py",
-      "line": 85
-    },
-    {
-      "name": "default_benchmark_grid",
+      "name": "test_high_correlation_reduces_leverage",
       "kind": "function",
-      "file": "src/ai_trading/mtf_parameter_benchmark.py",
-      "line": 96
+      "file": "tests/test_portfolio_intelligence.py",
+      "line": 76
     },
     {
-      "name": "btc_focused_benchmark_grid",
+      "name": "test_low_correlation_keeps_full_correlation_scale",
       "kind": "function",
-      "file": "src/ai_trading/mtf_parameter_benchmark.py",
-      "line": 119
+      "file": "tests/test_portfolio_intelligence.py",
+      "line": 107
     },
     {
-      "name": "market_selections",
+      "name": "test_portfolio_intelligence_fails_closed_on_insufficient_correlation_history",
       "kind": "function",
-      "file": "src/ai_trading/mtf_parameter_benchmark.py",
-      "line": 137
+      "file": "tests/test_portfolio_intelligence.py",
+      "line": 124
     },
     {
-      "name": "_macro_recall",
+      "name": "test_portfolio_intelligence_sanitizes_nonfinite_confidence",
       "kind": "function",
-      "file": "src/ai_trading/mtf_parameter_benchmark.py",
-      "line": 181
+      "file": "tests/test_portfolio_intelligence.py",
+      "line": 139
     },
     {
-      "name": "_selection_score",
+      "name": "test_portfolio_intelligence_rejects_invalid_equity",
       "kind": "function",
-      "file": "src/ai_trading/mtf_parameter_benchmark.py",
-      "line": 191
-    },
-    {
-      "name": "_fold_test_windows",
-      "kind": "function",
-      "file": "src/ai_trading/mtf_parameter_benchmark.py",
-      "line": 210
-    },
-    {
-      "name": "evaluate_market_config",
-      "kind": "function",
-      "file": "src/ai_trading/mtf_parameter_benchmark.py",
-      "line": 238
-    },
-    {
-      "name": "run_parameter_benchmark",
-      "kind": "function",
-      "file": "src/ai_trading/mtf_parameter_benchmark.py",
-      "line": 368
-    },
-    {
-      "name": "benchmark_payload",
-      "kind": "function",
-      "file": "src/ai_trading/mtf_parameter_benchmark.py",
-      "line": 430
-    },
-    {
-      "name": "write_benchmark_report",
-      "kind": "function",
-      "file": "src/ai_trading/mtf_parameter_benchmark.py",
-      "line": 469
-    },
-    {
-      "name": "main",
-      "kind": "function",
-      "file": "src/ai_trading/mtf_parameter_benchmark.py",
-      "line": 540
-    },
-    {
-      "name": "_utc_timestamp",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 24
-    },
-    {
-      "name": "_is_mtf_evaluation_boundary",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 31
-    },
-    {
-      "name": "PaperCycleResult",
-      "kind": "class",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 47
-    },
-    {
-      "name": "PaperCycleRunner",
-      "kind": "class",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 56
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 59
-    },
-    {
-      "name": "_is_logically_fresh",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 71
-    },
-    {
-      "name": "_pending_targets",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 84
-    },
-    {
-      "name": "run_once",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle.py",
-      "line": 149
-    },
-    {
-      "name": "test_load_history_keeps_price_rows_when_volume_is_missing",
-      "kind": "function",
-      "file": "tests/test_data.py",
-      "line": 8
-    },
-    {
-      "name": "test_load_history_retries_transient_provider_failure",
-      "kind": "function",
-      "file": "tests/test_data.py",
-      "line": 29
-    },
-    {
-      "name": "flaky_download",
-      "kind": "function",
-      "file": "tests/test_data.py",
-      "line": 43
-    },
-    {
-      "name": "test_load_history_sorts_and_deduplicates_provider_rows",
-      "kind": "function",
-      "file": "tests/test_data.py",
-      "line": 63
-    },
-    {
-      "name": "test_load_history_rejects_inconsistent_ohlc",
-      "kind": "function",
-      "file": "tests/test_data.py",
-      "line": 86
-    },
-    {
-      "name": "_Provider",
-      "kind": "class",
-      "file": "tests/test_data.py",
-      "line": 104
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "tests/test_data.py",
-      "line": 105
-    },
-    {
-      "name": "download",
-      "kind": "function",
-      "file": "tests/test_data.py",
-      "line": 110
-    },
-    {
-      "name": "test_load_history_falls_back_to_next_provider_after_primary_exhaustion",
-      "kind": "function",
-      "file": "tests/test_data.py",
-      "line": 117
-    },
-    {
-      "name": "test_load_history_rejects_empty_provider_chain",
-      "kind": "function",
-      "file": "tests/test_data.py",
-      "line": 146
+      "file": "tests/test_portfolio_intelligence.py",
+      "line": 156
     }
   ],
   "selected_tests": [
-    "tests/test_data.py",
-    "tests/test_data_quality.py",
-    "tests/test_dataset_evidence.py"
+    "tests/test_config_validation.py",
+    "tests/test_portfolio.py",
+    "tests/test_portfolio_intelligence.py"
   ]
 }

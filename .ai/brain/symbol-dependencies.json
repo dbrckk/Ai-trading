@@ -5,25 +5,19 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "MarketDataProvider": {
+    "PortfolioIntelligenceConfig": {
       "source": {
-        "file": "src/ai_trading/data.py",
-        "start": 12,
-        "end": 17
+        "file": "src/ai_trading/portfolio_intelligence.py",
+        "start": 10,
+        "end": 36
       },
       "symbol_dependencies": [
         {
-          "symbol": "download",
+          "symbol": "__post_init__",
           "definitions": [
             {
-              "file": "src/ai_trading/data.py",
-              "line": 17,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "src/ai_trading/data.py",
-              "line": 24,
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 22,
               "kind": "function",
               "language": "python"
             }
@@ -33,35 +27,56 @@
       ],
       "dependency_count": 1
     },
-    "download": {
+    "__post_init__": {
       "source": {
-        "file": "src/ai_trading/data.py",
-        "start": 17,
-        "end": 17
+        "file": "src/ai_trading/portfolio_intelligence.py",
+        "start": 22,
+        "end": 36
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "YahooFinanceProvider": {
+    "PortfolioIntelligenceReport": {
       "source": {
-        "file": "src/ai_trading/data.py",
-        "start": 21,
-        "end": 32
+        "file": "src/ai_trading/portfolio_intelligence.py",
+        "start": 40,
+        "end": 48
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "estimate_portfolio_volatility": {
+      "source": {
+        "file": "src/ai_trading/portfolio_intelligence.py",
+        "start": 51,
+        "end": 68
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "_active_max_pair_correlation": {
+      "source": {
+        "file": "src/ai_trading/portfolio_intelligence.py",
+        "start": 72,
+        "end": 91
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "_correlation_scale": {
+      "source": {
+        "file": "src/ai_trading/portfolio_intelligence.py",
+        "start": 94,
+        "end": 107
       },
       "symbol_dependencies": [
         {
-          "symbol": "download",
+          "symbol": "PortfolioIntelligenceConfig",
           "definitions": [
             {
-              "file": "src/ai_trading/data.py",
-              "line": 17,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "src/ai_trading/data.py",
-              "line": 24,
-              "kind": "function",
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 10,
+              "kind": "class",
               "language": "python"
             }
           ],
@@ -70,28 +85,41 @@
       ],
       "dependency_count": 1
     },
-    "_normalize_history_frame": {
+    "_drawdown_scale": {
       "source": {
-        "file": "src/ai_trading/data.py",
-        "start": 41,
-        "end": 82
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "load_history": {
-      "source": {
-        "file": "src/ai_trading/data.py",
-        "start": 85,
-        "end": 118
+        "file": "src/ai_trading/portfolio_intelligence.py",
+        "start": 109,
+        "end": 124
       },
       "symbol_dependencies": [
         {
-          "symbol": "MarketDataProvider",
+          "symbol": "PortfolioIntelligenceConfig",
           "definitions": [
             {
-              "file": "src/ai_trading/data.py",
-              "line": 12,
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "apply_portfolio_intelligence": {
+      "source": {
+        "file": "src/ai_trading/portfolio_intelligence.py",
+        "start": 127,
+        "end": 205
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PortfolioIntelligenceConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 10,
               "kind": "class",
               "language": "python"
             }
@@ -99,11 +127,23 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_normalize_history_frame",
+          "symbol": "PortfolioIntelligenceReport",
           "definitions": [
             {
-              "file": "src/ai_trading/data.py",
-              "line": 41,
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 40,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_active_max_pair_correlation",
+          "definitions": [
+            {
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 72,
               "kind": "function",
               "language": "python"
             }
@@ -111,17 +151,35 @@
           "relation": "same_file"
         },
         {
-          "symbol": "download",
+          "symbol": "_correlation_scale",
           "definitions": [
             {
-              "file": "src/ai_trading/data.py",
-              "line": 17,
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 94,
               "kind": "function",
               "language": "python"
-            },
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_drawdown_scale",
+          "definitions": [
             {
-              "file": "src/ai_trading/data.py",
-              "line": 24,
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 109,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "estimate_portfolio_volatility",
+          "definitions": [
+            {
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 51,
               "kind": "function",
               "language": "python"
             }
@@ -129,207 +187,168 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 3
+      "dependency_count": 6
     },
-    "test_load_history_keeps_price_rows_when_volume_is_missing": {
+    "sample_returns": {
       "source": {
-        "file": "tests/test_data.py",
-        "start": 8,
-        "end": 26
+        "file": "tests/test_portfolio_intelligence.py",
+        "start": 12,
+        "end": 20
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "test_volatility_targeting_scales_weights": {
+      "source": {
+        "file": "tests/test_portfolio_intelligence.py",
+        "start": 23,
+        "end": 39
       },
       "symbol_dependencies": [
         {
-          "symbol": "download",
+          "symbol": "PortfolioIntelligenceConfig",
           "definitions": [
             {
-              "file": "tests/test_data.py",
-              "line": 110,
-              "kind": "function",
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 10,
+              "kind": "class",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         },
         {
-          "symbol": "load_history",
+          "symbol": "apply_portfolio_intelligence",
           "definitions": [
             {
-              "file": "src/ai_trading/data.py",
-              "line": 85,
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 127,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
+        },
+        {
+          "symbol": "estimate_portfolio_volatility",
+          "definitions": [
+            {
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "sample_returns",
+          "definitions": [
+            {
+              "file": "tests/test_portfolio_intelligence.py",
+              "line": 12,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
         }
       ],
-      "dependency_count": 2
+      "dependency_count": 4
     },
-    "test_load_history_retries_transient_provider_failure": {
+    "test_drawdown_reduces_leverage": {
       "source": {
-        "file": "tests/test_data.py",
-        "start": 29,
+        "file": "tests/test_portfolio_intelligence.py",
+        "start": 42,
         "end": 60
       },
       "symbol_dependencies": [
         {
-          "symbol": "download",
+          "symbol": "apply_portfolio_intelligence",
           "definitions": [
             {
-              "file": "tests/test_data.py",
-              "line": 110,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "flaky_download",
-          "definitions": [
-            {
-              "file": "tests/test_data.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_history",
-          "definitions": [
-            {
-              "file": "src/ai_trading/data.py",
-              "line": 85,
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 127,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
+        },
+        {
+          "symbol": "sample_returns",
+          "definitions": [
+            {
+              "file": "tests/test_portfolio_intelligence.py",
+              "line": 12,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
         }
       ],
-      "dependency_count": 3
+      "dependency_count": 2
     },
-    "flaky_download": {
+    "test_low_confidence_asset_is_zeroed": {
       "source": {
-        "file": "tests/test_data.py",
-        "start": 43,
-        "end": 163
+        "file": "tests/test_portfolio_intelligence.py",
+        "start": 63,
+        "end": 73
       },
       "symbol_dependencies": [
         {
-          "symbol": "_Provider",
+          "symbol": "apply_portfolio_intelligence",
           "definitions": [
             {
-              "file": "tests/test_data.py",
-              "line": 104,
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 127,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "sample_returns",
+          "definitions": [
+            {
+              "file": "tests/test_portfolio_intelligence.py",
+              "line": 12,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_high_correlation_reduces_leverage": {
+      "source": {
+        "file": "tests/test_portfolio_intelligence.py",
+        "start": 76,
+        "end": 104
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PortfolioIntelligenceConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 10,
               "kind": "class",
               "language": "python"
             }
           ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "download",
-          "definitions": [
-            {
-              "file": "tests/test_data.py",
-              "line": 110,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_history",
-          "definitions": [
-            {
-              "file": "src/ai_trading/data.py",
-              "line": 85,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
           "relation": "imported_module"
         },
         {
-          "symbol": "test_load_history_falls_back_to_next_provider_after_primary_exhaustion",
+          "symbol": "apply_portfolio_intelligence",
           "definitions": [
             {
-              "file": "tests/test_data.py",
-              "line": 117,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_load_history_rejects_empty_provider_chain",
-          "definitions": [
-            {
-              "file": "tests/test_data.py",
-              "line": 146,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_load_history_rejects_inconsistent_ohlc",
-          "definitions": [
-            {
-              "file": "tests/test_data.py",
-              "line": 86,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_load_history_sorts_and_deduplicates_provider_rows",
-          "definitions": [
-            {
-              "file": "tests/test_data.py",
-              "line": 63,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 7
-    },
-    "test_load_history_sorts_and_deduplicates_provider_rows": {
-      "source": {
-        "file": "tests/test_data.py",
-        "start": 63,
-        "end": 83
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "download",
-          "definitions": [
-            {
-              "file": "tests/test_data.py",
-              "line": 110,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_history",
-          "definitions": [
-            {
-              "file": "src/ai_trading/data.py",
-              "line": 85,
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 127,
               "kind": "function",
               "language": "python"
             }
@@ -339,157 +358,75 @@
       ],
       "dependency_count": 2
     },
-    "test_load_history_rejects_inconsistent_ohlc": {
+    "test_low_correlation_keeps_full_correlation_scale": {
       "source": {
-        "file": "tests/test_data.py",
-        "start": 86,
-        "end": 101
+        "file": "tests/test_portfolio_intelligence.py",
+        "start": 107,
+        "end": 120
       },
       "symbol_dependencies": [
         {
-          "symbol": "download",
+          "symbol": "apply_portfolio_intelligence",
           "definitions": [
             {
-              "file": "tests/test_data.py",
-              "line": 110,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_history",
-          "definitions": [
-            {
-              "file": "src/ai_trading/data.py",
-              "line": 85,
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 127,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "_Provider": {
-      "source": {
-        "file": "tests/test_data.py",
-        "start": 104,
-        "end": 114
-      },
-      "symbol_dependencies": [
+        },
         {
-          "symbol": "download",
+          "symbol": "sample_returns",
           "definitions": [
             {
-              "file": "tests/test_data.py",
-              "line": 110,
+              "file": "tests/test_portfolio_intelligence.py",
+              "line": 12,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_portfolio_intelligence_fails_closed_on_insufficient_correlation_history": {
+      "source": {
+        "file": "tests/test_portfolio_intelligence.py",
+        "start": 124,
+        "end": 136
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "apply_portfolio_intelligence",
+          "definitions": [
+            {
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 127,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
         }
       ],
       "dependency_count": 1
     },
-    "__init__": {
+    "test_portfolio_intelligence_sanitizes_nonfinite_confidence": {
       "source": {
-        "file": "tests/test_data.py",
-        "start": 105,
-        "end": 225
+        "file": "tests/test_portfolio_intelligence.py",
+        "start": 139,
+        "end": 152
       },
       "symbol_dependencies": [
         {
-          "symbol": "_Provider",
+          "symbol": "apply_portfolio_intelligence",
           "definitions": [
             {
-              "file": "tests/test_data.py",
-              "line": 104,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "download",
-          "definitions": [
-            {
-              "file": "tests/test_data.py",
-              "line": 110,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_history",
-          "definitions": [
-            {
-              "file": "src/ai_trading/data.py",
-              "line": 85,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "test_load_history_falls_back_to_next_provider_after_primary_exhaustion",
-          "definitions": [
-            {
-              "file": "tests/test_data.py",
-              "line": 117,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_load_history_rejects_empty_provider_chain",
-          "definitions": [
-            {
-              "file": "tests/test_data.py",
-              "line": 146,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 5
-    },
-    "test_load_history_falls_back_to_next_provider_after_primary_exhaustion": {
-      "source": {
-        "file": "tests/test_data.py",
-        "start": 117,
-        "end": 143
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_Provider",
-          "definitions": [
-            {
-              "file": "tests/test_data.py",
-              "line": 104,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_history",
-          "definitions": [
-            {
-              "file": "src/ai_trading/data.py",
-              "line": 85,
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 127,
               "kind": "function",
               "language": "python"
             }
@@ -497,21 +434,21 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 2
+      "dependency_count": 1
     },
-    "test_load_history_rejects_empty_provider_chain": {
+    "test_portfolio_intelligence_rejects_invalid_equity": {
       "source": {
-        "file": "tests/test_data.py",
-        "start": 146,
-        "end": 148
+        "file": "tests/test_portfolio_intelligence.py",
+        "start": 156,
+        "end": 166
       },
       "symbol_dependencies": [
         {
-          "symbol": "load_history",
+          "symbol": "apply_portfolio_intelligence",
           "definitions": [
             {
-              "file": "src/ai_trading/data.py",
-              "line": 85,
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 127,
               "kind": "function",
               "language": "python"
             }

@@ -5854,15 +5854,16 @@ correlation_scale: float
 max_pair_correlation: float
 stress_detected: bool
 ⋮----
-aligned = returns.loc[:, weights.index].dropna()
+aligned = returns.reindex(columns=weights.index).dropna()
 ⋮----
 cov = aligned.cov().to_numpy(dtype=float) * periods_per_year
 w = weights.to_numpy(dtype=float)
+⋮----
 variance = float(w.T @ cov @ w)
 ⋮----
 active_assets = [asset for asset in weights.index if abs(float(weights.loc[asset])) > 1e-12]
 ⋮----
-aligned = returns.loc[:, active_assets].dropna()
+aligned = returns.reindex(columns=active_assets).dropna()
 ⋮----
 corr = aligned.corr().abs()
 max_corr = 0.0
@@ -5887,6 +5888,9 @@ confidence_multipliers = pd.Series(0.0, index=weights.index, dtype=float)
 ⋮----
 confidence = float(confidences.get(asset, 0.0))
 ⋮----
+confidence = 0.0
+confidence = min(1.0, max(0.0, confidence))
+⋮----
 normalized = (confidence - config.confidence_floor) / (1.0 - config.confidence_floor)
 ⋮----
 gross = float(weights.abs().sum())
@@ -5897,8 +5901,9 @@ vol_scale = config.min_leverage
 ⋮----
 vol_scale = config.target_annual_volatility / estimated_vol
 ⋮----
-recent_vol = returns.tail(20).std(ddof=1).mean()
-baseline_vol = returns.tail(120).std(ddof=1).mean()
+aligned_returns = returns.reindex(columns=weights.index)
+recent_vol = aligned_returns.tail(20).std(ddof=1).mean()
+baseline_vol = aligned_returns.tail(120).std(ddof=1).mean()
 stress_detected = bool(
 stress_scale = 0.5 if stress_detected else 1.0
 drawdown_scale = _drawdown_scale(current_equity, peak_equity, config)
@@ -10745,6 +10750,19 @@ x = np.linspace(-0.02, 0.02, 300)
 returns = pd.DataFrame(
 ⋮----
 def test_low_correlation_keeps_full_correlation_scale() -> None
+⋮----
+def test_portfolio_intelligence_fails_closed_on_insufficient_correlation_history() -> None
+⋮----
+weights = pd.Series({"A": 0.5, "B": 0.5})
+returns = pd.DataFrame({"A": [0.01], "B": [0.01]})
+⋮----
+def test_portfolio_intelligence_sanitizes_nonfinite_confidence() -> None
+⋮----
+@pytest.mark.parametrize("equity,peak", [(float("nan"), 100_000.0), (100_000.0, 0.0)])
+def test_portfolio_intelligence_rejects_invalid_equity(equity: float, peak: float) -> None
+⋮----
+weights = pd.Series({"A": 1.0})
+returns = pd.DataFrame({"A": [0.01, -0.01]})
 ````
 
 ## File: tests/test_portfolio_risk.py

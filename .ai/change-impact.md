@@ -1,18 +1,18 @@
 # Change impact
 
-Base: 5d547ebef697c3948143bd832b15232e5d93fdc2
-Head: 6e663e5ff1e37f2358a7f3d3c1ab0a0d4b8dfd1b
+Base: db3250179d92984823e38f8706c828adb1659a4c
+Head: 7f1797502e7723c424a91eabe7a59d0797683c29
 
 ## Changed files
-- M src/ai_trading/data.py
-- M tests/test_data.py
+- M src/ai_trading/portfolio_intelligence.py
+- M tests/test_portfolio_intelligence.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_data.py
+- tests/test_portfolio_intelligence.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

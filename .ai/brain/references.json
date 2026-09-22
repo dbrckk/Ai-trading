@@ -5,995 +5,602 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "MarketDataProvider": {
+    "PortfolioIntelligenceConfig": {
       "definition": {
-        "file": "src/ai_trading/data.py",
-        "line": 12,
+        "file": "src/ai_trading/portfolio_intelligence.py",
+        "line": 10,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/data.py",
-          "line": 12,
-          "preview": "class MarketDataProvider(Protocol):",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/data.py",
-          "line": 35,
-          "preview": "DEFAULT_MARKET_DATA_PROVIDERS: tuple[MarketDataProvider, ...] = (YahooFinanceProvider(),)",
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 13,
+          "preview": "from .portfolio_intelligence import PortfolioIntelligenceConfig, apply_portfolio_intelligence",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/data.py",
-          "line": 92,
-          "preview": "providers: tuple[MarketDataProvider, ...] | None = None,",
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 35,
+          "preview": "intelligence_config: PortfolioIntelligenceConfig | None = None,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 48,
+          "preview": "self.intelligence_config = intelligence_config or PortfolioIntelligenceConfig()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 47,
+          "preview": "PortfolioIntelligenceConfig,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 98,
+          "preview": "intelligence_config: PortfolioIntelligenceConfig | None = None,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 132,
+          "preview": "self.intelligence_config = intelligence_config or PortfolioIntelligenceConfig()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 10,
+          "preview": "class PortfolioIntelligenceConfig:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 96,
+          "preview": "config: PortfolioIntelligenceConfig,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 112,
+          "preview": "config: PortfolioIntelligenceConfig,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 134,
+          "preview": "config: PortfolioIntelligenceConfig | None = None,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 136,
+          "preview": "config = config or PortfolioIntelligenceConfig()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_config_validation.py",
+          "line": 12,
+          "preview": "from ai_trading.portfolio_intelligence import PortfolioIntelligenceConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_config_validation.py",
+          "line": 28,
+          "preview": "lambda: PortfolioIntelligenceConfig(min_leverage=1.1, max_leverage=1.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_config_validation.py",
+          "line": 29,
+          "preview": "lambda: PortfolioIntelligenceConfig(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 6,
+          "preview": "PortfolioIntelligenceConfig,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 32,
+          "preview": "config=PortfolioIntelligenceConfig(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 93,
+          "preview": "config=PortfolioIntelligenceConfig(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 17
+    },
+    "__post_init__": {
+      "definition": {
+        "file": "src/ai_trading/portfolio_intelligence.py",
+        "line": 22,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/alpha_allocation.py",
+          "line": 15,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/backtest.py",
+          "line": 37,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/config.py",
+          "line": 14,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/config.py",
+          "line": 36,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/global_allocator.py",
+          "line": 20,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/mtf_parameter_benchmark.py",
+          "line": 34,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 31,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio.py",
+          "line": 16,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 22,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/portfolio_risk.py",
+          "line": 15,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/trade_journal.py",
+          "line": 21,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 11
+    },
+    "PortfolioIntelligenceReport": {
+      "definition": {
+        "file": "src/ai_trading/portfolio_intelligence.py",
+        "line": 40,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 40,
+          "preview": "class PortfolioIntelligenceReport:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 135,
+          "preview": ") -> tuple[pd.Series, PortfolioIntelligenceReport]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 196,
+          "preview": "return intelligent_weights, PortfolioIntelligenceReport(",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 3
     },
-    "download": {
+    "estimate_portfolio_volatility": {
       "definition": {
-        "file": "src/ai_trading/data.py",
-        "line": 17,
+        "file": "src/ai_trading/portfolio_intelligence.py",
+        "line": 51,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/data.py",
-          "line": 17,
-          "preview": "def download(self, symbol: str, *, period: str, interval: str) -> pd.DataFrame: ...",
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 51,
+          "preview": "def estimate_portfolio_volatility(",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/data.py",
-          "line": 24,
-          "preview": "def download(self, symbol: str, *, period: str, interval: str) -> pd.DataFrame:",
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 162,
+          "preview": "estimated_vol = estimate_portfolio_volatility(weights, returns)",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/data.py",
-          "line": 25,
-          "preview": "return yf.download(",
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 8,
+          "preview": "estimate_portfolio_volatility,",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/data.py",
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 39,
+          "preview": "assert estimate_portfolio_volatility(weights, returns) >= 0.0",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "_active_max_pair_correlation": {
+      "definition": {
+        "file": "src/ai_trading/portfolio_intelligence.py",
+        "line": 72,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 72,
+          "preview": "def _active_max_pair_correlation(",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 179,
+          "preview": "max_pair_correlation = _active_max_pair_correlation(weights, returns)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_correlation_scale": {
+      "definition": {
+        "file": "src/ai_trading/portfolio_intelligence.py",
+        "line": 94,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 94,
+          "preview": "def _correlation_scale(",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 180,
+          "preview": "correlation_scale = _correlation_scale(max_pair_correlation, config)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_drawdown_scale": {
+      "definition": {
+        "file": "src/ai_trading/portfolio_intelligence.py",
+        "line": 109,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/portfolio_intelligence.py",
           "line": 109,
-          "preview": "frame = provider.download(symbol, period=period, interval=interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_data.py",
-          "line": 20,
-          "preview": "monkeypatch.setattr(data_module.yf, \"download\", lambda *args, **kwargs: frame)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_data.py",
-          "line": 49,
-          "preview": "monkeypatch.setattr(data_module.yf, \"download\", flaky_download)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_data.py",
-          "line": 77,
-          "preview": "monkeypatch.setattr(data_module.yf, \"download\", lambda *args, **kwargs: frame)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_data.py",
-          "line": 98,
-          "preview": "monkeypatch.setattr(data_module.yf, \"download\", lambda *args, **kwargs: frame)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_data.py",
-          "line": 110,
-          "preview": "def download(self, symbol: str, *, period: str, interval: str) -> pd.DataFrame:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 9
-    },
-    "YahooFinanceProvider": {
-      "definition": {
-        "file": "src/ai_trading/data.py",
-        "line": 21,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/data.py",
-          "line": 21,
-          "preview": "class YahooFinanceProvider:",
+          "preview": "def _drawdown_scale(",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/data.py",
-          "line": 35,
-          "preview": "DEFAULT_MARKET_DATA_PROVIDERS: tuple[MarketDataProvider, ...] = (YahooFinanceProvider(),)",
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 178,
+          "preview": "drawdown_scale = _drawdown_scale(current_equity, peak_equity, config)",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 2
     },
-    "_normalize_history_frame": {
+    "apply_portfolio_intelligence": {
       "definition": {
-        "file": "src/ai_trading/data.py",
-        "line": 41,
+        "file": "src/ai_trading/portfolio_intelligence.py",
+        "line": 127,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/data.py",
-          "line": 41,
-          "preview": "def _normalize_history_frame(df: pd.DataFrame) -> pd.DataFrame:",
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 13,
+          "preview": "from .portfolio_intelligence import PortfolioIntelligenceConfig, apply_portfolio_intelligence",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 126,
+          "preview": "intelligent, _ = apply_portfolio_intelligence(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 48,
+          "preview": "apply_portfolio_intelligence,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 659,
+          "preview": "intelligent_weights, intelligence = apply_portfolio_intelligence(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 127,
+          "preview": "def apply_portfolio_intelligence(",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/data.py",
-          "line": 110,
-          "preview": "return _normalize_history_frame(frame)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "load_history": {
-      "definition": {
-        "file": "src/ai_trading/data.py",
-        "line": 85,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 35,
-          "preview": "from .data import load_history",
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 7,
+          "preview": "apply_portfolio_intelligence,",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/cli.py",
-          "line": 184,
-          "preview": "df = load_history(symbol, period, interval)",
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 26,
+          "preview": "weights, report = apply_portfolio_intelligence(",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/cli.py",
-          "line": 196,
-          "preview": "df = load_history(symbol, period, interval)",
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 45,
+          "preview": "_, healthy = apply_portfolio_intelligence(",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/cli.py",
-          "line": 224,
-          "preview": "df = load_history(symbol, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 441,
-          "preview": "df = load_history(symbol, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 514,
-          "preview": "df = load_history(symbol, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 544,
-          "preview": "df = load_history(symbol, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 564,
-          "preview": "df = load_history(symbol, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 621,
-          "preview": "df = load_history(symbol, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 666,
-          "preview": "df = load_history(symbol, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 703,
-          "preview": "data_loader=lambda: load_history(symbol, period, interval),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 750,
-          "preview": "df = load_history(name, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 791,
-          "preview": "df = load_history(symbol, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 831,
-          "preview": "markets = {name: load_history(name, period, interval) for name in names}",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 875,
-          "preview": "markets = {name: load_history(name, period, interval) for name in names}",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 903,
-          "preview": "df = load_history(symbol, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 942,
-          "preview": "df = load_history(symbol, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 973,
-          "preview": "df = load_history(symbol, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 999,
-          "preview": "df = load_history(symbol, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1044,
-          "preview": "markets = {name: load_history(name, period, interval) for name in names}",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1080,
-          "preview": "df = load_history(name, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1127,
-          "preview": "df = load_history(name, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1285,
-          "preview": "benchmark_data = load_history(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1405,
-          "preview": "benchmark_data = load_history(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1532,
-          "preview": "name: load_history(name, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1762,
-          "preview": "name: load_history(name, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1843,
-          "preview": "name: load_history(name, period, interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/data.py",
-          "line": 85,
-          "preview": "def load_history(",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/hosted_runtime.py",
-          "line": 9,
-          "preview": "from .data import load_history",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/hosted_runtime.py",
-          "line": 143,
-          "preview": "data_loader=lambda: load_history(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/mtf_parameter_benchmark.py",
-          "line": 12,
-          "preview": "from .data import load_history",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/mtf_parameter_benchmark.py",
-          "line": 567,
-          "preview": "symbol: load_history(symbol, args.period, args.interval)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle.py",
-          "line": 8,
-          "preview": "from .data import load_history",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle.py",
-          "line": 63,
-          "preview": "data_loader: Callable[[str, str, str], pd.DataFrame] = load_history,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_data.py",
-          "line": 22,
-          "preview": "loaded = data_module.load_history(\"^GDAXI\", period=\"5d\", interval=\"5m\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_data.py",
+          "file": "tests/test_portfolio_intelligence.py",
           "line": 52,
-          "preview": "loaded = data_module.load_history(",
+          "preview": "_, stressed = apply_portfolio_intelligence(",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_data.py",
-          "line": 79,
-          "preview": "loaded = data_module.load_history(\"GC=F\", max_attempts=1)",
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 66,
+          "preview": "weights, _ = apply_portfolio_intelligence(",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_data.py",
-          "line": 101,
-          "preview": "data_module.load_history(\"GC=F\", max_attempts=1)",
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 87,
+          "preview": "_, report = apply_portfolio_intelligence(",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_data.py",
-          "line": 133,
-          "preview": "loaded = data_module.load_history(",
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 111,
+          "preview": "_, report = apply_portfolio_intelligence(",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_data.py",
-          "line": 148,
-          "preview": "data_module.load_history(\"GC=F\", providers=())",
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 127,
+          "preview": "intelligent, report = apply_portfolio_intelligence(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 144,
+          "preview": "intelligent, report = apply_portfolio_intelligence(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 160,
+          "preview": "apply_portfolio_intelligence(",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 40
+      "occurrence_count": 15
     },
-    "test_load_history_keeps_price_rows_when_volume_is_missing": {
+    "sample_returns": {
       "definition": {
-        "file": "tests/test_data.py",
-        "line": 8,
+        "file": "tests/test_portfolio_intelligence.py",
+        "line": 12,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_data.py",
-          "line": 8,
-          "preview": "def test_load_history_keeps_price_rows_when_volume_is_missing(monkeypatch) -> None:",
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 12,
+          "preview": "def sample_returns(n: int = 300) -> pd.DataFrame:",
           "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_load_history_retries_transient_provider_failure": {
-      "definition": {
-        "file": "tests/test_data.py",
-        "line": 29,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
+        },
         {
-          "file": "tests/test_data.py",
-          "line": 29,
-          "preview": "def test_load_history_retries_transient_provider_failure(monkeypatch) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "flaky_download": {
-      "definition": {
-        "file": "tests/test_data.py",
-        "line": 43,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 24,
+          "preview": "returns = sample_returns()",
+          "definition_candidate": false
+        },
         {
-          "file": "tests/test_data.py",
+          "file": "tests/test_portfolio_intelligence.py",
           "line": 43,
-          "preview": "def flaky_download(*args, **kwargs):",
-          "definition_candidate": true
+          "preview": "returns = sample_returns()",
+          "definition_candidate": false
         },
         {
-          "file": "tests/test_data.py",
-          "line": 49,
-          "preview": "monkeypatch.setattr(data_module.yf, \"download\", flaky_download)",
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 64,
+          "preview": "returns = sample_returns()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 108,
+          "preview": "returns = sample_returns()",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 2
+      "occurrence_count": 5
     },
-    "test_load_history_sorts_and_deduplicates_provider_rows": {
+    "test_volatility_targeting_scales_weights": {
       "definition": {
-        "file": "tests/test_data.py",
+        "file": "tests/test_portfolio_intelligence.py",
+        "line": 23,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 23,
+          "preview": "def test_volatility_targeting_scales_weights() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_drawdown_reduces_leverage": {
+      "definition": {
+        "file": "tests/test_portfolio_intelligence.py",
+        "line": 42,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 42,
+          "preview": "def test_drawdown_reduces_leverage() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_low_confidence_asset_is_zeroed": {
+      "definition": {
+        "file": "tests/test_portfolio_intelligence.py",
         "line": 63,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_data.py",
+          "file": "tests/test_portfolio_intelligence.py",
           "line": 63,
-          "preview": "def test_load_history_sorts_and_deduplicates_provider_rows(monkeypatch) -> None:",
+          "preview": "def test_low_confidence_asset_is_zeroed() -> None:",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_load_history_rejects_inconsistent_ohlc": {
+    "test_high_correlation_reduces_leverage": {
       "definition": {
-        "file": "tests/test_data.py",
-        "line": 86,
+        "file": "tests/test_portfolio_intelligence.py",
+        "line": 76,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_data.py",
-          "line": 86,
-          "preview": "def test_load_history_rejects_inconsistent_ohlc(monkeypatch) -> None:",
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 76,
+          "preview": "def test_high_correlation_reduces_leverage() -> None:",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "_Provider": {
+    "test_low_correlation_keeps_full_correlation_scale": {
       "definition": {
-        "file": "tests/test_data.py",
-        "line": 104,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_data.py",
-          "line": 104,
-          "preview": "class _Provider:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_data.py",
-          "line": 129,
-          "preview": "primary = _Provider(\"primary\", RuntimeError(\"provider unavailable\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_data.py",
-          "line": 130,
-          "preview": "fallback = _Provider(\"fallback\", frame)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "__init__": {
-      "definition": {
-        "file": "tests/test_data.py",
-        "line": 105,
+        "file": "tests/test_portfolio_intelligence.py",
+        "line": 107,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/allocation_state.py",
-          "line": 16,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/global_allocation.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/allocator_config_store.py",
-          "line": 11,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/global_allocator_config.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/audit.py",
-          "line": 32,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/audit.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 68,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/broker.py",
-          "line": 25,
-          "preview": "def __init__(self, config: RiskConfig) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 46,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/burnin.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 40,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/champion_probation.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 56,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champions.py",
-          "line": 26,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/champions.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_state_store.py",
-          "line": 11,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/crisis_state.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/drift_retrain_store.py",
-          "line": 16,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/economic_meta_store.py",
-          "line": 11,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/economic_meta.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 25,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/ensemble.py",
-          "line": 27,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/experiments.py",
-          "line": 13,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/experiments.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_pool.py",
-          "line": 29,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/expert_pool.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 31,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/generations.py",
-          "line": 27,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/governor_state_store.py",
-          "line": 16,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/risk_governor_state.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/health_server.py",
-          "line": 56,
-          "preview": "def __init__(self, host: str = \"127.0.0.1\", port: int = 8765) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/lifecycle_log.py",
-          "line": 26,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/model_lifecycle.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/maintenance.py",
-          "line": 15,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/maintenance.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/meta_store.py",
-          "line": 11,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/meta_router.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/model.py",
-          "line": 26,
-          "preview": "def __init__(self, random_state: int = 42) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/model_quarantine.py",
-          "line": 26,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/model_quarantine.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 28,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 86,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_scheduler.py",
-          "line": 34,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_state.py",
-          "line": 28,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/multiasset_state.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/online.py",
-          "line": 27,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
-          "line": 31,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle.py",
-          "line": 59,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 27,
-          "preview": "def __init__(self, *, code: str, error_type: str) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 28,
-          "preview": "super().__init__(code)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/persistence.py",
-          "line": 108,
-          "preview": "def __init__(self, root: str | Path = \"artifacts/models\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/postgres_persistence.py",
-          "line": 285,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/qualification_store.py",
-          "line": 36,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/quality_store.py",
-          "line": 16,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/model_quality.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 190,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_revocation.py",
-          "line": 17,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_score.py",
-          "line": 130,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/resilience.py",
+          "file": "tests/test_portfolio_intelligence.py",
           "line": 107,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/resilience_state.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/restart_log.py",
-          "line": 19,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/restarts.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 26,
-          "preview": "def __init__(self, config: RiskConfig) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime.py",
-          "line": 57,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_lock.py",
-          "line": 9,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/runtime.lock\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_state.py",
-          "line": 22,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/runtime_state.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_status.py",
-          "line": 86,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/runtime_status.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler.py",
-          "line": 25,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/specialist_experts.py",
-          "line": 23,
-          "preview": "def __init__(self, kind: str, random_state: int = 42) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/state_snapshot.py",
-          "line": 19,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 59,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor_lease.py",
-          "line": 18,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/supervisor_lease.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor_state.py",
-          "line": 19,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/supervisor_state.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/trade_journal.py",
-          "line": 29,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/trades.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/watchdog.py",
-          "line": 23,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/heartbeat.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_cost_stress.py",
-          "line": 11,
-          "preview": "def __init__(self, *, risk_config, model_config=None, config=None) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 27,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 24,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_data.py",
-          "line": 105,
-          "preview": "def __init__(self, name: str, result) -> None:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_hosted_persistence.py",
-          "line": 15,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_persistence.py",
-          "line": 40,
-          "preview": "def __init__(self, **kwargs) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_persistence.py",
-          "line": 71,
-          "preview": "def __init__(self, **kwargs) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_runtime.py",
-          "line": 69,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_runtime.py",
-          "line": 81,
-          "preview": "def __init__(self, **kwargs) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_mtf_shadow_challenger.py",
-          "line": 67,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_mtf_shadow_challenger.py",
-          "line": 148,
-          "preview": "def __init__(self, **kwargs) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 17,
-          "preview": "def __init__(self, *, initial_status: HostedRuntimeStatus | None = None) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 46,
-          "preview": "def __init__(self, persistence: FakePersistence) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_persistence.py",
-          "line": 37,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler.py",
-          "line": 8,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_iteration_callback.py",
-          "line": 21,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_shadow_challenger.py",
-          "line": 41,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 73
-    },
-    "test_load_history_falls_back_to_next_provider_after_primary_exhaustion": {
-      "definition": {
-        "file": "tests/test_data.py",
-        "line": 117,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_data.py",
-          "line": 117,
-          "preview": "def test_load_history_falls_back_to_next_provider_after_primary_exhaustion(monkeypatch) -> None:",
+          "preview": "def test_low_correlation_keeps_full_correlation_scale() -> None:",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_load_history_rejects_empty_provider_chain": {
+    "test_portfolio_intelligence_fails_closed_on_insufficient_correlation_history": {
       "definition": {
-        "file": "tests/test_data.py",
-        "line": 146,
+        "file": "tests/test_portfolio_intelligence.py",
+        "line": 124,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_data.py",
-          "line": 146,
-          "preview": "def test_load_history_rejects_empty_provider_chain() -> None:",
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 124,
+          "preview": "def test_portfolio_intelligence_fails_closed_on_insufficient_correlation_history() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_portfolio_intelligence_sanitizes_nonfinite_confidence": {
+      "definition": {
+        "file": "tests/test_portfolio_intelligence.py",
+        "line": 139,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 139,
+          "preview": "def test_portfolio_intelligence_sanitizes_nonfinite_confidence() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_portfolio_intelligence_rejects_invalid_equity": {
+      "definition": {
+        "file": "tests/test_portfolio_intelligence.py",
+        "line": 156,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 156,
+          "preview": "def test_portfolio_intelligence_rejects_invalid_equity(equity: float, peak: float) -> None:",
           "definition_candidate": true
         }
       ],
