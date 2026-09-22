@@ -2,13 +2,13 @@
 
 Summary: 6 success / 0 failure / 2 active
 
-- CI: in_progress / pending (9b65864b)
-- CodeQL: in_progress / pending (9b65864b)
+- CodeQL: in_progress / pending (c8d8b420)
+- CI: in_progress / pending (c8d8b420)
+- Paper Cycle: completed / success (2f0b299e)
+- CI: completed / success (1ce3d4ff)
+- CodeQL: completed / success (1ce3d4ff)
+- CI: completed / success (9b65864b)
+- CodeQL: completed / success (9b65864b)
 - CI: completed / success (ebef4257)
-- CodeQL: completed / success (ebef4257)
-- CI: completed / success (21887381)
-- CodeQL: completed / success (21887381)
-- CI: completed / success (620e4ea5)
-- CodeQL: completed / success (620e4ea5)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

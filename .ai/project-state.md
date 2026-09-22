@@ -45,20 +45,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T20:59:00Z
+Generated: 2026-09-22T23:01:11Z
 
 ### Git
 - Branch: `main`
-- Head: `9b65864b6097`
-- Commit date: 2026-09-22T22:58:48+02:00
-- Commit: fix: isolate checkpoint models from legacy mirrors
-- Tracked files: 496
+- Head: `c8d8b420e19f`
+- Commit date: 2026-09-23T01:01:01+02:00
+- Commit: fix: tolerate truncated unpublished checkpoint models
+- Tracked files: 497
 
 ### Recently changed files
+- `src/ai_trading/multiasset_checkpoint.py`
+- `tests/test_multiasset_checkpoint_orphan_corruption.py`
 - `src/ai_trading/multiasset_runtime.py`
 - `tests/test_multiasset_runtime.py`
-- `src/ai_trading/multiasset_checkpoint.py`
-- `tests/test_multiasset_checkpoint.py`
 
 ### Project signals
 - `pyproject.toml`

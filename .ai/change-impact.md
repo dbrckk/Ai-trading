@@ -1,18 +1,18 @@
 # Change impact
 
-Base: 04e7ce1632174e3e7c702cc8d58ecfae6051d1f8
-Head: 9b65864b6097893677d9227cfcf3ea8e7b83ac0f
+Base: 2f0b299ee8becacd66e74403ce5048abda19f032
+Head: c8d8b420e19f0c50c29356fba7219b688005faca
 
 ## Changed files
-- M src/ai_trading/multiasset_runtime.py
-- M tests/test_multiasset_runtime.py
+- M src/ai_trading/multiasset_checkpoint.py
+- A tests/test_multiasset_checkpoint_orphan_corruption.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_multiasset_runtime.py
+- tests/test_multiasset_checkpoint.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

@@ -322,6 +322,7 @@ tests/
   test_multi_period_promotion.py
   test_multi_timeframe_features.py
   test_multiasset_backtest.py
+  test_multiasset_checkpoint_orphan_corruption.py
   test_multiasset_checkpoint.py
   test_multiasset_evolution.py
   test_multiasset_market_context.py
@@ -10351,6 +10352,25 @@ real_config = backtest_module.risk_config_for_symbol
 def capture(symbol: str, base: RiskConfig)
 ⋮----
 config = real_config(
+````
+
+## File: tests/test_multiasset_checkpoint_orphan_corruption.py
+````python
+def _state(step: int) -> MultiAssetState
+⋮----
+def test_checkpoint_ignores_truncated_newer_unpublished_model(tmp_path: Path) -> None
+⋮----
+store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+⋮----
+orphan = store.root / "step-000000000004"
+⋮----
+state_path = orphan / "state.json"
+⋮----
+model_path = orphan / "model.joblib"
+⋮----
+manifest = {
+⋮----
+loaded = store.load()
 ````
 
 ## File: tests/test_multiasset_checkpoint.py

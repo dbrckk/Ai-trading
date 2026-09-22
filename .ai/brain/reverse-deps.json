@@ -111,6 +111,7 @@
         "tests/test_multi_timeframe_features.py",
         "tests/test_multiasset_backtest.py",
         "tests/test_multiasset_checkpoint.py",
+        "tests/test_multiasset_checkpoint_orphan_corruption.py",
         "tests/test_multiasset_evolution.py",
         "tests/test_multiasset_market_context.py",
         "tests/test_multiasset_runtime.py",
@@ -206,7 +207,7 @@
         "tests/test_watchdog_enforcer.py",
         "tests/test_worker_monitor.py"
       ],
-      "in_degree": 186,
+      "in_degree": 187,
       "out_degree": 0
     },
     "src/ai_trading/allocation_state.py": {
@@ -1664,9 +1665,10 @@
       "dependents": [
         "src/ai_trading/multiasset_runtime.py",
         "tests/test_multiasset_checkpoint.py",
+        "tests/test_multiasset_checkpoint_orphan_corruption.py",
         "tests/test_multiasset_runtime.py"
       ],
-      "in_degree": 3,
+      "in_degree": 4,
       "out_degree": 1
     },
     "src/ai_trading/multiasset_evolution.py": {
@@ -1792,10 +1794,11 @@
         "src/ai_trading/multiasset_runtime.py",
         "src/ai_trading/runtime_factory.py",
         "tests/test_multiasset_checkpoint.py",
+        "tests/test_multiasset_checkpoint_orphan_corruption.py",
         "tests/test_multiasset_runtime.py",
         "tests/test_multiasset_state.py"
       ],
-      "in_degree": 6,
+      "in_degree": 7,
       "out_degree": 0
     },
     "src/ai_trading/online.py": {
@@ -4047,6 +4050,16 @@
       "out_degree": 6
     },
     "tests/test_multiasset_checkpoint.py": {
+      "dependencies": [
+        "src/ai_trading/__init__.py",
+        "src/ai_trading/multiasset_checkpoint.py",
+        "src/ai_trading/multiasset_state.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 3
+    },
+    "tests/test_multiasset_checkpoint_orphan_corruption.py": {
       "dependencies": [
         "src/ai_trading/__init__.py",
         "src/ai_trading/multiasset_checkpoint.py",
