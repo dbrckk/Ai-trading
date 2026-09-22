@@ -14,9 +14,12 @@ from .multiasset_state import AssetPosition, MultiAssetState
 class MultiAssetCheckpointStore:
     """Checkpoint portfolio state and online models as one durable generation."""
 
-    def __init__(self, root: str | Path) -> None:
+    def __init__(self, root: str | Path, *, retain_generations: int = 3) -> None:
+        if retain_generations < 1:
+            raise ValueError("retain_generations must be at least 1")
         self.root = Path(root)
         self.current_path = self.root / "CURRENT"
+        self.retain_generations = retain_generations
 
     def _generation_dir(self, generation: str) -> Path:
         return self.root / generation
@@ -74,13 +77,25 @@ class MultiAssetCheckpointStore:
             encoding="utf-8",
         )
         if final_dir.exists():
-            shutil.rmtree(final_dir)
+            shutil.rmtree(temp_dir)
+            raise ValueError(f"multiasset checkpoint already exists: {generation}")
         temp_dir.replace(final_dir)
 
         pointer_tmp = self.current_path.with_suffix(".tmp")
         pointer_tmp.write_text(generation, encoding="utf-8")
         pointer_tmp.replace(self.current_path)
+        self._prune_old_generations(current=generation)
         return generation
+
+    def _prune_old_generations(self, *, current: str) -> None:
+        generations = sorted(
+            path
+            for path in self.root.glob("step-*")
+            if path.is_dir() and path.name != current
+        )
+        removable = max(0, len(generations) - (self.retain_generations - 1))
+        for path in generations[:removable]:
+            shutil.rmtree(path)
 
     def load(self) -> tuple[MultiAssetState, dict[str, object]] | None:
         if not self.current_path.exists():
