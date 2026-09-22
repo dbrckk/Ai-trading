@@ -4,14 +4,18 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from ai_trading.allocation_state import AllocationStateStore
 from ai_trading.audit import AuditLog
 from ai_trading.config import RiskConfig
+from ai_trading.crisis_state_store import CrisisStateStore
 from ai_trading.drift import DistributionDriftReport
 from ai_trading.drift_retrain_store import DriftRetrainStore
+from ai_trading.governor_state_store import GovernorStateStore
 from ai_trading.multiasset_runtime import MultiAssetPaperRuntime
 from ai_trading.multiasset_state import MultiAssetStateStore
 from ai_trading.portfolio import AllocationConfig
 from ai_trading.portfolio_risk import PortfolioRiskConfig
+from ai_trading.resilience import ResilienceStateStore
 
 
 def market(seed: int, n: int = 120) -> pd.DataFrame:
@@ -252,3 +256,48 @@ def test_multiasset_runtime_applies_symbol_specific_execution_costs(
     assert result.processed
     assert requested_symbols == ["A", "B"]
     assert observed_costs == [(1.5, 2.5), (7.0, 8.0)]
+
+
+
+def test_multiasset_runtime_defers_control_state_until_checkpoint_commit(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    allocation_store = AllocationStateStore(tmp_path / "allocation.json")
+    crisis_store = CrisisStateStore(tmp_path / "crisis.json")
+    resilience_store = ResilienceStateStore(tmp_path / "resilience.json")
+    governor_store = GovernorStateStore(tmp_path / "governor.json")
+
+    runtime = MultiAssetPaperRuntime(
+        risk_config=RiskConfig(),
+        allocation_config=AllocationConfig(max_asset_weight=0.6),
+        portfolio_risk_config=PortfolioRiskConfig(
+            max_gross_exposure=1.0,
+            max_net_exposure=1.0,
+            max_asset_exposure=0.6,
+            max_pair_correlation=0.99,
+        ),
+        state_store=MultiAssetStateStore(tmp_path / "state.json"),
+        audit_log=AuditLog(tmp_path / "audit.jsonl"),
+        lock_path=str(tmp_path / "lock"),
+        model_root=tmp_path / "online_models",
+        batch_model_root=tmp_path / "batch_models",
+        specialist_model_root=tmp_path / "specialists",
+        allocation_state_store=allocation_store,
+        crisis_state_store=crisis_store,
+        resilience_state_store=resilience_store,
+        governor_state_store=governor_store,
+    )
+
+    def fail_checkpoint(*_args, **_kwargs) -> None:
+        raise RuntimeError("synthetic checkpoint failure")
+
+    monkeypatch.setattr(runtime.checkpoint_store, "commit", fail_checkpoint)
+
+    with np.testing.assert_raises_regex(RuntimeError, "checkpoint failure"):
+        runtime.step({"A": market(51), "B": market(52)})
+
+    assert not allocation_store.path.exists()
+    assert not crisis_store.path.exists()
+    assert not resilience_store.path.exists()
+    assert not governor_store.path.exists()
