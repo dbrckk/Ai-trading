@@ -678,6 +678,7 @@ class MultiAssetPaperRuntime:
             )
 
             global_allocation_report = None
+            pending_allocation_weights = None
             if opportunity_keys:
                 opportunity_returns = pd.DataFrame(index=returns.index)
                 for key in opportunity_keys:
@@ -708,7 +709,7 @@ class MultiAssetPaperRuntime:
                             asset_scale.loc[opportunity_symbol] += abs(float(weight))
 
                     intelligent_weights = intelligent_weights * asset_scale
-                    self.allocation_state_store.save(global_allocation_report.weights)
+                    pending_allocation_weights = global_allocation_report.weights
                 else:
                     # Fail closed: rejected global allocation means no target
                     # risk until CVaR/turnover/cost constraints are satisfied.
@@ -730,7 +731,7 @@ class MultiAssetPaperRuntime:
                 drawdown=current_drawdown,
                 policy=self.crisis_policy,
             )
-            self.crisis_state_store.save(crisis_decision.state)
+            pending_crisis_state = crisis_decision.state
             intelligent_weights = (
                 intelligent_weights
                 * stress_report.risk_scale
@@ -828,7 +829,7 @@ class MultiAssetPaperRuntime:
                 mode_steps=resilience.state.mode_steps,
                 instability_status=stability.status,
             )
-            self.resilience_state_store.save(persisted_resilience_state)
+            pending_resilience_state = persisted_resilience_state
             if stability.status != previous_resilience_state.instability_status:
                 self.lifecycle_log.append(
                     event="resilience_instability",
@@ -880,12 +881,10 @@ class MultiAssetPaperRuntime:
                 if governor.halt
                 else 0
             )
-            self.governor_state_store.save(
-                GovernorState(
-                    verdict=governor.verdict,
-                    reason=governor.reason,
-                    consecutive_halts=consecutive_halts,
-                )
+            pending_governor_state = GovernorState(
+                verdict=governor.verdict,
+                reason=governor.reason,
+                consecutive_halts=consecutive_halts,
             )
 
             if governor.verdict == "REDUCE":
@@ -988,6 +987,11 @@ class MultiAssetPaperRuntime:
             current_equity = state.equity()
             state.peak_equity = max(state.peak_equity, current_equity)
             self.checkpoint_store.commit(state, pending_online_models)
+            if pending_allocation_weights is not None:
+                self.allocation_state_store.save(pending_allocation_weights)
+            self.crisis_state_store.save(pending_crisis_state)
+            self.resilience_state_store.save(pending_resilience_state)
+            self.governor_state_store.save(pending_governor_state)
             self.state_store.save(state)
             for symbol, model in pending_online_models.items():
                 self._save_model(symbol, model)
