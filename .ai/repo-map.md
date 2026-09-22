@@ -4727,6 +4727,11 @@ digest = hashlib.sha256(symbol.encode("utf-8")).hexdigest()[:16]
 ⋮----
 digest = hashlib.sha256()
 ⋮----
+@staticmethod
+    def _artifact_path(directory: Path, filename: object) -> Path
+⋮----
+candidate = Path(filename)
+⋮----
 generation = self._validate_generation(f"step-{state.processed_bars:012d}")
 final_dir = self._generation_dir(generation)
 temp_dir = self.root / f".{generation}.tmp"
@@ -4755,7 +4760,7 @@ manifest_path = directory / "manifest.json"
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 ⋮----
 state_meta = manifest["state"]
-state_path = directory / state_meta["file"]
+state_path = self._artifact_path(directory, state_meta["file"])
 ⋮----
 payload = json.loads(state_path.read_text(encoding="utf-8"))
 ⋮----
@@ -4763,7 +4768,7 @@ state = MultiAssetState(**payload)
 ⋮----
 models: dict[str, object] = {}
 ⋮----
-path = directory / metadata["file"]
+path = self._artifact_path(directory, metadata["file"])
 ⋮----
 def _newer_valid_generation(self, current: str | None) -> str | None
 ⋮----
@@ -10357,6 +10362,13 @@ def test_checkpoint_rejects_pointer_path_traversal(tmp_path: Path) -> None
 generation = store.current_path.read_text(encoding="utf-8")
 manifest = json.loads(
 files = [metadata["file"] for metadata in manifest["models"].values()]
+⋮----
+def test_checkpoint_rejects_manifest_state_path_escape(tmp_path: Path) -> None
+⋮----
+manifest_path = store.root / generation / "manifest.json"
+manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+⋮----
+def test_checkpoint_rejects_manifest_model_path_escape(tmp_path: Path) -> None
 ````
 
 ## File: tests/test_multiasset_evolution.py

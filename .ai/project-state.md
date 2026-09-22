@@ -45,13 +45,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T19:27:24Z
+Generated: 2026-09-22T19:33:30Z
 
 ### Git
 - Branch: `main`
-- Head: `bf14d29b7710`
-- Commit date: 2026-09-22T21:27:12+02:00
-- Commit: fix: harden checkpoint pointers and model paths
+- Head: `623930d11ff8`
+- Commit date: 2026-09-22T21:33:17+02:00
+- Commit: fix: constrain checkpoint manifest artifact paths
 - Tracked files: 496
 
 ### Recently changed files

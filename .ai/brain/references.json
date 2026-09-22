@@ -102,9 +102,21 @@
           "line": 188,
           "preview": "store = MultiAssetCheckpointStore(tmp_path / \"checkpoint\")",
           "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 218,
+          "preview": "store = MultiAssetCheckpointStore(tmp_path / \"checkpoint\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 232,
+          "preview": "store = MultiAssetCheckpointStore(tmp_path / \"checkpoint\")",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 15
+      "occurrence_count": 17
     },
     "__init__": {
       "definition": {
@@ -577,13 +589,13 @@
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 53,
+          "line": 63,
           "preview": "final_dir = self._generation_dir(generation)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 115,
+          "line": 125,
           "preview": "directory = self._generation_dir(generation)",
           "definition_candidate": false
         }
@@ -612,13 +624,13 @@
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 52,
+          "line": 62,
           "preview": "generation = self._validate_generation(f\"step-{state.processed_bars:012d}\")",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 162,
+          "line": 178,
           "preview": "current = self._validate_generation(current)",
           "definition_candidate": false
         }
@@ -641,7 +653,7 @@
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 65,
+          "line": 75,
           "preview": "filename = self._model_filename(symbol)",
           "definition_candidate": false
         }
@@ -664,25 +676,25 @@
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 73,
+          "line": 83,
           "preview": "\"state\": {\"file\": \"state.json\", \"sha256\": self._sha256(state_path)},",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 77,
+          "line": 87,
           "preview": "\"sha256\": self._sha256(temp_dir / filename),",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 123,
+          "line": 133,
           "preview": "if self._sha256(state_path) != state_meta[\"sha256\"]:",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 135,
+          "line": 145,
           "preview": "if self._sha256(path) != metadata[\"sha256\"]:",
           "definition_candidate": false
         },
@@ -719,10 +731,39 @@
       ],
       "occurrence_count": 10
     },
+    "_artifact_path": {
+      "definition": {
+        "file": "src/ai_trading/multiasset_checkpoint.py",
+        "line": 49,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/multiasset_checkpoint.py",
+          "line": 49,
+          "preview": "def _artifact_path(directory: Path, filename: object) -> Path:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/multiasset_checkpoint.py",
+          "line": 132,
+          "preview": "state_path = self._artifact_path(directory, state_meta[\"file\"])",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_checkpoint.py",
+          "line": 144,
+          "preview": "path = self._artifact_path(directory, metadata[\"file\"])",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
     "commit": {
       "definition": {
         "file": "src/ai_trading/multiasset_checkpoint.py",
-        "line": 47,
+        "line": 57,
         "kind": "function",
         "language": "python"
       },
@@ -795,7 +836,7 @@
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 47,
+          "line": 57,
           "preview": "def commit(",
           "definition_candidate": true
         },
@@ -992,6 +1033,18 @@
           "definition_candidate": false
         },
         {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 219,
+          "preview": "store.commit(state(6), {\"A\": {\"learned\": 6}})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 233,
+          "preview": "store.commit(state(7), {\"A\": {\"learned\": 7}})",
+          "definition_candidate": false
+        },
+        {
           "file": "tests/test_multiasset_runtime.py",
           "line": 146,
           "preview": "raise RuntimeError(\"synthetic state commit failure\")",
@@ -1106,31 +1159,31 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 63
+      "occurrence_count": 65
     },
     "_publish_current": {
       "definition": {
         "file": "src/ai_trading/multiasset_checkpoint.py",
-        "line": 96,
+        "line": 106,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 92,
+          "line": 102,
           "preview": "self._publish_current(generation)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 96,
+          "line": 106,
           "preview": "def _publish_current(self, generation: str) -> None:",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 169,
+          "line": 185,
           "preview": "self._publish_current(recovered)",
           "definition_candidate": false
         }
@@ -1140,26 +1193,26 @@
     "_prune_old_generations": {
       "definition": {
         "file": "src/ai_trading/multiasset_checkpoint.py",
-        "line": 101,
+        "line": 111,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 93,
+          "line": 103,
           "preview": "self._prune_old_generations(current=generation)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 101,
+          "line": 111,
           "preview": "def _prune_old_generations(self, *, current: str) -> None:",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 170,
+          "line": 186,
           "preview": "self._prune_old_generations(current=recovered)",
           "definition_candidate": false
         }
@@ -1169,32 +1222,32 @@
     "_load_generation": {
       "definition": {
         "file": "src/ai_trading/multiasset_checkpoint.py",
-        "line": 111,
+        "line": 121,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 111,
+          "line": 121,
           "preview": "def _load_generation(",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 150,
+          "line": 160,
           "preview": "self._load_generation(generation)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 163,
+          "line": 179,
           "preview": "loaded = self._load_generation(current)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 171,
+          "line": 187,
           "preview": "return self._load_generation(recovered)",
           "definition_candidate": false
         }
@@ -1204,20 +1257,20 @@
     "_newer_valid_generation": {
       "definition": {
         "file": "src/ai_trading/multiasset_checkpoint.py",
-        "line": 142,
+        "line": 152,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 142,
+          "line": 152,
           "preview": "def _newer_valid_generation(self, current: str | None) -> str | None:",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 167,
+          "line": 183,
           "preview": "recovered = self._newer_valid_generation(current)",
           "definition_candidate": false
         }
@@ -1227,7 +1280,7 @@
     "load": {
       "definition": {
         "file": "src/ai_trading/multiasset_checkpoint.py",
-        "line": 156,
+        "line": 172,
         "kind": "function",
         "language": "python"
       },
@@ -1594,13 +1647,13 @@
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 139,
+          "line": 149,
           "preview": "models[symbol] = joblib.load(path)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 156,
+          "line": 172,
           "preview": "def load(self) -> tuple[MultiAssetState, dict[str, object]] | None:",
           "definition_candidate": true
         },
@@ -2851,6 +2904,40 @@
           "file": "tests/test_multiasset_checkpoint.py",
           "line": 185,
           "preview": "def test_checkpoint_model_filenames_do_not_collide_for_similar_symbols(",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_checkpoint_rejects_manifest_state_path_escape": {
+      "definition": {
+        "file": "tests/test_multiasset_checkpoint.py",
+        "line": 217,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 217,
+          "preview": "def test_checkpoint_rejects_manifest_state_path_escape(tmp_path: Path) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_checkpoint_rejects_manifest_model_path_escape": {
+      "definition": {
+        "file": "tests/test_multiasset_checkpoint.py",
+        "line": 231,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 231,
+          "preview": "def test_checkpoint_rejects_manifest_model_path_escape(tmp_path: Path) -> None:",
           "definition_candidate": true
         }
       ],
