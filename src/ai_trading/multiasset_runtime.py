@@ -291,6 +291,7 @@ class MultiAssetPaperRuntime:
             returns = market_context.returns
 
             checkpoint = self.checkpoint_store.load()
+            checkpoint_loaded = checkpoint is not None
             if checkpoint is None:
                 state = self.state_store.load(self.risk_config.starting_cash)
                 checkpoint_models: dict[str, object] = {}
@@ -402,7 +403,12 @@ class MultiAssetPaperRuntime:
                         "drifted_features": [],
                     }
 
-                model = checkpoint_models.get(symbol) or self._load_model(symbol)
+                if checkpoint_loaded:
+                    model = checkpoint_models.get(symbol)
+                    if model is None:
+                        model = RiverDirectionModel()
+                else:
+                    model = self._load_model(symbol)
 
                 learn_label = labels.get(learn_idx)
                 evaluation_prediction = model.predict_one(features.loc[learn_idx, FEATURES])
