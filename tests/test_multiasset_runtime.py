@@ -1,4 +1,6 @@
 import json
+
+import joblib
 from pathlib import Path
 
 import numpy as np
@@ -353,3 +355,89 @@ def test_multiasset_runtime_defers_learning_side_effects_until_checkpoint_commit
     assert not economic_store.path.exists()
     assert not lifecycle_log.path.exists()
     assert not drift_store.path.exists()
+
+
+
+def test_multiasset_model_paths_are_collision_resistant(tmp_path: Path) -> None:
+    runtime = MultiAssetPaperRuntime(
+        state_store=MultiAssetStateStore(tmp_path / "state.json"),
+        audit_log=AuditLog(tmp_path / "audit.jsonl"),
+        lock_path=str(tmp_path / "lock"),
+        model_root=tmp_path / "online_models",
+        batch_model_root=tmp_path / "batch_models",
+        specialist_model_root=tmp_path / "specialists",
+    )
+
+    symbols = ("GC=F", "GC/F", "^GC_F")
+
+    assert len({runtime._model_path(symbol) for symbol in symbols}) == 3
+    assert len({runtime._batch_model_path(symbol) for symbol in symbols}) == 3
+    assert len(
+        {runtime._specialist_path(symbol, "trend") for symbol in symbols}
+    ) == 3
+
+
+def test_multiasset_online_model_legacy_path_is_migrated(tmp_path: Path) -> None:
+    runtime = MultiAssetPaperRuntime(
+        state_store=MultiAssetStateStore(tmp_path / "state.json"),
+        audit_log=AuditLog(tmp_path / "audit.jsonl"),
+        lock_path=str(tmp_path / "lock"),
+        model_root=tmp_path / "online_models",
+        batch_model_root=tmp_path / "batch_models",
+        specialist_model_root=tmp_path / "specialists",
+    )
+    symbol = "GC=F"
+    legacy_path = runtime._legacy_model_path(symbol)
+    legacy_path.parent.mkdir(parents=True, exist_ok=True)
+    expected = {"legacy": True}
+    joblib.dump(expected, legacy_path)
+
+    loaded = runtime._load_model(symbol)
+
+    assert loaded == expected
+    assert runtime._model_path(symbol).exists()
+    assert joblib.load(runtime._model_path(symbol)) == expected
+
+
+def test_multiasset_batch_and_specialist_legacy_paths_are_migrated(
+    tmp_path: Path,
+) -> None:
+    runtime = MultiAssetPaperRuntime(
+        state_store=MultiAssetStateStore(tmp_path / "state.json"),
+        audit_log=AuditLog(tmp_path / "audit.jsonl"),
+        lock_path=str(tmp_path / "lock"),
+        model_root=tmp_path / "online_models",
+        batch_model_root=tmp_path / "batch_models",
+        specialist_model_root=tmp_path / "specialists",
+    )
+    symbol = "GC=F"
+    features = pd.DataFrame(index=pd.date_range("2025-01-01", periods=2))
+    labels = pd.Series(index=features.index, dtype=float)
+    signal_idx = features.index[-1]
+
+    legacy_batch = runtime._legacy_batch_model_path(symbol)
+    legacy_batch.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump({"batch": True}, legacy_batch)
+
+    legacy_specialist = runtime._legacy_specialist_path(symbol, "trend")
+    legacy_specialist.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump({"specialist": True}, legacy_specialist)
+
+    batch = runtime._load_or_train_batch_model(
+        symbol,
+        features,
+        labels,
+        signal_idx,
+    )
+    specialist = runtime._load_or_train_specialist(
+        symbol,
+        "trend",
+        features,
+        labels,
+        signal_idx,
+    )
+
+    assert batch == {"batch": True}
+    assert specialist == {"specialist": True}
+    assert runtime._batch_model_path(symbol).exists()
+    assert runtime._specialist_path(symbol, "trend").exists()
