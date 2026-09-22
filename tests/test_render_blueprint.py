@@ -5,7 +5,11 @@ def test_render_blueprint_uses_readiness_and_external_multi_market_scheduler() -
     text = Path("render.yaml").read_text(encoding="utf-8")
 
     required = (
+        "autoDeployTrigger: checksPass",
         "healthCheckPath: /readyz",
+        "buildFilter:",
+        '".ai/**"',
+        '".serena/**"',
         "AI_TRADING_HOSTED_PAPER",
         "AI_TRADING_EXTERNAL_SCHEDULER",
         "AI_TRADING_MARKETS",
