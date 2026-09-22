@@ -12630,7 +12630,7 @@ services:
     name: ai-trading-dashboard
     runtime: docker
     dockerfilePath: ./Dockerfile
-    healthCheckPath: /
+    healthCheckPath: /livez
     envVars:
       - key: PORT
         value: 8765

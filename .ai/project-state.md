@@ -45,16 +45,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T15:51:12Z
+Generated: 2026-09-22T15:55:19Z
 
 ### Git
 - Branch: `main`
-- Head: `7f1797502e77`
-- Commit date: 2026-09-22T17:51:01+02:00
-- Commit: fix: harden portfolio intelligence against invalid inputs
+- Head: `c4e40cd5c043`
+- Commit date: 2026-09-22T17:55:06+02:00
+- Commit: fix: use dedicated Render liveness health check
 - Tracked files: 493
 
 ### Recently changed files
+- `render.yaml`
 - `src/ai_trading/portfolio_intelligence.py`
 - `tests/test_portfolio_intelligence.py`
 - `src/ai_trading/data.py`
@@ -64,7 +65,6 @@ Generated: 2026-09-22T15:51:12Z
 - `tests/test_paper_cycle.py`
 - `tests/test_scheduler_endpoint.py`
 - `tests/test_data_quality.py`
-- `tests/test_paper_cycle_service.py`
 
 ### Project signals
 - `pyproject.toml`

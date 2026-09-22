@@ -1,18 +1,16 @@
 # Change impact
 
-Base: db3250179d92984823e38f8706c828adb1659a4c
-Head: 7f1797502e7723c424a91eabe7a59d0797683c29
+Base: d5dc89cc746fbd5ba8790a2b706411d9b823a2d3
+Head: c4e40cd5c0439e1602a90162aad4e6b318eb52d3
 
 ## Changed files
-- M src/ai_trading/portfolio_intelligence.py
-- M tests/test_portfolio_intelligence.py
+- M render.yaml
 
 ## Affected areas
-- src
-- tests
+- (root)
 
 ## Related test candidates
-- tests/test_portfolio_intelligence.py
+- No direct filename-based test match detected.
 
 ## Agent guidance
 - Read this file before broad repository exploration.
