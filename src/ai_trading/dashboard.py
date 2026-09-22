@@ -69,6 +69,33 @@ def _display_ratio(value: float | None) -> str:
     return f"{value:.2f}"
 
 
+def _scheduler_display_state(
+    overview: dict[str, object],
+) -> tuple[str, str, str, str]:
+    delivery_count = int(overview["delivery_count"])
+    verified = bool(overview["cloudflare_delivery_verified"])
+    fresh = bool(overview["cloudflare_delivery_fresh"])
+    age = overview["last_delivery_age_seconds"]
+    freshness = float(overview["freshness_seconds"])
+
+    if verified:
+        state = "VERIFIED"
+        state_class = "status-ok"
+    elif delivery_count == 0:
+        state = "WAITING"
+        state_class = "status-warn"
+    elif not fresh:
+        state = "STALE"
+        state_class = "status-error"
+    else:
+        state = "COLLECTING"
+        state_class = "status-warn"
+
+    age_display = "-" if age is None else f"{float(age):.0f}s"
+    freshness_display = f"{freshness:.0f}s"
+    return state, state_class, age_display, freshness_display
+
+
 def _trade_pnl_known(trade: object) -> bool:
     marker = getattr(trade, "pnl_known", None)
     if marker is None:
@@ -508,7 +535,6 @@ def render_dashboard(
             list_deliveries = getattr(persistence, "list_scheduler_deliveries", None)
             deliveries = tuple(list_deliveries(limit=20)) if callable(list_deliveries) else ()
             scheduler_overview = scheduler_delivery_overview(deliveries)
-            scheduler_verified = bool(scheduler_overview["cloudflare_delivery_verified"])
             scheduler_delivery_count = int(scheduler_overview["delivery_count"])
             scheduler_successes = int(
                 scheduler_overview["consecutive_cloudflare_successes"]
@@ -522,12 +548,12 @@ def render_dashboard(
             scheduler_last_delivery = str(
                 scheduler_overview["last_delivery_timestamp_utc"] or "-"
             )
-            scheduler_state = (
-                "VERIFIED"
-                if scheduler_verified
-                else ("COLLECTING" if scheduler_delivery_count else "WAITING")
-            )
-            scheduler_state_class = "status-ok" if scheduler_verified else "status-warn"
+            (
+                scheduler_state,
+                scheduler_state_class,
+                scheduler_last_age,
+                scheduler_freshness_window,
+            ) = _scheduler_display_state(scheduler_overview)
             scheduler_panel = f"""
 <section class="section" id="scheduler">
 <div class="section-head"><h2>Scheduler delivery</h2><small>durable external-trigger evidence</small></div>
@@ -538,8 +564,10 @@ def render_dashboard(
 <div class="metric"><small>Last source</small><strong>{html.escape(scheduler_last_source)}</strong></div>
 <div class="metric"><small>Last HTTP status</small><strong>{html.escape(scheduler_last_status)}</strong></div>
 <div class="metric"><small>Last delivery</small><strong>{html.escape(scheduler_last_delivery)}</strong></div>
+<div class="metric"><small>Last delivery age</small><strong>{html.escape(scheduler_last_age)}</strong></div>
+<div class="metric"><small>Freshness window</small><strong>{html.escape(scheduler_freshness_window)}</strong></div>
 </div>
-<small class="runtime-reason">Verification requires at least three consecutive successful Cloudflare deliveries. Authentication material is never persisted or displayed.</small>
+<small class="runtime-reason">Verification requires three consecutive successful Cloudflare deliveries and a fresh latest delivery. Authentication material is never persisted or displayed.</small>
 </section>
 """
         except Exception:

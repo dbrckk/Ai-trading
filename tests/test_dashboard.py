@@ -1,4 +1,4 @@
-from ai_trading.dashboard import render_dashboard
+from ai_trading.dashboard import _scheduler_display_state, render_dashboard
 from ai_trading.trade_journal import TradeJournal, TradeSnapshot
 
 
@@ -149,3 +149,45 @@ def test_dashboard_does_not_render_legacy_unknown_pnl_as_zero(tmp_path) -> None:
 
     assert "<td>—</td>" in page
     assert '<small>PnL coverage</small><strong>0 / 1 recent</strong>' in page
+
+
+
+def test_scheduler_display_state_reports_waiting_collecting_stale_and_verified() -> None:
+    base = {
+        "delivery_count": 0,
+        "cloudflare_delivery_verified": False,
+        "cloudflare_delivery_fresh": False,
+        "last_delivery_age_seconds": None,
+        "freshness_seconds": 720.0,
+    }
+
+    waiting = _scheduler_display_state(base)
+    collecting = _scheduler_display_state(
+        {
+            **base,
+            "delivery_count": 2,
+            "cloudflare_delivery_fresh": True,
+            "last_delivery_age_seconds": 30.0,
+        }
+    )
+    stale = _scheduler_display_state(
+        {
+            **base,
+            "delivery_count": 3,
+            "last_delivery_age_seconds": 900.0,
+        }
+    )
+    verified = _scheduler_display_state(
+        {
+            **base,
+            "delivery_count": 3,
+            "cloudflare_delivery_verified": True,
+            "cloudflare_delivery_fresh": True,
+            "last_delivery_age_seconds": 15.0,
+        }
+    )
+
+    assert waiting == ("WAITING", "status-warn", "-", "720s")
+    assert collecting == ("COLLECTING", "status-warn", "30s", "720s")
+    assert stale == ("STALE", "status-error", "900s", "720s")
+    assert verified == ("VERIFIED", "status-ok", "15s", "720s")
