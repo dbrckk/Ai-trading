@@ -107,7 +107,10 @@ def load_history(
             attempts += 1
             try:
                 frame = provider.download(symbol, period=period, interval=interval)
-                return _normalize_history_frame(frame)
+                normalized = _normalize_history_frame(frame)
+                normalized.attrs["market_data_provider"] = provider.name
+                normalized.attrs["market_data_provider_attempt"] = attempt + 1
+                return normalized
             except Exception as exc:  # noqa: BLE001 - providers raise backend-specific errors
                 last_error = exc
                 if attempt + 1 < max_attempts:
