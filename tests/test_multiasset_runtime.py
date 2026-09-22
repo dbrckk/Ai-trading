@@ -152,3 +152,41 @@ def test_multiasset_runtime_does_not_persist_online_models_before_state_commit(
 
     assert not (tmp_path / "online_models" / "A.joblib").exists()
     assert not (tmp_path / "online_models" / "B.joblib").exists()
+
+
+
+def test_multiasset_runtime_prefers_checkpoint_over_stale_legacy_state(
+    tmp_path: Path,
+) -> None:
+    state_store = MultiAssetStateStore(tmp_path / "state.json")
+    runtime = MultiAssetPaperRuntime(
+        risk_config=RiskConfig(),
+        allocation_config=AllocationConfig(max_asset_weight=0.6),
+        portfolio_risk_config=PortfolioRiskConfig(
+            max_gross_exposure=1.0,
+            max_net_exposure=1.0,
+            max_asset_exposure=0.6,
+            max_pair_correlation=0.99,
+        ),
+        state_store=state_store,
+        audit_log=AuditLog(tmp_path / "audit.jsonl"),
+        lock_path=str(tmp_path / "lock"),
+        model_root=tmp_path / "online_models",
+        batch_model_root=tmp_path / "batch_models",
+        specialist_model_root=tmp_path / "specialists",
+    )
+    markets = {"A": market(31), "B": market(32)}
+
+    first = runtime.step(markets)
+    assert first.processed
+    assert (tmp_path / "multiasset_checkpoint" / "CURRENT").exists()
+
+    legacy = json.loads((tmp_path / "state.json").read_text(encoding="utf-8"))
+    legacy["last_processed"] = None
+    legacy["processed_bars"] = 0
+    (tmp_path / "state.json").write_text(json.dumps(legacy), encoding="utf-8")
+
+    second = runtime.step(markets)
+
+    assert not second.processed
+    assert second.risk_reasons == ("bar already processed",)
