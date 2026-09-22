@@ -37,6 +37,7 @@ from .meta_store import MetaRouterStore
 from .model_blend import BlendComponent, blend_predictions
 from .model_quality import evaluate_model_quality
 from .model_quarantine import ModelQuarantineStore
+from .multiasset_checkpoint import MultiAssetCheckpointStore
 from .multiasset_market_context import prepare_multiasset_market_context
 from .multiasset_state import AssetPosition, MultiAssetStateStore
 from .online import RiverDirectionModel
@@ -91,6 +92,7 @@ class MultiAssetPaperRuntime:
         allocation_config: AllocationConfig | None = None,
         portfolio_risk_config: PortfolioRiskConfig | None = None,
         state_store: MultiAssetStateStore | None = None,
+        checkpoint_store: MultiAssetCheckpointStore | None = None,
         audit_log: AuditLog | None = None,
         lock_path: str = "artifacts/multiasset_runtime.lock",
         model_root: str | Path = "artifacts/models/multiasset",
@@ -125,6 +127,9 @@ class MultiAssetPaperRuntime:
         self.allocation_config = allocation_config or AllocationConfig()
         self.portfolio_risk_config = portfolio_risk_config or PortfolioRiskConfig()
         self.state_store = state_store or MultiAssetStateStore()
+        self.checkpoint_store = checkpoint_store or MultiAssetCheckpointStore(
+            self.state_store.path.parent / "multiasset_checkpoint"
+        )
         self.audit = audit_log or AuditLog("artifacts/multiasset_audit.jsonl")
         self.lock_path = lock_path
         self.model_root = Path(model_root)
@@ -244,7 +249,12 @@ class MultiAssetPaperRuntime:
             execution_time = market_context.execution_time
             returns = market_context.returns
 
-            state = self.state_store.load(self.risk_config.starting_cash)
+            checkpoint = self.checkpoint_store.load()
+            if checkpoint is None:
+                state = self.state_store.load(self.risk_config.starting_cash)
+                checkpoint_models: dict[str, object] = {}
+            else:
+                state, checkpoint_models = checkpoint
             persisted_crisis = self.crisis_state_store.load()
             persisted_limits = limits_for_state(persisted_crisis)
             if state.last_processed == execution_time:
@@ -346,7 +356,7 @@ class MultiAssetPaperRuntime:
                         "drifted_features": [],
                     }
 
-                model = self._load_model(symbol)
+                model = checkpoint_models.get(symbol) or self._load_model(symbol)
 
                 learn_label = labels.get(learn_idx)
                 evaluation_prediction = model.predict_one(features.loc[learn_idx, FEATURES])
@@ -972,6 +982,7 @@ class MultiAssetPaperRuntime:
             state.last_processed = execution_time
             current_equity = state.equity()
             state.peak_equity = max(state.peak_equity, current_equity)
+            self.checkpoint_store.commit(state, pending_online_models)
             self.state_store.save(state)
             for symbol, model in pending_online_models.items():
                 self._save_model(symbol, model)
