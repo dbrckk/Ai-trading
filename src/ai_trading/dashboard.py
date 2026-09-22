@@ -535,7 +535,6 @@ def render_dashboard(
             list_deliveries = getattr(persistence, "list_scheduler_deliveries", None)
             deliveries = tuple(list_deliveries(limit=20)) if callable(list_deliveries) else ()
             scheduler_overview = scheduler_delivery_overview(deliveries)
-            scheduler_verified = bool(scheduler_overview["cloudflare_delivery_verified"])
             scheduler_delivery_count = int(scheduler_overview["delivery_count"])
             scheduler_successes = int(
                 scheduler_overview["consecutive_cloudflare_successes"]
