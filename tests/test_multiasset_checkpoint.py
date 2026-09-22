@@ -1,0 +1,57 @@
+from pathlib import Path
+
+import pytest
+
+from ai_trading.multiasset_checkpoint import MultiAssetCheckpointStore
+from ai_trading.multiasset_state import AssetPosition, MultiAssetState
+
+
+def state(step: int) -> MultiAssetState:
+    return MultiAssetState(
+        cash=1000.0 - step,
+        peak_equity=1100.0,
+        day_start_equity=1000.0,
+        positions={"A": AssetPosition(units=2.0, last_price=50.0)},
+        last_processed=f"bar-{step}",
+        processed_bars=step,
+    )
+
+
+def test_checkpoint_round_trip_state_and_models(tmp_path: Path) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    generation = store.commit(state(7), {"A": {"learned": 7}})
+
+    loaded = store.load()
+
+    assert generation == "step-000000000007"
+    assert loaded is not None
+    loaded_state, models = loaded
+    assert loaded_state == state(7)
+    assert models == {"A": {"learned": 7}}
+
+
+def test_unpublished_generation_does_not_replace_current_checkpoint(
+    tmp_path: Path,
+) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.commit(state(3), {"A": {"learned": 3}})
+
+    unpublished = store.root / "step-000000000004"
+    unpublished.mkdir()
+    (unpublished / "manifest.json").write_text("{}", encoding="utf-8")
+
+    loaded = store.load()
+
+    assert loaded is not None
+    loaded_state, models = loaded
+    assert loaded_state.processed_bars == 3
+    assert models["A"]["learned"] == 3
+
+
+def test_checkpoint_fails_closed_on_corrupted_state(tmp_path: Path) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    generation = store.commit(state(9), {"A": {"learned": 9}})
+    (store.root / generation / "state.json").write_text("{}", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="checksum mismatch"):
+        store.load()
