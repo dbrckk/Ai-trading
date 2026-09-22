@@ -424,3 +424,5 @@ def test_scheduler_delivery_verification_expires_when_latest_success_is_stale() 
 def test_scheduler_delivery_overview_rejects_invalid_freshness_window() -> None:
     with pytest.raises(ValueError, match="freshness_seconds"):
         scheduler_delivery_overview((), freshness_seconds=0)
+
+

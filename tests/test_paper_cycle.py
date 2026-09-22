@@ -918,7 +918,8 @@ def test_degraded_mtf_history_is_skipped_without_disrupting_primary_cycle(
     backend = FilePaperPersistence(tmp_path)
     primary = sample_market(217)
     long_history = sample_market(900)
-    long_history = long_history.drop(index=long_history.index[10:810:10])
+    recent = long_history.index[-100:]
+    long_history = long_history.drop(index=recent[10:90:10])
     calls: list[str] = []
     mtf_calls = 0
 
