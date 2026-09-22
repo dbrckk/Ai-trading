@@ -5,20 +5,20 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "MultiAssetBacktestReport": {
+    "MultiAssetStepResult": {
       "source": {
-        "file": "src/ai_trading/multiasset_backtest.py",
-        "start": 20,
-        "end": 25
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "start": 72,
+        "end": 82
       },
       "symbol_dependencies": [
         {
-          "symbol": "PerformanceMetrics",
+          "symbol": "equity",
           "definitions": [
             {
-              "file": "src/ai_trading/performance.py",
-              "line": 10,
-              "kind": "class",
+              "file": "src/ai_trading/multiasset_state.py",
+              "line": 23,
+              "kind": "function",
               "language": "python"
             }
           ],
@@ -27,11 +27,11 @@
       ],
       "dependency_count": 1
     },
-    "MultiAssetWalkForwardBacktester": {
+    "MultiAssetPaperRuntime": {
       "source": {
-        "file": "src/ai_trading/multiasset_backtest.py",
-        "start": 28,
-        "end": 188
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "start": 85,
+        "end": 1109
       },
       "symbol_dependencies": [
         {
@@ -39,6 +39,162 @@
           "definitions": [
             {
               "file": "src/ai_trading/portfolio.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "AllocationStateStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/allocation_state.py",
+              "line": 15,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "AllocatorConfigStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/allocator_config_store.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "AlphaAllocationConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/alpha_allocation.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "AssetPosition",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_state.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "AuditLog",
+          "definitions": [
+            {
+              "file": "src/ai_trading/audit.py",
+              "line": 31,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "BlendComponent",
+          "definitions": [
+            {
+              "file": "src/ai_trading/model_blend.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ChampionProbationStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/champion_probation.py",
+              "line": 39,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ChampionRegistry",
+          "definitions": [
+            {
+              "file": "src/ai_trading/champions.py",
+              "line": 25,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "CrisisAssetPolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/asset_classes.py",
+              "line": 7,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "CrisisPolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/crisis_controller.py",
+              "line": 7,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "CrisisStateStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/crisis_state_store.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "DriftRetrainStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/drift_retrain_store.py",
+              "line": 15,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "EconomicMetaStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/economic_meta_store.py",
               "line": 10,
               "kind": "class",
               "language": "python"
@@ -59,6 +215,114 @@
           "relation": "imported_module"
         },
         {
+          "symbol": "ExpertPoolStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/expert_pool.py",
+              "line": 28,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GlobalAllocatorConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/global_allocator.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GovernorPolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 7,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GovernorSignals",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 21,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GovernorState",
+          "definitions": [
+            {
+              "file": "src/ai_trading/governor_state_store.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GovernorStateStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/governor_state_store.py",
+              "line": 15,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "LifecycleEventLog",
+          "definitions": [
+            {
+              "file": "src/ai_trading/lifecycle_log.py",
+              "line": 25,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MetaContext",
+          "definitions": [
+            {
+              "file": "src/ai_trading/meta_router.py",
+              "line": 11,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MetaRouterStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/meta_store.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
           "symbol": "ModelConfig",
           "definitions": [
             {
@@ -71,11 +335,35 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "MultiAssetBacktestReport",
+          "symbol": "ModelQuarantineStore",
           "definitions": [
             {
-              "file": "src/ai_trading/multiasset_backtest.py",
-              "line": 20,
+              "file": "src/ai_trading/model_quarantine.py",
+              "line": 25,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MultiAssetStateStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_state.py",
+              "line": 27,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MultiAssetStepResult",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 72,
               "kind": "class",
               "language": "python"
             }
@@ -107,6 +395,90 @@
           "relation": "imported_module"
         },
         {
+          "symbol": "QualityStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/quality_store.py",
+              "line": 15,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ReadinessHistoryStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/readiness_score.py",
+              "line": 129,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ResilienceContext",
+          "definitions": [
+            {
+              "file": "src/ai_trading/resilience.py",
+              "line": 21,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ResiliencePolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/resilience.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ResilienceSignals",
+          "definitions": [
+            {
+              "file": "src/ai_trading/resilience.py",
+              "line": 90,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ResilienceState",
+          "definitions": [
+            {
+              "file": "src/ai_trading/resilience.py",
+              "line": 81,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ResilienceStateStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/resilience.py",
+              "line": 106,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
           "symbol": "RiskConfig",
           "definitions": [
             {
@@ -119,193 +491,37 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "__init__",
+          "symbol": "RiverDirectionModel",
           "definitions": [
             {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 27,
-              "kind": "function",
+              "file": "src/ai_trading/online.py",
+              "line": 24,
+              "kind": "class",
               "language": "python"
             }
           ],
           "relation": "imported_module"
         },
         {
-          "symbol": "apply_portfolio_intelligence",
+          "symbol": "RuntimeLock",
           "definitions": [
             {
-              "file": "src/ai_trading/portfolio_intelligence.py",
-              "line": 127,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "calculate_rebalance_fill",
-          "definitions": [
-            {
-              "file": "src/ai_trading/paper_execution.py",
-              "line": 18,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "compute_metrics",
-          "definitions": [
-            {
-              "file": "src/ai_trading/performance.py",
-              "line": 54,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "detect_regime",
-          "definitions": [
-            {
-              "file": "src/ai_trading/regime.py",
-              "line": 18,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_portfolio_risk",
-          "definitions": [
-            {
-              "file": "src/ai_trading/portfolio_risk.py",
-              "line": 36,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fit",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 78,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "infer_periods_per_year",
-          "definitions": [
-            {
-              "file": "src/ai_trading/performance.py",
-              "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "inverse_volatility_weights",
-          "definitions": [
-            {
-              "file": "src/ai_trading/portfolio.py",
-              "line": 70,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "make_features",
-          "definitions": [
-            {
-              "file": "src/ai_trading/features.py",
-              "line": 28,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "make_labels",
-          "definitions": [
-            {
-              "file": "src/ai_trading/features.py",
-              "line": 104,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "predict_one",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 106,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "risk_config_for_symbol",
-          "definitions": [
-            {
-              "file": "src/ai_trading/execution_costs.py",
-              "line": 13,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run",
-          "definitions": [
-            {
-              "file": "src/ai_trading/multiasset_backtest.py",
-              "line": 53,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "target_notionals",
-          "definitions": [
-            {
-              "file": "src/ai_trading/portfolio.py",
-              "line": 105,
-              "kind": "function",
+              "file": "src/ai_trading/runtime_lock.py",
+              "line": 8,
+              "kind": "class",
               "language": "python"
             }
           ],
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 22
+      "dependency_count": 40
     },
     "__init__": {
       "source": {
-        "file": "src/ai_trading/multiasset_backtest.py",
-        "start": 29,
-        "end": 149
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "start": 86,
+        "end": 206
       },
       "symbol_dependencies": [
         {
@@ -313,6 +529,138 @@
           "definitions": [
             {
               "file": "src/ai_trading/portfolio.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "AllocationStateStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/allocation_state.py",
+              "line": 15,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "AllocatorConfigStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/allocator_config_store.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "AlphaAllocationConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/alpha_allocation.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "AuditLog",
+          "definitions": [
+            {
+              "file": "src/ai_trading/audit.py",
+              "line": 31,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ChampionProbationStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/champion_probation.py",
+              "line": 39,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ChampionRegistry",
+          "definitions": [
+            {
+              "file": "src/ai_trading/champions.py",
+              "line": 25,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "CrisisAssetPolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/asset_classes.py",
+              "line": 7,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "CrisisPolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/crisis_controller.py",
+              "line": 7,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "CrisisStateStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/crisis_state_store.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "DriftRetrainStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/drift_retrain_store.py",
+              "line": 15,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "EconomicMetaStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/economic_meta_store.py",
               "line": 10,
               "kind": "class",
               "language": "python"
@@ -333,6 +681,78 @@
           "relation": "imported_module"
         },
         {
+          "symbol": "ExpertPoolStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/expert_pool.py",
+              "line": 28,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GlobalAllocatorConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/global_allocator.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GovernorPolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 7,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GovernorStateStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/governor_state_store.py",
+              "line": 15,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "LifecycleEventLog",
+          "definitions": [
+            {
+              "file": "src/ai_trading/lifecycle_log.py",
+              "line": 25,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MetaRouterStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/meta_store.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
           "symbol": "ModelConfig",
           "definitions": [
             {
@@ -345,16 +765,28 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "MultiAssetBacktestReport",
+          "symbol": "ModelQuarantineStore",
           "definitions": [
             {
-              "file": "src/ai_trading/multiasset_backtest.py",
-              "line": 20,
+              "file": "src/ai_trading/model_quarantine.py",
+              "line": 25,
               "kind": "class",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MultiAssetStateStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_state.py",
+              "line": 27,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
         },
         {
           "symbol": "PortfolioIntelligenceConfig",
@@ -362,6 +794,1086 @@
             {
               "file": "src/ai_trading/portfolio_intelligence.py",
               "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "PortfolioRiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/portfolio_risk.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "QualityStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/quality_store.py",
+              "line": 15,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ReadinessHistoryStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/readiness_score.py",
+              "line": 129,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ResiliencePolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/resilience.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ResilienceStateStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/resilience.py",
+              "line": 106,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 5,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "SpecialistDirectionModel",
+          "definitions": [
+            {
+              "file": "src/ai_trading/specialist_experts.py",
+              "line": 22,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "StressPolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/stress_engine.py",
+              "line": 20,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_batch_model_path",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 189,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_load_or_train_batch_model",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 193,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_load_or_train_specialist",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 167,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_specialist_path",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 163,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fit",
+          "definitions": [
+            {
+              "file": "src/ai_trading/ensemble.py",
+              "line": 78,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/specialist_experts.py",
+              "line": 60,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load",
+          "definitions": [
+            {
+              "file": "src/ai_trading/allocation_state.py",
+              "line": 19,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/allocator_config_store.py",
+              "line": 14,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/champion_probation.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/crisis_state_store.py",
+              "line": 14,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/drift_retrain_store.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 37
+    },
+    "_specialist_path": {
+      "source": {
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "start": 163,
+        "end": 165
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "_load_or_train_specialist": {
+      "source": {
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "start": 167,
+        "end": 187
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "SpecialistDirectionModel",
+          "definitions": [
+            {
+              "file": "src/ai_trading/specialist_experts.py",
+              "line": 22,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_specialist_path",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 163,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fit",
+          "definitions": [
+            {
+              "file": "src/ai_trading/ensemble.py",
+              "line": 78,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/specialist_experts.py",
+              "line": 60,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load",
+          "definitions": [
+            {
+              "file": "src/ai_trading/allocation_state.py",
+              "line": 19,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/allocator_config_store.py",
+              "line": 14,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/champion_probation.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/crisis_state_store.py",
+              "line": 14,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/drift_retrain_store.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "_batch_model_path": {
+      "source": {
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "start": 189,
+        "end": 191
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "_load_or_train_batch_model": {
+      "source": {
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "start": 193,
+        "end": 215
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "EnsembleDirectionModel",
+          "definitions": [
+            {
+              "file": "src/ai_trading/ensemble.py",
+              "line": 24,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_batch_model_path",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 189,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fit",
+          "definitions": [
+            {
+              "file": "src/ai_trading/ensemble.py",
+              "line": 78,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/specialist_experts.py",
+              "line": 60,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load",
+          "definitions": [
+            {
+              "file": "src/ai_trading/allocation_state.py",
+              "line": 19,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/allocator_config_store.py",
+              "line": 14,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/champion_probation.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/crisis_state_store.py",
+              "line": 14,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/drift_retrain_store.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "_model_path": {
+      "source": {
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "start": 217,
+        "end": 219
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "_load_model": {
+      "source": {
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "start": 221,
+        "end": 225
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "RiverDirectionModel",
+          "definitions": [
+            {
+              "file": "src/ai_trading/online.py",
+              "line": 24,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_model_path",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 217,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load",
+          "definitions": [
+            {
+              "file": "src/ai_trading/allocation_state.py",
+              "line": 19,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/allocator_config_store.py",
+              "line": 14,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/champion_probation.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/crisis_state_store.py",
+              "line": 14,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/drift_retrain_store.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "_save_model": {
+      "source": {
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "start": 227,
+        "end": 232
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "RiverDirectionModel",
+          "definitions": [
+            {
+              "file": "src/ai_trading/online.py",
+              "line": 24,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_model_path",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 217,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "step": {
+      "source": {
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "start": 234,
+        "end": 1109
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AssetPosition",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_state.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "BlendComponent",
+          "definitions": [
+            {
+              "file": "src/ai_trading/model_blend.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GovernorSignals",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 21,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GovernorState",
+          "definitions": [
+            {
+              "file": "src/ai_trading/governor_state_store.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MetaContext",
+          "definitions": [
+            {
+              "file": "src/ai_trading/meta_router.py",
+              "line": 11,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MultiAssetStepResult",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 72,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "ResilienceContext",
+          "definitions": [
+            {
+              "file": "src/ai_trading/resilience.py",
+              "line": 21,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ResilienceSignals",
+          "definitions": [
+            {
+              "file": "src/ai_trading/resilience.py",
+              "line": 90,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ResilienceState",
+          "definitions": [
+            {
+              "file": "src/ai_trading/resilience.py",
+              "line": 81,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiverDirectionModel",
+          "definitions": [
+            {
+              "file": "src/ai_trading/online.py",
+              "line": 24,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RuntimeLock",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_lock.py",
+              "line": 8,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_batch_model_path",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 189,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_load_model",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 221,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_load_or_train_batch_model",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 193,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_load_or_train_specialist",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 167,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_save_model",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 227,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "adapt_resilience_policy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/resilience.py",
+              "line": 28,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "allocate_global_capital",
+          "definitions": [
+            {
+              "file": "src/ai_trading/global_allocator.py",
+              "line": 99,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "alpha_risk_weights",
+          "definitions": [
+            {
+              "file": "src/ai_trading/alpha_allocation.py",
+              "line": 24,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "append",
+          "definitions": [
+            {
+              "file": "src/ai_trading/audit.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/lifecycle_log.py",
+              "line": 29,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/quality_store.py",
+              "line": 34,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/readiness_score.py",
+              "line": 136,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "apply_portfolio_intelligence",
+          "definitions": [
+            {
+              "file": "src/ai_trading/portfolio_intelligence.py",
+              "line": 127,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "asset_allowed_in_mode",
+          "definitions": [
+            {
+              "file": "src/ai_trading/asset_classes.py",
+              "line": 30,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "attribute_pnl",
+          "definitions": [
+            {
+              "file": "src/ai_trading/pnl_attribution.py",
+              "line": 15,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "blend_predictions",
+          "definitions": [
+            {
+              "file": "src/ai_trading/model_blend.py",
+              "line": 15,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "build_alpha_contribution",
+          "definitions": [
+            {
+              "file": "src/ai_trading/alpha_attribution.py",
+              "line": 15,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "calculate_rebalance_fill",
+          "definitions": [
+            {
+              "file": "src/ai_trading/paper_execution.py",
+              "line": 18,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "calibration_weight_multiplier",
+          "definitions": [
+            {
+              "file": "src/ai_trading/calibration_routing.py",
+              "line": 13,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "compute_budget_weights",
+          "definitions": [
+            {
+              "file": "src/ai_trading/expert_pool.py",
+              "line": 53,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "conservatively_calibrate_prediction",
+          "definitions": [
+            {
+              "file": "src/ai_trading/confidence_calibration.py",
+              "line": 75,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "detect_distribution_drift",
+          "definitions": [
+            {
+              "file": "src/ai_trading/drift.py",
+              "line": 109,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "detect_regime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/regime.py",
+              "line": 18,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "economic_route_weight",
+          "definitions": [
+            {
+              "file": "src/ai_trading/economic_meta.py",
+              "line": 65,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "equity",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_state.py",
+              "line": 23,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate_crisis_state",
+          "definitions": [
+            {
+              "file": "src/ai_trading/crisis_controller.py",
+              "line": 66,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate_expert_lifecycle",
+          "definitions": [
+            {
+              "file": "src/ai_trading/expert_lifecycle.py",
+              "line": 21,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate_governor",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 46,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate_market_data_quality",
+          "definitions": [
+            {
+              "file": "src/ai_trading/data_quality.py",
+              "line": 21,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate_model_quality",
+          "definitions": [
+            {
+              "file": "src/ai_trading/model_quality.py",
+              "line": 18,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate_portfolio_risk",
+          "definitions": [
+            {
+              "file": "src/ai_trading/portfolio_risk.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate_recovery_health",
+          "definitions": [
+            {
+              "file": "src/ai_trading/recovery_health.py",
+              "line": 24,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 40
+    },
+    "market": {
+      "source": {
+        "file": "tests/test_multiasset_runtime.py",
+        "start": 17,
+        "end": 32
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "test_multiasset_runtime_is_persistent_and_idempotent": {
+      "source": {
+        "file": "tests/test_multiasset_runtime.py",
+        "start": 35,
+        "end": 69
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AllocationConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/portfolio.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "AuditLog",
+          "definitions": [
+            {
+              "file": "src/ai_trading/audit.py",
+              "line": 31,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MultiAssetPaperRuntime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 85,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MultiAssetStateStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_state.py",
+              "line": 27,
               "kind": "class",
               "language": "python"
             }
@@ -393,11 +1905,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "apply_portfolio_intelligence",
+          "symbol": "equity",
           "definitions": [
             {
-              "file": "src/ai_trading/portfolio_intelligence.py",
-              "line": 127,
+              "file": "src/ai_trading/multiasset_state.py",
+              "line": 23,
               "kind": "function",
               "language": "python"
             }
@@ -405,107 +1917,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "detect_regime",
+          "symbol": "market",
           "definitions": [
             {
-              "file": "src/ai_trading/regime.py",
-              "line": 18,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_portfolio_risk",
-          "definitions": [
-            {
-              "file": "src/ai_trading/portfolio_risk.py",
-              "line": 36,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fit",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 78,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "inverse_volatility_weights",
-          "definitions": [
-            {
-              "file": "src/ai_trading/portfolio.py",
-              "line": 70,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "make_features",
-          "definitions": [
-            {
-              "file": "src/ai_trading/features.py",
-              "line": 28,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "make_labels",
-          "definitions": [
-            {
-              "file": "src/ai_trading/features.py",
-              "line": 104,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "predict_one",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 106,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "risk_config_for_symbol",
-          "definitions": [
-            {
-              "file": "src/ai_trading/execution_costs.py",
-              "line": 13,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run",
-          "definitions": [
-            {
-              "file": "src/ai_trading/multiasset_backtest.py",
-              "line": 53,
+              "file": "tests/test_multiasset_runtime.py",
+              "line": 17,
               "kind": "function",
               "language": "python"
             }
@@ -513,11 +1929,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "target_notionals",
+          "symbol": "step",
           "definitions": [
             {
-              "file": "src/ai_trading/portfolio.py",
-              "line": 105,
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 234,
               "kind": "function",
               "language": "python"
             }
@@ -525,21 +1941,21 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 18
+      "dependency_count": 9
     },
-    "run": {
+    "test_failed_drift_retrain_does_not_start_cooldown": {
       "source": {
-        "file": "src/ai_trading/multiasset_backtest.py",
-        "start": 53,
-        "end": 188
+        "file": "tests/test_multiasset_runtime.py",
+        "start": 73,
+        "end": 119
       },
       "symbol_dependencies": [
         {
-          "symbol": "EnsembleDirectionModel",
+          "symbol": "AllocationConfig",
           "definitions": [
             {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 24,
+              "file": "src/ai_trading/portfolio.py",
+              "line": 10,
               "kind": "class",
               "language": "python"
             }
@@ -547,23 +1963,137 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "MultiAssetBacktestReport",
+          "symbol": "AuditLog",
           "definitions": [
             {
-              "file": "src/ai_trading/multiasset_backtest.py",
-              "line": 20,
+              "file": "src/ai_trading/audit.py",
+              "line": 31,
               "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "DistributionDriftReport",
+          "definitions": [
+            {
+              "file": "src/ai_trading/drift.py",
+              "line": 64,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "DriftRetrainStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/drift_retrain_store.py",
+              "line": 15,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MultiAssetPaperRuntime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 85,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MultiAssetStateStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_state.py",
+              "line": 27,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "PortfolioRiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/portfolio_risk.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 5,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_load_or_train_batch_model",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 193,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "detect_distribution_drift",
+          "definitions": [
+            {
+              "file": "src/ai_trading/drift.py",
+              "line": 109,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "fail_batch_retrain",
+          "definitions": [
+            {
+              "file": "tests/test_multiasset_runtime.py",
+              "line": 108,
+              "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
         },
         {
-          "symbol": "apply_portfolio_intelligence",
+          "symbol": "load",
           "definitions": [
             {
-              "file": "src/ai_trading/portfolio_intelligence.py",
-              "line": 127,
+              "file": "src/ai_trading/drift_retrain_store.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/multiasset_state.py",
+              "line": 31,
               "kind": "function",
               "language": "python"
             }
@@ -571,11 +2101,23 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "calculate_rebalance_fill",
+          "symbol": "market",
           "definitions": [
             {
-              "file": "src/ai_trading/paper_execution.py",
-              "line": 18,
+              "file": "tests/test_multiasset_runtime.py",
+              "line": 17,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "should_retrain",
+          "definitions": [
+            {
+              "file": "src/ai_trading/drift_retrain_store.py",
+              "line": 31,
               "kind": "function",
               "language": "python"
             }
@@ -583,131 +2125,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "compute_metrics",
+          "symbol": "step",
           "definitions": [
             {
-              "file": "src/ai_trading/performance.py",
-              "line": 54,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "detect_regime",
-          "definitions": [
-            {
-              "file": "src/ai_trading/regime.py",
-              "line": 18,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_portfolio_risk",
-          "definitions": [
-            {
-              "file": "src/ai_trading/portfolio_risk.py",
-              "line": 36,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fit",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 78,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "infer_periods_per_year",
-          "definitions": [
-            {
-              "file": "src/ai_trading/performance.py",
-              "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "inverse_volatility_weights",
-          "definitions": [
-            {
-              "file": "src/ai_trading/portfolio.py",
-              "line": 70,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "make_features",
-          "definitions": [
-            {
-              "file": "src/ai_trading/features.py",
-              "line": 28,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "make_labels",
-          "definitions": [
-            {
-              "file": "src/ai_trading/features.py",
-              "line": 104,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "predict_one",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 106,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "risk_config_for_symbol",
-          "definitions": [
-            {
-              "file": "src/ai_trading/execution_costs.py",
-              "line": 13,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "target_notionals",
-          "definitions": [
-            {
-              "file": "src/ai_trading/portfolio.py",
-              "line": 105,
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 234,
               "kind": "function",
               "language": "python"
             }
@@ -717,20 +2139,11 @@
       ],
       "dependency_count": 15
     },
-    "market": {
+    "fail_batch_retrain": {
       "source": {
-        "file": "tests/test_multiasset_backtest.py",
-        "start": 13,
-        "end": 28
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "test_multiasset_walk_forward_produces_portfolio_curve": {
-      "source": {
-        "file": "tests/test_multiasset_backtest.py",
-        "start": 31,
-        "end": 53
+        "file": "tests/test_multiasset_runtime.py",
+        "start": 108,
+        "end": 228
       },
       "symbol_dependencies": [
         {
@@ -746,11 +2159,35 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "MultiAssetWalkForwardBacktester",
+          "symbol": "AuditLog",
           "definitions": [
             {
-              "file": "src/ai_trading/multiasset_backtest.py",
-              "line": 28,
+              "file": "src/ai_trading/audit.py",
+              "line": 31,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MultiAssetPaperRuntime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 85,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MultiAssetStateStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_state.py",
+              "line": 27,
               "kind": "class",
               "language": "python"
             }
@@ -782,11 +2219,23 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "market",
+          "symbol": "_load_or_train_batch_model",
           "definitions": [
             {
-              "file": "tests/test_multiasset_backtest.py",
-              "line": 13,
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 193,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "fail_state_save",
+          "definitions": [
+            {
+              "file": "tests/test_multiasset_runtime.py",
+              "line": 145,
               "kind": "function",
               "language": "python"
             }
@@ -794,25 +2243,91 @@
           "relation": "same_file"
         },
         {
-          "symbol": "run",
+          "symbol": "load",
           "definitions": [
             {
-              "file": "src/ai_trading/multiasset_backtest.py",
-              "line": 53,
+              "file": "src/ai_trading/drift_retrain_store.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/multiasset_state.py",
+              "line": 31,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
+        },
+        {
+          "symbol": "market",
+          "definitions": [
+            {
+              "file": "tests/test_multiasset_runtime.py",
+              "line": 17,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_state.py",
+              "line": 45,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "should_retrain",
+          "definitions": [
+            {
+              "file": "src/ai_trading/drift_retrain_store.py",
+              "line": 31,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "step",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 234,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "test_multiasset_runtime_does_not_persist_online_models_before_state_commit",
+          "definitions": [
+            {
+              "file": "tests/test_multiasset_runtime.py",
+              "line": 123,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
         }
       ],
-      "dependency_count": 6
+      "dependency_count": 14
     },
-    "test_multiasset_backtest_annualizes_from_actual_timestamps": {
+    "test_multiasset_runtime_does_not_persist_online_models_before_state_commit": {
       "source": {
-        "file": "tests/test_multiasset_backtest.py",
-        "start": 56,
-        "end": 76
+        "file": "tests/test_multiasset_runtime.py",
+        "start": 123,
+        "end": 154
       },
       "symbol_dependencies": [
         {
@@ -828,11 +2343,35 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "MultiAssetWalkForwardBacktester",
+          "symbol": "AuditLog",
           "definitions": [
             {
-              "file": "src/ai_trading/multiasset_backtest.py",
-              "line": 28,
+              "file": "src/ai_trading/audit.py",
+              "line": 31,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MultiAssetPaperRuntime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 85,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MultiAssetStateStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_state.py",
+              "line": 27,
               "kind": "class",
               "language": "python"
             }
@@ -864,35 +2403,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "compute_metrics",
+          "symbol": "fail_state_save",
           "definitions": [
             {
-              "file": "src/ai_trading/performance.py",
-              "line": 54,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "infer_periods_per_year",
-          "definitions": [
-            {
-              "file": "src/ai_trading/performance.py",
-              "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "market",
-          "definitions": [
-            {
-              "file": "tests/test_multiasset_backtest.py",
-              "line": 13,
+              "file": "tests/test_multiasset_runtime.py",
+              "line": 145,
               "kind": "function",
               "language": "python"
             }
@@ -900,11 +2415,35 @@
           "relation": "same_file"
         },
         {
-          "symbol": "run",
+          "symbol": "market",
           "definitions": [
             {
-              "file": "src/ai_trading/multiasset_backtest.py",
-              "line": 53,
+              "file": "tests/test_multiasset_runtime.py",
+              "line": 17,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_state.py",
+              "line": 45,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "step",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 234,
               "kind": "function",
               "language": "python"
             }
@@ -912,81 +2451,21 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 8
+      "dependency_count": 10
     },
-    "test_multiasset_backtest_uses_symbol_specific_execution_costs": {
+    "fail_state_save": {
       "source": {
-        "file": "tests/test_multiasset_backtest.py",
-        "start": 78,
-        "end": 108
+        "file": "tests/test_multiasset_runtime.py",
+        "start": 145,
+        "end": 265
       },
       "symbol_dependencies": [
         {
-          "symbol": "AllocationConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/portfolio.py",
-              "line": 10,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "MultiAssetWalkForwardBacktester",
-          "definitions": [
-            {
-              "file": "src/ai_trading/multiasset_backtest.py",
-              "line": 28,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "PortfolioRiskConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/portfolio_risk.py",
-              "line": 9,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/config.py",
-              "line": 5,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "capture",
-          "definitions": [
-            {
-              "file": "tests/test_multiasset_backtest.py",
-              "line": 82,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
           "symbol": "market",
           "definitions": [
             {
-              "file": "tests/test_multiasset_backtest.py",
-              "line": 13,
+              "file": "tests/test_multiasset_runtime.py",
+              "line": 17,
               "kind": "function",
               "language": "python"
             }
@@ -994,11 +2473,23 @@
           "relation": "same_file"
         },
         {
-          "symbol": "run",
+          "symbol": "save",
           "definitions": [
             {
-              "file": "src/ai_trading/multiasset_backtest.py",
-              "line": 53,
+              "file": "src/ai_trading/multiasset_state.py",
+              "line": 45,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "step",
+          "definitions": [
+            {
+              "file": "src/ai_trading/multiasset_runtime.py",
+              "line": 234,
               "kind": "function",
               "language": "python"
             }
@@ -1006,89 +2497,7 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 7
-    },
-    "capture": {
-      "source": {
-        "file": "tests/test_multiasset_backtest.py",
-        "start": 82,
-        "end": 202
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AllocationConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/portfolio.py",
-              "line": 10,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "MultiAssetWalkForwardBacktester",
-          "definitions": [
-            {
-              "file": "src/ai_trading/multiasset_backtest.py",
-              "line": 28,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "PortfolioRiskConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/portfolio_risk.py",
-              "line": 9,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/config.py",
-              "line": 5,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "market",
-          "definitions": [
-            {
-              "file": "tests/test_multiasset_backtest.py",
-              "line": 13,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run",
-          "definitions": [
-            {
-              "file": "src/ai_trading/multiasset_backtest.py",
-              "line": 53,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 6
+      "dependency_count": 3
     }
   }
 }

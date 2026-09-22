@@ -45,16 +45,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T16:17:57Z
+Generated: 2026-09-22T16:24:01Z
 
 ### Git
 - Branch: `main`
-- Head: `73136d6c4d25`
-- Commit date: 2026-09-22T18:17:39+02:00
-- Commit: fix: align multiasset backtest execution costs with production
+- Head: `b8959cf47906`
+- Commit date: 2026-09-22T18:23:14+02:00
+- Commit: fix: defer multiasset online model persistence until state commit
 - Tracked files: 494
 
 ### Recently changed files
+- `src/ai_trading/multiasset_runtime.py`
+- `tests/test_multiasset_runtime.py`
 - `src/ai_trading/multiasset_backtest.py`
 - `tests/test_multiasset_backtest.py`
 - `render.yaml`
@@ -62,10 +64,6 @@ Generated: 2026-09-22T16:17:57Z
 - `tests/test_portfolio_intelligence.py`
 - `src/ai_trading/data.py`
 - `tests/test_data.py`
-- `src/ai_trading/dashboard.py`
-- `tests/test_dashboard_persistence.py`
-- `tests/test_paper_cycle.py`
-- `tests/test_scheduler_endpoint.py`
 
 ### Project signals
 - `pyproject.toml`

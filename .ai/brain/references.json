@@ -5,116 +5,182 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "MultiAssetBacktestReport": {
+    "MultiAssetStepResult": {
       "definition": {
-        "file": "src/ai_trading/multiasset_backtest.py",
-        "line": 20,
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "line": 72,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 20,
-          "preview": "class MultiAssetBacktestReport:",
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 72,
+          "preview": "class MultiAssetStepResult:",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 53,
-          "preview": "def run(self, markets: dict[str, pd.DataFrame]) -> MultiAssetBacktestReport:",
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 234,
+          "preview": "def step(self, markets: dict[str, pd.DataFrame]) -> MultiAssetStepResult:",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 179,
-          "preview": "return MultiAssetBacktestReport(",
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 251,
+          "preview": "return MultiAssetStepResult(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 1095,
+          "preview": "return MultiAssetStepResult(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_scheduler.py",
+          "line": 12,
+          "preview": "from .multiasset_runtime import MultiAssetPaperRuntime, MultiAssetStepResult",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_scheduler.py",
+          "line": 127,
+          "preview": "def run(self) -> list[MultiAssetStepResult]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_scheduler.py",
+          "line": 195,
+          "preview": "results: list[MultiAssetStepResult] = []",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 3
+      "occurrence_count": 7
     },
-    "MultiAssetWalkForwardBacktester": {
+    "MultiAssetPaperRuntime": {
       "definition": {
-        "file": "src/ai_trading/multiasset_backtest.py",
-        "line": 28,
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "line": 85,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/cli.py",
-          "line": 56,
-          "preview": "from .multiasset_backtest import MultiAssetWalkForwardBacktester",
+          "line": 58,
+          "preview": "from .multiasset_runtime import MultiAssetPaperRuntime",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/cli.py",
-          "line": 876,
-          "preview": "report = MultiAssetWalkForwardBacktester().run(markets)",
+          "line": 832,
+          "preview": "result = MultiAssetPaperRuntime().step(markets)",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 28,
-          "preview": "class MultiAssetWalkForwardBacktester:",
+          "file": "src/ai_trading/cli.py",
+          "line": 1537,
+          "preview": "runtime=MultiAssetPaperRuntime(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 1704,
+          "preview": "runtime = MultiAssetPaperRuntime()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 85,
+          "preview": "class MultiAssetPaperRuntime:",
           "definition_candidate": true
         },
         {
-          "file": "tests/test_multiasset_backtest.py",
-          "line": 7,
-          "preview": "from ai_trading.multiasset_backtest import MultiAssetWalkForwardBacktester",
+          "file": "src/ai_trading/multiasset_scheduler.py",
+          "line": 12,
+          "preview": "from .multiasset_runtime import MultiAssetPaperRuntime, MultiAssetStepResult",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_multiasset_backtest.py",
-          "line": 32,
-          "preview": "backtester = MultiAssetWalkForwardBacktester(",
+          "file": "src/ai_trading/multiasset_scheduler.py",
+          "line": 37,
+          "preview": "runtime: MultiAssetPaperRuntime,",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_multiasset_backtest.py",
-          "line": 57,
-          "preview": "report = MultiAssetWalkForwardBacktester(",
+          "file": "src/ai_trading/runtime_factory.py",
+          "line": 18,
+          "preview": "from .multiasset_runtime import MultiAssetPaperRuntime",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_multiasset_backtest.py",
-          "line": 93,
-          "preview": "report = MultiAssetWalkForwardBacktester(",
+          "file": "src/ai_trading/runtime_factory.py",
+          "line": 25,
+          "preview": "def isolated_multiasset_runtime(root: str | Path) -> MultiAssetPaperRuntime:",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_research_config_validation.py",
-          "line": 5,
-          "preview": "from ai_trading.multiasset_backtest import MultiAssetWalkForwardBacktester",
+          "file": "src/ai_trading/runtime_factory.py",
+          "line": 29,
+          "preview": "return MultiAssetPaperRuntime(",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_research_config_validation.py",
-          "line": 50,
-          "preview": "lambda: MultiAssetWalkForwardBacktester(min_train_bars=1),",
+          "file": "src/ai_trading/soak.py",
+          "line": 9,
+          "preview": "from .multiasset_runtime import MultiAssetPaperRuntime",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_research_config_validation.py",
-          "line": 51,
-          "preview": "lambda: MultiAssetWalkForwardBacktester(test_window_bars=0),",
+          "file": "src/ai_trading/soak.py",
+          "line": 29,
+          "preview": "runtime: MultiAssetPaperRuntime,",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_research_config_validation.py",
-          "line": 73,
-          "preview": "multi = MultiAssetWalkForwardBacktester(",
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 11,
+          "preview": "from ai_trading.multiasset_runtime import MultiAssetPaperRuntime",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 36,
+          "preview": "runtime = MultiAssetPaperRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 78,
+          "preview": "runtime = MultiAssetPaperRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 128,
+          "preview": "runtime = MultiAssetPaperRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_scheduler.py",
+          "line": 9,
+          "preview": "from ai_trading.multiasset_runtime import MultiAssetPaperRuntime",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_scheduler.py",
+          "line": 35,
+          "preview": "runtime = MultiAssetPaperRuntime(",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 11
+      "occurrence_count": 18
     },
     "__init__": {
       "definition": {
-        "file": "src/ai_trading/multiasset_backtest.py",
-        "line": 29,
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "line": 86,
         "kind": "function",
         "language": "python"
       },
@@ -273,13 +339,13 @@
           "file": "src/ai_trading/multiasset_backtest.py",
           "line": 29,
           "preview": "def __init__(",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_runtime.py",
           "line": 86,
           "preview": "def __init__(",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "src/ai_trading/multiasset_scheduler.py",
@@ -560,336 +626,521 @@
       ],
       "occurrence_count": 73
     },
-    "run": {
+    "_specialist_path": {
       "definition": {
-        "file": "src/ai_trading/multiasset_backtest.py",
-        "line": 53,
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "line": 163,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/backtest.py",
-          "line": 80,
-          "preview": "def run(self, df: pd.DataFrame) -> BacktestReport:",
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 163,
+          "preview": "def _specialist_path(self, symbol: str, kind: str) -> Path:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 175,
+          "preview": "path = self._specialist_path(symbol, kind)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_load_or_train_specialist": {
+      "definition": {
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "line": 167,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 167,
+          "preview": "def _load_or_train_specialist(",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 478,
+          "preview": "specialist = self._load_or_train_specialist(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_batch_model_path": {
+      "definition": {
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "line": 189,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 189,
+          "preview": "def _batch_model_path(self, symbol: str) -> Path:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 200,
+          "preview": "path = self._batch_model_path(symbol)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 324,
+          "preview": "self._batch_model_path(symbol).unlink(missing_ok=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 528,
+          "preview": "self._batch_model_path(symbol).unlink(missing_ok=True)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "_load_or_train_batch_model": {
+      "definition": {
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "line": 193,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 193,
+          "preview": "def _load_or_train_batch_model(",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 362,
+          "preview": "batch_model = self._load_or_train_batch_model(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 111,
+          "preview": "monkeypatch.setattr(runtime, \"_load_or_train_batch_model\", fail_batch_retrain)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_model_path": {
+      "definition": {
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "line": 217,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 217,
+          "preview": "def _model_path(self, symbol: str) -> Path:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 222,
+          "preview": "path = self._model_path(symbol)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 228,
+          "preview": "path = self._model_path(symbol)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_load_model": {
+      "definition": {
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "line": 221,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 221,
+          "preview": "def _load_model(self, symbol: str) -> RiverDirectionModel:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 349,
+          "preview": "model = self._load_model(symbol)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_save_model": {
+      "definition": {
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "line": 227,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 227,
+          "preview": "def _save_model(self, symbol: str, model: RiverDirectionModel) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 977,
+          "preview": "self._save_model(symbol, model)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "step": {
+      "definition": {
+        "file": "src/ai_trading/multiasset_runtime.py",
+        "line": 234,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/chaos.py",
+          "line": 11,
+          "preview": "step: int",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/chaos.py",
+          "line": 22,
+          "preview": "if current_step != scenario.step:",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/cli.py",
-          "line": 150,
-          "preview": "results = scheduler.run()",
+          "line": 167,
+          "preview": "table.add_row(\"Runtime step\", \"PASS\")",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/cli.py",
-          "line": 237,
-          "preview": "report = backtester.run(df)",
+          "line": 659,
+          "preview": "@app.command(\"runtime-step\")",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/cli.py",
-          "line": 462,
-          "preview": ").run(df)",
+          "line": 670,
+          "preview": ").step(df)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/cli.py",
-          "line": 467,
-          "preview": ").run(df)",
+          "line": 821,
+          "preview": "@app.command(\"multiasset-step\")",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/cli.py",
-          "line": 519,
-          "preview": ").run(df)",
+          "line": 832,
+          "preview": "result = MultiAssetPaperRuntime().step(markets)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/cli.py",
-          "line": 569,
-          "preview": ").run(df)",
+          "line": 1772,
+          "preview": "step=chaos_step,",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/cli.py",
-          "line": 630,
-          "preview": ").run(df)",
+          "file": "src/ai_trading/evolution.py",
+          "line": 26,
+          "preview": "for step in config.horizon_steps:",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/cli.py",
-          "line": 710,
-          "preview": "results = scheduler.run()",
+          "file": "src/ai_trading/evolution.py",
+          "line": 27,
+          "preview": "horizon = max(1, parent.horizon_bars + step)",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/cli.py",
-          "line": 796,
-          "preview": ").run(df)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 876,
-          "preview": "report = MultiAssetWalkForwardBacktester().run(markets)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 965,
-          "preview": "@app.command(\"expert-factory-run\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1544,
-          "preview": "results = scheduler.run()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1672,
-          "preview": "@app.command(\"supervisor-run\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1725,
-          "preview": "result = supervisor.run()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/continuous.py",
-          "line": 62,
-          "preview": ").run(df)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cost_stress.py",
-          "line": 52,
-          "preview": ").run(df)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/global_allocator.py",
-          "line": 139,
-          "preview": "# run below target gross exposure.",
+          "file": "src/ai_trading/evolution.py",
+          "line": 34,
+          "preview": "compute_cost=parent.compute_cost * (1.0 + 0.05 * abs(step)),",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/hosted_runtime.py",
-          "line": 158,
-          "preview": "scheduler.run()",
+          "line": 114,
+          "preview": "step = result.runtime",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/mtf_parameter_benchmark.py",
-          "line": 99,
-          "preview": "The first run showed 30m ahead of 15m/10m, while ATR multipliers were",
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 122,
+          "preview": "last_cycle_timestamp=step.timestamp,",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 53,
-          "preview": "def run(self, markets: dict[str, pd.DataFrame]) -> MultiAssetBacktestReport:",
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 123,
+          "preview": "processed=step.processed,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 124,
+          "preview": "side=step.side,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 125,
+          "preview": "confidence=step.confidence,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 126,
+          "preview": "approved=step.approved,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 127,
+          "preview": "reason=step.reason,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 128,
+          "preview": "equity=step.equity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 129,
+          "preview": "units=step.units,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 130,
+          "preview": "processed_bars=step.processed_bars,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 136,
+          "preview": "f\"processed={step.processed} side={step.side} \"",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 137,
+          "preview": "f\"confidence={step.confidence:.3f} approved={step.approved}\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 234,
+          "preview": "def step(self, markets: dict[str, pd.DataFrame]) -> MultiAssetStepResult:",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/multiasset_scheduler.py",
-          "line": 127,
-          "preview": "def run(self) -> list[MultiAssetStepResult]:",
+          "line": 226,
+          "preview": "result = self.runtime.step(markets)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/orchestrator.py",
-          "line": 52,
-          "preview": ").run(df)",
+          "line": 71,
+          "preview": "def step(",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/parameter_sensitivity.py",
-          "line": 75,
-          "preview": ").run(df)",
+          "file": "src/ai_trading/orchestrator.py",
+          "line": 78,
+          "preview": "runtime_result = self.runtime.step(df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/qualification_suite.py",
+          "line": 29,
+          "preview": "def _chaos_cases(symbol: str, step: int) -> tuple[tuple[str, tuple[ChaosScenario, ...]], ...]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/qualification_suite.py",
+          "line": 32,
+          "preview": "(\"nan_last_close\", (ChaosScenario(\"nan_last_close\", step=step, symbol=symbol),)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/qualification_suite.py",
+          "line": 33,
+          "preview": "(\"duplicate_timestamp\", (ChaosScenario(\"duplicate_timestamp\", step=step, symbol=symbol),)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/qualification_suite.py",
+          "line": 34,
+          "preview": "(\"ohlc_violation\", (ChaosScenario(\"ohlc_violation\", step=step, symbol=symbol),)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/qualification_suite.py",
+          "line": 35,
+          "preview": "(\"stale_prices\", (ChaosScenario(\"stale_prices\", step=step, symbol=symbol),)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 51,
+          "preview": "\"\"\"One-step autonomous paper runtime.",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 53,
+          "preview": "A scheduler may call step repeatedly. The runtime itself never routes",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 165,
+          "preview": "def step(self, df: pd.DataFrame) -> RuntimeStepResult:",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/scheduler.py",
-          "line": 55,
-          "preview": "def run(self) -> list[OrchestrationResult]:",
+          "line": 74,
+          "preview": "result = self.orchestrator.step(df, symbol=self.symbol)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/scheduler.py",
+          "line": 76,
+          "preview": "result = self.orchestrator.step(",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/soak.py",
-          "line": 41,
-          "preview": "raise ValueError(\"insufficient history for soak run\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 104,
-          "preview": "def run(self) -> SupervisorResult:",
+          "line": 70,
+          "preview": "result = runtime.step(window)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/tuning.py",
-          "line": 78,
-          "preview": ").run(df)",
+          "line": 71,
+          "preview": "max_train_bars=trial.suggest_int(\"max_train_bars\", 504, 1260, step=126),",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_backtest.py",
-          "line": 41,
-          "preview": ").run(sample_market())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 70,
-          "preview": ").run(sample_market())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 90,
-          "preview": ").run(sample_market())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest_ensemble.py",
-          "line": 35,
-          "preview": ").run(sample_market())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_cost_stress.py",
-          "line": 16,
-          "preview": "def run(self, df) -> BacktestReport:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_persistence.py",
-          "line": 43,
-          "preview": "def run(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_persistence.py",
-          "line": 75,
-          "preview": "def run(self) -> list[object]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_runtime.py",
-          "line": 84,
-          "preview": "def run(self) -> list[object]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_backtest.py",
-          "line": 44,
-          "preview": "report = backtester.run(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_backtest.py",
-          "line": 68,
-          "preview": ").run({\"A\": market(3), \"B\": market(4)})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_backtest.py",
-          "line": 104,
-          "preview": ").run({\"A\": market(5), \"B\": market(6)})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_scheduler.py",
-          "line": 47,
-          "preview": "scheduler.run()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler.py",
+          "file": "tests/test_chaos.py",
           "line": 26,
-          "preview": "results = scheduler.run()",
+          "preview": "ChaosScenario(\"ohlc_violation\", step=0, symbol=\"GC=F\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 51,
+          "preview": "first = runtime.step(markets)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 52,
+          "preview": "second = runtime.step(markets)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 114,
+          "preview": "result = runtime.step(markets)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 151,
+          "preview": "runtime.step({\"A\": market(21), \"B\": market(22)})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime.py",
+          "line": 40,
+          "preview": "first = runtime.step(df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime.py",
+          "line": 41,
+          "preview": "second = runtime.step(df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime.py",
+          "line": 49,
+          "preview": "third = runtime.step(next_df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 99,
+          "preview": "result = runtime.step(sample_market())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 134,
+          "preview": "result = runtime.step(sample_market())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 150,
+          "preview": "runtime.step(sample_market())",
           "definition_candidate": false
         },
         {
           "file": "tests/test_scheduler.py",
-          "line": 54,
-          "preview": "results = scheduler.run()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler.py",
-          "line": 72,
-          "preview": "scheduler.run()",
+          "line": 11,
+          "preview": "def step(self, df: pd.DataFrame, *, symbol: str):",
           "definition_candidate": false
         },
         {
           "file": "tests/test_scheduler_governor.py",
-          "line": 37,
-          "preview": "scheduler.run()",
+          "line": 11,
+          "preview": "def step(self, df: pd.DataFrame, *, symbol: str):",
           "definition_candidate": false
         },
         {
           "file": "tests/test_scheduler_iteration_callback.py",
-          "line": 46,
-          "preview": "results = scheduler.run()",
+          "line": 16,
+          "preview": "def step(self, df: pd.DataFrame, *, symbol: str):",
           "definition_candidate": false
         },
         {
           "file": "tests/test_scheduler_iteration_callback.py",
-          "line": 66,
-          "preview": "scheduler.run()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_smoke_e2e.py",
-          "line": 55,
-          "preview": "results = scheduler.run()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_supervisor.py",
-          "line": 27,
-          "preview": "result = supervisor.run()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_supervisor.py",
-          "line": 48,
-          "preview": "result = supervisor.run()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_supervisor.py",
-          "line": 69,
-          "preview": "result = supervisor.run()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_supervisor.py",
-          "line": 126,
-          "preview": "result = supervisor.run()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_supervisor_clean_exit.py",
-          "line": 21,
-          "preview": "result = supervisor.run()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_supervisor_crash_loop.py",
-          "line": 29,
-          "preview": "result = supervisor.run()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_supervisor_qualification.py",
-          "line": 26,
-          "preview": "result = supervisor.run()",
+          "line": 24,
+          "preview": "def step(",
           "definition_candidate": false
         }
       ],
@@ -897,8 +1148,8 @@
     },
     "market": {
       "definition": {
-        "file": "tests/test_multiasset_backtest.py",
-        "line": 13,
+        "file": "tests/test_multiasset_runtime.py",
+        "line": 17,
         "kind": "function",
         "language": "python"
       },
@@ -1626,75 +1877,98 @@
       ],
       "occurrence_count": 120
     },
-    "test_multiasset_walk_forward_produces_portfolio_curve": {
+    "test_multiasset_runtime_is_persistent_and_idempotent": {
       "definition": {
-        "file": "tests/test_multiasset_backtest.py",
-        "line": 31,
+        "file": "tests/test_multiasset_runtime.py",
+        "line": 35,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_multiasset_backtest.py",
-          "line": 31,
-          "preview": "def test_multiasset_walk_forward_produces_portfolio_curve() -> None:",
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 35,
+          "preview": "def test_multiasset_runtime_is_persistent_and_idempotent(tmp_path: Path) -> None:",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_multiasset_backtest_annualizes_from_actual_timestamps": {
+    "test_failed_drift_retrain_does_not_start_cooldown": {
       "definition": {
-        "file": "tests/test_multiasset_backtest.py",
-        "line": 56,
+        "file": "tests/test_multiasset_runtime.py",
+        "line": 73,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_multiasset_backtest.py",
-          "line": 56,
-          "preview": "def test_multiasset_backtest_annualizes_from_actual_timestamps() -> None:",
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 73,
+          "preview": "def test_failed_drift_retrain_does_not_start_cooldown(",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_multiasset_backtest_uses_symbol_specific_execution_costs": {
+    "fail_batch_retrain": {
       "definition": {
-        "file": "tests/test_multiasset_backtest.py",
-        "line": 78,
+        "file": "tests/test_multiasset_runtime.py",
+        "line": 108,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_multiasset_backtest.py",
-          "line": 78,
-          "preview": "def test_multiasset_backtest_uses_symbol_specific_execution_costs(monkeypatch) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "capture": {
-      "definition": {
-        "file": "tests/test_multiasset_backtest.py",
-        "line": 82,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_multiasset_backtest.py",
-          "line": 82,
-          "preview": "def capture(symbol: str, base: RiskConfig):",
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 108,
+          "preview": "def fail_batch_retrain(*_args, **_kwargs):",
           "definition_candidate": true
         },
         {
-          "file": "tests/test_multiasset_backtest.py",
-          "line": 92,
-          "preview": "monkeypatch.setattr(backtest_module, \"risk_config_for_symbol\", capture)",
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 111,
+          "preview": "monkeypatch.setattr(runtime, \"_load_or_train_batch_model\", fail_batch_retrain)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "test_multiasset_runtime_does_not_persist_online_models_before_state_commit": {
+      "definition": {
+        "file": "tests/test_multiasset_runtime.py",
+        "line": 123,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 123,
+          "preview": "def test_multiasset_runtime_does_not_persist_online_models_before_state_commit(",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "fail_state_save": {
+      "definition": {
+        "file": "tests/test_multiasset_runtime.py",
+        "line": 145,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 145,
+          "preview": "def fail_state_save(_state) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 148,
+          "preview": "monkeypatch.setattr(state_store, \"save\", fail_state_save)",
           "definition_candidate": false
         }
       ],

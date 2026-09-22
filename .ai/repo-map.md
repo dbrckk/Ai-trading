@@ -4859,6 +4859,7 @@ opportunity_keys: list[str] = []
 opportunity_alpha: dict[str, float] = {}
 opportunity_quality: dict[str, float] = {}
 signed_weights = base_weights.copy()
+pending_online_models: dict[str, RiverDirectionModel] = {}
 ⋮----
 features = features_by_symbol[symbol]
 labels = labels_by_symbol[symbol]
@@ -10278,6 +10279,10 @@ def fail_batch_retrain(*_args, **_kwargs)
 ⋮----
 markets = {"A": market(11, n=180), "B": market(12, n=180)}
 result = runtime.step(markets)
+⋮----
+state_store = MultiAssetStateStore(tmp_path / "state.json")
+⋮----
+def fail_state_save(_state) -> None
 ````
 
 ## File: tests/test_multiasset_scheduler.py

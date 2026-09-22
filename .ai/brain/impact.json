@@ -1,28 +1,31 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "c4e40cd5c0439e1602a90162aad4e6b318eb52d3",
-  "head": "73136d6c4d25c8ead8eb8aca27ea839accfcdae7",
+  "base": "73136d6c4d25c8ead8eb8aca27ea839accfcdae7",
+  "head": "b8959cf47906aabf70e090bce7b774ee9fcf018d",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "src/ai_trading/multiasset_backtest.py",
+      "path": "src/ai_trading/multiasset_runtime.py",
       "status": "M"
     },
     {
-      "path": "tests/test_multiasset_backtest.py",
+      "path": "tests/test_multiasset_runtime.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "src/ai_trading/multiasset_backtest.py",
-    "tests/test_multiasset_backtest.py"
+    "src/ai_trading/multiasset_runtime.py",
+    "tests/test_multiasset_runtime.py"
   ],
   "impacted_files": [
     "src/ai_trading/cli.py",
-    "src/ai_trading/multiasset_backtest.py",
-    "tests/test_multiasset_backtest.py",
-    "tests/test_research_config_validation.py"
+    "src/ai_trading/multiasset_runtime.py",
+    "src/ai_trading/multiasset_scheduler.py",
+    "src/ai_trading/runtime_factory.py",
+    "src/ai_trading/soak.py",
+    "tests/test_multiasset_runtime.py",
+    "tests/test_multiasset_scheduler.py"
   ],
   "impacted_symbols": [
     {
@@ -278,75 +281,207 @@
       "line": 1882
     },
     {
-      "name": "MultiAssetBacktestReport",
+      "name": "MultiAssetStepResult",
       "kind": "class",
-      "file": "src/ai_trading/multiasset_backtest.py",
-      "line": 20
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 72
     },
     {
-      "name": "MultiAssetWalkForwardBacktester",
+      "name": "MultiAssetPaperRuntime",
       "kind": "class",
-      "file": "src/ai_trading/multiasset_backtest.py",
-      "line": 28
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 85
     },
     {
       "name": "__init__",
       "kind": "function",
-      "file": "src/ai_trading/multiasset_backtest.py",
-      "line": 29
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 86
+    },
+    {
+      "name": "_specialist_path",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 163
+    },
+    {
+      "name": "_load_or_train_specialist",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 167
+    },
+    {
+      "name": "_batch_model_path",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 189
+    },
+    {
+      "name": "_load_or_train_batch_model",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 193
+    },
+    {
+      "name": "_model_path",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 217
+    },
+    {
+      "name": "_load_model",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 221
+    },
+    {
+      "name": "_save_model",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 227
+    },
+    {
+      "name": "step",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 234
+    },
+    {
+      "name": "MultiAssetSchedulerConfig",
+      "kind": "class",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 21
+    },
+    {
+      "name": "MultiAssetPaperScheduler",
+      "kind": "class",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 33
+    },
+    {
+      "name": "__init__",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 34
+    },
+    {
+      "name": "_state_files",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 51
+    },
+    {
+      "name": "_jsonl_files",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 64
+    },
+    {
+      "name": "_active_model_files",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 71
+    },
+    {
+      "name": "_snapshot_files",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 85
+    },
+    {
+      "name": "_audit_error",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 88
+    },
+    {
+      "name": "_verify_audit",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 97
+    },
+    {
+      "name": "_snapshot",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 110
     },
     {
       "name": "run",
       "kind": "function",
-      "file": "src/ai_trading/multiasset_backtest.py",
-      "line": 53
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 127
+    },
+    {
+      "name": "isolated_multiasset_runtime",
+      "kind": "function",
+      "file": "src/ai_trading/runtime_factory.py",
+      "line": 25
+    },
+    {
+      "name": "SoakResult",
+      "kind": "class",
+      "file": "src/ai_trading/soak.py",
+      "line": 13
+    },
+    {
+      "name": "run_multiasset_soak",
+      "kind": "function",
+      "file": "src/ai_trading/soak.py",
+      "line": 28
     },
     {
       "name": "market",
       "kind": "function",
-      "file": "tests/test_multiasset_backtest.py",
-      "line": 13
+      "file": "tests/test_multiasset_runtime.py",
+      "line": 17
     },
     {
-      "name": "test_multiasset_walk_forward_produces_portfolio_curve",
+      "name": "test_multiasset_runtime_is_persistent_and_idempotent",
       "kind": "function",
-      "file": "tests/test_multiasset_backtest.py",
-      "line": 31
+      "file": "tests/test_multiasset_runtime.py",
+      "line": 35
     },
     {
-      "name": "test_multiasset_backtest_annualizes_from_actual_timestamps",
+      "name": "test_failed_drift_retrain_does_not_start_cooldown",
       "kind": "function",
-      "file": "tests/test_multiasset_backtest.py",
-      "line": 56
+      "file": "tests/test_multiasset_runtime.py",
+      "line": 73
     },
     {
-      "name": "test_multiasset_backtest_uses_symbol_specific_execution_costs",
+      "name": "fail_batch_retrain",
       "kind": "function",
-      "file": "tests/test_multiasset_backtest.py",
-      "line": 78
+      "file": "tests/test_multiasset_runtime.py",
+      "line": 108
     },
     {
-      "name": "capture",
+      "name": "test_multiasset_runtime_does_not_persist_online_models_before_state_commit",
       "kind": "function",
-      "file": "tests/test_multiasset_backtest.py",
-      "line": 82
+      "file": "tests/test_multiasset_runtime.py",
+      "line": 123
     },
     {
-      "name": "test_invalid_research_configuration_fails_closed",
+      "name": "fail_state_save",
       "kind": "function",
-      "file": "tests/test_research_config_validation.py",
-      "line": 54
+      "file": "tests/test_multiasset_runtime.py",
+      "line": 145
     },
     {
-      "name": "test_valid_research_configurations_remain_supported",
+      "name": "market",
       "kind": "function",
-      "file": "tests/test_research_config_validation.py",
-      "line": 59
+      "file": "tests/test_multiasset_scheduler.py",
+      "line": 16
+    },
+    {
+      "name": "test_multiasset_scheduler_refuses_to_run_when_halted",
+      "kind": "function",
+      "file": "tests/test_multiasset_scheduler.py",
+      "line": 32
     }
   ],
   "selected_tests": [
-    "tests/test_backtest.py",
-    "tests/test_multiasset_backtest.py",
-    "tests/test_research_config_validation.py"
+    "tests/test_multiasset_runtime.py",
+    "tests/test_multiasset_scheduler.py",
+    "tests/test_runtime.py"
   ]
 }
