@@ -44,7 +44,6 @@ class MultiAssetCheckpointStore:
                 digest.update(chunk)
         return digest.hexdigest()
 
-
     @staticmethod
     def _artifact_path(directory: Path, filename: object) -> Path:
         if not isinstance(filename, str) or not filename:
@@ -159,6 +158,7 @@ class MultiAssetCheckpointStore:
             try:
                 self._load_generation(generation)
             except (
+                EOFError,
                 FileNotFoundError,
                 KeyError,
                 TypeError,
