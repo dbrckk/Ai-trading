@@ -4907,29 +4907,47 @@ risk_reasons: tuple[str, ...]
 ⋮----
 class MultiAssetPaperRuntime
 ⋮----
+@staticmethod
+    def _symbol_key(symbol: str) -> str
+⋮----
+@staticmethod
+    def _legacy_symbol_key(symbol: str) -> str
+⋮----
 def _specialist_path(self, symbol: str, kind: str) -> Path
 ⋮----
-safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
+def _legacy_specialist_path(self, symbol: str, kind: str) -> Path
 ⋮----
 path = self._specialist_path(symbol, kind)
+⋮----
+legacy_path = self._legacy_specialist_path(symbol, kind)
+⋮----
+model = joblib.load(legacy_path)
+⋮----
+temp = path.with_suffix(".tmp")
 ⋮----
 train_idx = features.index[features.index < signal_idx]
 train_idx = train_idx.intersection(labels.dropna().index)
 model = SpecialistDirectionModel(kind, random_state=42)
 ⋮----
-temp = path.with_suffix(".tmp")
-⋮----
 def _batch_model_path(self, symbol: str) -> Path
 ⋮----
+def _legacy_batch_model_path(self, symbol: str) -> Path
+⋮----
 path = self._batch_model_path(symbol)
+⋮----
+legacy_path = self._legacy_batch_model_path(symbol)
 ⋮----
 model = EnsembleDirectionModel(random_state=42)
 ⋮----
 def _model_path(self, symbol: str) -> Path
 ⋮----
+def _legacy_model_path(self, symbol: str) -> Path
+⋮----
 def _load_model(self, symbol: str) -> RiverDirectionModel
 ⋮----
 path = self._model_path(symbol)
+⋮----
+legacy_path = self._legacy_model_path(symbol)
 ⋮----
 def _save_model(self, symbol: str, model: RiverDirectionModel) -> None
 ⋮----
@@ -10486,6 +10504,30 @@ meta_store = MetaRouterStore(tmp_path / "meta.json")
 economic_store = EconomicMetaStore(tmp_path / "economic.json")
 lifecycle_log = LifecycleEventLog(tmp_path / "lifecycle.jsonl")
 drift_store = DriftRetrainStore(tmp_path / "drift.json")
+⋮----
+def test_multiasset_model_paths_are_collision_resistant(tmp_path: Path) -> None
+⋮----
+symbols = ("GC=F", "GC/F", "^GC_F")
+⋮----
+def test_multiasset_online_model_legacy_path_is_migrated(tmp_path: Path) -> None
+⋮----
+symbol = "GC=F"
+legacy_path = runtime._legacy_model_path(symbol)
+⋮----
+expected = {"legacy": True}
+⋮----
+loaded = runtime._load_model(symbol)
+⋮----
+features = pd.DataFrame(index=pd.date_range("2025-01-01", periods=2))
+labels = pd.Series(index=features.index, dtype=float)
+signal_idx = features.index[-1]
+⋮----
+legacy_batch = runtime._legacy_batch_model_path(symbol)
+⋮----
+legacy_specialist = runtime._legacy_specialist_path(symbol, "trend")
+⋮----
+batch = runtime._load_or_train_batch_model(
+specialist = runtime._load_or_train_specialist(
 ````
 
 ## File: tests/test_multiasset_scheduler.py

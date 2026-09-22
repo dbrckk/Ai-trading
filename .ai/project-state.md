@@ -45,13 +45,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T19:54:18Z
+Generated: 2026-09-22T20:24:07Z
 
 ### Git
 - Branch: `main`
-- Head: `0d7df220f219`
-- Commit date: 2026-09-22T21:54:06+02:00
-- Commit: fix: defer multiasset learning side effects until checkpoint commit
+- Head: `2188738132d5`
+- Commit date: 2026-09-22T22:23:55+02:00
+- Commit: fix: prevent multiasset model path collisions
 - Tracked files: 496
 
 ### Recently changed files

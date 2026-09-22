@@ -3,7 +3,7 @@
 - Index mode: incremental
 - Files indexed: 359
 - Files reparsed this run: 2
-- Symbols: 1740
+- Symbols: 1748
 - Internal import edges: 1203
 - Impacted files: 7
 - Selected tests: 3
@@ -27,12 +27,12 @@
 - src/ai_trading/postgres_persistence.py: 18 symbols
 - src/ai_trading/mtf_parameter_benchmark.py: 17 symbols
 - tests/test_deployment_readiness.py: 17 symbols
+- tests/test_multiasset_runtime.py: 17 symbols
 - src/ai_trading/file_persistence.py: 16 symbols
+- src/ai_trading/multiasset_runtime.py: 16 symbols
 - tests/test_runtime_persistence.py: 16 symbols
 - tests/test_mtf_shadow_challenger.py: 15 symbols
 - src/ai_trading/readiness_score.py: 14 symbols
-- tests/test_hosted_runtime.py: 14 symbols
-- tests/test_multiasset_runtime.py: 14 symbols
 
 ## Agent routing
 - Read impact.json first after project/change context.
@@ -45,8 +45,8 @@
 - AST index mode: incremental
 - AST files reparsed this run: 2
 - outline files retained: 359
-- top-level items retained: 3047
-- direct members retained: 1515
+- top-level items retained: 3052
+- direct members retained: 1520
 - symbol shards: 25
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 
