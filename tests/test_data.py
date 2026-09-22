@@ -141,8 +141,47 @@ def test_load_history_falls_back_to_next_provider_after_primary_exhaustion(monke
     assert primary.calls == 2
     assert fallback.calls == 1
     assert len(loaded) == 3
+    assert loaded.attrs["market_data_provider"] == "fallback"
+    assert loaded.attrs["market_data_provider_attempt"] == 1
 
 
 def test_load_history_rejects_empty_provider_chain() -> None:
     with pytest.raises(ValueError, match="providers"):
         data_module.load_history("GC=F", providers=())
+
+
+def test_load_history_falls_back_when_primary_returns_invalid_ohlc(monkeypatch) -> None:
+    index = pd.date_range("2026-09-18 08:00", periods=2, freq="5min")
+    invalid = pd.DataFrame(
+        {
+            "Open": [100.0, 101.0],
+            "High": [99.0, 102.0],
+            "Low": [98.0, 100.0],
+            "Close": [100.5, 101.5],
+            "Volume": [10.0, 11.0],
+        },
+        index=index,
+    )
+    valid = pd.DataFrame(
+        {
+            "Open": [100.0, 101.0],
+            "High": [101.0, 102.0],
+            "Low": [99.0, 100.0],
+            "Close": [100.5, 101.5],
+            "Volume": [10.0, 11.0],
+        },
+        index=index,
+    )
+    primary = _Provider("primary", invalid)
+    fallback = _Provider("fallback", valid)
+    monkeypatch.setattr(data_module, "sleep", lambda *_args, **_kwargs: None)
+
+    loaded = data_module.load_history(
+        "GC=F",
+        max_attempts=1,
+        providers=(primary, fallback),
+    )
+
+    assert primary.calls == 1
+    assert fallback.calls == 1
+    assert loaded.attrs["market_data_provider"] == "fallback"
