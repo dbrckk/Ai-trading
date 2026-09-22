@@ -68,7 +68,8 @@ class MultiAssetCheckpointStore:
                 for symbol, filename in model_files.items()
             },
         }
-        (temp_dir / "manifest.json").write_text(
+        manifest_path = temp_dir / "manifest.json"
+        manifest_path.write_text(
             json.dumps(manifest, sort_keys=True),
             encoding="utf-8",
         )
@@ -88,7 +89,8 @@ class MultiAssetCheckpointStore:
         if not generation:
             raise ValueError("multiasset checkpoint pointer is empty")
         directory = self._generation_dir(generation)
-        manifest = json.loads((directory / "manifest.json").read_text(encoding="utf-8"))
+        manifest_path = directory / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         if manifest.get("generation") != generation:
             raise ValueError("multiasset checkpoint generation mismatch")
 
