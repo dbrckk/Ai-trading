@@ -2493,6 +2493,8 @@ sys_version = ""
 ⋮----
 def end_headers(self) -> None
 ⋮----
+def _write_response_body(self, body: bytes) -> None
+⋮----
 body = json.dumps(payload, sort_keys=True).encode()
 ⋮----
 def do_GET(self) -> None
@@ -8945,6 +8947,8 @@ def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None
 ⋮----
 def list_scheduler_deliveries(self, *, limit: int = 20)
 ⋮----
+now = datetime.now(UTC)
+⋮----
 class FailingPersistence
 ⋮----
 def _fail(self)
@@ -10569,7 +10573,8 @@ def test_paper_cycle_accepts_single_tolerated_market_gap(tmp_path: Path) -> None
 ⋮----
 df = df.drop(index=df.index[50])
 ⋮----
-long_history = long_history.drop(index=long_history.index[10:810:10])
+recent = long_history.index[-100:]
+long_history = long_history.drop(index=recent[10:90:10])
 ⋮----
 mtf_calls = 0
 ⋮----

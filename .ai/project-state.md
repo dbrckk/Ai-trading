@@ -45,21 +45,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T18:32:41Z
+Generated: 2026-09-22T05:20:32Z
 
 ### Git
 - Branch: `main`
-- Head: `0d6b0a25bff2`
-- Commit date: 2026-09-21T20:31:43+02:00
-- Commit: fix: enforce production market data quality
+- Head: `9481113c835e`
+- Commit date: 2026-09-22T07:20:20+02:00
+- Commit: fix: suppress harmless dashboard disconnect tracebacks (#100)
 - Tracked files: 493
 
 ### Recently changed files
+- `src/ai_trading/dashboard.py`
+- `tests/test_dashboard_persistence.py`
+- `tests/test_paper_cycle.py`
+- `tests/test_scheduler_endpoint.py`
 - `tests/test_data_quality.py`
 - `tests/test_paper_cycle_service.py`
-- `tests/test_paper_cycle.py`
 - `src/ai_trading/paper_cycle_service.py`
-- `src/ai_trading/paper_cycle.py`
 
 ### Project signals
 - `pyproject.toml`
