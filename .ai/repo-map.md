@@ -4718,16 +4718,14 @@ filename = f"{self._safe_symbol(symbol)}.joblib"
 manifest = {
 manifest_path = temp_dir / "manifest.json"
 ⋮----
+def _publish_current(self, generation: str) -> None
+⋮----
 pointer_tmp = self.current_path.with_suffix(".tmp")
 ⋮----
 def _prune_old_generations(self, *, current: str) -> None
 ⋮----
 generations = sorted(
 removable = max(0, len(generations) - (self.retain_generations - 1))
-⋮----
-def load(self) -> tuple[MultiAssetState, dict[str, object]] | None
-⋮----
-generation = self.current_path.read_text(encoding="utf-8").strip()
 ⋮----
 directory = self._generation_dir(generation)
 manifest_path = directory / "manifest.json"
@@ -4743,6 +4741,22 @@ state = MultiAssetState(**payload)
 models: dict[str, object] = {}
 ⋮----
 path = directory / metadata["file"]
+⋮----
+def _newer_valid_generation(self, current: str | None) -> str | None
+⋮----
+candidates = sorted(
+⋮----
+def load(self) -> tuple[MultiAssetState, dict[str, object]] | None
+⋮----
+current: str | None = None
+⋮----
+current = self.current_path.read_text(encoding="utf-8").strip()
+⋮----
+loaded = self._load_generation(current)
+⋮----
+loaded = None
+⋮----
+recovered = self._newer_valid_generation(current)
 ````
 
 ## File: src/ai_trading/multiasset_evolution.py
@@ -10292,6 +10306,17 @@ store = MultiAssetCheckpointStore(
 generations = sorted(
 ⋮----
 def test_checkpoint_retention_must_be_positive(tmp_path: Path) -> None
+⋮----
+orphan = store.root / "step-000000000002"
+⋮----
+orphan_state = state(2)
+state_path = orphan / "state.json"
+⋮----
+model_path = orphan / "A.joblib"
+⋮----
+manifest = {
+⋮----
+broken = store.root / "step-000000000004"
 ````
 
 ## File: tests/test_multiasset_evolution.py

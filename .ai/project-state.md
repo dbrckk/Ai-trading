@@ -45,13 +45,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T18:13:43Z
+Generated: 2026-09-22T18:38:51Z
 
 ### Git
 - Branch: `main`
-- Head: `f59be216db7d`
-- Commit date: 2026-09-22T20:13:31+02:00
-- Commit: fix: make multiasset checkpoints immutable and bounded
+- Head: `bce9d13a7826`
+- Commit date: 2026-09-22T20:38:40+02:00
+- Commit: fix: recover complete unpublished multiasset checkpoints
 - Tracked files: 496
 
 ### Recently changed files
@@ -59,8 +59,6 @@ Generated: 2026-09-22T18:13:43Z
 - `tests/test_multiasset_checkpoint.py`
 - `src/ai_trading/multiasset_runtime.py`
 - `tests/test_multiasset_runtime.py`
-- `src/ai_trading/multiasset_backtest.py`
-- `tests/test_multiasset_backtest.py`
 
 ### Project signals
 - `pyproject.toml`
