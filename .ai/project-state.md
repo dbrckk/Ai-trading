@@ -45,25 +45,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T17:44:25Z
+Generated: 2026-09-22T18:00:45Z
 
 ### Git
 - Branch: `main`
-- Head: `cb922adde714`
-- Commit date: 2026-09-22T19:44:11+02:00
-- Commit: feat: add atomic generation checkpoints for multiasset state and models
+- Head: `2230152e2b38`
+- Commit date: 2026-09-22T20:00:32+02:00
+- Commit: feat: wire atomic checkpoints into multiasset runtime
 - Tracked files: 496
 
 ### Recently changed files
-- `src/ai_trading/multiasset_checkpoint.py`
-- `tests/test_multiasset_checkpoint.py`
 - `src/ai_trading/multiasset_runtime.py`
 - `tests/test_multiasset_runtime.py`
+- `src/ai_trading/multiasset_checkpoint.py`
+- `tests/test_multiasset_checkpoint.py`
 - `src/ai_trading/multiasset_backtest.py`
 - `tests/test_multiasset_backtest.py`
 - `render.yaml`
-- `src/ai_trading/portfolio_intelligence.py`
-- `tests/test_portfolio_intelligence.py`
 
 ### Project signals
 - `pyproject.toml`

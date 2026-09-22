@@ -4895,7 +4895,11 @@ labels_by_symbol = market_context.labels_by_symbol
 execution_time = market_context.execution_time
 returns = market_context.returns
 ⋮----
+checkpoint = self.checkpoint_store.load()
+⋮----
 state = self.state_store.load(self.risk_config.starting_cash)
+checkpoint_models: dict[str, object] = {}
+⋮----
 persisted_crisis = self.crisis_state_store.load()
 persisted_limits = limits_for_state(persisted_crisis)
 ⋮----
@@ -4937,7 +4941,7 @@ retrain_triggered = True
 ⋮----
 distribution_drift = None
 ⋮----
-model = self._load_model(symbol)
+model = checkpoint_models.get(symbol) or self._load_model(symbol)
 ⋮----
 learn_label = labels.get(learn_idx)
 evaluation_prediction = model.predict_one(features.loc[learn_idx, FEATURES])
@@ -10357,6 +10361,10 @@ result = runtime.step(markets)
 state_store = MultiAssetStateStore(tmp_path / "state.json")
 ⋮----
 def fail_state_save(_state) -> None
+⋮----
+markets = {"A": market(31), "B": market(32)}
+⋮----
+legacy = json.loads((tmp_path / "state.json").read_text(encoding="utf-8"))
 ````
 
 ## File: tests/test_multiasset_scheduler.py

@@ -1,96 +1,493 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "b8959cf47906aabf70e090bce7b774ee9fcf018d",
-  "head": "cb922adde71412d285b97ff09a12bfaa5bb47ac6",
+  "base": "cb922adde71412d285b97ff09a12bfaa5bb47ac6",
+  "head": "2230152e2b38336084190f9fa08cdb3bf8504444",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "src/ai_trading/multiasset_checkpoint.py",
-      "status": "A"
+      "path": "src/ai_trading/multiasset_runtime.py",
+      "status": "M"
     },
     {
-      "path": "tests/test_multiasset_checkpoint.py",
-      "status": "A"
+      "path": "tests/test_multiasset_runtime.py",
+      "status": "M"
     }
   ],
   "changed_source_files": [
-    "src/ai_trading/multiasset_checkpoint.py",
-    "tests/test_multiasset_checkpoint.py"
+    "src/ai_trading/multiasset_runtime.py",
+    "tests/test_multiasset_runtime.py"
   ],
   "impacted_files": [
-    "src/ai_trading/multiasset_checkpoint.py",
-    "tests/test_multiasset_checkpoint.py"
+    "src/ai_trading/cli.py",
+    "src/ai_trading/multiasset_runtime.py",
+    "src/ai_trading/multiasset_scheduler.py",
+    "src/ai_trading/runtime_factory.py",
+    "src/ai_trading/soak.py",
+    "tests/test_multiasset_runtime.py",
+    "tests/test_multiasset_scheduler.py"
   ],
   "impacted_symbols": [
     {
-      "name": "MultiAssetCheckpointStore",
+      "name": "self_test",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 107
+    },
+    {
+      "name": "synthetic_market",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 113
+    },
+    {
+      "name": "train",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 179
+    },
+    {
+      "name": "paper",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 191
+    },
+    {
+      "name": "walk_forward",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 212
+    },
+    {
+      "name": "compare_models",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 433
+    },
+    {
+      "name": "robustness",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 507
+    },
+    {
+      "name": "tune",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 538
+    },
+    {
+      "name": "health_check",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 558
+    },
+    {
+      "name": "learning_cycle",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 615
+    },
+    {
+      "name": "runtime_step",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 660
+    },
+    {
+      "name": "paper_loop",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 689
+    },
+    {
+      "name": "portfolio_analyze",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 738
+    },
+    {
+      "name": "readiness_check",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 784
+    },
+    {
+      "name": "multiasset_step",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 822
+    },
+    {
+      "name": "multiasset_backtest",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 866
+    },
+    {
+      "name": "expert_sandbox",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 894
+    },
+    {
+      "name": "expert_pool_refresh",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 937
+    },
+    {
+      "name": "expert_factory_run",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 966
+    },
+    {
+      "name": "expert_evolve",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 993
+    },
+    {
+      "name": "generation_rollback",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1018
+    },
+    {
+      "name": "multiasset_evolve",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1033
+    },
+    {
+      "name": "global_allocation_check",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1067
+    },
+    {
+      "name": "global_allocation_tune",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1114
+    },
+    {
+      "name": "crisis_status",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1153
+    },
+    {
+      "name": "risk_governor_status",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1173
+    },
+    {
+      "name": "system_status",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1186
+    },
+    {
+      "name": "create_readiness_release_command",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1208
+    },
+    {
+      "name": "revoke_readiness_release",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1322
+    },
+    {
+      "name": "deployment_readiness",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1342
+    },
+    {
+      "name": "multiasset_loop",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1519
+    },
+    {
+      "name": "loader",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1530
+    },
+    {
+      "name": "watchdog_status",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1559
+    },
+    {
+      "name": "watchdog_enforce",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1590
+    },
+    {
+      "name": "maintenance",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1615
+    },
+    {
+      "name": "supervisor_status",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1628
+    },
+    {
+      "name": "metrics",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1651
+    },
+    {
+      "name": "health_serve",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1656
+    },
+    {
+      "name": "supervisor_run",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1673
+    },
+    {
+      "name": "paper_soak",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1747
+    },
+    {
+      "name": "paper_qualification_suite",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1831
+    },
+    {
+      "name": "dashboard",
+      "kind": "function",
+      "file": "src/ai_trading/cli.py",
+      "line": 1882
+    },
+    {
+      "name": "MultiAssetStepResult",
       "kind": "class",
-      "file": "src/ai_trading/multiasset_checkpoint.py",
-      "line": 14
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 73
+    },
+    {
+      "name": "MultiAssetPaperRuntime",
+      "kind": "class",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 86
     },
     {
       "name": "__init__",
       "kind": "function",
-      "file": "src/ai_trading/multiasset_checkpoint.py",
-      "line": 17
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 87
     },
     {
-      "name": "_generation_dir",
+      "name": "_specialist_path",
       "kind": "function",
-      "file": "src/ai_trading/multiasset_checkpoint.py",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 168
+    },
+    {
+      "name": "_load_or_train_specialist",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 172
+    },
+    {
+      "name": "_batch_model_path",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 194
+    },
+    {
+      "name": "_load_or_train_batch_model",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 198
+    },
+    {
+      "name": "_model_path",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 222
+    },
+    {
+      "name": "_load_model",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 226
+    },
+    {
+      "name": "_save_model",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 232
+    },
+    {
+      "name": "step",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_runtime.py",
+      "line": 239
+    },
+    {
+      "name": "MultiAssetSchedulerConfig",
+      "kind": "class",
+      "file": "src/ai_trading/multiasset_scheduler.py",
       "line": 21
     },
     {
-      "name": "_safe_symbol",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_checkpoint.py",
-      "line": 25
-    },
-    {
-      "name": "_sha256",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_checkpoint.py",
-      "line": 29
-    },
-    {
-      "name": "commit",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_checkpoint.py",
-      "line": 36
-    },
-    {
-      "name": "load",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_checkpoint.py",
-      "line": 85
-    },
-    {
-      "name": "state",
-      "kind": "function",
-      "file": "tests/test_multiasset_checkpoint.py",
-      "line": 9
-    },
-    {
-      "name": "test_checkpoint_round_trip_state_and_models",
-      "kind": "function",
-      "file": "tests/test_multiasset_checkpoint.py",
-      "line": 20
-    },
-    {
-      "name": "test_unpublished_generation_does_not_replace_current_checkpoint",
-      "kind": "function",
-      "file": "tests/test_multiasset_checkpoint.py",
+      "name": "MultiAssetPaperScheduler",
+      "kind": "class",
+      "file": "src/ai_trading/multiasset_scheduler.py",
       "line": 33
     },
     {
-      "name": "test_checkpoint_fails_closed_on_corrupted_state",
+      "name": "__init__",
       "kind": "function",
-      "file": "tests/test_multiasset_checkpoint.py",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 34
+    },
+    {
+      "name": "_state_files",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_scheduler.py",
       "line": 51
+    },
+    {
+      "name": "_jsonl_files",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 64
+    },
+    {
+      "name": "_active_model_files",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 71
+    },
+    {
+      "name": "_snapshot_files",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 85
+    },
+    {
+      "name": "_audit_error",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 88
+    },
+    {
+      "name": "_verify_audit",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 97
+    },
+    {
+      "name": "_snapshot",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 110
+    },
+    {
+      "name": "run",
+      "kind": "function",
+      "file": "src/ai_trading/multiasset_scheduler.py",
+      "line": 127
+    },
+    {
+      "name": "isolated_multiasset_runtime",
+      "kind": "function",
+      "file": "src/ai_trading/runtime_factory.py",
+      "line": 25
+    },
+    {
+      "name": "SoakResult",
+      "kind": "class",
+      "file": "src/ai_trading/soak.py",
+      "line": 13
+    },
+    {
+      "name": "run_multiasset_soak",
+      "kind": "function",
+      "file": "src/ai_trading/soak.py",
+      "line": 28
+    },
+    {
+      "name": "market",
+      "kind": "function",
+      "file": "tests/test_multiasset_runtime.py",
+      "line": 17
+    },
+    {
+      "name": "test_multiasset_runtime_is_persistent_and_idempotent",
+      "kind": "function",
+      "file": "tests/test_multiasset_runtime.py",
+      "line": 35
+    },
+    {
+      "name": "test_failed_drift_retrain_does_not_start_cooldown",
+      "kind": "function",
+      "file": "tests/test_multiasset_runtime.py",
+      "line": 73
+    },
+    {
+      "name": "fail_batch_retrain",
+      "kind": "function",
+      "file": "tests/test_multiasset_runtime.py",
+      "line": 108
+    },
+    {
+      "name": "test_multiasset_runtime_does_not_persist_online_models_before_state_commit",
+      "kind": "function",
+      "file": "tests/test_multiasset_runtime.py",
+      "line": 123
+    },
+    {
+      "name": "fail_state_save",
+      "kind": "function",
+      "file": "tests/test_multiasset_runtime.py",
+      "line": 145
+    },
+    {
+      "name": "test_multiasset_runtime_prefers_checkpoint_over_stale_legacy_state",
+      "kind": "function",
+      "file": "tests/test_multiasset_runtime.py",
+      "line": 158
+    },
+    {
+      "name": "market",
+      "kind": "function",
+      "file": "tests/test_multiasset_scheduler.py",
+      "line": 16
+    },
+    {
+      "name": "test_multiasset_scheduler_refuses_to_run_when_halted",
+      "kind": "function",
+      "file": "tests/test_multiasset_scheduler.py",
+      "line": 32
     }
   ],
   "selected_tests": [
-    "tests/test_multiasset_checkpoint.py"
+    "tests/test_multiasset_runtime.py",
+    "tests/test_multiasset_scheduler.py",
+    "tests/test_runtime.py"
   ]
 }
