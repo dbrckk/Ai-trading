@@ -4715,14 +4715,19 @@ def __init__(self, root: str | Path, *, retain_generations: int = 3) -> None
 def _generation_dir(self, generation: str) -> Path
 ⋮----
 @staticmethod
-    def _safe_symbol(symbol: str) -> str
+    def _validate_generation(generation: str) -> str
+⋮----
+@staticmethod
+    def _model_filename(symbol: str) -> str
+⋮----
+digest = hashlib.sha256(symbol.encode("utf-8")).hexdigest()[:16]
 ⋮----
 @staticmethod
     def _sha256(path: Path) -> str
 ⋮----
 digest = hashlib.sha256()
 ⋮----
-generation = f"step-{state.processed_bars:012d}"
+generation = self._validate_generation(f"step-{state.processed_bars:012d}")
 final_dir = self._generation_dir(generation)
 temp_dir = self.root / f".{generation}.tmp"
 ⋮----
@@ -4731,7 +4736,7 @@ state_payload = json.dumps(asdict(state), sort_keys=True)
 ⋮----
 model_files: dict[str, str] = {}
 ⋮----
-filename = f"{self._safe_symbol(symbol)}.joblib"
+filename = self._model_filename(symbol)
 ⋮----
 manifest = {
 manifest_path = temp_dir / "manifest.json"
@@ -4770,6 +4775,7 @@ current: str | None = None
 ⋮----
 current = self.current_path.read_text(encoding="utf-8").strip()
 ⋮----
+current = self._validate_generation(current)
 loaded = self._load_generation(current)
 ⋮----
 loaded = None
@@ -10345,6 +10351,12 @@ model_path = orphan / "A.joblib"
 manifest = {
 ⋮----
 broken = store.root / "step-000000000004"
+⋮----
+def test_checkpoint_rejects_pointer_path_traversal(tmp_path: Path) -> None
+⋮----
+generation = store.current_path.read_text(encoding="utf-8")
+manifest = json.loads(
+files = [metadata["file"] for metadata in manifest["models"].values()]
 ````
 
 ## File: tests/test_multiasset_evolution.py

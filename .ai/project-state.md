@@ -45,22 +45,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T19:20:50Z
+Generated: 2026-09-22T19:27:24Z
 
 ### Git
 - Branch: `main`
-- Head: `c5ec4bce4f28`
-- Commit date: 2026-09-22T21:20:39+02:00
-- Commit: fix: align multiasset runtime execution costs by symbol
+- Head: `bf14d29b7710`
+- Commit date: 2026-09-22T21:27:12+02:00
+- Commit: fix: harden checkpoint pointers and model paths
 - Tracked files: 496
 
 ### Recently changed files
+- `src/ai_trading/multiasset_checkpoint.py`
+- `tests/test_multiasset_checkpoint.py`
 - `src/ai_trading/multiasset_runtime.py`
 - `tests/test_multiasset_runtime.py`
 - `src/ai_trading/dashboard.py`
 - `tests/test_dashboard.py`
-- `src/ai_trading/multiasset_checkpoint.py`
-- `tests/test_multiasset_checkpoint.py`
 
 ### Project signals
 - `pyproject.toml`
