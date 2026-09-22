@@ -3,8 +3,8 @@
 - Index mode: incremental
 - Files indexed: 359
 - Files reparsed this run: 2
-- Symbols: 1738
-- Internal import edges: 1199
+- Symbols: 1740
+- Internal import edges: 1203
 - Impacted files: 7
 - Selected tests: 3
 
@@ -32,7 +32,7 @@
 - tests/test_mtf_shadow_challenger.py: 15 symbols
 - src/ai_trading/readiness_score.py: 14 symbols
 - tests/test_hosted_runtime.py: 14 symbols
-- src/ai_trading/multiasset_checkpoint.py: 13 symbols
+- tests/test_multiasset_runtime.py: 14 symbols
 
 ## Agent routing
 - Read impact.json first after project/change context.
@@ -45,7 +45,7 @@
 - AST index mode: incremental
 - AST files reparsed this run: 2
 - outline files retained: 359
-- top-level items retained: 3042
+- top-level items retained: 3047
 - direct members retained: 1515
 - symbol shards: 25
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard

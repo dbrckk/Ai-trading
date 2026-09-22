@@ -746,13 +746,14 @@
         "tests/test_control_plane.py",
         "tests/test_lifecycle_log.py",
         "tests/test_metrics.py",
+        "tests/test_multiasset_runtime.py",
         "tests/test_recovery_health.py",
         "tests/test_reliability.py",
         "tests/test_resilience_stability.py",
         "tests/test_startup_check.py",
         "tests/test_supervisor.py"
       ],
-      "in_degree": 20,
+      "in_degree": 21,
       "out_degree": 0,
       "path": "src/ai_trading/lifecycle_log.py"
     },
@@ -951,6 +952,32 @@
       "in_degree": 9,
       "out_degree": 9,
       "path": "src/ai_trading/file_persistence.py"
+    },
+    {
+      "dependencies": [
+        "src/ai_trading/__init__.py",
+        "src/ai_trading/allocation_state.py",
+        "src/ai_trading/audit.py",
+        "src/ai_trading/config.py",
+        "src/ai_trading/crisis_state_store.py",
+        "src/ai_trading/drift.py",
+        "src/ai_trading/drift_retrain_store.py",
+        "src/ai_trading/economic_meta_store.py",
+        "src/ai_trading/governor_state_store.py",
+        "src/ai_trading/lifecycle_log.py",
+        "src/ai_trading/meta_store.py",
+        "src/ai_trading/multiasset_runtime.py",
+        "src/ai_trading/multiasset_state.py",
+        "src/ai_trading/paper_execution.py",
+        "src/ai_trading/portfolio.py",
+        "src/ai_trading/portfolio_risk.py",
+        "src/ai_trading/quality_store.py",
+        "src/ai_trading/resilience.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 18,
+      "path": "tests/test_multiasset_runtime.py"
     },
     {
       "dependencies": [],
@@ -1236,28 +1263,6 @@
       "in_degree": 0,
       "out_degree": 14,
       "path": "tests/test_dashboard_overview.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/__init__.py",
-        "src/ai_trading/allocation_state.py",
-        "src/ai_trading/audit.py",
-        "src/ai_trading/config.py",
-        "src/ai_trading/crisis_state_store.py",
-        "src/ai_trading/drift.py",
-        "src/ai_trading/drift_retrain_store.py",
-        "src/ai_trading/governor_state_store.py",
-        "src/ai_trading/multiasset_runtime.py",
-        "src/ai_trading/multiasset_state.py",
-        "src/ai_trading/paper_execution.py",
-        "src/ai_trading/portfolio.py",
-        "src/ai_trading/portfolio_risk.py",
-        "src/ai_trading/resilience.py"
-      ],
-      "dependents": [],
-      "in_degree": 0,
-      "out_degree": 14,
-      "path": "tests/test_multiasset_runtime.py"
     },
     {
       "dependencies": [],
@@ -1846,7 +1851,7 @@
       "path": "src/ai_trading/scheduler.py"
     }
   ],
-  "edge_count": 1959,
+  "edge_count": 1967,
   "generated_by": "dbrckk/repo-brain-v7-graph",
   "node_count": 357,
   "schema_version": 1

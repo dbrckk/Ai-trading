@@ -45,13 +45,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T19:46:31Z
+Generated: 2026-09-22T19:54:18Z
 
 ### Git
 - Branch: `main`
-- Head: `119a5732241b`
-- Commit date: 2026-09-22T21:46:16+02:00
-- Commit: fix: defer multiasset control state until checkpoint commit
+- Head: `0d7df220f219`
+- Commit date: 2026-09-22T21:54:06+02:00
+- Commit: fix: defer multiasset learning side effects until checkpoint commit
 - Tracked files: 496
 
 ### Recently changed files
@@ -59,8 +59,6 @@ Generated: 2026-09-22T19:46:31Z
 - `tests/test_multiasset_runtime.py`
 - `src/ai_trading/multiasset_checkpoint.py`
 - `tests/test_multiasset_checkpoint.py`
-- `src/ai_trading/dashboard.py`
-- `tests/test_dashboard.py`
 
 ### Project signals
 - `pyproject.toml`

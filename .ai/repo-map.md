@@ -4968,6 +4968,11 @@ opportunity_alpha: dict[str, float] = {}
 opportunity_quality: dict[str, float] = {}
 signed_weights = base_weights.copy()
 pending_online_models: dict[str, RiverDirectionModel] = {}
+pending_drift_marks: list[tuple[str, int, float, float]] = []
+pending_quality_updates: list[tuple[str, int, float, int]] = []
+pending_meta_updates: list[tuple[MetaContext, str, bool, float]] = []
+pending_lifecycle_events: list[dict[str, object]] = []
+pending_economic_updates: list[tuple[str, float, float, float, float, float]] = []
 ⋮----
 features = features_by_symbol[symbol]
 labels = labels_by_symbol[symbol]
@@ -10475,6 +10480,12 @@ resilience_store = ResilienceStateStore(tmp_path / "resilience.json")
 governor_store = GovernorStateStore(tmp_path / "governor.json")
 ⋮----
 def fail_checkpoint(*_args, **_kwargs) -> None
+⋮----
+quality_store = QualityStore(tmp_path / "quality.json")
+meta_store = MetaRouterStore(tmp_path / "meta.json")
+economic_store = EconomicMetaStore(tmp_path / "economic.json")
+lifecycle_log = LifecycleEventLog(tmp_path / "lifecycle.jsonl")
+drift_store = DriftRetrainStore(tmp_path / "drift.json")
 ````
 
 ## File: tests/test_multiasset_scheduler.py
