@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from ai_trading.config import RiskConfig
 from ai_trading import multiasset_backtest as backtest_module
+from ai_trading.config import RiskConfig
 from ai_trading.multiasset_backtest import MultiAssetWalkForwardBacktester
 from ai_trading.performance import compute_metrics, infer_periods_per_year
 from ai_trading.portfolio import AllocationConfig
@@ -74,8 +74,6 @@ def test_multiasset_backtest_annualizes_from_actual_timestamps() -> None:
     assert report.metrics.annualized_volatility == pytest.approx(
         expected.annualized_volatility
     )
-
-
 
 def test_multiasset_backtest_uses_symbol_specific_execution_costs(monkeypatch) -> None:
     seen: list[tuple[str, float, float]] = []
