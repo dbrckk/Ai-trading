@@ -1214,12 +1214,6 @@ def serve_dashboard(
             )
             super().end_headers()
 
-        def _write_response_body(self, body: bytes) -> None:
-            try:
-                self.wfile.write(body)
-            except (BrokenPipeError, ConnectionResetError):
-                return
-
         def _send_json(
             self,
             payload: dict[str, object],
@@ -1232,7 +1226,7 @@ def serve_dashboard(
             self.send_header("Cache-Control", "no-store")
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
-            self._write_response_body(body)
+            write_response_body(self.wfile, body)
 
         def do_GET(self) -> None:
             path = urlsplit(self.path).path.rstrip("/")
@@ -1330,7 +1324,7 @@ def serve_dashboard(
             self.send_header("Cache-Control", "no-store")
             self.send_header("Content-Length", str(len(payload)))
             self.end_headers()
-            self._write_response_body(payload)
+            write_response_body(self.wfile, payload)
 
         def do_POST(self) -> None:
             path = urlsplit(self.path).path.rstrip("/")
