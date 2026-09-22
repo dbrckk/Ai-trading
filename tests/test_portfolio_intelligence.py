@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import pytest
 
 from ai_trading.portfolio_intelligence import (
     PortfolioIntelligenceConfig,
@@ -117,3 +118,49 @@ def test_low_correlation_keeps_full_correlation_scale() -> None:
 
     assert report.max_pair_correlation < 0.70
     assert report.correlation_scale == 1.0
+
+
+
+def test_portfolio_intelligence_fails_closed_on_insufficient_correlation_history() -> None:
+    weights = pd.Series({"A": 0.5, "B": 0.5})
+    returns = pd.DataFrame({"A": [0.01], "B": [0.01]})
+    intelligent, report = apply_portfolio_intelligence(
+        weights,
+        returns,
+        {"A": 0.9, "B": 0.9},
+        current_equity=100_000.0,
+        peak_equity=100_000.0,
+    )
+    assert report.max_pair_correlation == 1.0
+    assert report.correlation_scale == report.leverage
+    assert float(intelligent.abs().sum()) <= 0.1000001
+
+
+def test_portfolio_intelligence_sanitizes_nonfinite_confidence() -> None:
+    weights = pd.Series({"A": 0.5, "B": 0.5})
+    returns = pd.DataFrame(
+        {"A": [0.01, -0.01, 0.02], "B": [-0.01, 0.01, -0.02]}
+    )
+    intelligent, report = apply_portfolio_intelligence(
+        weights,
+        returns,
+        {"A": float("nan"), "B": 0.9},
+        current_equity=100_000.0,
+        peak_equity=100_000.0,
+    )
+    assert intelligent["A"] == 0.0
+    assert np.isfinite(report.confidence_scale)
+
+
+@pytest.mark.parametrize("equity,peak", [(float("nan"), 100_000.0), (100_000.0, 0.0)])
+def test_portfolio_intelligence_rejects_invalid_equity(equity: float, peak: float) -> None:
+    weights = pd.Series({"A": 1.0})
+    returns = pd.DataFrame({"A": [0.01, -0.01]})
+    with pytest.raises(ValueError):
+        apply_portfolio_intelligence(
+            weights,
+            returns,
+            {"A": 0.9},
+            current_equity=equity,
+            peak_equity=peak,
+        )

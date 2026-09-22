@@ -53,12 +53,18 @@ def estimate_portfolio_volatility(
     returns: pd.DataFrame,
     periods_per_year: int = 252,
 ) -> float:
-    aligned = returns.loc[:, weights.index].dropna()
-    if aligned.empty:
+    if periods_per_year < 1:
+        raise ValueError("periods_per_year must be positive")
+    aligned = returns.reindex(columns=weights.index).dropna()
+    if len(aligned) < 2:
         return 0.0
     cov = aligned.cov().to_numpy(dtype=float) * periods_per_year
     w = weights.to_numpy(dtype=float)
+    if not np.isfinite(cov).all() or not np.isfinite(w).all():
+        return 0.0
     variance = float(w.T @ cov @ w)
+    if not np.isfinite(variance):
+        return 0.0
     return float(np.sqrt(max(0.0, variance)))
 
 
@@ -71,9 +77,9 @@ def _active_max_pair_correlation(
     if len(active_assets) < 2:
         return 0.0
 
-    aligned = returns.loc[:, active_assets].dropna()
-    if aligned.empty:
-        return 0.0
+    aligned = returns.reindex(columns=active_assets).dropna()
+    if len(aligned) < 2:
+        return 1.0
 
     corr = aligned.corr().abs()
     max_corr = 0.0
@@ -129,10 +135,19 @@ def apply_portfolio_intelligence(
 ) -> tuple[pd.Series, PortfolioIntelligenceReport]:
     config = config or PortfolioIntelligenceConfig()
     weights = base_weights.astype(float).copy()
+    if not np.isfinite(weights.to_numpy(dtype=float)).all():
+        raise ValueError("base_weights must contain only finite values")
+    if not np.isfinite(current_equity) or current_equity <= 0:
+        raise ValueError("current_equity must be finite and positive")
+    if not np.isfinite(peak_equity) or peak_equity <= 0:
+        raise ValueError("peak_equity must be finite and positive")
 
     confidence_multipliers = pd.Series(0.0, index=weights.index, dtype=float)
     for asset in weights.index:
         confidence = float(confidences.get(asset, 0.0))
+        if not np.isfinite(confidence):
+            confidence = 0.0
+        confidence = min(1.0, max(0.0, confidence))
         if confidence <= config.confidence_floor:
             confidence_multipliers.loc[asset] = 0.0
         else:
@@ -150,8 +165,9 @@ def apply_portfolio_intelligence(
     else:
         vol_scale = config.target_annual_volatility / estimated_vol
 
-    recent_vol = returns.tail(20).std(ddof=1).mean()
-    baseline_vol = returns.tail(120).std(ddof=1).mean()
+    aligned_returns = returns.reindex(columns=weights.index)
+    recent_vol = aligned_returns.tail(20).std(ddof=1).mean()
+    baseline_vol = aligned_returns.tail(120).std(ddof=1).mean()
     stress_detected = bool(
         pd.notna(recent_vol)
         and pd.notna(baseline_vol)
