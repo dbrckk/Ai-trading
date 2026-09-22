@@ -4674,6 +4674,7 @@ notionals = target_notionals(equity, intelligent)
 risk = evaluate_portfolio_risk(
 ⋮----
 price = float(aligned[symbol].at[execution_idx, "Open"])
+symbol_risk_config = risk_config_for_symbol(
 fill = calculate_rebalance_fill(
 ⋮----
 peak_equity = max(peak_equity, equity)
@@ -10190,6 +10191,15 @@ report = MultiAssetWalkForwardBacktester(
 ⋮----
 periods = infer_periods_per_year(report.equity_curve.index)
 expected = compute_metrics(report.equity_curve, periods)
+⋮----
+def test_multiasset_backtest_uses_symbol_specific_execution_costs(monkeypatch) -> None
+⋮----
+seen: list[tuple[str, float, float]] = []
+real_config = backtest_module.risk_config_for_symbol
+⋮----
+def capture(symbol: str, base: RiskConfig)
+⋮----
+config = real_config(
 ````
 
 ## File: tests/test_multiasset_evolution.py

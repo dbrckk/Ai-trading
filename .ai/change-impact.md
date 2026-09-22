@@ -1,16 +1,18 @@
 # Change impact
 
-Base: d5dc89cc746fbd5ba8790a2b706411d9b823a2d3
-Head: c4e40cd5c0439e1602a90162aad4e6b318eb52d3
+Base: 37a879dbc34e895a8926519b9e4af38922cfa716
+Head: 73136d6c4d25c8ead8eb8aca27ea839accfcdae7
 
 ## Changed files
-- M render.yaml
+- M src/ai_trading/multiasset_backtest.py
+- M tests/test_multiasset_backtest.py
 
 ## Affected areas
-- (root)
+- src
+- tests
 
 ## Related test candidates
-- No direct filename-based test match detected.
+- tests/test_multiasset_backtest.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

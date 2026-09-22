@@ -45,16 +45,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T15:55:19Z
+Generated: 2026-09-22T16:17:57Z
 
 ### Git
 - Branch: `main`
-- Head: `c4e40cd5c043`
-- Commit date: 2026-09-22T17:55:06+02:00
-- Commit: fix: use dedicated Render liveness health check
-- Tracked files: 493
+- Head: `73136d6c4d25`
+- Commit date: 2026-09-22T18:17:39+02:00
+- Commit: fix: align multiasset backtest execution costs with production
+- Tracked files: 494
 
 ### Recently changed files
+- `src/ai_trading/multiasset_backtest.py`
+- `tests/test_multiasset_backtest.py`
 - `render.yaml`
 - `src/ai_trading/portfolio_intelligence.py`
 - `tests/test_portfolio_intelligence.py`
@@ -64,7 +66,6 @@ Generated: 2026-09-22T15:55:19Z
 - `tests/test_dashboard_persistence.py`
 - `tests/test_paper_cycle.py`
 - `tests/test_scheduler_endpoint.py`
-- `tests/test_data_quality.py`
 
 ### Project signals
 - `pyproject.toml`
