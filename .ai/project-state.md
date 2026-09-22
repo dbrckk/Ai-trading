@@ -45,16 +45,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T16:24:01Z
+Generated: 2026-09-22T17:44:25Z
 
 ### Git
 - Branch: `main`
-- Head: `b8959cf47906`
-- Commit date: 2026-09-22T18:23:14+02:00
-- Commit: fix: defer multiasset online model persistence until state commit
-- Tracked files: 494
+- Head: `cb922adde714`
+- Commit date: 2026-09-22T19:44:11+02:00
+- Commit: feat: add atomic generation checkpoints for multiasset state and models
+- Tracked files: 496
 
 ### Recently changed files
+- `src/ai_trading/multiasset_checkpoint.py`
+- `tests/test_multiasset_checkpoint.py`
 - `src/ai_trading/multiasset_runtime.py`
 - `tests/test_multiasset_runtime.py`
 - `src/ai_trading/multiasset_backtest.py`
@@ -62,8 +64,6 @@ Generated: 2026-09-22T16:24:01Z
 - `render.yaml`
 - `src/ai_trading/portfolio_intelligence.py`
 - `tests/test_portfolio_intelligence.py`
-- `src/ai_trading/data.py`
-- `tests/test_data.py`
 
 ### Project signals
 - `pyproject.toml`

@@ -146,6 +146,7 @@ src/
     multi_market.py
     multi_timeframe_features.py
     multiasset_backtest.py
+    multiasset_checkpoint.py
     multiasset_evolution.py
     multiasset_market_context.py
     multiasset_runtime.py
@@ -321,6 +322,7 @@ tests/
   test_multi_period_promotion.py
   test_multi_timeframe_features.py
   test_multiasset_backtest.py
+  test_multiasset_checkpoint.py
   test_multiasset_evolution.py
   test_multiasset_market_context.py
   test_multiasset_runtime.py
@@ -4682,6 +4684,60 @@ peak_equity = max(peak_equity, equity)
 start = test_end
 ⋮----
 equity_curve = pd.Series(curve, dtype=float).sort_index()
+````
+
+## File: src/ai_trading/multiasset_checkpoint.py
+````python
+class MultiAssetCheckpointStore
+⋮----
+"""Checkpoint portfolio state and online models as one durable generation."""
+⋮----
+def __init__(self, root: str | Path) -> None
+⋮----
+def _generation_dir(self, generation: str) -> Path
+⋮----
+@staticmethod
+    def _safe_symbol(symbol: str) -> str
+⋮----
+@staticmethod
+    def _sha256(path: Path) -> str
+⋮----
+digest = hashlib.sha256()
+⋮----
+generation = f"step-{state.processed_bars:012d}"
+final_dir = self._generation_dir(generation)
+temp_dir = self.root / f".{generation}.tmp"
+⋮----
+state_path = temp_dir / "state.json"
+state_payload = json.dumps(asdict(state), sort_keys=True)
+⋮----
+model_files: dict[str, str] = {}
+⋮----
+filename = f"{self._safe_symbol(symbol)}.joblib"
+⋮----
+manifest = {
+manifest_path = temp_dir / "manifest.json"
+⋮----
+pointer_tmp = self.current_path.with_suffix(".tmp")
+⋮----
+def load(self) -> tuple[MultiAssetState, dict[str, object]] | None
+⋮----
+generation = self.current_path.read_text(encoding="utf-8").strip()
+⋮----
+directory = self._generation_dir(generation)
+manifest_path = directory / "manifest.json"
+manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+⋮----
+state_meta = manifest["state"]
+state_path = directory / state_meta["file"]
+⋮----
+payload = json.loads(state_path.read_text(encoding="utf-8"))
+⋮----
+state = MultiAssetState(**payload)
+⋮----
+models: dict[str, object] = {}
+⋮----
+path = directory / metadata["file"]
 ````
 
 ## File: src/ai_trading/multiasset_evolution.py
@@ -10201,6 +10257,24 @@ real_config = backtest_module.risk_config_for_symbol
 def capture(symbol: str, base: RiskConfig)
 ⋮----
 config = real_config(
+````
+
+## File: tests/test_multiasset_checkpoint.py
+````python
+def state(step: int) -> MultiAssetState
+⋮----
+def test_checkpoint_round_trip_state_and_models(tmp_path: Path) -> None
+⋮----
+store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+generation = store.commit(state(7), {"A": {"learned": 7}})
+⋮----
+loaded = store.load()
+⋮----
+unpublished = store.root / "step-000000000004"
+⋮----
+def test_checkpoint_fails_closed_on_corrupted_state(tmp_path: Path) -> None
+⋮----
+generation = store.commit(state(9), {"A": {"learned": 9}})
 ````
 
 ## File: tests/test_multiasset_evolution.py
