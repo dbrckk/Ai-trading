@@ -15,8 +15,10 @@ from ai_trading.economic_meta_store import EconomicMetaStore
 from ai_trading.governor_state_store import GovernorStateStore
 from ai_trading.lifecycle_log import LifecycleEventLog
 from ai_trading.meta_store import MetaRouterStore
+from ai_trading.multiasset_checkpoint import MultiAssetCheckpointStore
 from ai_trading.multiasset_runtime import MultiAssetPaperRuntime
-from ai_trading.multiasset_state import MultiAssetStateStore
+from ai_trading.multiasset_state import MultiAssetState, MultiAssetStateStore
+from ai_trading.online import RiverDirectionModel
 from ai_trading.portfolio import AllocationConfig
 from ai_trading.portfolio_risk import PortfolioRiskConfig
 from ai_trading.quality_store import QualityStore
@@ -440,3 +442,46 @@ def test_multiasset_batch_and_specialist_legacy_paths_are_migrated(
     assert specialist == {"specialist": True}
     assert runtime._batch_model_path(symbol).exists()
     assert runtime._specialist_path(symbol, "trend").exists()
+
+
+
+def test_multiasset_runtime_does_not_mix_checkpoint_with_legacy_model(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    checkpoint_store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    checkpoint_store.commit(
+        MultiAssetState(
+            cash=100_000.0,
+            peak_equity=100_000.0,
+            day_start_equity=100_000.0,
+            processed_bars=1,
+        ),
+        {"A": RiverDirectionModel()},
+    )
+    runtime = MultiAssetPaperRuntime(
+        risk_config=RiskConfig(),
+        allocation_config=AllocationConfig(max_asset_weight=0.6),
+        portfolio_risk_config=PortfolioRiskConfig(
+            max_gross_exposure=1.0,
+            max_net_exposure=1.0,
+            max_asset_exposure=0.6,
+            max_pair_correlation=0.99,
+        ),
+        state_store=MultiAssetStateStore(tmp_path / "state.json"),
+        checkpoint_store=checkpoint_store,
+        audit_log=AuditLog(tmp_path / "audit.jsonl"),
+        lock_path=str(tmp_path / "lock"),
+        model_root=tmp_path / "online_models",
+        batch_model_root=tmp_path / "batch_models",
+        specialist_model_root=tmp_path / "specialists",
+    )
+
+    def fail_legacy_load(symbol: str):
+        raise AssertionError(f"legacy model loaded for {symbol}")
+
+    monkeypatch.setattr(runtime, "_load_model", fail_legacy_load)
+
+    result = runtime.step({"A": market(71), "B": market(72)})
+
+    assert result.processed
