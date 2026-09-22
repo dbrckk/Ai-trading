@@ -4,6 +4,7 @@ import hashlib
 import json
 import re
 import shutil
+import zlib
 from dataclasses import asdict
 from pathlib import Path
 
@@ -160,10 +161,13 @@ class MultiAssetCheckpointStore:
             except (
                 EOFError,
                 FileNotFoundError,
+                IndexError,
                 KeyError,
+                OSError,
                 TypeError,
                 ValueError,
                 json.JSONDecodeError,
+                zlib.error,
             ):
                 continue
             return generation
