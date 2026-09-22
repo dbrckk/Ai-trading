@@ -3,10 +3,26 @@ services:
     name: ai-trading-dashboard
     runtime: docker
     dockerfilePath: ./Dockerfile
-    healthCheckPath: /
+    healthCheckPath: /readyz
     envVars:
       - key: PORT
         value: 8765
+      - key: AI_TRADING_HOSTED_PAPER
+        value: "1"
+      - key: AI_TRADING_EXTERNAL_SCHEDULER
+        value: "1"
+      - key: AI_TRADING_MARKETS
+        value: "GC=F,^GDAXI,BTC-USD"
+      - key: AI_TRADING_HOSTED_SYMBOL
+        value: "GC=F"
+      - key: AI_TRADING_HOSTED_PERIOD
+        value: "5d"
+      - key: AI_TRADING_HOSTED_INTERVAL
+        value: "5m"
+      - key: AI_TRADING_DATABASE_URL
+        sync: false
+      - key: AI_TRADING_SCHEDULER_TOKEN
+        sync: false
     disk:
       name: trading-artifacts
       mountPath: /app/artifacts
