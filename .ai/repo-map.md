@@ -2180,6 +2180,26 @@ def _display_units(value: float | None) -> str
 ⋮----
 def _display_ratio(value: float | None) -> str
 ⋮----
+delivery_count = int(overview["delivery_count"])
+verified = bool(overview["cloudflare_delivery_verified"])
+fresh = bool(overview["cloudflare_delivery_fresh"])
+age = overview["last_delivery_age_seconds"]
+freshness = float(overview["freshness_seconds"])
+⋮----
+state = "VERIFIED"
+state_class = "status-ok"
+⋮----
+state = "WAITING"
+state_class = "status-warn"
+⋮----
+state = "STALE"
+state_class = "status-error"
+⋮----
+state = "COLLECTING"
+⋮----
+age_display = "-" if age is None else f"{float(age):.0f}s"
+freshness_display = f"{freshness:.0f}s"
+⋮----
 def _trade_pnl_known(trade: object) -> bool
 ⋮----
 marker = getattr(trade, "pnl_known", None)
@@ -2397,14 +2417,12 @@ scheduler_panel = ""
 list_deliveries = getattr(persistence, "list_scheduler_deliveries", None)
 deliveries = tuple(list_deliveries(limit=20)) if callable(list_deliveries) else ()
 scheduler_overview = scheduler_delivery_overview(deliveries)
-scheduler_verified = bool(scheduler_overview["cloudflare_delivery_verified"])
 scheduler_delivery_count = int(scheduler_overview["delivery_count"])
 scheduler_successes = int(
 scheduler_last_source = str(scheduler_overview["last_source"] or "-")
 scheduler_last_status = (
 scheduler_last_delivery = str(
-scheduler_state = (
-scheduler_state_class = "status-ok" if scheduler_verified else "status-warn"
+⋮----
 scheduler_panel = f"""
 ⋮----
 scheduler_panel = """
@@ -9134,6 +9152,15 @@ page = render_dashboard(TradeJournal(tmp_path / "empty.jsonl"))
 def test_dashboard_live_refresh_preserves_scroll_without_meta_reload(tmp_path) -> None
 ⋮----
 def test_dashboard_does_not_render_legacy_unknown_pnl_as_zero(tmp_path) -> None
+⋮----
+def test_scheduler_display_state_reports_waiting_collecting_stale_and_verified() -> None
+⋮----
+base = {
+⋮----
+waiting = _scheduler_display_state(base)
+collecting = _scheduler_display_state(
+stale = _scheduler_display_state(
+verified = _scheduler_display_state(
 ````
 
 ## File: tests/test_data_quality.py

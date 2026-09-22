@@ -45,16 +45,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T18:38:51Z
+Generated: 2026-09-22T18:58:28Z
 
 ### Git
 - Branch: `main`
-- Head: `bce9d13a7826`
-- Commit date: 2026-09-22T20:38:40+02:00
-- Commit: fix: recover complete unpublished multiasset checkpoints
+- Head: `78d37553e586`
+- Commit date: 2026-09-22T20:58:16+02:00
+- Commit: fix: show scheduler freshness in dashboard
 - Tracked files: 496
 
 ### Recently changed files
+- `src/ai_trading/dashboard.py`
+- `tests/test_dashboard.py`
 - `src/ai_trading/multiasset_checkpoint.py`
 - `tests/test_multiasset_checkpoint.py`
 - `src/ai_trading/multiasset_runtime.py`
