@@ -4962,6 +4962,7 @@ execution_time = market_context.execution_time
 returns = market_context.returns
 ⋮----
 checkpoint = self.checkpoint_store.load()
+checkpoint_loaded = checkpoint is not None
 ⋮----
 state = self.state_store.load(self.risk_config.starting_cash)
 checkpoint_models: dict[str, object] = {}
@@ -5012,7 +5013,11 @@ retrain_triggered = True
 ⋮----
 distribution_drift = None
 ⋮----
-model = checkpoint_models.get(symbol) or self._load_model(symbol)
+model = checkpoint_models.get(symbol)
+⋮----
+model = RiverDirectionModel()
+⋮----
+model = self._load_model(symbol)
 ⋮----
 learn_label = labels.get(learn_idx)
 evaluation_prediction = model.predict_one(features.loc[learn_idx, FEATURES])
@@ -10528,6 +10533,12 @@ legacy_specialist = runtime._legacy_specialist_path(symbol, "trend")
 ⋮----
 batch = runtime._load_or_train_batch_model(
 specialist = runtime._load_or_train_specialist(
+⋮----
+checkpoint_store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+⋮----
+def fail_legacy_load(symbol: str)
+⋮----
+result = runtime.step({"A": market(71), "B": market(72)})
 ````
 
 ## File: tests/test_multiasset_scheduler.py

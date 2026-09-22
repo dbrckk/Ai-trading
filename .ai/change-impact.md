@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 2047440e820c9cecb898fde35d78666b8aee384b
-Head: 2188738132d5aac7958f641415c5b515e338cf44
+Base: 04e7ce1632174e3e7c702cc8d58ecfae6051d1f8
+Head: 9b65864b6097893677d9227cfcf3ea8e7b83ac0f
 
 ## Changed files
 - M src/ai_trading/multiasset_runtime.py

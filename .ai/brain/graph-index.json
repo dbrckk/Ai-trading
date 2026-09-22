@@ -901,6 +901,34 @@
       "path": "src/ai_trading/supervisor.py"
     },
     {
+      "dependencies": [
+        "src/ai_trading/__init__.py",
+        "src/ai_trading/allocation_state.py",
+        "src/ai_trading/audit.py",
+        "src/ai_trading/config.py",
+        "src/ai_trading/crisis_state_store.py",
+        "src/ai_trading/drift.py",
+        "src/ai_trading/drift_retrain_store.py",
+        "src/ai_trading/economic_meta_store.py",
+        "src/ai_trading/governor_state_store.py",
+        "src/ai_trading/lifecycle_log.py",
+        "src/ai_trading/meta_store.py",
+        "src/ai_trading/multiasset_checkpoint.py",
+        "src/ai_trading/multiasset_runtime.py",
+        "src/ai_trading/multiasset_state.py",
+        "src/ai_trading/online.py",
+        "src/ai_trading/paper_execution.py",
+        "src/ai_trading/portfolio.py",
+        "src/ai_trading/portfolio_risk.py",
+        "src/ai_trading/quality_store.py",
+        "src/ai_trading/resilience.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 20,
+      "path": "tests/test_multiasset_runtime.py"
+    },
+    {
       "dependencies": [],
       "dependents": [
         "src/ai_trading/cli.py",
@@ -952,32 +980,6 @@
       "in_degree": 9,
       "out_degree": 9,
       "path": "src/ai_trading/file_persistence.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/__init__.py",
-        "src/ai_trading/allocation_state.py",
-        "src/ai_trading/audit.py",
-        "src/ai_trading/config.py",
-        "src/ai_trading/crisis_state_store.py",
-        "src/ai_trading/drift.py",
-        "src/ai_trading/drift_retrain_store.py",
-        "src/ai_trading/economic_meta_store.py",
-        "src/ai_trading/governor_state_store.py",
-        "src/ai_trading/lifecycle_log.py",
-        "src/ai_trading/meta_store.py",
-        "src/ai_trading/multiasset_runtime.py",
-        "src/ai_trading/multiasset_state.py",
-        "src/ai_trading/paper_execution.py",
-        "src/ai_trading/portfolio.py",
-        "src/ai_trading/portfolio_risk.py",
-        "src/ai_trading/quality_store.py",
-        "src/ai_trading/resilience.py"
-      ],
-      "dependents": [],
-      "in_degree": 0,
-      "out_degree": 18,
-      "path": "tests/test_multiasset_runtime.py"
     },
     {
       "dependencies": [],
@@ -1152,6 +1154,29 @@
     },
     {
       "dependencies": [
+        "src/ai_trading/features.py",
+        "src/ai_trading/model.py"
+      ],
+      "dependents": [
+        "src/ai_trading/model_codec.py",
+        "src/ai_trading/multiasset_runtime.py",
+        "src/ai_trading/runtime.py",
+        "tests/test_cumulative_performance_persistence.py",
+        "tests/test_durable_burnin_persistence.py",
+        "tests/test_file_persistence.py",
+        "tests/test_model_codec.py",
+        "tests/test_multiasset_runtime.py",
+        "tests/test_online.py",
+        "tests/test_paper_cycle.py",
+        "tests/test_postgres_persistence.py",
+        "tests/test_runtime_persistence.py"
+      ],
+      "in_degree": 12,
+      "out_degree": 2,
+      "path": "src/ai_trading/online.py"
+    },
+    {
+      "dependencies": [
         "src/ai_trading/lifecycle_log.py",
         "src/ai_trading/resilience.py"
       ],
@@ -1284,28 +1309,6 @@
       "in_degree": 13,
       "out_degree": 0,
       "path": "src/ai_trading/readiness_score.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/features.py",
-        "src/ai_trading/model.py"
-      ],
-      "dependents": [
-        "src/ai_trading/model_codec.py",
-        "src/ai_trading/multiasset_runtime.py",
-        "src/ai_trading/runtime.py",
-        "tests/test_cumulative_performance_persistence.py",
-        "tests/test_durable_burnin_persistence.py",
-        "tests/test_file_persistence.py",
-        "tests/test_model_codec.py",
-        "tests/test_online.py",
-        "tests/test_paper_cycle.py",
-        "tests/test_postgres_persistence.py",
-        "tests/test_runtime_persistence.py"
-      ],
-      "in_degree": 11,
-      "out_degree": 2,
-      "path": "src/ai_trading/online.py"
     },
     {
       "dependencies": [
@@ -1851,7 +1854,7 @@
       "path": "src/ai_trading/scheduler.py"
     }
   ],
-  "edge_count": 1967,
+  "edge_count": 1971,
   "generated_by": "dbrckk/repo-brain-v7-graph",
   "node_count": 357,
   "schema_version": 1

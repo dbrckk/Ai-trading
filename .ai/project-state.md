@@ -45,13 +45,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T20:24:07Z
+Generated: 2026-09-22T20:59:00Z
 
 ### Git
 - Branch: `main`
-- Head: `2188738132d5`
-- Commit date: 2026-09-22T22:23:55+02:00
-- Commit: fix: prevent multiasset model path collisions
+- Head: `9b65864b6097`
+- Commit date: 2026-09-22T22:58:48+02:00
+- Commit: fix: isolate checkpoint models from legacy mirrors
 - Tracked files: 496
 
 ### Recently changed files
