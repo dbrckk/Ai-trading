@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import pytest
 
 from ai_trading.portfolio_intelligence import (
     PortfolioIntelligenceConfig,
