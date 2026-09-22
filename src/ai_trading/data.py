@@ -1,10 +1,38 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from time import sleep
+from typing import Protocol
 
 import numpy as np
 import pandas as pd
 import yfinance as yf
+
+
+class MarketDataProvider(Protocol):
+    """Minimal provider contract used by the trading runtime."""
+
+    name: str
+
+    def download(self, symbol: str, *, period: str, interval: str) -> pd.DataFrame: ...
+
+
+@dataclass(frozen=True)
+class YahooFinanceProvider:
+    name: str = "yahoo"
+
+    def download(self, symbol: str, *, period: str, interval: str) -> pd.DataFrame:
+        return yf.download(
+            symbol,
+            period=period,
+            interval=interval,
+            auto_adjust=True,
+            progress=False,
+            threads=False,
+        )
+
+
+DEFAULT_MARKET_DATA_PROVIDERS: tuple[MarketDataProvider, ...] = (YahooFinanceProvider(),)
 
 _OHLC_COLUMNS = ("Open", "High", "Low", "Close")
 _HISTORY_COLUMNS = (*_OHLC_COLUMNS, "Volume")
@@ -61,29 +89,30 @@ def load_history(
     *,
     max_attempts: int = 3,
     retry_backoff_seconds: float = 0.25,
+    providers: tuple[MarketDataProvider, ...] | None = None,
 ) -> pd.DataFrame:
     if max_attempts < 1:
         raise ValueError("max_attempts must be at least 1")
     if retry_backoff_seconds < 0:
         raise ValueError("retry_backoff_seconds must be non-negative")
 
+    provider_chain = DEFAULT_MARKET_DATA_PROVIDERS if providers is None else providers
+    if not provider_chain:
+        raise ValueError("providers must contain at least one market data provider")
+
     last_error: Exception | None = None
-    for attempt in range(max_attempts):
-        try:
-            frame = yf.download(
-                symbol,
-                period=period,
-                interval=interval,
-                auto_adjust=True,
-                progress=False,
-                threads=False,
-            )
-            return _normalize_history_frame(frame)
-        except Exception as exc:  # noqa: BLE001 - provider can raise backend-specific transport errors
-            last_error = exc
-            if attempt + 1 < max_attempts:
-                sleep(retry_backoff_seconds * (2**attempt))
+    attempts = 0
+    for provider in provider_chain:
+        for attempt in range(max_attempts):
+            attempts += 1
+            try:
+                frame = provider.download(symbol, period=period, interval=interval)
+                return _normalize_history_frame(frame)
+            except Exception as exc:  # noqa: BLE001 - providers raise backend-specific errors
+                last_error = exc
+                if attempt + 1 < max_attempts:
+                    sleep(retry_backoff_seconds * (2**attempt))
 
     raise ValueError(
-        f"Failed to load valid market data for {symbol!r} after {max_attempts} attempts"
+        f"Failed to load valid market data for {symbol!r} after {attempts} provider attempts"
     ) from last_error

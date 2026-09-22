@@ -99,3 +99,50 @@ def test_load_history_rejects_inconsistent_ohlc(monkeypatch) -> None:
 
     with pytest.raises(ValueError, match="Failed to load valid market data"):
         data_module.load_history("GC=F", max_attempts=1)
+
+
+class _Provider:
+    def __init__(self, name: str, result) -> None:
+        self.name = name
+        self.result = result
+        self.calls = 0
+
+    def download(self, symbol: str, *, period: str, interval: str) -> pd.DataFrame:
+        self.calls += 1
+        if isinstance(self.result, Exception):
+            raise self.result
+        return self.result
+
+
+def test_load_history_falls_back_to_next_provider_after_primary_exhaustion(monkeypatch) -> None:
+    index = pd.date_range("2026-09-18 08:00", periods=3, freq="5min")
+    frame = pd.DataFrame(
+        {
+            "Open": [100.0, 101.0, 102.0],
+            "High": [101.0, 102.0, 103.0],
+            "Low": [99.0, 100.0, 101.0],
+            "Close": [100.5, 101.5, 102.5],
+            "Volume": [10.0, 11.0, 12.0],
+        },
+        index=index,
+    )
+    primary = _Provider("primary", RuntimeError("provider unavailable"))
+    fallback = _Provider("fallback", frame)
+    monkeypatch.setattr(data_module, "sleep", lambda *_args, **_kwargs: None)
+
+    loaded = data_module.load_history(
+        "GC=F",
+        period="5d",
+        interval="5m",
+        max_attempts=2,
+        providers=(primary, fallback),
+    )
+
+    assert primary.calls == 2
+    assert fallback.calls == 1
+    assert len(loaded) == 3
+
+
+def test_load_history_rejects_empty_provider_chain() -> None:
+    with pytest.raises(ValueError, match="providers"):
+        data_module.load_history("GC=F", providers=())
