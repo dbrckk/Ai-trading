@@ -44,6 +44,16 @@ class MultiAssetCheckpointStore:
                 digest.update(chunk)
         return digest.hexdigest()
 
+
+    @staticmethod
+    def _artifact_path(directory: Path, filename: object) -> Path:
+        if not isinstance(filename, str) or not filename:
+            raise ValueError("invalid multiasset checkpoint artifact path")
+        candidate = Path(filename)
+        if candidate.name != filename or filename in {".", ".."}:
+            raise ValueError("invalid multiasset checkpoint artifact path")
+        return directory / filename
+
     def commit(
         self,
         state: MultiAssetState,
@@ -119,7 +129,7 @@ class MultiAssetCheckpointStore:
             raise ValueError("multiasset checkpoint generation mismatch")
 
         state_meta = manifest["state"]
-        state_path = directory / state_meta["file"]
+        state_path = self._artifact_path(directory, state_meta["file"])
         if self._sha256(state_path) != state_meta["sha256"]:
             raise ValueError("multiasset checkpoint state checksum mismatch")
         payload = json.loads(state_path.read_text(encoding="utf-8"))
@@ -131,7 +141,7 @@ class MultiAssetCheckpointStore:
 
         models: dict[str, object] = {}
         for symbol, metadata in manifest.get("models", {}).items():
-            path = directory / metadata["file"]
+            path = self._artifact_path(directory, metadata["file"])
             if self._sha256(path) != metadata["sha256"]:
                 raise ValueError(
                     f"multiasset checkpoint model checksum mismatch: {symbol}"
@@ -148,7 +158,13 @@ class MultiAssetCheckpointStore:
         for generation in reversed(candidates):
             try:
                 self._load_generation(generation)
-            except (FileNotFoundError, KeyError, ValueError, json.JSONDecodeError):
+            except (
+                FileNotFoundError,
+                KeyError,
+                TypeError,
+                ValueError,
+                json.JSONDecodeError,
+            ):
                 continue
             return generation
         return None

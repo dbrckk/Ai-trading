@@ -211,3 +211,32 @@ def test_checkpoint_model_filenames_do_not_collide_for_similar_symbols(
     )
     files = [metadata["file"] for metadata in manifest["models"].values()]
     assert len(files) == len(set(files)) == 3
+
+
+
+def test_checkpoint_rejects_manifest_state_path_escape(tmp_path: Path) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.commit(state(6), {"A": {"learned": 6}})
+
+    generation = store.current_path.read_text(encoding="utf-8")
+    manifest_path = store.root / generation / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["state"]["file"] = "../state.json"
+    manifest_path.write_text(json.dumps(manifest, sort_keys=True), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="artifact path"):
+        store.load()
+
+
+def test_checkpoint_rejects_manifest_model_path_escape(tmp_path: Path) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.commit(state(7), {"A": {"learned": 7}})
+
+    generation = store.current_path.read_text(encoding="utf-8")
+    manifest_path = store.root / generation / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["models"]["A"]["file"] = "../A.joblib"
+    manifest_path.write_text(json.dumps(manifest, sort_keys=True), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="artifact path"):
+        store.load()
