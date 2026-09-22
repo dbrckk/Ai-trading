@@ -4692,7 +4692,7 @@ class MultiAssetCheckpointStore
 ⋮----
 """Checkpoint portfolio state and online models as one durable generation."""
 ⋮----
-def __init__(self, root: str | Path) -> None
+def __init__(self, root: str | Path, *, retain_generations: int = 3) -> None
 ⋮----
 def _generation_dir(self, generation: str) -> Path
 ⋮----
@@ -4719,6 +4719,11 @@ manifest = {
 manifest_path = temp_dir / "manifest.json"
 ⋮----
 pointer_tmp = self.current_path.with_suffix(".tmp")
+⋮----
+def _prune_old_generations(self, *, current: str) -> None
+⋮----
+generations = sorted(
+removable = max(0, len(generations) - (self.retain_generations - 1))
 ⋮----
 def load(self) -> tuple[MultiAssetState, dict[str, object]] | None
 ⋮----
@@ -10279,6 +10284,14 @@ unpublished = store.root / "step-000000000004"
 def test_checkpoint_fails_closed_on_corrupted_state(tmp_path: Path) -> None
 ⋮----
 generation = store.commit(state(9), {"A": {"learned": 9}})
+⋮----
+def test_checkpoint_refuses_to_overwrite_published_generation(tmp_path: Path) -> None
+⋮----
+store = MultiAssetCheckpointStore(
+⋮----
+generations = sorted(
+⋮----
+def test_checkpoint_retention_must_be_positive(tmp_path: Path) -> None
 ````
 
 ## File: tests/test_multiasset_evolution.py

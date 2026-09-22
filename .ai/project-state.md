@@ -45,23 +45,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T18:00:45Z
+Generated: 2026-09-22T18:13:43Z
 
 ### Git
 - Branch: `main`
-- Head: `2230152e2b38`
-- Commit date: 2026-09-22T20:00:32+02:00
-- Commit: feat: wire atomic checkpoints into multiasset runtime
+- Head: `f59be216db7d`
+- Commit date: 2026-09-22T20:13:31+02:00
+- Commit: fix: make multiasset checkpoints immutable and bounded
 - Tracked files: 496
 
 ### Recently changed files
-- `src/ai_trading/multiasset_runtime.py`
-- `tests/test_multiasset_runtime.py`
 - `src/ai_trading/multiasset_checkpoint.py`
 - `tests/test_multiasset_checkpoint.py`
+- `src/ai_trading/multiasset_runtime.py`
+- `tests/test_multiasset_runtime.py`
 - `src/ai_trading/multiasset_backtest.py`
 - `tests/test_multiasset_backtest.py`
-- `render.yaml`
 
 ### Project signals
 - `pyproject.toml`
