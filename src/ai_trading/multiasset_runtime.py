@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -166,9 +167,23 @@ class MultiAssetPaperRuntime:
         self.resilience_policy = resilience_policy or ResiliencePolicy()
         self.readiness_history_store = readiness_history_store or ReadinessHistoryStore()
 
+    @staticmethod
+    def _symbol_key(symbol: str) -> str:
+        return hashlib.sha256(symbol.encode("utf-8")).hexdigest()[:16]
+
+    @staticmethod
+    def _legacy_symbol_key(symbol: str) -> str:
+        return symbol.replace("/", "_").replace("=", "_").replace("^", "_")
+
     def _specialist_path(self, symbol: str, kind: str) -> Path:
-        safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
-        return self.specialist_model_root / f"{safe}_{kind}.joblib"
+        return self.specialist_model_root / (
+            f"{self._symbol_key(symbol)}_{kind}.joblib"
+        )
+
+    def _legacy_specialist_path(self, symbol: str, kind: str) -> Path:
+        return self.specialist_model_root / (
+            f"{self._legacy_symbol_key(symbol)}_{kind}.joblib"
+        )
 
     def _load_or_train_specialist(
         self,
@@ -181,6 +196,14 @@ class MultiAssetPaperRuntime:
         path = self._specialist_path(symbol, kind)
         if path.exists():
             return joblib.load(path)
+        legacy_path = self._legacy_specialist_path(symbol, kind)
+        if legacy_path.exists():
+            model = joblib.load(legacy_path)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            temp = path.with_suffix(".tmp")
+            joblib.dump(model, temp)
+            temp.replace(path)
+            return model
 
         train_idx = features.index[features.index < signal_idx]
         train_idx = train_idx.intersection(labels.dropna().index)
@@ -193,8 +216,10 @@ class MultiAssetPaperRuntime:
         return model
 
     def _batch_model_path(self, symbol: str) -> Path:
-        safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
-        return self.batch_model_root / f"{safe}.joblib"
+        return self.batch_model_root / f"{self._symbol_key(symbol)}.joblib"
+
+    def _legacy_batch_model_path(self, symbol: str) -> Path:
+        return self.batch_model_root / f"{self._legacy_symbol_key(symbol)}.joblib"
 
     def _load_or_train_batch_model(
         self,
@@ -206,6 +231,14 @@ class MultiAssetPaperRuntime:
         path = self._batch_model_path(symbol)
         if path.exists():
             return joblib.load(path)
+        legacy_path = self._legacy_batch_model_path(symbol)
+        if legacy_path.exists():
+            model = joblib.load(legacy_path)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            temp = path.with_suffix(".tmp")
+            joblib.dump(model, temp)
+            temp.replace(path)
+            return model
 
         train_idx = features.index[features.index < signal_idx]
         train_idx = train_idx.intersection(labels.dropna().index)
@@ -221,13 +254,20 @@ class MultiAssetPaperRuntime:
         return model
 
     def _model_path(self, symbol: str) -> Path:
-        safe = symbol.replace("/", "_").replace("=", "_").replace("^", "_")
-        return self.model_root / f"{safe}.joblib"
+        return self.model_root / f"{self._symbol_key(symbol)}.joblib"
+
+    def _legacy_model_path(self, symbol: str) -> Path:
+        return self.model_root / f"{self._legacy_symbol_key(symbol)}.joblib"
 
     def _load_model(self, symbol: str) -> RiverDirectionModel:
         path = self._model_path(symbol)
         if path.exists():
             return joblib.load(path)
+        legacy_path = self._legacy_model_path(symbol)
+        if legacy_path.exists():
+            model = joblib.load(legacy_path)
+            self._save_model(symbol, model)
+            return model
         return RiverDirectionModel()
 
     def _save_model(self, symbol: str, model: RiverDirectionModel) -> None:
