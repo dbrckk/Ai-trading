@@ -48,7 +48,8 @@ class MultiAssetCheckpointStore:
         temp_dir.mkdir()
 
         state_path = temp_dir / "state.json"
-        state_path.write_text(json.dumps(asdict(state), sort_keys=True), encoding="utf-8")
+        state_payload = json.dumps(asdict(state), sort_keys=True)
+        state_path.write_text(state_payload, encoding="utf-8")
         model_files: dict[str, str] = {}
         for symbol, model in sorted(models.items()):
             filename = f"{self._safe_symbol(symbol)}.joblib"
@@ -109,6 +110,8 @@ class MultiAssetCheckpointStore:
         for symbol, metadata in manifest.get("models", {}).items():
             path = directory / metadata["file"]
             if self._sha256(path) != metadata["sha256"]:
-                raise ValueError(f"multiasset checkpoint model checksum mismatch: {symbol}")
+                raise ValueError(
+                    f"multiasset checkpoint model checksum mismatch: {symbol}"
+                )
             models[symbol] = joblib.load(path)
         return state, models
