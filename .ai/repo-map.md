@@ -5092,6 +5092,7 @@ previous_prices = {
 previous_units = {
 ⋮----
 global_allocation_report = None
+pending_allocation_weights = None
 ⋮----
 opportunity_returns = pd.DataFrame(index=returns.index)
 ⋮----
@@ -5104,6 +5105,7 @@ asset_scale = pd.Series(
 opportunity_symbol = str(key).split("|", 1)[0]
 ⋮----
 intelligent_weights = intelligent_weights * asset_scale
+pending_allocation_weights = global_allocation_report.weights
 ⋮----
 # Fail closed: rejected global allocation means no target
 # risk until CVaR/turnover/cost constraints are satisfied.
@@ -5112,7 +5114,7 @@ intelligent_weights = intelligent_weights * 0.0
 stress_report = run_stress_test(
 current_drawdown = (
 crisis_decision = evaluate_crisis_state(
-⋮----
+pending_crisis_state = crisis_decision.state
 intelligent_weights = (
 ⋮----
 provisional_notionals = target_notionals(equity, intelligent_weights)
@@ -5134,11 +5136,13 @@ stability_critical = stability.status == "critical"
 effective_signals = ResilienceSignals(
 resilience = evaluate_resilience(
 persisted_resilience_state = ResilienceState(
+pending_resilience_state = persisted_resilience_state
 ⋮----
 intelligent_weights = intelligent_weights * resilience.exposure_cap
 ⋮----
 previous_governor = self.governor_state_store.load()
 consecutive_halts = (
+pending_governor_state = GovernorState(
 ⋮----
 intelligent_weights = intelligent_weights * governor.exposure_scale
 ⋮----
@@ -10464,6 +10468,13 @@ def fake_symbol_config(symbol: str, base: RiskConfig) -> RiskConfig
 def capture_fill(**kwargs)
 ⋮----
 result = runtime.step({"A": market(41), "B": market(42)})
+⋮----
+allocation_store = AllocationStateStore(tmp_path / "allocation.json")
+crisis_store = CrisisStateStore(tmp_path / "crisis.json")
+resilience_store = ResilienceStateStore(tmp_path / "resilience.json")
+governor_store = GovernorStateStore(tmp_path / "governor.json")
+⋮----
+def fail_checkpoint(*_args, **_kwargs) -> None
 ````
 
 ## File: tests/test_multiasset_scheduler.py

@@ -45,20 +45,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T19:33:30Z
+Generated: 2026-09-22T19:46:31Z
 
 ### Git
 - Branch: `main`
-- Head: `623930d11ff8`
-- Commit date: 2026-09-22T21:33:17+02:00
-- Commit: fix: constrain checkpoint manifest artifact paths
+- Head: `119a5732241b`
+- Commit date: 2026-09-22T21:46:16+02:00
+- Commit: fix: defer multiasset control state until checkpoint commit
 - Tracked files: 496
 
 ### Recently changed files
-- `src/ai_trading/multiasset_checkpoint.py`
-- `tests/test_multiasset_checkpoint.py`
 - `src/ai_trading/multiasset_runtime.py`
 - `tests/test_multiasset_runtime.py`
+- `src/ai_trading/multiasset_checkpoint.py`
+- `tests/test_multiasset_checkpoint.py`
 - `src/ai_trading/dashboard.py`
 - `tests/test_dashboard.py`
 
