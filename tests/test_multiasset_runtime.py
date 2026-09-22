@@ -193,26 +193,42 @@ def test_multiasset_runtime_prefers_checkpoint_over_stale_legacy_state(
 
 
 
+
+
 def test_multiasset_runtime_applies_symbol_specific_execution_costs(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
+    from dataclasses import replace
+
     from ai_trading.paper_execution import calculate_rebalance_fill as real_fill
 
-    monkeypatch.setenv(
-        "AI_TRADING_EXECUTION_COSTS_JSON",
-        '{"A":{"transaction_cost_bps":1.5,"slippage_bps":2.5},'
-        '"B":{"transaction_cost_bps":7.0,"slippage_bps":8.0}}',
-    )
-    observed: dict[str, tuple[float, float]] = {}
-    current_symbol = {"value": ""}
+    requested_symbols: list[str] = []
+    observed_costs: list[tuple[float, float]] = []
+
+    def fake_symbol_config(symbol: str, base: RiskConfig) -> RiskConfig:
+        requested_symbols.append(symbol)
+        if symbol == "A":
+            return replace(base, transaction_cost_bps=1.5, slippage_bps=2.5)
+        return replace(base, transaction_cost_bps=7.0, slippage_bps=8.0)
 
     def capture_fill(**kwargs):
-        observed[current_symbol["value"]] = (
-            float(kwargs["transaction_cost_bps"]),
-            float(kwargs["slippage_bps"]),
+        observed_costs.append(
+            (
+                float(kwargs["transaction_cost_bps"]),
+                float(kwargs["slippage_bps"]),
+            )
         )
         return real_fill(**kwargs)
+
+    monkeypatch.setattr(
+        "ai_trading.multiasset_runtime.risk_config_for_symbol",
+        fake_symbol_config,
+    )
+    monkeypatch.setattr(
+        "ai_trading.multiasset_runtime.calculate_rebalance_fill",
+        capture_fill,
+    )
 
     runtime = MultiAssetPaperRuntime(
         risk_config=RiskConfig(),
@@ -231,29 +247,8 @@ def test_multiasset_runtime_applies_symbol_specific_execution_costs(
         specialist_model_root=tmp_path / "specialists",
     )
 
-    original_positions = runtime.step
-
-    def run_with_symbol_tracking(markets):
-        original = __import__(
-            "ai_trading.multiasset_runtime",
-            fromlist=["calculate_rebalance_fill"],
-        )
-        original_fill = original.calculate_rebalance_fill
-
-        def tracked_fill(**kwargs):
-            price = float(kwargs["price"])
-            symbol = min(
-                markets,
-                key=lambda name: abs(float(markets[name]["Open"].iloc[-1]) - price),
-            )
-            current_symbol["value"] = symbol
-            return capture_fill(**kwargs)
-
-        monkeypatch.setattr(original, "calculate_rebalance_fill", tracked_fill)
-        return original_positions(markets)
-
-    result = run_with_symbol_tracking({"A": market(41), "B": market(42)})
+    result = runtime.step({"A": market(41), "B": market(42)})
 
     assert result.processed
-    assert observed["A"] == (1.5, 2.5)
-    assert observed["B"] == (7.0, 8.0)
+    assert requested_symbols == ["A", "B"]
+    assert observed_costs == [(1.5, 2.5), (7.0, 8.0)]
