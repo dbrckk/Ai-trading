@@ -5,7 +5,7 @@ import json
 import shutil
 from dataclasses import asdict
 from pathlib import Path
-from typing import Mapping
+from collections.abc import Mapping
 
 import joblib
 
