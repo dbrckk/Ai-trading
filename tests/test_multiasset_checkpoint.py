@@ -170,3 +170,44 @@ def test_checkpoint_ignores_invalid_newer_unpublished_generation(
     assert loaded_state.processed_bars == 3
     assert models == {"A": {"learned": 3}}
     assert store.current_path.read_text(encoding="utf-8") == "step-000000000003"
+
+
+
+def test_checkpoint_rejects_pointer_path_traversal(tmp_path: Path) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.root.mkdir(parents=True)
+    store.current_path.write_text("../outside", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="invalid multiasset checkpoint generation"):
+        store.load()
+
+
+def test_checkpoint_model_filenames_do_not_collide_for_similar_symbols(
+    tmp_path: Path,
+) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.commit(
+        state(5),
+        {
+            "GC=F": {"learned": 1},
+            "GC/F": {"learned": 2},
+            "^GC_F": {"learned": 3},
+        },
+    )
+
+    loaded = store.load()
+
+    assert loaded is not None
+    _, models = loaded
+    assert models == {
+        "GC=F": {"learned": 1},
+        "GC/F": {"learned": 2},
+        "^GC_F": {"learned": 3},
+    }
+
+    generation = store.current_path.read_text(encoding="utf-8")
+    manifest = json.loads(
+        (store.root / generation / "manifest.json").read_text(encoding="utf-8")
+    )
+    files = [metadata["file"] for metadata in manifest["models"].values()]
+    assert len(files) == len(set(files)) == 3
