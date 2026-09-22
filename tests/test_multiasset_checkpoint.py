@@ -55,3 +55,50 @@ def test_checkpoint_fails_closed_on_corrupted_state(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="checksum mismatch"):
         store.load()
+
+
+
+def test_checkpoint_refuses_to_overwrite_published_generation(tmp_path: Path) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.commit(state(4), {"A": {"learned": 4}})
+
+    with pytest.raises(ValueError, match="already exists"):
+        store.commit(state(4), {"A": {"learned": 999}})
+
+    loaded = store.load()
+    assert loaded is not None
+    loaded_state, models = loaded
+    assert loaded_state.processed_bars == 4
+    assert models == {"A": {"learned": 4}}
+
+
+def test_checkpoint_retention_keeps_current_and_recent_generations(
+    tmp_path: Path,
+) -> None:
+    store = MultiAssetCheckpointStore(
+        tmp_path / "checkpoint",
+        retain_generations=2,
+    )
+
+    for step in range(1, 5):
+        store.commit(state(step), {"A": {"learned": step}})
+
+    generations = sorted(
+        path.name
+        for path in store.root.glob("step-*")
+        if path.is_dir()
+    )
+
+    assert generations == [
+        "step-000000000003",
+        "step-000000000004",
+    ]
+    assert store.current_path.read_text(encoding="utf-8") == "step-000000000004"
+
+
+def test_checkpoint_retention_must_be_positive(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="at least 1"):
+        MultiAssetCheckpointStore(
+            tmp_path / "checkpoint",
+            retain_generations=0,
+        )
