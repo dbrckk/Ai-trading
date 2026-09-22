@@ -190,3 +190,65 @@ def test_multiasset_runtime_prefers_checkpoint_over_stale_legacy_state(
 
     assert not second.processed
     assert second.risk_reasons == ("bar already processed",)
+
+
+
+
+
+def test_multiasset_runtime_applies_symbol_specific_execution_costs(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    from dataclasses import replace
+
+    from ai_trading.paper_execution import calculate_rebalance_fill as real_fill
+
+    requested_symbols: list[str] = []
+    observed_costs: list[tuple[float, float]] = []
+
+    def fake_symbol_config(symbol: str, base: RiskConfig) -> RiskConfig:
+        requested_symbols.append(symbol)
+        if symbol == "A":
+            return replace(base, transaction_cost_bps=1.5, slippage_bps=2.5)
+        return replace(base, transaction_cost_bps=7.0, slippage_bps=8.0)
+
+    def capture_fill(**kwargs):
+        observed_costs.append(
+            (
+                float(kwargs["transaction_cost_bps"]),
+                float(kwargs["slippage_bps"]),
+            )
+        )
+        return real_fill(**kwargs)
+
+    monkeypatch.setattr(
+        "ai_trading.multiasset_runtime.risk_config_for_symbol",
+        fake_symbol_config,
+    )
+    monkeypatch.setattr(
+        "ai_trading.multiasset_runtime.calculate_rebalance_fill",
+        capture_fill,
+    )
+
+    runtime = MultiAssetPaperRuntime(
+        risk_config=RiskConfig(),
+        allocation_config=AllocationConfig(max_asset_weight=0.6),
+        portfolio_risk_config=PortfolioRiskConfig(
+            max_gross_exposure=1.0,
+            max_net_exposure=1.0,
+            max_asset_exposure=0.6,
+            max_pair_correlation=0.99,
+        ),
+        state_store=MultiAssetStateStore(tmp_path / "state.json"),
+        audit_log=AuditLog(tmp_path / "audit.jsonl"),
+        lock_path=str(tmp_path / "lock"),
+        model_root=tmp_path / "online_models",
+        batch_model_root=tmp_path / "batch_models",
+        specialist_model_root=tmp_path / "specialists",
+    )
+
+    result = runtime.step({"A": market(41), "B": market(42)})
+
+    assert result.processed
+    assert requested_symbols == ["A", "B"]
+    assert observed_costs == [(1.5, 2.5), (7.0, 8.0)]

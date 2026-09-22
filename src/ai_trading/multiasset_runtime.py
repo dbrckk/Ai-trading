@@ -25,6 +25,7 @@ from .drift_retrain_store import DriftRetrainStore
 from .economic_meta import economic_route_weight
 from .economic_meta_store import EconomicMetaStore
 from .ensemble import EnsembleDirectionModel
+from .execution_costs import risk_config_for_symbol
 from .expert_lifecycle import evaluate_expert_lifecycle
 from .expert_pool import ExpertPoolStore, compute_budget_weights
 from .expert_uncertainty import measure_expert_uncertainty
@@ -908,12 +909,16 @@ class MultiAssetPaperRuntime:
                 for symbol in intelligent_weights.index:
                     price = float(opens[symbol].iloc[-1])
                     position = state.positions.setdefault(symbol, AssetPosition())
+                    symbol_risk_config = risk_config_for_symbol(
+                        symbol,
+                        self.risk_config,
+                    )
                     fill = calculate_rebalance_fill(
                         current_units=position.units,
                         target_notional=float(notionals[symbol]),
                         price=price,
-                        transaction_cost_bps=self.risk_config.transaction_cost_bps,
-                        slippage_bps=self.risk_config.slippage_bps,
+                        transaction_cost_bps=symbol_risk_config.transaction_cost_bps,
+                        slippage_bps=symbol_risk_config.slippage_bps,
                     )
                     total_costs += fill.costs
                     turnover_by_symbol[symbol] = fill.gross_turnover
