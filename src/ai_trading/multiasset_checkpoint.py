@@ -13,7 +13,7 @@ from .multiasset_state import AssetPosition, MultiAssetState
 
 
 class MultiAssetCheckpointStore:
-    """Durable generation-based checkpoint for portfolio state and online models."""
+    """Checkpoint portfolio state and online models as one durable generation."""
 
     def __init__(self, root: str | Path) -> None:
         self.root = Path(root)
