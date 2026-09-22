@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import shutil
 from dataclasses import asdict
 from pathlib import Path
@@ -22,11 +23,18 @@ class MultiAssetCheckpointStore:
         self.retain_generations = retain_generations
 
     def _generation_dir(self, generation: str) -> Path:
-        return self.root / generation
+        return self.root / self._validate_generation(generation)
 
     @staticmethod
-    def _safe_symbol(symbol: str) -> str:
-        return symbol.replace("/", "_").replace("=", "_").replace("^", "_")
+    def _validate_generation(generation: str) -> str:
+        if re.fullmatch(r"step-\d{12}", generation) is None:
+            raise ValueError("invalid multiasset checkpoint generation")
+        return generation
+
+    @staticmethod
+    def _model_filename(symbol: str) -> str:
+        digest = hashlib.sha256(symbol.encode("utf-8")).hexdigest()[:16]
+        return f"model-{digest}.joblib"
 
     @staticmethod
     def _sha256(path: Path) -> str:
@@ -41,7 +49,7 @@ class MultiAssetCheckpointStore:
         state: MultiAssetState,
         models: dict[str, object],
     ) -> str:
-        generation = f"step-{state.processed_bars:012d}"
+        generation = self._validate_generation(f"step-{state.processed_bars:012d}")
         final_dir = self._generation_dir(generation)
         temp_dir = self.root / f".{generation}.tmp"
         self.root.mkdir(parents=True, exist_ok=True)
@@ -54,7 +62,7 @@ class MultiAssetCheckpointStore:
         state_path.write_text(state_payload, encoding="utf-8")
         model_files: dict[str, str] = {}
         for symbol, model in sorted(models.items()):
-            filename = f"{self._safe_symbol(symbol)}.joblib"
+            filename = self._model_filename(symbol)
             joblib.dump(model, temp_dir / filename)
             model_files[symbol] = filename
 
@@ -151,6 +159,7 @@ class MultiAssetCheckpointStore:
             current = self.current_path.read_text(encoding="utf-8").strip()
             if not current:
                 raise ValueError("multiasset checkpoint pointer is empty")
+            current = self._validate_generation(current)
             loaded = self._load_generation(current)
         else:
             loaded = None
