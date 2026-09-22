@@ -1,5 +1,8 @@
+from dataclasses import asdict
+import json
 from pathlib import Path
 
+import joblib
 import pytest
 
 from ai_trading.multiasset_checkpoint import MultiAssetCheckpointStore
@@ -102,3 +105,68 @@ def test_checkpoint_retention_must_be_positive(tmp_path: Path) -> None:
             tmp_path / "checkpoint",
             retain_generations=0,
         )
+
+
+
+def test_checkpoint_recovers_complete_generation_not_yet_published(
+    tmp_path: Path,
+) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.commit(state(1), {"A": {"learned": 1}})
+
+    orphan = store.root / "step-000000000002"
+    orphan.mkdir()
+    orphan_state = state(2)
+    state_path = orphan / "state.json"
+    state_path.write_text(
+        json.dumps(asdict(orphan_state), sort_keys=True),
+        encoding="utf-8",
+    )
+    model_path = orphan / "A.joblib"
+    joblib.dump({"learned": 2}, model_path)
+    manifest = {
+        "generation": "step-000000000002",
+        "processed_bars": 2,
+        "last_processed": orphan_state.last_processed,
+        "state": {
+            "file": "state.json",
+            "sha256": store._sha256(state_path),
+        },
+        "models": {
+            "A": {
+                "file": "A.joblib",
+                "sha256": store._sha256(model_path),
+            }
+        },
+    }
+    (orphan / "manifest.json").write_text(
+        json.dumps(manifest, sort_keys=True),
+        encoding="utf-8",
+    )
+
+    loaded = store.load()
+
+    assert loaded is not None
+    loaded_state, models = loaded
+    assert loaded_state.processed_bars == 2
+    assert models == {"A": {"learned": 2}}
+    assert store.current_path.read_text(encoding="utf-8") == "step-000000000002"
+
+
+def test_checkpoint_ignores_invalid_newer_unpublished_generation(
+    tmp_path: Path,
+) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.commit(state(3), {"A": {"learned": 3}})
+
+    broken = store.root / "step-000000000004"
+    broken.mkdir()
+    (broken / "manifest.json").write_text("{}", encoding="utf-8")
+
+    loaded = store.load()
+
+    assert loaded is not None
+    loaded_state, models = loaded
+    assert loaded_state.processed_bars == 3
+    assert models == {"A": {"learned": 3}}
+    assert store.current_path.read_text(encoding="utf-8") == "step-000000000003"
