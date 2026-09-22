@@ -3,7 +3,12 @@ services:
     name: ai-trading-dashboard
     runtime: docker
     dockerfilePath: ./Dockerfile
+    autoDeployTrigger: checksPass
     healthCheckPath: /readyz
+    buildFilter:
+      ignoredPaths:
+        - ".ai/**"
+        - ".serena/**"
     envVars:
       - key: PORT
         value: 8765
