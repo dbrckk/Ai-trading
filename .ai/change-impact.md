@@ -1,18 +1,18 @@
 # Change impact
 
-Base: 41e444d16ceba5816dbf00cd1ca33977d6317122
-Head: 78d37553e586f313357eece8f1aa93020481d921
+Base: bb1b2694c9c08cb240f6dd90bea838d34ed501be
+Head: c5ec4bce4f28dfcd46ac37f2f29b48c867bcc9ed
 
 ## Changed files
-- M src/ai_trading/dashboard.py
-- M tests/test_dashboard.py
+- M src/ai_trading/multiasset_runtime.py
+- M tests/test_multiasset_runtime.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_dashboard.py
+- tests/test_multiasset_runtime.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

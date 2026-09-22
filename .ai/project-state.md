@@ -45,22 +45,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T18:58:28Z
+Generated: 2026-09-22T19:20:50Z
 
 ### Git
 - Branch: `main`
-- Head: `78d37553e586`
-- Commit date: 2026-09-22T20:58:16+02:00
-- Commit: fix: show scheduler freshness in dashboard
+- Head: `c5ec4bce4f28`
+- Commit date: 2026-09-22T21:20:39+02:00
+- Commit: fix: align multiasset runtime execution costs by symbol
 - Tracked files: 496
 
 ### Recently changed files
+- `src/ai_trading/multiasset_runtime.py`
+- `tests/test_multiasset_runtime.py`
 - `src/ai_trading/dashboard.py`
 - `tests/test_dashboard.py`
 - `src/ai_trading/multiasset_checkpoint.py`
 - `tests/test_multiasset_checkpoint.py`
-- `src/ai_trading/multiasset_runtime.py`
-- `tests/test_multiasset_runtime.py`
 
 ### Project signals
 - `pyproject.toml`

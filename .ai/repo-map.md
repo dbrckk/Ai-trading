@@ -5140,6 +5140,7 @@ costs_by_symbol = {symbol: 0.0 for symbol in intelligent_weights.index}
 ⋮----
 price = float(opens[symbol].iloc[-1])
 position = state.positions.setdefault(symbol, AssetPosition())
+symbol_risk_config = risk_config_for_symbol(
 fill = calculate_rebalance_fill(
 ⋮----
 current_prices = {
@@ -10430,6 +10431,15 @@ def fail_state_save(_state) -> None
 markets = {"A": market(31), "B": market(32)}
 ⋮----
 legacy = json.loads((tmp_path / "state.json").read_text(encoding="utf-8"))
+⋮----
+requested_symbols: list[str] = []
+observed_costs: list[tuple[float, float]] = []
+⋮----
+def fake_symbol_config(symbol: str, base: RiskConfig) -> RiskConfig
+⋮----
+def capture_fill(**kwargs)
+⋮----
+result = runtime.step({"A": market(41), "B": market(42)})
 ````
 
 ## File: tests/test_multiasset_scheduler.py
