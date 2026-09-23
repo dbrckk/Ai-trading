@@ -133,12 +133,12 @@ class MultiAssetCheckpointStore:
 
         models: dict[str, object] = {}
         for symbol, metadata in manifest.get("models", {}).items():
+            path = self._artifact_path(directory, metadata["file"])
             expected_filename = self._model_filename(symbol)
-            if metadata.get("file") != expected_filename:
+            if path.name != expected_filename:
                 raise ValueError(
                     f"multiasset checkpoint model filename mismatch: {symbol}"
                 )
-            path = self._artifact_path(directory, metadata["file"])
             if self._sha256(path) != metadata["sha256"]:
                 raise ValueError(
                     f"multiasset checkpoint model checksum mismatch: {symbol}"
