@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import shutil
 import zlib
@@ -95,7 +96,14 @@ class MultiAssetCheckpointStore:
     def _publish_current(self, generation: str) -> None:
         pointer_tmp = self.current_path.with_suffix(".tmp")
         pointer_tmp.write_text(generation, encoding="utf-8")
+        with pointer_tmp.open("rb") as handle:
+            os.fsync(handle.fileno())
         pointer_tmp.replace(self.current_path)
+        directory_fd = os.open(self.root, os.O_RDONLY)
+        try:
+            os.fsync(directory_fd)
+        finally:
+            os.close(directory_fd)
 
     def _prune_old_generations(self, *, current: str) -> None:
         generations = sorted(
