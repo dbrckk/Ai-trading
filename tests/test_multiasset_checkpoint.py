@@ -366,3 +366,18 @@ def test_checkpoint_fsyncs_artifacts_and_publication_boundaries(
     assert "CURRENT.tmp" in file_calls
     assert f".{generation}.tmp" in directory_calls
     assert directory_calls.count(store.root.name) >= 2
+
+
+
+def test_checkpoint_commit_does_not_delete_unrelated_staging_directory(
+    tmp_path: Path,
+) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    unrelated = store.root / ".step-000000000008.other.tmp"
+    unrelated.mkdir(parents=True)
+    marker = unrelated / "marker"
+    marker.write_text("keep", encoding="utf-8")
+
+    store.commit(state(8), {"A": {"learned": 8}})
+
+    assert marker.read_text(encoding="utf-8") == "keep"
