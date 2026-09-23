@@ -336,3 +336,22 @@ def test_checkpoint_recovery_succeeds_when_retention_cleanup_fails(
     assert loaded_state.processed_bars == 2
     assert models == {"A": {"learned": 2}}
     assert store.current_path.read_text(encoding="utf-8") == "step-000000000002"
+
+
+
+def test_checkpoint_current_publication_is_fsynced(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    fsync_calls: list[int] = []
+
+    monkeypatch.setattr(
+        "ai_trading.multiasset_checkpoint.os.fsync",
+        lambda fd: fsync_calls.append(fd),
+    )
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+
+    store.commit(state(8), {"A": {"learned": 8}})
+
+    assert len(fsync_calls) >= 2
+    assert store.current_path.read_text(encoding="utf-8") == "step-000000000008"
