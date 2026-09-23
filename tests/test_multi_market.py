@@ -403,3 +403,54 @@ def test_multi_market_cycle_rejects_invalid_allocation_sum() -> None:
             shadow_challenger_enabled=False,
             persistence=object(),
         )
+
+
+
+def test_multi_market_overview_marks_portfolio_totals_unknown_on_market_error() -> None:
+    backend = FakeMultiPersistence(
+        equities={
+            "GC=F": 110_000.0,
+            "BTC-USD": 90_000.0,
+        }
+    )
+
+    snapshot = build_multi_market_overview(
+        backend,
+        DEFAULT_MARKETS,
+        interval="5m",
+        portfolio_cash=100_000.0,
+        now=TEST_MARKET_NOW,
+    )
+
+    assert snapshot["portfolio"]["equity"] is None
+    assert snapshot["portfolio"]["pnl"] is None
+    assert snapshot["portfolio"]["equity_complete"] is False
+    assert snapshot["portfolio"]["error_markets"] == 1
+    dax = next(row for row in snapshot["markets"] if row["symbol"] == "^GDAXI")
+    assert dax["equity"] is None
+    assert dax["pnl"] is None
+    assert dax["freshness"] == "ERROR"
+
+
+def test_dashboard_does_not_render_market_unavailability_as_portfolio_loss(
+    tmp_path,
+) -> None:
+    backend = FakeMultiPersistence(
+        equities={
+            "GC=F": 100_000.0,
+            "BTC-USD": 100_000.0,
+        }
+    )
+
+    page = render_dashboard(
+        TradeJournal(tmp_path / "empty.jsonl"),
+        persistence=backend,
+        runtime_key="paper:GC=F:5m:online-river:v1",
+        markets=DEFAULT_MARKETS,
+        market_interval="5m",
+    )
+
+    assert "Multi-market portfolio" in page
+    assert "Markets with alerts" in page
+    assert ">-</strong>" in page
+    assert "-33,000.00" not in page
