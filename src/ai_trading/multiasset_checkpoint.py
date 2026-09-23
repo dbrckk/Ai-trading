@@ -89,7 +89,7 @@ class MultiAssetCheckpointStore:
             raise ValueError(f"multiasset checkpoint already exists: {generation}")
         temp_dir.replace(final_dir)
         self._publish_current(generation)
-        self._prune_old_generations(current=generation)
+        self._prune_old_generations_best_effort(current=generation)
         return generation
 
     def _publish_current(self, generation: str) -> None:
@@ -105,6 +105,14 @@ class MultiAssetCheckpointStore:
         removable = max(0, len(generations) - (self.retain_generations - 1))
         for path in generations[:removable]:
             shutil.rmtree(path)
+
+    def _prune_old_generations_best_effort(self, *, current: str) -> None:
+        try:
+            self._prune_old_generations(current=current)
+        except OSError:
+            # CURRENT is already authoritative at this point. Retention cleanup
+            # must not make a successfully published checkpoint look failed.
+            return
 
     def _load_generation(self, generation: str) -> tuple[MultiAssetState, dict[str, object]]:
         directory = self._generation_dir(generation)
@@ -183,7 +191,7 @@ class MultiAssetCheckpointStore:
         recovered = self._newer_valid_generation(current)
         if recovered is not None:
             self._publish_current(recovered)
-            self._prune_old_generations(current=recovered)
+            self._prune_old_generations_best_effort(current=recovered)
             return self._load_generation(recovered)
 
         return loaded
