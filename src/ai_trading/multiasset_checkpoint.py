@@ -13,6 +13,7 @@ from pathlib import Path
 import joblib
 
 from .multiasset_state import AssetPosition, MultiAssetState
+from .online import RiverDirectionModel
 
 
 class MultiAssetCheckpointStore:
@@ -180,7 +181,12 @@ class MultiAssetCheckpointStore:
                 raise ValueError(
                     f"multiasset checkpoint model checksum mismatch: {symbol}"
                 )
-            models[symbol] = joblib.load(path)
+            model = joblib.load(path)
+            if not isinstance(model, RiverDirectionModel):
+                raise ValueError(
+                    f"multiasset checkpoint model type mismatch: {symbol}"
+                )
+            models[symbol] = model
         return state, models
 
     def _newer_valid_generation(self, current: str | None) -> str | None:
