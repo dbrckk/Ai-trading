@@ -407,6 +407,10 @@ class MultiAssetPaperRuntime:
                     model = checkpoint_models.get(symbol)
                     if model is None:
                         model = RiverDirectionModel()
+                    elif not isinstance(model, RiverDirectionModel):
+                        raise ValueError(
+                            f"invalid checkpoint online model type for {symbol}"
+                        )
                 else:
                     model = self._load_model(symbol)
 
