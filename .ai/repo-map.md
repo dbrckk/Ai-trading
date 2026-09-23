@@ -322,6 +322,7 @@ tests/
   test_multi_period_promotion.py
   test_multi_timeframe_features.py
   test_multiasset_backtest.py
+  test_multiasset_checkpoint_consistency.py
   test_multiasset_checkpoint_orphan_corruption.py
   test_multiasset_checkpoint.py
   test_multiasset_evolution.py
@@ -4766,6 +4767,7 @@ state_path = self._artifact_path(directory, state_meta["file"])
 payload = json.loads(state_path.read_text(encoding="utf-8"))
 ⋮----
 state = MultiAssetState(**payload)
+expected_generation = self._validate_generation(
 ⋮----
 models: dict[str, object] = {}
 ⋮----
@@ -10352,6 +10354,27 @@ real_config = backtest_module.risk_config_for_symbol
 def capture(symbol: str, base: RiskConfig)
 ⋮----
 config = real_config(
+````
+
+## File: tests/test_multiasset_checkpoint_consistency.py
+````python
+def _state(step: int) -> MultiAssetState
+⋮----
+directory = store.root / f"step-{directory_step:012d}"
+⋮----
+state_path = directory / "state.json"
+⋮----
+model_path = directory / "A.joblib"
+⋮----
+manifest = {
+⋮----
+store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+⋮----
+loaded = store.load()
+⋮----
+generation = store.commit(_state(5), {"A": {"learned": 5}})
+manifest_path = store.root / generation / "manifest.json"
+manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 ````
 
 ## File: tests/test_multiasset_checkpoint_orphan_corruption.py

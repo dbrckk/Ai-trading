@@ -122,6 +122,30 @@
           "definition_candidate": false
         },
         {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 8,
+          "preview": "from ai_trading.multiasset_checkpoint import MultiAssetCheckpointStore",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 23,
+          "preview": "store: MultiAssetCheckpointStore,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 56,
+          "preview": "store = MultiAssetCheckpointStore(tmp_path / \"checkpoint\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 78,
+          "preview": "store = MultiAssetCheckpointStore(tmp_path / \"checkpoint\")",
+          "definition_candidate": false
+        },
+        {
           "file": "tests/test_multiasset_checkpoint_orphan_corruption.py",
           "line": 5,
           "preview": "from ai_trading.multiasset_checkpoint import MultiAssetCheckpointStore",
@@ -146,7 +170,7 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 22
+      "occurrence_count": 26
     },
     "__init__": {
       "definition": {
@@ -660,12 +684,18 @@
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 182,
+          "line": 141,
+          "preview": "expected_generation = self._validate_generation(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_checkpoint.py",
+          "line": 191,
           "preview": "current = self._validate_generation(current)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 4
+      "occurrence_count": 5
     },
     "_model_filename": {
       "definition": {
@@ -724,7 +754,7 @@
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 145,
+          "line": 154,
           "preview": "if self._sha256(path) != metadata[\"sha256\"]:",
           "definition_candidate": false
         },
@@ -771,6 +801,18 @@
           "definition_candidate": false
         },
         {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 43,
+          "preview": "\"state\": {\"file\": state_path.name, \"sha256\": store._sha256(state_path)},",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 45,
+          "preview": "\"A\": {\"file\": model_path.name, \"sha256\": store._sha256(model_path)}",
+          "definition_candidate": false
+        },
+        {
           "file": "tests/test_multiasset_checkpoint_orphan_corruption.py",
           "line": 38,
           "preview": "\"sha256\": store._sha256(state_path),",
@@ -783,7 +825,7 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 14
+      "occurrence_count": 16
     },
     "_artifact_path": {
       "definition": {
@@ -807,7 +849,7 @@
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 144,
+          "line": 153,
           "preview": "path = self._artifact_path(directory, metadata[\"file\"])",
           "definition_candidate": false
         }
@@ -1105,6 +1147,18 @@
           "definition_candidate": false
         },
         {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 57,
+          "preview": "store.commit(_state(3), {\"A\": {\"learned\": 3}})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 79,
+          "preview": "generation = store.commit(_state(5), {\"A\": {\"learned\": 5}})",
+          "definition_candidate": false
+        },
+        {
           "file": "tests/test_multiasset_checkpoint_orphan_corruption.py",
           "line": 21,
           "preview": "store.commit(_state(3), {\"A\": {\"learned\": 3}})",
@@ -1243,7 +1297,7 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 70
+      "occurrence_count": 72
     },
     "_publish_current": {
       "definition": {
@@ -1267,7 +1321,7 @@
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 189,
+          "line": 198,
           "preview": "self._publish_current(recovered)",
           "definition_candidate": false
         }
@@ -1296,7 +1350,7 @@
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 190,
+          "line": 199,
           "preview": "self._prune_old_generations(current=recovered)",
           "definition_candidate": false
         }
@@ -1319,19 +1373,19 @@
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 160,
+          "line": 169,
           "preview": "self._load_generation(generation)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 183,
+          "line": 192,
           "preview": "loaded = self._load_generation(current)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 191,
+          "line": 200,
           "preview": "return self._load_generation(recovered)",
           "definition_candidate": false
         }
@@ -1341,20 +1395,20 @@
     "_newer_valid_generation": {
       "definition": {
         "file": "src/ai_trading/multiasset_checkpoint.py",
-        "line": 152,
+        "line": 161,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 152,
+          "line": 161,
           "preview": "def _newer_valid_generation(self, current: str | None) -> str | None:",
           "definition_candidate": true
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 187,
+          "line": 196,
           "preview": "recovered = self._newer_valid_generation(current)",
           "definition_candidate": false
         }
@@ -1364,7 +1418,7 @@
     "load": {
       "definition": {
         "file": "src/ai_trading/multiasset_checkpoint.py",
-        "line": 176,
+        "line": 185,
         "kind": "function",
         "language": "python"
       },
@@ -1731,13 +1785,13 @@
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 149,
+          "line": 158,
           "preview": "models[symbol] = joblib.load(path)",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 176,
+          "line": 185,
           "preview": "def load(self) -> tuple[MultiAssetState, dict[str, object]] | None:",
           "definition_candidate": true
         },
@@ -2092,953 +2146,207 @@
       ],
       "occurrence_count": 120
     },
-    "state": {
+    "_state": {
       "definition": {
-        "file": "tests/test_multiasset_checkpoint.py",
+        "file": "tests/test_multiasset_checkpoint_consistency.py",
         "line": 12,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/backtest.py",
-          "line": 101,
-          "preview": "previous_units = broker.state.units",
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 17,
+          "preview": "def _state(processed_bars: int) -> RuntimeState:",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/backtest.py",
-          "line": 139,
-          "preview": "equity_before_step = broker.state.equity",
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 47,
+          "preview": "state=_state(revision + 1),",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/backtest.py",
-          "line": 147,
-          "preview": "equity=broker.state.equity,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 148,
-          "preview": "peak_equity=broker.state.peak_equity,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 149,
-          "preview": "day_start_equity=broker.state.day_start_equity,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 150,
-          "preview": "current_position_value=broker.state.units * execution_price,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 157,
-          "preview": "if broker.state.units != previous_units:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 159,
-          "preview": "previous_units = broker.state.units",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 164,
-          "preview": "curve[execution_idx] = broker.state.equity",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 168,
-          "preview": "broker.state.equity / equity_before_step - 1.0",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/broker.py",
-          "line": 27,
-          "preview": "self.state = BrokerState(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/broker.py",
-          "line": 37,
-          "preview": "self.state.last_price = price",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/broker.py",
-          "line": 38,
-          "preview": "equity = self.state.equity",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/broker.py",
-          "line": 39,
-          "preview": "self.state.peak_equity = max(self.state.peak_equity, equity)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/broker.py",
-          "line": 42,
-          "preview": "self.state.day_start_equity = self.state.equity",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/broker.py",
-          "line": 53,
-          "preview": "current_units=self.state.units,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/broker.py",
-          "line": 54,
-          "preview": "current_average_entry_price=self.state.average_entry_price,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/broker.py",
-          "line": 61,
-          "preview": "self.state.cash -= fill.delta_units * price",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/broker.py",
-          "line": 62,
-          "preview": "self.state.cash -= fill.costs",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/broker.py",
-          "line": 63,
-          "preview": "self.state.units = fill.desired_units",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/broker.py",
-          "line": 64,
-          "preview": "self.state.average_entry_price = fill.next_average_entry_price",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 35,
-          "preview": "state: ProbationState",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 48,
-          "preview": "def save(self, state: ProbationState) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 51,
-          "preview": "temp.write_text(json.dumps(asdict(state), sort_keys=True), encoding=\"utf-8\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 72,
-          "preview": "state = ProbationState(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 76,
-          "preview": "self.store.save(state)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 77,
-          "preview": "return state",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 85,
-          "preview": "state = self.store.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 87,
-          "preview": "if state is None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 89,
-          "preview": "if active is None or active.version != state.version:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 96,
-          "preview": "if name not in state.baseline_metrics or name not in metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 100,
-          "preview": "return self._rollback(state, reasons, processed_bar=processed_bar)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 102,
-          "preview": "observations = state.observations + 1",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 103,
-          "preview": "baseline = state.baseline_metrics",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 123,
-          "preview": "version=state.version,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 124,
-          "preview": "baseline_metrics=state.baseline_metrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 127,
-          "preview": "failure_count=state.failure_count,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 160,
-          "preview": "state: ProbationState,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 167,
-          "preview": "version=state.version,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 168,
-          "preview": "baseline_metrics=state.baseline_metrics,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 169,
-          "preview": "observations=state.observations,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 171,
-          "preview": "failure_count=state.failure_count + 1,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/checkpoint_verification.py",
-          "line": 67,
-          "preview": "\"restored state matches checkpoint\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/checkpoint_verification.py",
-          "line": 69,
-          "preview": "else \"restored state hash mismatch\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1154,
-          "preview": "state = CrisisStateStore().load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1155,
-          "preview": "limits = limits_for_state(state)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1160,
-          "preview": "table.add_row(\"Mode\", state.mode)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1161,
-          "preview": "table.add_row(\"Recovery streak\", str(state.recovery_streak))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1174,
-          "preview": "state = GovernorStateStore().load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1179,
-          "preview": "table.add_row(\"Verdict\", state.verdict)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1180,
-          "preview": "table.add_row(\"Reason\", state.reason)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1181,
-          "preview": "table.add_row(\"Consecutive halts\", str(state.consecutive_halts))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 26,
-          "preview": "state: CrisisState",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 84,
-          "preview": "state = CrisisState(mode=desired, recovery_streak=0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 95,
-          "preview": "state = CrisisState(mode=next_mode, recovery_streak=0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 98,
-          "preview": "state = CrisisState(mode=current.mode, recovery_streak=streak)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 101,
-          "preview": "state = CrisisState(mode=current.mode, recovery_streak=0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 104,
-          "preview": "if state.mode == \"normal\":",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 105,
-          "preview": "return CrisisDecision(state, 1.0, 8, 1.0, True, reason)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 106,
-          "preview": "if state.mode == \"cautious\":",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 107,
-          "preview": "return CrisisDecision(state, 0.75, 5, 0.75, False, reason)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 108,
-          "preview": "if state.mode == \"defensive\":",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 109,
-          "preview": "return CrisisDecision(state, 0.40, 3, 0.50, False, reason)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 110,
-          "preview": "return CrisisDecision(state, 0.10, 1, 0.25, False, reason)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 113,
-          "preview": "def limits_for_state(state: CrisisState) -> CrisisDecision:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 114,
-          "preview": "if state.mode == \"normal\":",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 115,
-          "preview": "return CrisisDecision(state, 1.0, 8, 1.0, True, \"persisted normal mode\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 116,
-          "preview": "if state.mode == \"cautious\":",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 117,
-          "preview": "return CrisisDecision(state, 0.75, 5, 0.75, False, \"persisted cautious mode\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 118,
-          "preview": "if state.mode == \"defensive\":",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 119,
-          "preview": "return CrisisDecision(state, 0.40, 3, 0.50, False, \"persisted defensive mode\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_controller.py",
-          "line": 121,
-          "preview": "state,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_state_store.py",
-          "line": 20,
-          "preview": "def save(self, state: CrisisState) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_state_store.py",
-          "line": 23,
-          "preview": "temp.write_text(json.dumps(asdict(state), sort_keys=True), encoding=\"utf-8\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 82,
-          "preview": "state = \"VERIFIED\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 85,
-          "preview": "state = \"WAITING\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 88,
-          "preview": "state = \"STALE\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 91,
-          "preview": "state = \"COLLECTING\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 96,
-          "preview": "return state, state_class, age_display, freshness_display",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 165,
-          "preview": "state = \"pass\" if check.passed else \"fail\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 175,
-          "preview": "f'<strong class=\"criterion-status {state}\">{label}</strong>'",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 206,
-          "preview": "state = persisted.state",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 249,
-          "preview": "state = None",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 259,
-          "preview": "state = state_store.load(starting_cash) if state_store is not None else None",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 313,
-          "preview": "cash = state.cash if state is not None else starting_cash",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 314,
-          "preview": "units = state.units if state is not None else 0.0",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 315,
-          "preview": "last_price = state.last_price if state is not None else 0.0",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 316,
-          "preview": "equity = state.cash + state.units * state.last_price if state is not None else starting_cash",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 320,
-          "preview": "state.last_processed",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 321,
-          "preview": "if state is not None and state.last_processed and not storage_error",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 325,
-          "preview": "str(state.processed_bars) if state is not None and not storage_error else \"-\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 377,
-          "preview": "and state is not None",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 378,
-          "preview": "and state.processed_bars > 0",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 456,
-          "preview": "else (state.processed_bars if state is not None and not storage_error else None)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 959,
-          "preview": "<div class=\"section-head\"><h2>Trading state</h2><small>paper execution state</small></div>",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 65,
-          "preview": "start = broker.state.equity",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 69,
-          "preview": "previous_units = broker.state.units",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 82,
-          "preview": "equity=broker.state.equity,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 83,
-          "preview": "peak_equity=broker.state.peak_equity,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 84,
-          "preview": "day_start_equity=broker.state.day_start_equity,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 85,
-          "preview": "current_position_value=broker.state.units * price,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 92,
-          "preview": "if broker.state.units != previous_units:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 94,
-          "preview": "previous_units = broker.state.units",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 96,
-          "preview": "if broker.state.peak_equity > 0:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 97,
-          "preview": "dd = 1.0 - broker.state.equity / broker.state.peak_equity",
-          "definition_candidate": false
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 12,
+          "preview": "def _state(step: int) -> MultiAssetState:",
+          "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/engine.py",
-          "line": 103,
-          "preview": "final = broker.state.equity",
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 34,
+          "preview": "json.dumps(asdict(_state(state_step)), sort_keys=True),",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/file_persistence.py",
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
           "line": 57,
-          "preview": "state = self.state_store.load(starting_cash)",
+          "preview": "store.commit(_state(3), {\"A\": {\"learned\": 3}})",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 68,
-          "preview": "state=state,",
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 79,
+          "preview": "generation = store.commit(_state(5), {\"A\": {\"learned\": 5}})",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 70,
-          "preview": "revision=state.processed_bars,",
+          "file": "tests/test_multiasset_checkpoint_orphan_corruption.py",
+          "line": 9,
+          "preview": "def _state(step: int) -> MultiAssetState:",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 76,
-          "preview": "current = self.state_store.load(commit.state.cash)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 83,
-          "preview": "self.state_store.save(commit.state)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 88,
-          "preview": "state = commit.state",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 98,
-          "preview": "equity=state.cash + state.units * state.last_price,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 100,
-          "preview": "processed_bars=state.processed_bars,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/governor_state_store.py",
-          "line": 11,
-          "preview": "reason: str = \"initial state\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/governor_state_store.py",
-          "line": 25,
-          "preview": "def save(self, state: GovernorState) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/governor_state_store.py",
-          "line": 28,
-          "preview": "temp.write_text(json.dumps(asdict(state), sort_keys=True), encoding=\"utf-8\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/maintenance.py",
-          "line": 23,
-          "preview": "def save(self, state: MaintenanceState) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/maintenance.py",
-          "line": 26,
-          "preview": "temp.write_text(json.dumps(asdict(state), sort_keys=True), encoding=\"utf-8\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/market_freshness.py",
+          "file": "tests/test_multiasset_checkpoint_orphan_corruption.py",
           "line": 21,
-          "preview": "\"\"\"Return the expected weekly session state for supported paper markets.",
+          "preview": "store.commit(_state(3), {\"A\": {\"learned\": 3}})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_orphan_corruption.py",
+          "line": 27,
+          "preview": "json.dumps(asdict(_state(4)), sort_keys=True),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 156,
+          "preview": "def fail_state_save(_state) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 25,
+          "preview": "def _state(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 71,
+          "preview": "commit_state = state or _state()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 132,
+          "preview": "second_state = _state(cash=99_800.0, processed_bars=2)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 176,
+          "preview": "state=_state(cash=99_800.0, processed_bars=2),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 246,
+          "preview": "state=_state(cash=99_800.0, processed_bars=2),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 257,
+          "preview": "state=_state(cash=99_700.0, processed_bars=3),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 328,
+          "preview": "state=_state(processed_bars=1, average_entry_price=101.5),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 339,
+          "preview": "state=_state(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 426,
+          "preview": "state=_state(processed_bars=1),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 437,
+          "preview": "state=_state(processed_bars=1),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 448,
+          "preview": "state=_state(cash=99_800.0, processed_bars=2),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 459,
+          "preview": "state=_state(cash=99_800.0, processed_bars=2),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 470,
+          "preview": "state=_state(processed_bars=1),",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 120
+      "occurrence_count": 23
     },
-    "test_checkpoint_round_trip_state_and_models": {
+    "_write_generation": {
       "definition": {
-        "file": "tests/test_multiasset_checkpoint.py",
-        "line": 23,
+        "file": "tests/test_multiasset_checkpoint_consistency.py",
+        "line": 22,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_multiasset_checkpoint.py",
-          "line": 23,
-          "preview": "def test_checkpoint_round_trip_state_and_models(tmp_path: Path) -> None:",
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 22,
+          "preview": "def _write_generation(",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 58,
+          "preview": "_write_generation(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "test_checkpoint_ignores_unpublished_generation_with_wrong_state_step": {
+      "definition": {
+        "file": "tests/test_multiasset_checkpoint_consistency.py",
+        "line": 53,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 53,
+          "preview": "def test_checkpoint_ignores_unpublished_generation_with_wrong_state_step(",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_unpublished_generation_does_not_replace_current_checkpoint": {
+    "test_checkpoint_fails_closed_on_published_manifest_state_mismatch": {
       "definition": {
-        "file": "tests/test_multiasset_checkpoint.py",
-        "line": 36,
+        "file": "tests/test_multiasset_checkpoint_consistency.py",
+        "line": 75,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_multiasset_checkpoint.py",
-          "line": 36,
-          "preview": "def test_unpublished_generation_does_not_replace_current_checkpoint(",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_checkpoint_fails_closed_on_corrupted_state": {
-      "definition": {
-        "file": "tests/test_multiasset_checkpoint.py",
-        "line": 54,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_multiasset_checkpoint.py",
-          "line": 54,
-          "preview": "def test_checkpoint_fails_closed_on_corrupted_state(tmp_path: Path) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_checkpoint_refuses_to_overwrite_published_generation": {
-      "definition": {
-        "file": "tests/test_multiasset_checkpoint.py",
-        "line": 64,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_multiasset_checkpoint.py",
-          "line": 64,
-          "preview": "def test_checkpoint_refuses_to_overwrite_published_generation(tmp_path: Path) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_checkpoint_retention_keeps_current_and_recent_generations": {
-      "definition": {
-        "file": "tests/test_multiasset_checkpoint.py",
-        "line": 78,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_multiasset_checkpoint.py",
-          "line": 78,
-          "preview": "def test_checkpoint_retention_keeps_current_and_recent_generations(",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_checkpoint_retention_must_be_positive": {
-      "definition": {
-        "file": "tests/test_multiasset_checkpoint.py",
-        "line": 102,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_multiasset_checkpoint.py",
-          "line": 102,
-          "preview": "def test_checkpoint_retention_must_be_positive(tmp_path: Path) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_checkpoint_recovers_complete_generation_not_yet_published": {
-      "definition": {
-        "file": "tests/test_multiasset_checkpoint.py",
-        "line": 111,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_multiasset_checkpoint.py",
-          "line": 111,
-          "preview": "def test_checkpoint_recovers_complete_generation_not_yet_published(",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_checkpoint_ignores_invalid_newer_unpublished_generation": {
-      "definition": {
-        "file": "tests/test_multiasset_checkpoint.py",
-        "line": 156,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_multiasset_checkpoint.py",
-          "line": 156,
-          "preview": "def test_checkpoint_ignores_invalid_newer_unpublished_generation(",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_checkpoint_ignores_corrupt_compressed_unpublished_model": {
-      "definition": {
-        "file": "tests/test_multiasset_checkpoint.py",
-        "line": 175,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_multiasset_checkpoint.py",
-          "line": 175,
-          "preview": "def test_checkpoint_ignores_corrupt_compressed_unpublished_model(tmp_path: Path) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_checkpoint_rejects_pointer_path_traversal": {
-      "definition": {
-        "file": "tests/test_multiasset_checkpoint.py",
-        "line": 208,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_multiasset_checkpoint.py",
-          "line": 208,
-          "preview": "def test_checkpoint_rejects_pointer_path_traversal(tmp_path: Path) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_checkpoint_model_filenames_do_not_collide_for_similar_symbols": {
-      "definition": {
-        "file": "tests/test_multiasset_checkpoint.py",
-        "line": 217,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_multiasset_checkpoint.py",
-          "line": 217,
-          "preview": "def test_checkpoint_model_filenames_do_not_collide_for_similar_symbols(",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_checkpoint_rejects_manifest_state_path_escape": {
-      "definition": {
-        "file": "tests/test_multiasset_checkpoint.py",
-        "line": 249,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_multiasset_checkpoint.py",
-          "line": 249,
-          "preview": "def test_checkpoint_rejects_manifest_state_path_escape(tmp_path: Path) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_checkpoint_rejects_manifest_model_path_escape": {
-      "definition": {
-        "file": "tests/test_multiasset_checkpoint.py",
-        "line": 263,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_multiasset_checkpoint.py",
-          "line": 263,
-          "preview": "def test_checkpoint_rejects_manifest_model_path_escape(tmp_path: Path) -> None:",
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 75,
+          "preview": "def test_checkpoint_fails_closed_on_published_manifest_state_mismatch(",
           "definition_candidate": true
         }
       ],

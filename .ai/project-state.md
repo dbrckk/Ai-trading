@@ -45,17 +45,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T23:59:37Z
+Generated: 2026-09-23T01:58:41Z
 
 ### Git
 - Branch: `main`
-- Head: `3d7b0878daa4`
-- Commit date: 2026-09-23T01:59:26+02:00
-- Commit: fix: tolerate compressed orphan checkpoint corruption
-- Tracked files: 497
+- Head: `6e4a1dc9242c`
+- Commit date: 2026-09-23T03:58:32+02:00
+- Commit: fix: validate checkpoint manifest against persisted state
+- Tracked files: 499
 
 ### Recently changed files
 - `src/ai_trading/multiasset_checkpoint.py`
+- `tests/test_multiasset_checkpoint_consistency.py`
 - `tests/test_multiasset_checkpoint.py`
 - `tests/test_multiasset_checkpoint_orphan_corruption.py`
 - `src/ai_trading/multiasset_runtime.py`
