@@ -266,3 +266,73 @@ def test_checkpoint_rejects_manifest_model_path_escape(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="artifact path"):
         store.load()
+
+
+
+def test_checkpoint_commit_succeeds_when_retention_cleanup_fails(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint", retain_generations=1)
+    store.commit(state(1), {"A": {"learned": 1}})
+
+    def fail_prune(*, current: str) -> None:
+        raise OSError("synthetic cleanup failure")
+
+    monkeypatch.setattr(store, "_prune_old_generations", fail_prune)
+
+    generation = store.commit(state(2), {"A": {"learned": 2}})
+
+    assert generation == "step-000000000002"
+    assert store.current_path.read_text(encoding="utf-8") == generation
+    loaded = store.load()
+    assert loaded is not None
+    loaded_state, models = loaded
+    assert loaded_state.processed_bars == 2
+    assert models == {"A": {"learned": 2}}
+
+
+def test_checkpoint_recovery_succeeds_when_retention_cleanup_fails(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint", retain_generations=1)
+    store.commit(state(1), {"A": {"learned": 1}})
+
+    newer = store._generation_dir("step-000000000002")
+    staged = store.root / ".step-000000000002.tmp"
+    staged.mkdir()
+    state_path = staged / "state.json"
+    state_path.write_text(json.dumps(asdict(state(2)), sort_keys=True), encoding="utf-8")
+    model_path = staged / store._model_filename("A")
+    joblib.dump({"learned": 2}, model_path)
+    manifest = {
+        "generation": "step-000000000002",
+        "processed_bars": 2,
+        "last_processed": state(2).last_processed,
+        "state": {"file": "state.json", "sha256": store._sha256(state_path)},
+        "models": {
+            "A": {
+                "file": model_path.name,
+                "sha256": store._sha256(model_path),
+            }
+        },
+    }
+    (staged / "manifest.json").write_text(
+        json.dumps(manifest, sort_keys=True),
+        encoding="utf-8",
+    )
+    staged.replace(newer)
+
+    def fail_prune(*, current: str) -> None:
+        raise OSError("synthetic cleanup failure")
+
+    monkeypatch.setattr(store, "_prune_old_generations", fail_prune)
+
+    loaded = store.load()
+
+    assert loaded is not None
+    loaded_state, models = loaded
+    assert loaded_state.processed_bars == 2
+    assert models == {"A": {"learned": 2}}
+    assert store.current_path.read_text(encoding="utf-8") == "step-000000000002"
