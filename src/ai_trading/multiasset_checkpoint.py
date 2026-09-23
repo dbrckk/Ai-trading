@@ -54,11 +54,7 @@ class MultiAssetCheckpointStore:
             raise ValueError("invalid multiasset checkpoint artifact path")
         return directory / filename
 
-    def commit(
-        self,
-        state: MultiAssetState,
-        models: dict[str, object],
-    ) -> str:
+    def commit(self, state: MultiAssetState, models: dict[str, object]) -> str:
         generation = self._validate_generation(f"step-{state.processed_bars:012d}")
         final_dir = self._generation_dir(generation)
         temp_dir = self.root / f".{generation}.tmp"
@@ -68,8 +64,7 @@ class MultiAssetCheckpointStore:
         temp_dir.mkdir()
 
         state_path = temp_dir / "state.json"
-        state_payload = json.dumps(asdict(state), sort_keys=True)
-        state_path.write_text(state_payload, encoding="utf-8")
+        state_path.write_text(json.dumps(asdict(state), sort_keys=True), encoding="utf-8")
         model_files: dict[str, str] = {}
         for symbol, model in sorted(models.items()):
             filename = self._model_filename(symbol)
@@ -82,23 +77,17 @@ class MultiAssetCheckpointStore:
             "last_processed": state.last_processed,
             "state": {"file": "state.json", "sha256": self._sha256(state_path)},
             "models": {
-                symbol: {
-                    "file": filename,
-                    "sha256": self._sha256(temp_dir / filename),
-                }
+                symbol: {"file": filename, "sha256": self._sha256(temp_dir / filename)}
                 for symbol, filename in model_files.items()
             },
         }
-        manifest_path = temp_dir / "manifest.json"
-        manifest_path.write_text(
-            json.dumps(manifest, sort_keys=True),
-            encoding="utf-8",
+        (temp_dir / "manifest.json").write_text(
+            json.dumps(manifest, sort_keys=True), encoding="utf-8"
         )
         if final_dir.exists():
             shutil.rmtree(temp_dir)
             raise ValueError(f"multiasset checkpoint already exists: {generation}")
         temp_dir.replace(final_dir)
-
         self._publish_current(generation)
         self._prune_old_generations(current=generation)
         return generation
@@ -110,18 +99,14 @@ class MultiAssetCheckpointStore:
 
     def _prune_old_generations(self, *, current: str) -> None:
         generations = sorted(
-            path
-            for path in self.root.glob("step-*")
+            path for path in self.root.glob("step-*")
             if path.is_dir() and path.name != current
         )
         removable = max(0, len(generations) - (self.retain_generations - 1))
         for path in generations[:removable]:
             shutil.rmtree(path)
 
-    def _load_generation(
-        self,
-        generation: str,
-    ) -> tuple[MultiAssetState, dict[str, object]]:
+    def _load_generation(self, generation: str) -> tuple[MultiAssetState, dict[str, object]]:
         directory = self._generation_dir(generation)
         manifest_path = directory / "manifest.json"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -138,9 +123,7 @@ class MultiAssetCheckpointStore:
             for symbol, position in payload.get("positions", {}).items()
         }
         state = MultiAssetState(**payload)
-        expected_generation = self._validate_generation(
-            f"step-{state.processed_bars:012d}"
-        )
+        expected_generation = self._validate_generation(f"step-{state.processed_bars:012d}")
         if expected_generation != generation:
             raise ValueError("multiasset checkpoint state generation mismatch")
         if manifest.get("processed_bars") != state.processed_bars:
@@ -150,6 +133,11 @@ class MultiAssetCheckpointStore:
 
         models: dict[str, object] = {}
         for symbol, metadata in manifest.get("models", {}).items():
+            expected_filename = self._model_filename(symbol)
+            if metadata.get("file") != expected_filename:
+                raise ValueError(
+                    f"multiasset checkpoint model filename mismatch: {symbol}"
+                )
             path = self._artifact_path(directory, metadata["file"])
             if self._sha256(path) != metadata["sha256"]:
                 raise ValueError(
@@ -160,8 +148,7 @@ class MultiAssetCheckpointStore:
 
     def _newer_valid_generation(self, current: str | None) -> str | None:
         candidates = sorted(
-            path.name
-            for path in self.root.glob("step-*")
+            path.name for path in self.root.glob("step-*")
             if path.is_dir() and (current is None or path.name > current)
         )
         for generation in reversed(candidates):
