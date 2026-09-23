@@ -336,3 +336,33 @@ def test_checkpoint_recovery_succeeds_when_retention_cleanup_fails(
     assert loaded_state.processed_bars == 2
     assert models == {"A": {"learned": 2}}
     assert store.current_path.read_text(encoding="utf-8") == "step-000000000002"
+
+
+
+def test_checkpoint_fsyncs_artifacts_and_publication_boundaries(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    file_calls: list[str] = []
+    directory_calls: list[str] = []
+
+    monkeypatch.setattr(
+        store,
+        "_fsync_file",
+        lambda path: file_calls.append(Path(path).name),
+    )
+    monkeypatch.setattr(
+        store,
+        "_fsync_directory",
+        lambda path: directory_calls.append(Path(path).name),
+    )
+
+    generation = store.commit(state(8), {"A": {"learned": 8}})
+
+    assert "state.json" in file_calls
+    assert store._model_filename("A") in file_calls
+    assert "manifest.json" in file_calls
+    assert "CURRENT.tmp" in file_calls
+    assert f".{generation}.tmp" in directory_calls
+    assert directory_calls.count(store.root.name) >= 2
