@@ -424,3 +424,34 @@ def test_checkpoint_orphan_recovery_skips_non_object_manifest(tmp_path: Path) ->
     assert loaded_state.processed_bars == 12
     assert models == {"A": {"learned": 12}}
     assert store.current_path.read_text(encoding="utf-8") == "step-000000000012"
+
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("manifest", []),
+        ("state", []),
+        ("models", []),
+    ],
+)
+def test_checkpoint_rejects_malformed_manifest_schema(
+    tmp_path: Path,
+    field: str,
+    value: object,
+) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.commit(state(8), {"A": {"learned": 8}})
+
+    generation = store.current_path.read_text(encoding="utf-8")
+    manifest_path = store.root / generation / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if field == "manifest":
+        payload = value
+    else:
+        manifest[field] = value
+        payload = manifest
+    manifest_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="checkpoint"):
+        store.load()
