@@ -112,6 +112,7 @@ class MultiAssetCheckpointStore:
             model_files[symbol] = filename
 
         manifest = {
+            "schema_version": 1,
             "generation": generation,
             "processed_bars": state.processed_bars,
             "last_processed": state.last_processed,
@@ -166,8 +167,16 @@ class MultiAssetCheckpointStore:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         if not isinstance(manifest, dict):
             raise ValueError("invalid multiasset checkpoint manifest")
+        if not isinstance(manifest, dict):
+            raise ValueError("invalid multiasset checkpoint manifest")
+        if manifest.get("schema_version", 1) != 1:
+            raise ValueError("unsupported multiasset checkpoint schema")
         if manifest.get("generation") != generation:
             raise ValueError("multiasset checkpoint generation mismatch")
+        if not isinstance(manifest.get("state"), dict):
+            raise ValueError("invalid multiasset checkpoint state metadata")
+        if not isinstance(manifest.get("models", {}), dict):
+            raise ValueError("invalid multiasset checkpoint model metadata")
 
         state_meta = self._metadata_dict(
             manifest.get("state"),
