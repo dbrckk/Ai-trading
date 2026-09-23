@@ -1,11 +1,12 @@
 # Change impact
 
-Base: 553f90ed763f2221f9a5119ec59285bf967d9f79
-Head: 6e4a1dc9242c6962d7b8ff7fec4c3007d3263573
+Base: 55308da5fb5254d9b68bb3821622edeb4982180e
+Head: ead299cd7ddcd0ea941915b6dcb3812b26b3d0e1
 
 ## Changed files
 - M src/ai_trading/multiasset_checkpoint.py
-- A tests/test_multiasset_checkpoint_consistency.py
+- M tests/test_multiasset_checkpoint.py
+- A tests/test_multiasset_checkpoint_manifest_binding.py
 
 ## Affected areas
 - src

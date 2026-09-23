@@ -323,6 +323,7 @@ tests/
   test_multi_timeframe_features.py
   test_multiasset_backtest.py
   test_multiasset_checkpoint_consistency.py
+  test_multiasset_checkpoint_manifest_binding.py
   test_multiasset_checkpoint_orphan_corruption.py
   test_multiasset_checkpoint.py
   test_multiasset_evolution.py
@@ -4734,19 +4735,19 @@ digest = hashlib.sha256()
 ⋮----
 candidate = Path(filename)
 ⋮----
+def commit(self, state: MultiAssetState, models: dict[str, object]) -> str
+⋮----
 generation = self._validate_generation(f"step-{state.processed_bars:012d}")
 final_dir = self._generation_dir(generation)
 temp_dir = self.root / f".{generation}.tmp"
 ⋮----
 state_path = temp_dir / "state.json"
-state_payload = json.dumps(asdict(state), sort_keys=True)
 ⋮----
 model_files: dict[str, str] = {}
 ⋮----
 filename = self._model_filename(symbol)
 ⋮----
 manifest = {
-manifest_path = temp_dir / "manifest.json"
 ⋮----
 def _publish_current(self, generation: str) -> None
 ⋮----
@@ -4756,6 +4757,8 @@ def _prune_old_generations(self, *, current: str) -> None
 ⋮----
 generations = sorted(
 removable = max(0, len(generations) - (self.retain_generations - 1))
+⋮----
+def _load_generation(self, generation: str) -> tuple[MultiAssetState, dict[str, object]]
 ⋮----
 directory = self._generation_dir(generation)
 manifest_path = directory / "manifest.json"
@@ -4767,11 +4770,12 @@ state_path = self._artifact_path(directory, state_meta["file"])
 payload = json.loads(state_path.read_text(encoding="utf-8"))
 ⋮----
 state = MultiAssetState(**payload)
-expected_generation = self._validate_generation(
+expected_generation = self._validate_generation(f"step-{state.processed_bars:012d}")
 ⋮----
 models: dict[str, object] = {}
 ⋮----
 path = self._artifact_path(directory, metadata["file"])
+expected_filename = self._model_filename(symbol)
 ⋮----
 def _newer_valid_generation(self, current: str | None) -> str | None
 ⋮----
@@ -10377,6 +10381,23 @@ manifest_path = store.root / generation / "manifest.json"
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 ````
 
+## File: tests/test_multiasset_checkpoint_manifest_binding.py
+````python
+def _state(step: int) -> MultiAssetState
+⋮----
+store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+generation = store.commit(
+manifest_path = store.root / generation / "manifest.json"
+manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+⋮----
+# Build a complete generation through the normal writer, then restore CURRENT
+# to simulate a crash immediately before publication of the newer generation.
+⋮----
+generation = "step-000000000002"
+⋮----
+loaded = store.load()
+````
+
 ## File: tests/test_multiasset_checkpoint_orphan_corruption.py
 ````python
 def _state(step: int) -> MultiAssetState
@@ -10426,7 +10447,7 @@ orphan = store.root / "step-000000000002"
 orphan_state = state(2)
 state_path = orphan / "state.json"
 ⋮----
-model_path = orphan / "A.joblib"
+model_path = orphan / store._model_filename("A")
 ⋮----
 manifest = {
 ⋮----
