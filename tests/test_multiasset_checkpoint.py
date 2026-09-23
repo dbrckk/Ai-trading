@@ -7,6 +7,7 @@ import pytest
 
 from ai_trading.multiasset_checkpoint import MultiAssetCheckpointStore
 from ai_trading.multiasset_state import AssetPosition, MultiAssetState
+from ai_trading.online import RiverDirectionModel
 
 
 def state(step: int) -> MultiAssetState:
@@ -22,7 +23,7 @@ def state(step: int) -> MultiAssetState:
 
 def test_checkpoint_round_trip_state_and_models(tmp_path: Path) -> None:
     store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
-    generation = store.commit(state(7), {"A": {"learned": 7}})
+    generation = store.commit(state(7), {"A": RiverDirectionModel()})
 
     loaded = store.load()
 
@@ -30,14 +31,14 @@ def test_checkpoint_round_trip_state_and_models(tmp_path: Path) -> None:
     assert loaded is not None
     loaded_state, models = loaded
     assert loaded_state == state(7)
-    assert models == {"A": {"learned": 7}}
+    assert isinstance(models["A"], RiverDirectionModel)
 
 
 def test_unpublished_generation_does_not_replace_current_checkpoint(
     tmp_path: Path,
 ) -> None:
     store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
-    store.commit(state(3), {"A": {"learned": 3}})
+    store.commit(state(3), {"A": RiverDirectionModel()})
 
     unpublished = store.root / "step-000000000004"
     unpublished.mkdir()
@@ -48,12 +49,12 @@ def test_unpublished_generation_does_not_replace_current_checkpoint(
     assert loaded is not None
     loaded_state, models = loaded
     assert loaded_state.processed_bars == 3
-    assert models["A"]["learned"] == 3
+    assert isinstance(models["A"], RiverDirectionModel)
 
 
 def test_checkpoint_fails_closed_on_corrupted_state(tmp_path: Path) -> None:
     store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
-    generation = store.commit(state(9), {"A": {"learned": 9}})
+    generation = store.commit(state(9), {"A": RiverDirectionModel()})
     (store.root / generation / "state.json").write_text("{}", encoding="utf-8")
 
     with pytest.raises(ValueError, match="checksum mismatch"):
@@ -62,7 +63,7 @@ def test_checkpoint_fails_closed_on_corrupted_state(tmp_path: Path) -> None:
 
 def test_checkpoint_refuses_to_overwrite_published_generation(tmp_path: Path) -> None:
     store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
-    store.commit(state(4), {"A": {"learned": 4}})
+    store.commit(state(4), {"A": RiverDirectionModel()})
 
     with pytest.raises(ValueError, match="already exists"):
         store.commit(state(4), {"A": {"learned": 999}})
@@ -71,7 +72,7 @@ def test_checkpoint_refuses_to_overwrite_published_generation(tmp_path: Path) ->
     assert loaded is not None
     loaded_state, models = loaded
     assert loaded_state.processed_bars == 4
-    assert models == {"A": {"learned": 4}}
+    assert models == {"A": RiverDirectionModel()}
 
 
 def test_checkpoint_retention_keeps_current_and_recent_generations(
@@ -153,7 +154,7 @@ def test_checkpoint_ignores_invalid_newer_unpublished_generation(
     tmp_path: Path,
 ) -> None:
     store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
-    store.commit(state(3), {"A": {"learned": 3}})
+    store.commit(state(3), {"A": RiverDirectionModel()})
 
     broken = store.root / "step-000000000004"
     broken.mkdir()
@@ -164,13 +165,13 @@ def test_checkpoint_ignores_invalid_newer_unpublished_generation(
     assert loaded is not None
     loaded_state, models = loaded
     assert loaded_state.processed_bars == 3
-    assert models == {"A": {"learned": 3}}
+    assert models == {"A": RiverDirectionModel()}
     assert store.current_path.read_text(encoding="utf-8") == "step-000000000003"
 
 
 def test_checkpoint_ignores_corrupt_compressed_unpublished_model(tmp_path: Path) -> None:
     store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
-    store.commit(state(3), {"A": {"learned": 3}})
+    store.commit(state(3), {"A": RiverDirectionModel()})
 
     orphan = store.root / "step-000000000004"
     orphan.mkdir()
@@ -196,7 +197,7 @@ def test_checkpoint_ignores_corrupt_compressed_unpublished_model(tmp_path: Path)
     assert loaded is not None
     loaded_state, models = loaded
     assert loaded_state.processed_bars == 3
-    assert models == {"A": {"learned": 3}}
+    assert models == {"A": RiverDirectionModel()}
     assert store.current_path.read_text(encoding="utf-8") == "step-000000000003"
 
 
@@ -242,7 +243,7 @@ def test_checkpoint_model_filenames_do_not_collide_for_similar_symbols(
 
 def test_checkpoint_rejects_manifest_state_path_escape(tmp_path: Path) -> None:
     store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
-    store.commit(state(6), {"A": {"learned": 6}})
+    store.commit(state(6), {"A": RiverDirectionModel()})
 
     generation = store.current_path.read_text(encoding="utf-8")
     manifest_path = store.root / generation / "manifest.json"
@@ -256,7 +257,7 @@ def test_checkpoint_rejects_manifest_state_path_escape(tmp_path: Path) -> None:
 
 def test_checkpoint_rejects_manifest_model_path_escape(tmp_path: Path) -> None:
     store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
-    store.commit(state(7), {"A": {"learned": 7}})
+    store.commit(state(7), {"A": RiverDirectionModel()})
 
     generation = store.current_path.read_text(encoding="utf-8")
     manifest_path = store.root / generation / "manifest.json"
@@ -358,7 +359,7 @@ def test_checkpoint_fsyncs_artifacts_and_publication_boundaries(
         lambda path: directory_calls.append(Path(path).name),
     )
 
-    generation = store.commit(state(8), {"A": {"learned": 8}})
+    generation = store.commit(state(8), {"A": RiverDirectionModel()})
 
     assert "state.json" in file_calls
     assert store._model_filename("A") in file_calls
@@ -385,7 +386,16 @@ def test_checkpoint_commit_does_not_delete_existing_staging_directory(
     marker = stale / "marker"
     marker.write_text("keep", encoding="utf-8")
 
-    generation = store.commit(state(9), {"A": {"learned": 9}})
+    generation = store.commit(state(9), {"A": RiverDirectionModel()})
 
     assert generation == "step-000000000009"
     assert marker.read_text(encoding="utf-8") == "keep"
+
+
+
+def test_checkpoint_rejects_unexpected_model_type(tmp_path: Path) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.commit(state(10), {"A": {"not": "a river model"}})
+
+    with pytest.raises(ValueError, match="checkpoint model type"):
+        store.load()
