@@ -741,10 +741,13 @@ def render_dashboard(
                 f'<span class="gate-chip">{mtf_review}</span><small>{reason}</small></div>'
                 '</article>'
             )
-        portfolio_pnl = float(portfolio["pnl"])
+        raw_portfolio_pnl = portfolio["pnl"]
+        portfolio_pnl = (
+            None if raw_portfolio_pnl is None else float(raw_portfolio_pnl)
+        )
         portfolio_pnl_css = (
-            "value-positive" if portfolio_pnl > 0
-            else "value-negative" if portfolio_pnl < 0
+            "value-positive" if portfolio_pnl is not None and portfolio_pnl > 0
+            else "value-negative" if portfolio_pnl is not None and portfolio_pnl < 0
             else "value-neutral"
         )
         market_panel = (
@@ -753,7 +756,7 @@ def render_dashboard(
             '<h2>Multi-market portfolio</h2></div>'
             '<small>normalized sleeves · isolated runtimes · 5m cadence</small></div>'
             '<div class="portfolio-ribbon">'
-            f'<div><small>Portfolio equity</small><strong>{_display_money(float(portfolio["equity"]))}</strong></div>'
+            f'<div><small>Portfolio equity</small><strong>{_display_money(None if portfolio["equity"] is None else float(portfolio["equity"]))}</strong></div>'
             f'<div><small>Portfolio PnL</small><strong class="{portfolio_pnl_css}">{_display_money(portfolio_pnl)}</strong></div>'
             f'<div><small>Storage healthy</small><strong>{portfolio["healthy_markets"]} / {portfolio["markets"]}</strong></div>'
             f'<div><small>Engines running</small><strong>{portfolio["running_markets"]} / {portfolio["markets"]}</strong></div>'

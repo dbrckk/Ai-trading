@@ -185,6 +185,7 @@ def build_multi_market_overview(
 
     market_rows: list[dict[str, object]] = []
     portfolio_equity = 0.0
+    portfolio_equity_complete = True
     healthy_markets = 0
     running_markets = 0
     stale_markets = 0
@@ -297,6 +298,7 @@ def build_multi_market_overview(
                 }
             )
         except Exception:  # noqa: BLE001 - isolate one market from the dashboard
+            portfolio_equity_complete = False
             error_markets += 1
             alert_markets += 1
             market_rows.append(
@@ -326,11 +328,21 @@ def build_multi_market_overview(
                 }
             )
 
+    reported_portfolio_equity = (
+        portfolio_equity if portfolio_equity_complete else None
+    )
+    reported_portfolio_pnl = (
+        portfolio_equity - portfolio_cash
+        if portfolio_equity_complete
+        else None
+    )
+
     return {
         "portfolio": {
             "starting_cash": portfolio_cash,
-            "equity": portfolio_equity,
-            "pnl": portfolio_equity - portfolio_cash,
+            "equity": reported_portfolio_equity,
+            "pnl": reported_portfolio_pnl,
+            "equity_complete": portfolio_equity_complete,
             "markets": len(markets),
             "healthy_markets": healthy_markets,
             "running_markets": running_markets,
