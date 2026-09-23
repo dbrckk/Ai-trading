@@ -152,6 +152,8 @@ class MultiAssetCheckpointStore:
             raise ValueError("multiasset checkpoint generation mismatch")
 
         state_meta = manifest["state"]
+        if not isinstance(state_meta, dict):
+            raise ValueError("invalid multiasset checkpoint state metadata")
         state_path = self._artifact_path(directory, state_meta["file"])
         if self._sha256(state_path) != state_meta["sha256"]:
             raise ValueError("multiasset checkpoint state checksum mismatch")
@@ -169,8 +171,13 @@ class MultiAssetCheckpointStore:
         if manifest.get("last_processed") != state.last_processed:
             raise ValueError("multiasset checkpoint last processed mismatch")
 
+        model_metadata = manifest.get("models", {})
+        if not isinstance(model_metadata, dict):
+            raise ValueError("invalid multiasset checkpoint model metadata")
         models: dict[str, object] = {}
-        for symbol, metadata in manifest.get("models", {}).items():
+        for symbol, metadata in model_metadata.items():
+            if not isinstance(symbol, str) or not isinstance(metadata, dict):
+                raise ValueError("invalid multiasset checkpoint model metadata")
             path = self._artifact_path(directory, metadata["file"])
             expected_filename = self._model_filename(symbol)
             if path.name != expected_filename:
