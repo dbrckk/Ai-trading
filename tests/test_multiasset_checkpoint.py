@@ -366,3 +366,61 @@ def test_checkpoint_fsyncs_artifacts_and_publication_boundaries(
     assert "CURRENT.tmp" in file_calls
     assert f".{generation}.tmp" in directory_calls
     assert directory_calls.count(store.root.name) >= 2
+
+
+
+def test_checkpoint_rejects_non_object_manifest(tmp_path: Path) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.commit(state(9), {"A": {"learned": 9}})
+
+    generation = store.current_path.read_text(encoding="utf-8")
+    manifest_path = store.root / generation / "manifest.json"
+    manifest_path.write_text("[]", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="checkpoint manifest"):
+        store.load()
+
+
+def test_checkpoint_rejects_invalid_model_metadata_shape(tmp_path: Path) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.commit(state(10), {"A": {"learned": 10}})
+
+    generation = store.current_path.read_text(encoding="utf-8")
+    manifest_path = store.root / generation / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["models"]["A"] = []
+    manifest_path.write_text(json.dumps(manifest, sort_keys=True), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="model A metadata"):
+        store.load()
+
+
+def test_checkpoint_rejects_invalid_checksum_shape(tmp_path: Path) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.commit(state(11), {"A": {"learned": 11}})
+
+    generation = store.current_path.read_text(encoding="utf-8")
+    manifest_path = store.root / generation / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["models"]["A"]["sha256"] = "not-a-checksum"
+    manifest_path.write_text(json.dumps(manifest, sort_keys=True), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="model A checksum"):
+        store.load()
+
+
+def test_checkpoint_orphan_recovery_skips_non_object_manifest(tmp_path: Path) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.commit(state(12), {"A": {"learned": 12}})
+
+    orphan = store.root / "step-000000000013"
+    orphan.mkdir()
+    (orphan / "manifest.json").write_text("[]", encoding="utf-8")
+
+    loaded = store.load()
+
+    assert loaded is not None
+    loaded_state, models = loaded
+    assert loaded_state.processed_bars == 12
+    assert models == {"A": {"learned": 12}}
+    assert store.current_path.read_text(encoding="utf-8") == "step-000000000012"
