@@ -45,13 +45,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-23T07:36:00Z
+Generated: 2026-09-23T08:54:45Z
 
 ### Git
 - Branch: `main`
-- Head: `c3565daf3c9b`
-- Commit date: 2026-09-23T09:35:43+02:00
-- Commit: fix: fsync multiasset checkpoints before publication
+- Head: `8c8a7cdae3d1`
+- Commit date: 2026-09-23T10:54:32+02:00
+- Commit: fix: isolate checkpoint staging paths
 - Tracked files: 500
 
 ### Recently changed files

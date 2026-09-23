@@ -1,7 +1,7 @@
 # Change impact
 
-Base: a7b04010b4758e9b7eb6dbbbb35c4879324e71c0
-Head: c3565daf3c9bc7e9215ac4d9bba8de78e37d80fa
+Base: a403a2ef450ec7aba8f51ae8bba908afc527ee3a
+Head: 8c8a7cdae3d1fe6e98730d06f5511b94e6673db8
 
 ## Changed files
 - M src/ai_trading/multiasset_checkpoint.py

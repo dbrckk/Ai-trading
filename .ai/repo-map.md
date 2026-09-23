@@ -4757,7 +4757,8 @@ def commit(self, state: MultiAssetState, models: dict[str, object]) -> str
 ⋮----
 generation = self._validate_generation(f"step-{state.processed_bars:012d}")
 final_dir = self._generation_dir(generation)
-temp_dir = self.root / f".{generation}.tmp"
+⋮----
+temp_dir = self.root / f".{generation}.{uuid.uuid4().hex}.tmp"
 ⋮----
 state_path = temp_dir / "state.json"
 ⋮----
@@ -4771,7 +4772,7 @@ manifest_path = temp_dir / "manifest.json"
 ⋮----
 def _publish_current(self, generation: str) -> None
 ⋮----
-pointer_tmp = self.current_path.with_suffix(".tmp")
+pointer_tmp = self.root / f".CURRENT.{uuid.uuid4().hex}.tmp"
 ⋮----
 def _prune_old_generations(self, *, current: str) -> None
 ⋮----
@@ -10526,6 +10527,10 @@ file_calls: list[str] = []
 directory_calls: list[str] = []
 ⋮----
 generation = store.commit(state(8), {"A": {"learned": 8}})
+⋮----
+stale = store.root / ".step-000000000009.existing.tmp"
+⋮----
+marker = stale / "marker"
 ````
 
 ## File: tests/test_multiasset_evolution.py
