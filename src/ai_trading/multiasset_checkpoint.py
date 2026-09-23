@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import shutil
 import zlib
@@ -45,6 +46,26 @@ class MultiAssetCheckpointStore:
                 digest.update(chunk)
         return digest.hexdigest()
 
+
+    @staticmethod
+    def _fsync_file(path: Path) -> None:
+        with path.open("rb") as handle:
+            os.fsync(handle.fileno())
+
+    @staticmethod
+    def _fsync_directory(path: Path) -> None:
+        try:
+            descriptor = os.open(path, os.O_RDONLY)
+        except OSError:
+            return
+        try:
+            os.fsync(descriptor)
+        except OSError:
+            # Directory fsync is not supported on every platform/filesystem.
+            return
+        finally:
+            os.close(descriptor)
+
     @staticmethod
     def _artifact_path(directory: Path, filename: object) -> Path:
         if not isinstance(filename, str) or not filename:
@@ -65,10 +86,13 @@ class MultiAssetCheckpointStore:
 
         state_path = temp_dir / "state.json"
         state_path.write_text(json.dumps(asdict(state), sort_keys=True), encoding="utf-8")
+        self._fsync_file(state_path)
         model_files: dict[str, str] = {}
         for symbol, model in sorted(models.items()):
             filename = self._model_filename(symbol)
-            joblib.dump(model, temp_dir / filename)
+            model_path = temp_dir / filename
+            joblib.dump(model, model_path)
+            self._fsync_file(model_path)
             model_files[symbol] = filename
 
         manifest = {
@@ -81,13 +105,17 @@ class MultiAssetCheckpointStore:
                 for symbol, filename in model_files.items()
             },
         }
-        (temp_dir / "manifest.json").write_text(
+        manifest_path = temp_dir / "manifest.json"
+        manifest_path.write_text(
             json.dumps(manifest, sort_keys=True), encoding="utf-8"
         )
+        self._fsync_file(manifest_path)
+        self._fsync_directory(temp_dir)
         if final_dir.exists():
             shutil.rmtree(temp_dir)
             raise ValueError(f"multiasset checkpoint already exists: {generation}")
         temp_dir.replace(final_dir)
+        self._fsync_directory(self.root)
         self._publish_current(generation)
         self._prune_old_generations_best_effort(current=generation)
         return generation
@@ -95,7 +123,9 @@ class MultiAssetCheckpointStore:
     def _publish_current(self, generation: str) -> None:
         pointer_tmp = self.current_path.with_suffix(".tmp")
         pointer_tmp.write_text(generation, encoding="utf-8")
+        self._fsync_file(pointer_tmp)
         pointer_tmp.replace(self.current_path)
+        self._fsync_directory(self.root)
 
     def _prune_old_generations(self, *, current: str) -> None:
         generations = sorted(
