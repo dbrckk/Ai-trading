@@ -1,11 +1,11 @@
 # Change impact
 
-Base: 2f0b299ee8becacd66e74403ce5048abda19f032
-Head: c8d8b420e19f0c50c29356fba7219b688005faca
+Base: 29d40457434f689c081334c95b2d5fffcf29a64f
+Head: 3d7b0878daa4f30c0cd4db4a2b078310281be39a
 
 ## Changed files
 - M src/ai_trading/multiasset_checkpoint.py
-- A tests/test_multiasset_checkpoint_orphan_corruption.py
+- M tests/test_multiasset_checkpoint.py
 
 ## Affected areas
 - src

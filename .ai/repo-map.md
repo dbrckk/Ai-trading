@@ -10409,6 +10409,10 @@ manifest = {
 ⋮----
 broken = store.root / "step-000000000004"
 ⋮----
+def test_checkpoint_ignores_corrupt_compressed_unpublished_model(tmp_path: Path) -> None
+⋮----
+orphan = store.root / "step-000000000004"
+⋮----
 def test_checkpoint_rejects_pointer_path_traversal(tmp_path: Path) -> None
 ⋮----
 generation = store.current_path.read_text(encoding="utf-8")
