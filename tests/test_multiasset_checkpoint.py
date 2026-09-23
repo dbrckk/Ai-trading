@@ -366,3 +366,30 @@ def test_checkpoint_fsyncs_artifacts_and_publication_boundaries(
     assert "CURRENT.tmp" in file_calls
     assert f".{generation}.tmp" in directory_calls
     assert directory_calls.count(store.root.name) >= 2
+
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("state", [], "state metadata"),
+        ("models", [], "model metadata"),
+    ],
+)
+def test_checkpoint_rejects_invalid_manifest_metadata_shape(
+    tmp_path: Path,
+    field: str,
+    value: object,
+    message: str,
+) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.commit(state(9), {"A": {"learned": 9}})
+
+    generation = store.current_path.read_text(encoding="utf-8")
+    manifest_path = store.root / generation / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest[field] = value
+    manifest_path.write_text(json.dumps(manifest, sort_keys=True), encoding="utf-8")
+
+    with pytest.raises(ValueError, match=message):
+        store.load()
