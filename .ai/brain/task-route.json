@@ -4,15 +4,15 @@
     "expand_to": 12,
     "max_files": 6,
     "requested_max_files": 12,
-    "score_margin": 3,
+    "score_margin": 6,
     "tier": "bounded",
-    "top_score": 26
+    "top_score": 23
   },
   "cache": {
-    "fingerprint": "5723e1ae6589ce3886f401347dc8eb48b19c4a1fea83252f96a954785946ee2c",
+    "fingerprint": "9f49ee0c57789b6eab59ba7554045868a92ded2431203101f2cbaea433c0922d",
     "hit": false
   },
-  "candidate_count": 16,
+  "candidate_count": 19,
   "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
   "files": [
     {
@@ -23,10 +23,9 @@
       "path": "src/ai_trading/dashboard.py",
       "reasons": [
         "impact",
-        "recently-changed",
         "search-index"
       ],
-      "score": 26,
+      "score": 23,
       "symbols": [
         "Handler",
         "_display_money",
@@ -57,10 +56,9 @@
       ],
       "path": "src/ai_trading/cli.py",
       "reasons": [
-        "impact",
         "search-index"
       ],
-      "score": 23,
+      "score": 17,
       "symbols": [
         "compare_models",
         "create_readiness_release_command",
@@ -129,20 +127,6 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "tests/test_dashboard_engine_status.py",
-      "reasons": [
-        "impact"
-      ],
-      "score": 16,
-      "symbols": [
-        "test_dashboard_shows_engine_and_latest_decision"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "engine"
-      ],
       "path": "src/ai_trading/engine.py",
       "reasons": [],
       "score": 10,
@@ -152,6 +136,22 @@
         "__init__",
         "paper_run",
         "train"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "engine"
+      ],
+      "path": "src/ai_trading/stress_engine.py",
+      "reasons": [],
+      "score": 10,
+      "symbols": [
+        "StressPolicy",
+        "StressReport",
+        "StressScenario",
+        "_stressed_covariance",
+        "run_stress_test"
       ]
     }
   ],

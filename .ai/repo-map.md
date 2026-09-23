@@ -4506,6 +4506,8 @@ market = futures[future]
 ⋮----
 result = future.result()
 ⋮----
+except Exception:  # noqa: BLE001 - isolate and sanitize one market
+⋮----
 remaining_backlog = remaining_backlog or result.remaining_backlog
 mtf_evaluated = mtf_evaluated or result.mtf_evaluated
 ⋮----
@@ -4737,6 +4739,16 @@ digest = hashlib.sha256(symbol.encode("utf-8")).hexdigest()[:16]
 digest = hashlib.sha256()
 ⋮----
 @staticmethod
+    def _fsync_file(path: Path) -> None
+⋮----
+@staticmethod
+    def _fsync_directory(path: Path) -> None
+⋮----
+descriptor = os.open(path, os.O_RDONLY)
+⋮----
+# Directory fsync is not supported on every platform/filesystem.
+⋮----
+@staticmethod
     def _artifact_path(directory: Path, filename: object) -> Path
 ⋮----
 candidate = Path(filename)
@@ -4752,8 +4764,10 @@ state_path = temp_dir / "state.json"
 model_files: dict[str, str] = {}
 ⋮----
 filename = self._model_filename(symbol)
+model_path = temp_dir / filename
 ⋮----
 manifest = {
+manifest_path = temp_dir / "manifest.json"
 ⋮----
 def _publish_current(self, generation: str) -> None
 ⋮----
@@ -10306,6 +10320,10 @@ def test_multi_market_cycle_rejects_invalid_allocation_sum() -> None
 def test_multi_market_overview_marks_portfolio_totals_unknown_on_market_error() -> None
 ⋮----
 dax = next(row for row in snapshot["markets"] if row["symbol"] == "^GDAXI")
+⋮----
+def test_multi_market_cycle_isolates_unexpected_market_exception(monkeypatch) -> None
+⋮----
+def test_multi_market_cycle_sanitizes_all_unexpected_failures(monkeypatch) -> None
 ````
 
 ## File: tests/test_multi_period_promotion.py
@@ -10503,6 +10521,11 @@ staged = store.root / ".step-000000000002.tmp"
 state_path = staged / "state.json"
 ⋮----
 model_path = staged / store._model_filename("A")
+⋮----
+file_calls: list[str] = []
+directory_calls: list[str] = []
+⋮----
+generation = store.commit(state(8), {"A": {"learned": 8}})
 ````
 
 ## File: tests/test_multiasset_evolution.py

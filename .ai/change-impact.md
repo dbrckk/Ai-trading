@@ -1,20 +1,18 @@
 # Change impact
 
-Base: 755936064c18f2594e4b7956cd73e633fad56683
-Head: 784eea5b7273dbd4c1579f637c44e44044b7b3e4
+Base: a7b04010b4758e9b7eb6dbbbb35c4879324e71c0
+Head: c3565daf3c9bc7e9215ac4d9bba8de78e37d80fa
 
 ## Changed files
-- M src/ai_trading/dashboard.py
-- M src/ai_trading/multi_market.py
-- M tests/test_multi_market.py
+- M src/ai_trading/multiasset_checkpoint.py
+- M tests/test_multiasset_checkpoint.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_dashboard.py
-- tests/test_multi_market.py
+- tests/test_multiasset_checkpoint.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.
