@@ -1,27 +1,27 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "ee887bd54e73f1d741924b90e1d66cbfea5a9959",
-  "head": "72427258acd74c9ea8e3a3f1dc08225952efc045",
+  "base": "72427258acd74c9ea8e3a3f1dc08225952efc045",
+  "head": "6aa6c9d8dcc06062329a912206656aa0affd7f48",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "src/ai_trading/multi_market.py",
+      "path": "src/ai_trading/scheduler_endpoint.py",
       "status": "M"
     },
     {
-      "path": "tests/test_multi_market.py",
+      "path": "tests/test_scheduler_endpoint.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "src/ai_trading/multi_market.py",
-    "tests/test_multi_market.py"
+    "src/ai_trading/scheduler_endpoint.py",
+    "tests/test_scheduler_endpoint.py"
   ],
   "impacted_files": [
     "src/ai_trading/dashboard.py",
-    "src/ai_trading/multi_market.py",
-    "tests/test_multi_market.py"
+    "src/ai_trading/scheduler_endpoint.py",
+    "tests/test_scheduler_endpoint.py"
   ],
   "impacted_symbols": [
     {
@@ -151,175 +151,224 @@
       "line": 1409
     },
     {
-      "name": "MarketSpec",
+      "name": "SchedulerHttpResponse",
       "kind": "class",
-      "file": "src/ai_trading/multi_market.py",
-      "line": 26
+      "file": "src/ai_trading/scheduler_endpoint.py",
+      "line": 14
     },
     {
-      "name": "__post_init__",
+      "name": "scheduler_telemetry_payload",
       "kind": "function",
-      "file": "src/ai_trading/multi_market.py",
-      "line": 31
+      "file": "src/ai_trading/scheduler_endpoint.py",
+      "line": 23
     },
     {
-      "name": "_validate_market_bundle",
+      "name": "_utc_now",
       "kind": "function",
-      "file": "src/ai_trading/multi_market.py",
-      "line": 40
+      "file": "src/ai_trading/scheduler_endpoint.py",
+      "line": 56
     },
     {
-      "name": "configured_markets_from_env",
+      "name": "_delivery_age_seconds",
       "kind": "function",
-      "file": "src/ai_trading/multi_market.py",
-      "line": 58
+      "file": "src/ai_trading/scheduler_endpoint.py",
+      "line": 63
     },
     {
-      "name": "run_multi_market_paper_cycle",
+      "name": "scheduler_delivery_overview",
       "kind": "function",
-      "file": "src/ai_trading/multi_market.py",
+      "file": "src/ai_trading/scheduler_endpoint.py",
       "line": 82
     },
     {
-      "name": "run_market",
+      "name": "_authorized",
       "kind": "function",
-      "file": "src/ai_trading/multi_market.py",
-      "line": 112
+      "file": "src/ai_trading/scheduler_endpoint.py",
+      "line": 143
     },
     {
-      "name": "build_multi_market_overview",
+      "name": "handle_scheduler_request",
       "kind": "function",
-      "file": "src/ai_trading/multi_market.py",
-      "line": 176
+      "file": "src/ai_trading/scheduler_endpoint.py",
+      "line": 152
     },
     {
-      "name": "FakeMultiPersistence",
-      "kind": "class",
-      "file": "tests/test_multi_market.py",
-      "line": 29
+      "name": "successful_result",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 25
     },
     {
-      "name": "load_runtime",
+      "name": "_free_port",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 32
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 39
     },
     {
-      "name": "load_runtime_status",
+      "name": "_request",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 51
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 45
     },
     {
-      "name": "list_burnin_snapshots",
+      "name": "_start_scheduler_dashboard",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 69
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 60
     },
     {
-      "name": "list_regimes",
+      "name": "test_missing_server_token_fails_closed",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 73
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 92
     },
     {
-      "name": "list_trades",
+      "name": "run_cycle",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 77
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 95
     },
     {
-      "name": "load_trade_performance",
+      "name": "test_missing_authorization_is_unauthorized",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 81
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 111
     },
     {
-      "name": "load_portfolio_trade_performance",
+      "name": "test_wrong_scheme_is_unauthorized",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 94
-    },
-    {
-      "name": "test_configured_markets_default_to_full_bundle",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 112
-    },
-    {
-      "name": "test_configured_default_bundle_uses_34_33_33",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
+      "file": "tests/test_scheduler_endpoint.py",
       "line": 122
     },
     {
-      "name": "test_multi_market_cycle_isolates_one_market_failure",
+      "name": "test_wrong_bearer_token_is_unauthorized",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 131
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 133
+    },
+    {
+      "name": "test_valid_token_runs_exactly_one_cycle",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 144
+    },
+    {
+      "name": "run_cycle",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 147
+    },
+    {
+      "name": "test_concurrent_progress_is_successful_noop",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 170
+    },
+    {
+      "name": "test_storage_failure_is_sanitized",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 191
+    },
+    {
+      "name": "run_cycle",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 192
+    },
+    {
+      "name": "test_execution_failure_is_sanitized",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 212
+    },
+    {
+      "name": "run_cycle",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 213
+    },
+    {
+      "name": "test_http_scheduler_rejects_missing_and_wrong_authorization",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 233
+    },
+    {
+      "name": "test_http_scheduler_valid_token_runs_one_cycle_and_ignores_body",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 254
     },
     {
       "name": "fake_cycle",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 134
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 257
     },
     {
-      "name": "test_multi_market_overview_scales_normalized_sleeves_to_100k",
+      "name": "test_http_scheduler_other_post_routes_are_not_exposed",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 173
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 289
     },
     {
-      "name": "test_dashboard_renders_multi_market_cards",
+      "name": "test_http_scheduler_failure_response_never_leaks_secrets",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 223
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 305
     },
     {
-      "name": "test_multi_market_cycle_runs_markets_concurrently",
+      "name": "fail_cycle",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 288
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 306
     },
     {
-      "name": "fake_cycle",
+      "name": "test_scheduler_telemetry_is_sanitized_and_identifies_cloudflare",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 291
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 330
     },
     {
-      "name": "test_multi_market_overview_marks_stale_heartbeat_as_delayed",
+      "name": "test_scheduler_telemetry_does_not_trust_arbitrary_source_headers",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 322
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 359
     },
     {
-      "name": "stale_status",
+      "name": "test_scheduler_delivery_overview_verifies_three_consecutive_cloudflare_successes",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 333
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 379
     },
     {
-      "name": "test_market_spec_rejects_invalid_fields",
+      "name": "test_http_scheduler_exposes_durable_cloudflare_delivery_evidence",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 367
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 403
     },
     {
-      "name": "test_multi_market_cycle_rejects_duplicate_symbols",
+      "name": "test_scheduler_delivery_verification_expires_when_latest_success_is_stale",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 372
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 434
     },
     {
-      "name": "test_multi_market_cycle_rejects_invalid_allocation_sum",
+      "name": "test_scheduler_delivery_overview_rejects_invalid_freshness_window",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 390
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 455
+    },
+    {
+      "name": "test_scheduler_response_exposes_backlog_and_mtf_progress",
+      "kind": "function",
+      "file": "tests/test_scheduler_endpoint.py",
+      "line": 463
     }
   ],
   "selected_tests": [
-    "tests/test_multi_market.py"
+    "tests/test_scheduler.py",
+    "tests/test_scheduler_endpoint.py"
   ]
 }

@@ -7595,6 +7595,12 @@ normalized_source = "external"
 payload: dict[str, object] = {
 processed = response.payload.get("processed")
 ⋮----
+processed_bars = response.payload.get("processed_bars")
+⋮----
+remaining_backlog = response.payload.get("remaining_backlog")
+⋮----
+mtf_evaluated = response.payload.get("mtf_evaluated")
+⋮----
 def _utc_now(now: datetime | None) -> datetime
 ⋮----
 current = now or datetime.now(UTC)
@@ -12097,6 +12103,10 @@ now = datetime(2026, 9, 21, 17, 0, tzinfo=UTC)
 overview = scheduler_delivery_overview(deliveries, now=now)
 ⋮----
 def test_scheduler_delivery_overview_rejects_invalid_freshness_window() -> None
+⋮----
+def test_scheduler_response_exposes_backlog_and_mtf_progress() -> None
+⋮----
+result = PaperCycleResult(
 ````
 
 ## File: tests/test_scheduler_governor.py

@@ -1,18 +1,18 @@
 # Change impact
 
-Base: aac7dffb867f2293cca7dbd931316c0b16c4fdb7
-Head: 72427258acd74c9ea8e3a3f1dc08225952efc045
+Base: 6f98bb9a61600ac24e7b176d7b540cd67c47346a
+Head: 6aa6c9d8dcc06062329a912206656aa0affd7f48
 
 ## Changed files
-- M src/ai_trading/multi_market.py
-- M tests/test_multi_market.py
+- M src/ai_trading/scheduler_endpoint.py
+- M tests/test_scheduler_endpoint.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_multi_market.py
+- tests/test_scheduler_endpoint.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.
