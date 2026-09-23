@@ -454,3 +454,64 @@ def test_dashboard_does_not_render_market_unavailability_as_portfolio_loss(
     assert "Markets with alerts" in page
     assert ">-</strong>" in page
     assert "-33,000.00" not in page
+
+
+
+def test_multi_market_cycle_isolates_unexpected_market_exception(monkeypatch) -> None:
+    def fake_cycle(settings, *, persistence=None, **kwargs):
+        del persistence, kwargs
+        if settings.symbol == "^GDAXI":
+            raise RuntimeError("provider exploded")
+        return PaperCycleResult(
+            processed=1,
+            remaining_backlog=False,
+            last_processed="2026-09-19 18:00:00+00:00",
+            processed_bars=5,
+            reason="processed 1 bar(s)",
+        )
+
+    monkeypatch.setattr(
+        multi_market_module,
+        "run_production_paper_cycle",
+        fake_cycle,
+    )
+
+    result = run_multi_market_paper_cycle(
+        DEFAULT_MARKETS,
+        period="5d",
+        interval="5m",
+        max_catchup_bars=72,
+        poll_seconds=300.0,
+        shadow_challenger_enabled=True,
+        persistence=object(),
+    )
+
+    assert result.processed == 2
+    assert "isolated failures=1" in result.reason
+
+
+def test_multi_market_cycle_sanitizes_all_unexpected_failures(monkeypatch) -> None:
+    def fake_cycle(settings, *, persistence=None, **kwargs):
+        del settings, persistence, kwargs
+        raise RuntimeError("sensitive provider internals")
+
+    monkeypatch.setattr(
+        multi_market_module,
+        "run_production_paper_cycle",
+        fake_cycle,
+    )
+
+    with pytest.raises(PaperCycleServiceError) as exc_info:
+        run_multi_market_paper_cycle(
+            DEFAULT_MARKETS,
+            period="5d",
+            interval="5m",
+            max_catchup_bars=72,
+            poll_seconds=300.0,
+            shadow_challenger_enabled=True,
+            persistence=object(),
+        )
+
+    assert exc_info.value.code == "execution_failed"
+    assert exc_info.value.error_type == "MultiMarketFailure"
+    assert "sensitive provider internals" not in str(exc_info.value)
