@@ -455,3 +455,32 @@ def test_checkpoint_rejects_malformed_manifest_schema(
 
     with pytest.raises(ValueError, match="checkpoint"):
         store.load()
+
+
+
+def test_checkpoint_rejects_unsupported_manifest_schema(tmp_path: Path) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.commit(state(8), {"A": {"learned": 8}})
+
+    generation = store.current_path.read_text(encoding="utf-8")
+    manifest_path = store.root / generation / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["schema_version"] = 999
+    manifest_path.write_text(json.dumps(manifest, sort_keys=True), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="unsupported multiasset checkpoint schema"):
+        store.load()
+
+
+def test_checkpoint_rejects_malformed_model_metadata(tmp_path: Path) -> None:
+    store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    store.commit(state(9), {"A": {"learned": 9}})
+
+    generation = store.current_path.read_text(encoding="utf-8")
+    manifest_path = store.root / generation / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["models"]["A"] = "not-an-object"
+    manifest_path.write_text(json.dumps(manifest, sort_keys=True), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="model metadata"):
+        store.load()
