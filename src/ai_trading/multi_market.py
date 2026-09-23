@@ -58,7 +58,7 @@ DEFAULT_MARKETS: tuple[MarketSpec, ...] = (
 def configured_markets_from_env() -> tuple[MarketSpec, ...]:
     raw = os.getenv("AI_TRADING_MARKETS", "").strip()
     if not raw:
-        return (MarketSpec("GC=F", "Gold", 1.0),)
+        return DEFAULT_MARKETS
 
     symbols = tuple(part.strip() for part in raw.split(",") if part.strip())
     if not symbols:
