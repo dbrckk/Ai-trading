@@ -109,13 +109,14 @@ class FakeMultiPersistence:
         )
 
 
-def test_configured_markets_default_to_gold(monkeypatch) -> None:
+def test_configured_markets_default_to_full_bundle(monkeypatch) -> None:
     monkeypatch.delenv("AI_TRADING_MARKETS", raising=False)
 
     markets = configured_markets_from_env()
 
-    assert [market.symbol for market in markets] == ["GC=F"]
-    assert markets[0].allocation == 1.0
+    assert markets == DEFAULT_MARKETS
+    assert [market.symbol for market in markets] == ["GC=F", "^GDAXI", "BTC-USD"]
+    assert [market.allocation for market in markets] == [0.34, 0.33, 0.33]
 
 
 def test_configured_default_bundle_uses_34_33_33(monkeypatch) -> None:
