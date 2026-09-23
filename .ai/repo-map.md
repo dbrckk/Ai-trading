@@ -10245,7 +10245,7 @@ def load_trade_performance(self, runtime_key: str)
 ⋮----
 def load_portfolio_trade_performance(self, runtime_keys: tuple[str, ...])
 ⋮----
-def test_configured_markets_default_to_gold(monkeypatch) -> None
+def test_configured_markets_default_to_full_bundle(monkeypatch) -> None
 ⋮----
 markets = configured_markets_from_env()
 ⋮----

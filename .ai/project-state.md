@@ -45,21 +45,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-23T05:32:05Z
+Generated: 2026-09-23T05:35:39Z
 
 ### Git
 - Branch: `main`
-- Head: `ee887bd54e73`
-- Commit date: 2026-09-23T07:31:53+02:00
-- Commit: fix: keep published checkpoints valid when pruning fails
+- Head: `72427258acd7`
+- Commit date: 2026-09-23T07:35:28+02:00
+- Commit: fix: default production to gold dax and btc
 - Tracked files: 500
 
 ### Recently changed files
+- `src/ai_trading/multi_market.py`
+- `tests/test_multi_market.py`
 - `src/ai_trading/multiasset_checkpoint.py`
 - `tests/test_multiasset_checkpoint.py`
 - `tests/test_multiasset_checkpoint_manifest_binding.py`
 - `tests/test_multiasset_checkpoint_consistency.py`
-- `tests/test_multiasset_checkpoint_orphan_corruption.py`
 
 ### Project signals
 - `pyproject.toml`

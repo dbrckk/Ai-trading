@@ -5,8 +5,8 @@
 - Files reparsed this run: 2
 - Symbols: 1765
 - Internal import edges: 1214
-- Impacted files: 7
-- Selected tests: 5
+- Impacted files: 3
+- Selected tests: 1
 
 ## Languages
 - python: 360 files
