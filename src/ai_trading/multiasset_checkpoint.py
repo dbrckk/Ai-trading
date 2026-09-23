@@ -5,6 +5,7 @@ import json
 import os
 import re
 import shutil
+import uuid
 import zlib
 from dataclasses import asdict
 from pathlib import Path
@@ -78,10 +79,8 @@ class MultiAssetCheckpointStore:
     def commit(self, state: MultiAssetState, models: dict[str, object]) -> str:
         generation = self._validate_generation(f"step-{state.processed_bars:012d}")
         final_dir = self._generation_dir(generation)
-        temp_dir = self.root / f".{generation}.tmp"
         self.root.mkdir(parents=True, exist_ok=True)
-        if temp_dir.exists():
-            shutil.rmtree(temp_dir)
+        temp_dir = self.root / f".{generation}.{uuid.uuid4().hex}.tmp"
         temp_dir.mkdir()
 
         state_path = temp_dir / "state.json"
@@ -121,7 +120,7 @@ class MultiAssetCheckpointStore:
         return generation
 
     def _publish_current(self, generation: str) -> None:
-        pointer_tmp = self.current_path.with_suffix(".tmp")
+        pointer_tmp = self.root / f".CURRENT.{uuid.uuid4().hex}.tmp"
         pointer_tmp.write_text(generation, encoding="utf-8")
         self._fsync_file(pointer_tmp)
         pointer_tmp.replace(self.current_path)
