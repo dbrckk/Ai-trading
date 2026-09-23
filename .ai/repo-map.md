@@ -2480,7 +2480,8 @@ market_mark = {
 pnl_css = (
 reason = html.escape(str(item.get("reason") or "waiting for next eligible bar"))
 ⋮----
-portfolio_pnl = float(portfolio["pnl"])
+raw_portfolio_pnl = portfolio["pnl"]
+portfolio_pnl = (
 portfolio_pnl_css = (
 market_panel = (
 ⋮----
@@ -4517,6 +4518,7 @@ reason = f"processed {processed} bar(s) across {len(markets) - len(failures)} ma
 ⋮----
 market_rows: list[dict[str, object]] = []
 portfolio_equity = 0.0
+portfolio_equity_complete = True
 healthy_markets = 0
 running_markets = 0
 stale_markets = 0
@@ -4562,6 +4564,10 @@ healthy = bool(overview.get("storage_healthy"))
 engine_status = str(overview.get("engine_status") or "UNKNOWN").upper()
 ⋮----
 except Exception:  # noqa: BLE001 - isolate one market from the dashboard
+portfolio_equity_complete = False
+⋮----
+reported_portfolio_equity = (
+reported_portfolio_pnl = (
 ````
 
 ## File: src/ai_trading/multi_timeframe_features.py
@@ -10296,6 +10302,10 @@ def test_multi_market_cycle_rejects_duplicate_symbols(monkeypatch) -> None
 markets = (
 ⋮----
 def test_multi_market_cycle_rejects_invalid_allocation_sum() -> None
+⋮----
+def test_multi_market_overview_marks_portfolio_totals_unknown_on_market_error() -> None
+⋮----
+dax = next(row for row in snapshot["markets"] if row["symbol"] == "^GDAXI")
 ````
 
 ## File: tests/test_multi_period_promotion.py

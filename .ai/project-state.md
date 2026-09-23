@@ -45,24 +45,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-23T05:38:35Z
+Generated: 2026-09-23T05:40:42Z
 
 ### Git
 - Branch: `main`
-- Head: `6aa6c9d8dcc0`
-- Commit date: 2026-09-23T07:38:24+02:00
-- Commit: feat: expose scheduler backlog and cycle progress
+- Head: `784eea5b7273`
+- Commit date: 2026-09-23T07:40:31+02:00
+- Commit: fix: avoid fake portfolio losses when a market is unavailable
 - Tracked files: 500
 
 ### Recently changed files
-- `src/ai_trading/scheduler_endpoint.py`
-- `tests/test_scheduler_endpoint.py`
+- `src/ai_trading/dashboard.py`
 - `src/ai_trading/multi_market.py`
 - `tests/test_multi_market.py`
+- `src/ai_trading/scheduler_endpoint.py`
+- `tests/test_scheduler_endpoint.py`
 - `src/ai_trading/multiasset_checkpoint.py`
 - `tests/test_multiasset_checkpoint.py`
 - `tests/test_multiasset_checkpoint_manifest_binding.py`
-- `tests/test_multiasset_checkpoint_consistency.py`
 
 ### Project signals
 - `pyproject.toml`
