@@ -75,6 +75,22 @@ class MultiAssetCheckpointStore:
             raise ValueError("invalid multiasset checkpoint artifact path")
         return directory / filename
 
+
+    @staticmethod
+    def _metadata_dict(value: object, *, label: str) -> dict[str, object]:
+        if not isinstance(value, dict):
+            raise ValueError(f"invalid multiasset checkpoint {label} metadata")
+        return value
+
+    @staticmethod
+    def _checksum(value: object, *, label: str) -> str:
+        if (
+            not isinstance(value, str)
+            or re.fullmatch(r"[0-9a-f]{64}", value) is None
+        ):
+            raise ValueError(f"invalid multiasset checkpoint {label} checksum")
+        return value
+
     def commit(self, state: MultiAssetState, models: dict[str, object]) -> str:
         generation = self._validate_generation(f"step-{state.processed_bars:012d}")
         final_dir = self._generation_dir(generation)
@@ -148,18 +164,34 @@ class MultiAssetCheckpointStore:
         directory = self._generation_dir(generation)
         manifest_path = directory / "manifest.json"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if not isinstance(manifest, dict):
+            raise ValueError("invalid multiasset checkpoint manifest")
         if manifest.get("generation") != generation:
             raise ValueError("multiasset checkpoint generation mismatch")
 
-        state_meta = manifest["state"]
-        state_path = self._artifact_path(directory, state_meta["file"])
-        if self._sha256(state_path) != state_meta["sha256"]:
+        state_meta = self._metadata_dict(
+            manifest.get("state"),
+            label="state",
+        )
+        state_path = self._artifact_path(directory, state_meta.get("file"))
+        state_checksum = self._checksum(
+            state_meta.get("sha256"),
+            label="state",
+        )
+        if self._sha256(state_path) != state_checksum:
             raise ValueError("multiasset checkpoint state checksum mismatch")
         payload = json.loads(state_path.read_text(encoding="utf-8"))
-        payload["positions"] = {
-            symbol: AssetPosition(**position)
-            for symbol, position in payload.get("positions", {}).items()
-        }
+        if not isinstance(payload, dict):
+            raise ValueError("invalid multiasset checkpoint state payload")
+        positions = payload.get("positions", {})
+        if not isinstance(positions, dict):
+            raise ValueError("invalid multiasset checkpoint positions")
+        normalized_positions: dict[str, AssetPosition] = {}
+        for symbol, position in positions.items():
+            if not isinstance(symbol, str) or not isinstance(position, dict):
+                raise ValueError("invalid multiasset checkpoint position")
+            normalized_positions[symbol] = AssetPosition(**position)
+        payload["positions"] = normalized_positions
         state = MultiAssetState(**payload)
         expected_generation = self._validate_generation(f"step-{state.processed_bars:012d}")
         if expected_generation != generation:
@@ -169,15 +201,28 @@ class MultiAssetCheckpointStore:
         if manifest.get("last_processed") != state.last_processed:
             raise ValueError("multiasset checkpoint last processed mismatch")
 
+        raw_models = manifest.get("models", {})
+        if not isinstance(raw_models, dict):
+            raise ValueError("invalid multiasset checkpoint models metadata")
         models: dict[str, object] = {}
-        for symbol, metadata in manifest.get("models", {}).items():
-            path = self._artifact_path(directory, metadata["file"])
+        for symbol, raw_metadata in raw_models.items():
+            if not isinstance(symbol, str) or not symbol:
+                raise ValueError("invalid multiasset checkpoint model symbol")
+            metadata = self._metadata_dict(
+                raw_metadata,
+                label=f"model {symbol}",
+            )
+            path = self._artifact_path(directory, metadata.get("file"))
             expected_filename = self._model_filename(symbol)
             if path.name != expected_filename:
                 raise ValueError(
                     f"multiasset checkpoint model filename mismatch: {symbol}"
                 )
-            if self._sha256(path) != metadata["sha256"]:
+            expected_checksum = self._checksum(
+                metadata.get("sha256"),
+                label=f"model {symbol}",
+            )
+            if self._sha256(path) != expected_checksum:
                 raise ValueError(
                     f"multiasset checkpoint model checksum mismatch: {symbol}"
                 )
