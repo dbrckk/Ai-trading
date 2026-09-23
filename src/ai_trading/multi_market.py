@@ -135,6 +135,9 @@ def run_multi_market_paper_cycle(
             except PaperCycleServiceError as exc:
                 failures.append((market.symbol, exc.code))
                 continue
+            except Exception:  # noqa: BLE001 - isolate and sanitize one market
+                failures.append((market.symbol, "execution_failed"))
+                continue
 
             processed += result.processed
             processed_bars += result.processed_bars
