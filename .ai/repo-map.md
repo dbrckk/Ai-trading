@@ -4758,6 +4758,11 @@ def _prune_old_generations(self, *, current: str) -> None
 generations = sorted(
 removable = max(0, len(generations) - (self.retain_generations - 1))
 ⋮----
+def _prune_old_generations_best_effort(self, *, current: str) -> None
+⋮----
+# CURRENT is already authoritative at this point. Retention cleanup
+# must not make a successfully published checkpoint look failed.
+⋮----
 def _load_generation(self, generation: str) -> tuple[MultiAssetState, dict[str, object]]
 ⋮----
 directory = self._generation_dir(generation)
@@ -10469,6 +10474,19 @@ manifest_path = store.root / generation / "manifest.json"
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 ⋮----
 def test_checkpoint_rejects_manifest_model_path_escape(tmp_path: Path) -> None
+⋮----
+store = MultiAssetCheckpointStore(tmp_path / "checkpoint", retain_generations=1)
+⋮----
+def fail_prune(*, current: str) -> None
+⋮----
+generation = store.commit(state(2), {"A": {"learned": 2}})
+⋮----
+newer = store._generation_dir("step-000000000002")
+staged = store.root / ".step-000000000002.tmp"
+⋮----
+state_path = staged / "state.json"
+⋮----
+model_path = staged / store._model_filename("A")
 ````
 
 ## File: tests/test_multiasset_evolution.py

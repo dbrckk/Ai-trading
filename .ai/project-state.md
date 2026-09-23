@@ -45,13 +45,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-23T04:59:01Z
+Generated: 2026-09-23T05:32:05Z
 
 ### Git
 - Branch: `main`
-- Head: `ead299cd7ddc`
-- Commit date: 2026-09-23T06:58:50+02:00
-- Commit: fix: bind checkpoint model artifacts to symbols
+- Head: `ee887bd54e73`
+- Commit date: 2026-09-23T07:31:53+02:00
+- Commit: fix: keep published checkpoints valid when pruning fails
 - Tracked files: 500
 
 ### Recently changed files
@@ -60,8 +60,6 @@ Generated: 2026-09-23T04:59:01Z
 - `tests/test_multiasset_checkpoint_manifest_binding.py`
 - `tests/test_multiasset_checkpoint_consistency.py`
 - `tests/test_multiasset_checkpoint_orphan_corruption.py`
-- `src/ai_trading/multiasset_runtime.py`
-- `tests/test_multiasset_runtime.py`
 
 ### Project signals
 - `pyproject.toml`
