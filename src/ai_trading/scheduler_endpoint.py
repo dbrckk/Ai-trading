@@ -37,6 +37,19 @@ def scheduler_telemetry_payload(
     processed = response.payload.get("processed")
     if isinstance(processed, int) and not isinstance(processed, bool):
         payload["processed"] = processed
+
+    processed_bars = response.payload.get("processed_bars")
+    if isinstance(processed_bars, int) and not isinstance(processed_bars, bool):
+        payload["processed_bars"] = processed_bars
+
+    remaining_backlog = response.payload.get("remaining_backlog")
+    if isinstance(remaining_backlog, bool):
+        payload["remaining_backlog"] = remaining_backlog
+
+    mtf_evaluated = response.payload.get("mtf_evaluated")
+    if isinstance(mtf_evaluated, bool):
+        payload["mtf_evaluated"] = mtf_evaluated
+
     return payload
 
 
@@ -171,6 +184,9 @@ def handle_scheduler_request(
         payload={
             "ok": True,
             "processed": int(result.processed),
+            "processed_bars": int(result.processed_bars),
+            "remaining_backlog": bool(result.remaining_backlog),
+            "mtf_evaluated": bool(result.mtf_evaluated),
             "status": "RUNNING",
         },
     )
