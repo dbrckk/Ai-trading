@@ -60,7 +60,6 @@ def test_checkpoint_fails_closed_on_corrupted_state(tmp_path: Path) -> None:
         store.load()
 
 
-
 def test_checkpoint_refuses_to_overwrite_published_generation(tmp_path: Path) -> None:
     store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
     store.commit(state(4), {"A": {"learned": 4}})
@@ -87,9 +86,7 @@ def test_checkpoint_retention_keeps_current_and_recent_generations(
         store.commit(state(step), {"A": {"learned": step}})
 
     generations = sorted(
-        path.name
-        for path in store.root.glob("step-*")
-        if path.is_dir()
+        path.name for path in store.root.glob("step-*") if path.is_dir()
     )
 
     assert generations == [
@@ -107,7 +104,6 @@ def test_checkpoint_retention_must_be_positive(tmp_path: Path) -> None:
         )
 
 
-
 def test_checkpoint_recovers_complete_generation_not_yet_published(
     tmp_path: Path,
 ) -> None:
@@ -122,7 +118,7 @@ def test_checkpoint_recovers_complete_generation_not_yet_published(
         json.dumps(asdict(orphan_state), sort_keys=True),
         encoding="utf-8",
     )
-    model_path = orphan / "A.joblib"
+    model_path = orphan / store._model_filename("A")
     joblib.dump({"learned": 2}, model_path)
     manifest = {
         "generation": "step-000000000002",
@@ -134,7 +130,7 @@ def test_checkpoint_recovers_complete_generation_not_yet_published(
         },
         "models": {
             "A": {
-                "file": "A.joblib",
+                "file": model_path.name,
                 "sha256": store._sha256(model_path),
             }
         },
@@ -180,7 +176,7 @@ def test_checkpoint_ignores_corrupt_compressed_unpublished_model(tmp_path: Path)
     orphan.mkdir()
     state_path = orphan / "state.json"
     state_path.write_text(json.dumps(asdict(state(4)), sort_keys=True), encoding="utf-8")
-    model_path = orphan / "A.joblib"
+    model_path = orphan / store._model_filename("A")
     model_path.write_bytes(b"\x78\x9cBADBADBAD")
     manifest = {
         "generation": orphan.name,
@@ -202,7 +198,6 @@ def test_checkpoint_ignores_corrupt_compressed_unpublished_model(tmp_path: Path)
     assert loaded_state.processed_bars == 3
     assert models == {"A": {"learned": 3}}
     assert store.current_path.read_text(encoding="utf-8") == "step-000000000003"
-
 
 
 def test_checkpoint_rejects_pointer_path_traversal(tmp_path: Path) -> None:
@@ -243,7 +238,6 @@ def test_checkpoint_model_filenames_do_not_collide_for_similar_symbols(
     )
     files = [metadata["file"] for metadata in manifest["models"].values()]
     assert len(files) == len(set(files)) == 3
-
 
 
 def test_checkpoint_rejects_manifest_state_path_escape(tmp_path: Path) -> None:
