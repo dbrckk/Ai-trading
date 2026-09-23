@@ -157,7 +157,14 @@ def test_valid_token_runs_exactly_one_cycle() -> None:
 
     assert calls == 1
     assert response.status_code == 200
-    assert response.payload == {"ok": True, "processed": 2, "status": "RUNNING"}
+    assert response.payload == {
+        "ok": True,
+        "processed": 2,
+        "processed_bars": 2,
+        "remaining_backlog": False,
+        "mtf_evaluated": False,
+        "status": "RUNNING",
+    }
 
 
 def test_concurrent_progress_is_successful_noop() -> None:
@@ -171,7 +178,14 @@ def test_concurrent_progress_is_successful_noop() -> None:
     )
 
     assert response.status_code == 200
-    assert response.payload == {"ok": True, "processed": 0, "status": "RUNNING"}
+    assert response.payload == {
+        "ok": True,
+        "processed": 0,
+        "processed_bars": 1,
+        "remaining_backlog": False,
+        "mtf_evaluated": False,
+        "status": "RUNNING",
+    }
 
 
 def test_storage_failure_is_sanitized() -> None:
@@ -262,7 +276,14 @@ def test_http_scheduler_valid_token_runs_one_cycle_and_ignores_body(tmp_path) ->
 
     assert status == 200
     assert calls == 1
-    assert json.loads(body) == {"ok": True, "processed": 1, "status": "RUNNING"}
+    assert json.loads(body) == {
+        "ok": True,
+        "processed": 1,
+        "processed_bars": 1,
+        "remaining_backlog": False,
+        "mtf_evaluated": False,
+        "status": "RUNNING",
+    }
 
 
 def test_http_scheduler_other_post_routes_are_not_exposed(tmp_path) -> None:
@@ -309,7 +330,14 @@ def test_http_scheduler_failure_response_never_leaks_secrets(tmp_path) -> None:
 def test_scheduler_telemetry_is_sanitized_and_identifies_cloudflare() -> None:
     response = SchedulerHttpResponse(
         status_code=200,
-        payload={"ok": True, "processed": 3, "status": "RUNNING"},
+        payload={
+            "ok": True,
+            "processed": 3,
+            "processed_bars": 42,
+            "remaining_backlog": True,
+            "mtf_evaluated": True,
+            "status": "RUNNING",
+        },
     )
 
     payload = scheduler_telemetry_payload(response, "cloudflare")
@@ -320,6 +348,9 @@ def test_scheduler_telemetry_is_sanitized_and_identifies_cloudflare() -> None:
         "status_code": 200,
         "ok": True,
         "processed": 3,
+        "processed_bars": 42,
+        "remaining_backlog": True,
+        "mtf_evaluated": True,
     }
     assert "Authorization" not in repr(payload)
     assert "token" not in repr(payload).lower()
@@ -426,3 +457,31 @@ def test_scheduler_delivery_overview_rejects_invalid_freshness_window() -> None:
         scheduler_delivery_overview((), freshness_seconds=0)
 
 
+
+
+
+def test_scheduler_response_exposes_backlog_and_mtf_progress() -> None:
+    result = PaperCycleResult(
+        processed=5,
+        remaining_backlog=True,
+        last_processed="2026-09-16 08:00:00+00:00",
+        processed_bars=123,
+        reason="catch-up pending",
+        mtf_evaluated=True,
+    )
+
+    response = handle_scheduler_request(
+        authorization="Bearer expected-token",
+        configured_token="expected-token",
+        run_cycle=lambda: result,
+    )
+
+    assert response.status_code == 200
+    assert response.payload == {
+        "ok": True,
+        "processed": 5,
+        "processed_bars": 123,
+        "remaining_backlog": True,
+        "mtf_evaluated": True,
+        "status": "RUNNING",
+    }
