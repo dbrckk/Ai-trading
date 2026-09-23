@@ -138,6 +138,15 @@ class MultiAssetCheckpointStore:
             for symbol, position in payload.get("positions", {}).items()
         }
         state = MultiAssetState(**payload)
+        expected_generation = self._validate_generation(
+            f"step-{state.processed_bars:012d}"
+        )
+        if expected_generation != generation:
+            raise ValueError("multiasset checkpoint state generation mismatch")
+        if manifest.get("processed_bars") != state.processed_bars:
+            raise ValueError("multiasset checkpoint processed bars mismatch")
+        if manifest.get("last_processed") != state.last_processed:
+            raise ValueError("multiasset checkpoint last processed mismatch")
 
         models: dict[str, object] = {}
         for symbol, metadata in manifest.get("models", {}).items():
