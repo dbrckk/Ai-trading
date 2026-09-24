@@ -515,4 +515,4 @@ def test_multiasset_runtime_rejects_invalid_checkpoint_model_type(
         ValueError,
         "invalid checkpoint online model type for A",
     ):
-        runtime.step({"A": market(81)})
+        runtime.step({"A": market(81), "B": market(82)})
