@@ -485,3 +485,42 @@ def test_multiasset_runtime_does_not_mix_checkpoint_with_legacy_model(
     result = runtime.step({"A": market(71), "B": market(72)})
 
     assert result.processed
+
+
+
+def test_multiasset_runtime_rejects_invalid_checkpoint_online_model_type(
+    tmp_path: Path,
+) -> None:
+    checkpoint_store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
+    checkpoint_store.commit(
+        MultiAssetState(
+            cash=100_000.0,
+            peak_equity=100_000.0,
+            day_start_equity=100_000.0,
+            processed_bars=1,
+        ),
+        {"A": {"not": "a river model"}},
+    )
+    runtime = MultiAssetPaperRuntime(
+        risk_config=RiskConfig(),
+        allocation_config=AllocationConfig(max_asset_weight=0.6),
+        portfolio_risk_config=PortfolioRiskConfig(
+            max_gross_exposure=1.0,
+            max_net_exposure=1.0,
+            max_asset_exposure=0.6,
+            max_pair_correlation=0.99,
+        ),
+        state_store=MultiAssetStateStore(tmp_path / "state.json"),
+        checkpoint_store=checkpoint_store,
+        audit_log=AuditLog(tmp_path / "audit.jsonl"),
+        lock_path=str(tmp_path / "lock"),
+        model_root=tmp_path / "online_models",
+        batch_model_root=tmp_path / "batch_models",
+        specialist_model_root=tmp_path / "specialists",
+    )
+
+    with np.testing.assert_raises_regex(
+        ValueError,
+        "invalid checkpoint online model type for A",
+    ):
+        runtime.step({"A": market(81), "B": market(82)})
