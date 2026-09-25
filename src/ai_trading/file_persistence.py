@@ -12,7 +12,6 @@ from .mtf_shadow_quality import (
 )
 from .performance_metrics import TradePerformanceMetrics, calculate_performance_metrics
 from .persistence import (
-    build_runtime_key,
     CommitOutcome,
     ModelBlob,
     PaperPersistence,
@@ -26,7 +25,7 @@ from .shadow_quality import ShadowQualityComparison, compare_shadow_audit_payloa
 from .trade_journal import TradeJournal, TradeSnapshot
 
 
-_LEGACY_RUNTIME_KEY = build_runtime_key("GC=F", "5m")
+_LEGACY_RUNTIME_KEY = "paper:GC=F:5m:online-river:v1"
 
 
 class FilePaperPersistence(PaperPersistence):
