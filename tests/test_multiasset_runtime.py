@@ -12,6 +12,7 @@ from ai_trading.crisis_state_store import CrisisStateStore
 from ai_trading.drift import DistributionDriftReport
 from ai_trading.drift_retrain_store import DriftRetrainStore
 from ai_trading.economic_meta_store import EconomicMetaStore
+from ai_trading.ensemble import EnsembleDirectionModel
 from ai_trading.governor_state_store import GovernorStateStore
 from ai_trading.lifecycle_log import LifecycleEventLog
 from ai_trading.meta_store import MetaRouterStore
@@ -23,6 +24,7 @@ from ai_trading.portfolio import AllocationConfig
 from ai_trading.portfolio_risk import PortfolioRiskConfig
 from ai_trading.quality_store import QualityStore
 from ai_trading.resilience import ResilienceStateStore
+from ai_trading.specialist_experts import SpecialistDirectionModel
 
 
 def market(seed: int, n: int = 120) -> pd.DataFrame:
@@ -390,14 +392,14 @@ def test_multiasset_online_model_legacy_path_is_migrated(tmp_path: Path) -> None
     symbol = "GC=F"
     legacy_path = runtime._legacy_model_path(symbol)
     legacy_path.parent.mkdir(parents=True, exist_ok=True)
-    expected = {"legacy": True}
+    expected = RiverDirectionModel()
     joblib.dump(expected, legacy_path)
 
     loaded = runtime._load_model(symbol)
 
-    assert loaded == expected
+    assert isinstance(loaded, RiverDirectionModel)
     assert runtime._model_path(symbol).exists()
-    assert joblib.load(runtime._model_path(symbol)) == expected
+    assert isinstance(joblib.load(runtime._model_path(symbol)), RiverDirectionModel)
 
 
 def test_multiasset_batch_and_specialist_legacy_paths_are_migrated(
@@ -418,11 +420,14 @@ def test_multiasset_batch_and_specialist_legacy_paths_are_migrated(
 
     legacy_batch = runtime._legacy_batch_model_path(symbol)
     legacy_batch.parent.mkdir(parents=True, exist_ok=True)
-    joblib.dump({"batch": True}, legacy_batch)
+    joblib.dump(EnsembleDirectionModel(random_state=42), legacy_batch)
 
     legacy_specialist = runtime._legacy_specialist_path(symbol, "trend")
     legacy_specialist.parent.mkdir(parents=True, exist_ok=True)
-    joblib.dump({"specialist": True}, legacy_specialist)
+    joblib.dump(
+        SpecialistDirectionModel("trend", random_state=42),
+        legacy_specialist,
+    )
 
     batch = runtime._load_or_train_batch_model(
         symbol,
@@ -438,8 +443,8 @@ def test_multiasset_batch_and_specialist_legacy_paths_are_migrated(
         signal_idx,
     )
 
-    assert batch == {"batch": True}
-    assert specialist == {"specialist": True}
+    assert isinstance(batch, EnsembleDirectionModel)
+    assert isinstance(specialist, SpecialistDirectionModel)
     assert runtime._batch_model_path(symbol).exists()
     assert runtime._specialist_path(symbol, "trend").exists()
 
@@ -524,3 +529,48 @@ def test_multiasset_runtime_rejects_invalid_checkpoint_online_model_type(
         "invalid checkpoint online model type for A",
     ):
         runtime.step({"A": market(81), "B": market(82)})
+
+
+
+def test_multiasset_rejects_invalid_model_artifact_types(tmp_path: Path) -> None:
+    runtime = MultiAssetPaperRuntime(
+        state_store=MultiAssetStateStore(tmp_path / "state.json"),
+        audit_log=AuditLog(tmp_path / "audit.jsonl"),
+        lock_path=str(tmp_path / "lock"),
+        model_root=tmp_path / "online_models",
+        batch_model_root=tmp_path / "batch_models",
+        specialist_model_root=tmp_path / "specialists",
+    )
+    symbol = "GC=F"
+    features = pd.DataFrame(index=pd.date_range("2025-01-01", periods=2))
+    labels = pd.Series(index=features.index, dtype=float)
+    signal_idx = features.index[-1]
+
+    online_path = runtime._model_path(symbol)
+    online_path.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump({"invalid": True}, online_path)
+    with np.testing.assert_raises_regex(TypeError, "online model artifact type"):
+        runtime._load_model(symbol)
+
+    batch_path = runtime._batch_model_path(symbol)
+    batch_path.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump({"invalid": True}, batch_path)
+    with np.testing.assert_raises_regex(TypeError, "batch model artifact type"):
+        runtime._load_or_train_batch_model(
+            symbol,
+            features,
+            labels,
+            signal_idx,
+        )
+
+    specialist_path = runtime._specialist_path(symbol, "trend")
+    specialist_path.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump({"invalid": True}, specialist_path)
+    with np.testing.assert_raises_regex(TypeError, "specialist model artifact type"):
+        runtime._load_or_train_specialist(
+            symbol,
+            "trend",
+            features,
+            labels,
+            signal_idx,
+        )
