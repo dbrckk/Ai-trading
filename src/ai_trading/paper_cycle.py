@@ -51,6 +51,8 @@ class PaperCycleResult:
     processed_bars: int
     reason: str
     mtf_evaluated: bool = False
+    partial_failure: bool = False
+    failed_markets: int = 0
 
 
 class PaperCycleRunner:
