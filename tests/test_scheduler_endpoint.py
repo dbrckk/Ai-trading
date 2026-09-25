@@ -398,6 +398,7 @@ def test_scheduler_delivery_overview_verifies_three_consecutive_cloudflare_succe
     assert overview["cloudflare_delivery_verified"] is True
     assert overview["last_delivery_age_seconds"] == 0.0
     assert overview["last_source"] == "cloudflare"
+    assert overview["last_ok"] is True
 
 
 def test_http_scheduler_exposes_durable_cloudflare_delivery_evidence(tmp_path) -> None:
@@ -521,3 +522,24 @@ def test_scheduler_marks_partial_market_cycle_degraded() -> None:
     assert telemetry["ok"] is False
     assert telemetry["partial_failure"] is True
     assert telemetry["failed_markets"] == 1
+
+
+
+def test_scheduler_delivery_overview_exposes_recent_failed_delivery() -> None:
+    now = datetime(2026, 9, 25, 15, 30, tzinfo=UTC)
+    deliveries = (
+        SchedulerDelivery(
+            timestamp_utc=(now - timedelta(seconds=30)).isoformat(),
+            source="cloudflare",
+            status_code=200,
+            ok=False,
+            processed=4,
+        ),
+    )
+
+    overview = scheduler_delivery_overview(deliveries, now=now)
+
+    assert overview["cloudflare_delivery_fresh"] is False
+    assert overview["cloudflare_delivery_verified"] is False
+    assert overview["last_delivery_age_seconds"] == 30.0
+    assert overview["last_ok"] is False
