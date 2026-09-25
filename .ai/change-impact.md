@@ -1,18 +1,18 @@
 # Change impact
 
-Base: a403a2ef450ec7aba8f51ae8bba908afc527ee3a
-Head: 8c8a7cdae3d1fe6e98730d06f5511b94e6673db8
+Base: 4ea9e2b0dd317d06302e5c8aecb9a8b9d5267cac
+Head: 4cf5a542d90d04c5a120457e21a430baf76cb8d4
 
 ## Changed files
-- M src/ai_trading/multiasset_checkpoint.py
-- M tests/test_multiasset_checkpoint.py
+- M src/ai_trading/multiasset_runtime.py
+- M tests/test_multiasset_runtime.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_multiasset_checkpoint.py
+- tests/test_multiasset_runtime.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

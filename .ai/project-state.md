@@ -45,23 +45,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-23T08:54:45Z
+Generated: 2026-09-25T12:39:03Z
 
 ### Git
 - Branch: `main`
-- Head: `8c8a7cdae3d1`
-- Commit date: 2026-09-23T10:54:32+02:00
-- Commit: fix: isolate checkpoint staging paths
+- Head: `4cf5a542d90d`
+- Commit date: 2026-09-25T14:38:51+02:00
+- Commit: fix: validate checkpoint online model types
 - Tracked files: 500
 
 ### Recently changed files
+- `src/ai_trading/multiasset_runtime.py`
+- `tests/test_multiasset_runtime.py`
 - `src/ai_trading/multiasset_checkpoint.py`
 - `tests/test_multiasset_checkpoint.py`
 - `src/ai_trading/multi_market.py`
 - `tests/test_multi_market.py`
 - `src/ai_trading/dashboard.py`
-- `src/ai_trading/scheduler_endpoint.py`
-- `tests/test_scheduler_endpoint.py`
 
 ### Project signals
 - `pyproject.toml`
