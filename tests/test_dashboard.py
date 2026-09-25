@@ -158,6 +158,7 @@ def test_scheduler_display_state_reports_waiting_collecting_stale_and_verified()
         "cloudflare_delivery_verified": False,
         "cloudflare_delivery_fresh": False,
         "last_delivery_age_seconds": None,
+        "last_ok": None,
         "freshness_seconds": 720.0,
     }
 
@@ -168,6 +169,7 @@ def test_scheduler_display_state_reports_waiting_collecting_stale_and_verified()
             "delivery_count": 2,
             "cloudflare_delivery_fresh": True,
             "last_delivery_age_seconds": 30.0,
+            "last_ok": True,
         }
     )
     stale = _scheduler_display_state(
@@ -175,6 +177,15 @@ def test_scheduler_display_state_reports_waiting_collecting_stale_and_verified()
             **base,
             "delivery_count": 3,
             "last_delivery_age_seconds": 900.0,
+            "last_ok": True,
+        }
+    )
+    degraded = _scheduler_display_state(
+        {
+            **base,
+            "delivery_count": 3,
+            "last_delivery_age_seconds": 30.0,
+            "last_ok": False,
         }
     )
     verified = _scheduler_display_state(
@@ -184,10 +195,12 @@ def test_scheduler_display_state_reports_waiting_collecting_stale_and_verified()
             "cloudflare_delivery_verified": True,
             "cloudflare_delivery_fresh": True,
             "last_delivery_age_seconds": 15.0,
+            "last_ok": True,
         }
     )
 
     assert waiting == ("WAITING", "status-warn", "-", "720s")
     assert collecting == ("COLLECTING", "status-warn", "30s", "720s")
     assert stale == ("STALE", "status-error", "900s", "720s")
+    assert degraded == ("DEGRADED", "status-error", "30s", "720s")
     assert verified == ("VERIFIED", "status-ok", "15s", "720s")
