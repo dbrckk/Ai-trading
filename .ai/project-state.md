@@ -45,22 +45,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-25T15:28:09Z
+Generated: 2026-09-25T15:39:38Z
 
 ### Git
 - Branch: `main`
-- Head: `40960e9b8144`
-- Commit date: 2026-09-25T17:27:57+02:00
-- Commit: fix: validate persisted multiasset model artifact types
+- Head: `f3a7163945ad`
+- Commit date: 2026-09-25T17:39:03+02:00
+- Commit: fix: mark partial multi-market scheduler cycles degraded
 - Tracked files: 500
 
 ### Recently changed files
+- `src/ai_trading/multi_market.py`
+- `src/ai_trading/paper_cycle.py`
+- `src/ai_trading/scheduler_endpoint.py`
+- `tests/test_multi_market.py`
+- `tests/test_scheduler_endpoint.py`
 - `src/ai_trading/multiasset_runtime.py`
 - `tests/test_multiasset_runtime.py`
 - `src/ai_trading/multiasset_checkpoint.py`
 - `tests/test_multiasset_checkpoint.py`
-- `src/ai_trading/multi_market.py`
-- `tests/test_multi_market.py`
 
 ### Project signals
 - `pyproject.toml`

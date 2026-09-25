@@ -5602,6 +5602,8 @@ last_processed: str | None
 processed_bars: int
 reason: str
 mtf_evaluated: bool = False
+partial_failure: bool = False
+failed_markets: int = 0
 ⋮----
 class PaperCycleRunner
 ⋮----
@@ -7621,6 +7623,10 @@ processed_bars = response.payload.get("processed_bars")
 remaining_backlog = response.payload.get("remaining_backlog")
 ⋮----
 mtf_evaluated = response.payload.get("mtf_evaluated")
+⋮----
+partial_failure = response.payload.get("partial_failure")
+⋮----
+failed_markets = response.payload.get("failed_markets")
 ⋮----
 def _utc_now(now: datetime | None) -> datetime
 ⋮----
@@ -12153,6 +12159,10 @@ def test_scheduler_delivery_overview_rejects_invalid_freshness_window() -> None
 def test_scheduler_response_exposes_backlog_and_mtf_progress() -> None
 ⋮----
 result = PaperCycleResult(
+⋮----
+def test_scheduler_marks_partial_market_cycle_degraded() -> None
+⋮----
+telemetry = scheduler_telemetry_payload(response, "cloudflare")
 ````
 
 ## File: tests/test_scheduler_governor.py

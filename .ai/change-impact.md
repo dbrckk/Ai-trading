@@ -1,18 +1,23 @@
 # Change impact
 
-Base: 2008c72371f5e261033ce0eebc12b64a391d617c
-Head: 40960e9b81441b19c677d37689828ae38f6ee3bc
+Base: ebde24ae9a4e70a949215eff1de8a5385fc34c31
+Head: f3a7163945ad9afb40f92468d56c09232c35d26e
 
 ## Changed files
-- M src/ai_trading/multiasset_runtime.py
-- M tests/test_multiasset_runtime.py
+- M src/ai_trading/multi_market.py
+- M src/ai_trading/paper_cycle.py
+- M src/ai_trading/scheduler_endpoint.py
+- M tests/test_multi_market.py
+- M tests/test_scheduler_endpoint.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_multiasset_runtime.py
+- tests/test_multi_market.py
+- tests/test_paper_cycle.py
+- tests/test_scheduler_endpoint.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.
