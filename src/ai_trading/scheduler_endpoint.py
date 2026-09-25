@@ -135,6 +135,7 @@ def scheduler_delivery_overview(
         "last_delivery_timestamp_utc": None if latest is None else latest.timestamp_utc,
         "last_source": None if latest is None else latest.source,
         "last_status_code": None if latest is None else latest.status_code,
+        "last_ok": None if latest is None else latest.ok,
         "deliveries": [
             {
                 "timestamp_utc": delivery.timestamp_utc,

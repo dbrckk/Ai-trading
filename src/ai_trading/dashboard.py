@@ -77,6 +77,8 @@ def _scheduler_display_state(
     fresh = bool(overview["cloudflare_delivery_fresh"])
     age = overview["last_delivery_age_seconds"]
     freshness = float(overview["freshness_seconds"])
+    last_ok = overview.get("last_ok")
+    recent = age is not None and float(age) <= freshness
 
     if verified:
         state = "VERIFIED"
@@ -84,6 +86,9 @@ def _scheduler_display_state(
     elif delivery_count == 0:
         state = "WAITING"
         state_class = "status-warn"
+    elif recent and last_ok is False:
+        state = "DEGRADED"
+        state_class = "status-error"
     elif not fresh:
         state = "STALE"
         state_class = "status-error"
