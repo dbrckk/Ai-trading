@@ -45,13 +45,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-25T12:39:03Z
+Generated: 2026-09-25T15:28:09Z
 
 ### Git
 - Branch: `main`
-- Head: `4cf5a542d90d`
-- Commit date: 2026-09-25T14:38:51+02:00
-- Commit: fix: validate checkpoint online model types
+- Head: `40960e9b8144`
+- Commit date: 2026-09-25T17:27:57+02:00
+- Commit: fix: validate persisted multiasset model artifact types
 - Tracked files: 500
 
 ### Recently changed files
@@ -61,7 +61,6 @@ Generated: 2026-09-25T12:39:03Z
 - `tests/test_multiasset_checkpoint.py`
 - `src/ai_trading/multi_market.py`
 - `tests/test_multi_market.py`
-- `src/ai_trading/dashboard.py`
 
 ### Project signals
 - `pyproject.toml`

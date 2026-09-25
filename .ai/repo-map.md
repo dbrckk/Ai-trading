@@ -4954,7 +4954,7 @@ path = self._specialist_path(symbol, kind)
 ⋮----
 legacy_path = self._legacy_specialist_path(symbol, kind)
 ⋮----
-model = joblib.load(legacy_path)
+model = self._require_model_type(
 ⋮----
 temp = path.with_suffix(".tmp")
 ⋮----
@@ -10649,7 +10649,7 @@ def test_multiasset_online_model_legacy_path_is_migrated(tmp_path: Path) -> None
 symbol = "GC=F"
 legacy_path = runtime._legacy_model_path(symbol)
 ⋮----
-expected = {"legacy": True}
+expected = RiverDirectionModel()
 ⋮----
 loaded = runtime._load_model(symbol)
 ⋮----
@@ -10669,6 +10669,14 @@ checkpoint_store = MultiAssetCheckpointStore(tmp_path / "checkpoint")
 def fail_legacy_load(symbol: str)
 ⋮----
 result = runtime.step({"A": market(71), "B": market(72)})
+⋮----
+def test_multiasset_rejects_invalid_model_artifact_types(tmp_path: Path) -> None
+⋮----
+online_path = runtime._model_path(symbol)
+⋮----
+batch_path = runtime._batch_model_path(symbol)
+⋮----
+specialist_path = runtime._specialist_path(symbol, "trend")
 ````
 
 ## File: tests/test_multiasset_scheduler.py
