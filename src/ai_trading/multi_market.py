@@ -173,6 +173,8 @@ def run_multi_market_paper_cycle(
         processed_bars=processed_bars,
         reason=reason,
         mtf_evaluated=mtf_evaluated,
+        partial_failure=bool(failures),
+        failed_markets=len(failures),
     )
 
 
