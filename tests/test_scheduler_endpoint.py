@@ -485,3 +485,39 @@ def test_scheduler_response_exposes_backlog_and_mtf_progress() -> None:
         "mtf_evaluated": True,
         "status": "RUNNING",
     }
+
+
+
+def test_scheduler_marks_partial_market_cycle_degraded() -> None:
+    result = PaperCycleResult(
+        processed=4,
+        remaining_backlog=False,
+        last_processed="2026-09-25 12:00:00+00:00",
+        processed_bars=42,
+        reason="processed 4 bar(s); isolated failures=1",
+        partial_failure=True,
+        failed_markets=1,
+    )
+
+    response = handle_scheduler_request(
+        authorization="Bearer expected-token",
+        configured_token="expected-token",
+        run_cycle=lambda: result,
+    )
+
+    assert response.status_code == 200
+    assert response.payload == {
+        "ok": False,
+        "processed": 4,
+        "processed_bars": 42,
+        "remaining_backlog": False,
+        "mtf_evaluated": False,
+        "status": "DEGRADED",
+        "partial_failure": True,
+        "failed_markets": 1,
+    }
+
+    telemetry = scheduler_telemetry_payload(response, "cloudflare")
+    assert telemetry["ok"] is False
+    assert telemetry["partial_failure"] is True
+    assert telemetry["failed_markets"] == 1
