@@ -515,3 +515,40 @@ def test_multi_market_cycle_sanitizes_all_unexpected_failures(monkeypatch) -> No
     assert exc_info.value.code == "execution_failed"
     assert exc_info.value.error_type == "MultiMarketFailure"
     assert "sensitive provider internals" not in str(exc_info.value)
+
+
+
+def test_multi_market_cycle_classifies_mixed_total_failure_as_execution_failed(
+    monkeypatch,
+) -> None:
+    def fake_cycle(settings, *, persistence=None, **kwargs):
+        del persistence, kwargs
+        if settings.symbol == "GC=F":
+            raise PaperCycleServiceError(
+                code="storage_unavailable",
+                error_type="StorageError",
+            )
+        raise PaperCycleServiceError(
+            code="execution_failed",
+            error_type="ProviderError",
+        )
+
+    monkeypatch.setattr(
+        multi_market_module,
+        "run_production_paper_cycle",
+        fake_cycle,
+    )
+
+    with pytest.raises(PaperCycleServiceError) as exc_info:
+        run_multi_market_paper_cycle(
+            DEFAULT_MARKETS,
+            period="5d",
+            interval="5m",
+            max_catchup_bars=72,
+            poll_seconds=300.0,
+            shadow_challenger_enabled=True,
+            persistence=object(),
+        )
+
+    assert exc_info.value.code == "execution_failed"
+    assert exc_info.value.error_type == "MultiMarketFailure"
