@@ -50,6 +50,14 @@ def scheduler_telemetry_payload(
     if isinstance(mtf_evaluated, bool):
         payload["mtf_evaluated"] = mtf_evaluated
 
+    partial_failure = response.payload.get("partial_failure")
+    if isinstance(partial_failure, bool):
+        payload["partial_failure"] = partial_failure
+
+    failed_markets = response.payload.get("failed_markets")
+    if isinstance(failed_markets, int) and not isinstance(failed_markets, bool):
+        payload["failed_markets"] = failed_markets
+
     return payload
 
 
@@ -179,14 +187,19 @@ def handle_scheduler_request(
             payload={"ok": False, "error": "worker failure"},
         )
 
+    payload: dict[str, object] = {
+        "ok": not result.partial_failure,
+        "processed": int(result.processed),
+        "processed_bars": int(result.processed_bars),
+        "remaining_backlog": bool(result.remaining_backlog),
+        "mtf_evaluated": bool(result.mtf_evaluated),
+        "status": "DEGRADED" if result.partial_failure else "RUNNING",
+    }
+    if result.partial_failure:
+        payload["partial_failure"] = True
+        payload["failed_markets"] = int(result.failed_markets)
+
     return SchedulerHttpResponse(
         status_code=200,
-        payload={
-            "ok": True,
-            "processed": int(result.processed),
-            "processed_bars": int(result.processed_bars),
-            "remaining_backlog": bool(result.remaining_backlog),
-            "mtf_evaluated": bool(result.mtf_evaluated),
-            "status": "RUNNING",
-        },
+        payload=payload,
     )
