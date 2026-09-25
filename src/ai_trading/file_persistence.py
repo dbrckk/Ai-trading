@@ -25,11 +25,10 @@ from .shadow_quality import ShadowQualityComparison, compare_shadow_audit_payloa
 from .trade_journal import TradeJournal, TradeSnapshot
 
 
-_LEGACY_RUNTIME_KEY = "paper:GC=F:5m:online-river:v1"
-
-
 class FilePaperPersistence(PaperPersistence):
     """File backend with per-runtime isolation and legacy Gold compatibility."""
+
+    _LEGACY_RUNTIME_KEY = "paper:GC=F:5m:online-river:v1"
 
     def __init__(
         self,
@@ -53,45 +52,45 @@ class FilePaperPersistence(PaperPersistence):
         self.model_path = Path(model_path) if model_path is not None else root_path / "models" / "online-river.joblib"
 
     def _runtime_root(self, runtime_key: str) -> Path:
-        if runtime_key == _LEGACY_RUNTIME_KEY:
+        if runtime_key == self._LEGACY_RUNTIME_KEY:
             return self.root_path
         digest = hashlib.sha256(runtime_key.encode("utf-8")).hexdigest()[:16]
         return self.root_path / "runtimes" / digest
 
     def _state_store_for(self, runtime_key: str) -> RuntimeStateStore:
-        if runtime_key == _LEGACY_RUNTIME_KEY:
+        if runtime_key == self._LEGACY_RUNTIME_KEY:
             return self.state_store
         return RuntimeStateStore(self._runtime_root(runtime_key) / "runtime_state.json")
 
     def _trade_journal_for(self, runtime_key: str) -> TradeJournal:
-        if runtime_key == _LEGACY_RUNTIME_KEY:
+        if runtime_key == self._LEGACY_RUNTIME_KEY:
             return self.trade_journal
         return TradeJournal(self._runtime_root(runtime_key) / "trades.jsonl")
 
     def _audit_log_for(self, runtime_key: str) -> AuditLog:
-        if runtime_key == _LEGACY_RUNTIME_KEY:
+        if runtime_key == self._LEGACY_RUNTIME_KEY:
             return self.audit_log
         return AuditLog(self._runtime_root(runtime_key) / "audit.jsonl")
 
     def _status_store_for(self, runtime_key: str) -> HostedRuntimeStatusStore:
-        if runtime_key == _LEGACY_RUNTIME_KEY:
+        if runtime_key == self._LEGACY_RUNTIME_KEY:
             return self.status_store
         return HostedRuntimeStatusStore(
             self._runtime_root(runtime_key) / "runtime_status.json"
         )
 
     def _burnin_tracker_for(self, runtime_key: str) -> BurnInTracker:
-        if runtime_key == _LEGACY_RUNTIME_KEY:
+        if runtime_key == self._LEGACY_RUNTIME_KEY:
             return self.burnin_tracker
         return BurnInTracker(self._runtime_root(runtime_key) / "burnin.jsonl")
 
     def _regimes_path_for(self, runtime_key: str) -> Path:
-        if runtime_key == _LEGACY_RUNTIME_KEY:
+        if runtime_key == self._LEGACY_RUNTIME_KEY:
             return self.regimes_path
         return self._runtime_root(runtime_key) / "regimes.txt"
 
     def _model_path_for(self, runtime_key: str) -> Path:
-        if runtime_key == _LEGACY_RUNTIME_KEY:
+        if runtime_key == self._LEGACY_RUNTIME_KEY:
             return self.model_path
         return self._runtime_root(runtime_key) / "models" / "online-river.joblib"
 
