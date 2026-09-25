@@ -502,6 +502,7 @@ def test_multiasset_runtime_rejects_invalid_checkpoint_model_type(
         {"A": {"not": "a river model"}},
     )
     runtime = MultiAssetPaperRuntime(
+        allocation_config=AllocationConfig(max_asset_weight=0.6),
         state_store=MultiAssetStateStore(tmp_path / "state.json"),
         checkpoint_store=checkpoint_store,
         audit_log=AuditLog(tmp_path / "audit.jsonl"),
