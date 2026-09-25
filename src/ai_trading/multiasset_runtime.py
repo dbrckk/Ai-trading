@@ -175,6 +175,18 @@ class MultiAssetPaperRuntime:
     def _legacy_symbol_key(symbol: str) -> str:
         return symbol.replace("/", "_").replace("=", "_").replace("^", "_")
 
+
+    @staticmethod
+    def _require_model_type(
+        model: object,
+        expected_type: type,
+        *,
+        label: str,
+    ) -> object:
+        if not isinstance(model, expected_type):
+            raise TypeError(f"invalid {label} model artifact type")
+        return model
+
     def _specialist_path(self, symbol: str, kind: str) -> Path:
         return self.specialist_model_root / (
             f"{self._symbol_key(symbol)}_{kind}.joblib"
@@ -195,10 +207,18 @@ class MultiAssetPaperRuntime:
     ) -> SpecialistDirectionModel:
         path = self._specialist_path(symbol, kind)
         if path.exists():
-            return joblib.load(path)
+            return self._require_model_type(
+                joblib.load(path),
+                SpecialistDirectionModel,
+                label="specialist",
+            )
         legacy_path = self._legacy_specialist_path(symbol, kind)
         if legacy_path.exists():
-            model = joblib.load(legacy_path)
+            model = self._require_model_type(
+                joblib.load(legacy_path),
+                SpecialistDirectionModel,
+                label="legacy specialist",
+            )
             path.parent.mkdir(parents=True, exist_ok=True)
             temp = path.with_suffix(".tmp")
             joblib.dump(model, temp)
@@ -230,10 +250,18 @@ class MultiAssetPaperRuntime:
     ) -> EnsembleDirectionModel:
         path = self._batch_model_path(symbol)
         if path.exists():
-            return joblib.load(path)
+            return self._require_model_type(
+                joblib.load(path),
+                EnsembleDirectionModel,
+                label="batch",
+            )
         legacy_path = self._legacy_batch_model_path(symbol)
         if legacy_path.exists():
-            model = joblib.load(legacy_path)
+            model = self._require_model_type(
+                joblib.load(legacy_path),
+                EnsembleDirectionModel,
+                label="legacy batch",
+            )
             path.parent.mkdir(parents=True, exist_ok=True)
             temp = path.with_suffix(".tmp")
             joblib.dump(model, temp)
@@ -262,10 +290,18 @@ class MultiAssetPaperRuntime:
     def _load_model(self, symbol: str) -> RiverDirectionModel:
         path = self._model_path(symbol)
         if path.exists():
-            return joblib.load(path)
+            return self._require_model_type(
+                joblib.load(path),
+                RiverDirectionModel,
+                label="online",
+            )
         legacy_path = self._legacy_model_path(symbol)
         if legacy_path.exists():
-            model = joblib.load(legacy_path)
+            model = self._require_model_type(
+                joblib.load(legacy_path),
+                RiverDirectionModel,
+                label="legacy online",
+            )
             self._save_model(symbol, model)
             return model
         return RiverDirectionModel()
