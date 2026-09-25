@@ -63,6 +63,8 @@ def configured_markets_from_env() -> tuple[MarketSpec, ...]:
     symbols = tuple(part.strip() for part in raw.split(",") if part.strip())
     if not symbols:
         raise ValueError("AI_TRADING_MARKETS must contain at least one symbol")
+    if len(set(symbols)) != len(symbols):
+        raise ValueError("AI_TRADING_MARKETS must contain unique symbols")
 
     known = {spec.symbol: spec for spec in DEFAULT_MARKETS}
     if symbols == tuple(spec.symbol for spec in DEFAULT_MARKETS):
@@ -72,7 +74,7 @@ def configured_markets_from_env() -> tuple[MarketSpec, ...]:
     return tuple(
         MarketSpec(
             symbol=symbol,
-            label=known.get(symbol, MarketSpec(symbol, symbol, weight)).label,
+            label=known[symbol].label if symbol in known else symbol,
             allocation=weight,
         )
         for symbol in symbols
