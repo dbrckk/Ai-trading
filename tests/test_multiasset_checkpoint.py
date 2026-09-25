@@ -363,8 +363,11 @@ def test_checkpoint_fsyncs_artifacts_and_publication_boundaries(
     assert "state.json" in file_calls
     assert store._model_filename("A") in file_calls
     assert "manifest.json" in file_calls
-    assert "CURRENT.tmp" in file_calls
-    assert f".{generation}.tmp" in directory_calls
+    assert any(name.startswith(".CURRENT.") and name.endswith(".tmp") for name in file_calls)
+    assert any(
+        name.startswith(f".{generation}.") and name.endswith(".tmp")
+        for name in directory_calls
+    )
     assert directory_calls.count(store.root.name) >= 2
 
 
