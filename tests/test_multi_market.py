@@ -519,3 +519,20 @@ def test_multi_market_cycle_sanitizes_all_unexpected_failures(monkeypatch) -> No
     assert exc_info.value.code == "execution_failed"
     assert exc_info.value.error_type == "MultiMarketFailure"
     assert "sensitive provider internals" not in str(exc_info.value)
+
+
+
+def test_configured_markets_rejects_duplicate_symbols(monkeypatch) -> None:
+    monkeypatch.setenv("AI_TRADING_MARKETS", "GC=F,GC=F,BTC-USD")
+
+    with pytest.raises(ValueError, match="unique symbols"):
+        configured_markets_from_env()
+
+
+def test_configured_markets_preserves_known_labels_and_custom_symbols(monkeypatch) -> None:
+    monkeypatch.setenv("AI_TRADING_MARKETS", "GC=F,ETH-USD")
+
+    markets = configured_markets_from_env()
+
+    assert [market.label for market in markets] == ["Gold", "ETH-USD"]
+    assert [market.allocation for market in markets] == pytest.approx([0.5, 0.5])
