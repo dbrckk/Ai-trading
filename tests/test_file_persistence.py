@@ -161,3 +161,65 @@ def test_file_backend_persists_scheduler_deliveries(tmp_path) -> None:
 
     restored = FilePaperPersistence(root=tmp_path)
     assert restored.list_scheduler_deliveries() == (delivery,)
+
+
+
+def test_file_backend_isolates_runtime_keys(tmp_path) -> None:
+    from ai_trading.file_persistence import FilePaperPersistence
+
+    backend = FilePaperPersistence(root=tmp_path)
+    gold_key = "paper:GC=F:5m:online-river:v1"
+    dax_key = "paper:^GDAXI:5m:online-river:v1"
+
+    gold = backend.load_runtime(gold_key, 100_000.0)
+    dax = backend.load_runtime(dax_key, 100_000.0)
+    assert gold.is_new is True
+    assert dax.is_new is True
+
+    gold_commit = RuntimeStepCommit(
+        expected_revision=0,
+        state=RuntimeState(
+            cash=101_000.0,
+            units=0.0,
+            last_price=100.0,
+            peak_equity=101_000.0,
+            day_start_equity=100_000.0,
+            processed_bars=1,
+        ),
+        model=serialize_model(RiverDirectionModel()),
+        trade=None,
+        audit_event="runtime_step",
+        audit_payload={"market": "gold"},
+        observed_regime="gold_regime",
+    )
+    dax_commit = RuntimeStepCommit(
+        expected_revision=0,
+        state=RuntimeState(
+            cash=99_000.0,
+            units=0.0,
+            last_price=200.0,
+            peak_equity=100_000.0,
+            day_start_equity=100_000.0,
+            processed_bars=1,
+        ),
+        model=serialize_model(RiverDirectionModel()),
+        trade=None,
+        audit_event="runtime_step",
+        audit_payload={"market": "dax"},
+        observed_regime="dax_regime",
+    )
+
+    assert backend.commit_step(gold_key, gold_commit) is CommitOutcome.COMMITTED
+    assert backend.commit_step(dax_key, dax_commit) is CommitOutcome.COMMITTED
+
+    restored = FilePaperPersistence(root=tmp_path)
+    gold_restored = restored.load_runtime(gold_key, 100_000.0)
+    dax_restored = restored.load_runtime(dax_key, 100_000.0)
+
+    assert gold_restored.state.cash == 101_000.0
+    assert dax_restored.state.cash == 99_000.0
+    assert restored.list_regimes(gold_key) == ("gold_regime",)
+    assert restored.list_regimes(dax_key) == ("dax_regime",)
+    assert restored.state_store.path == tmp_path / "runtime_state.json"
+    assert restored._state_store_for(dax_key).path != restored.state_store.path
+    assert restored._model_path_for(dax_key) != restored.model_path
