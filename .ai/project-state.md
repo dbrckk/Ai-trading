@@ -45,21 +45,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-25T15:39:38Z
+Generated: 2026-09-25T15:46:19Z
 
 ### Git
 - Branch: `main`
-- Head: `f3a7163945ad`
-- Commit date: 2026-09-25T17:39:03+02:00
-- Commit: fix: mark partial multi-market scheduler cycles degraded
+- Head: `38011336bd5c`
+- Commit date: 2026-09-25T17:46:02+02:00
+- Commit: fix: distinguish degraded scheduler deliveries from stale ones
 - Tracked files: 500
 
 ### Recently changed files
+- `src/ai_trading/dashboard.py`
+- `src/ai_trading/scheduler_endpoint.py`
+- `tests/test_dashboard.py`
+- `tests/test_scheduler_endpoint.py`
 - `src/ai_trading/multi_market.py`
 - `src/ai_trading/paper_cycle.py`
-- `src/ai_trading/scheduler_endpoint.py`
 - `tests/test_multi_market.py`
-- `tests/test_scheduler_endpoint.py`
 - `src/ai_trading/multiasset_runtime.py`
 - `tests/test_multiasset_runtime.py`
 - `src/ai_trading/multiasset_checkpoint.py`

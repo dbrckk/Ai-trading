@@ -1,13 +1,12 @@
 # Change impact
 
-Base: ebde24ae9a4e70a949215eff1de8a5385fc34c31
-Head: f3a7163945ad9afb40f92468d56c09232c35d26e
+Base: ad92fd58b5aa835cc5a2ddde8814a783104cb90a
+Head: 38011336bd5c29a26282ef3421e5ac473a0f3161
 
 ## Changed files
-- M src/ai_trading/multi_market.py
-- M src/ai_trading/paper_cycle.py
+- M src/ai_trading/dashboard.py
 - M src/ai_trading/scheduler_endpoint.py
-- M tests/test_multi_market.py
+- M tests/test_dashboard.py
 - M tests/test_scheduler_endpoint.py
 
 ## Affected areas
@@ -15,8 +14,7 @@ Head: f3a7163945ad9afb40f92468d56c09232c35d26e
 - tests
 
 ## Related test candidates
-- tests/test_multi_market.py
-- tests/test_paper_cycle.py
+- tests/test_dashboard.py
 - tests/test_scheduler_endpoint.py
 
 ## Agent guidance

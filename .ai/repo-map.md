@@ -2188,6 +2188,8 @@ verified = bool(overview["cloudflare_delivery_verified"])
 fresh = bool(overview["cloudflare_delivery_fresh"])
 age = overview["last_delivery_age_seconds"]
 freshness = float(overview["freshness_seconds"])
+last_ok = overview.get("last_ok")
+recent = age is not None and float(age) <= freshness
 ⋮----
 state = "VERIFIED"
 state_class = "status-ok"
@@ -2195,8 +2197,10 @@ state_class = "status-ok"
 state = "WAITING"
 state_class = "status-warn"
 ⋮----
-state = "STALE"
+state = "DEGRADED"
 state_class = "status-error"
+⋮----
+state = "STALE"
 ⋮----
 state = "COLLECTING"
 ⋮----
@@ -9249,6 +9253,7 @@ base = {
 waiting = _scheduler_display_state(base)
 collecting = _scheduler_display_state(
 stale = _scheduler_display_state(
+degraded = _scheduler_display_state(
 verified = _scheduler_display_state(
 ````
 
@@ -12163,6 +12168,11 @@ result = PaperCycleResult(
 def test_scheduler_marks_partial_market_cycle_degraded() -> None
 ⋮----
 telemetry = scheduler_telemetry_payload(response, "cloudflare")
+⋮----
+def test_scheduler_delivery_overview_exposes_recent_failed_delivery() -> None
+⋮----
+now = datetime(2026, 9, 25, 15, 30, tzinfo=UTC)
+deliveries = (
 ````
 
 ## File: tests/test_scheduler_governor.py
