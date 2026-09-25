@@ -167,6 +167,8 @@ def test_multi_market_cycle_isolates_one_market_failure(monkeypatch) -> None:
         [("GC=F", "1mo"), ("^GDAXI", "1mo"), ("BTC-USD", "1mo")]
     )
     assert result.processed == 4
+    assert result.partial_failure is True
+    assert result.failed_markets == 1
     assert "isolated failures=1" in result.reason
 
 
@@ -487,6 +489,8 @@ def test_multi_market_cycle_isolates_unexpected_market_exception(monkeypatch) ->
     )
 
     assert result.processed == 2
+    assert result.partial_failure is True
+    assert result.failed_markets == 1
     assert "isolated failures=1" in result.reason
 
 
