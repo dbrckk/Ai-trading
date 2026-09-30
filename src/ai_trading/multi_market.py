@@ -154,7 +154,7 @@ def run_multi_market_paper_cycle(
         failure_codes = {code for _, code in failures}
         code = (
             "storage_unavailable"
-            if "storage_unavailable" in failure_codes
+            if failure_codes == {"storage_unavailable"}
             else "execution_failed"
         )
         raise PaperCycleServiceError(
