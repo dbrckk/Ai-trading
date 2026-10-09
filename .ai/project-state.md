@@ -45,16 +45,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-25T15:46:19Z
+Generated: 2026-10-09T11:21:51Z
 
 ### Git
 - Branch: `main`
-- Head: `38011336bd5c`
-- Commit date: 2026-09-25T17:46:02+02:00
-- Commit: fix: distinguish degraded scheduler deliveries from stale ones
+- Head: `246df4eb7347`
+- Commit date: 2026-10-09T13:20:33+02:00
+- Commit: docs(agents): adopt pinned 88-rule development standard
 - Tracked files: 500
 
 ### Recently changed files
+- `AGENTS.md`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/scheduler_endpoint.py`
 - `tests/test_dashboard.py`
@@ -64,8 +65,6 @@ Generated: 2026-09-25T15:46:19Z
 - `tests/test_multi_market.py`
 - `src/ai_trading/multiasset_runtime.py`
 - `tests/test_multiasset_runtime.py`
-- `src/ai_trading/multiasset_checkpoint.py`
-- `tests/test_multiasset_checkpoint.py`
 
 ### Project signals
 - `pyproject.toml`
