@@ -72,6 +72,10 @@ class FakeRunner:
             last_processed="2026-09-16 08:00:00+00:00",
             processed_bars=4,
             reason="processed 2 bar(s)",
+            side=-1,
+            confidence=0.81,
+            approved=True,
+            decision_reason="approved",
             mtf_evaluated=shadow_challenger_enabled,
         )
 
@@ -95,6 +99,10 @@ def test_service_persists_starting_and_running_status() -> None:
     assert final.units == 2.0
     assert final.equity == 99_702.0
     assert final.reason == "processed 2 bar(s)"
+    assert final.side == -1
+    assert final.confidence == 0.81
+    assert final.approved is True
+    assert final.decision_reason == "approved"
     assert final.cycle_duration_seconds is not None
     assert final.cycle_duration_seconds >= 0.0
     assert final.mtf_evaluated is False
