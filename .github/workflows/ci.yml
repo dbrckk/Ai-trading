@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: ["main"]
   workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: "Expected trusted checkpoint commit (empty for manual CI)"
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -32,6 +37,15 @@ jobs:
       TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/ai_trading_test
     steps:
       - uses: actions/checkout@v7
+      - name: Verify explicitly requested checkpoint SHA
+        if: ${{ inputs.expected_sha != '' }}
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+        run: |
+          test "$GITHUB_SHA" = "$EXPECTED_SHA" || {
+            echo "Requested checkpoint changed before CI validation" >&2
+            exit 1
+          }
       - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
