@@ -1,8 +1,10 @@
-from datetime import UTC, datetime
+from dataclasses import replace
+from datetime import UTC, datetime, timedelta
 
 from ai_trading.market_freshness import (
     classify_market_freshness,
     market_session_open,
+    paper_signal_snapshot,
 )
 from ai_trading.runtime_status import HostedRuntimeStatus
 
@@ -28,6 +30,29 @@ def test_btc_session_is_always_open() -> None:
     saturday = datetime(2026, 9, 19, 12, 0, tzinfo=UTC)
 
     assert market_session_open("BTC-USD", now=saturday) is True
+    approved = replace(
+        _status(),
+        symbol="BTC-USD",
+        last_cycle_timestamp=saturday.isoformat(),
+        processed=True,
+        side=1,
+        confidence=0.71,
+        approved=True,
+        decision_reason="approved",
+    )
+    valid = paper_signal_snapshot(
+        approved, freshness="LIVE", session_open=True, now=saturday
+    )
+    assert valid["signal"] == "LONG"
+    assert valid["confidence"] == 0.71
+    assert valid["risk_approved"] is True
+    assert valid["signal_state"] == "PAPER_APPROVED"
+    expired = paper_signal_snapshot(
+        approved, freshness="LIVE", session_open=True,
+        now=saturday + timedelta(minutes=16),
+    )
+    assert expired["signal"] is None
+    assert expired["signal_state"] == "DELAYED"
 
 
 def test_dax_regular_weekday_session_is_dst_aware() -> None:
@@ -95,6 +120,14 @@ def test_closed_session_is_not_misreported_as_delayed() -> None:
 
     assert freshness == "MARKET_CLOSED"
     assert session_open is False
+    blocked = paper_signal_snapshot(
+        replace(status, processed=True, side=-1, confidence=0.91, approved=True),
+        freshness=freshness,
+        session_open=session_open,
+        now=datetime(2026, 9, 20, 12, 0, tzinfo=UTC),
+    )
+    assert blocked["signal"] is None
+    assert blocked["signal_state"] == "UNAVAILABLE"
 
 
 def test_stale_heartbeat_during_open_session_is_delayed() -> None:
