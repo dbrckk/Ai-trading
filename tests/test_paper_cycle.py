@@ -92,6 +92,11 @@ def test_fresh_runtime_processes_only_latest_eligible_bar(tmp_path: Path) -> Non
     assert result.last_processed == str(eligible[-1])
     assert state.last_processed == str(eligible[-1])
     assert state.processed_bars == 1
+    audit = json.loads(backend.audit_log.path.read_text(encoding="utf-8").splitlines()[-1])
+    assert result.side == audit["payload"]["prediction"]["side"]
+    assert result.confidence == audit["payload"]["prediction"]["confidence"]
+    assert result.approved == audit["payload"]["risk_decision"]["approved"]
+    assert result.decision_reason == audit["payload"]["risk_decision"]["reason"]
 
 
 def test_existing_runtime_catches_up_oldest_first(tmp_path: Path) -> None:
