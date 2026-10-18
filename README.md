@@ -291,3 +291,6 @@ The predictive model cannot bypass the risk engine. A future live adapter must r
 - [ ] V4 — external live execution adapter (NautilusTrader or Lean)
 - [x] V5 — multi-asset portfolio allocation and portfolio-level risk
 - [x] V6 — guarded continuous learning, drift detection, rollback and resilience governance
+## Kronos shadow research (optional)
+
+An isolated offline evaluator can benchmark the upstream Kronos OHLCV model on Gold, DAX and BTC without changing paper execution. See [docs/kronos-research.md](docs/kronos-research.md). No production inference or model promotion is enabled.

@@ -27,6 +27,7 @@ Status: active
 - Repository-standards routing benchmark health is separate from the trading CI; trading CI is green.
 
 ## Current priority
+- PR #145 (draft, 2026-10-18) introduces an isolated upstream Kronos offline evaluator, cost-adjusted non-overlapping forecasts and a review-only confidence gate. No production routing is changed. Real model benchmarks on Gold/DAX/BTC are pending and accuracy/profitability claims are not established.
 - Collect new versioned MTF evidence independently for the validated Gold and DAX 45-minute candidates.
 - Require at least 500 realized MTF observations and at least 100 directional observations before MTF review eligibility.
 - Keep BTC MTF unvalidated/disabled until a leakage-safe benchmark candidate passes the active-direction gate.
