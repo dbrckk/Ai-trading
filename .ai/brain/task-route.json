@@ -4,15 +4,15 @@
     "expand_to": 12,
     "max_files": 6,
     "requested_max_files": 12,
-    "score_margin": 0,
+    "score_margin": 3,
     "tier": "bounded",
-    "top_score": 17
+    "top_score": 26
   },
   "cache": {
-    "fingerprint": "fa21bfb8293d0765a115eb4e859f9d0279a7cbbbab829f7da40142fe06c81b1c",
+    "fingerprint": "922eb905b9a513dfbb90f9002d1308f8fc75b6905f345da5b0c6fbc5ecb93a5e",
     "hit": false
   },
-  "candidate_count": 12,
+  "candidate_count": 38,
   "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
   "files": [
     {
@@ -20,11 +20,47 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/cli.py",
+      "path": "src/ai_trading/dashboard.py",
       "reasons": [
+        "impact",
+        "recently-changed",
         "search-index"
       ],
-      "score": 17,
+      "score": 26,
+      "symbols": [
+        "Handler",
+        "_display_money",
+        "_display_ratio",
+        "_display_trade_pnl",
+        "_display_units",
+        "_equity_chart_svg",
+        "_public_runtime_snapshot",
+        "_readiness_number",
+        "_readiness_panel",
+        "_scheduler_display_state",
+        "_send_json",
+        "_trade_pnl_known",
+        "_write_response_body",
+        "do_GET",
+        "do_POST",
+        "end_headers",
+        "execute_paper_cycle",
+        "load_status_snapshot",
+        "log_message",
+        "render_dashboard"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "engine"
+      ],
+      "path": "src/ai_trading/cli.py",
+      "reasons": [
+        "impact",
+        "search-index"
+      ],
+      "score": 23,
       "symbols": [
         "compare_models",
         "create_readiness_release_command",
@@ -53,32 +89,14 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/dashboard.py",
+      "path": "tests/test_dashboard_engine_status.py",
       "reasons": [
-        "search-index"
+        "impact",
+        "recently-changed"
       ],
-      "score": 17,
+      "score": 19,
       "symbols": [
-        "Handler",
-        "_display_money",
-        "_display_ratio",
-        "_display_trade_pnl",
-        "_display_units",
-        "_equity_chart_svg",
-        "_public_runtime_snapshot",
-        "_readiness_number",
-        "_readiness_panel",
-        "_scheduler_display_state",
-        "_send_json",
-        "_trade_pnl_known",
-        "_write_response_body",
-        "do_GET",
-        "do_POST",
-        "end_headers",
-        "execute_paper_cycle",
-        "load_status_snapshot",
-        "log_message",
-        "render_dashboard"
+        "test_dashboard_hides_expired_paper_decision"
       ]
     },
     {
@@ -135,22 +153,6 @@
         "__init__",
         "paper_run",
         "train"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "engine"
-      ],
-      "path": "src/ai_trading/stress_engine.py",
-      "reasons": [],
-      "score": 10,
-      "symbols": [
-        "StressPolicy",
-        "StressReport",
-        "StressScenario",
-        "_stressed_covariance",
-        "run_stress_test"
       ]
     }
   ],

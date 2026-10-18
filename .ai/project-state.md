@@ -46,28 +46,34 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-18T10:33:39Z
+Generated: 2026-10-18T22:47:11Z
 
 ### Git
 - Branch: `main`
-- Head: `ed4348220b4d`
-- Commit date: 2026-10-18T06:33:30-04:00
-- Commit: ci(security): trusted Production-OS draft review handoff (#144)
+- Head: `82264e1167e6`
+- Commit date: 2026-10-18T18:47:00-04:00
+- Commit: fix: restore paper decision integrity and prevent stale dashboard signals (#146)
 - Tracked files: 501
 
 ### Recently changed files
+- `README.md`
+- `src/ai_trading/dashboard.py`
+- `src/ai_trading/market_freshness.py`
+- `src/ai_trading/multi_market.py`
+- `src/ai_trading/paper_cycle.py`
+- `src/ai_trading/paper_cycle_service.py`
+- `src/ai_trading/runtime_status.py`
+- `tests/test_dashboard.py`
+- `tests/test_dashboard_engine_status.py`
+- `tests/test_market_freshness.py`
+- `tests/test_multi_market.py`
+- `tests/test_paper_cycle.py`
+- `tests/test_paper_cycle_service.py`
 - `.github/workflows/ci.yml`
 - `.github/workflows/production-os-review-handoff.yml`
 - `AGENTS.md`
-- `src/ai_trading/dashboard.py`
 - `src/ai_trading/scheduler_endpoint.py`
-- `tests/test_dashboard.py`
 - `tests/test_scheduler_endpoint.py`
-- `src/ai_trading/multi_market.py`
-- `src/ai_trading/paper_cycle.py`
-- `tests/test_multi_market.py`
-- `src/ai_trading/multiasset_runtime.py`
-- `tests/test_multiasset_runtime.py`
 
 ### Project signals
 - `pyproject.toml`

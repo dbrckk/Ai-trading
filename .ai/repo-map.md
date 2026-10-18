@@ -2512,13 +2512,18 @@ confidence = "-"
 risk_decision = "-"
 decision_reason = "storage unavailable" if storage_error else "-"
 ⋮----
+paper_signal = paper_signal_snapshot(
+⋮----
 decision_reason = (
 ⋮----
 decision_reason = "worker heartbeat expired"
 ⋮----
-signal = {1: "LONG", -1: "SHORT", 0: "FLAT"}.get(
-confidence = f"{runtime_status.confidence:.1%}"
+signal = str(paper_signal["signal"])
+confidence = f"{float(paper_signal['confidence']):.1%}"
 risk_decision = "APPROVED" if runtime_status.approved else "REJECTED"
+decision_reason = runtime_status.decision_reason or decision_reason
+⋮----
+risk_decision = str(paper_signal["signal_state"])
 ⋮----
 risk_decision = "SKIPPED"
 ⋮----
@@ -2622,6 +2627,11 @@ mtf_review = (
 mtf_score_delta = mtf_shadow.get("score_delta")
 mtf_score_display = (
 signal = item.get("signal") or "-"
+signal_state = str(item.get("signal_state") or "UNAVAILABLE")
+signal_time = html.escape(str(item.get("signal_time") or "-"))
+paper_risk_reason = html.escape(str(item.get("decision_reason") or "-"))
+signal_age = item.get("signal_age_seconds")
+signal_age_display = (
 signal_css = {
 market_confidence = item.get("confidence")
 confidence_value = (
@@ -4001,6 +4011,18 @@ local_time = local.time().replace(tzinfo=None)
 session_open = market_session_open(symbol, now=now)
 ⋮----
 engine_status = str(status_snapshot.get("engine_status") or "OFF").upper()
+⋮----
+"""Only expose a fresh, completed PAPER decision; never imply live trade advice."""
+snapshot: dict[str, object] = {
+⋮----
+units = {"m": 60, "h": 3600, "d": 86400}
+match = fullmatch(r"([1-9][0-9]*)(m|h|d)", status.interval)
+⋮----
+timestamp = datetime.fromisoformat(status.last_cycle_timestamp)
+⋮----
+age_seconds = (_utc_now(now) - timestamp.astimezone(UTC)).total_seconds()
+⋮----
+max_age = max(3 * int(match.group(1)) * units[match.group(2)], 300)
 ````
 
 ## File: src/ai_trading/meta_router.py
@@ -4698,16 +4720,12 @@ normalized_equity = (
 sleeve_equity = allocated_cash * normalized_equity / _NORMALIZED_RUNTIME_CASH
 overview = build_operational_overview(
 status = persistence.load_runtime_status(runtime_key)
-market_signal = None
-market_confidence = None
 market_reason = None
 cycle_duration_seconds = None
 market_mtf_evaluated = False
 heartbeat_age_seconds = None
 freshness = "OFF"
 ⋮----
-market_signal = (
-market_confidence = status.confidence if status.processed else None
 market_reason = status.reason
 cycle_duration_seconds = status.cycle_duration_seconds
 market_mtf_evaluated = status.mtf_evaluated
@@ -4715,6 +4733,7 @@ status_snapshot = runtime_status_snapshot(status, now=now)
 heartbeat_age_seconds = status_snapshot.get("heartbeat_age_seconds")
 ⋮----
 session_open = None
+signal_snapshot = paper_signal_snapshot(
 healthy = bool(overview.get("storage_healthy"))
 ⋮----
 engine_status = str(overview.get("engine_status") or "UNKNOWN").upper()
@@ -5758,6 +5777,10 @@ reason: str
 mtf_evaluated: bool = False
 partial_failure: bool = False
 failed_markets: int = 0
+side: int = 0
+confidence: float = 0.0
+approved: bool = False
+decision_reason: str | None = None
 ⋮----
 class PaperCycleRunner
 ⋮----
@@ -5825,11 +5848,14 @@ mtf_attach_target = None
 ⋮----
 processed = 0
 attempts = 0
+last_decision = None
 ⋮----
 target = pending[0]
 observer_kwargs = {}
 ⋮----
 result = runtime.step_prepared(
+⋮----
+last_decision = result
 ⋮----
 remaining_backlog = bool(pending)
 ⋮----
@@ -7592,6 +7618,7 @@ poll_seconds: float = 60.0
 consecutive_cycle_errors: int = 0
 cycle_duration_seconds: float | None = None
 mtf_evaluated: bool = False
+decision_reason: str | None = None
 ⋮----
 current_time = now or datetime.now(UTC)
 ⋮----
@@ -9142,7 +9169,7 @@ backend = FilePaperPersistence(root=tmp_path)
 
 ## File: tests/test_dashboard_engine_status.py
 ````python
-def test_dashboard_shows_engine_and_latest_decision(tmp_path) -> None
+def test_dashboard_hides_expired_paper_decision(tmp_path) -> None
 ⋮----
 journal = TradeJournal(tmp_path / "trades.jsonl")
 state_store = RuntimeStateStore(tmp_path / "runtime_state.json")
@@ -10153,6 +10180,11 @@ def test_btc_session_is_always_open() -> None
 ⋮----
 saturday = datetime(2026, 9, 19, 12, 0, tzinfo=UTC)
 ⋮----
+approved = replace(
+valid = paper_signal_snapshot(
+⋮----
+expired = paper_signal_snapshot(
+⋮----
 def test_dax_regular_weekday_session_is_dst_aware() -> None
 ⋮----
 opening = datetime(2026, 9, 21, 7, 0, tzinfo=UTC)
@@ -10176,6 +10208,8 @@ status = _status(
 def test_closed_session_is_not_misreported_as_delayed() -> None
 ⋮----
 status = _status()
+⋮----
+blocked = paper_signal_snapshot(
 ⋮----
 def test_stale_heartbeat_during_open_session_is_delayed() -> None
 ````
@@ -11073,6 +11107,8 @@ runner = build_runner(tmp_path, backend, df)
 ⋮----
 result = runner.run_once(
 state = backend.load_runtime(runtime.runtime_key, 100_000.0).state
+⋮----
+audit = json.loads(backend.audit_log.path.read_text(encoding="utf-8").splitlines()[-1])
 ⋮----
 def test_existing_runtime_catches_up_oldest_first(tmp_path: Path) -> None
 ⋮----
@@ -13110,6 +13146,30 @@ Per-market paper execution costs can be overridden without changing code by sett
 ```
 
 The example only demonstrates the configuration format; production values should be calibrated from observed execution/spread data rather than assumed from the example.
+
+### Interpreting paper signals
+
+`/api/markets` and the dashboard show the **last completed paper decision**, not a
+live order recommendation. The Cloudflare/Render scheduler must process a new bar
+before a new signal becomes available. The per-market API exposes:
+
+- `signal`, `confidence`: the actual River prediction, only when it is recent
+  and based on a completed paper step (not the default FLAT/0% fallback).
+- `risk_approved`, `decision_reason`: the independent risk engine's decision,
+  not an assessment of future profitability.
+- `signal_state`: `PAPER_APPROVED`, `RISK_REJECTED`, `NO_TRADE`, `WAITING`,
+  `DELAYED`, `UNVERIFIED` or `UNAVAILABLE`. Only a fresh, verified,
+  in-session decision may expose a side and confidence.
+- `signal_time`, `signal_age_seconds`: evidence of when the paper decision
+  was processed. A stale, unparseable or timezone-naive timestamp suppresses
+  signal publication. For a 5-minute market, decisions expire after 15 minutes.
+- `freshness` and `heartbeat_age_seconds`: separate scheduler/data health.
+  A healthy heartbeat **alone** never makes an old prediction tradable.
+
+All trades are simulated. These fields do not include live quotes, broker fills,
+spread guarantees, stop loss or actionable entries; do not manually copy the
+historical paper decisions into live orders. Kronos remains an independent,
+unvalidated research challenger.
 
 ### Hosted dashboard
 

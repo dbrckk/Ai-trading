@@ -2,24 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "perf: bound MTF feature computation window (#58)",
-      "terms": [
-        "58",
-        "bound",
-        "computation",
-        "feature",
-        "mtf",
-        "perf",
-        "window"
-      ],
-      "tests": [],
-      "useful": [
-        "src/ai_trading/mtf_shadow_challenger.py",
-        "tests/test_mtf_shadow_challenger.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "perf: run MTF research on quarter-hour boundaries (#59)",
       "terms": [
         "59",
@@ -1234,6 +1216,36 @@
         "tests/test_dashboard.py",
         "tests/test_scheduler_endpoint.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "fix: restore paper decision integrity and prevent stale dashboard signals (#146)",
+      "terms": [
+        "146",
+        "dashboard",
+        "decision",
+        "integrity",
+        "paper",
+        "prevent",
+        "restore",
+        "signals",
+        "stale"
+      ],
+      "tests": [],
+      "useful": [
+        "src/ai_trading/dashboard.py",
+        "src/ai_trading/market_freshness.py",
+        "src/ai_trading/multi_market.py",
+        "src/ai_trading/paper_cycle.py",
+        "src/ai_trading/paper_cycle_service.py",
+        "src/ai_trading/runtime_status.py",
+        "tests/test_dashboard.py",
+        "tests/test_dashboard_engine_status.py",
+        "tests/test_market_freshness.py",
+        "tests/test_multi_market.py",
+        "tests/test_paper_cycle.py",
+        "tests/test_paper_cycle_service.py"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1248,6 +1260,20 @@
     "101": {
       "src/ai_trading/data.py": 4,
       "tests/test_data.py": 4
+    },
+    "146": {
+      "src/ai_trading/dashboard.py": 4,
+      "src/ai_trading/market_freshness.py": 4,
+      "src/ai_trading/multi_market.py": 4,
+      "src/ai_trading/paper_cycle.py": 4,
+      "src/ai_trading/paper_cycle_service.py": 4,
+      "src/ai_trading/runtime_status.py": 4,
+      "tests/test_dashboard.py": 4,
+      "tests/test_dashboard_engine_status.py": 4,
+      "tests/test_market_freshness.py": 4,
+      "tests/test_multi_market.py": 4,
+      "tests/test_paper_cycle.py": 4,
+      "tests/test_paper_cycle_service.py": 4
     },
     "56": {
       "src/ai_trading/command_app.py": 4,
@@ -1947,14 +1973,21 @@
     },
     "dashboard": {
       "src/ai_trading/backtest.py": 4,
-      "src/ai_trading/dashboard.py": 20,
+      "src/ai_trading/dashboard.py": 24,
+      "src/ai_trading/market_freshness.py": 4,
       "src/ai_trading/mtf_parameter_benchmark.py": 4,
-      "src/ai_trading/multi_market.py": 4,
+      "src/ai_trading/multi_market.py": 8,
       "src/ai_trading/multiasset_backtest.py": 4,
-      "tests/test_dashboard.py": 8,
+      "src/ai_trading/paper_cycle.py": 4,
+      "src/ai_trading/paper_cycle_service.py": 4,
+      "src/ai_trading/runtime_status.py": 4,
+      "tests/test_dashboard.py": 12,
+      "tests/test_dashboard_engine_status.py": 4,
       "tests/test_dashboard_persistence.py": 12,
-      "tests/test_multi_market.py": 8,
-      "tests/test_paper_cycle.py": 4,
+      "tests/test_market_freshness.py": 4,
+      "tests/test_multi_market.py": 12,
+      "tests/test_paper_cycle.py": 8,
+      "tests/test_paper_cycle_service.py": 4,
       "tests/test_research_config_validation.py": 4,
       "tests/test_scheduler_endpoint.py": 4
     },
@@ -2001,6 +2034,20 @@
       "tests/test_mtf_shadow_quality.py": 4,
       "tests/test_multi_market.py": 8,
       "tests/test_paper_cycle.py": 4
+    },
+    "decision": {
+      "src/ai_trading/dashboard.py": 4,
+      "src/ai_trading/market_freshness.py": 4,
+      "src/ai_trading/multi_market.py": 4,
+      "src/ai_trading/paper_cycle.py": 4,
+      "src/ai_trading/paper_cycle_service.py": 4,
+      "src/ai_trading/runtime_status.py": 4,
+      "tests/test_dashboard.py": 4,
+      "tests/test_dashboard_engine_status.py": 4,
+      "tests/test_market_freshness.py": 4,
+      "tests/test_multi_market.py": 4,
+      "tests/test_paper_cycle.py": 4,
+      "tests/test_paper_cycle_service.py": 4
     },
     "default": {
       "src/ai_trading/multi_market.py": 4,
@@ -2376,6 +2423,20 @@
       "src/ai_trading/portfolio_intelligence.py": 4,
       "tests/test_portfolio_intelligence.py": 4
     },
+    "integrity": {
+      "src/ai_trading/dashboard.py": 4,
+      "src/ai_trading/market_freshness.py": 4,
+      "src/ai_trading/multi_market.py": 4,
+      "src/ai_trading/paper_cycle.py": 4,
+      "src/ai_trading/paper_cycle_service.py": 4,
+      "src/ai_trading/runtime_status.py": 4,
+      "tests/test_dashboard.py": 4,
+      "tests/test_dashboard_engine_status.py": 4,
+      "tests/test_market_freshness.py": 4,
+      "tests/test_multi_market.py": 4,
+      "tests/test_paper_cycle.py": 4,
+      "tests/test_paper_cycle_service.py": 4
+    },
     "intelligence": {
       "src/ai_trading/multiasset_runtime.py": 4,
       "src/ai_trading/portfolio_intelligence.py": 8,
@@ -2729,25 +2790,30 @@
     },
     "paper": {
       "src/ai_trading/broker.py": 8,
-      "src/ai_trading/dashboard.py": 4,
+      "src/ai_trading/dashboard.py": 8,
       "src/ai_trading/execution_costs.py": 4,
       "src/ai_trading/hosted_runtime.py": 4,
-      "src/ai_trading/multi_market.py": 4,
+      "src/ai_trading/market_freshness.py": 4,
+      "src/ai_trading/multi_market.py": 8,
       "src/ai_trading/multiasset_backtest.py": 4,
       "src/ai_trading/multiasset_runtime.py": 4,
-      "src/ai_trading/paper_cycle.py": 12,
-      "src/ai_trading/paper_cycle_service.py": 8,
+      "src/ai_trading/paper_cycle.py": 16,
+      "src/ai_trading/paper_cycle_service.py": 12,
       "src/ai_trading/paper_execution.py": 8,
       "src/ai_trading/performance_metrics.py": 4,
       "src/ai_trading/postgres_persistence.py": 4,
       "src/ai_trading/runtime.py": 8,
       "src/ai_trading/runtime_state.py": 4,
+      "src/ai_trading/runtime_status.py": 4,
       "src/ai_trading/trade_journal.py": 4,
+      "tests/test_dashboard.py": 4,
+      "tests/test_dashboard_engine_status.py": 4,
       "tests/test_execution_costs.py": 4,
       "tests/test_hosted_runtime.py": 4,
-      "tests/test_multi_market.py": 4,
-      "tests/test_paper_cycle.py": 12,
-      "tests/test_paper_cycle_service.py": 8,
+      "tests/test_market_freshness.py": 4,
+      "tests/test_multi_market.py": 8,
+      "tests/test_paper_cycle.py": 16,
+      "tests/test_paper_cycle_service.py": 12,
       "tests/test_paper_execution.py": 4,
       "tests/test_performance_metrics.py": 4,
       "tests/test_postgres_persistence.py": 4,
@@ -2862,8 +2928,20 @@
       "tests/test_multi_market.py": 4
     },
     "prevent": {
+      "src/ai_trading/dashboard.py": 4,
+      "src/ai_trading/market_freshness.py": 4,
+      "src/ai_trading/multi_market.py": 4,
       "src/ai_trading/multiasset_runtime.py": 4,
-      "tests/test_multiasset_runtime.py": 4
+      "src/ai_trading/paper_cycle.py": 4,
+      "src/ai_trading/paper_cycle_service.py": 4,
+      "src/ai_trading/runtime_status.py": 4,
+      "tests/test_dashboard.py": 4,
+      "tests/test_dashboard_engine_status.py": 4,
+      "tests/test_market_freshness.py": 4,
+      "tests/test_multi_market.py": 4,
+      "tests/test_multiasset_runtime.py": 4,
+      "tests/test_paper_cycle.py": 4,
+      "tests/test_paper_cycle_service.py": 4
     },
     "primary": {
       "src/ai_trading/dashboard.py": 4,
@@ -3060,6 +3138,20 @@
       "src/ai_trading/dashboard.py": 4,
       "tests/test_dashboard_persistence.py": 4
     },
+    "restore": {
+      "src/ai_trading/dashboard.py": 4,
+      "src/ai_trading/market_freshness.py": 4,
+      "src/ai_trading/multi_market.py": 4,
+      "src/ai_trading/paper_cycle.py": 4,
+      "src/ai_trading/paper_cycle_service.py": 4,
+      "src/ai_trading/runtime_status.py": 4,
+      "tests/test_dashboard.py": 4,
+      "tests/test_dashboard_engine_status.py": 4,
+      "tests/test_market_freshness.py": 4,
+      "tests/test_multi_market.py": 4,
+      "tests/test_paper_cycle.py": 4,
+      "tests/test_paper_cycle_service.py": 4
+    },
     "resume": {
       "src/ai_trading/paper_cycle.py": 4,
       "tests/test_paper_cycle.py": 4
@@ -3240,14 +3332,38 @@
       "src/ai_trading/multiasset_runtime.py": 4,
       "tests/test_multiasset_runtime.py": 4
     },
+    "signals": {
+      "src/ai_trading/dashboard.py": 4,
+      "src/ai_trading/market_freshness.py": 4,
+      "src/ai_trading/multi_market.py": 4,
+      "src/ai_trading/paper_cycle.py": 4,
+      "src/ai_trading/paper_cycle_service.py": 4,
+      "src/ai_trading/runtime_status.py": 4,
+      "tests/test_dashboard.py": 4,
+      "tests/test_dashboard_engine_status.py": 4,
+      "tests/test_market_freshness.py": 4,
+      "tests/test_multi_market.py": 4,
+      "tests/test_paper_cycle.py": 4,
+      "tests/test_paper_cycle_service.py": 4
+    },
     "staging": {
       "src/ai_trading/multiasset_checkpoint.py": 4,
       "tests/test_multiasset_checkpoint.py": 4
     },
     "stale": {
-      "src/ai_trading/dashboard.py": 4,
+      "src/ai_trading/dashboard.py": 8,
+      "src/ai_trading/market_freshness.py": 4,
+      "src/ai_trading/multi_market.py": 4,
+      "src/ai_trading/paper_cycle.py": 4,
+      "src/ai_trading/paper_cycle_service.py": 4,
+      "src/ai_trading/runtime_status.py": 4,
       "src/ai_trading/scheduler_endpoint.py": 4,
-      "tests/test_dashboard.py": 4,
+      "tests/test_dashboard.py": 8,
+      "tests/test_dashboard_engine_status.py": 4,
+      "tests/test_market_freshness.py": 4,
+      "tests/test_multi_market.py": 4,
+      "tests/test_paper_cycle.py": 4,
+      "tests/test_paper_cycle_service.py": 4,
       "tests/test_scheduler_endpoint.py": 4
     },
     "state": {
