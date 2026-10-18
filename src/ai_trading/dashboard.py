@@ -721,7 +721,7 @@ def render_dashboard(
             )
             reason = html.escape(str(item.get("reason") or "waiting for next eligible bar"))
             cards.append(
-                f'<article class="market-card {market_tone}">'
+                f'<article class="market-card {market_tone}" data-symbol="{html.escape(str(item["symbol"]), quote=True)}">'
                 '<div class="market-card-glow"></div>'
                 '<div class="market-card-head">'
                 f'<div class="market-identity"><span class="market-mark">{market_mark}</span>'
@@ -778,7 +778,7 @@ def render_dashboard(
         )
         market_panel = (
             '<section class="section markets-section" id="markets">'
-            '<div class="section-head"><div><div class="section-kicker">LIVE MARKET MATRIX</div>'
+            '<div class="section-head"><div><div class="section-kicker">PAPER MARKET MATRIX</div>'
             '<h2>Multi-market portfolio</h2></div>'
             '<small>normalized sleeves · isolated runtimes · 5m cadence</small></div>'
             '<div class="portfolio-ribbon">'
@@ -798,7 +798,7 @@ def render_dashboard(
     return f"""<!doctype html>
 <html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI Trading — Live</title>
+<title>AI Trading — Paper Terminal</title>
 <style>
 html.dashboard-refreshing, html.dashboard-refreshing body {{ overflow-anchor: none; }}
 :root{{color-scheme:dark;--bg:#030712;--bg-2:#07101d;--surface:rgba(12,21,37,.78);--surface-2:rgba(8,15,28,.86);--surface-3:rgba(17,29,49,.86);--border:rgba(148,163,184,.14);--border-strong:rgba(148,163,184,.22);--text:#f7f9ff;--muted:#8797b0;--muted-2:#617087;--blue:#79aaff;--cyan:#5de0df;--green:#62e6a4;--amber:#ffd273;--red:#ff838d;--violet:#a78bfa;--shadow:0 28px 70px rgba(0,0,0,.32);--shadow-soft:0 14px 36px rgba(0,0,0,.24)}}
@@ -1086,8 +1086,8 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
     if (!best) return null;
 
     const id = best.id || null;
-    const marketLabel = best.classList.contains("market-card")
-      ? best.querySelector(".market-card-head h3")?.textContent?.trim() || null
+    const marketSymbol = best.classList.contains("market-card")
+      ? best.dataset.symbol || null
       : null;
     const sectionLabel = best.classList.contains("section")
       ? best.querySelector(".section-head h2")?.textContent?.trim() || null
@@ -1095,7 +1095,7 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
 
     return {{
       id,
-      marketLabel,
+      marketSymbol,
       sectionLabel,
       top: best.getBoundingClientRect().top,
     }};
@@ -1108,9 +1108,9 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
     if (anchor.id) {{
       element = document.getElementById(anchor.id);
     }}
-    if (!element && anchor.marketLabel) {{
+    if (!element && anchor.marketSymbol) {{
       element = Array.from(document.querySelectorAll(".market-card")).find(
-        (card) => card.querySelector(".market-card-head h3")?.textContent?.trim() === anchor.marketLabel
+        (card) => card.dataset.symbol === anchor.marketSymbol
       ) || null;
     }}
     if (!element && anchor.sectionLabel) {{
@@ -1122,7 +1122,7 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
 
     const delta = element.getBoundingClientRect().top - anchor.top;
     if (Math.abs(delta) > 0.5) {{
-      window.scrollBy({{left: 0, top: delta, behavior: "auto"}});
+      window.scrollBy({{left: 0, top: delta, behavior: "instant"}});
     }}
   }}
 
@@ -1131,6 +1131,7 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
     if (Date.now() - lastInteractionAt < INTERACTION_GRACE_MS) return;
 
     refreshing = true;
+    const interactionBeforeFetch = lastInteractionAt;
     const anchor = captureViewportAnchor();
     document.documentElement.classList.add("dashboard-refreshing");
 
@@ -1146,6 +1147,9 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
       const currentCard = document.querySelector(".card");
       const nextCard = nextDocument.querySelector(".card");
       if (!currentCard || !nextCard) throw new Error("dashboard refresh markup missing");
+      // Never swap the DOM while a user gesture or scrolling began during the fetch.
+      if (lastInteractionAt !== interactionBeforeFetch ||
+          Date.now() - lastInteractionAt < INTERACTION_GRACE_MS) return;
 
       currentCard.replaceChildren(
         ...Array.from(nextCard.childNodes).map((node) => document.importNode(node, true))
