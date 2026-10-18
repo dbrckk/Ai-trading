@@ -48,7 +48,7 @@ class ResearchConfig:
 def validate_market(frame: pd.DataFrame) -> pd.DataFrame:
     """Reject malformed time series rather than silently changing signal ordering."""
     if not isinstance(frame.index, pd.DatetimeIndex):
-        raise ValueError("market index must contain timestamps")
+        raise TypeError("market index must contain timestamps")
     if frame.index.hasnans or frame.index.has_duplicates or not frame.index.is_monotonic_increasing:
         raise ValueError("market timestamps must be unique, valid and chronological")
     required = ("Open", "High", "Low", "Close")
@@ -204,10 +204,10 @@ def load_predictor(source_dir: Path, model_size: str, device: str) -> ForecastPr
     if model_size not in {"mini", "small", "base"}:
         raise ValueError("model_size must be mini, small or base")
     sys.path.insert(0, str(source_dir))
-    import torch  # noqa: PLC0415
+    import torch
 
     torch.manual_seed(42)
-    from model import Kronos, KronosPredictor, KronosTokenizer  # type: ignore[import-not-found]  # noqa: PLC0415
+    from model import Kronos, KronosPredictor, KronosTokenizer  # type: ignore[import-not-found]
 
     tokenizer_id = "NeoQuasar/Kronos-Tokenizer-2k" if model_size == "mini" else "NeoQuasar/Kronos-Tokenizer-base"
     tokenizer = KronosTokenizer.from_pretrained(tokenizer_id)
@@ -252,7 +252,7 @@ def main() -> None:
         frame["timestamp"] = pd.to_datetime(frame["timestamp"], utc=True, errors="raise")
         market = frame.set_index("timestamp")
     else:
-        from .data import load_history  # noqa: PLC0415
+        from .data import load_history
 
         market = load_history(args.symbol, period=args.period, interval=args.interval)
     predictor = load_predictor(args.kronos_source, args.model_size, args.device)
