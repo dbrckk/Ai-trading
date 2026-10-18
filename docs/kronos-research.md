@@ -10,6 +10,7 @@ runtime. It does not alter River paper trades or promote a new model.
 ```bash
 git clone https://github.com/dbrckk/Ai-trading.git
 git clone https://github.com/shiyu-coder/Kronos.git
+git -C Kronos checkout --detach 67b630e67f6a18c9e9be918d9b4337c960db1e9a
 cd Ai-trading
 python -m venv .venv
 source .venv/bin/activate
@@ -23,6 +24,11 @@ python -m ai_trading.kronos_research \
   --transaction-cost-bps 3 --slippage-bps 2 \
   --output artifacts/kronos-btc-45m.json
 ```
+
+The optional GitHub Actions workflow `Kronos Model Smoke` runs the pinned
+upstream `mini` implementation against real BTC-USD data and uploads a JSON
+artifact. It performs only a few predictions to verify interoperability,
+not enough to establish predictive quality.
 
 The upstream tokenizer and model weights download from Hugging Face on first
 use. `mini` is the lightweight option; choose `small` or `base` for a larger
@@ -53,7 +59,7 @@ at the time of prediction when claiming a historical simulation.
   bootstrap bounds for both net mean return and incremental return over
   momentum. This is **review eligibility**, never automatic promotion.
 - Historical window selection and fixed thresholds are not a replacement for
-  a fully purged, independent holdout or **live forward shadow** evaluation.
+  a fully purged, independent holdout, comparison with the incumbent River\n  model on identical bars, or **live forward shadow** evaluation.
   Retrospective exclusion of session gaps can still introduce selection bias.
 - Simulated next-open fills omit intrabar spread dynamics, market impact,
   financing and liquidity constraints. Results **cannot demonstrate**
