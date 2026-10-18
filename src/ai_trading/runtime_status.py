@@ -26,6 +26,7 @@ class HostedRuntimeStatus:
     consecutive_cycle_errors: int = 0
     cycle_duration_seconds: float | None = None
     mtf_evaluated: bool = False
+    decision_reason: str | None = None
 
 
 def runtime_status_snapshot(
