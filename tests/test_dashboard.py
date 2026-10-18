@@ -126,6 +126,9 @@ def test_dashboard_live_refresh_preserves_scroll_without_meta_reload(tmp_path) -
     assert "captureViewportAnchor" in page
     assert "restoreViewportAnchor" in page
     assert "window.scrollTo" not in page
+    assert "interactionBeforeFetch" in page
+    assert "anchor.marketSymbol" in page
+    assert 'behavior: "instant"' in page
     assert 'INTERACTION_GRACE_MS = 1800' in page
     assert 'touchmove' in page
 
