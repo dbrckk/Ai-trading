@@ -118,7 +118,13 @@ def evaluate_walk_forward(
 
     for signal_pos in signal_positions:
         history = market.iloc[signal_pos + 1 - config.lookback : signal_pos + 1]
-        future_times = market.index[signal_pos + 1 : signal_pos + config.horizon_bars + 1]
+        step = history.index.to_series().diff().dropna().median()
+        future_times = pd.date_range(
+            start=history.index[-1] + step, periods=config.horizon_bars, freq=step
+        )
+        observed_times = market.index[signal_pos + 1 : signal_pos + config.horizon_bars + 1]
+        if not future_times.equals(observed_times):
+            continue  # Market closure or missing bars: do not infer unseen timestamps.
         forecast = predictor.predict(
             df=history.rename(columns=forecast_columns).reset_index(drop=True),
             x_timestamp=pd.Series(history.index),
@@ -157,6 +163,9 @@ def evaluate_walk_forward(
                 "momentum_net_return": baseline_net,
             }
         )
+
+    if not observations:
+        raise ValueError("no consecutive evaluation windows; check history cadence")
 
     kronos = [float(item["kronos_net_return"]) for item in observations]
     baseline = [float(item["momentum_net_return"]) for item in observations]
