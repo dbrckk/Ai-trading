@@ -39,8 +39,9 @@ at the time of prediction when claiming a historical simulation.
 ## Evidence and limitations
 
 - Every sample uses only `lookback` completed OHLCV bars, ending at the
-  signal close. The forecast horizon timestamps are read from the historical
-  calendar, but **future OHLCV values are not given to Kronos**.
+  signal close. The future prediction timestamps are extrapolated from the
+  last observed bar cadence; windows crossing market closures or missing
+  bars are excluded. **Future OHLCV values are not given to Kronos**.
 - Entry is simulated at the next bar's **open**, and exit at the horizon
   bar's **close**. Round-trip transaction cost and slippage are charged.
 - Samples do not have overlapping holding periods, and the directional
@@ -53,7 +54,7 @@ at the time of prediction when claiming a historical simulation.
   momentum. This is **review eligibility**, never automatic promotion.
 - Historical window selection and fixed thresholds are not a replacement for
   a fully purged, independent holdout or **live forward shadow** evaluation.
-  Retrospective calendar timestamps may also encode trading-session knowledge.
+  Retrospective exclusion of session gaps can still introduce selection bias.
 - Simulated next-open fills omit intrabar spread dynamics, market impact,
   financing and liquidity constraints. Results **cannot demonstrate**
   profitable live execution or materially improved trades.
