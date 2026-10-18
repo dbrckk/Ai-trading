@@ -2,9 +2,9 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "feat/validated-per-market-mtf-shadow",
-  "pull_request": 67,
-  "focus": "Activate benchmark-validated Gold/DAX 45-minute MTF candidates as versioned audit-only shadows; keep BTC unvalidated.",
+  "active_branch": "fix/paper-signal-integrity",
+  "pull_request": 146,
+  "focus": "Fix production paper decision persistence, stale signal suppression, and dashboard scroll-safe refresh; keep River authoritative and Kronos research-only.",
   "production_evidence": {
     "main_head": "3e40c11cd9cd923232b70f9b63dba71cee355f91",
     "render_live_commit": "3e40c11cd9cd923232b70f9b63dba71cee355f91",
@@ -49,17 +49,20 @@
     "PR #52 added volume-less market support and restored the DAX runtime to RUNNING.",
     "PR #54-#61 added premium dashboard, scroll-safe refresh, true multi-timeframe shadow research, bounded compute, 15-minute cadence, latency telemetry, and directional evidence gates.",
     "PR #63 refined MTF benchmark scoring around confidence-gated directional evidence.",
-    "PR #66 selected validated parameters independently per market: Gold 45m/5bp/ATR0.25/train1000/conf56, DAX 45m/5bp/ATR0.25/train1000/conf60; BTC remains unvalidated."
+    "PR #66 selected validated parameters independently per market: Gold 45m/5bp/ATR0.25/train1000/conf56, DAX 45m/5bp/ATR0.25/train1000/conf60; BTC remains unvalidated.",
+    "PR #146 carries actual per-bar River side/confidence/risk decision into hosted status and makes stale/closed-session signals unavailable.",
+    "PR #146 stabilizes mobile dashboard refresh by avoiding DOM changes during user interactions and anchoring market cards by stable symbol."
   ],
   "safety": {
     "live_broker_enabled": false,
     "shadow_can_control_execution": false,
-    "github_schedule_fallback_enabled": true
+    "github_schedule_fallback_enabled": true,
+    "signal_is_live_order": false
   },
   "next_actions": [
-    "Deploy PR #67 after green CI and verify the versioned Gold/DAX candidate metadata in production.",
-    "Collect at least 500 realized MTF observations and 100 directional observations for each validated Gold/DAX candidate before review eligibility.",
-    "Keep BTC MTF disabled until a focused leakage-safe benchmark produces a directional-gate-passing candidate.",
-    "Keep River authoritative for all PAPER risk and execution."
+    "Finish PR #146 CI and CodeQL; merge only after successful checks.",
+    "Confirm Render production deployment of the merged main revision if accessible.",
+    "Observe real scheduler cycles and verify that /api/markets signal_state, risk_approved and signal_time are consistent.",
+    "Benchmark Kronos separately; do not promote until out-of-sample gains are demonstrated."
   ]
 }
