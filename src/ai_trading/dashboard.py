@@ -1055,7 +1055,7 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
 </div>
 <script type="text/javascript">
 (() => {{
-  const REFRESH_MS = 2000;
+  const REFRESH_MS = 15000; // Five-minute paper bars do not need 2-second page reloads.
   const INTERACTION_GRACE_MS = 1800;
   let refreshing = false;
   let lastInteractionAt = 0;
