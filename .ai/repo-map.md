@@ -46,6 +46,7 @@ The content is organized as follows:
     codeql.yml
     mtf-parameter-benchmark.yml
     paper-cycle.yml
+    production-os-review-handoff.yml
     semantic-refresh.yml
   dependabot.yml
 .serena/
@@ -464,6 +465,11 @@ on:
   pull_request:
     branches: ["main"]
   workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: "Expected trusted checkpoint commit (empty for manual CI)"
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -490,6 +496,15 @@ jobs:
       TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/ai_trading_test
     steps:
       - uses: actions/checkout@v7
+      - name: Verify explicitly requested checkpoint SHA
+        if: ${{ inputs.expected_sha != '' }}
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+        run: |
+          test "$GITHUB_SHA" = "$EXPECTED_SHA" || {
+            echo "Requested checkpoint changed before CI validation" >&2
+            exit 1
+          }
       - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
@@ -717,6 +732,141 @@ jobs:
         run: python -m pip install .
       - name: Run paper cycle
         run: ai-trading paper-cycle --symbol GC=F --period 5d --interval 5m --max-catchup-bars 72
+````
+
+## File: .github/workflows/production-os-review-handoff.yml
+````yaml
+name: Trusted Production-OS PR Handoff
+
+# Runs from the default branch only. Never checks out or executes Studio code.
+on:
+  repository_dispatch:
+    types: [production_os_review_handoff]
+
+permissions:
+  contents: read
+  pull-requests: write
+  actions: write
+
+concurrency:
+  group: production-os-review-handoff
+  cancel-in-progress: false
+
+jobs:
+  create-review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      REVIEW_TOKEN: ${{ github.token }}
+    steps:
+      - name: Verify published checkpoint and open a review PR
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+
+          repo = os.environ["GITHUB_REPOSITORY"]
+          if repo != "dbrckk/Ai-trading":
+              raise SystemExit("Review handoff must run in the trusted repository")
+          with open(os.environ["GITHUB_EVENT_PATH"], encoding="utf-8") as source:
+              event = json.load(source)
+          payload = event.get("client_payload")
+          if not isinstance(payload, dict) or set(payload) != {"branch", "commit_sha"}:
+              raise SystemExit("Invalid Production-OS review handoff payload")
+          branch = payload.get("branch")
+          sha = payload.get("commit_sha")
+          if not isinstance(branch, str) or not re.fullmatch(r"studio/mp-[a-f0-9]{24}", branch):
+              raise SystemExit("Handoff branch does not match managed Studio namespace")
+          if not isinstance(sha, str) or not re.fullmatch(r"[a-f0-9]{40}", sha):
+              raise SystemExit("Handoff commit SHA is invalid")
+
+          token = os.environ["REVIEW_TOKEN"]
+          base = "https://api.github.com/repos/" + repo
+          headers = {
+              "Authorization": "Bearer " + token,
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "User-Agent": "production-os-review-handoff",
+          }
+
+          def request(method, path, data=None):
+              body = json.dumps(data).encode("utf-8") if data is not None else None
+              action = urllib.request.Request(
+                  base + path, data=body, method=method, headers={
+                      **headers, **({"Content-Type": "application/json"} if body else {}),
+                  }
+              )
+              try:
+                  with urllib.request.urlopen(action, timeout=20) as response:
+                      raw = response.read(1000000)
+                      return json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as exc:
+                  if exc.code in {401, 403}:
+                      raise SystemExit(
+                          "Target GitHub Actions must allow pull-request creation "
+                          "(Pull requests:write and repository setting)"
+                      ) from None
+                  raise SystemExit("Review handoff GitHub API returned HTTP " + str(exc.code)) from None
+
+          ref = request("GET", "/git/ref/heads/" + branch)
+          verified = (ref.get("object") or {}).get("sha")
+          if verified != sha:
+              raise SystemExit("Review handoff rejected a stale or unverified branch tip")
+          delta = request("GET", "/compare/main..." + branch)
+          files = delta.get("files")
+          if (delta.get("status") not in {"ahead", "diverged"}
+                  or not isinstance(files, list) or not 0 < len(files) < 300):
+              raise SystemExit("Review handoff requires a bounded nonempty compare")
+          if any(str(f.get("filename") or "").startswith(".github/") or str(f.get("filename") or "") == ".gitmodules" for f in files):
+              raise SystemExit("Review handoff refuses GitHub automation and submodule configuration changes")
+
+          owner = repo.split("/", 1)[0]
+          query = urllib.parse.urlencode({
+              "state": "open", "head": owner + ":" + branch, "base": "main",
+              "per_page": "20",
+          })
+          existing = request("GET", "/pulls?" + query)
+          if not isinstance(existing, list):
+              raise SystemExit("Pull request list returned an invalid response")
+          for item in existing:
+              if ((item.get("head") or {}).get("ref") == branch
+                      and (item.get("base") or {}).get("ref") == "main"):
+                  print("Reused existing review: " + str(item.get("html_url") or ""))
+                  break
+          else:
+              created = request("POST", "/pulls", {
+                  "title": "Review Production-OS Ai-trading checkpoint: " + branch,
+                  "head": branch,
+                  "base": "main",
+                  "draft": True,
+                  "body": (
+                      "Production-OS published this checkpoint to a review branch. "
+                      "This PR was opened by the trusted target-repository handoff "
+                      "after independently validating the exact branch tip and diff. "
+                      "Review all changed files and run required CI before any merge. "
+                      "No changes are merged automatically.\n\n"
+                      "Checkpoint: `" + sha + "`"
+                  ),
+              })
+              if not isinstance(created, dict) or not created.get("number"):
+                  raise SystemExit("Review handoff did not receive a real PR number")
+              print("Opened draft review: " + str(created.get("html_url") or ""))
+          # GitHub does not trigger pull_request CI from a GITHUB_TOKEN-created PR.
+          # An explicit workflow_dispatch instead schedules an
+          # isolated, read-only project CI against the verified branch tip.
+          # This default-branch handoff never checks out Studio code.
+          request("POST", "/actions/workflows/ci.yml/dispatches", {
+              "ref": branch,
+              "inputs": {"expected_sha": sha},
+          })
+          print("Dispatched pytest/project CI for exact checkpoint: " + sha)
+          PY
 ````
 
 ## File: .github/workflows/semantic-refresh.yml

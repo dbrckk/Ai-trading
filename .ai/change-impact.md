@@ -1,13 +1,14 @@
 # Change impact
 
-Base: f4556d0eb004b658219958c9f288da5ddbe7eecb
-Head: 246df4eb73478a34407b45598f5352be80e059d2
+Base: 83aa0da42dd3be48d981b6659d94554a7b43e4c0
+Head: ed4348220b4d23a24759afd33c6c1c15f7b0fb35
 
 ## Changed files
-- M AGENTS.md
+- M .github/workflows/ci.yml
+- A .github/workflows/production-os-review-handoff.yml
 
 ## Affected areas
-- (root)
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

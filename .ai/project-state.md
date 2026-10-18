@@ -45,16 +45,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T11:21:51Z
+Generated: 2026-10-18T10:33:39Z
 
 ### Git
 - Branch: `main`
-- Head: `246df4eb7347`
-- Commit date: 2026-10-09T13:20:33+02:00
-- Commit: docs(agents): adopt pinned 88-rule development standard
-- Tracked files: 500
+- Head: `ed4348220b4d`
+- Commit date: 2026-10-18T06:33:30-04:00
+- Commit: ci(security): trusted Production-OS draft review handoff (#144)
+- Tracked files: 501
 
 ### Recently changed files
+- `.github/workflows/ci.yml`
+- `.github/workflows/production-os-review-handoff.yml`
 - `AGENTS.md`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/scheduler_endpoint.py`
