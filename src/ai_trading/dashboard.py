@@ -12,6 +12,7 @@ from urllib.parse import urlsplit
 from .burnin import BurnInSnapshot, calculate_burnin_metrics
 from .file_persistence import FilePaperPersistence
 from .hosted_runtime import HostedPaperSettings, start_hosted_paper_runtime
+from .market_freshness import classify_market_freshness, paper_signal_snapshot
 from .multi_market import (
     MarketSpec,
     build_multi_market_overview,
@@ -393,6 +394,16 @@ def render_dashboard(
     confidence = "-"
     risk_decision = "-"
     decision_reason = "storage unavailable" if storage_error else "-"
+    signal_freshness, signal_session_open = classify_market_freshness(
+        runtime_status.symbol if runtime_status is not None else "",
+        runtime_status if not storage_error else None,
+        runtime_snapshot,
+    )
+    paper_signal = paper_signal_snapshot(
+        runtime_status if not storage_error else None,
+        freshness=signal_freshness,
+        session_open=signal_session_open,
+    )
     if runtime_status is not None and not storage_error:
         decision_reason = (
             "worker failure" if runtime_status.error else runtime_status.reason or "-"
@@ -400,13 +411,13 @@ def render_dashboard(
         if engine_status == "STALE" and decision_reason == "-":
             decision_reason = "worker heartbeat expired"
         if runtime_status.last_cycle_timestamp is not None:
-            if runtime_status.processed:
-                signal = {1: "LONG", -1: "SHORT", 0: "FLAT"}.get(
-                    runtime_status.side,
-                    "UNKNOWN",
-                )
-                confidence = f"{runtime_status.confidence:.1%}"
+            if runtime_status.processed and paper_signal["signal"] is not None:
+                signal = str(paper_signal["signal"])
+                confidence = f"{float(paper_signal['confidence']):.1%}"
                 risk_decision = "APPROVED" if runtime_status.approved else "REJECTED"
+                decision_reason = runtime_status.decision_reason or decision_reason
+            elif runtime_status.processed:
+                risk_decision = str(paper_signal["signal_state"])
             else:
                 risk_decision = "SKIPPED"
 
@@ -664,6 +675,13 @@ def render_dashboard(
                 "-" if mtf_score_delta is None else f"{float(mtf_score_delta):+.3f}"
             )
             signal = item.get("signal") or "-"
+            signal_state = str(item.get("signal_state") or "UNAVAILABLE")
+            signal_time = html.escape(str(item.get("signal_time") or "-"))
+            paper_risk_reason = html.escape(str(item.get("decision_reason") or "-"))
+            signal_age = item.get("signal_age_seconds")
+            signal_age_display = (
+                "-" if signal_age is None else f"{float(signal_age) / 60.0:.0f}m"
+            )
             signal_css = {
                 "LONG": "signal-long",
                 "SHORT": "signal-short",
@@ -703,7 +721,7 @@ def render_dashboard(
             )
             reason = html.escape(str(item.get("reason") or "waiting for next eligible bar"))
             cards.append(
-                f'<article class="market-card {market_tone}">'
+                f'<article class="market-card {market_tone}" data-symbol="{html.escape(str(item["symbol"]), quote=True)}">'
                 '<div class="market-card-glow"></div>'
                 '<div class="market-card-head">'
                 f'<div class="market-identity"><span class="market-mark">{market_mark}</span>'
@@ -711,7 +729,9 @@ def render_dashboard(
                 f'<small>{html.escape(str(item["symbol"]))} · {float(item["allocation"]):.0%} sleeve</small></div></div>'
                 f'<span class="status-badge {status_css}">{html.escape(status)}</span></div>'
                 f'<div class="market-signal-row"><span class="signal-chip {signal_css}">{html.escape(str(signal))}</span>'
-                f'<span class="market-confidence-label">Confidence <strong>{confidence_display}</strong></span></div>'
+                f'<span class="market-confidence-label">Model confidence <strong>{confidence_display}</strong></span></div>'
+                f'<small class="runtime-reason">Paper decision: {html.escape(signal_state)} · '
+                f'Signal age: {signal_age_display} · at {signal_time}</small>'
                 '<div class="confidence-meter"><span '
                 f'style="width:{confidence_value * 100:.1f}%"></span></div>'
                 '<div class="market-grid">'
@@ -722,6 +742,7 @@ def render_dashboard(
                 f'<div><small>Freshness</small><strong>{html.escape(freshness)}</strong></div>'
                 f'<div><small>Session</small><strong>{session_display}</strong></div>'
                 f'<div><small>Heartbeat age</small><strong>{heartbeat_age_display}</strong></div>'
+                f'<div><small>Risk reason</small><strong>{paper_risk_reason}</strong></div>'
                 f'<div><small>MTF this cycle</small><strong>{mtf_cycle_display}</strong></div>'
                 f'<div><small>Shadow 5m</small><strong>{observations}</strong></div>'
                 f'<div><small>{mtf_label}</small><strong>{mtf_observations}</strong></div>'
@@ -757,7 +778,7 @@ def render_dashboard(
         )
         market_panel = (
             '<section class="section markets-section" id="markets">'
-            '<div class="section-head"><div><div class="section-kicker">LIVE MARKET MATRIX</div>'
+            '<div class="section-head"><div><div class="section-kicker">PAPER MARKET MATRIX</div>'
             '<h2>Multi-market portfolio</h2></div>'
             '<small>normalized sleeves · isolated runtimes · 5m cadence</small></div>'
             '<div class="portfolio-ribbon">'
@@ -777,7 +798,7 @@ def render_dashboard(
     return f"""<!doctype html>
 <html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI Trading — Live</title>
+<title>AI Trading — Paper Terminal</title>
 <style>
 html.dashboard-refreshing, html.dashboard-refreshing body {{ overflow-anchor: none; }}
 :root{{color-scheme:dark;--bg:#030712;--bg-2:#07101d;--surface:rgba(12,21,37,.78);--surface-2:rgba(8,15,28,.86);--surface-3:rgba(17,29,49,.86);--border:rgba(148,163,184,.14);--border-strong:rgba(148,163,184,.22);--text:#f7f9ff;--muted:#8797b0;--muted-2:#617087;--blue:#79aaff;--cyan:#5de0df;--green:#62e6a4;--amber:#ffd273;--red:#ff838d;--violet:#a78bfa;--shadow:0 28px 70px rgba(0,0,0,.32);--shadow-soft:0 14px 36px rgba(0,0,0,.24)}}
@@ -940,7 +961,7 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
 <div class="hero-kpis">
 <div class="hero-kpi"><small>Equity</small><strong>{_display_money(equity)}</strong></div>
 <div class="hero-kpi"><small>Realized PnL</small><strong>{pnl_display}</strong></div>
-<div class="hero-kpi"><small>Signal</small><strong>{html.escape(signal)}</strong></div>
+<div class="hero-kpi"><small>Last paper signal</small><strong>{html.escape(signal)}</strong></div>
 <div class="hero-kpi"><small>Burn-in</small><strong>{burnin_progress_display}</strong></div>
 </div>
 
@@ -966,7 +987,7 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
 <section class="section">
 <div class="section-head"><h2>Trading state</h2><small>paper execution state</small></div>
 <div class="metrics">
-<div class="metric primary"><small>Signal</small><strong>{html.escape(signal)}</strong></div>
+<div class="metric primary"><small>Paper signal</small><strong>{html.escape(signal)}</strong></div>
 <div class="metric primary"><small>Risk decision</small><strong>{html.escape(risk_decision)}</strong></div>
 <div class="metric"><small>AI confidence</small><strong>{html.escape(confidence)}</strong></div>
 <div class="metric"><small>Equity</small><strong>{_display_money(equity)}</strong></div>
@@ -974,7 +995,7 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
 <div class="metric"><small>Open units</small><strong>{_display_units(units)}</strong></div>
 <div class="metric"><small>Position value</small><strong>{_display_money(position_value)}</strong></div>
 </div>
-<small class="runtime-reason">Last engine reason: {html.escape(decision_reason)}</small>
+<small class="runtime-reason">Paper signal status: {html.escape(str(paper_signal["signal_state"]))} · Last engine reason: {html.escape(decision_reason)}</small>
 </section>
 
 {market_panel}
@@ -1034,7 +1055,7 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
 </div>
 <script type="text/javascript">
 (() => {{
-  const REFRESH_MS = 2000;
+  const REFRESH_MS = 15000; // Five-minute paper bars do not need 2-second page reloads.
   const INTERACTION_GRACE_MS = 1800;
   let refreshing = false;
   let lastInteractionAt = 0;
@@ -1065,8 +1086,8 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
     if (!best) return null;
 
     const id = best.id || null;
-    const marketLabel = best.classList.contains("market-card")
-      ? best.querySelector(".market-card-head h3")?.textContent?.trim() || null
+    const marketSymbol = best.classList.contains("market-card")
+      ? best.dataset.symbol || null
       : null;
     const sectionLabel = best.classList.contains("section")
       ? best.querySelector(".section-head h2")?.textContent?.trim() || null
@@ -1074,7 +1095,7 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
 
     return {{
       id,
-      marketLabel,
+      marketSymbol,
       sectionLabel,
       top: best.getBoundingClientRect().top,
     }};
@@ -1087,9 +1108,9 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
     if (anchor.id) {{
       element = document.getElementById(anchor.id);
     }}
-    if (!element && anchor.marketLabel) {{
+    if (!element && anchor.marketSymbol) {{
       element = Array.from(document.querySelectorAll(".market-card")).find(
-        (card) => card.querySelector(".market-card-head h3")?.textContent?.trim() === anchor.marketLabel
+        (card) => card.dataset.symbol === anchor.marketSymbol
       ) || null;
     }}
     if (!element && anchor.sectionLabel) {{
@@ -1101,7 +1122,7 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
 
     const delta = element.getBoundingClientRect().top - anchor.top;
     if (Math.abs(delta) > 0.5) {{
-      window.scrollBy({{left: 0, top: delta, behavior: "auto"}});
+      window.scrollBy({{left: 0, top: delta, behavior: "instant"}});
     }}
   }}
 
@@ -1110,6 +1131,7 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
     if (Date.now() - lastInteractionAt < INTERACTION_GRACE_MS) return;
 
     refreshing = true;
+    const interactionBeforeFetch = lastInteractionAt;
     const anchor = captureViewportAnchor();
     document.documentElement.classList.add("dashboard-refreshing");
 
@@ -1125,6 +1147,9 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
       const currentCard = document.querySelector(".card");
       const nextCard = nextDocument.querySelector(".card");
       if (!currentCard || !nextCard) throw new Error("dashboard refresh markup missing");
+      // Never swap the DOM while a user gesture or scrolling began during the fetch.
+      if (lastInteractionAt !== interactionBeforeFetch ||
+          Date.now() - lastInteractionAt < INTERACTION_GRACE_MS) return;
 
       currentCard.replaceChildren(
         ...Array.from(nextCard.childNodes).map((node) => document.importNode(node, true))

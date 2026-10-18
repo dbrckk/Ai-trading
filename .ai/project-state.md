@@ -27,6 +27,7 @@ Status: active
 - Repository-standards routing benchmark health is separate from the trading CI; trading CI is green.
 
 ## Current priority
+- PR #146 (2026-10-19) fixes a paper-cycle signal status omission (side/confidence/risk approval), gates visibility on decision freshness/session/heartbeat, and corrects market-card scroll anchoring. Production deployment and post-merge end-to-end telemetry are not yet verified.
 - Collect new versioned MTF evidence independently for the validated Gold and DAX 45-minute candidates.
 - Require at least 500 realized MTF observations and at least 100 directional observations before MTF review eligibility.
 - Keep BTC MTF unvalidated/disabled until a leakage-safe benchmark candidate passes the active-direction gate.

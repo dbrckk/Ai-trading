@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime, time
+from math import isfinite
+from re import fullmatch
 
 from .runtime_status import HostedRuntimeStatus
 
@@ -88,3 +90,63 @@ def classify_market_freshness(
     if engine_status == "RUNNING":
         return "LIVE", session_open
     return engine_status, session_open
+
+
+def paper_signal_snapshot(
+    status: HostedRuntimeStatus | None,
+    *,
+    freshness: str,
+    session_open: bool | None,
+    now: datetime | None = None,
+) -> dict[str, object]:
+    """Only expose a fresh, completed PAPER decision; never imply live trade advice."""
+    snapshot: dict[str, object] = {
+        "signal": None,
+        "confidence": None,
+        "risk_approved": None,
+        "signal_state": "WAITING",
+        "signal_time": status.last_cycle_timestamp if status is not None else None,
+        "signal_age_seconds": None,
+        "decision_reason": status.decision_reason if status is not None else None,
+    }
+    if status is None or not status.processed:
+        return snapshot
+    if freshness != "LIVE" or session_open is not True or status.error:
+        snapshot["signal_state"] = "UNAVAILABLE"
+        return snapshot
+
+    units = {"m": 60, "h": 3600, "d": 86400}
+    match = fullmatch(r"([1-9][0-9]*)(m|h|d)", status.interval)
+    if match is None or not status.last_cycle_timestamp:
+        snapshot["signal_state"] = "UNVERIFIED"
+        return snapshot
+    try:
+        timestamp = datetime.fromisoformat(status.last_cycle_timestamp)
+    except ValueError:
+        snapshot["signal_state"] = "UNVERIFIED"
+        return snapshot
+    if timestamp.tzinfo is None:
+        snapshot["signal_state"] = "UNVERIFIED"
+        return snapshot
+
+    age_seconds = (_utc_now(now) - timestamp.astimezone(UTC)).total_seconds()
+    snapshot["signal_age_seconds"] = max(0.0, age_seconds)
+    max_age = max(3 * int(match.group(1)) * units[match.group(2)], 300)
+    if not -60.0 <= age_seconds <= max_age:
+        snapshot["signal_state"] = "DELAYED"
+        return snapshot
+    if status.side not in (-1, 0, 1) or not isfinite(status.confidence):
+        snapshot["signal_state"] = "UNVERIFIED"
+        return snapshot
+    if not 0.0 <= status.confidence <= 1.0:
+        snapshot["signal_state"] = "UNVERIFIED"
+        return snapshot
+    snapshot["signal"] = {1: "LONG", -1: "SHORT", 0: "FLAT"}[status.side]
+    snapshot["confidence"] = status.confidence
+    snapshot["risk_approved"] = bool(status.approved)
+    snapshot["signal_state"] = (
+        "NO_TRADE" if status.side == 0
+        else "PAPER_APPROVED" if status.approved
+        else "RISK_REJECTED"
+    )
+    return snapshot

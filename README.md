@@ -189,6 +189,30 @@ Per-market paper execution costs can be overridden without changing code by sett
 
 The example only demonstrates the configuration format; production values should be calibrated from observed execution/spread data rather than assumed from the example.
 
+### Interpreting paper signals
+
+`/api/markets` and the dashboard show the **last completed paper decision**, not a
+live order recommendation. The Cloudflare/Render scheduler must process a new bar
+before a new signal becomes available. The per-market API exposes:
+
+- `signal`, `confidence`: the actual River prediction, only when it is recent
+  and based on a completed paper step (not the default FLAT/0% fallback).
+- `risk_approved`, `decision_reason`: the independent risk engine's decision,
+  not an assessment of future profitability.
+- `signal_state`: `PAPER_APPROVED`, `RISK_REJECTED`, `NO_TRADE`, `WAITING`,
+  `DELAYED`, `UNVERIFIED` or `UNAVAILABLE`. Only a fresh, verified,
+  in-session decision may expose a side and confidence.
+- `signal_time`, `signal_age_seconds`: evidence of when the paper decision
+  was processed. A stale, unparseable or timezone-naive timestamp suppresses
+  signal publication. For a 5-minute market, decisions expire after 15 minutes.
+- `freshness` and `heartbeat_age_seconds`: separate scheduler/data health.
+  A healthy heartbeat **alone** never makes an old prediction tradable.
+
+All trades are simulated. These fields do not include live quotes, broker fills,
+spread guarantees, stop loss or actionable entries; do not manually copy the
+historical paper decisions into live orders. Kronos remains an independent,
+unvalidated research challenger.
+
 ### Hosted dashboard
 
 The read-only production paper dashboard is available at:

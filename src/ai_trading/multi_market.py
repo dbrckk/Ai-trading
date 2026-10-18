@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from math import isclose, isfinite
 
-from .market_freshness import classify_market_freshness
+from .market_freshness import classify_market_freshness, paper_signal_snapshot
 from .operational_overview import build_operational_overview
 from .paper_cycle import PaperCycleResult
 from .paper_cycle_service import (
@@ -233,20 +233,12 @@ def build_multi_market_overview(
                 _NORMALIZED_RUNTIME_CASH,
             )
             status = persistence.load_runtime_status(runtime_key)
-            market_signal = None
-            market_confidence = None
             market_reason = None
             cycle_duration_seconds = None
             market_mtf_evaluated = False
             heartbeat_age_seconds = None
             freshness = "OFF"
             if status is not None:
-                market_signal = (
-                    {1: "LONG", -1: "SHORT", 0: "FLAT"}.get(status.side)
-                    if status.processed
-                    else None
-                )
-                market_confidence = status.confidence if status.processed else None
                 market_reason = status.reason
                 cycle_duration_seconds = status.cycle_duration_seconds
                 market_mtf_evaluated = status.mtf_evaluated
@@ -260,6 +252,12 @@ def build_multi_market_overview(
                 )
             else:
                 session_open = None
+            signal_snapshot = paper_signal_snapshot(
+                status,
+                freshness=freshness,
+                session_open=session_open,
+                now=now,
+            )
             healthy = bool(overview.get("storage_healthy"))
             if healthy:
                 healthy_markets += 1
@@ -291,8 +289,13 @@ def build_multi_market_overview(
                     "pnl": sleeve_equity - allocated_cash,
                     "normalized_equity": normalized_equity,
                     "runtime_key": runtime_key,
-                    "signal": market_signal,
-                    "confidence": market_confidence,
+                    "signal": signal_snapshot["signal"],
+                    "confidence": signal_snapshot["confidence"],
+                    "risk_approved": signal_snapshot["risk_approved"],
+                    "signal_state": signal_snapshot["signal_state"],
+                    "signal_time": signal_snapshot["signal_time"],
+                    "signal_age_seconds": signal_snapshot["signal_age_seconds"],
+                    "decision_reason": signal_snapshot["decision_reason"],
                     "reason": market_reason,
                     "cycle_duration_seconds": cycle_duration_seconds,
                     "mtf_evaluated": market_mtf_evaluated,
@@ -316,6 +319,13 @@ def build_multi_market_overview(
                     "pnl": None,
                     "normalized_equity": None,
                     "runtime_key": runtime_key,
+                    "signal": None,
+                    "confidence": None,
+                    "risk_approved": None,
+                    "signal_state": "UNAVAILABLE",
+                    "signal_time": None,
+                    "signal_age_seconds": None,
+                    "decision_reason": None,
                     "heartbeat_age_seconds": None,
                     "freshness": "ERROR",
                     "session_open": None,

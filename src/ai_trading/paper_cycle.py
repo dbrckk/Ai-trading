@@ -53,6 +53,10 @@ class PaperCycleResult:
     mtf_evaluated: bool = False
     partial_failure: bool = False
     failed_markets: int = 0
+    side: int = 0
+    confidence: float = 0.0
+    approved: bool = False
+    decision_reason: str | None = None
 
 
 class PaperCycleRunner:
@@ -269,6 +273,7 @@ class PaperCycleRunner:
 
         processed = 0
         attempts = 0
+        last_decision = None
         while pending and attempts < max_catchup_bars:
             target = pending[0]
             observer_kwargs = {}
@@ -284,6 +289,7 @@ class PaperCycleRunner:
             attempts += 1
             if result.processed:
                 processed += 1
+                last_decision = result
             elif result.reason not in {
                 "persistence revision conflict",
                 "bar already processed",
@@ -311,4 +317,8 @@ class PaperCycleRunner:
             processed_bars=snapshot.state.processed_bars,
             reason=reason,
             mtf_evaluated=mtf_shadow_result is not None,
+            side=last_decision.side if last_decision is not None else 0,
+            confidence=last_decision.confidence if last_decision is not None else 0.0,
+            approved=last_decision.approved if last_decision is not None else False,
+            decision_reason=last_decision.reason if last_decision is not None else None,
         )

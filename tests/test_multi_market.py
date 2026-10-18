@@ -220,6 +220,8 @@ def test_multi_market_overview_scales_normalized_sleeves_to_100k() -> None:
     assert {row["freshness"] for row in snapshot["markets"]} == {"LIVE"}
     assert all(row["heartbeat_age_seconds"] == 0.0 for row in snapshot["markets"])
     assert all(row["session_open"] is True for row in snapshot["markets"])
+    assert all(row["signal"] is None for row in snapshot["markets"])
+    assert {row["signal_state"] for row in snapshot["markets"]} == {"DELAYED"}
 
 
 def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
@@ -248,8 +250,10 @@ def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
     assert "Markets with alerts" in page
     assert "Signal" in page
     assert "Confidence" in page
-    assert "LONG" in page
-    assert "72.0%" in page
+    assert "Paper decision: DELAYED" in page
+    assert "Model confidence" in page
+    assert "Risk reason" in page
+    assert "72.0%" not in page
     assert 'class="market-card gold"' in page
     assert 'class="market-card dax"' in page
     assert 'class="market-card btc"' in page
@@ -354,6 +358,8 @@ def test_multi_market_overview_marks_stale_heartbeat_as_delayed() -> None:
     assert {row["freshness"] for row in snapshot["markets"]} == {"DELAYED"}
     assert snapshot["portfolio"]["stale_markets"] == 3
     assert snapshot["portfolio"]["running_markets"] == 0
+    assert all(row["signal"] is None for row in snapshot["markets"])
+    assert all(row["signal_state"] == "UNAVAILABLE" for row in snapshot["markets"])
 
 
 @pytest.mark.parametrize(

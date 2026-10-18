@@ -8,7 +8,7 @@ from ai_trading.runtime_status import HostedRuntimeStatus, HostedRuntimeStatusSt
 from ai_trading.trade_journal import TradeJournal
 
 
-def test_dashboard_shows_engine_and_latest_decision(tmp_path) -> None:
+def test_dashboard_hides_expired_paper_decision(tmp_path) -> None:
     journal = TradeJournal(tmp_path / "trades.jsonl")
     state_store = RuntimeStateStore(tmp_path / "runtime_state.json")
     status_store = HostedRuntimeStatusStore(tmp_path / "runtime_status.json")
@@ -39,7 +39,7 @@ def test_dashboard_shows_engine_and_latest_decision(tmp_path) -> None:
 
     assert "RUNNING" in page
     assert "GC=F · 5m" in page
-    assert "LONG" in page
-    assert "73.0%" in page
-    assert "APPROVED" in page
+    assert "LONG" not in page
+    assert "73.0%" not in page
+    assert "Paper signal status: DELAYED" in page
     assert "2026-09-15 15:55:00+00:00" in page
