@@ -1,26 +1,20 @@
 # Change impact
 
-Base: 1eff5a43c322c055d7cffc061725cc227cce1a6f
-Head: 69f9c0ac1a71cf96b2f6a17510d8c4e3177b98e8
+Base: 01ddfe768f7756c6a631845bf6138cb45b9e2e82
+Head: 96962cfddcfb4dab8cb62a42826a5ea41eb7aea8
 
 ## Changed files
 - M README.md
-- M infra/cloudflare-paper-scheduler/src/index.js
-- M infra/cloudflare-paper-scheduler/test/index.test.js
-- M src/ai_trading/multi_market.py
-- M src/ai_trading/scheduler_endpoint.py
-- M tests/test_multi_market.py
-- M tests/test_scheduler_endpoint.py
+- M src/ai_trading/scheduler_fallback.py
+- M tests/test_paper_cycle_workflow.py
 
 ## Affected areas
 - (root)
-- infra
 - src
 - tests
 
 ## Related test candidates
-- tests/test_multi_market.py
-- tests/test_scheduler_endpoint.py
+- No direct filename-based test match detected.
 
 ## Agent guidance
 - Read this file before broad repository exploration.

@@ -7992,6 +7992,8 @@ class FallbackFailure(RuntimeError)
 ⋮----
 """Sanitized failure suitable for public CI logs."""
 ⋮----
+_CLOUDFLARE_HEALTHY_WINDOW_SECONDS = 32 * 60
+⋮----
 def _recent_cloudflare(payload: object) -> bool
 ⋮----
 age = payload.get("last_delivery_age_seconds")
@@ -11349,8 +11351,6 @@ text = WORKFLOW_PATH.read_text(encoding="utf-8")
 worker = WORKER_CONFIG_PATH.read_text(encoding="utf-8")
 required = (
 ⋮----
-def test_fallback_skips_healthy_recent_cloudflare_without_paper_post() -> None
-⋮----
 seen = []
 ⋮----
 def fake_open(request, timeout)
@@ -13415,7 +13415,7 @@ paper state/model/trades         Render dashboard
 GitHub Actions fallback scheduler
 ```
 
-The primary scheduler is the Cloudflare Worker under `infra/cloudflare-paper-scheduler/`. Its cron runs every fifteen minutes and sends an authenticated POST to Render's `/internal/paper-cycle` endpoint. The Worker contains no database credentials and no trading logic. The hourly `.github/workflows/paper-cycle.yml` fallback calls the same authenticated Render endpoint, skipping the POST when Cloudflare succeeded recently. Render alone holds the database connection; GitHub Actions does not store it. Both schedulers process Gold (`GC=F`), DAX (`^GDAXI`) and BTC (`BTC-USD`) independently, so one market failure does not prevent the others from advancing. GitHub scheduled jobs can be delayed; this fallback does not guarantee an exact heartbeat.
+The primary scheduler is the Cloudflare Worker under `infra/cloudflare-paper-scheduler/`. Its cron runs every fifteen minutes and sends an authenticated POST to Render's `/internal/paper-cycle` endpoint. The Worker contains no database credentials and no trading logic. The hourly `.github/workflows/paper-cycle.yml` fallback calls the same authenticated Render endpoint, skipping the POST when Cloudflare succeeded within the last 32 minutes (matching the dashboard's health window). Render alone holds the database connection; GitHub Actions does not store it. Both schedulers process Gold (`GC=F`), DAX (`^GDAXI`) and BTC (`BTC-USD`) independently, so one market failure does not prevent the others from advancing. GitHub scheduled jobs can be delayed; this fallback does not guarantee an exact heartbeat.
 
 Scheduler delivery telemetry is sanitized and persisted durably. The application never persists the bearer token or raw authorization headers. A partially failed multi-market cycle returns **HTTP 503**, and the Cloudflare Worker also checks the JSON `ok` flag on successful HTTP responses. Failures are observable rather than falsely reported as successful; Render logs contain only known failed market symbols and sanitized failure codes, not provider exception text. Three consecutive successful Cloudflare deliveries are treated as the minimum verification threshold exposed by `/api/scheduler`.
 

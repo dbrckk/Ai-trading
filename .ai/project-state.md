@@ -46,17 +46,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T23:40:01Z
+Generated: 2026-10-19T23:46:20Z
 
 ### Git
 - Branch: `main`
-- Head: `69f9c0ac1a71`
-- Commit date: 2026-10-19T19:39:51-04:00
-- Commit: fix(scheduler): report degraded market cycles as failures, not success (#161)
+- Head: `96962cfddcfb`
+- Commit date: 2026-10-19T19:46:11-04:00
+- Commit: fix(scheduler): avoid redundant GitHub fallback while Cloudflare is healthy (#162)
 - Tracked files: 504
 
 ### Recently changed files
 - `README.md`
+- `src/ai_trading/scheduler_fallback.py`
+- `tests/test_paper_cycle_workflow.py`
 - `infra/cloudflare-paper-scheduler/src/index.js`
 - `infra/cloudflare-paper-scheduler/test/index.test.js`
 - `src/ai_trading/multi_market.py`
@@ -66,11 +68,7 @@ Generated: 2026-10-19T23:40:01Z
 - `src/ai_trading/postgres_persistence.py`
 - `tests/test_postgres_persistence.py`
 - `.github/workflows/paper-cycle.yml`
-- `tests/test_paper_cycle_workflow.py`
 - `infra/cloudflare-paper-scheduler/wrangler.toml`
-- `src/ai_trading/scheduler_fallback.py`
-- `src/ai_trading/deployment_probe.py`
-- `tests/test_dashboard_health.py`
 
 ### Project signals
 - `pyproject.toml`
