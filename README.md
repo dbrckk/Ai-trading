@@ -262,8 +262,11 @@ Health probes intentionally have separate semantics: `/livez` checks only that t
 
 `.github/workflows/hosted-dashboard-probe.yml` runs a read-only external
 probe every two hours (plus pushes touching the hosted configuration). It
-separately checks `/livez`, `/readyz` and that `/api/markets` contains
-Gold, DAX and BTC, reporting a failing GitHub Actions job if the
+separately checks `/livez`, `/readyz`, and that `/api/markets` contains
+Gold, DAX and BTC **with complete portfolio data and no market storage errors**.
+Known readiness HTTP 503 responses distinguish `configuration_incomplete`
+from `storage_unavailable` without publishing exception text or secrets.
+It reports a failing GitHub Actions job if the
 publicly hosted service is unavailable or incomplete. This check **does
 not** invoke the scheduler, place trades, wake workers, or guarantee
 fresh market data. For manual diagnosis, use

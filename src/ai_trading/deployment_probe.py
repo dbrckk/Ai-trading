@@ -26,6 +26,16 @@ def _fetch_json(base_url: str, endpoint: str, timeout: float) -> tuple[dict, str
             status = response.status
             body = response.read(128_001)
     except HTTPError as exc:
+        # Only surface known, public readiness error codes. Never print
+        # arbitrary upstream bodies, database URLs or exception details.
+        if endpoint == "/readyz" and exc.code == 503:
+            try:
+                explanation = json.loads(exc.read(4096))
+                reason = explanation.get("error") if isinstance(explanation, dict) else None
+                if reason in {"storage unavailable", "configuration incomplete"}:
+                    return {}, "http_503_" + reason.replace(" ", "_")
+            except (ValueError, UnicodeDecodeError, OSError):
+                pass
         return {}, f"http_{exc.code}"
     except (URLError, TimeoutError, OSError):
         return {}, "connection_failed"
@@ -67,13 +77,27 @@ def probe_dashboard(base_url: str, *, timeout: float = 60.0) -> tuple[ProbeCheck
         else:
             markets = payload.get("markets")
             symbols = (
-                {item.get("symbol") for item in markets if isinstance(item, dict)}
+                {
+                    item["symbol"] for item in markets
+                    if isinstance(item, dict) and isinstance(item.get("symbol"), str)
+                }
                 if isinstance(markets, list)
                 else set()
             )
             expected = {"GC=F", "^GDAXI", "BTC-USD"}
-            valid = expected.issubset(symbols)
-            detail = "three_markets_present" if valid else "missing_market_cards"
+            portfolio = payload.get("portfolio")
+            complete = (
+                isinstance(portfolio, dict)
+                and portfolio.get("equity_complete") is True
+                and portfolio.get("error_markets") == 0
+            )
+            valid = expected.issubset(symbols) and complete
+            if not expected.issubset(symbols):
+                detail = "missing_market_cards"
+            elif not complete:
+                detail = "portfolio_or_market_unavailable"
+            else:
+                detail = "three_markets_healthy"
         checks.append(ProbeCheck(endpoint, valid, detail))
     return tuple(checks)
 
