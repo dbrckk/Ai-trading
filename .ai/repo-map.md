@@ -4713,13 +4713,18 @@ load_portfolio_performance = getattr(
 portfolio_performance = performance_payload(
 except Exception:  # noqa: BLE001 - optional observer must not break overview
 ⋮----
+# Independent, read-only model diagnostics can run concurrently.
+# Collect futures in input order to preserve stable market rows.
+⋮----
+overview_futures = {
+⋮----
 runtime_key = build_runtime_key(market.symbol, interval)
 allocated_cash = portfolio_cash * market.allocation
 ⋮----
 persisted = persistence.load_runtime(runtime_key, _NORMALIZED_RUNTIME_CASH)
 normalized_equity = (
 sleeve_equity = allocated_cash * normalized_equity / _NORMALIZED_RUNTIME_CASH
-overview = build_operational_overview(
+overview = overview_futures[market.symbol].result()
 status = persistence.load_runtime_status(runtime_key)
 market_reason = None
 cycle_duration_seconds = None
@@ -10499,9 +10504,14 @@ def test_dashboard_renders_multi_market_cards(tmp_path) -> None
 ⋮----
 page = render_dashboard(
 ⋮----
-def test_multi_market_cycle_runs_markets_concurrently(monkeypatch) -> None
+def test_multi_market_overview_parallelizes_read_only_observers(monkeypatch) -> None
 ⋮----
 barrier = Barrier(len(DEFAULT_MARKETS))
+original = multi_market_module.build_operational_overview
+⋮----
+def concurrent_observer(persistence, runtime_key, starting_cash)
+⋮----
+def test_multi_market_cycle_runs_markets_concurrently(monkeypatch) -> None
 ⋮----
 def test_multi_market_overview_marks_stale_heartbeat_as_delayed() -> None
 ⋮----

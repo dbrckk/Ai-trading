@@ -1,5 +1,9 @@
 {
   "files": {
+    "Dockerfile": {
+      "sha256": "842246f60debaa00f5967c33e4e568f95b238ceaef6a3f3c3201bed71dc15299",
+      "size": 328
+    },
     "src/ai_trading/__init__.py": {
       "sha256": "b9dff288ae98d64dec4345a3704aad0406f0fa2784917ca65cf68f4d6f55d28f",
       "size": 49
@@ -11,10 +15,6 @@
     "src/ai_trading/cli.py": {
       "sha256": "b6d24a3a50190918b90bf0b17cf7632e454d801ac52dae02c64d7cded21ca392",
       "size": 70120
-    },
-    "src/ai_trading/config.py": {
-      "sha256": "435c24e9fe374563e2cd615664a85eb2291dc965b4cb1cec28b269e1f9e197ac",
-      "size": 1386
     },
     "src/ai_trading/dashboard.py": {
       "sha256": "82ddd5d224397653fb5cc1661fede1263f3485e81ddfc424b5857a5581c369d5",
@@ -28,13 +28,17 @@
       "sha256": "3488733cc4d53c0dbdddabb62a157246cc6c68f62936a382c68a4a84f2ec2379",
       "size": 7396
     },
-    "src/ai_trading/multi_market.py": {
-      "sha256": "a092abce140a8cbfc044a21eb89c06238dfbc472d166db0166aa85bc32cbb8d5",
-      "size": 13912
+    "src/ai_trading/market_freshness.py": {
+      "sha256": "a05c7af78835ecf7ce98ceca6587ac9125918c8912f732fd5ec5030be2e043a0",
+      "size": 5081
     },
-    "src/ai_trading/online.py": {
-      "sha256": "5accdd2d7cc0e96357384c3f5d95df6a1e2e40da6f8af50ee090dd69d7cf4efc",
-      "size": 1871
+    "src/ai_trading/multi_market.py": {
+      "sha256": "7ca903cbbe455efd1c6843e6bf477498ffe775be93ae49aa6bdc6e3df81c3079",
+      "size": 14806
+    },
+    "src/ai_trading/operational_overview.py": {
+      "sha256": "242a1afd2d30ad6cd510e7abc4391c0d264704cdd2126dd9b25d3bfa9108d285",
+      "size": 14706
     },
     "src/ai_trading/paper_cycle.py": {
       "sha256": "306e511442c1c5a15bbd7ef7365710605cd333404466deacd8bb7c01a68c5a7a",
@@ -43,6 +47,10 @@
     "src/ai_trading/paper_cycle_service.py": {
       "sha256": "6b8f168930669f5900f89865c16cf9e616d71569bc1f74cef885ff4bfe4ddea6",
       "size": 6758
+    },
+    "src/ai_trading/paper_readiness_evidence.py": {
+      "sha256": "c2de014312c392ca22f04d94f03d4da99f4a1699007684dabdce0b816e3ebd22",
+      "size": 408
     },
     "src/ai_trading/performance_metrics.py": {
       "sha256": "f3ecbb920bfb270a8b71b3cd8f378d976f8ef01d1a286e6cc56305dfaff141cb",
@@ -56,13 +64,9 @@
       "sha256": "b1cbcae3c6d0b5fdf9a624f87c80b109e59094c9f5c8f939850216c3848c9371",
       "size": 649
     },
-    "src/ai_trading/postgres_persistence.py": {
-      "sha256": "5e3dfe2dd5ef2300f8848a22b5ed09b20aaa3d6079fb93d360969850f8b91dd9",
-      "size": 35743
-    },
-    "src/ai_trading/runtime.py": {
-      "sha256": "46340b022527ad4d46f668ab96692b83a04ab5f89184039d4320d9c3be2cbf30",
-      "size": 14676
+    "src/ai_trading/readiness.py": {
+      "sha256": "d0072e6f26c3179e8d9cb2e106cbef42bae21a0d516487f93e4149d6e88695b4",
+      "size": 4002
     },
     "src/ai_trading/runtime_state.py": {
       "sha256": "c7e5739549e9134b89fe1f217570c01927c2b67f8db0ee3c63f8c6f5ae3b208e",
@@ -72,6 +76,10 @@
       "sha256": "33f04bd5d38228a92a1585e8e150cec2d6f4f15d7f3240473eb5c038aa961ad1",
       "size": 3120
     },
+    "src/ai_trading/scheduler_endpoint.py": {
+      "sha256": "694697eae1ab76afedbeb60301f462eb84f4126878088cb2113cb752d86a1e33",
+      "size": 6764
+    },
     "src/ai_trading/trade_journal.py": {
       "sha256": "02f5cf98729b621da5a234e1b497b1163a82f7e38066b7b3e4ce9468f790c392",
       "size": 1440
@@ -79,10 +87,6 @@
     "src/ai_trading/watchdog.py": {
       "sha256": "bbd0ddfda96eb95a77abd102b0ebb803acfcc22888696a9a554d6e54c3a9f204",
       "size": 1711
-    },
-    "tests/test_cumulative_performance_persistence.py": {
-      "sha256": "ac99ed5ba3639c98623ae5b22e78006514e24c92c39df254b0721268de503110",
-      "size": 5121
     },
     "tests/test_dashboard.py": {
       "sha256": "17feacbc5c044caf2f9a6f798341f970f155c61a54f147c36d7a0a07d58a46bf",
@@ -104,25 +108,9 @@
       "sha256": "1a54af815a1ce04da94da2e1f54575a0f6115719dbc869ba8f7bbf50aae84026",
       "size": 14258
     },
-    "tests/test_durable_burnin_persistence.py": {
-      "sha256": "b43044e48885afda4536bc1d3b238f6a46f4f18f4d61963d674524a387955f1e",
-      "size": 4454
-    },
     "tests/test_multi_market.py": {
-      "sha256": "76479e4f3ed093762a055123399a9ded04be5fc5b18649616b6eb1779e2d80ad",
-      "size": 19103
-    },
-    "tests/test_paper_cycle_postgres.py": {
-      "sha256": "a4886c81cd6352101cee69154fd27c2dd3a6788a53f6975c436444f0c3392645",
-      "size": 3406
-    },
-    "tests/test_persistence_factory.py": {
-      "sha256": "978d01f0e378cb995b8206ccc6ba1e8e5fb1738a047d9f8abd2f52a56f6ce483",
-      "size": 1341
-    },
-    "tests/test_postgres_persistence.py": {
-      "sha256": "57495fe288ee6bf75e681536a3a32e3d62e5d232284c5600c5d2f46d0f20814e",
-      "size": 16657
+      "sha256": "e9f58873301db880d09443e9a7963c852efc495db4abb8aeabfe99ff629f57f5",
+      "size": 20072
     },
     "tests/test_scheduler_endpoint.py": {
       "sha256": "3a9b75b317132a0c76d55a076d33ab954339a31a2b61a0f8dbd934e8cf5d610b",

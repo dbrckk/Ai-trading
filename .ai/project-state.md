@@ -46,23 +46,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T07:34:55Z
+Generated: 2026-10-19T07:43:36Z
 
 ### Git
 - Branch: `main`
-- Head: `6da9bd60b80e`
-- Commit date: 2026-10-19T03:34:45-04:00
-- Commit: perf: pool bounded PostgreSQL connections for responsive hosted dashboard (#149)
+- Head: `ea3ee85ac4b7`
+- Commit date: 2026-10-19T03:43:26-04:00
+- Commit: perf: parallelize read-only Gold DAX BTC market overviews (#150)
 - Tracked files: 501
 
 ### Recently changed files
+- `src/ai_trading/multi_market.py`
+- `tests/test_multi_market.py`
 - `pyproject.toml`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/persistence_factory.py`
 - `src/ai_trading/postgres_persistence.py`
 - `tests/test_postgres_persistence.py`
-- `src/ai_trading/multi_market.py`
-- `tests/test_multi_market.py`
 - `README.md`
 - `src/ai_trading/market_freshness.py`
 - `src/ai_trading/paper_cycle.py`
@@ -75,7 +75,6 @@ Generated: 2026-10-19T07:34:55Z
 - `tests/test_paper_cycle_service.py`
 - `.github/workflows/ci.yml`
 - `.github/workflows/production-os-review-handoff.yml`
-- `AGENTS.md`
 
 ### Project signals
 - `pyproject.toml`
