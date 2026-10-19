@@ -1014,6 +1014,7 @@ def test_kronos_research_compares_same_windows_with_river_and_momentum() -> None
     )
     assert summary["mean_alpha_vs_river_ci95_lower"] is None
     assert all(start < stop for start, stop in calls)
+    assert calls[-1][0] - calls[0][0] > pd.Timedelta(hours=12)
 
 
 def test_kronos_river_reference_never_trains_on_unmatured_labels(monkeypatch) -> None:
