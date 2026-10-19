@@ -171,7 +171,9 @@ def test_external_scheduler_readiness_detects_missing_configuration(
         "storage_healthy": True,
         "error": "configuration incomplete",
     }
-    assert probe_dashboard(f"http://127.0.0.1:{port}", timeout=3)[1].ok is False
+    readiness = probe_dashboard(f"http://127.0.0.1:{port}", timeout=3)[1]
+    assert readiness.ok is False
+    assert readiness.detail == "http_503_configuration_incomplete"
 
 
 def test_render_blueprint_declares_external_runtime_and_secret_inputs() -> None:
@@ -201,3 +203,46 @@ def test_external_probe_reports_connection_errors_without_exposing_details(
     results = probe_dashboard("https://example.invalid")
     assert len(results) == 3
     assert all(item.ok is False and item.detail == "connection_failed" for item in results)
+
+
+def test_probe_rejects_market_cards_with_broken_portfolio(monkeypatch) -> None:
+    from io import BytesIO
+
+    from ai_trading import deployment_probe
+
+    class FakeResponse:
+        status = 200
+
+        def __init__(self, payload):
+            self.body = BytesIO(json.dumps(payload).encode())
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self, count):
+            return self.body.read(count)
+
+    def fake_urlopen(request, timeout):
+        del timeout
+        if request.full_url.endswith("/livez"):
+            return FakeResponse({"web_healthy": True})
+        if request.full_url.endswith("/readyz"):
+            return FakeResponse({"ready": True, "storage_healthy": True})
+        return FakeResponse({
+            "portfolio": {"equity_complete": False, "error_markets": 1},
+            "markets": [
+                {"symbol": "GC=F"},
+                {"symbol": "^GDAXI"},
+                {"symbol": "BTC-USD"},
+            ],
+        })
+
+    monkeypatch.setattr(deployment_probe, "urlopen", fake_urlopen)
+    results = probe_dashboard("https://example.invalid")
+    assert results[0].ok is True
+    assert results[1].ok is True
+    assert results[2].ok is False
+    assert results[2].detail == "portfolio_or_market_unavailable"
