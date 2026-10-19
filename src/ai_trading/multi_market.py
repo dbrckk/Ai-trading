@@ -60,23 +60,27 @@ def configured_markets_from_env() -> tuple[MarketSpec, ...]:
     if not raw:
         return DEFAULT_MARKETS
 
-    symbols = tuple(part.strip() for part in raw.split(",") if part.strip())
-    if not symbols:
-        raise ValueError("AI_TRADING_MARKETS must contain at least one symbol")
+    symbols = tuple(part.strip() for part in raw.split(","))
+    if not all(symbols):
+        raise ValueError("AI_TRADING_MARKETS must contain non-empty symbols")
+    if len(set(symbols)) != len(symbols):
+        raise ValueError("AI_TRADING_MARKETS symbols must be unique")
 
     known = {spec.symbol: spec for spec in DEFAULT_MARKETS}
     if symbols == tuple(spec.symbol for spec in DEFAULT_MARKETS):
         return DEFAULT_MARKETS
 
     weight = 1.0 / len(symbols)
-    return tuple(
+    markets = tuple(
         MarketSpec(
             symbol=symbol,
-            label=known.get(symbol, MarketSpec(symbol, symbol, weight)).label,
+            label=known[symbol].label if symbol in known else symbol,
             allocation=weight,
         )
         for symbol in symbols
     )
+    _validate_market_bundle(markets)
+    return markets
 
 
 def run_multi_market_paper_cycle(
@@ -154,7 +158,7 @@ def run_multi_market_paper_cycle(
         failure_codes = {code for _, code in failures}
         code = (
             "storage_unavailable"
-            if "storage_unavailable" in failure_codes
+            if failure_codes == {"storage_unavailable"}
             else "execution_failed"
         )
         raise PaperCycleServiceError(
