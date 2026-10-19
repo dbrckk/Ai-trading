@@ -563,15 +563,26 @@ def test_multi_market_cycle_sanitizes_all_unexpected_failures(monkeypatch) -> No
 @pytest.mark.parametrize(
     ("codes", "expected"),
     [
-        (("storage_unavailable", "storage_unavailable", "storage_unavailable"), "storage_unavailable"),
-        (("execution_failed", "execution_failed", "execution_failed"), "execution_failed"),
-        (("storage_unavailable", "execution_failed", "storage_unavailable"), "execution_failed"),
+        (
+            ("storage_unavailable", "storage_unavailable", "storage_unavailable"),
+            "storage_unavailable",
+        ),
+        (
+            ("execution_failed", "execution_failed", "execution_failed"),
+            "execution_failed",
+        ),
+        (
+            ("storage_unavailable", "execution_failed", "storage_unavailable"),
+            "execution_failed",
+        ),
     ],
 )
 def test_multi_market_total_failure_classification(
     monkeypatch, codes: tuple[str, str, str], expected: str
 ) -> None:
-    failure_by_market = dict(zip((m.symbol for m in DEFAULT_MARKETS), codes, strict=True))
+    failure_by_market = dict(
+        zip((market.symbol for market in DEFAULT_MARKETS), codes, strict=True)
+    )
 
     def fake_cycle(settings, *, persistence=None):
         del persistence
