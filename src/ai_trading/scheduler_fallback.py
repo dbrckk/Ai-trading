@@ -17,6 +17,9 @@ class FallbackFailure(RuntimeError):
     """Sanitized failure suitable for public CI logs."""
 
 
+_CLOUDFLARE_HEALTHY_WINDOW_SECONDS = 32 * 60
+
+
 def _recent_cloudflare(payload: object) -> bool:
     if not isinstance(payload, dict):
         return False
@@ -28,7 +31,7 @@ def _recent_cloudflare(payload: object) -> bool:
         and isinstance(age, (int, float))
         and not isinstance(age, bool)
         and math.isfinite(age)
-        and 0 <= age <= 12 * 60
+        and 0 <= age <= _CLOUDFLARE_HEALTHY_WINDOW_SECONDS
     )
 
 
