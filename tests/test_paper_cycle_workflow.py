@@ -54,7 +54,10 @@ def test_paper_cycle_workflow_uses_authenticated_render_not_expired_db() -> None
         assert forbidden not in text
 
 
-def test_fallback_skips_healthy_recent_cloudflare_without_paper_post() -> None:
+@pytest.mark.parametrize("age_seconds", [8 * 60, 13 * 60, 30 * 60, 32 * 60])
+def test_fallback_skips_healthy_recent_cloudflare_without_paper_post(
+    age_seconds: int,
+) -> None:
     seen = []
 
     def fake_open(request, timeout):
@@ -64,7 +67,7 @@ def test_fallback_skips_healthy_recent_cloudflare_without_paper_post() -> None:
                 "last_source": "cloudflare",
                 "last_status_code": 200,
                 "last_ok": True,
-                "last_delivery_age_seconds": 8 * 60,
+                "last_delivery_age_seconds": age_seconds,
             }
         )
 
@@ -80,7 +83,7 @@ def test_fallback_skips_healthy_recent_cloudflare_without_paper_post() -> None:
         {"last_source": "cloudflare", "last_status_code": 200, "last_ok": False,
          "last_delivery_age_seconds": 20},
         {"last_source": "cloudflare", "last_status_code": 200, "last_ok": True,
-         "last_delivery_age_seconds": 13 * 60},
+         "last_delivery_age_seconds": 33 * 60},
         {"last_source": "github", "last_status_code": 200, "last_ok": True,
          "last_delivery_age_seconds": 30},
     ],
