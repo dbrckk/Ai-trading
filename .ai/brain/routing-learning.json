@@ -2,28 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "feat: activate benchmark-validated BTC 90m MTF shadow (#69)",
-      "terms": [
-        "69",
-        "90m",
-        "activate",
-        "benchmark-validated",
-        "btc",
-        "feat",
-        "mtf",
-        "shadow"
-      ],
-      "tests": [],
-      "useful": [
-        "src/ai_trading/mtf_shadow_config.py",
-        "tests/test_dashboard_overview.py",
-        "tests/test_mtf_shadow_config.py",
-        "tests/test_multi_market.py",
-        "tests/test_paper_cycle.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "fix: align MTF evidence cadence with candidate horizon (#70)",
       "terms": [
         "70",
@@ -1234,6 +1212,30 @@
         "src/ai_trading/deployment_probe.py",
         "tests/test_dashboard_health.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "fix(paper): route scheduler fallback through Render and respect Neon free quota (#158)",
+      "terms": [
+        "158",
+        "fallback",
+        "free",
+        "neon",
+        "paper",
+        "quota",
+        "render",
+        "respect",
+        "route",
+        "scheduler",
+        "through"
+      ],
+      "tests": [],
+      "useful": [
+        "src/ai_trading/scheduler_endpoint.py",
+        "src/ai_trading/scheduler_fallback.py",
+        "tests/test_paper_cycle_workflow.py",
+        "tests/test_scheduler_endpoint.py"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1296,6 +1298,12 @@
     "156": {
       "src/ai_trading/deployment_probe.py": 4,
       "tests/test_dashboard_health.py": 4
+    },
+    "158": {
+      "src/ai_trading/scheduler_endpoint.py": 4,
+      "src/ai_trading/scheduler_fallback.py": 4,
+      "tests/test_paper_cycle_workflow.py": 4,
+      "tests/test_scheduler_endpoint.py": 4
     },
     "56": {
       "src/ai_trading/command_app.py": 4,
@@ -2314,8 +2322,11 @@
     },
     "fallback": {
       "src/ai_trading/data.py": 4,
+      "src/ai_trading/scheduler_endpoint.py": 4,
+      "src/ai_trading/scheduler_fallback.py": 4,
       "tests/test_data.py": 4,
-      "tests/test_paper_cycle_workflow.py": 4
+      "tests/test_paper_cycle_workflow.py": 8,
+      "tests/test_scheduler_endpoint.py": 4
     },
     "feat": {
       "infra/cloudflare-paper-scheduler/src/index.js": 4,
@@ -2396,6 +2407,12 @@
       "tests/test_cloudflare_scheduler_deploy_workflow.py": 4,
       "tests/test_data.py": 4,
       "tests/test_performance.py": 4
+    },
+    "free": {
+      "src/ai_trading/scheduler_endpoint.py": 4,
+      "src/ai_trading/scheduler_fallback.py": 4,
+      "tests/test_paper_cycle_workflow.py": 4,
+      "tests/test_scheduler_endpoint.py": 4
     },
     "freshness": {
       "src/ai_trading/dashboard.py": 12,
@@ -2859,6 +2876,12 @@
       "tests/test_multiasset_checkpoint.py": 16,
       "tests/test_multiasset_runtime.py": 28
     },
+    "neon": {
+      "src/ai_trading/scheduler_endpoint.py": 4,
+      "src/ai_trading/scheduler_fallback.py": 4,
+      "tests/test_paper_cycle_workflow.py": 4,
+      "tests/test_scheduler_endpoint.py": 4
+    },
     "observability": {
       "src/ai_trading/dashboard.py": 4,
       "src/ai_trading/file_persistence.py": 4,
@@ -2924,6 +2947,8 @@
       "src/ai_trading/runtime.py": 8,
       "src/ai_trading/runtime_state.py": 4,
       "src/ai_trading/runtime_status.py": 4,
+      "src/ai_trading/scheduler_endpoint.py": 4,
+      "src/ai_trading/scheduler_fallback.py": 4,
       "src/ai_trading/trade_journal.py": 4,
       "tests/test_dashboard.py": 4,
       "tests/test_dashboard_engine_status.py": 4,
@@ -2934,10 +2959,12 @@
       "tests/test_multi_market.py": 8,
       "tests/test_paper_cycle.py": 16,
       "tests/test_paper_cycle_service.py": 16,
+      "tests/test_paper_cycle_workflow.py": 4,
       "tests/test_paper_execution.py": 4,
       "tests/test_performance_metrics.py": 4,
       "tests/test_postgres_persistence.py": 4,
-      "tests/test_realized_pnl_accounting.py": 4
+      "tests/test_realized_pnl_accounting.py": 4,
+      "tests/test_scheduler_endpoint.py": 4
     },
     "parallelize": {
       "src/ai_trading/multi_market.py": 4,
@@ -3203,6 +3230,12 @@
       "src/ai_trading/paper_cycle.py": 4,
       "tests/test_paper_cycle.py": 4
     },
+    "quota": {
+      "src/ai_trading/scheduler_endpoint.py": 4,
+      "src/ai_trading/scheduler_fallback.py": 4,
+      "tests/test_paper_cycle_workflow.py": 4,
+      "tests/test_scheduler_endpoint.py": 4
+    },
     "random": {
       "src/ai_trading/mtf_parameter_benchmark.py": 4,
       "tests/test_mtf_parameter_benchmark.py": 4
@@ -3283,7 +3316,11 @@
     "render": {
       "src/ai_trading/dashboard.py": 4,
       "src/ai_trading/deployment_probe.py": 8,
-      "tests/test_dashboard_health.py": 8
+      "src/ai_trading/scheduler_endpoint.py": 4,
+      "src/ai_trading/scheduler_fallback.py": 4,
+      "tests/test_dashboard_health.py": 8,
+      "tests/test_paper_cycle_workflow.py": 4,
+      "tests/test_scheduler_endpoint.py": 4
     },
     "repeated": {
       "src/ai_trading/data_quality.py": 4,
@@ -3304,6 +3341,12 @@
     "research": {
       "src/ai_trading/paper_cycle.py": 4,
       "tests/test_paper_cycle.py": 4
+    },
+    "respect": {
+      "src/ai_trading/scheduler_endpoint.py": 4,
+      "src/ai_trading/scheduler_fallback.py": 4,
+      "tests/test_paper_cycle_workflow.py": 4,
+      "tests/test_scheduler_endpoint.py": 4
     },
     "responses": {
       "src/ai_trading/dashboard.py": 4,
@@ -3344,6 +3387,12 @@
       "tests/test_dashboard_overview.py": 4,
       "tests/test_mtf_shadow_quality.py": 4,
       "tests/test_multi_market.py": 4
+    },
+    "route": {
+      "src/ai_trading/scheduler_endpoint.py": 4,
+      "src/ai_trading/scheduler_fallback.py": 4,
+      "tests/test_paper_cycle_workflow.py": 4,
+      "tests/test_scheduler_endpoint.py": 4
     },
     "run": {
       "src/ai_trading/dashboard.py": 4,
@@ -3398,7 +3447,8 @@
       "src/ai_trading/persistence.py": 4,
       "src/ai_trading/postgres_persistence.py": 4,
       "src/ai_trading/runtime.py": 4,
-      "src/ai_trading/scheduler_endpoint.py": 20,
+      "src/ai_trading/scheduler_endpoint.py": 24,
+      "src/ai_trading/scheduler_fallback.py": 4,
       "tests/test_backtest.py": 4,
       "tests/test_broker.py": 4,
       "tests/test_dashboard.py": 8,
@@ -3406,8 +3456,9 @@
       "tests/test_multi_market.py": 4,
       "tests/test_multiasset_backtest.py": 4,
       "tests/test_paper_cycle_service.py": 4,
+      "tests/test_paper_cycle_workflow.py": 4,
       "tests/test_postgres_persistence.py": 4,
-      "tests/test_scheduler_endpoint.py": 20
+      "tests/test_scheduler_endpoint.py": 24
     },
     "scroll": {
       "src/ai_trading/dashboard.py": 4,
@@ -3607,6 +3658,12 @@
       "tests/test_multi_market.py": 12,
       "tests/test_paper_cycle_service.py": 4,
       "tests/test_runtime_status.py": 4,
+      "tests/test_scheduler_endpoint.py": 4
+    },
+    "through": {
+      "src/ai_trading/scheduler_endpoint.py": 4,
+      "src/ai_trading/scheduler_fallback.py": 4,
+      "tests/test_paper_cycle_workflow.py": 4,
       "tests/test_scheduler_endpoint.py": 4
     },
     "tolerate": {

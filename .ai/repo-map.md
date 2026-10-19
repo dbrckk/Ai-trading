@@ -210,6 +210,7 @@ src/
     runtime_status.py
     runtime.py
     scheduler_endpoint.py
+    scheduler_fallback.py
     scheduler.py
     sensitivity_gate.py
     session_integrity.py
@@ -739,8 +740,10 @@ jobs:
 name: Paper Cycle
 
 on:
+  # Offset from the Cloudflare :00/:15/:30/:45 schedule to avoid duplicate work.
+  # At 0.25 CU, five-minute DB reads keep Neon awake and exhaust its free quota.
   schedule:
-    - cron: "7-57/5 * * * *"
+    - cron: "7-52/15 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -755,37 +758,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      AI_TRADING_DATABASE_URL: ${{ secrets.AI_TRADING_DATABASE_URL }}
+      AI_TRADING_SCHEDULER_TOKEN: ${{ secrets.AI_TRADING_SCHEDULER_TOKEN }}
+      DASHBOARD_URL: https://ai-trading-dashboard-qyr2.onrender.com
+      PYTHONPATH: src
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
-          cache: pip
-      - name: Require durable database
+      - name: Require authenticated scheduler
         shell: bash
         run: |
-          if [ -z "${AI_TRADING_DATABASE_URL:-}" ]; then
-            echo "::error::AI_TRADING_DATABASE_URL repository secret is required"
+          if [ -z "${AI_TRADING_SCHEDULER_TOKEN:-}" ]; then
+            echo "::error::AI_TRADING_SCHEDULER_TOKEN repository secret is required"
             exit 1
           fi
-      - name: Install
-        run: python -m pip install .
-      - name: Run all three paper markets
-        shell: bash
+      - name: Run authenticated three-market fallback
         run: |
-          failures=0
-          # Keep backup processing independent: DAX/BTC must still run if Gold fails.
-          for symbol in GC=F ^GDAXI BTC-USD; do
-            echo "Running paper cycle for ${symbol}"
-            ai-trading paper-cycle \
-              --symbol "${symbol}" --period 5d --interval 5m --max-catchup-bars 72 \
-              || failures=$((failures + 1))
-          done
-          if [ "${failures}" -gt 0 ]; then
-            echo "::error::${failures} market paper cycle(s) failed"
-            exit 1
-          fi
+          python -m ai_trading.scheduler_fallback \
+            --base-url "${DASHBOARD_URL}" --timeout 90
 ````
 
 ## File: .github/workflows/production-os-review-handoff.yml
@@ -1039,7 +1030,7 @@ main = "src/index.js"
 compatibility_date = "2026-09-16"
 
 [triggers]
-crons = ["*/5 * * * *"]
+crons = ["*/15 * * * *"]
 
 [vars]
 TARGET_URL = "https://ai-trading-dashboard-qyr2.onrender.com/internal/paper-cycle"
@@ -7931,8 +7922,8 @@ class SchedulerHttpResponse
 status_code: int
 payload: dict[str, object]
 ⋮----
-_ALLOWED_SCHEDULER_SOURCES = {"cloudflare"}
-_SCHEDULER_FRESHNESS_SECONDS = 12 * 60
+_ALLOWED_SCHEDULER_SOURCES = {"cloudflare", "github"}
+_SCHEDULER_FRESHNESS_SECONDS = 32 * 60
 ⋮----
 normalized_source = (source or "").strip().lower()
 ⋮----
@@ -7974,6 +7965,45 @@ def _authorized(authorization: str | None, configured_token: str) -> bool
 provided = authorization.removeprefix("Bearer ")
 ⋮----
 result = run_cycle()
+````
+
+## File: src/ai_trading/scheduler_fallback.py
+````python
+"""Authenticated GitHub scheduler fallback using Render as the single DB writer.
+
+The dashboard owns the Neon connection; GitHub never receives database credentials.
+"""
+⋮----
+class FallbackFailure(RuntimeError)
+⋮----
+"""Sanitized failure suitable for public CI logs."""
+⋮----
+def _recent_cloudflare(payload: object) -> bool
+⋮----
+age = payload.get("last_delivery_age_seconds")
+⋮----
+"""Skip a recent successful Cloudflare cycle, or trigger one paper-only cycle."""
+⋮----
+origin = base_url.rstrip("/")
+status_request = Request(
+⋮----
+status_payload = (
+⋮----
+status_payload = None
+⋮----
+cycle_request = Request(
+⋮----
+body = response.read(16_385)
+⋮----
+payload = json.loads(body)
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser(description="Neon-budgeted paper scheduler fallback")
+⋮----
+args = parser.parse_args()
+⋮----
+outcome = run_fallback(
 ````
 
 ## File: src/ai_trading/scheduler.py
@@ -11283,26 +11313,45 @@ completed = backend.statuses[-1]
 ## File: tests/test_paper_cycle_workflow.py
 ````python
 WORKFLOW_PATH = Path(".github/workflows/paper-cycle.yml")
-STEP_HEADER = (
+WORKER_CONFIG_PATH = Path("infra/cloudflare-paper-scheduler/wrangler.toml")
 ⋮----
-def _fallback_script() -> str
+class FakeResponse
 ⋮----
-workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
-# This is the actual shell body GitHub Actions runs, not a copied command.
-body = workflow.split(STEP_HEADER, 1)[1]
+status = 200
 ⋮----
-def test_paper_cycle_workflow_structure() -> None
+def __init__(self, payload: dict[str, object], *, status: int = 200) -> None
+⋮----
+def __enter__(self)
+⋮----
+def __exit__(self, *_args)
+⋮----
+def read(self, size: int) -> bytes
+⋮----
+def test_paper_cycle_workflow_uses_authenticated_render_not_expired_db() -> None
 ⋮----
 text = WORKFLOW_PATH.read_text(encoding="utf-8")
-⋮----
+worker = WORKER_CONFIG_PATH.read_text(encoding="utf-8")
 required = (
 ⋮----
-def test_fallback_runs_every_market_even_after_failure(tmp_path: Path) -> None
+def test_fallback_skips_healthy_recent_cloudflare_without_paper_post() -> None
 ⋮----
-market_log = tmp_path / "visited-markets.txt"
-fake_cli = tmp_path / "ai-trading"
+seen = []
 ⋮----
-result = subprocess.run(
+def fake_open(request, timeout)
+⋮----
+outcome = run_fallback("https://example.invalid", "server-secret", opener=fake_open)
+⋮----
+calls = []
+⋮----
+def test_fallback_runs_after_scheduler_telemetry_failure() -> None
+⋮----
+def test_fallback_rejects_missing_token_without_network() -> None
+⋮----
+def test_fallback_reports_sanitized_http_failure() -> None
+⋮----
+def test_fallback_fails_closed_when_paper_cycle_has_partial_market_failure() -> None
+⋮----
+def test_fallback_rejects_malformed_and_future_scheduler_ages() -> None
 ````
 
 ## File: tests/test_paper_cycle.py
@@ -13206,8 +13255,8 @@ Autonomous trading research platform focused on reproducible, risk-aware, out-of
 - multi-timeframe evidence across 5m / 15m / 1h / 4h
 - correlation-aware portfolio de-risking and fail-closed configuration validation
 - bounded external paper-cycle scheduling with catch-up support
-- Cloudflare five-minute scheduler with authenticated Render endpoint and durable delivery evidence
-- GitHub Actions scheduler retained as operational fallback
+- Cloudflare fifteen-minute scheduler with authenticated Render endpoint and durable delivery evidence
+- GitHub Actions authenticated scheduler retained as operational fallback (reuses Render/Neon; skips recent Cloudflare success)
 - read-only hosted dashboard backed by the same durable runtime state
 - CI with Ruff + Pytest + PostgreSQL 16 integration tests
 

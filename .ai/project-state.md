@@ -46,28 +46,30 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T14:38:16Z
+Generated: 2026-10-19T19:05:38Z
 
 ### Git
 - Branch: `main`
-- Head: `05c929040f92`
-- Commit date: 2026-10-19T10:38:05-04:00
-- Commit: fix(ops): diagnose Render readiness failures without leaking secrets (#156)
-- Tracked files: 503
+- Head: `fddfd942340c`
+- Commit date: 2026-10-19T15:05:28-04:00
+- Commit: fix(paper): route scheduler fallback through Render and respect Neon free quota (#158)
+- Tracked files: 504
 
 ### Recently changed files
+- `.github/workflows/paper-cycle.yml`
 - `README.md`
+- `infra/cloudflare-paper-scheduler/wrangler.toml`
+- `src/ai_trading/scheduler_endpoint.py`
+- `src/ai_trading/scheduler_fallback.py`
+- `tests/test_paper_cycle_workflow.py`
+- `tests/test_scheduler_endpoint.py`
 - `src/ai_trading/deployment_probe.py`
 - `tests/test_dashboard_health.py`
 - `.github/workflows/hosted-dashboard-probe.yml`
 - `render.yaml`
 - `src/ai_trading/dashboard.py`
-- `.github/workflows/paper-cycle.yml`
-- `tests/test_paper_cycle_workflow.py`
 - `src/ai_trading/paper_cycle_service.py`
 - `tests/test_paper_cycle_service.py`
-- `src/ai_trading/bootstrap_robustness.py`
-- `tests/test_bootstrap_robustness.py`
 
 ### Project signals
 - `pyproject.toml`
