@@ -9,7 +9,11 @@ import pytest
 
 
 WORKFLOW_PATH = Path(".github/workflows/paper-cycle.yml")
-STEP_HEADER = "      - name: Run all three paper markets\n        shell: bash\n        run: |\n"
+STEP_HEADER = (
+    "      - name: Run all three paper markets\n"
+    "        shell: bash\n"
+    "        run: |\n"
+)
 
 
 def _fallback_script() -> str:
