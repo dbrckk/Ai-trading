@@ -1,10 +1,11 @@
 name: Paper Cycle
 
 on:
-  # Offset from the Cloudflare :00/:15/:30/:45 schedule to avoid duplicate work.
-  # At 0.25 CU, five-minute DB reads keep Neon awake and exhaust its free quota.
+  # At most one backup probe per hour, 3 min after Cloudflare :00.
+  # Probing Neon at :07 every 15 minutes would wake it unnecessarily
+  # and risk exceeding 100 free CU-hours/month at 0.25 CU.
   schedule:
-    - cron: "7-52/15 * * * *"
+    - cron: "3 * * * *"
   workflow_dispatch:
 
 permissions:
