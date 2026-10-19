@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import socket
 import time
+from pathlib import Path
 from threading import Thread
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
@@ -174,8 +175,6 @@ def test_external_scheduler_readiness_detects_missing_configuration(
 
 
 def test_render_blueprint_declares_external_runtime_and_secret_inputs() -> None:
-    from pathlib import Path
-
     text = Path("render.yaml").read_text(encoding="utf-8")
     for key, value in (
         ("AI_TRADING_HOSTED_PAPER", 'value: "1"'),
@@ -184,7 +183,7 @@ def test_render_blueprint_declares_external_runtime_and_secret_inputs() -> None:
         ("AI_TRADING_DATABASE_URL", "sync: false"),
         ("AI_TRADING_SCHEDULER_TOKEN", "sync: false"),
     ):
-        assert f"- key: {key}\\n        {value}".replace("\\\\n", "\\n") in text
+        assert f"- key: {key}\n        {value}" in text
 
 
 def test_external_probe_reports_connection_errors_without_exposing_details(
