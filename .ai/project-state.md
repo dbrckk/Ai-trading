@@ -46,17 +46,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T12:37:35Z
+Generated: 2026-10-19T12:59:23Z
 
 ### Git
 - Branch: `main`
-- Head: `8ee39d5cae6f`
-- Commit date: 2026-10-19T08:37:24-04:00
-- Commit: fix: retain the latest verified paper signal across empty scheduler polls (#152)
+- Head: `f87c562a426f`
+- Commit date: 2026-10-19T08:59:12-04:00
+- Commit: fix: GitHub fallback processes Gold, DAX and BTC independently (#153)
 - Tracked files: 501
 
 ### Recently changed files
+- `.github/workflows/paper-cycle.yml`
 - `README.md`
+- `tests/test_paper_cycle_workflow.py`
 - `src/ai_trading/paper_cycle_service.py`
 - `tests/test_paper_cycle_service.py`
 - `src/ai_trading/bootstrap_robustness.py`

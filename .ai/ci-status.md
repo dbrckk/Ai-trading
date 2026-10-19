@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 6 success / 0 failure / 2 active
+Summary: 3 success / 2 failure / 2 active
 
-- CodeQL: in_progress / pending (8ee39d5c)
-- CI: in_progress / pending (8ee39d5c)
-- CI: completed / success (70706640)
-- CodeQL: completed / success (70706640)
-- CodeQL: completed / success (b70047d1)
-- Precise semantic refresh: completed / success (b70047d1)
-- CodeQL: completed / success (52492bad)
-- CI: completed / success (52492bad)
+- CI: in_progress / pending (f87c562a)
+- CodeQL: in_progress / pending (f87c562a)
+- CodeQL: completed / success (ffc6b9f1)
+- CI: completed / success (ffc6b9f1)
+- CodeQL: completed / success (cd644aaf)
+- CI: completed / failure (cd644aaf)
+- CodeQL: completed / cancelled (b8975ccb)
+- CI: completed / failure (b8975ccb)
+
+## Latest failed run structure
+- Job: test
+  - Failed step: Pytest
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

@@ -730,8 +730,21 @@ jobs:
           fi
       - name: Install
         run: python -m pip install .
-      - name: Run paper cycle
-        run: ai-trading paper-cycle --symbol GC=F --period 5d --interval 5m --max-catchup-bars 72
+      - name: Run all three paper markets
+        shell: bash
+        run: |
+          failures=0
+          # Keep backup processing independent: DAX/BTC must still run if Gold fails.
+          for symbol in GC=F ^GDAXI BTC-USD; do
+            echo "Running paper cycle for ${symbol}"
+            ai-trading paper-cycle \
+              --symbol "${symbol}" --period 5d --interval 5m --max-catchup-bars 72 \
+              || failures=$((failures + 1))
+          done
+          if [ "${failures}" -gt 0 ]; then
+            echo "::error::${failures} market paper cycle(s) failed"
+            exit 1
+          fi
 ````
 
 ## File: .github/workflows/production-os-review-handoff.yml
@@ -11135,13 +11148,27 @@ completed = backend.statuses[-1]
 
 ## File: tests/test_paper_cycle_workflow.py
 ````python
+WORKFLOW_PATH = Path(".github/workflows/paper-cycle.yml")
+STEP_HEADER = (
+⋮----
+def _fallback_script() -> str
+⋮----
+workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
+# This is the actual shell body GitHub Actions runs, not a copied command.
+body = workflow.split(STEP_HEADER, 1)[1]
+⋮----
 def test_paper_cycle_workflow_structure() -> None
 ⋮----
-path = Path(".github/workflows/paper-cycle.yml")
-⋮----
-text = path.read_text(encoding="utf-8")
+text = WORKFLOW_PATH.read_text(encoding="utf-8")
 ⋮----
 required = (
+⋮----
+def test_fallback_runs_every_market_even_after_failure(tmp_path: Path) -> None
+⋮----
+market_log = tmp_path / "visited-markets.txt"
+fake_cli = tmp_path / "ai-trading"
+⋮----
+result = subprocess.run(
 ````
 
 ## File: tests/test_paper_cycle.py
@@ -13185,7 +13212,7 @@ paper state/model/trades         Render dashboard
 GitHub Actions fallback scheduler
 ```
 
-The primary scheduler is the Cloudflare Worker under `infra/cloudflare-paper-scheduler/`. Its cron runs every five minutes and sends an authenticated POST to Render's `/internal/paper-cycle` endpoint. The Worker contains no database credentials and no trading logic. The existing `.github/workflows/paper-cycle.yml` schedule remains available as a fallback until external scheduler delivery has accumulated sufficient production evidence.
+The primary scheduler is the Cloudflare Worker under `infra/cloudflare-paper-scheduler/`. Its cron runs every five minutes and sends an authenticated POST to Render's `/internal/paper-cycle` endpoint. The Worker contains no database credentials and no trading logic. The existing `.github/workflows/paper-cycle.yml` schedule remains available as a fallback until external scheduler delivery has accumulated sufficient production evidence. The GitHub fallback runs **Gold (`GC=F`), DAX (`^GDAXI`) and BTC (`BTC-USD`)** independently against the durable database: one market's failure does not skip the others, but the workflow still fails visibly if any market fails. GitHub scheduled jobs can be delayed; this fallback does **not** guarantee a five-minute heartbeat.
 
 Scheduler delivery telemetry is sanitized and persisted durably. The application never persists the bearer token or raw authorization headers. Three consecutive successful Cloudflare deliveries are treated as the minimum verification threshold exposed by `/api/scheduler`.
 

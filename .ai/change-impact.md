@@ -1,20 +1,20 @@
 # Change impact
 
-Base: b70047d152365d930ea534d08619d63496ac107d
-Head: 8ee39d5cae6f0732a004a24395aa6f674bb3618d
+Base: e7db309628e38a6fcf7adbd88ac02b51bcf3ac3e
+Head: f87c562a426fd6c166d3a384b90187d31eef9a59
 
 ## Changed files
+- M .github/workflows/paper-cycle.yml
 - M README.md
-- M src/ai_trading/paper_cycle_service.py
-- M tests/test_paper_cycle_service.py
+- M tests/test_paper_cycle_workflow.py
 
 ## Affected areas
+- .github
 - (root)
-- src
 - tests
 
 ## Related test candidates
-- tests/test_paper_cycle_service.py
+- No direct filename-based test match detected.
 
 ## Agent guidance
 - Read this file before broad repository exploration.
