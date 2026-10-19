@@ -1417,10 +1417,13 @@ drawdown = 1.0 - wealth / peak
 ⋮----
 alpha = (1.0 - config.confidence) / 2.0
 ⋮----
-output: list[float] = []
-max_start = len(returns) - block_size
-⋮----
-start = int(rng.integers(0, max_start + 1))
+# A batch of integer draws is RNG-equivalent to one draw per block.
+# Vectorized indexing avoids millions of Python list extensions when the
+# hosted readiness endpoint bootstraps thousands of historical bars.
+count = len(returns)
+blocks = (count + block_size - 1) // block_size
+starts = rng.integers(0, count - block_size + 1, size=blocks)
+indices = (starts[:, None] + np.arange(block_size)).ravel()[:count]
 ````
 
 ## File: src/ai_trading/broker.py
@@ -8898,6 +8901,18 @@ def test_bootstrap_positive_curve_has_positive_median() -> None
 curve = pd.Series([100.0, 101.0, 102.0, 103.0, 104.0, 105.0])
 ⋮----
 report = bootstrap_equity_curve(
+⋮----
+returns = np.linspace(-0.01, 0.02, length)
+reference_rng = np.random.default_rng(123)
+expected: list[float] = []
+⋮----
+start = int(reference_rng.integers(0, length - block_size + 1))
+⋮----
+actual_rng = np.random.default_rng(123)
+actual = _block_bootstrap(returns, rng=actual_rng, block_size=block_size)
+⋮----
+# The next draw must also be identical: repeated bootstrap simulations
+# rely on consuming exactly the same deterministic RNG sequence.
 ````
 
 ## File: tests/test_broker.py

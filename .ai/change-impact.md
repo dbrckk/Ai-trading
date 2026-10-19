@@ -1,18 +1,18 @@
 # Change impact
 
-Base: 177080591ec3ce9fe36fbd2faad51f459266e89b
-Head: ea3ee85ac4b71476bd58edc1c37398d4d7034c02
+Base: d769b8e744dd789e1fcfa649cb2d75a66d5d1652
+Head: 52492bad355f34fd6c9637ccf42d91894c6ad1f5
 
 ## Changed files
-- M src/ai_trading/multi_market.py
-- M tests/test_multi_market.py
+- M src/ai_trading/bootstrap_robustness.py
+- M tests/test_bootstrap_robustness.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_multi_market.py
+- tests/test_bootstrap_robustness.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

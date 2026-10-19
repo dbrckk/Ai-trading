@@ -46,16 +46,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T07:43:36Z
+Generated: 2026-10-19T07:51:17Z
 
 ### Git
 - Branch: `main`
-- Head: `ea3ee85ac4b7`
-- Commit date: 2026-10-19T03:43:26-04:00
-- Commit: perf: parallelize read-only Gold DAX BTC market overviews (#150)
+- Head: `52492bad355f`
+- Commit date: 2026-10-19T03:51:08-04:00
+- Commit: perf: vectorize deterministic bootstrap to unblock historical dashboard (#151)
 - Tracked files: 501
 
 ### Recently changed files
+- `src/ai_trading/bootstrap_robustness.py`
+- `tests/test_bootstrap_robustness.py`
 - `src/ai_trading/multi_market.py`
 - `tests/test_multi_market.py`
 - `pyproject.toml`
@@ -73,8 +75,6 @@ Generated: 2026-10-19T07:43:36Z
 - `tests/test_market_freshness.py`
 - `tests/test_paper_cycle.py`
 - `tests/test_paper_cycle_service.py`
-- `.github/workflows/ci.yml`
-- `.github/workflows/production-os-review-handoff.yml`
 
 ### Project signals
 - `pyproject.toml`
