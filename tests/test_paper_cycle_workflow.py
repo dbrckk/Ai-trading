@@ -5,7 +5,6 @@ import subprocess
 from pathlib import Path
 from textwrap import dedent
 
-
 WORKFLOW_PATH = Path(".github/workflows/paper-cycle.yml")
 STEP_HEADER = (
     "      - name: Run all three paper markets\n"
