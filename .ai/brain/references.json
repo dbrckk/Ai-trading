@@ -5,62 +5,1439 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "_fallback_script": {
+    "_public_runtime_snapshot": {
       "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 16,
+        "file": "src/ai_trading/dashboard.py",
+        "line": 50,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 16,
-          "preview": "def _fallback_script() -> str:",
+          "file": "src/ai_trading/dashboard.py",
+          "line": 50,
+          "preview": "def _public_runtime_snapshot(status: HostedRuntimeStatus | None) -> dict[str, object]:",
           "definition_candidate": true
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 62,
-          "preview": "[\"bash\", \"-e\", \"-c\", _fallback_script()],",
+          "file": "src/ai_trading/dashboard.py",
+          "line": 334,
+          "preview": "runtime_snapshot = _public_runtime_snapshot(runtime_status)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1266,
+          "preview": "return _public_runtime_snapshot(backend.load_runtime_status(runtime_key))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_display_money": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 57,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 57,
+          "preview": "def _display_money(value: float | None) -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 151,
+          "preview": "f'<span>{_display_money(values[0])}</span>'",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 152,
+          "preview": "f'<span>{_display_money(values[-1])}</span>'",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 445,
+          "preview": "pnl_display = _display_money(realized_pnl)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 456,
+          "preview": "average_pnl_display = _display_money(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 464,
+          "preview": "max_drawdown_display = _display_money(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 738,
+          "preview": "f'<div><small>Equity</small><strong>{_display_money(sleeve_equity)}</strong></div>'",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 739,
+          "preview": "f'<div><small>PnL</small><strong class=\"{pnl_css}\">{_display_money(sleeve_pnl)}</strong></div>'",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 785,
+          "preview": "f'<div><small>Portfolio equity</small><strong>{_display_money(None if portfolio[\"equity\"] is None else float(portfolio[\"equity\"]))}</strong></div>'",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 786,
+          "preview": "f'<div><small>Portfolio PnL</small><strong class=\"{portfolio_pnl_css}\">{_display_money(portfolio_pnl)}</strong></div>'",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 962,
+          "preview": "<div class=\"hero-kpi\"><small>Equity</small><strong>{_display_money(equity)}</strong></div>",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 993,
+          "preview": "<div class=\"metric\"><small>Equity</small><strong>{_display_money(equity)}</strong></div>",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 994,
+          "preview": "<div class=\"metric\"><small>Cash</small><strong>{_display_money(cash)}</strong></div>",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 996,
+          "preview": "<div class=\"metric\"><small>Position value</small><strong>{_display_money(position_value)}</strong></div>",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 14
+    },
+    "_display_units": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 61,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 61,
+          "preview": "def _display_units(value: float | None) -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 995,
+          "preview": "<div class=\"metric\"><small>Open units</small><strong>{_display_units(units)}</strong></div>",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 2
     },
-    "test_paper_cycle_workflow_structure": {
+    "_display_ratio": {
       "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 23,
+        "file": "src/ai_trading/dashboard.py",
+        "line": 65,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 23,
-          "preview": "def test_paper_cycle_workflow_structure() -> None:",
+          "file": "src/ai_trading/dashboard.py",
+          "line": 65,
+          "preview": "def _display_ratio(value: float | None) -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 461,
+          "preview": "profit_factor_display = _display_ratio(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_scheduler_display_state": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 73,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 73,
+          "preview": "def _scheduler_display_state(",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 572,
+          "preview": ") = _scheduler_display_state(scheduler_overview)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard.py",
+          "line": 1,
+          "preview": "from ai_trading.dashboard import _scheduler_display_state, render_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard.py",
+          "line": 168,
+          "preview": "waiting = _scheduler_display_state(base)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard.py",
+          "line": 169,
+          "preview": "collecting = _scheduler_display_state(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard.py",
+          "line": 178,
+          "preview": "stale = _scheduler_display_state(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard.py",
+          "line": 186,
+          "preview": "degraded = _scheduler_display_state(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard.py",
+          "line": 194,
+          "preview": "verified = _scheduler_display_state(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 8
+    },
+    "_trade_pnl_known": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 105,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 105,
+          "preview": "def _trade_pnl_known(trade: object) -> bool:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 113,
+          "preview": "if not _trade_pnl_known(trade):",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 300,
+          "preview": "pnl_observations = sum(1 for trade in recent if _trade_pnl_known(trade))",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 310,
+          "preview": "if _trade_pnl_known(trade) and trade.pnl > 0",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 315,
+          "preview": "if _trade_pnl_known(trade) and trade.pnl < 0",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "_display_trade_pnl": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 112,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 112,
+          "preview": "def _display_trade_pnl(trade: object) -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 435,
+          "preview": "f\"<td>{_display_trade_pnl(t)}</td>\"",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_equity_chart_svg": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 118,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 118,
+          "preview": "def _equity_chart_svg(snapshots: tuple[BurnInSnapshot, ...]) -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 488,
+          "preview": "equity_chart = _equity_chart_svg(burnin_snapshots)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_readiness_number": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 158,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 158,
+          "preview": "def _readiness_number(check: ReadinessCheck, value: float) -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 173,
+          "preview": "value = _readiness_number(check, check.value)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 174,
+          "preview": "threshold = _readiness_number(check, check.threshold)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_readiness_panel": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 166,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 166,
+          "preview": "def _readiness_panel(report: ReadinessReport | None) -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 541,
+          "preview": "readiness_panel = _readiness_panel(readiness_report)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "render_dashboard": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 187,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 187,
+          "preview": "def render_dashboard(",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1397,
+          "preview": "payload = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard.py",
+          "line": 1,
+          "preview": "from ai_trading.dashboard import _scheduler_display_state, render_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard.py",
+          "line": 37,
+          "preview": "page = render_dashboard(journal)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard.py",
+          "line": 77,
+          "preview": "page = render_dashboard(journal)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard.py",
+          "line": 100,
+          "preview": "page = render_dashboard(journal)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard.py",
+          "line": 111,
+          "preview": "page = render_dashboard(TradeJournal(tmp_path / \"empty.jsonl\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard.py",
+          "line": 122,
+          "preview": "page = render_dashboard(TradeJournal(tmp_path / \"empty.jsonl\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard.py",
+          "line": 151,
+          "preview": "page = render_dashboard(journal)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_engine_status.py",
+          "line": 5,
+          "preview": "from ai_trading.dashboard import render_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_engine_status.py",
+          "line": 33,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 11,
+          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 81,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 11,
+          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 487,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 501,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 527,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 547,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 12,
+          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 192,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 221,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 287,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 316,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 334,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 353,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 405,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 10,
+          "preview": "from ai_trading.dashboard import render_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 269,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 519,
+          "preview": "page = render_dashboard(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 29
+    },
+    "serve_dashboard": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 1176,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 34,
+          "preview": "from .dashboard import serve_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 1890,
+          "preview": "serve_dashboard(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1176,
+          "preview": "def serve_dashboard(",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 11,
+          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 42,
+          "preview": "target=serve_dashboard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 11,
+          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 228,
+          "preview": "target=serve_dashboard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 12,
+          "preview": "from ai_trading.dashboard import render_dashboard, serve_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 164,
+          "preview": "target=serve_dashboard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_scheduler_endpoint.py",
+          "line": 13,
+          "preview": "from ai_trading.dashboard import serve_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_scheduler_endpoint.py",
+          "line": 68,
+          "preview": "target=serve_dashboard,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 11
+    },
+    "execute_paper_cycle": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 1240,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1240,
+          "preview": "def execute_paper_cycle() -> PaperCycleResult:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1257,
+          "preview": "effective_cycle_executor = execute_paper_cycle",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "load_status_snapshot": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 1264,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1264,
+          "preview": "def load_status_snapshot() -> dict[str, object]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1346,
+          "preview": "self._send_json(load_status_snapshot())",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1352,
+          "preview": "snapshot = load_status_snapshot()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1374,
+          "preview": "snapshot = load_status_snapshot()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "Handler": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 1270,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1270,
+          "preview": "class Handler(BaseHTTPRequestHandler):",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1463,
+          "preview": "ThreadingHTTPServer((host, port), Handler).serve_forever()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "end_headers": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 1274,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1274,
+          "preview": "def end_headers(self) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1289,
+          "preview": "super().end_headers()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1308,
+          "preview": "self.end_headers()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1411,
+          "preview": "self.end_headers()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/health_server.py",
+          "line": 21,
+          "preview": "self.end_headers()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/health_server.py",
+          "line": 27,
+          "preview": "self.end_headers()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/health_server.py",
+          "line": 48,
+          "preview": "self.end_headers()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "_write_response_body": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 1291,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1291,
+          "preview": "def _write_response_body(self, body: bytes) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1309,
+          "preview": "self._write_response_body(body)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1412,
+          "preview": "self._write_response_body(payload)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_send_json": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 1297,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1297,
+          "preview": "def _send_json(",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1314,
+          "preview": "self._send_json(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1323,
+          "preview": "self._send_json(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1335,
+          "preview": "self._send_json(scheduler_delivery_overview(deliveries))",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1337,
+          "preview": "self._send_json(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1346,
+          "preview": "self._send_json(load_status_snapshot())",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1349,
+          "preview": "self._send_json({\"web_healthy\": True})",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1355,
+          "preview": "self._send_json(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1376,
+          "preview": "self._send_json(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1386,
+          "preview": "self._send_json(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1455,
+          "preview": "self._send_json(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 11
+    },
+    "do_GET": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 1311,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1311,
+          "preview": "def do_GET(self) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/health_server.py",
+          "line": 15,
+          "preview": "def do_GET(self) -> None:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "do_POST": {
+      "definition": {
+        "file": "src/ai_trading/dashboard.py",
+        "line": 1414,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1414,
+          "preview": "def do_POST(self) -> None:",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_fallback_runs_every_market_even_after_failure": {
+    "log_message": {
       "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 49,
+        "file": "src/ai_trading/dashboard.py",
+        "line": 1460,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 49,
-          "preview": "def test_fallback_runs_every_market_even_after_failure(tmp_path: Path) -> None:",
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1460,
+          "preview": "def log_message(self, format: str, *args: object) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/health_server.py",
+          "line": 51,
+          "preview": "def log_message(self, format: str, *args) -> None:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "ProbeCheck": {
+      "definition": {
+        "file": "src/ai_trading/deployment_probe.py",
+        "line": 13,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/deployment_probe.py",
+          "line": 13,
+          "preview": "class ProbeCheck:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/deployment_probe.py",
+          "line": 46,
+          "preview": "def probe_dashboard(base_url: str, *, timeout: float = 60.0) -> tuple[ProbeCheck, ...]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/deployment_probe.py",
+          "line": 51,
+          "preview": "checks: list[ProbeCheck] = []",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/deployment_probe.py",
+          "line": 55,
+          "preview": "checks.append(ProbeCheck(endpoint, False, fetch_state))",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/deployment_probe.py",
+          "line": 77,
+          "preview": "checks.append(ProbeCheck(endpoint, valid, detail))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "_fetch_json": {
+      "definition": {
+        "file": "src/ai_trading/deployment_probe.py",
+        "line": 19,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/deployment_probe.py",
+          "line": 19,
+          "preview": "def _fetch_json(base_url: str, endpoint: str, timeout: float) -> tuple[dict, str]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/deployment_probe.py",
+          "line": 53,
+          "preview": "payload, fetch_state = _fetch_json(base_url, endpoint, timeout)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "probe_dashboard": {
+      "definition": {
+        "file": "src/ai_trading/deployment_probe.py",
+        "line": 46,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/deployment_probe.py",
+          "line": 46,
+          "preview": "def probe_dashboard(base_url: str, *, timeout: float = 60.0) -> tuple[ProbeCheck, ...]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/deployment_probe.py",
+          "line": 86,
+          "preview": "checks = probe_dashboard(args.base_url, timeout=args.timeout)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 12,
+          "preview": "from ai_trading.deployment_probe import probe_dashboard",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 139,
+          "preview": "results = probe_dashboard(f\"http://127.0.0.1:{port}\", timeout=3)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 174,
+          "preview": "assert probe_dashboard(f\"http://127.0.0.1:{port}\", timeout=3)[1].ok is False",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 201,
+          "preview": "results = probe_dashboard(\"https://example.invalid\")",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "main": {
+      "definition": {
+        "file": "src/ai_trading/deployment_probe.py",
+        "line": 81,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 810,
+          "preview": "main{{max-width:1580px;margin:auto;padding:18px 20px 48px;position:relative}}",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 929,
+          "preview": "@media (max-width:700px){{main{{padding:9px 8px 24px}}.top-nav{{top:5px;border-radius:13px;padding:8px 9px}}.brand span:last-child{{display:none}}.nav-links{{max-width:76vw}}.card{",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 932,
+          "preview": "</style></head><body><main>",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1173,
+          "preview": "</div></main></body></html>\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/deployment_probe.py",
+          "line": 81,
+          "preview": "def main() -> int:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/deployment_probe.py",
+          "line": 96,
+          "preview": "raise SystemExit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/mtf_parameter_benchmark.py",
+          "line": 540,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/mtf_parameter_benchmark.py",
+          "line": 591,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cloudflare_scheduler_deploy_workflow.py",
+          "line": 11,
+          "preview": "'branches: [\"main\"]',",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 9
+    },
+    "_free_port": {
+      "definition": {
+        "file": "tests/test_dashboard_health.py",
+        "line": 19,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 19,
+          "preview": "def _free_port() -> int:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 40,
+          "preview": "port = _free_port()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 219,
+          "preview": "def _free_port() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 226,
+          "preview": "port = _free_port()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 142,
+          "preview": "def _free_port() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 162,
+          "preview": "port = _free_port()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_scheduler_endpoint.py",
+          "line": 39,
+          "preview": "def _free_port() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_scheduler_endpoint.py",
+          "line": 66,
+          "preview": "port = _free_port()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 8
+    },
+    "_get": {
+      "definition": {
+        "file": "tests/test_dashboard_health.py",
+        "line": 25,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 25,
+          "preview": "def _get(url: str) -> tuple[int, str, str]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 57,
+          "preview": "status, _, _ = _get(f\"http://127.0.0.1:{port}/\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 103,
+          "preview": "status, content_type, body = _get(f\"http://127.0.0.1:{port}/api/status\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 125,
+          "preview": "status, content_type, body = _get(f\"http://127.0.0.1:{port}/healthz\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 163,
+          "preview": "status, _, body = _get(f\"http://127.0.0.1:{port}/livez\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 167,
+          "preview": "status, _, body = _get(f\"http://127.0.0.1:{port}/readyz\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 148,
+          "preview": "def _get(url: str) -> tuple[int, str]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 181,
+          "preview": "status, _ = _get(f\"http://127.0.0.1:{port}/healthz\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 236,
+          "preview": "status_code, body = _get(f\"http://127.0.0.1:{port}/livez\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 245,
+          "preview": "status_code, body = _get(f\"http://127.0.0.1:{port}/readyz\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 260,
+          "preview": "status_code, status_body = _get(f\"http://127.0.0.1:{port}/api/status\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 261,
+          "preview": "health_code, health_body = _get(f\"http://127.0.0.1:{port}/healthz\")",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 12
+    },
+    "_start_dashboard": {
+      "definition": {
+        "file": "tests/test_dashboard_health.py",
+        "line": 37,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 37,
+          "preview": "def _start_dashboard(",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 101,
+          "preview": "port = _start_dashboard(tmp_path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 123,
+          "preview": "port = _start_dashboard(tmp_path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 138,
+          "preview": "port = _start_dashboard(tmp_path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 153,
+          "preview": "port = _start_dashboard(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "test_dashboard_marks_expired_worker_heartbeat_stale": {
+      "definition": {
+        "file": "tests/test_dashboard_health.py",
+        "line": 65,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 65,
+          "preview": "def test_dashboard_marks_expired_worker_heartbeat_stale(tmp_path) -> None:",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
+    },
+    "test_api_status_reports_stale_worker_without_hiding_web_health": {
+      "definition": {
+        "file": "tests/test_dashboard_health.py",
+        "line": 91,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 91,
+          "preview": "def test_api_status_reports_stale_worker_without_hiding_web_health(tmp_path) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_healthz_keeps_web_liveness_separate_from_engine_health": {
+      "definition": {
+        "file": "tests/test_dashboard_health.py",
+        "line": 113,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 113,
+          "preview": "def test_healthz_keeps_web_liveness_separate_from_engine_health(tmp_path) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_external_probe_checks_live_ready_and_all_markets": {
+      "definition": {
+        "file": "tests/test_dashboard_health.py",
+        "line": 137,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 137,
+          "preview": "def test_external_probe_checks_live_ready_and_all_markets(tmp_path) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_external_scheduler_readiness_detects_missing_configuration": {
+      "definition": {
+        "file": "tests/test_dashboard_health.py",
+        "line": 148,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 148,
+          "preview": "def test_external_scheduler_readiness_detects_missing_configuration(",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_render_blueprint_declares_external_runtime_and_secret_inputs": {
+      "definition": {
+        "file": "tests/test_dashboard_health.py",
+        "line": 177,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 177,
+          "preview": "def test_render_blueprint_declares_external_runtime_and_secret_inputs() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_external_probe_reports_connection_errors_without_exposing_details": {
+      "definition": {
+        "file": "tests/test_dashboard_health.py",
+        "line": 189,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 189,
+          "preview": "def test_external_probe_reports_connection_errors_without_exposing_details(",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "fail_request": {
+      "definition": {
+        "file": "tests/test_dashboard_health.py",
+        "line": 196,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 196,
+          "preview": "def fail_request(request, timeout):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 200,
+          "preview": "monkeypatch.setattr(deployment_probe, \"urlopen\", fail_request)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
     }
   }
 }

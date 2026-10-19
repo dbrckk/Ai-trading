@@ -46,18 +46,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T12:59:23Z
+Generated: 2026-10-19T14:21:04Z
 
 ### Git
 - Branch: `main`
-- Head: `f87c562a426f`
-- Commit date: 2026-10-19T08:59:12-04:00
-- Commit: fix: GitHub fallback processes Gold, DAX and BTC independently (#153)
-- Tracked files: 501
+- Head: `097c83c9ae41`
+- Commit date: 2026-10-19T10:20:53-04:00
+- Commit: fix(ops): fail-closed Render paper readiness and externally probe dashboard availability (#154)
+- Tracked files: 503
 
 ### Recently changed files
-- `.github/workflows/paper-cycle.yml`
+- `.github/workflows/hosted-dashboard-probe.yml`
 - `README.md`
+- `render.yaml`
+- `src/ai_trading/dashboard.py`
+- `src/ai_trading/deployment_probe.py`
+- `tests/test_dashboard_health.py`
+- `.github/workflows/paper-cycle.yml`
 - `tests/test_paper_cycle_workflow.py`
 - `src/ai_trading/paper_cycle_service.py`
 - `tests/test_paper_cycle_service.py`
@@ -65,11 +70,6 @@ Generated: 2026-10-19T12:59:23Z
 - `tests/test_bootstrap_robustness.py`
 - `src/ai_trading/multi_market.py`
 - `tests/test_multi_market.py`
-- `pyproject.toml`
-- `src/ai_trading/dashboard.py`
-- `src/ai_trading/persistence_factory.py`
-- `src/ai_trading/postgres_persistence.py`
-- `tests/test_postgres_persistence.py`
 
 ### Project signals
 - `pyproject.toml`

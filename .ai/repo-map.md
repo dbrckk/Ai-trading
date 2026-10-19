@@ -44,6 +44,7 @@ The content is organized as follows:
     ci.yml
     cloudflare-paper-scheduler-deploy.yml
     codeql.yml
+    hosted-dashboard-probe.yml
     mtf-parameter-benchmark.yml
     paper-cycle.yml
     production-os-review-handoff.yml
@@ -98,6 +99,7 @@ src/
     data_quality.py
     data.py
     dataset_evidence.py
+    deployment_probe.py
     deployment_readiness.py
     drift_retrain_store.py
     drift.py
@@ -623,6 +625,45 @@ jobs:
 
       - name: Analyze
         uses: github/codeql-action/analyze@v4
+````
+
+## File: .github/workflows/hosted-dashboard-probe.yml
+````yaml
+name: Hosted Dashboard Probe
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */2 * * *"
+  push:
+    branches: ["main"]
+    paths:
+      - render.yaml
+      - Dockerfile
+      - src/ai_trading/dashboard.py
+      - src/ai_trading/deployment_probe.py
+      - .github/workflows/hosted-dashboard-probe.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hosted-dashboard-probe
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      DASHBOARD_URL: https://ai-trading-dashboard-qyr2.onrender.com
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v7
+      - name: Verify liveness, durable readiness and market cards
+        run: |
+          python -m ai_trading.deployment_probe \
+            --base-url "${DASHBOARD_URL}" --timeout 60
 ````
 
 ## File: .github/workflows/mtf-parameter-benchmark.yml
@@ -2680,6 +2721,9 @@ backend = FilePaperPersistence(
 ⋮----
 runtime_key = effective_settings.runtime_key
 effective_scheduler_token = (
+# A hosted external scheduler needs an authenticated entry point and a
+# shared durable database. In local/offline mode these are optional.
+external_scheduler_configured = (
 effective_cycle_executor = paper_cycle_executor
 ⋮----
 cycle_settings = ProductionPaperCycleSettings(
@@ -2709,6 +2753,7 @@ deliveries = backend.list_scheduler_deliveries(limit=20)
 ⋮----
 snapshot = load_status_snapshot()
 storage_healthy = snapshot.get("storage_healthy") is not False
+ready = storage_healthy and external_scheduler_configured
 ⋮----
 payload = render_dashboard(
 ⋮----
@@ -2844,6 +2889,52 @@ payload = {
 canonical = json.dumps(
 ⋮----
 def dataset_evidence_hash(evidence: DatasetEvidence) -> str
+````
+
+## File: src/ai_trading/deployment_probe.py
+````python
+"""Read-only probe of the deployed dashboard; no broker or scheduler requests."""
+⋮----
+@dataclass(frozen=True)
+class ProbeCheck
+⋮----
+endpoint: str
+ok: bool
+detail: str
+⋮----
+def _fetch_json(base_url: str, endpoint: str, timeout: float) -> tuple[dict, str]
+⋮----
+request = Request(
+⋮----
+status = response.status
+body = response.read(128_001)
+⋮----
+payload = json.loads(body)
+⋮----
+def probe_dashboard(base_url: str, *, timeout: float = 60.0) -> tuple[ProbeCheck, ...]
+⋮----
+"""Check web process, durable readiness and three market cards independently."""
+⋮----
+checks: list[ProbeCheck] = []
+⋮----
+valid = payload.get("web_healthy") is True
+detail = "web_healthy" if valid else "liveness_unhealthy"
+⋮----
+valid = (
+detail = "storage_ready" if valid else "storage_or_configuration_unready"
+⋮----
+markets = payload.get("markets")
+symbols = (
+expected = {"GC=F", "^GDAXI", "BTC-USD"}
+valid = expected.issubset(symbols)
+detail = "three_markets_present" if valid else "missing_market_cards"
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser(description="Probe read-only Trading AI endpoints")
+⋮----
+args = parser.parse_args()
+checks = probe_dashboard(args.base_url, timeout=args.timeout)
 ````
 
 ## File: src/ai_trading/deployment_readiness.py
@@ -9234,8 +9325,6 @@ def _free_port() -> int
 ⋮----
 def _get(url: str) -> tuple[int, str, str]
 ⋮----
-def _start_dashboard(tmp_path) -> int
-⋮----
 port = _free_port()
 thread = Thread(
 ⋮----
@@ -9256,6 +9345,20 @@ port = _start_dashboard(tmp_path)
 payload = json.loads(body)
 ⋮----
 def test_healthz_keeps_web_liveness_separate_from_engine_health(tmp_path) -> None
+⋮----
+def test_external_probe_checks_live_ready_and_all_markets(tmp_path) -> None
+⋮----
+results = probe_dashboard(f"http://127.0.0.1:{port}", timeout=3)
+⋮----
+port = _start_dashboard(
+⋮----
+def test_render_blueprint_declares_external_runtime_and_secret_inputs() -> None
+⋮----
+text = Path("render.yaml").read_text(encoding="utf-8")
+⋮----
+def fail_request(request, timeout)
+⋮----
+results = probe_dashboard("https://example.invalid")
 ````
 
 ## File: tests/test_dashboard_overview.py
@@ -13298,11 +13401,28 @@ AI_TRADING_HOSTED_PERIOD=5d
 AI_TRADING_HOSTED_INTERVAL=5m
 ```
 
+The Render Blueprint (`render.yaml`) declares these paper-only variables and
+requests `AI_TRADING_DATABASE_URL` and `AI_TRADING_SCHEDULER_TOKEN` using
+`sync: false`. Set the database URL to the **same database as the GitHub
+fallback** and provide the same scheduler token used by Cloudflare. Neither
+secret belongs in Git or in HTTP endpoints. Existing Render services must
+also have these values configured; changing the Blueprint does not prove
+the hosted service was successfully deployed.
+
 `AI_TRADING_EXTERNAL_SCHEDULER=1` explicitly suppresses the legacy in-process daemon worker. Render serves the dashboard and the authenticated cycle endpoint while external schedulers own delivery. The dashboard reads the shared durable state and exposes the last processed bar, processed-bar count, per-market freshness and durable scheduler evidence without exposing storage connection details.
 
 The scheduler verification endpoint reports recent sanitized deliveries, the current consecutive Cloudflare-success count and whether the three-delivery verification threshold has been reached. A successful HTTP trigger with zero newly processed bars is still a valid delivery: duplicate/overlapping invocations are intentionally benign and durable runtime revision protection prevents stale writers from overwriting newer state.
 
-Health probes intentionally have separate semantics: `/livez` checks only that the HTTP process is alive, `/readyz` returns HTTP 503 when durable storage is unavailable, and `/healthz` remains the backwards-compatible detailed runtime health view. Market/provider errors therefore do not masquerade as web-process failures.
+Health probes intentionally have separate semantics: `/livez` checks only that the HTTP process is alive, `/readyz` returns HTTP 503 when durable storage is unavailable **or** the external scheduler is enabled without its required token/durable database, and `/healthz` remains the backwards-compatible detailed runtime health view. Market/provider errors therefore do not masquerade as web-process failures.
+
+`.github/workflows/hosted-dashboard-probe.yml` runs a read-only external
+probe every two hours (plus pushes touching the hosted configuration). It
+separately checks `/livez`, `/readyz` and that `/api/markets` contains
+Gold, DAX and BTC, reporting a failing GitHub Actions job if the
+publicly hosted service is unavailable or incomplete. This check **does
+not** invoke the scheduler, place trades, wake workers, or guarantee
+fresh market data. For manual diagnosis, use
+`PYTHONPATH=src python -m ai_trading.deployment_probe --base-url https://ai-trading-dashboard-qyr2.onrender.com`.
 
 ## Walk-forward methodology
 
@@ -13383,6 +13503,23 @@ services:
     envVars:
       - key: PORT
         value: 8765
+      # The web process is read-only; cycles are initiated by Cloudflare/GitHub.
+      - key: AI_TRADING_HOSTED_PAPER
+        value: "1"
+      - key: AI_TRADING_EXTERNAL_SCHEDULER
+        value: "1"
+      - key: AI_TRADING_HOSTED_SYMBOL
+        value: GC=F
+      - key: AI_TRADING_HOSTED_PERIOD
+        value: 5d
+      - key: AI_TRADING_HOSTED_INTERVAL
+        value: 5m
+      # Do not put secrets in Git. Render requests these on Blueprint creation.
+      # The database URL must point to the same persistent DB as GitHub fallback.
+      - key: AI_TRADING_DATABASE_URL
+        sync: false
+      - key: AI_TRADING_SCHEDULER_TOKEN
+        sync: false
     disk:
       name: trading-artifacts
       mountPath: /app/artifacts

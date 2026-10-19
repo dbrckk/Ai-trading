@@ -1,20 +1,24 @@
 # Change impact
 
-Base: e7db309628e38a6fcf7adbd88ac02b51bcf3ac3e
-Head: f87c562a426fd6c166d3a384b90187d31eef9a59
+Base: beb47ab60b401d5e62f150927cd07cfb0608a79a
+Head: 097c83c9ae41b6e6df09267a66122802077c14a9
 
 ## Changed files
-- M .github/workflows/paper-cycle.yml
+- A .github/workflows/hosted-dashboard-probe.yml
 - M README.md
-- M tests/test_paper_cycle_workflow.py
+- M render.yaml
+- M src/ai_trading/dashboard.py
+- A src/ai_trading/deployment_probe.py
+- M tests/test_dashboard_health.py
 
 ## Affected areas
 - .github
 - (root)
+- src
 - tests
 
 ## Related test candidates
-- No direct filename-based test match detected.
+- tests/test_dashboard.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

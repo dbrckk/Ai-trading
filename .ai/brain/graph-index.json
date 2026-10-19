@@ -1344,6 +1344,28 @@
     },
     {
       "dependencies": [
+        "src/ai_trading/data.py",
+        "src/ai_trading/orchestrator.py",
+        "src/ai_trading/persistence.py",
+        "src/ai_trading/persistence_factory.py",
+        "src/ai_trading/runtime.py",
+        "src/ai_trading/runtime_status.py",
+        "src/ai_trading/scheduler.py"
+      ],
+      "dependents": [
+        "src/ai_trading/dashboard.py",
+        "tests/test_dashboard_health.py",
+        "tests/test_dashboard_overview.py",
+        "tests/test_dashboard_persistence.py",
+        "tests/test_hosted_persistence.py",
+        "tests/test_hosted_runtime.py"
+      ],
+      "in_degree": 6,
+      "out_degree": 7,
+      "path": "src/ai_trading/hosted_runtime.py"
+    },
+    {
+      "dependencies": [
         "src/ai_trading/control_plane.py",
         "src/ai_trading/governor_state_store.py",
         "src/ai_trading/lifecycle_log.py",
@@ -1427,27 +1449,6 @@
       "in_degree": 11,
       "out_degree": 1,
       "path": "src/ai_trading/performance_metrics.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/data.py",
-        "src/ai_trading/orchestrator.py",
-        "src/ai_trading/persistence.py",
-        "src/ai_trading/persistence_factory.py",
-        "src/ai_trading/runtime.py",
-        "src/ai_trading/runtime_status.py",
-        "src/ai_trading/scheduler.py"
-      ],
-      "dependents": [
-        "src/ai_trading/dashboard.py",
-        "tests/test_dashboard_overview.py",
-        "tests/test_dashboard_persistence.py",
-        "tests/test_hosted_persistence.py",
-        "tests/test_hosted_runtime.py"
-      ],
-      "in_degree": 5,
-      "out_degree": 7,
-      "path": "src/ai_trading/hosted_runtime.py"
     },
     {
       "dependencies": [
@@ -1864,8 +1865,8 @@
       "path": "src/ai_trading/multiasset_state.py"
     }
   ],
-  "edge_count": 1994,
+  "edge_count": 1997,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 360,
+  "node_count": 361,
   "schema_version": 1
 }
