@@ -85,9 +85,11 @@ def _block_bootstrap(
     rng: np.random.Generator,
     block_size: int,
 ) -> np.ndarray:
-    output: list[float] = []
-    max_start = len(returns) - block_size
-    while len(output) < len(returns):
-        start = int(rng.integers(0, max_start + 1))
-        output.extend(returns[start : start + block_size])
-    return np.asarray(output[: len(returns)], dtype=float)
+    # A batch of integer draws is RNG-equivalent to one draw per block.
+    # Vectorized indexing avoids millions of Python list extensions when the
+    # hosted readiness endpoint bootstraps thousands of historical bars.
+    count = len(returns)
+    blocks = (count + block_size - 1) // block_size
+    starts = rng.integers(0, count - block_size + 1, size=blocks)
+    indices = (starts[:, None] + np.arange(block_size)).ravel()[:count]
+    return np.asarray(returns[indices], dtype=float)
