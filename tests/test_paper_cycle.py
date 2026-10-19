@@ -8,9 +8,9 @@ import pytest
 
 import ai_trading.paper_cycle as paper_cycle_module
 import ai_trading.runtime as runtime_module
-from ai_trading.kronos_research import ResearchConfig, evaluate_walk_forward
 from ai_trading.config import RiskConfig
 from ai_trading.file_persistence import FilePaperPersistence
+from ai_trading.kronos_research import ResearchConfig, evaluate_walk_forward
 from ai_trading.model import Prediction
 from ai_trading.mtf_shadow_challenger import MultiTimeframeShadowResult
 from ai_trading.paper_cycle import PaperCycleRunner
