@@ -9,14 +9,14 @@ import pytest
 
 
 WORKFLOW_PATH = Path(".github/workflows/paper-cycle.yml")
-STEP_HEADER = "      - name: Run all three paper markets\\n        shell: bash\\n        run: |\\n"
+STEP_HEADER = "      - name: Run all three paper markets\n        shell: bash\n        run: |\n"
 
 
 def _fallback_script() -> str:
     workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
     # This is the actual shell body GitHub Actions runs, not a copied command.
-    body = workflow.split(STEP_HEADER.replace("\\\\n", "\\n"), 1)[1]
-    return dedent(body.split("\\n      - ", 1)[0])
+    body = workflow.split(STEP_HEADER, 1)[1]
+    return dedent(body.split("\n      - ", 1)[0])
 
 
 def test_paper_cycle_workflow_structure() -> None:
@@ -57,9 +57,9 @@ def test_fallback_runs_every_market_even_after_failure(
     market_log = tmp_path / "visited-markets.txt"
     fake_cli = tmp_path / "ai-trading"
     fake_cli.write_text(
-        "#!/bin/sh\\n"
-        'printf "%s\\\\n" "$2" >> "$FAKE_MARKET_LOG"\\n'
-        '[ "$2" != "$FAKE_FAIL_MARKET" ]\\n',
+        "#!/bin/sh\n"
+        'printf "%s\\n" "$2" >> "$FAKE_MARKET_LOG"\n'
+        '[ "$2" != "$FAKE_FAIL_MARKET" ]\n',
         encoding="utf-8",
     )
     fake_cli.chmod(0o755)
