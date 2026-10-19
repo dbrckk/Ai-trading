@@ -6536,8 +6536,10 @@ canonical = json.dumps(
 ⋮----
 class PostgresPaperPersistence(PaperPersistence)
 ⋮----
-# The hosted dashboard performs many sequential observer reads per request.
-# Reuse at most four connections there; CLI jobs remain one-shot by default.
+# Reuse up to four connections for bursty dashboard reads. With min_size=0,
+# close idle connections promptly so serverless Postgres can scale to zero
+# between 15-minute paper cycles instead of staying awake for 10 minutes.
+# CLI jobs remain one-shot by default.
 ⋮----
 def _connect(self)
 ⋮----
@@ -11690,6 +11692,8 @@ def test_opt_in_postgres_pool_reuses_connection_safely(backend) -> None
 pooled = PostgresPaperPersistence(DATABASE_URL, pooled=True)
 ⋮----
 pids = []
+⋮----
+# The free Neon compute must be allowed to sleep between paper cycles.
 ⋮----
 def test_postgres_16_is_reachable() -> None
 ⋮----

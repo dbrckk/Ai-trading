@@ -46,16 +46,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T19:12:02Z
+Generated: 2026-10-19T19:21:10Z
 
 ### Git
 - Branch: `main`
-- Head: `b56eb99f3c82`
-- Commit date: 2026-10-19T15:11:51-04:00
-- Commit: fix(ops): throttle GitHub fallback to protect free Neon compute budget (#159)
+- Head: `cdb5346f7eb5`
+- Commit date: 2026-10-19T15:20:56-04:00
+- Commit: fix(db): free idle Neon connections between paper cycles (#160)
 - Tracked files: 504
 
 ### Recently changed files
+- `src/ai_trading/postgres_persistence.py`
+- `tests/test_postgres_persistence.py`
 - `.github/workflows/paper-cycle.yml`
 - `README.md`
 - `tests/test_paper_cycle_workflow.py`

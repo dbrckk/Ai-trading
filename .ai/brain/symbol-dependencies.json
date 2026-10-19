@@ -5,76 +5,40 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "FakeResponse": {
+    "_trade_event_key": {
       "source": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "start": 16,
-        "end": 30
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 273,
+        "end": 282
       },
       "symbol_dependencies": [
         {
-          "symbol": "__enter__",
+          "symbol": "TradeSnapshot",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 23,
-              "kind": "function",
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 9,
+              "kind": "class",
               "language": "python"
             }
           ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "__exit__",
-          "definitions": [
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 26,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "read",
-          "definitions": [
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
+          "relation": "imported_module"
         }
       ],
-      "dependency_count": 3
+      "dependency_count": 1
     },
-    "__init__": {
+    "PostgresPaperPersistence": {
       "source": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "start": 19,
-        "end": 139
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 285,
+        "end": 999
       },
       "symbol_dependencies": [
         {
-          "symbol": "FakeResponse",
+          "symbol": "BurnInSnapshot",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 16,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "FallbackFailure",
-          "definitions": [
-            {
-              "file": "src/ai_trading/scheduler_fallback.py",
+              "file": "src/ai_trading/burnin.py",
               "line": 16,
               "kind": "class",
               "language": "python"
@@ -83,83 +47,161 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "__enter__",
+          "symbol": "CommitOutcome",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 23,
-              "kind": "function",
+              "file": "src/ai_trading/persistence.py",
+              "line": 18,
+              "kind": "class",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         },
         {
-          "symbol": "__exit__",
+          "symbol": "HostedRuntimeStatus",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 26,
-              "kind": "function",
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 10,
+              "kind": "class",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         },
         {
-          "symbol": "fake_open",
+          "symbol": "ModelBlob",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 60,
+              "file": "src/ai_trading/persistence.py",
+              "line": 24,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MultiTimeframeShadowQuality",
+          "definitions": [
+            {
+              "file": "src/ai_trading/mtf_shadow_quality.py",
+              "line": 13,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "PaperPersistence",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 59,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "PersistedRuntime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 32,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RuntimeState",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_state.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RuntimeStepCommit",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 49,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "SchedulerDelivery",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 40,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ShadowQualityComparison",
+          "definitions": [
+            {
+              "file": "src/ai_trading/shadow_quality.py",
+              "line": 13,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "TradePerformanceMetrics",
+          "definitions": [
+            {
+              "file": "src/ai_trading/performance_metrics.py",
+              "line": 11,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "TradeSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "__init__",
+          "definitions": [
+            {
+              "file": "src/ai_trading/audit.py",
+              "line": 32,
               "kind": "function",
               "language": "python"
             },
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 93,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 112,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 131,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 146,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "read",
-          "definitions": [
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run_fallback",
-          "definitions": [
-            {
-              "file": "src/ai_trading/scheduler_fallback.py",
-              "line": 35,
+              "file": "src/ai_trading/burnin.py",
+              "line": 46,
               "kind": "function",
               "language": "python"
             }
@@ -167,11 +209,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "test_fallback_rejects_missing_token_without_network",
+          "symbol": "_connect",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 125,
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 313,
               "kind": "function",
               "language": "python"
             }
@@ -179,11 +221,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_fallback_reports_sanitized_http_failure",
+          "symbol": "_trade_event_key",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 130,
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 273,
               "kind": "function",
               "language": "python"
             }
@@ -191,11 +233,47 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_fallback_runs_after_scheduler_telemetry_failure",
+          "symbol": "append",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 109,
+              "file": "src/ai_trading/audit.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 49,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 32,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "build_audit_record",
+          "definitions": [
+            {
+              "file": "src/ai_trading/audit.py",
+              "line": 15,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "close",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 318,
               "kind": "function",
               "language": "python"
             }
@@ -203,11 +281,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_fallback_runs_one_authenticated_three_market_endpoint_cycle",
+          "symbol": "commit_step",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 88,
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 394,
               "kind": "function",
               "language": "python"
             }
@@ -215,163 +293,225 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_fallback_skips_healthy_recent_cloudflare_without_paper_post",
+          "symbol": "compare_mtf_shadow_audit_payloads",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 57,
+              "file": "src/ai_trading/mtf_shadow_quality.py",
+              "line": 46,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         },
         {
-          "symbol": "test_paper_cycle_workflow_uses_authenticated_render_not_expired_db",
+          "symbol": "compare_shadow_audit_payloads",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
+              "file": "src/ai_trading/shadow_quality.py",
               "line": 33,
               "kind": "function",
               "language": "python"
             }
           ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "initialize_schema",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 322,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "list",
+          "definitions": [
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "list_burnin_snapshots",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 817,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "list_regimes",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 849,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "list_scheduler_deliveries",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 971,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "list_trades",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 645,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load_mtf_shadow_quality",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 885,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load_portfolio_trade_performance",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 724,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load_runtime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 327,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load_runtime_status",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 938,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load_shadow_quality",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 863,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load_trade_performance",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 689,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "performance_metrics_from_totals",
+          "definitions": [
+            {
+              "file": "src/ai_trading/performance_metrics.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "record_scheduler_delivery",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 953,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save_runtime_status",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 912,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
           "relation": "same_file"
         }
       ],
-      "dependency_count": 13
+      "dependency_count": 37
     },
-    "__enter__": {
+    "__init__": {
       "source": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "start": 23,
-        "end": 24
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "__exit__": {
-      "source": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "start": 26,
-        "end": 27
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "read": {
-      "source": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "start": 29,
-        "end": 30
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "test_paper_cycle_workflow_uses_authenticated_render_not_expired_db": {
-      "source": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "start": 33,
-        "end": 54
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "test_fallback_skips_healthy_recent_cloudflare_without_paper_post": {
-      "source": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "start": 57,
-        "end": 73
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 286,
+        "end": 406
       },
       "symbol_dependencies": [
         {
-          "symbol": "FakeResponse",
+          "symbol": "CommitOutcome",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 16,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "fake_open",
-          "definitions": [
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 60,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 93,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 112,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 131,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 146,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run_fallback",
-          "definitions": [
-            {
-              "file": "src/ai_trading/scheduler_fallback.py",
-              "line": 35,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "fake_open": {
-      "source": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "start": 60,
-        "end": 180
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "FakeResponse",
-          "definitions": [
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 16,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "FallbackFailure",
-          "definitions": [
-            {
-              "file": "src/ai_trading/scheduler_fallback.py",
-              "line": 16,
+              "file": "src/ai_trading/persistence.py",
+              "line": 18,
               "kind": "class",
               "language": "python"
             }
@@ -379,35 +519,59 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "_recent_cloudflare",
+          "symbol": "ModelBlob",
           "definitions": [
             {
-              "file": "src/ai_trading/scheduler_fallback.py",
-              "line": 20,
-              "kind": "function",
+              "file": "src/ai_trading/persistence.py",
+              "line": 24,
+              "kind": "class",
               "language": "python"
             }
           ],
           "relation": "imported_module"
         },
         {
-          "symbol": "run_fallback",
+          "symbol": "PersistedRuntime",
           "definitions": [
             {
-              "file": "src/ai_trading/scheduler_fallback.py",
-              "line": 35,
-              "kind": "function",
+              "file": "src/ai_trading/persistence.py",
+              "line": 32,
+              "kind": "class",
               "language": "python"
             }
           ],
           "relation": "imported_module"
         },
         {
-          "symbol": "test_fallback_fails_closed_when_paper_cycle_has_partial_market_failure",
+          "symbol": "RuntimeState",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 145,
+              "file": "src/ai_trading/runtime_state.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RuntimeStepCommit",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 49,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_connect",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 313,
               "kind": "function",
               "language": "python"
             }
@@ -415,11 +579,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_fallback_rejects_malformed_and_future_scheduler_ages",
+          "symbol": "close",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 156,
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 318,
               "kind": "function",
               "language": "python"
             }
@@ -427,11 +591,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_fallback_rejects_missing_token_without_network",
+          "symbol": "commit_step",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 125,
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 394,
               "kind": "function",
               "language": "python"
             }
@@ -439,11 +603,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_fallback_reports_sanitized_http_failure",
+          "symbol": "initialize_schema",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 130,
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 322,
               "kind": "function",
               "language": "python"
             }
@@ -451,23 +615,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_fallback_runs_after_scheduler_telemetry_failure",
+          "symbol": "load_runtime",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 109,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_fallback_runs_one_authenticated_three_market_endpoint_cycle",
-          "definitions": [
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 88,
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 327,
               "kind": "function",
               "language": "python"
             }
@@ -477,55 +629,141 @@
       ],
       "dependency_count": 10
     },
-    "test_fallback_runs_one_authenticated_three_market_endpoint_cycle": {
+    "_connect": {
       "source": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "start": 88,
-        "end": 106
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 313,
+        "end": 316
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "close": {
+      "source": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 318,
+        "end": 320
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "initialize_schema": {
+      "source": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 322,
+        "end": 325
       },
       "symbol_dependencies": [
         {
-          "symbol": "FakeResponse",
+          "symbol": "_connect",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 16,
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 313,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "load_runtime": {
+      "source": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 327,
+        "end": 392
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "ModelBlob",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 24,
               "kind": "class",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         },
         {
-          "symbol": "fake_open",
+          "symbol": "PersistedRuntime",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 60,
+              "file": "src/ai_trading/persistence.py",
+              "line": 32,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RuntimeState",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_state.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_connect",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 313,
               "kind": "function",
               "language": "python"
-            },
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "commit_step": {
+      "source": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 394,
+        "end": 643
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "CommitOutcome",
+          "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 93,
-              "kind": "function",
+              "file": "src/ai_trading/persistence.py",
+              "line": 18,
+              "kind": "class",
               "language": "python"
-            },
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RuntimeStepCommit",
+          "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 112,
-              "kind": "function",
+              "file": "src/ai_trading/persistence.py",
+              "line": 49,
+              "kind": "class",
               "language": "python"
-            },
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_connect",
+          "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 131,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 146,
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 313,
               "kind": "function",
               "language": "python"
             }
@@ -533,11 +771,139 @@
           "relation": "same_file"
         },
         {
-          "symbol": "run_fallback",
+          "symbol": "_trade_event_key",
           "definitions": [
             {
-              "file": "src/ai_trading/scheduler_fallback.py",
-              "line": 35,
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 273,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "build_audit_record",
+          "definitions": [
+            {
+              "file": "src/ai_trading/audit.py",
+              "line": 15,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "list_trades": {
+      "source": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 645,
+        "end": 687
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "TradeSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_connect",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 313,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "append",
+          "definitions": [
+            {
+              "file": "src/ai_trading/audit.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 49,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 32,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "list",
+          "definitions": [
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "load_trade_performance": {
+      "source": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 689,
+        "end": 722
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "TradePerformanceMetrics",
+          "definitions": [
+            {
+              "file": "src/ai_trading/performance_metrics.py",
+              "line": 11,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_connect",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 313,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "performance_metrics_from_totals",
+          "definitions": [
+            {
+              "file": "src/ai_trading/performance_metrics.py",
+              "line": 22,
               "kind": "function",
               "language": "python"
             }
@@ -547,55 +913,31 @@
       ],
       "dependency_count": 3
     },
-    "test_fallback_runs_after_scheduler_telemetry_failure": {
+    "load_portfolio_trade_performance": {
       "source": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "start": 109,
-        "end": 122
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 724,
+        "end": 815
       },
       "symbol_dependencies": [
         {
-          "symbol": "FakeResponse",
+          "symbol": "TradePerformanceMetrics",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 16,
+              "file": "src/ai_trading/performance_metrics.py",
+              "line": 11,
               "kind": "class",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         },
         {
-          "symbol": "fake_open",
+          "symbol": "_connect",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 60,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 93,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 112,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 131,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 146,
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 313,
               "kind": "function",
               "language": "python"
             }
@@ -603,11 +945,23 @@
           "relation": "same_file"
         },
         {
-          "symbol": "run_fallback",
+          "symbol": "list",
           "definitions": [
             {
-              "file": "src/ai_trading/scheduler_fallback.py",
-              "line": 35,
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "performance_metrics_from_totals",
+          "definitions": [
+            {
+              "file": "src/ai_trading/performance_metrics.py",
+              "line": 22,
               "kind": "function",
               "language": "python"
             }
@@ -615,20 +969,20 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 3
+      "dependency_count": 4
     },
-    "test_fallback_rejects_missing_token_without_network": {
+    "list_burnin_snapshots": {
       "source": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "start": 125,
-        "end": 127
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 817,
+        "end": 847
       },
       "symbol_dependencies": [
         {
-          "symbol": "FallbackFailure",
+          "symbol": "BurnInSnapshot",
           "definitions": [
             {
-              "file": "src/ai_trading/scheduler_fallback.py",
+              "file": "src/ai_trading/burnin.py",
               "line": 16,
               "kind": "class",
               "language": "python"
@@ -637,11 +991,572 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "run_fallback",
+          "symbol": "_connect",
           "definitions": [
             {
-              "file": "src/ai_trading/scheduler_fallback.py",
-              "line": 35,
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 313,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "list_regimes": {
+      "source": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 849,
+        "end": 861
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_connect",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 313,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "load_shadow_quality": {
+      "source": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 863,
+        "end": 883
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "ShadowQualityComparison",
+          "definitions": [
+            {
+              "file": "src/ai_trading/shadow_quality.py",
+              "line": 13,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_connect",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 313,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "append",
+          "definitions": [
+            {
+              "file": "src/ai_trading/audit.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 49,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 32,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "compare_shadow_audit_payloads",
+          "definitions": [
+            {
+              "file": "src/ai_trading/shadow_quality.py",
+              "line": 33,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "load_mtf_shadow_quality": {
+      "source": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 885,
+        "end": 910
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "MultiTimeframeShadowQuality",
+          "definitions": [
+            {
+              "file": "src/ai_trading/mtf_shadow_quality.py",
+              "line": 13,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_connect",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 313,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "append",
+          "definitions": [
+            {
+              "file": "src/ai_trading/audit.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/burnin.py",
+              "line": 49,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 32,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "compare_mtf_shadow_audit_payloads",
+          "definitions": [
+            {
+              "file": "src/ai_trading/mtf_shadow_quality.py",
+              "line": 46,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "save_runtime_status": {
+      "source": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 912,
+        "end": 936
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "HostedRuntimeStatus",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_connect",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 313,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "load_runtime_status": {
+      "source": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 938,
+        "end": 950
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "HostedRuntimeStatus",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_connect",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 313,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "record_scheduler_delivery": {
+      "source": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 953,
+        "end": 969
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "SchedulerDelivery",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 40,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_connect",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 313,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "list_scheduler_deliveries": {
+      "source": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "start": 971,
+        "end": 999
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "SchedulerDelivery",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 40,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_connect",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 313,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_opt_in_postgres_pool_reuses_connection_safely": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 19,
+        "end": 39
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PostgresPaperPersistence",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 285,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_connect",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 313,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "append",
+          "definitions": [
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 32,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "backend",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 107,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "close",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 318,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_runtime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 327,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "test_postgres_16_is_reachable": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 42,
+        "end": 45
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "_state": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 48,
+        "end": 64
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "RuntimeState",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_state.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "_trade": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 67,
+        "end": 84
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "TradeSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "_commit": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 87,
+        "end": 103
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "RiverDirectionModel",
+          "definitions": [
+            {
+              "file": "src/ai_trading/online.py",
+              "line": 24,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RuntimeState",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_state.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RuntimeStepCommit",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 49,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "TradeSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 9,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_state",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 48,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "serialize_model",
+          "definitions": [
+            {
+              "file": "src/ai_trading/model_codec.py",
+              "line": 15,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "backend": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 107,
+        "end": 118
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PostgresPaperPersistence",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 285,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "initialize_schema",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 60,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 322,
               "kind": "function",
               "language": "python"
             }
@@ -651,79 +1566,37 @@
       ],
       "dependency_count": 2
     },
-    "test_fallback_reports_sanitized_http_failure": {
+    "test_schema_initialization_is_idempotent": {
       "source": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "start": 130,
-        "end": 142
+        "file": "tests/test_postgres_persistence.py",
+        "start": 121,
+        "end": 123
       },
       "symbol_dependencies": [
         {
-          "symbol": "FakeResponse",
+          "symbol": "backend",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 16,
-              "kind": "class",
+              "file": "tests/test_postgres_persistence.py",
+              "line": 107,
+              "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
         },
         {
-          "symbol": "FallbackFailure",
+          "symbol": "initialize_schema",
           "definitions": [
             {
-              "file": "src/ai_trading/scheduler_fallback.py",
-              "line": 16,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fake_open",
-          "definitions": [
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
+              "file": "src/ai_trading/persistence.py",
               "line": 60,
               "kind": "function",
               "language": "python"
             },
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 93,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 112,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 131,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 146,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run_fallback",
-          "definitions": [
-            {
-              "file": "src/ai_trading/scheduler_fallback.py",
-              "line": 35,
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 322,
               "kind": "function",
               "language": "python"
             }
@@ -731,33 +1604,21 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 4
+      "dependency_count": 2
     },
-    "test_fallback_fails_closed_when_paper_cycle_has_partial_market_failure": {
+    "test_runtime_state_and_model_survive_new_instance": {
       "source": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "start": 145,
-        "end": 153
+        "file": "tests/test_postgres_persistence.py",
+        "start": 126,
+        "end": 141
       },
       "symbol_dependencies": [
         {
-          "symbol": "FakeResponse",
+          "symbol": "CommitOutcome",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 16,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "FallbackFailure",
-          "definitions": [
-            {
-              "file": "src/ai_trading/scheduler_fallback.py",
-              "line": 16,
+              "file": "src/ai_trading/persistence.py",
+              "line": 18,
               "kind": "class",
               "language": "python"
             }
@@ -765,35 +1626,1551 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "fake_open",
+          "symbol": "PostgresPaperPersistence",
           "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 285,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiverDirectionModel",
+          "definitions": [
+            {
+              "file": "src/ai_trading/online.py",
+              "line": 24,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_commit",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 87,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "backend",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 107,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "commit_step",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 64,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 394,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "deserialize_model",
+          "definitions": [
+            {
+              "file": "src/ai_trading/model_codec.py",
+              "line": 27,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_runtime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 327,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "test_fresh_instances_continue_from_persisted_revision": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 144,
+        "end": 171
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "CommitOutcome",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 18,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "PostgresPaperPersistence",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 285,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_commit",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 87,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_state",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 48,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "backend",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 107,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "commit_step",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 64,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 394,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_runtime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 327,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "test_same_revision_has_exactly_one_winner": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 174,
+        "end": 186
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "CommitOutcome",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 18,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_commit",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 87,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_trade",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 67,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "backend",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 107,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "commit_step",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 64,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 394,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "list_trades",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 66,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 645,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_runtime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 327,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "test_duplicate_logical_trade_is_idempotent_across_revisions": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 189,
+        "end": 209
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "CommitOutcome",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 18,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_commit",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 87,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_state",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 48,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_trade",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 67,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "backend",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 107,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "commit_step",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 64,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 394,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "list_trades",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 66,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 645,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_runtime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 327,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "test_failure_before_state_commit_rolls_back_everything": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 212,
+        "end": 233
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PostgresPaperPersistence",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 285,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_commit",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 87,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_trade",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 67,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "backend",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 107,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "commit_step",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 64,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 394,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "fail",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 217,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "list_trades",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 66,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 645,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_runtime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 327,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "fail": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 217,
+        "end": 337
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "CommitOutcome",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 18,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "HostedRuntimeStatus",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "PostgresPaperPersistence",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 285,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RuntimeStepCommit",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 49,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "SchedulerDelivery",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 40,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_commit",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 87,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_state",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 48,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_trade",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 67,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "backend",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 107,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "commit_step",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 64,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 394,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "list_burnin_snapshots",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 80,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 817,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "list_regimes",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 82,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 849,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "list_scheduler_deliveries",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 90,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 971,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "list_trades",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 66,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 645,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_runtime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 327,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_runtime_status",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 86,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 938,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_shadow_quality",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 863,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "record_scheduler_delivery",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 88,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 953,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "save_runtime_status",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 912,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "test_postgres_loads_shadow_quality_from_audit",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 296,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_regime_coverage_is_deduplicated_and_persisted",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 254,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_runtime_status_survives_new_instance",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 236,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_scheduler_deliveries_survive_postgres_restart",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 323,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 23
+    },
+    "test_runtime_status_survives_new_instance": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 236,
+        "end": 251
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "HostedRuntimeStatus",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "PostgresPaperPersistence",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 285,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "backend",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 107,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load_runtime_status",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 86,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 938,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "save_runtime_status",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 912,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "test_regime_coverage_is_deduplicated_and_persisted": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 254,
+        "end": 292
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "CommitOutcome",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 18,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_commit",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 87,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_state",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 48,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "backend",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 107,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "commit_step",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 64,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 394,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "list_burnin_snapshots",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 80,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 817,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "list_regimes",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 82,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 849,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_runtime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 327,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "test_postgres_loads_shadow_quality_from_audit": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 296,
+        "end": 320
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "CommitOutcome",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 18,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RuntimeStepCommit",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 49,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_commit",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 87,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "backend",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 107,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "commit_step",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 64,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 394,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_runtime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 327,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_shadow_quality",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 863,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "test_scheduler_deliveries_survive_postgres_restart": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 323,
+        "end": 336
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PostgresPaperPersistence",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 285,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "SchedulerDelivery",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 40,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "backend",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 107,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "list_scheduler_deliveries",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 90,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 971,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "record_scheduler_delivery",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 88,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 953,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "test_postgres_persists_pnl_provenance_and_performance_coverage": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 340,
+        "end": 389
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "CommitOutcome",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 18,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_commit",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 87,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_state",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 48,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_trade",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 67,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "backend",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 107,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "commit_step",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 64,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 394,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "list_trades",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 66,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 645,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_runtime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 327,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_trade_performance",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 73,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 689,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 9
+    },
+    "test_trade_event_key_ignores_pnl_provenance_metadata": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 392,
+        "end": 398
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_trade",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 67,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_trade_event_key",
+          "definitions": [
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 273,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_schema_upgrade_adds_pnl_accounting_columns_without_reset": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 402,
+        "end": 435
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "backend",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 107,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "initialize_schema",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
               "line": 60,
               "kind": "function",
               "language": "python"
             },
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 93,
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 322,
               "kind": "function",
               "language": "python"
-            },
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_postgres_portfolio_performance_uses_global_trade_chronology": {
+      "source": {
+        "file": "tests/test_postgres_persistence.py",
+        "start": 439,
+        "end": 511
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "CommitOutcome",
+          "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 112,
-              "kind": "function",
+              "file": "src/ai_trading/persistence.py",
+              "line": 18,
+              "kind": "class",
               "language": "python"
-            },
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_commit",
+          "definitions": [
             {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 131,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_paper_cycle_workflow.py",
-              "line": 146,
+              "file": "tests/test_postgres_persistence.py",
+              "line": 87,
               "kind": "function",
               "language": "python"
             }
@@ -801,11 +3178,89 @@
           "relation": "same_file"
         },
         {
-          "symbol": "run_fallback",
+          "symbol": "_state",
           "definitions": [
             {
-              "file": "src/ai_trading/scheduler_fallback.py",
-              "line": 35,
+              "file": "tests/test_postgres_persistence.py",
+              "line": 48,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_trade",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 67,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "backend",
+          "definitions": [
+            {
+              "file": "tests/test_postgres_persistence.py",
+              "line": 107,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "commit_step",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 64,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 394,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_portfolio_trade_performance",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 75,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 724,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_runtime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 327,
               "kind": "function",
               "language": "python"
             }
@@ -813,21 +3268,39 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 4
+      "dependency_count": 8
     },
-    "test_fallback_rejects_malformed_and_future_scheduler_ages": {
+    "test_postgres_portfolio_performance_empty_runtime_set_is_empty": {
       "source": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "start": 156,
-        "end": 163
+        "file": "tests/test_postgres_persistence.py",
+        "start": 514,
+        "end": 521
       },
       "symbol_dependencies": [
         {
-          "symbol": "_recent_cloudflare",
+          "symbol": "backend",
           "definitions": [
             {
-              "file": "src/ai_trading/scheduler_fallback.py",
-              "line": 20,
+              "file": "tests/test_postgres_persistence.py",
+              "line": 107,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load_portfolio_trade_performance",
+          "definitions": [
+            {
+              "file": "src/ai_trading/persistence.py",
+              "line": 75,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/postgres_persistence.py",
+              "line": 724,
               "kind": "function",
               "language": "python"
             }
@@ -835,7 +3308,7 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 1
+      "dependency_count": 2
     }
   }
 }

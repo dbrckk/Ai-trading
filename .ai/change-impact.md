@@ -1,20 +1,18 @@
 # Change impact
 
-Base: 93437edaa9032a143684e578239d78d697c4dfa8
-Head: b56eb99f3c827f4b8b1fe363e2b49f57d13c4ca6
+Base: f33b092730c1d060faa4b4101b8648e8fc5be30c
+Head: cdb5346f7eb5b81d726afcc6427fdee7a1f318a2
 
 ## Changed files
-- M .github/workflows/paper-cycle.yml
-- M README.md
-- M tests/test_paper_cycle_workflow.py
+- M src/ai_trading/postgres_persistence.py
+- M tests/test_postgres_persistence.py
 
 ## Affected areas
-- .github
-- (root)
+- src
 - tests
 
 ## Related test candidates
-- No direct filename-based test match detected.
+- tests/test_postgres_persistence.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

@@ -5,93 +5,254 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "FakeResponse": {
+    "_trade_event_key": {
       "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 16,
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 273,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 273,
+          "preview": "def _trade_event_key(trade: TradeSnapshot) -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 420,
+          "preview": "_trade_event_key(trade),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 393,
+          "preview": "from ai_trading.postgres_persistence import _trade_event_key",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 398,
+          "preview": "assert _trade_event_key(known) == _trade_event_key(unknown)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "PostgresPaperPersistence": {
+      "definition": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 285,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_dashboard_health.py",
-          "line": 213,
-          "preview": "class FakeResponse:",
+          "file": "src/ai_trading/persistence_factory.py",
+          "line": 8,
+          "preview": "from .postgres_persistence import PostgresPaperPersistence",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_dashboard_health.py",
-          "line": 231,
-          "preview": "return FakeResponse({\"web_healthy\": True})",
+          "file": "src/ai_trading/persistence_factory.py",
+          "line": 20,
+          "preview": "persistence = PostgresPaperPersistence(database_url, pooled=pool_connections)",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_dashboard_health.py",
-          "line": 233,
-          "preview": "return FakeResponse({\"ready\": True, \"storage_healthy\": True})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 234,
-          "preview": "return FakeResponse({",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 16,
-          "preview": "class FakeResponse:",
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 285,
+          "preview": "class PostgresPaperPersistence(PaperPersistence):",
           "definition_candidate": true
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 62,
-          "preview": "return FakeResponse(",
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 66,
+          "preview": "from ai_trading.postgres_persistence import PostgresPaperPersistence",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 97,
-          "preview": "return FakeResponse(status_payload)",
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 68,
+          "preview": "backend = PostgresPaperPersistence(DATABASE_URL)",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 98,
-          "preview": "return FakeResponse({\"ok\": True, \"processed\": 3})",
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 87,
+          "preview": "from ai_trading.postgres_persistence import PostgresPaperPersistence",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 117,
-          "preview": "return FakeResponse({\"ok\": True})",
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 89,
+          "preview": "backend = PostgresPaperPersistence(DATABASE_URL)",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 134,
-          "preview": "return FakeResponse({})",
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 108,
+          "preview": "from ai_trading.postgres_persistence import PostgresPaperPersistence",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 149,
-          "preview": "return FakeResponse({})",
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 110,
+          "preview": "backend = PostgresPaperPersistence(DATABASE_URL)",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 44,
+          "preview": "from ai_trading.postgres_persistence import PostgresPaperPersistence",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 46,
+          "preview": "backend = PostgresPaperPersistence(DATABASE_URL)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 67,
+          "preview": "from ai_trading.postgres_persistence import PostgresPaperPersistence",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 69,
+          "preview": "backend = PostgresPaperPersistence(DATABASE_URL)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 12,
+          "preview": "from ai_trading.postgres_persistence import PostgresPaperPersistence",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 56,
+          "preview": "first_persistence = PostgresPaperPersistence(database_url)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 72,
+          "preview": "second_persistence = PostgresPaperPersistence(database_url)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_persistence_factory.py",
+          "line": 30,
+          "preview": "monkeypatch.setattr(factory.PostgresPaperPersistence, \"initialize_schema\", fake_initialize)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_persistence_factory.py",
+          "line": 33,
+          "preview": "assert isinstance(persistence, factory.PostgresPaperPersistence)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 20,
+          "preview": "from ai_trading.postgres_persistence import PostgresPaperPersistence",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 22,
+          "preview": "pooled = PostgresPaperPersistence(DATABASE_URL, pooled=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 108,
+          "preview": "from ai_trading.postgres_persistence import PostgresPaperPersistence",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 110,
+          "preview": "persistence = PostgresPaperPersistence(DATABASE_URL)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 127,
+          "preview": "from ai_trading.postgres_persistence import PostgresPaperPersistence",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 135,
+          "preview": "restored = PostgresPaperPersistence(DATABASE_URL).load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 145,
+          "preview": "from ai_trading.postgres_persistence import PostgresPaperPersistence",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
           "line": 150,
-          "preview": "return FakeResponse({\"ok\": False, \"partial_failure\": True})",
+          "preview": "restarted = PostgresPaperPersistence(DATABASE_URL)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 164,
+          "preview": "restored_again = PostgresPaperPersistence(DATABASE_URL).load_runtime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 213,
+          "preview": "from ai_trading.postgres_persistence import PostgresPaperPersistence",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 220,
+          "preview": "failing = PostgresPaperPersistence(DATABASE_URL, before_state_commit=fail)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 237,
+          "preview": "from ai_trading.postgres_persistence import PostgresPaperPersistence",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 250,
+          "preview": "restored = PostgresPaperPersistence(DATABASE_URL).load_runtime_status(RUNTIME_KEY)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 324,
+          "preview": "from ai_trading.postgres_persistence import PostgresPaperPersistence",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 335,
+          "preview": "restored = PostgresPaperPersistence(DATABASE_URL)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 12
+      "occurrence_count": 33
     },
     "__init__": {
       "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 19,
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 286,
         "kind": "function",
         "language": "python"
       },
@@ -316,7 +477,7 @@
           "file": "src/ai_trading/postgres_persistence.py",
           "line": 286,
           "preview": "def __init__(",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "src/ai_trading/qualification_store.py",
@@ -526,7 +687,7 @@
           "file": "tests/test_paper_cycle_workflow.py",
           "line": 19,
           "preview": "def __init__(self, payload: dict[str, object], *, status: int = 200) -> None:",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tests/test_runtime_persistence.py",
@@ -555,457 +716,4043 @@
       ],
       "occurrence_count": 76
     },
-    "__enter__": {
+    "_connect": {
       "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 23,
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 313,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/runtime_lock.py",
-          "line": 13,
-          "preview": "def __enter__(self) -> Self:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 219,
-          "preview": "def __enter__(self):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 23,
-          "preview": "def __enter__(self):",
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 313,
+          "preview": "def _connect(self):",
           "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "__exit__": {
-      "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 26,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
+        },
         {
-          "file": "src/ai_trading/runtime_lock.py",
-          "line": 22,
-          "preview": "def __exit__(self, exc_type, exc, tb) -> None:",
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 323,
+          "preview": "with self._connect() as connection, connection.cursor() as cursor:",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_dashboard_health.py",
-          "line": 222,
-          "preview": "def __exit__(self, *args):",
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 328,
+          "preview": "with self._connect() as connection, connection.cursor() as cursor:",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 395,
+          "preview": "with self._connect() as connection, connection.cursor() as cursor:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 665,
+          "preview": "with self._connect() as connection, connection.cursor() as cursor:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 690,
+          "preview": "with self._connect() as connection, connection.cursor() as cursor:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 738,
+          "preview": "with self._connect() as connection, connection.cursor() as cursor:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 818,
+          "preview": "with self._connect() as connection, connection.cursor() as cursor:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 850,
+          "preview": "with self._connect() as connection, connection.cursor() as cursor:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 864,
+          "preview": "with self._connect() as connection, connection.cursor() as cursor:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 891,
+          "preview": "with self._connect() as connection, connection.cursor() as cursor:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 914,
+          "preview": "with self._connect() as connection, connection.cursor() as cursor:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 939,
+          "preview": "with self._connect() as connection, connection.cursor() as cursor:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 954,
+          "preview": "with self._connect() as connection, connection.cursor() as cursor:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 978,
+          "preview": "with self._connect() as connection, connection.cursor() as cursor:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
           "line": 26,
-          "preview": "def __exit__(self, *_args):",
-          "definition_candidate": true
+          "preview": "with pooled._connect() as connection, connection.cursor() as cursor:",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 3
+      "occurrence_count": 16
     },
-    "read": {
+    "close": {
       "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 29,
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 318,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/burnin.py",
-          "line": 73,
-          "preview": "def read(self) -> list[BurnInSnapshot]:",
+          "file": "src/ai_trading/cli.py",
+          "line": 117,
+          "preview": "close = 100.0 * np.cumprod(1.0 + returns)",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/burnin.py",
+          "file": "src/ai_trading/cli.py",
+          "line": 118,
+          "preview": "open_ = close * (1.0 + rng.normal(0.0, 0.001, n))",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 122,
+          "preview": "\"High\": np.maximum(open_, close) * 1.005,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 123,
+          "preview": "\"Low\": np.minimum(open_, close) * 0.995,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 124,
+          "preview": "\"Close\": close,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/data_quality.py",
+          "line": 70,
+          "preview": "close = sample[\"Close\"]",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/data_quality.py",
+          "line": 74,
+          "preview": "| (high < close)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/data_quality.py",
+          "line": 76,
+          "preview": "| (low > close)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/data_quality.py",
+          "line": 80,
+          "preview": "close_changes = close.pct_change().abs()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/features.py",
+          "line": 29,
+          "preview": "close = df[\"Close\"].astype(float)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/features.py",
+          "line": 35,
+          "preview": "out[\"ret_1\"] = close.pct_change()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/features.py",
+          "line": 36,
+          "preview": "out[\"ret_5\"] = close.pct_change(5)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/features.py",
+          "line": 37,
+          "preview": "out[\"vol_10\"] = close.pct_change().rolling(10).std()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/features.py",
+          "line": 38,
+          "preview": "out[\"trend_10\"] = close / close.rolling(10).mean() - 1.0",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/features.py",
+          "line": 39,
+          "preview": "out[\"trend_30\"] = close / close.rolling(30).mean() - 1.0",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/features.py",
+          "line": 40,
+          "preview": "out[\"range_pct\"] = (high - low) / close.replace(0, np.nan)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/features.py",
+          "line": 60,
+          "preview": "close = df[\"Close\"].astype(float)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/features.py",
+          "line": 63,
+          "preview": "returns = close.pct_change()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/features.py",
+          "line": 64,
+          "preview": "out[\"ret_15\"] = close.pct_change(15)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/features.py",
+          "line": 67,
+          "preview": "previous_close = close.shift(1)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/features.py",
+          "line": 76,
+          "preview": "out[\"atr_pct_14\"] = true_range.rolling(14).mean() / close.replace(0, np.nan)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/features.py",
+          "line": 78,
+          "preview": "delta = close.diff()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/features.py",
+          "line": 90,
+          "preview": "out[\"range_pos_20\"] = (close - rolling_low) / range_width",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/features.py",
+          "line": 92,
+          "preview": "out[\"body_pct\"] = (close - open_) / close.replace(0, np.nan)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_timeframe_features.py",
+          "line": 54,
+          "preview": "def _rsi(close: pd.Series, window: int) -> pd.Series:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_timeframe_features.py",
+          "line": 55,
+          "preview": "delta = close.diff()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_timeframe_features.py",
+          "line": 74,
+          "preview": "close = frame[\"Close\"].astype(float)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_timeframe_features.py",
+          "line": 75,
+          "preview": "returns = close.pct_change()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_timeframe_features.py",
+          "line": 78,
+          "preview": "out[f\"{prefix}_ret_{return_window}\"] = close.pct_change(return_window)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_timeframe_features.py",
+          "line": 80,
+          "preview": "close / close.rolling(trend_window).mean() - 1.0",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_timeframe_features.py",
           "line": 85,
-          "preview": "return calculate_burnin_metrics(self.read())",
+          "preview": "out[f\"{prefix}_rsi_{rsi_window}\"] = _rsi(close, rsi_window)",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/burnin.py",
-          "line": 88,
-          "preview": "snapshots = self.read()",
+          "file": "src/ai_trading/multi_timeframe_features.py",
+          "line": 105,
+          "preview": "Higher-timeframe bars are labeled at their close and are only exposed to a",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 952,
-          "preview": "<small class=\"header-subtitle\">Premium read-only control center \u00b7 live refresh without page jumps \u00b7 durable hosted runtime</small>",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 1054,
-          "preview": "<div class=\"footer-note\">AI Trading \u00b7 paper runtime \u00b7 read-only observability</div>",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 27,
-          "preview": "body = response.read(128_001)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 33,
-          "preview": "explanation = json.loads(exc.read(4096))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
+          "file": "src/ai_trading/multi_timeframe_features.py",
           "line": 106,
-          "preview": "parser = argparse.ArgumentParser(description=\"Probe read-only Trading AI endpoints\")",
+          "preview": "5-minute signal row once that higher-timeframe close is available at the",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 126,
-          "preview": "return tuple(self.burnin_tracker.read())",
+          "file": "src/ai_trading/multi_timeframe_features.py",
+          "line": 187,
+          "preview": "close = market[\"Close\"].astype(float)",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/lifecycle_log.py",
-          "line": 79,
-          "preview": "for chunk in iter(lambda: handle.read(1024 * 1024), b\"\"):",
+          "file": "src/ai_trading/multi_timeframe_features.py",
+          "line": 188,
+          "preview": "previous_close = close.shift(1)",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/multi_market.py",
-          "line": 224,
-          "preview": "# Independent, read-only model diagnostics can run concurrently.",
+          "file": "src/ai_trading/multi_timeframe_features.py",
+          "line": 197,
+          "preview": "atr_pct = true_range.rolling(atr_window).mean() / close.replace(0.0, np.nan)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_timeframe_features.py",
+          "line": 214,
+          "preview": "close = market[\"Close\"].astype(float)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_timeframe_features.py",
+          "line": 215,
+          "preview": "future_return = close.shift(-horizon_bars) / close - 1.0",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 46,
-          "preview": "for chunk in iter(lambda: handle.read(1024 * 1024), b\"\"):",
+          "line": 68,
+          "preview": "os.close(descriptor)",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 58,
-          "preview": "json.loads(response.read(16_385))",
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 296,
+          "preview": "# close idle connections promptly so serverless Postgres can scale to zero",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 81,
-          "preview": "body = response.read(16_385)",
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 318,
+          "preview": "def close(self) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 320,
+          "preview": "self._pool.close()",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/state_snapshot.py",
-          "line": 29,
-          "preview": "for chunk in iter(lambda: handle.read(65536), b\"\"):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_burnin.py",
+          "file": "src/ai_trading/runtime_lock.py",
           "line": 24,
-          "preview": "snapshots = tracker.read()",
+          "preview": "os.close(self.fd)",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_dashboard_health.py",
-          "line": 31,
-          "preview": "response.read().decode(),",
+          "file": "tests/test_backtest.py",
+          "line": 18,
+          "preview": "close = 100.0 + 0.04 * t + 4.0 * np.sin(t / 7.0) + 1.5 * np.sin(t / 2.3)",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_dashboard_health.py",
-          "line": 34,
-          "preview": "return exc.code, exc.headers.get(\"Content-Type\", \"\"), exc.read().decode()",
+          "file": "tests/test_backtest.py",
+          "line": 19,
+          "preview": "open_ = close * (1.0 + 0.001 * np.sin(t / 5.0))",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_dashboard_health.py",
-          "line": 225,
-          "preview": "def read(self, count):",
+          "file": "tests/test_backtest.py",
+          "line": 23,
+          "preview": "\"High\": np.maximum(open_, close) * 1.005,",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_dashboard_health.py",
-          "line": 226,
-          "preview": "return self.body.read(count)",
+          "file": "tests/test_backtest.py",
+          "line": 24,
+          "preview": "\"Low\": np.minimum(open_, close) * 0.995,",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 471,
-          "preview": "payload = json.loads(response.read().decode())",
+          "file": "tests/test_backtest.py",
+          "line": 25,
+          "preview": "\"Close\": close,",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 588,
-          "preview": "payload = json.loads(response.read().decode())",
+          "file": "tests/test_backtest_ensemble.py",
+          "line": 11,
+          "preview": "close = 100.0 + 0.05 * t + 5.0 * np.sin(t / 8.0) + 2.0 * np.sin(t / 2.7)",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 151,
-          "preview": "return response.status, response.read().decode()",
+          "file": "tests/test_backtest_ensemble.py",
+          "line": 12,
+          "preview": "open_ = close * (1.0 + 0.0015 * np.sin(t / 4.0))",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 153,
-          "preview": "return exc.code, exc.read().decode()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 158,
-          "preview": "return response.status, response.headers, response.read().decode()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_health_server.py",
+          "file": "tests/test_backtest_ensemble.py",
           "line": 16,
-          "preview": "body = response.read().decode(\"utf-8\")",
+          "preview": "\"High\": np.maximum(open_, close) * 1.006,",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 29,
-          "preview": "def read(self, size: int) -> bytes:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 30,
-          "preview": "return self.content.read(size)",
+          "file": "tests/test_backtest_ensemble.py",
+          "line": 17,
+          "preview": "\"Low\": np.minimum(open_, close) * 0.994,",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_scheduler_endpoint.py",
-          "line": 55,
-          "preview": "return response.status, response.read().decode()",
+          "file": "tests/test_backtest_ensemble.py",
+          "line": 18,
+          "preview": "\"Close\": close,",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_scheduler_endpoint.py",
-          "line": 57,
-          "preview": "return exc.code, exc.read().decode()",
+          "file": "tests/test_chaos.py",
+          "line": 9,
+          "preview": "close = 100.0 + np.arange(n, dtype=float)",
           "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 30
-    },
-    "test_paper_cycle_workflow_uses_authenticated_render_not_expired_db": {
-      "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 33,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
+        },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
+          "file": "tests/test_chaos.py",
+          "line": 12,
+          "preview": "\"Open\": close,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_chaos.py",
+          "line": 13,
+          "preview": "\"High\": close + 1.0,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_chaos.py",
+          "line": 14,
+          "preview": "\"Low\": close - 1.0,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_chaos.py",
+          "line": 15,
+          "preview": "\"Close\": close,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_data_quality.py",
+          "line": 10,
+          "preview": "close = 100.0 + np.arange(n, dtype=float) * 0.1",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_data_quality.py",
+          "line": 13,
+          "preview": "\"Open\": close - 0.02,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_data_quality.py",
+          "line": 14,
+          "preview": "\"High\": close + 0.05,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_data_quality.py",
+          "line": 15,
+          "preview": "\"Low\": close - 0.05,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_data_quality.py",
+          "line": 16,
+          "preview": "\"Close\": close,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_evolution_manager.py",
+          "line": 11,
+          "preview": "close = 100 + 0.05 * t + 3.0 * np.sin(t / 8.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_evolution_manager.py",
+          "line": 12,
+          "preview": "open_ = close * (1.0 + 0.001 * np.sin(t / 5.0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_evolution_manager.py",
+          "line": 16,
+          "preview": "\"High\": np.maximum(open_, close) * 1.005,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_evolution_manager.py",
+          "line": 17,
+          "preview": "\"Low\": np.minimum(open_, close) * 0.995,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_evolution_manager.py",
+          "line": 18,
+          "preview": "\"Close\": close,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_expert_factory.py",
+          "line": 11,
+          "preview": "close = 100 + 0.03 * t + 4.0 * np.sin(t / 10.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_expert_factory.py",
+          "line": 12,
+          "preview": "open_ = close * (1.0 + 0.001 * np.sin(t / 4.0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_expert_factory.py",
+          "line": 16,
+          "preview": "\"High\": np.maximum(open_, close) * 1.005,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_expert_factory.py",
+          "line": 17,
+          "preview": "\"Low\": np.minimum(open_, close) * 0.995,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_expert_factory.py",
+          "line": 18,
+          "preview": "\"Close\": close,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_expert_pool_manager.py",
+          "line": 11,
+          "preview": "close = 100 + 0.04 * t + 3.5 * np.sin(t / 9.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_expert_pool_manager.py",
+          "line": 12,
+          "preview": "open_ = close * (1.0 + 0.001 * np.sin(t / 4.0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_expert_pool_manager.py",
+          "line": 16,
+          "preview": "\"High\": np.maximum(open_, close) * 1.005,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_expert_pool_manager.py",
+          "line": 17,
+          "preview": "\"Low\": np.minimum(open_, close) * 0.995,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_expert_pool_manager.py",
+          "line": 18,
+          "preview": "\"Close\": close,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_expert_sandbox.py",
+          "line": 10,
+          "preview": "close = 100 + 0.05 * t + 3.0 * np.sin(t / 8.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_expert_sandbox.py",
+          "line": 11,
+          "preview": "open_ = close * (1.0 + 0.001 * np.sin(t / 3.0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_expert_sandbox.py",
+          "line": 15,
+          "preview": "\"High\": np.maximum(open_, close) * 1.005,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_expert_sandbox.py",
+          "line": 16,
+          "preview": "\"Low\": np.minimum(open_, close) * 0.995,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_expert_sandbox.py",
+          "line": 17,
+          "preview": "\"Close\": close,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_features.py",
+          "line": 15,
+          "preview": "close = pd.Series(100 + np.linspace(0, 20, n) + np.sin(np.arange(n)), index=idx)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_features.py",
+          "line": 18,
+          "preview": "\"Open\": close * 0.999,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_features.py",
+          "line": 19,
+          "preview": "\"High\": close * 1.01,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_features.py",
+          "line": 20,
+          "preview": "\"Low\": close * 0.99,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_features.py",
+          "line": 21,
+          "preview": "\"Close\": close,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_parameter_benchmark.py",
+          "line": 21,
+          "preview": "close = (",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_parameter_benchmark.py",
+          "line": 27,
+          "preview": "open_ = close * (1.0 + 0.0004 * np.sin(t / 9.0 + phase))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_parameter_benchmark.py",
+          "line": 31,
+          "preview": "\"High\": np.maximum(open_, close) * 1.003,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_parameter_benchmark.py",
+          "line": 32,
+          "preview": "\"Low\": np.minimum(open_, close) * 0.997,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_parameter_benchmark.py",
           "line": 33,
-          "preview": "def test_paper_cycle_workflow_uses_authenticated_render_not_expired_db() -> None:",
-          "definition_candidate": true
+          "preview": "\"Close\": close,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_shadow_challenger.py",
+          "line": 20,
+          "preview": "close = 100.0 + 0.015 * t + 1.3 * np.sin(t / 17.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_shadow_challenger.py",
+          "line": 21,
+          "preview": "open_ = close * (1.0 + 0.0004 * np.sin(t / 9.0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_shadow_challenger.py",
+          "line": 25,
+          "preview": "\"High\": np.maximum(open_, close) * 1.0025,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_shadow_challenger.py",
+          "line": 26,
+          "preview": "\"Low\": np.minimum(open_, close) * 0.9975,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_shadow_challenger.py",
+          "line": 27,
+          "preview": "\"Close\": close,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_timeframe_features.py",
+          "line": 17,
+          "preview": "close = 100.0 + 0.01 * t + 1.8 * np.sin(t / 19.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_timeframe_features.py",
+          "line": 18,
+          "preview": "open_ = close * (1.0 + 0.0003 * np.sin(t / 7.0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_timeframe_features.py",
+          "line": 22,
+          "preview": "\"High\": np.maximum(open_, close) * 1.002,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_timeframe_features.py",
+          "line": 23,
+          "preview": "\"Low\": np.minimum(open_, close) * 0.998,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_timeframe_features.py",
+          "line": 24,
+          "preview": "\"Close\": close,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_backtest.py",
+          "line": 17,
+          "preview": "close = 100.0 * np.cumprod(1.0 + rets)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_backtest.py",
+          "line": 18,
+          "preview": "open_ = close * (1.0 + rng.normal(0.0, 0.001, n))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_backtest.py",
+          "line": 22,
+          "preview": "\"High\": np.maximum(open_, close) * 1.004,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_backtest.py",
+          "line": 23,
+          "preview": "\"Low\": np.minimum(open_, close) * 0.996,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_backtest.py",
+          "line": 24,
+          "preview": "\"Close\": close,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_evolution.py",
+          "line": 14,
+          "preview": "close = 100 + 0.04 * t + 3.0 * np.sin(t / (7.0 + seed)) + noise",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_evolution.py",
+          "line": 15,
+          "preview": "open_ = close * (1.0 + 0.001 * np.sin(t / (4.0 + seed)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_evolution.py",
+          "line": 19,
+          "preview": "\"High\": np.maximum(open_, close) * 1.005,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_evolution.py",
+          "line": 20,
+          "preview": "\"Low\": np.minimum(open_, close) * 0.995,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_evolution.py",
+          "line": 21,
+          "preview": "\"Close\": close,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_market_context.py",
+          "line": 17,
+          "preview": "close = 100.0 * np.cumprod(1.0 + returns)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_market_context.py",
+          "line": 18,
+          "preview": "open_ = close * (1.0 + rng.normal(0.0, 0.001, n))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_market_context.py",
+          "line": 22,
+          "preview": "\"High\": np.maximum(open_, close) * 1.005,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_market_context.py",
+          "line": 23,
+          "preview": "\"Low\": np.minimum(open_, close) * 0.995,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_market_context.py",
+          "line": 24,
+          "preview": "\"Close\": close,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 34,
+          "preview": "close = 100.0 * np.cumprod(1.0 + rets)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 35,
+          "preview": "open_ = close * (1.0 + rng.normal(0.0, 0.001, n))",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 120
     },
-    "test_fallback_skips_healthy_recent_cloudflare_without_paper_post": {
+    "initialize_schema": {
       "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 57,
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 322,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 57,
-          "preview": "def test_fallback_skips_healthy_recent_cloudflare_without_paper_post() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "fake_open": {
-      "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 60,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 51,
+          "preview": "def initialize_schema(self) -> None:",
+          "definition_candidate": false
+        },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
+          "file": "src/ai_trading/persistence.py",
           "line": 60,
-          "preview": "def fake_open(request, timeout):",
+          "preview": "def initialize_schema(self) -> None: ...",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/persistence_factory.py",
+          "line": 21,
+          "preview": "persistence.initialize_schema()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 322,
+          "preview": "def initialize_schema(self) -> None:",
           "definition_candidate": true
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 71,
-          "preview": "outcome = run_fallback(\"https://example.invalid\", \"server-secret\", opener=fake_open)",
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 69,
+          "preview": "backend.initialize_schema()",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 93,
-          "preview": "def fake_open(request, timeout):",
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 90,
+          "preview": "backend.initialize_schema()",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 100,
-          "preview": "outcome = run_fallback(\"https://example.invalid\", \"server-secret\", opener=fake_open)",
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 111,
+          "preview": "backend.initialize_schema()",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 112,
-          "preview": "def fake_open(request, timeout):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 120,
-          "preview": "\"https://example.invalid\", \"server-secret\", opener=fake_open",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
+          "file": "tests/test_cumulative_performance_persistence.py",
           "line": 131,
-          "preview": "def fake_open(request, timeout):",
+          "preview": "backend.initialize_schema()",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 140,
-          "preview": "run_fallback(\"https://example.invalid\", \"server-secret\", opener=fake_open)",
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 47,
+          "preview": "backend.initialize_schema()",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 146,
-          "preview": "def fake_open(request, timeout):",
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 70,
+          "preview": "backend.initialize_schema()",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 153,
-          "preview": "run_fallback(\"https://example.invalid\", \"server-secret\", opener=fake_open)",
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 57,
+          "preview": "first_persistence.initialize_schema()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 73,
+          "preview": "second_persistence.initialize_schema()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_persistence_factory.py",
+          "line": 30,
+          "preview": "monkeypatch.setattr(factory.PostgresPaperPersistence, \"initialize_schema\", fake_initialize)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 111,
+          "preview": "persistence.initialize_schema()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 122,
+          "preview": "backend.initialize_schema()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 123,
+          "preview": "backend.initialize_schema()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 414,
+          "preview": "backend.initialize_schema()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 48,
+          "preview": "def initialize_schema(self) -> None:",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 10
+      "occurrence_count": 18
     },
-    "test_fallback_runs_one_authenticated_three_market_endpoint_cycle": {
+    "load_runtime": {
       "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 88,
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 327,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_paper_cycle_workflow.py",
+          "file": "src/ai_trading/dashboard.py",
+          "line": 210,
+          "preview": "persisted = persistence.load_runtime(runtime_key, starting_cash)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 54,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 240,
+          "preview": "persisted = persistence.load_runtime(runtime_key, _NORMALIZED_RUNTIME_CASH)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/operational_overview.py",
+          "line": 289,
+          "preview": "persisted = persistence.load_runtime(runtime_key, starting_cash)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle.py",
+          "line": 184,
+          "preview": "snapshot = self.persistence.load_runtime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle.py",
+          "line": 299,
+          "preview": "snapshot = self.persistence.load_runtime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 174,
+          "preview": "state = backend.load_runtime(runtime_key, starting_cash).state",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/persistence.py",
+          "line": 62,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime: ...",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 327,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 233,
+          "preview": "persisted = self.persistence.load_runtime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 76,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 97,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 118,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 74,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 210,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 598,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 61,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 129,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 54,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 77,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 100,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 12,
+          "preview": "loaded = backend.load_runtime(key, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 38,
+          "preview": "restored = FilePaperPersistence(root=tmp_path).load_runtime(key, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 49,
+          "preview": "backend.load_runtime(key, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 74,
+          "preview": "backend.load_runtime(key, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 32,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
           "line": 88,
-          "preview": "def test_fallback_runs_one_authenticated_three_market_endpoint_cycle(",
-          "definition_candidate": true
+          "preview": "state = backend.load_runtime(runtime.runtime_key, 100_000.0).state",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 279,
+          "preview": "state = backend.load_runtime(primary.runtime_key, 100_000.0).state",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 307,
+          "preview": "final = backend.load_runtime(primary.runtime_key, 100_000.0).state",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 70,
+          "preview": "first_snapshot = first_persistence.load_runtime(runtime_key, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 92,
+          "preview": "final = second_persistence.load_runtime(runtime_key, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 42,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 35,
+          "preview": "assert pooled.load_runtime(RUNTIME_KEY, 100_000.0).revision >= 0",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 129,
+          "preview": "fresh = backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 135,
+          "preview": "restored = PostgresPaperPersistence(DATABASE_URL).load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 147,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 151,
+          "preview": "after_restart = restarted.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 164,
+          "preview": "restored_again = PostgresPaperPersistence(DATABASE_URL).load_runtime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 175,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 182,
+          "preview": "restored = backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 190,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 206,
+          "preview": "restored = backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 215,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 224,
+          "preview": "restored = backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 255,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 297,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 341,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 373,
+          "preview": "restored = backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 440,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 441,
+          "preview": "backend.load_runtime(BTC_RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 442,
+          "preview": "backend.load_runtime(DAX_RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 51,
+          "preview": "def load_runtime(self, runtime_key: str, starting_cash: float) -> PersistedRuntime:",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 52
     },
-    "test_fallback_runs_after_scheduler_telemetry_failure": {
+    "commit_step": {
       "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 109,
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 394,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 109,
-          "preview": "def test_fallback_runs_after_scheduler_telemetry_failure() -> None:",
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 74,
+          "preview": "def commit_step(self, runtime_key: str, commit: RuntimeStepCommit) -> CommitOutcome:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/persistence.py",
+          "line": 64,
+          "preview": "def commit_step(self, runtime_key: str, commit: RuntimeStepCommit) -> CommitOutcome: ...",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 394,
+          "preview": "def commit_step(self, runtime_key: str, commit: RuntimeStepCommit) -> CommitOutcome:",
           "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 349,
+          "preview": "outcome = self.persistence.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 79,
+          "preview": "backend.commit_step(RUNTIME_KEY, _commit(revision, _trade(pnl, revision)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 99,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, _commit(0, trade)) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 100,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, _commit(1, trade)) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 121,
+          "preview": "backend.commit_step(RUNTIME_KEY, _commit(revision, _trade(pnl, revision)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 61,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, commit) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 79,
+          "preview": "backend.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 86,
+          "preview": "backend.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 108,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, commit) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 16,
+          "preview": "outcome = backend.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 66,
+          "preview": "assert backend.commit_step(key, commit) is CommitOutcome.CONFLICT",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 111,
+          "preview": "assert backend.commit_step(key, first) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 112,
+          "preview": "assert backend.commit_step(key, second) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 133,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, _commit()) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 148,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, _commit()) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 157,
+          "preview": "restarted.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 179,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, first) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 180,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, second) is CommitOutcome.CONFLICT",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 193,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, _commit(trade=trade)) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 195,
+          "preview": "backend.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 222,
+          "preview": "failing.commit_step(RUNTIME_KEY, _commit(trade=_trade()))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 258,
+          "preview": "backend.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 265,
+          "preview": "backend.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 276,
+          "preview": "backend.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 315,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, shadow_commit) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 347,
+          "preview": "backend.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 358,
+          "preview": "backend.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 445,
+          "preview": "backend.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 456,
+          "preview": "backend.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 467,
+          "preview": "backend.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 478,
+          "preview": "backend.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 489,
+          "preview": "backend.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 55,
+          "preview": "def commit_step(self, runtime_key: str, commit: RuntimeStepCommit) -> CommitOutcome:",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 36
     },
-    "test_fallback_rejects_missing_token_without_network": {
+    "list_trades": {
       "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 125,
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 645,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 125,
-          "preview": "def test_fallback_rejects_missing_token_without_network() -> None:",
+          "file": "src/ai_trading/dashboard.py",
+          "line": 206,
+          "preview": "recent = persistence.list_trades(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 104,
+          "preview": "def list_trades(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/persistence.py",
+          "line": 66,
+          "preview": "def list_trades(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 645,
+          "preview": "def list_trades(",
           "definition_candidate": true
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 79,
+          "preview": "def list_trades(self, runtime_key: str | None = None, *, limit: int | None = None):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 66,
+          "preview": "def list_trades(self, runtime_key: str | None = None, *, limit: int | None = None):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 133,
+          "preview": "def list_trades(self, runtime_key: str | None = None, *, limit: int | None = None):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 77,
+          "preview": "def list_trades(self, runtime_key: str | None = None, *, limit: int | None = None):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 897,
+          "preview": "assert backend.list_trades() == ()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 184,
+          "preview": "trades = backend.list_trades(RUNTIME_KEY)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 209,
+          "preview": "assert backend.list_trades(RUNTIME_KEY) == (trade,)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 227,
+          "preview": "assert backend.list_trades(RUNTIME_KEY) == ()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 376,
+          "preview": "trades = backend.list_trades(RUNTIME_KEY)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 59,
+          "preview": "def list_trades(",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 14
     },
-    "test_fallback_reports_sanitized_http_failure": {
+    "load_trade_performance": {
       "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 130,
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 689,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 130,
-          "preview": "def test_fallback_reports_sanitized_http_failure() -> None:",
+          "file": "src/ai_trading/dashboard.py",
+          "line": 216,
+          "preview": "load_performance = getattr(persistence, \"load_trade_performance\", None)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 113,
+          "preview": "def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/operational_overview.py",
+          "line": 325,
+          "preview": "performance_loader = getattr(persistence, \"load_trade_performance\", None)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/persistence.py",
+          "line": 73,
+          "preview": "def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics: ...",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 689,
+          "preview": "def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics:",
           "definition_candidate": true
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 83,
+          "preview": "_assert_metrics(backend.load_trade_performance(RUNTIME_KEY))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 102,
+          "preview": "metrics = backend.load_trade_performance(RUNTIME_KEY)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 132,
+          "preview": "_assert_metrics(backend.load_trade_performance(RUNTIME_KEY))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 140,
+          "preview": "_assert_metrics(backend.load_trade_performance(RUNTIME_KEY))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 113,
+          "preview": "def load_trade_performance(self, runtime_key: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 652,
+          "preview": "def load_trade_performance(self, runtime_key: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 71,
+          "preview": "def load_trade_performance(self, runtime_key: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 81,
+          "preview": "def load_trade_performance(self, runtime_key: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 382,
+          "preview": "metrics = backend.load_trade_performance(RUNTIME_KEY)",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 14
     },
-    "test_fallback_fails_closed_when_paper_cycle_has_partial_market_failure": {
+    "load_portfolio_trade_performance": {
       "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 145,
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 724,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 145,
-          "preview": "def test_fallback_fails_closed_when_paper_cycle_has_partial_market_failure() -> None:",
+          "file": "src/ai_trading/dashboard.py",
+          "line": 219,
+          "preview": "\"load_portfolio_trade_performance\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 117,
+          "preview": "def load_portfolio_trade_performance(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 213,
+          "preview": "\"load_portfolio_trade_performance\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/persistence.py",
+          "line": 75,
+          "preview": "def load_portfolio_trade_performance(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 724,
+          "preview": "def load_portfolio_trade_performance(",
           "definition_candidate": true
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 94,
+          "preview": "def load_portfolio_trade_performance(self, runtime_keys: tuple[str, ...]):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 500,
+          "preview": "metrics = backend.load_portfolio_trade_performance(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 515,
+          "preview": "metrics = backend.load_portfolio_trade_performance(())",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 8
     },
-    "test_fallback_rejects_malformed_and_future_scheduler_ages": {
+    "list_burnin_snapshots": {
       "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 156,
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 817,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_paper_cycle_workflow.py",
+          "file": "src/ai_trading/dashboard.py",
+          "line": 244,
+          "preview": "load_burnin = getattr(persistence, \"list_burnin_snapshots\", None)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 124,
+          "preview": "def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/operational_overview.py",
+          "line": 291,
+          "preview": "burnin_loader = getattr(persistence, \"list_burnin_snapshots\", None)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/persistence.py",
+          "line": 80,
+          "preview": "def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]: ...",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 817,
+          "preview": "def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 84,
+          "preview": "def list_burnin_snapshots(self, runtime_key: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 179,
+          "preview": "def list_burnin_snapshots(self, runtime_key: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 613,
+          "preview": "def list_burnin_snapshots(self, runtime_key: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 81,
+          "preview": "def list_burnin_snapshots(self, runtime_key: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 374,
+          "preview": "def list_burnin_snapshots(self, runtime_key: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 63,
+          "preview": "_assert_snapshots(backend.list_burnin_snapshots(RUNTIME_KEY))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 93,
+          "preview": "snapshots = backend.list_burnin_snapshots(RUNTIME_KEY)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 110,
+          "preview": "_assert_snapshots(backend.list_burnin_snapshots(RUNTIME_KEY))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 115,
+          "preview": "assert restored.list_burnin_snapshots(key)[-1].regimes_covered == 1",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 69,
+          "preview": "def list_burnin_snapshots(self, runtime_key: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 291,
+          "preview": "snapshots = backend.list_burnin_snapshots(RUNTIME_KEY)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 16
+    },
+    "list_regimes": {
+      "definition": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 849,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 246,
+          "preview": "load_regimes = getattr(persistence, \"list_regimes\", None)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 90,
+          "preview": "regimes = set(self.list_regimes(\"\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 99,
+          "preview": "regimes_covered=len(self.list_regimes(\"\")),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 128,
+          "preview": "def list_regimes(self, runtime_key: str) -> tuple[str, ...]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/operational_overview.py",
+          "line": 297,
+          "preview": "regime_loader = getattr(persistence, \"list_regimes\", None)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/persistence.py",
+          "line": 82,
+          "preview": "def list_regimes(self, runtime_key: str) -> tuple[str, ...]: ...",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 849,
+          "preview": "def list_regimes(self, runtime_key: str) -> tuple[str, ...]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 105,
+          "preview": "def list_regimes(self, runtime_key: str) -> tuple[str, ...]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 617,
+          "preview": "def list_regimes(self, runtime_key: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 102,
+          "preview": "def list_regimes(self, runtime_key: str) -> tuple[str, ...]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 114,
+          "preview": "assert restored.list_regimes(key) == (\"bull_normal_vol\",)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 73,
+          "preview": "def list_regimes(self, runtime_key: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 287,
+          "preview": "assert backend.list_regimes(RUNTIME_KEY) == (",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 13
+    },
+    "load_shadow_quality": {
+      "definition": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 863,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 138,
+          "preview": "def load_shadow_quality(self, runtime_key: str) -> ShadowQualityComparison:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/operational_overview.py",
+          "line": 333,
+          "preview": "shadow_loader = getattr(persistence, \"load_shadow_quality\", None)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 863,
+          "preview": "def load_shadow_quality(self, runtime_key: str) -> ShadowQualityComparison:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 124,
+          "preview": "def load_shadow_quality(self, runtime_key: str) -> ShadowQualityComparison:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 621,
+          "preview": "def load_shadow_quality(self, runtime_key: str) -> ShadowQualityComparison:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 623,
+          "preview": "return super().load_shadow_quality(RUNTIME_KEY)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 142,
+          "preview": "comparison = backend.load_shadow_quality(\"paper:GC=F:5m:online-river:v1\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 316,
+          "preview": "comparison = backend.load_shadow_quality(RUNTIME_KEY)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 8
+    },
+    "load_mtf_shadow_quality": {
+      "definition": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 885,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/file_persistence.py",
           "line": 156,
-          "preview": "def test_fallback_rejects_malformed_and_future_scheduler_ages() -> None:",
+          "preview": "def load_mtf_shadow_quality(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/operational_overview.py",
+          "line": 341,
+          "preview": "mtf_shadow_loader = getattr(persistence, \"load_mtf_shadow_quality\", None)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 885,
+          "preview": "def load_mtf_shadow_quality(",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 146,
+          "preview": "def load_mtf_shadow_quality(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 625,
+          "preview": "def load_mtf_shadow_quality(self, runtime_key: str, **kwargs):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 628,
+          "preview": "return super().load_mtf_shadow_quality(RUNTIME_KEY)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "save_runtime_status": {
+      "definition": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 912,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 179,
+          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 99,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 115,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 168,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 129,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 185,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 226,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/persistence.py",
+          "line": 84,
+          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None: ...",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 912,
+          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_hosted_persistence.py",
+          "line": 18,
+          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_runtime.py",
+          "line": 72,
+          "preview": "def save_runtime_status(self, runtime_key, status) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 34,
+          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 141,
+          "preview": "backend.save_runtime_status = broken_save",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 186,
+          "preview": "original_save = backend.save_runtime_status",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 196,
+          "preview": "backend.save_runtime_status = flaky_save",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 248,
+          "preview": "backend.save_runtime_status(RUNTIME_KEY, status)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 68,
+          "preview": "def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 17
+    },
+    "load_runtime_status": {
+      "definition": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 938,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 215,
+          "preview": "runtime_status = persistence.load_runtime_status(runtime_key)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1266,
+          "preview": "return _public_runtime_snapshot(backend.load_runtime_status(runtime_key))",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 183,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 161,
+          "preview": "current = backend.load_runtime_status(settings.runtime_key) or HostedRuntimeStatus(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 247,
+          "preview": "status = persistence.load_runtime_status(runtime_key)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/operational_overview.py",
+          "line": 290,
+          "preview": "status = persistence.load_runtime_status(runtime_key)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 123,
+          "preview": "previous_status = backend.load_runtime_status(runtime_key)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/persistence.py",
+          "line": 86,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None: ...",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 938,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 109,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 214,
+          "preview": "def load_runtime_status(self, runtime_key: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 603,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 106,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 137,
+          "preview": "def load_runtime_status(self, runtime_key: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_persistence.py",
+          "line": 21,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_persistence.py",
+          "line": 122,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_runtime.py",
+          "line": 76,
+          "preview": "def load_runtime_status(self, runtime_key):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 51,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 403,
+          "preview": "original = backend.load_runtime_status",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 414,
+          "preview": "backend.load_runtime_status = stale_status  # type: ignore[method-assign]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 38,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 250,
+          "preview": "restored = PostgresPaperPersistence(DATABASE_URL).load_runtime_status(RUNTIME_KEY)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 71,
+          "preview": "def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 23
+    },
+    "record_scheduler_delivery": {
+      "definition": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 953,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1429,
+          "preview": "backend.record_scheduler_delivery(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 188,
+          "preview": "def record_scheduler_delivery(self, delivery: SchedulerDelivery) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/persistence.py",
+          "line": 88,
+          "preview": "def record_scheduler_delivery(self, delivery: SchedulerDelivery) -> None: ...",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 953,
+          "preview": "def record_scheduler_delivery(self, delivery: SchedulerDelivery) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 160,
+          "preview": "backend.record_scheduler_delivery(delivery)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 333,
+          "preview": "backend.record_scheduler_delivery(delivery)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "list_scheduler_deliveries": {
+      "definition": {
+        "file": "src/ai_trading/postgres_persistence.py",
+        "line": 971,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 551,
+          "preview": "list_deliveries = getattr(persistence, \"list_scheduler_deliveries\", None)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1334,
+          "preview": "deliveries = backend.list_scheduler_deliveries(limit=20)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 205,
+          "preview": "def list_scheduler_deliveries(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/persistence.py",
+          "line": 90,
+          "preview": "def list_scheduler_deliveries(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 971,
+          "preview": "def list_scheduler_deliveries(",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 110,
+          "preview": "def list_scheduler_deliveries(self, *, limit: int = 20):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 163,
+          "preview": "assert restored.list_scheduler_deliveries() == (delivery,)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 336,
+          "preview": "assert restored.list_scheduler_deliveries(limit=10) == (delivery,)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 8
+    },
+    "test_opt_in_postgres_pool_reuses_connection_safely": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 19,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 19,
+          "preview": "def test_opt_in_postgres_pool_reuses_connection_safely(backend) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_postgres_16_is_reachable": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 42,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 42,
+          "preview": "def test_postgres_16_is_reachable() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "_state": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 48,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 17,
+          "preview": "def _state(processed_bars: int) -> RuntimeState:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 47,
+          "preview": "state=_state(revision + 1),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 12,
+          "preview": "def _state(step: int) -> MultiAssetState:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 34,
+          "preview": "json.dumps(asdict(_state(state_step)), sort_keys=True),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 57,
+          "preview": "store.commit(_state(3), {\"A\": {\"learned\": 3}})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 79,
+          "preview": "generation = store.commit(_state(5), {\"A\": {\"learned\": 5}})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_manifest_binding.py",
+          "line": 10,
+          "preview": "def _state(step: int) -> MultiAssetState:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_manifest_binding.py",
+          "line": 25,
+          "preview": "_state(1),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_manifest_binding.py",
+          "line": 42,
+          "preview": "store.commit(_state(1), {\"A\": {\"symbol\": \"A\"}})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_manifest_binding.py",
+          "line": 46,
+          "preview": "store.commit(_state(2), {\"A\": {\"symbol\": \"A\"}, \"B\": {\"symbol\": \"B\"}})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_orphan_corruption.py",
+          "line": 9,
+          "preview": "def _state(step: int) -> MultiAssetState:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_orphan_corruption.py",
+          "line": 21,
+          "preview": "store.commit(_state(3), {\"A\": {\"learned\": 3}})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_orphan_corruption.py",
+          "line": 27,
+          "preview": "json.dumps(asdict(_state(4)), sort_keys=True),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 158,
+          "preview": "def fail_state_save(_state) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 48,
+          "preview": "def _state(",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 94,
+          "preview": "commit_state = state or _state()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 155,
+          "preview": "second_state = _state(cash=99_800.0, processed_bars=2)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 199,
+          "preview": "state=_state(cash=99_800.0, processed_bars=2),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 269,
+          "preview": "state=_state(cash=99_800.0, processed_bars=2),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 280,
+          "preview": "state=_state(cash=99_700.0, processed_bars=3),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 351,
+          "preview": "state=_state(processed_bars=1, average_entry_price=101.5),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 362,
+          "preview": "state=_state(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 449,
+          "preview": "state=_state(processed_bars=1),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 460,
+          "preview": "state=_state(processed_bars=1),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 471,
+          "preview": "state=_state(cash=99_800.0, processed_bars=2),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 482,
+          "preview": "state=_state(cash=99_800.0, processed_bars=2),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 493,
+          "preview": "state=_state(processed_bars=1),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 27
+    },
+    "_trade": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 67,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 30,
+          "preview": "def _trade(pnl: float, index: int) -> TradeSnapshot:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 79,
+          "preview": "backend.commit_step(RUNTIME_KEY, _commit(revision, _trade(pnl, revision)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 98,
+          "preview": "trade = _trade(12.5, 0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 121,
+          "preview": "backend.commit_step(RUNTIME_KEY, _commit(revision, _trade(pnl, revision)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 138,
+          "preview": "backend.trade_journal.append(_trade(pnl, index))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_performance_metrics.py",
+          "line": 5,
+          "preview": "def _trade(pnl: float) -> TradeSnapshot:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_performance_metrics.py",
+          "line": 33,
+          "preview": "(_trade(10.0), _trade(-4.0), _trade(6.0), _trade(0.0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_performance_metrics.py",
+          "line": 47,
+          "preview": "(_trade(20.0), _trade(-5.0), _trade(-30.0), _trade(10.0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_performance_metrics.py",
+          "line": 54,
+          "preview": "metrics = calculate_performance_metrics((_trade(5.0), _trade(7.0)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 67,
+          "preview": "def _trade(",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 176,
+          "preview": "first = _commit(trade=_trade(side=\"BUY\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 177,
+          "preview": "second = _commit(trade=_trade(side=\"SELL\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 191,
+          "preview": "trade = _trade()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 222,
+          "preview": "failing.commit_step(RUNTIME_KEY, _commit(trade=_trade()))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 343,
+          "preview": "known = _trade(side=\"BUY\", pnl=5.0, pnl_known=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 344,
+          "preview": "unknown = _trade(side=\"SELL\", pnl=0.0, pnl_known=False)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 395,
+          "preview": "known = _trade(pnl=0.0, pnl_known=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 396,
+          "preview": "unknown = _trade(pnl=0.0, pnl_known=False)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 450,
+          "preview": "trade=_trade(pnl=10.0, pnl_known=True),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 461,
+          "preview": "trade=_trade(pnl=-20.0, pnl_known=True),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 472,
+          "preview": "trade=_trade(pnl=5.0, pnl_known=True),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 483,
+          "preview": "trade=_trade(pnl=0.0, pnl_known=False),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 494,
+          "preview": "trade=_trade(pnl=1000.0, pnl_known=True),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 23
+    },
+    "_commit": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 87,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 44,
+          "preview": "def _commit(revision: int, trade: TradeSnapshot) -> RuntimeStepCommit:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 79,
+          "preview": "backend.commit_step(RUNTIME_KEY, _commit(revision, _trade(pnl, revision)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 99,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, _commit(0, trade)) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 100,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, _commit(1, trade)) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 121,
+          "preview": "backend.commit_step(RUNTIME_KEY, _commit(revision, _trade(pnl, revision)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 15,
+          "preview": "def _commit(*, revision: int, cash: float, units: float, price: float) -> RuntimeStepCommit:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 56,
+          "preview": "_commit(revision=0, cash=99_900.0, units=1.0, price=100.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 57,
+          "preview": "_commit(revision=1, cash=99_700.0, units=2.0, price=100.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 58,
+          "preview": "_commit(revision=2, cash=100_300.0, units=0.0, price=101.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 81,
+          "preview": "_commit(revision=0, cash=99_900.0, units=1.0, price=100.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 88,
+          "preview": "_commit(revision=0, cash=99_800.0, units=2.0, price=100.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 103,
+          "preview": "_commit(revision=0, cash=99_900.0, units=1.0, price=100.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 104,
+          "preview": "_commit(revision=1, cash=99_700.0, units=2.0, price=100.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 105,
+          "preview": "_commit(revision=2, cash=100_300.0, units=0.0, price=101.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 87,
+          "preview": "def _commit(",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 133,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, _commit()) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 148,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, _commit()) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 159,
+          "preview": "_commit(expected_revision=after_restart.revision, state=second_state),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 176,
+          "preview": "first = _commit(trade=_trade(side=\"BUY\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 177,
+          "preview": "second = _commit(trade=_trade(side=\"SELL\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 193,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, _commit(trade=trade)) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 197,
+          "preview": "_commit(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 222,
+          "preview": "failing.commit_step(RUNTIME_KEY, _commit(trade=_trade()))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 260,
+          "preview": "_commit(observed_regime=\"bull_normal_vol\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 267,
+          "preview": "_commit(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 278,
+          "preview": "_commit(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 298,
+          "preview": "commit = _commit()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 349,
+          "preview": "_commit(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 360,
+          "preview": "_commit(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 447,
+          "preview": "_commit(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 458,
+          "preview": "_commit(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 469,
+          "preview": "_commit(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 480,
+          "preview": "_commit(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 491,
+          "preview": "_commit(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 34
+    },
+    "backend": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 107,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1195,
+          "preview": "backend = persistence",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1196,
+          "preview": "if backend is None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1198,
+          "preview": "backend = build_paper_persistence(pool_connections=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1201,
+          "preview": "backend = FilePaperPersistence(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1250,
+          "preview": "persistence=backend,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1254,
+          "preview": "persistence=backend,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1261,
+          "preview": "persistence=backend,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1266,
+          "preview": "return _public_runtime_snapshot(backend.load_runtime_status(runtime_key))",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1316,
+          "preview": "backend,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1325,
+          "preview": "backend,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1334,
+          "preview": "deliveries = backend.list_scheduler_deliveries(limit=20)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1402,
+          "preview": "persistence=backend,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1429,
+          "preview": "backend.record_scheduler_delivery(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/data.py",
+          "line": 111,
+          "preview": "except Exception as exc:  # noqa: BLE001 - providers raise backend-specific errors",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 29,
+          "preview": "\"\"\"Compatibility backend over the existing local artifact files.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 93,
+          "preview": "backend = persistence or build_paper_persistence()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 96,
+          "preview": "persistence=backend,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 99,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 115,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 161,
+          "preview": "current = backend.load_runtime_status(settings.runtime_key) or HostedRuntimeStatus(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 168,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 99,
+          "preview": "backend = persistence",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 100,
+          "preview": "if backend is None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 102,
+          "preview": "backend = build_paper_persistence()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 127,
+          "preview": "persistence=backend,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/operational_overview.py",
+          "line": 301,
+          "preview": "except Exception:  # noqa: BLE001 - observability boundary must sanitize backend failures",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 112,
+          "preview": "backend = persistence",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 113,
+          "preview": "if backend is None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 115,
+          "preview": "backend = persistence_factory()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 123,
+          "preview": "previous_status = backend.load_runtime_status(runtime_key)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 129,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 157,
+          "preview": "runner = runner_factory(backend)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 174,
+          "preview": "state = backend.load_runtime(runtime_key, starting_cash).state",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 185,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 226,
+          "preview": "backend.save_runtime_status(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 68,
+          "preview": "backend = PostgresPaperPersistence(DATABASE_URL)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 69,
+          "preview": "backend.initialize_schema()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 76,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 79,
+          "preview": "backend.commit_step(RUNTIME_KEY, _commit(revision, _trade(pnl, revision)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 83,
+          "preview": "_assert_metrics(backend.load_trade_performance(RUNTIME_KEY))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 89,
+          "preview": "backend = PostgresPaperPersistence(DATABASE_URL)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 90,
+          "preview": "backend.initialize_schema()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 97,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 99,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, _commit(0, trade)) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 100,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, _commit(1, trade)) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 102,
+          "preview": "metrics = backend.load_trade_performance(RUNTIME_KEY)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 110,
+          "preview": "backend = PostgresPaperPersistence(DATABASE_URL)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 111,
+          "preview": "backend.initialize_schema()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 118,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 121,
+          "preview": "backend.commit_step(RUNTIME_KEY, _commit(revision, _trade(pnl, revision)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 131,
+          "preview": "backend.initialize_schema()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 132,
+          "preview": "_assert_metrics(backend.load_trade_performance(RUNTIME_KEY))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 136,
+          "preview": "backend = FilePaperPersistence(root=tmp_path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 138,
+          "preview": "backend.trade_journal.append(_trade(pnl, index))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cumulative_performance_persistence.py",
+          "line": 140,
+          "preview": "_assert_metrics(backend.load_trade_performance(RUNTIME_KEY))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 46,
+          "preview": "backend = PostgresPaperPersistence(DATABASE_URL)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 47,
+          "preview": "backend.initialize_schema()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 54,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 61,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, commit) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 63,
+          "preview": "_assert_snapshots(backend.list_burnin_snapshots(RUNTIME_KEY))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 69,
+          "preview": "backend = PostgresPaperPersistence(DATABASE_URL)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 70,
+          "preview": "backend.initialize_schema()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 77,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 79,
+          "preview": "backend.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 86,
+          "preview": "backend.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 93,
+          "preview": "snapshots = backend.list_burnin_snapshots(RUNTIME_KEY)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 99,
+          "preview": "backend = FilePaperPersistence(root=tmp_path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 100,
+          "preview": "backend.load_runtime(RUNTIME_KEY, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 108,
+          "preview": "assert backend.commit_step(RUNTIME_KEY, commit) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_durable_burnin_persistence.py",
+          "line": 110,
+          "preview": "_assert_snapshots(backend.list_burnin_snapshots(RUNTIME_KEY))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 10,
+          "preview": "backend = FilePaperPersistence(root=tmp_path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 12,
+          "preview": "loaded = backend.load_runtime(key, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 16,
+          "preview": "outcome = backend.commit_step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 47,
+          "preview": "backend = FilePaperPersistence(root=tmp_path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 49,
+          "preview": "backend.load_runtime(key, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 66,
+          "preview": "assert backend.commit_step(key, commit) is CommitOutcome.CONFLICT",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 72,
+          "preview": "backend = FilePaperPersistence(root=tmp_path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 74,
+          "preview": "backend.load_runtime(key, 100_000.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 111,
+          "preview": "assert backend.commit_step(key, first) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 112,
+          "preview": "assert backend.commit_step(key, second) is CommitOutcome.COMMITTED",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 122,
+          "preview": "backend = FilePaperPersistence(root=tmp_path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 140,
+          "preview": "backend.audit_log.append(\"runtime_step\", payload)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 142,
+          "preview": "comparison = backend.load_shadow_quality(\"paper:GC=F:5m:online-river:v1\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 152,
+          "preview": "backend = FilePaperPersistence(root=tmp_path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_file_persistence.py",
+          "line": 160,
+          "preview": "backend.record_scheduler_delivery(delivery)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 209,
+          "preview": "backend = FakeMultiPersistence(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 218,
+          "preview": "backend,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 261,
+          "preview": "backend = FakeMultiPersistence(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 271,
+          "preview": "persistence=backend,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 328,
+          "preview": "backend = FakeMultiPersistence(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 346,
+          "preview": "backend,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 395,
+          "preview": "backend = FakeMultiPersistence(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 403,
+          "preview": "original = backend.load_runtime_status",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 414,
+          "preview": "backend.load_runtime_status = stale_status  # type: ignore[method-assign]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 417,
+          "preview": "backend,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 484,
+          "preview": "backend = FakeMultiPersistence(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 492,
+          "preview": "backend,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 512,
+          "preview": "backend = FakeMultiPersistence(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 521,
+          "preview": "persistence=backend,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 51,
+          "preview": "backend: FilePaperPersistence,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 57,
+          "preview": "persistence=backend,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 65,
+          "preview": "backend: FilePaperPersistence,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 70,
+          "preview": "persistence=backend,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 77,
+          "preview": "backend = FilePaperPersistence(tmp_path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 79,
+          "preview": "runtime, eligible = build_runtime(tmp_path, backend, df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 80,
+          "preview": "runner = build_runner(tmp_path, backend, df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 88,
+          "preview": "state = backend.load_runtime(runtime.runtime_key, 100_000.0).state",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 95,
+          "preview": "audit = json.loads(backend.audit_log.path.read_text(encoding=\"utf-8\").splitlines()[-1])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 103,
+          "preview": "backend = FilePaperPersistence(tmp_path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 105,
+          "preview": "runtime, eligible = build_runtime(tmp_path, backend, df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 107,
+          "preview": "runner = build_runner(tmp_path, backend, df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 117,
+          "preview": "for line in backend.audit_log.path.read_text(encoding=\"utf-8\").splitlines()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 129,
+          "preview": "backend = FilePaperPersistence(tmp_path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 131,
+          "preview": "runtime, eligible = build_runtime(tmp_path, backend, df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 133,
+          "preview": "runner = build_runner(tmp_path, backend, df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 152,
+          "preview": "backend = FilePaperPersistence(tmp_path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 154,
+          "preview": "runtime, eligible = build_runtime(tmp_path, backend, df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 176,
+          "preview": "runner = build_runner(tmp_path, backend, df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 190,
+          "preview": "backend = FilePaperPersistence(tmp_path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 191,
+          "preview": "backend.state_store.save(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 120
+    },
+    "test_schema_initialization_is_idempotent": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 121,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 121,
+          "preview": "def test_schema_initialization_is_idempotent(backend) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_runtime_state_and_model_survive_new_instance": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 126,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 126,
+          "preview": "def test_runtime_state_and_model_survive_new_instance(backend) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_fresh_instances_continue_from_persisted_revision": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 144,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 144,
+          "preview": "def test_fresh_instances_continue_from_persisted_revision(backend) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_same_revision_has_exactly_one_winner": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 174,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 174,
+          "preview": "def test_same_revision_has_exactly_one_winner(backend) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_duplicate_logical_trade_is_idempotent_across_revisions": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 189,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 189,
+          "preview": "def test_duplicate_logical_trade_is_idempotent_across_revisions(backend) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_failure_before_state_commit_rolls_back_everything": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 212,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 212,
+          "preview": "def test_failure_before_state_commit_rolls_back_everything(backend) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "fail": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 217,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 171,
+          "preview": "state = \"pass\" if check.passed else \"fail\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 907,
+          "preview": ".criterion-status.fail{{color:#ffc0c0;background:rgba(115,29,29,.26);border-color:rgba(255,138,138,.25)}}",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 150,
+          "preview": "except Exception as exc:  # noqa: BLE001 - storage boundary is fail-closed",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_cli.py",
+          "line": 57,
+          "preview": "def fail(settings: ProductionPaperCycleSettings) -> PaperCycleResult:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_cli.py",
+          "line": 64,
+          "preview": "monkeypatch.setattr(command_app, \"run_production_paper_cycle\", fail)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 217,
+          "preview": "def fail() -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 220,
+          "preview": "failing = PostgresPaperPersistence(DATABASE_URL, before_state_commit=fail)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_readiness_release.py",
+          "line": 301,
+          "preview": "raise AssertionError(\"expected immutable release overwrite to fail\")",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 8
+    },
+    "test_runtime_status_survives_new_instance": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 236,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 236,
+          "preview": "def test_runtime_status_survives_new_instance(backend) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_regime_coverage_is_deduplicated_and_persisted": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 254,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 254,
+          "preview": "def test_regime_coverage_is_deduplicated_and_persisted(backend) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_postgres_loads_shadow_quality_from_audit": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 296,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 296,
+          "preview": "def test_postgres_loads_shadow_quality_from_audit(backend) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_scheduler_deliveries_survive_postgres_restart": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 323,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 323,
+          "preview": "def test_scheduler_deliveries_survive_postgres_restart(backend) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_postgres_persists_pnl_provenance_and_performance_coverage": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 340,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 340,
+          "preview": "def test_postgres_persists_pnl_provenance_and_performance_coverage(backend) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_trade_event_key_ignores_pnl_provenance_metadata": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 392,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 392,
+          "preview": "def test_trade_event_key_ignores_pnl_provenance_metadata() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_schema_upgrade_adds_pnl_accounting_columns_without_reset": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 402,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 402,
+          "preview": "def test_schema_upgrade_adds_pnl_accounting_columns_without_reset(backend) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_postgres_portfolio_performance_uses_global_trade_chronology": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 439,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 439,
+          "preview": "def test_postgres_portfolio_performance_uses_global_trade_chronology(backend) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_postgres_portfolio_performance_empty_runtime_set_is_empty": {
+      "definition": {
+        "file": "tests/test_postgres_persistence.py",
+        "line": 514,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_postgres_persistence.py",
+          "line": 514,
+          "preview": "def test_postgres_portfolio_performance_empty_runtime_set_is_empty(backend) -> None:",
           "definition_candidate": true
         }
       ],

@@ -1,141 +1,398 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "fddfd942340c3d859390f2c391e64f2024f6c8c0",
-  "head": "b56eb99f3c827f4b8b1fe363e2b49f57d13c4ca6",
+  "base": "b56eb99f3c827f4b8b1fe363e2b49f57d13c4ca6",
+  "head": "cdb5346f7eb5b81d726afcc6427fdee7a1f318a2",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/paper-cycle.yml",
+      "path": "src/ai_trading/postgres_persistence.py",
       "status": "M"
     },
     {
-      "path": "README.md",
-      "status": "M"
-    },
-    {
-      "path": "tests/test_paper_cycle_workflow.py",
+      "path": "tests/test_postgres_persistence.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "tests/test_paper_cycle_workflow.py"
+    "src/ai_trading/postgres_persistence.py",
+    "tests/test_postgres_persistence.py"
   ],
   "impacted_files": [
-    "tests/test_paper_cycle_workflow.py"
+    "src/ai_trading/persistence_factory.py",
+    "src/ai_trading/postgres_persistence.py",
+    "tests/test_cumulative_performance_persistence.py",
+    "tests/test_durable_burnin_persistence.py",
+    "tests/test_paper_cycle_postgres.py",
+    "tests/test_postgres_persistence.py"
   ],
   "impacted_symbols": [
     {
-      "name": "FakeResponse",
+      "name": "build_paper_persistence",
+      "kind": "function",
+      "file": "src/ai_trading/persistence_factory.py",
+      "line": 11
+    },
+    {
+      "name": "_trade_event_key",
+      "kind": "function",
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 273
+    },
+    {
+      "name": "PostgresPaperPersistence",
       "kind": "class",
-      "file": "tests/test_paper_cycle_workflow.py",
-      "line": 16
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 285
     },
     {
       "name": "__init__",
       "kind": "function",
-      "file": "tests/test_paper_cycle_workflow.py",
-      "line": 19
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 286
     },
     {
-      "name": "__enter__",
+      "name": "_connect",
       "kind": "function",
-      "file": "tests/test_paper_cycle_workflow.py",
-      "line": 23
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 313
     },
     {
-      "name": "__exit__",
+      "name": "close",
       "kind": "function",
-      "file": "tests/test_paper_cycle_workflow.py",
-      "line": 26
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 318
     },
     {
-      "name": "read",
+      "name": "initialize_schema",
       "kind": "function",
-      "file": "tests/test_paper_cycle_workflow.py",
-      "line": 29
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 322
     },
     {
-      "name": "test_paper_cycle_workflow_uses_authenticated_render_not_expired_db",
+      "name": "load_runtime",
       "kind": "function",
-      "file": "tests/test_paper_cycle_workflow.py",
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 327
+    },
+    {
+      "name": "commit_step",
+      "kind": "function",
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 394
+    },
+    {
+      "name": "list_trades",
+      "kind": "function",
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 645
+    },
+    {
+      "name": "load_trade_performance",
+      "kind": "function",
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 689
+    },
+    {
+      "name": "load_portfolio_trade_performance",
+      "kind": "function",
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 724
+    },
+    {
+      "name": "list_burnin_snapshots",
+      "kind": "function",
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 817
+    },
+    {
+      "name": "list_regimes",
+      "kind": "function",
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 849
+    },
+    {
+      "name": "load_shadow_quality",
+      "kind": "function",
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 863
+    },
+    {
+      "name": "load_mtf_shadow_quality",
+      "kind": "function",
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 885
+    },
+    {
+      "name": "save_runtime_status",
+      "kind": "function",
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 912
+    },
+    {
+      "name": "load_runtime_status",
+      "kind": "function",
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 938
+    },
+    {
+      "name": "record_scheduler_delivery",
+      "kind": "function",
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 953
+    },
+    {
+      "name": "list_scheduler_deliveries",
+      "kind": "function",
+      "file": "src/ai_trading/postgres_persistence.py",
+      "line": 971
+    },
+    {
+      "name": "_state",
+      "kind": "function",
+      "file": "tests/test_cumulative_performance_persistence.py",
+      "line": 17
+    },
+    {
+      "name": "_trade",
+      "kind": "function",
+      "file": "tests/test_cumulative_performance_persistence.py",
+      "line": 30
+    },
+    {
+      "name": "_commit",
+      "kind": "function",
+      "file": "tests/test_cumulative_performance_persistence.py",
+      "line": 44
+    },
+    {
+      "name": "_assert_metrics",
+      "kind": "function",
+      "file": "tests/test_cumulative_performance_persistence.py",
+      "line": 55
+    },
+    {
+      "name": "test_postgres_persists_cumulative_trade_performance",
+      "kind": "function",
+      "file": "tests/test_cumulative_performance_persistence.py",
+      "line": 65
+    },
+    {
+      "name": "test_postgres_duplicate_trade_does_not_double_count_performance",
+      "kind": "function",
+      "file": "tests/test_cumulative_performance_persistence.py",
+      "line": 86
+    },
+    {
+      "name": "test_postgres_schema_initialization_backfills_missing_performance_summary",
+      "kind": "function",
+      "file": "tests/test_cumulative_performance_persistence.py",
+      "line": 107
+    },
+    {
+      "name": "test_file_backend_reports_full_journal_performance",
+      "kind": "function",
+      "file": "tests/test_cumulative_performance_persistence.py",
+      "line": 135
+    },
+    {
+      "name": "_commit",
+      "kind": "function",
+      "file": "tests/test_durable_burnin_persistence.py",
+      "line": 15
+    },
+    {
+      "name": "_assert_snapshots",
+      "kind": "function",
+      "file": "tests/test_durable_burnin_persistence.py",
+      "line": 37
+    },
+    {
+      "name": "test_postgres_records_one_equity_snapshot_per_committed_bar",
+      "kind": "function",
+      "file": "tests/test_durable_burnin_persistence.py",
+      "line": 43
+    },
+    {
+      "name": "test_postgres_conflict_does_not_append_burnin_snapshot",
+      "kind": "function",
+      "file": "tests/test_durable_burnin_persistence.py",
+      "line": 66
+    },
+    {
+      "name": "test_file_backend_records_equity_snapshots_per_commit",
+      "kind": "function",
+      "file": "tests/test_durable_burnin_persistence.py",
+      "line": 98
+    },
+    {
+      "name": "test_burnin_tracker_uses_processed_bars_for_readiness_duration",
+      "kind": "function",
+      "file": "tests/test_durable_burnin_persistence.py",
+      "line": 113
+    },
+    {
+      "name": "sample_market",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_postgres.py",
+      "line": 16
+    },
+    {
+      "name": "runtime_factory",
+      "kind": "function",
+      "file": "tests/test_paper_cycle_postgres.py",
       "line": 33
     },
     {
-      "name": "test_fallback_skips_healthy_recent_cloudflare_without_paper_post",
+      "name": "build",
       "kind": "function",
-      "file": "tests/test_paper_cycle_workflow.py",
-      "line": 57
+      "file": "tests/test_paper_cycle_postgres.py",
+      "line": 34
     },
     {
-      "name": "fake_open",
+      "name": "test_paper_cycle_survives_postgres_object_reconstruction",
       "kind": "function",
-      "file": "tests/test_paper_cycle_workflow.py",
-      "line": 60
+      "file": "tests/test_paper_cycle_postgres.py",
+      "line": 48
     },
     {
-      "name": "test_fallback_runs_one_authenticated_three_market_endpoint_cycle",
+      "name": "test_opt_in_postgres_pool_reuses_connection_safely",
       "kind": "function",
-      "file": "tests/test_paper_cycle_workflow.py",
-      "line": 88
+      "file": "tests/test_postgres_persistence.py",
+      "line": 19
     },
     {
-      "name": "fake_open",
+      "name": "test_postgres_16_is_reachable",
       "kind": "function",
-      "file": "tests/test_paper_cycle_workflow.py",
-      "line": 93
+      "file": "tests/test_postgres_persistence.py",
+      "line": 42
     },
     {
-      "name": "test_fallback_runs_after_scheduler_telemetry_failure",
+      "name": "_state",
       "kind": "function",
-      "file": "tests/test_paper_cycle_workflow.py",
-      "line": 109
+      "file": "tests/test_postgres_persistence.py",
+      "line": 48
     },
     {
-      "name": "fake_open",
+      "name": "_trade",
       "kind": "function",
-      "file": "tests/test_paper_cycle_workflow.py",
-      "line": 112
+      "file": "tests/test_postgres_persistence.py",
+      "line": 67
     },
     {
-      "name": "test_fallback_rejects_missing_token_without_network",
+      "name": "_commit",
       "kind": "function",
-      "file": "tests/test_paper_cycle_workflow.py",
-      "line": 125
+      "file": "tests/test_postgres_persistence.py",
+      "line": 87
     },
     {
-      "name": "test_fallback_reports_sanitized_http_failure",
+      "name": "backend",
       "kind": "function",
-      "file": "tests/test_paper_cycle_workflow.py",
-      "line": 130
+      "file": "tests/test_postgres_persistence.py",
+      "line": 107
     },
     {
-      "name": "fake_open",
+      "name": "test_schema_initialization_is_idempotent",
       "kind": "function",
-      "file": "tests/test_paper_cycle_workflow.py",
-      "line": 131
+      "file": "tests/test_postgres_persistence.py",
+      "line": 121
     },
     {
-      "name": "test_fallback_fails_closed_when_paper_cycle_has_partial_market_failure",
+      "name": "test_runtime_state_and_model_survive_new_instance",
       "kind": "function",
-      "file": "tests/test_paper_cycle_workflow.py",
-      "line": 145
+      "file": "tests/test_postgres_persistence.py",
+      "line": 126
     },
     {
-      "name": "fake_open",
+      "name": "test_fresh_instances_continue_from_persisted_revision",
       "kind": "function",
-      "file": "tests/test_paper_cycle_workflow.py",
-      "line": 146
+      "file": "tests/test_postgres_persistence.py",
+      "line": 144
     },
     {
-      "name": "test_fallback_rejects_malformed_and_future_scheduler_ages",
+      "name": "test_same_revision_has_exactly_one_winner",
       "kind": "function",
-      "file": "tests/test_paper_cycle_workflow.py",
-      "line": 156
+      "file": "tests/test_postgres_persistence.py",
+      "line": 174
+    },
+    {
+      "name": "test_duplicate_logical_trade_is_idempotent_across_revisions",
+      "kind": "function",
+      "file": "tests/test_postgres_persistence.py",
+      "line": 189
+    },
+    {
+      "name": "test_failure_before_state_commit_rolls_back_everything",
+      "kind": "function",
+      "file": "tests/test_postgres_persistence.py",
+      "line": 212
+    },
+    {
+      "name": "fail",
+      "kind": "function",
+      "file": "tests/test_postgres_persistence.py",
+      "line": 217
+    },
+    {
+      "name": "test_runtime_status_survives_new_instance",
+      "kind": "function",
+      "file": "tests/test_postgres_persistence.py",
+      "line": 236
+    },
+    {
+      "name": "test_regime_coverage_is_deduplicated_and_persisted",
+      "kind": "function",
+      "file": "tests/test_postgres_persistence.py",
+      "line": 254
+    },
+    {
+      "name": "test_postgres_loads_shadow_quality_from_audit",
+      "kind": "function",
+      "file": "tests/test_postgres_persistence.py",
+      "line": 296
+    },
+    {
+      "name": "test_scheduler_deliveries_survive_postgres_restart",
+      "kind": "function",
+      "file": "tests/test_postgres_persistence.py",
+      "line": 323
+    },
+    {
+      "name": "test_postgres_persists_pnl_provenance_and_performance_coverage",
+      "kind": "function",
+      "file": "tests/test_postgres_persistence.py",
+      "line": 340
+    },
+    {
+      "name": "test_trade_event_key_ignores_pnl_provenance_metadata",
+      "kind": "function",
+      "file": "tests/test_postgres_persistence.py",
+      "line": 392
+    },
+    {
+      "name": "test_schema_upgrade_adds_pnl_accounting_columns_without_reset",
+      "kind": "function",
+      "file": "tests/test_postgres_persistence.py",
+      "line": 402
+    },
+    {
+      "name": "test_postgres_portfolio_performance_uses_global_trade_chronology",
+      "kind": "function",
+      "file": "tests/test_postgres_persistence.py",
+      "line": 439
+    },
+    {
+      "name": "test_postgres_portfolio_performance_empty_runtime_set_is_empty",
+      "kind": "function",
+      "file": "tests/test_postgres_persistence.py",
+      "line": 514
     }
   ],
   "selected_tests": [
-    "tests/test_paper_cycle.py",
-    "tests/test_paper_cycle_workflow.py"
+    "tests/test_cumulative_performance_persistence.py",
+    "tests/test_durable_burnin_persistence.py",
+    "tests/test_paper_cycle_postgres.py",
+    "tests/test_persistence.py",
+    "tests/test_postgres_persistence.py"
   ]
 }
