@@ -1,0 +1,35 @@
+name: Hosted Dashboard Probe
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */2 * * *"
+  push:
+    branches: ["main"]
+    paths:
+      - render.yaml
+      - Dockerfile
+      - src/ai_trading/dashboard.py
+      - src/ai_trading/deployment_probe.py
+      - .github/workflows/hosted-dashboard-probe.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hosted-dashboard-probe
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      DASHBOARD_URL: https://ai-trading-dashboard-qyr2.onrender.com
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v7
+      - name: Verify liveness, durable readiness and market cards
+        run: |
+          python -m ai_trading.deployment_probe \
+            --base-url "${DASHBOARD_URL}" --timeout 60
