@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 import pandas as pd
-from river import linear_model, preprocessing
+from river import linear_model, multiclass, preprocessing
 
 from .features import FEATURES
 from .model import Prediction
@@ -59,4 +59,15 @@ class RiverDirectionModel:
             side=side,
             confidence=probabilities[side],
             probabilities=probabilities,
+        )
+
+
+class RiverMulticlassDirectionModel(RiverDirectionModel):
+    """Research-only three-class River alternative; not loaded by paper v1."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.model = (
+            preprocessing.StandardScaler()
+            | multiclass.OneVsRestClassifier(linear_model.LogisticRegression())
         )
