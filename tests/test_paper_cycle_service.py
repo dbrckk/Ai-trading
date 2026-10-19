@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-import pytest
 from datetime import UTC, datetime, timedelta
+
+import pytest
 
 from ai_trading.market_freshness import paper_signal_snapshot
 from ai_trading.paper_cycle import PaperCycleResult
