@@ -26,6 +26,7 @@ class ResearchConfig:
     transaction_cost_bps: float = 2.0
     slippage_bps: float = 1.0
     sample_count: int = 3
+    river_min_confidence: float = 0.56
 
     def __post_init__(self) -> None:
         if not 32 <= self.lookback <= 512:
@@ -43,6 +44,10 @@ class ResearchConfig:
             )
         ):
             raise ValueError("threshold and execution costs must be finite and non-negative")
+        if not np.isfinite(self.river_min_confidence) or not (
+            0.0 <= self.river_min_confidence <= 1.0
+        ):
+            raise ValueError("river_min_confidence must be in [0, 1]")
 
 
 def validate_market(frame: pd.DataFrame) -> pd.DataFrame:
@@ -99,6 +104,57 @@ def _bootstrap_lower(values: list[float], *, seed: int = 42) -> float | None:
     return float(np.quantile(means, 0.025))
 
 
+def _river_predictions(
+    market: pd.DataFrame,
+    signal_positions: list[int],
+    config: ResearchConfig,
+) -> dict[int, tuple[int, float, int]]:
+    """Train on matured labels only, then predict on each shared signal bar.
+
+    This uses a corrected *research-only* three-class River model, not the
+    persisted production v1 binary model. Predictions share the exact entry
+    and exit with Kronos, but no forward outcome is available at inference.
+    """
+    from .features import FEATURES, make_features, make_labels
+    from .online import RiverMulticlassDirectionModel
+
+    model = RiverMulticlassDirectionModel()
+    features = make_features(market)
+    labels = make_labels(
+        market,
+        horizon_bars=config.horizon_bars,
+        return_threshold=config.threshold_bps / 10_000,
+    )
+    results: dict[int, tuple[int, float, int]] = {}
+    learned_through = -1
+
+    for signal_pos in signal_positions:
+        matured_last = signal_pos - config.horizon_bars
+        for index in range(learned_through + 1, matured_last + 1):
+            row = features.iloc[index]
+            label = labels.iloc[index]
+            if pd.notna(label) and row.loc[FEATURES].notna().all():
+                model.learn_one(row, int(label))
+        learned_through = matured_last
+
+        signal_features = features.iloc[signal_pos]
+        if model.stats.observations < 50 or not signal_features.loc[FEATURES].notna().all():
+            results[signal_pos] = (0, 0.0, model.stats.observations)
+            continue
+        prediction = model.predict_one(signal_features)
+        side = (
+            prediction.side
+            if prediction.confidence >= config.river_min_confidence
+            else 0
+        )
+        results[signal_pos] = (
+            side,
+            prediction.confidence,
+            model.stats.observations,
+        )
+    return results
+
+
 def evaluate_walk_forward(
     market: pd.DataFrame,
     predictor: ForecastPredictor,
@@ -113,6 +169,7 @@ def evaluate_walk_forward(
     signal_positions = list(
         range(config.lookback - 1, end_signal + 1, config.horizon_bars)
     )[-config.max_windows :]
+    river_predictions = _river_predictions(market, signal_positions, config)
     observations: list[dict[str, object]] = []
     forecast_columns = {"Open": "open", "High": "high", "Low": "low", "Close": "close", "Volume": "volume"}
 
@@ -151,6 +208,8 @@ def evaluate_walk_forward(
         baseline_side = _side(momentum_return, config.threshold_bps)
         kronos_net = _net_return(kronos_side, realized_return, config)
         baseline_net = _net_return(baseline_side, realized_return, config)
+        river_side, river_confidence, river_training_rows = river_predictions[signal_pos]
+        river_net = _net_return(river_side, realized_return, config)
         observations.append(
             {
                 "signal_time": market.index[signal_pos].isoformat(),
@@ -161,6 +220,10 @@ def evaluate_walk_forward(
                 "momentum_side": baseline_side,
                 "kronos_net_return": kronos_net,
                 "momentum_net_return": baseline_net,
+                "river_side": river_side,
+                "river_confidence": river_confidence,
+                "river_training_rows": river_training_rows,
+                "river_net_return": river_net,
             }
         )
 
@@ -170,9 +233,12 @@ def evaluate_walk_forward(
     kronos = [float(item["kronos_net_return"]) for item in observations]
     baseline = [float(item["momentum_net_return"]) for item in observations]
     alpha = [k - b for k, b in zip(kronos, baseline, strict=True)]
+    river = [float(item["river_net_return"]) for item in observations]
+    river_alpha = [k - r for k, r in zip(kronos, river, strict=True)]
     directional = [item for item in observations if item["kronos_side"] != 0]
     mean_lower = _bootstrap_lower(kronos)
     alpha_lower = _bootstrap_lower(alpha)
+    river_alpha_lower = _bootstrap_lower(river_alpha)
     summary = {
         "windows": len(observations),
         "directional_trades": len(directional),
@@ -184,13 +250,18 @@ def evaluate_walk_forward(
         "mean_net_return": float(np.mean(kronos)),
         "momentum_mean_net_return": float(np.mean(baseline)),
         "mean_alpha_vs_momentum": float(np.mean(alpha)),
+        "river_mean_net_return": float(np.mean(river)),
+        "river_directional_trades": sum(item["river_side"] != 0 for item in observations),
+        "mean_alpha_vs_river": float(np.mean(river_alpha)),
         "mean_net_return_ci95_lower": mean_lower,
         "mean_alpha_ci95_lower": alpha_lower,
+        "mean_alpha_vs_river_ci95_lower": river_alpha_lower,
         "review_eligible": (
             len(observations) >= 500
             and len(directional) >= 100
             and mean_lower is not None and mean_lower > 0
             and alpha_lower is not None and alpha_lower > 0
+            and river_alpha_lower is not None and river_alpha_lower > 0
         ),
     }
     return {"config": asdict(config), "summary": summary, "observations": observations}
@@ -233,6 +304,7 @@ def main() -> None:
     parser.add_argument("--transaction-cost-bps", type=float, default=2.0)
     parser.add_argument("--slippage-bps", type=float, default=1.0)
     parser.add_argument("--sample-count", type=int, default=3)
+    parser.add_argument("--river-min-confidence", type=float, default=0.56)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
 
@@ -244,6 +316,7 @@ def main() -> None:
         transaction_cost_bps=args.transaction_cost_bps,
         slippage_bps=args.slippage_bps,
         sample_count=args.sample_count,
+        river_min_confidence=args.river_min_confidence,
     )
     if args.csv:
         frame = pd.read_csv(args.csv)
