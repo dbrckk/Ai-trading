@@ -29,6 +29,9 @@ def test_opt_in_postgres_pool_reuses_connection_safely(backend) -> None:
         assert len(set(pids)) == 1
         assert pooled._pool is not None
         assert pooled._pool.max_size == 4
+        # The free Neon compute must be allowed to sleep between paper cycles.
+        assert pooled._pool.min_size == 0
+        assert pooled._pool.max_idle == 30.0
         assert pooled.load_runtime(RUNTIME_KEY, 100_000.0).revision >= 0
     finally:
         pooled.close()
