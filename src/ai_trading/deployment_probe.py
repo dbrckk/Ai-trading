@@ -77,7 +77,10 @@ def probe_dashboard(base_url: str, *, timeout: float = 60.0) -> tuple[ProbeCheck
         else:
             markets = payload.get("markets")
             symbols = (
-                {item.get("symbol") for item in markets if isinstance(item, dict)}
+                {
+                    item["symbol"] for item in markets
+                    if isinstance(item, dict) and isinstance(item.get("symbol"), str)
+                }
                 if isinstance(markets, list)
                 else set()
             )
