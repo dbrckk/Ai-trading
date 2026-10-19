@@ -1,18 +1,24 @@
 # Change impact
 
-Base: 68894574976d60d42972d1d403443733e0d03f54
-Head: bc80ffc89c0f4247aad6ab77442350b1d5ea2e9b
+Base: 980cc221969d611fedb4ee9cce8217af9ba3fa6a
+Head: 6da9bd60b80e9d1ed030f145b3db02069e260198
 
 ## Changed files
-- M src/ai_trading/multi_market.py
-- M tests/test_multi_market.py
+- M pyproject.toml
+- M src/ai_trading/dashboard.py
+- M src/ai_trading/persistence_factory.py
+- M src/ai_trading/postgres_persistence.py
+- M tests/test_postgres_persistence.py
 
 ## Affected areas
+- (root)
 - src
 - tests
 
 ## Related test candidates
-- tests/test_multi_market.py
+- tests/test_dashboard.py
+- tests/test_persistence_factory.py
+- tests/test_postgres_persistence.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

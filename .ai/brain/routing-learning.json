@@ -2,31 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "feat: expose cycle latency and MTF activity telemetry (#60)",
-      "terms": [
-        "60",
-        "activity",
-        "cycle",
-        "expose",
-        "feat",
-        "latency",
-        "mtf",
-        "telemetry"
-      ],
-      "tests": [],
-      "useful": [
-        "src/ai_trading/dashboard.py",
-        "src/ai_trading/multi_market.py",
-        "src/ai_trading/paper_cycle.py",
-        "src/ai_trading/paper_cycle_service.py",
-        "src/ai_trading/runtime_status.py",
-        "tests/test_multi_market.py",
-        "tests/test_paper_cycle_service.py",
-        "tests/test_runtime_status.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "feat: require directional evidence for MTF review (#61)",
       "terms": [
         "61",
@@ -1246,6 +1221,28 @@
         "src/ai_trading/multi_market.py",
         "tests/test_multi_market.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "perf: pool bounded PostgreSQL connections for responsive hosted dashboard (#149)",
+      "terms": [
+        "149",
+        "bounded",
+        "connections",
+        "dashboard",
+        "hosted",
+        "perf",
+        "pool",
+        "postgresql",
+        "responsive"
+      ],
+      "tests": [],
+      "useful": [
+        "src/ai_trading/dashboard.py",
+        "src/ai_trading/persistence_factory.py",
+        "src/ai_trading/postgres_persistence.py",
+        "tests/test_postgres_persistence.py"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1278,6 +1275,12 @@
     "148": {
       "src/ai_trading/multi_market.py": 4,
       "tests/test_multi_market.py": 4
+    },
+    "149": {
+      "src/ai_trading/dashboard.py": 4,
+      "src/ai_trading/persistence_factory.py": 4,
+      "src/ai_trading/postgres_persistence.py": 4,
+      "tests/test_postgres_persistence.py": 4
     },
     "56": {
       "src/ai_trading/command_app.py": 4,
@@ -1721,12 +1724,16 @@
       "tests/test_data.py": 4
     },
     "bounded": {
+      "src/ai_trading/dashboard.py": 4,
       "src/ai_trading/multiasset_checkpoint.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
       "src/ai_trading/paper_cycle_service.py": 4,
+      "src/ai_trading/persistence_factory.py": 4,
+      "src/ai_trading/postgres_persistence.py": 4,
       "tests/test_multiasset_checkpoint.py": 4,
       "tests/test_paper_cycle.py": 4,
-      "tests/test_paper_cycle_service.py": 4
+      "tests/test_paper_cycle_service.py": 4,
+      "tests/test_postgres_persistence.py": 4
     },
     "btc": {
       "src/ai_trading/mtf_shadow_config.py": 4,
@@ -1911,6 +1918,12 @@
       "tests/test_config_validation.py": 4,
       "tests/test_multi_market.py": 4
     },
+    "connections": {
+      "src/ai_trading/dashboard.py": 4,
+      "src/ai_trading/persistence_factory.py": 4,
+      "src/ai_trading/postgres_persistence.py": 4,
+      "tests/test_postgres_persistence.py": 4
+    },
     "constrain": {
       "src/ai_trading/multiasset_checkpoint.py": 4,
       "tests/test_multiasset_checkpoint.py": 4
@@ -1983,13 +1996,15 @@
     },
     "dashboard": {
       "src/ai_trading/backtest.py": 4,
-      "src/ai_trading/dashboard.py": 24,
+      "src/ai_trading/dashboard.py": 28,
       "src/ai_trading/market_freshness.py": 4,
       "src/ai_trading/mtf_parameter_benchmark.py": 4,
       "src/ai_trading/multi_market.py": 8,
       "src/ai_trading/multiasset_backtest.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
       "src/ai_trading/paper_cycle_service.py": 4,
+      "src/ai_trading/persistence_factory.py": 4,
+      "src/ai_trading/postgres_persistence.py": 4,
       "src/ai_trading/runtime_status.py": 4,
       "tests/test_dashboard.py": 12,
       "tests/test_dashboard_engine_status.py": 4,
@@ -1998,6 +2013,7 @@
       "tests/test_multi_market.py": 12,
       "tests/test_paper_cycle.py": 8,
       "tests/test_paper_cycle_service.py": 4,
+      "tests/test_postgres_persistence.py": 4,
       "tests/test_research_config_validation.py": 4,
       "tests/test_scheduler_endpoint.py": 4
     },
@@ -2418,8 +2434,11 @@
       "tests/test_paper_cycle.py": 4
     },
     "hosted": {
-      "src/ai_trading/dashboard.py": 4,
-      "tests/test_dashboard_persistence.py": 4
+      "src/ai_trading/dashboard.py": 8,
+      "src/ai_trading/persistence_factory.py": 4,
+      "src/ai_trading/postgres_persistence.py": 4,
+      "tests/test_dashboard_persistence.py": 4,
+      "tests/test_postgres_persistence.py": 4
     },
     "http": {
       "src/ai_trading/dashboard.py": 4,
@@ -2869,10 +2888,14 @@
       "tests/test_multi_market.py": 4
     },
     "perf": {
+      "src/ai_trading/dashboard.py": 4,
       "src/ai_trading/mtf_shadow_challenger.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
+      "src/ai_trading/persistence_factory.py": 4,
+      "src/ai_trading/postgres_persistence.py": 4,
       "tests/test_mtf_shadow_challenger.py": 4,
-      "tests/test_paper_cycle.py": 4
+      "tests/test_paper_cycle.py": 4,
+      "tests/test_postgres_persistence.py": 4
     },
     "persist": {
       "src/ai_trading/broker.py": 4,
@@ -2917,6 +2940,12 @@
       "src/ai_trading/multiasset_checkpoint.py": 4,
       "tests/test_multiasset_checkpoint.py": 4
     },
+    "pool": {
+      "src/ai_trading/dashboard.py": 4,
+      "src/ai_trading/persistence_factory.py": 4,
+      "src/ai_trading/postgres_persistence.py": 4,
+      "tests/test_postgres_persistence.py": 4
+    },
     "portfolio": {
       "src/ai_trading/dashboard.py": 4,
       "src/ai_trading/multi_market.py": 4,
@@ -2930,6 +2959,12 @@
       "src/ai_trading/dashboard.py": 4,
       "tests/test_dashboard.py": 4,
       "tests/test_multi_market.py": 4
+    },
+    "postgresql": {
+      "src/ai_trading/dashboard.py": 4,
+      "src/ai_trading/persistence_factory.py": 4,
+      "src/ai_trading/postgres_persistence.py": 4,
+      "tests/test_postgres_persistence.py": 4
     },
     "preparation": {
       "src/ai_trading/multiasset_market_context.py": 4,
@@ -3155,6 +3190,12 @@
     "responses": {
       "src/ai_trading/dashboard.py": 4,
       "tests/test_dashboard_persistence.py": 4
+    },
+    "responsive": {
+      "src/ai_trading/dashboard.py": 4,
+      "src/ai_trading/persistence_factory.py": 4,
+      "src/ai_trading/postgres_persistence.py": 4,
+      "tests/test_postgres_persistence.py": 4
     },
     "restore": {
       "src/ai_trading/dashboard.py": 4,

@@ -2657,7 +2657,7 @@ runtime_status_store = HostedRuntimeStatusStore(status_path)
 ⋮----
 backend = persistence
 ⋮----
-backend = build_paper_persistence()
+backend = build_paper_persistence(pool_connections=True)
 ⋮----
 root = Path(state_path).parent
 backend = FilePaperPersistence(
@@ -6062,7 +6062,7 @@ clean = prices.astype(float).dropna()
 ````python
 database_url = os.getenv("AI_TRADING_DATABASE_URL", "").strip()
 ⋮----
-persistence = PostgresPaperPersistence(database_url)
+persistence = PostgresPaperPersistence(database_url, pooled=pool_connections)
 ````
 
 ## File: src/ai_trading/persistence.py
@@ -6408,7 +6408,12 @@ canonical = json.dumps(
 ⋮----
 class PostgresPaperPersistence(PaperPersistence)
 ⋮----
+# The hosted dashboard performs many sequential observer reads per request.
+# Reuse at most four connections there; CLI jobs remain one-shot by default.
+⋮----
 def _connect(self)
+⋮----
+def close(self) -> None
 ⋮----
 def initialize_schema(self) -> None
 ⋮----
@@ -11420,6 +11425,12 @@ RUNTIME_KEY = "paper:GC=F:5m:online-river:v1"
 BTC_RUNTIME_KEY = "paper:BTC-USD:5m:online-river:v1"
 DAX_RUNTIME_KEY = "paper:^GDAXI:5m:online-river:v1"
 ⋮----
+def test_opt_in_postgres_pool_reuses_connection_safely(backend) -> None
+⋮----
+pooled = PostgresPaperPersistence(DATABASE_URL, pooled=True)
+⋮----
+pids = []
+⋮----
 def test_postgres_16_is_reachable() -> None
 ⋮----
 commit_state = state or _state()
@@ -12937,7 +12948,7 @@ dependencies = [
   "optuna>=4.0",
   "joblib>=1.4",
   "river>=0.22",
-  "psycopg[binary]>=3.2"
+  "psycopg[binary,pool]>=3.2"
 ]
 
 [project.optional-dependencies]

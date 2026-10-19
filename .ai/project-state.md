@@ -46,20 +46,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T07:30:04Z
+Generated: 2026-10-19T07:34:55Z
 
 ### Git
 - Branch: `main`
-- Head: `bc80ffc89c0f`
-- Commit date: 2026-10-19T03:29:55-04:00
-- Commit: fix: validate multi-market configuration and aggregate failure reporting (#148)
+- Head: `6da9bd60b80e`
+- Commit date: 2026-10-19T03:34:45-04:00
+- Commit: perf: pool bounded PostgreSQL connections for responsive hosted dashboard (#149)
 - Tracked files: 501
 
 ### Recently changed files
+- `pyproject.toml`
+- `src/ai_trading/dashboard.py`
+- `src/ai_trading/persistence_factory.py`
+- `src/ai_trading/postgres_persistence.py`
+- `tests/test_postgres_persistence.py`
 - `src/ai_trading/multi_market.py`
 - `tests/test_multi_market.py`
 - `README.md`
-- `src/ai_trading/dashboard.py`
 - `src/ai_trading/market_freshness.py`
 - `src/ai_trading/paper_cycle.py`
 - `src/ai_trading/paper_cycle_service.py`
@@ -72,8 +76,6 @@ Generated: 2026-10-19T07:30:04Z
 - `.github/workflows/ci.yml`
 - `.github/workflows/production-os-review-handoff.yml`
 - `AGENTS.md`
-- `src/ai_trading/scheduler_endpoint.py`
-- `tests/test_scheduler_endpoint.py`
 
 ### Project signals
 - `pyproject.toml`
