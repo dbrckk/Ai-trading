@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 4 success / 0 failure / 2 active
+Summary: 6 success / 0 failure / 2 active
 
-- CodeQL: in_progress / pending (82264e11)
-- CI: in_progress / pending (82264e11)
-- CI: completed / success (55659b97)
-- CodeQL: completed / success (55659b97)
-- CodeQL: completed / cancelled (d1cd92c9)
-- CI: completed / success (d1cd92c9)
-- CodeQL: completed / cancelled (472a74bf)
-- CI: completed / success (472a74bf)
+- CodeQL: queued / pending (bc80ffc8)
+- CI: in_progress / pending (bc80ffc8)
+- CodeQL: completed / success (5a04affb)
+- CI: completed / success (5a04affb)
+- Paper Cycle: completed / success (68894574)
+- CI: completed / success (4db3034e)
+- CodeQL: completed / success (4db3034e)
+- npm_and_yarn in /infra/cloudflare-paper-scheduler - Update #1635345292: completed / success (68894574)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

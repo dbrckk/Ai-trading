@@ -46,27 +46,27 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-18T22:47:11Z
+Generated: 2026-10-19T07:30:04Z
 
 ### Git
 - Branch: `main`
-- Head: `82264e1167e6`
-- Commit date: 2026-10-18T18:47:00-04:00
-- Commit: fix: restore paper decision integrity and prevent stale dashboard signals (#146)
+- Head: `bc80ffc89c0f`
+- Commit date: 2026-10-19T03:29:55-04:00
+- Commit: fix: validate multi-market configuration and aggregate failure reporting (#148)
 - Tracked files: 501
 
 ### Recently changed files
+- `src/ai_trading/multi_market.py`
+- `tests/test_multi_market.py`
 - `README.md`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/market_freshness.py`
-- `src/ai_trading/multi_market.py`
 - `src/ai_trading/paper_cycle.py`
 - `src/ai_trading/paper_cycle_service.py`
 - `src/ai_trading/runtime_status.py`
 - `tests/test_dashboard.py`
 - `tests/test_dashboard_engine_status.py`
 - `tests/test_market_freshness.py`
-- `tests/test_multi_market.py`
 - `tests/test_paper_cycle.py`
 - `tests/test_paper_cycle_service.py`
 - `.github/workflows/ci.yml`

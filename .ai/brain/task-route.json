@@ -4,15 +4,15 @@
     "expand_to": 12,
     "max_files": 6,
     "requested_max_files": 12,
-    "score_margin": 3,
+    "score_margin": 6,
     "tier": "bounded",
-    "top_score": 26
+    "top_score": 23
   },
   "cache": {
-    "fingerprint": "922eb905b9a513dfbb90f9002d1308f8fc75b6905f345da5b0c6fbc5ecb93a5e",
+    "fingerprint": "95cc1da4423f6a5e04af12c6aef05706df3f5065e925ae7beff0570ea2ad4d20",
     "hit": false
   },
-  "candidate_count": 38,
+  "candidate_count": 12,
   "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
   "files": [
     {
@@ -23,10 +23,9 @@
       "path": "src/ai_trading/dashboard.py",
       "reasons": [
         "impact",
-        "recently-changed",
         "search-index"
       ],
-      "score": 26,
+      "score": 23,
       "symbols": [
         "Handler",
         "_display_money",
@@ -57,10 +56,9 @@
       ],
       "path": "src/ai_trading/cli.py",
       "reasons": [
-        "impact",
         "search-index"
       ],
-      "score": 23,
+      "score": 17,
       "symbols": [
         "compare_models",
         "create_readiness_release_command",
@@ -82,21 +80,6 @@
         "metrics",
         "multiasset_backtest",
         "multiasset_evolve"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "engine"
-      ],
-      "path": "tests/test_dashboard_engine_status.py",
-      "reasons": [
-        "impact",
-        "recently-changed"
-      ],
-      "score": 19,
-      "symbols": [
-        "test_dashboard_hides_expired_paper_decision"
       ]
     },
     {
@@ -153,6 +136,22 @@
         "__init__",
         "paper_run",
         "train"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "engine"
+      ],
+      "path": "src/ai_trading/stress_engine.py",
+      "reasons": [],
+      "score": 10,
+      "symbols": [
+        "StressPolicy",
+        "StressReport",
+        "StressScenario",
+        "_stressed_covariance",
+        "run_stress_test"
       ]
     }
   ],

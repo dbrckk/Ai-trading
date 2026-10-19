@@ -4656,11 +4656,12 @@ def configured_markets_from_env() -> tuple[MarketSpec, ...]
 ⋮----
 raw = os.getenv("AI_TRADING_MARKETS", "").strip()
 ⋮----
-symbols = tuple(part.strip() for part in raw.split(",") if part.strip())
+symbols = tuple(part.strip() for part in raw.split(","))
 ⋮----
 known = {spec.symbol: spec for spec in DEFAULT_MARKETS}
 ⋮----
 weight = 1.0 / len(symbols)
+markets = tuple(
 ⋮----
 backend = persistence
 ⋮----
@@ -10473,6 +10474,8 @@ markets = configured_markets_from_env()
 ⋮----
 def test_configured_default_bundle_uses_34_33_33(monkeypatch) -> None
 ⋮----
+def test_configured_markets_preserve_known_and_custom_labels(monkeypatch) -> None
+⋮----
 def test_multi_market_cycle_isolates_one_market_failure(monkeypatch) -> None
 ⋮----
 calls: list[tuple[str, str]] = []
@@ -10520,6 +10523,10 @@ dax = next(row for row in snapshot["markets"] if row["symbol"] == "^GDAXI")
 def test_multi_market_cycle_isolates_unexpected_market_exception(monkeypatch) -> None
 ⋮----
 def test_multi_market_cycle_sanitizes_all_unexpected_failures(monkeypatch) -> None
+⋮----
+failure_by_market = dict(
+⋮----
+def fake_cycle(settings, *, persistence=None)
 ````
 
 ## File: tests/test_multi_period_promotion.py
