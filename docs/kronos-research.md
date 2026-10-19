@@ -50,16 +50,32 @@ at the time of prediction when claiming a historical simulation.
   bars are excluded. **Future OHLCV values are not given to Kronos**.
 - Entry is simulated at the next bar's **open**, and exit at the horizon
   bar's **close**. Round-trip transaction cost and slippage are charged.
-- Samples do not have overlapping holding periods, and the directional
-  decision is compared with a same-horizon momentum baseline.
+- Samples do not have overlapping holding periods. All three comparators
+  (real pretrained Kronos, same-horizon momentum, and a *research-only*
+  three-class River One-vs-Rest classifier) use identical realized
+  next-open-to-horizon-close returns and the same explicit round-trip costs.
+- The River research comparator is trained sequentially using only labels
+  whose `horizon_bars` outcome is already observable at the signal close.
+  Its minimum confidence is 0.56 by default (configurable), as in the
+  existing production risk threshold; its model is **not** promoted to
+  production by the study.
+- The existing persisted `joblib-river-v1` engine uses binary logistic
+  regression even though it expects three classes; its SHORT probability
+  is zero under its current probability mapping. The research River
+  comparator corrects this by using One-vs-Rest, **without overwriting
+  or silently migrating** existing production state.
 - JSON contains every timestamp, forecast direction, realized outcome, net
   return and summary. No synthetic/mock prediction is used in real runs.
 - `review_eligible` can only be true with at least 500 non-overlapping
   evaluated windows, 100 directional predictions, and positive lower 95%
-  bootstrap bounds for both net mean return and incremental return over
-  momentum. This is **review eligibility**, never automatic promotion.
-- Historical window selection and fixed thresholds are not a replacement for
-  a fully purged, independent holdout, comparison with the incumbent River\n  model on identical bars, or **live forward shadow** evaluation.
+  bootstrap bounds for net mean return **and** incremental return over
+  *both momentum and the corrected River research comparator*. This is
+  **review eligibility**, never automatic promotion.
+- This baseline is **not** the active persisted River-v1 model; its
+  evaluation is an offline controlled comparison under the same horizon.
+  Historical window selection and fixed thresholds are not a replacement
+  for a fully purged independent holdout or **live forward shadow**
+  evaluation.
   Retrospective exclusion of session gaps can still introduce selection bias.
 - Simulated next-open fills omit intrabar spread dynamics, market impact,
   financing and liquidity constraints. Results **cannot demonstrate**
