@@ -205,6 +205,9 @@ before a new signal becomes available. The per-market API exposes:
 - `signal_time`, `signal_age_seconds`: evidence of when the paper decision
   was processed. A stale, unparseable or timezone-naive timestamp suppresses
   signal publication. For a 5-minute market, decisions expire after 15 minutes.
+  A successful poll with **no new eligible bar** preserves the previous
+  completed paper decision only if the stored bar and revision agree; it
+  **does not** refresh the signal timestamp or represent a new trade.
 - `freshness` and `heartbeat_age_seconds`: separate scheduler/data health.
   A healthy heartbeat **alone** never makes an old prediction tradable.
 
