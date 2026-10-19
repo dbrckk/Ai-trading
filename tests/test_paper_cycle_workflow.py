@@ -5,8 +5,6 @@ import subprocess
 from pathlib import Path
 from textwrap import dedent
 
-import pytest
-
 
 WORKFLOW_PATH = Path(".github/workflows/paper-cycle.yml")
 STEP_HEADER = (
@@ -49,42 +47,36 @@ def test_paper_cycle_workflow_structure() -> None:
         assert forbidden not in text
 
 
-@pytest.mark.parametrize(
-    ("failed_market", "expected_code"),
-    [("GC=F", 1), ("", 0)],
-)
-def test_fallback_runs_every_market_even_after_failure(
-    tmp_path: Path,
-    failed_market: str,
-    expected_code: int,
-) -> None:
-    market_log = tmp_path / "visited-markets.txt"
-    fake_cli = tmp_path / "ai-trading"
-    fake_cli.write_text(
-        "#!/bin/sh\n"
-        'printf "%s\\n" "$2" >> "$FAKE_MARKET_LOG"\n'
-        '[ "$2" != "$FAKE_FAIL_MARKET" ]\n',
-        encoding="utf-8",
-    )
-    fake_cli.chmod(0o755)
-    result = subprocess.run(
-        ["bash", "-e", "-c", _fallback_script()],
-        env={
-            **os.environ,
-            "PATH": f"{tmp_path}:{os.environ.get('PATH', '')}",
-            "FAKE_MARKET_LOG": str(market_log),
-            "FAKE_FAIL_MARKET": failed_market,
-        },
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+def test_fallback_runs_every_market_even_after_failure(tmp_path: Path) -> None:
+    for failed_market, expected_code in (("GC=F", 1), ("", 0)):
+        (tmp_path / "visited-markets.txt").write_text("", encoding="utf-8")
+        market_log = tmp_path / "visited-markets.txt"
+        fake_cli = tmp_path / "ai-trading"
+        fake_cli.write_text(
+            "#!/bin/sh\n"
+            'printf "%s\\n" "$2" >> "$FAKE_MARKET_LOG"\n'
+            '[ "$2" != "$FAKE_FAIL_MARKET" ]\n',
+            encoding="utf-8",
+        )
+        fake_cli.chmod(0o755)
+        result = subprocess.run(
+            ["bash", "-e", "-c", _fallback_script()],
+            env={
+                **os.environ,
+                "PATH": f"{tmp_path}:{os.environ.get('PATH', '')}",
+                "FAKE_MARKET_LOG": str(market_log),
+                "FAKE_FAIL_MARKET": failed_market,
+            },
+            capture_output=True,
+            text=True,
+            check=False,
+        )
 
-    assert market_log.read_text(encoding="utf-8").splitlines() == [
-        "GC=F",
-        "^GDAXI",
-        "BTC-USD",
-    ]
-    assert result.returncode == expected_code
-    if failed_market:
-        assert "::error::1 market paper cycle(s) failed" in result.stdout
+        assert market_log.read_text(encoding="utf-8").splitlines() == [
+            "GC=F",
+            "^GDAXI",
+            "BTC-USD",
+        ]
+        assert result.returncode == expected_code
+        if failed_market:
+            assert "::error::1 market paper cycle(s) failed" in result.stdout
