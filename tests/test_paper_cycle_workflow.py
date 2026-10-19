@@ -34,7 +34,7 @@ def test_paper_cycle_workflow_uses_authenticated_render_not_expired_db() -> None
     text = WORKFLOW_PATH.read_text(encoding="utf-8")
     worker = WORKER_CONFIG_PATH.read_text(encoding="utf-8")
     required = (
-        'cron: "7-52/15 * * * *"',
+        'cron: "3 * * * *"',
         "workflow_dispatch:",
         "timeout-minutes: 15",
         "group: paper-cycle-production",
