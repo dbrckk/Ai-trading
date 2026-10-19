@@ -166,9 +166,14 @@ def evaluate_walk_forward(
     if end_signal < config.lookback - 1:
         raise ValueError("not enough completed bars for lookback and future outcome")
 
-    signal_positions = list(
-        range(config.lookback - 1, end_signal + 1, config.horizon_bars)
-    )[-config.max_windows :]
+    # Spread bounded, non-overlapping windows over the available history,
+    # rather than selecting only the most recent few hours of a long sample.
+    candidates = list(range(config.lookback - 1, end_signal + 1, config.horizon_bars))
+    if len(candidates) <= config.max_windows:
+        signal_positions = candidates
+    else:
+        selected = np.linspace(0, len(candidates) - 1, config.max_windows, dtype=int)
+        signal_positions = [candidates[int(i)] for i in selected]
     river_predictions = _river_predictions(market, signal_positions, config)
     observations: list[dict[str, object]] = []
     forecast_columns = {"Open": "open", "High": "high", "Low": "low", "Close": "close", "Volume": "volume"}
