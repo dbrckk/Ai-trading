@@ -442,7 +442,7 @@ def test_scheduler_delivery_verification_expires_when_latest_success_is_stale() 
             ok=True,
             processed=1,
         )
-        for offset in (25, 20, 15)
+        for offset in (55, 50, 45)
     )
 
     overview = scheduler_delivery_overview(deliveries, now=now)
@@ -450,7 +450,7 @@ def test_scheduler_delivery_verification_expires_when_latest_success_is_stale() 
     assert overview["consecutive_cloudflare_successes"] == 3
     assert overview["cloudflare_delivery_fresh"] is False
     assert overview["cloudflare_delivery_verified"] is False
-    assert overview["last_delivery_age_seconds"] == 15 * 60
+    assert overview["last_delivery_age_seconds"] == 45 * 60
 
 
 def test_scheduler_delivery_overview_rejects_invalid_freshness_window() -> None:
