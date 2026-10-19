@@ -46,30 +46,28 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T19:05:38Z
+Generated: 2026-10-19T19:12:02Z
 
 ### Git
 - Branch: `main`
-- Head: `fddfd942340c`
-- Commit date: 2026-10-19T15:05:28-04:00
-- Commit: fix(paper): route scheduler fallback through Render and respect Neon free quota (#158)
+- Head: `b56eb99f3c82`
+- Commit date: 2026-10-19T15:11:51-04:00
+- Commit: fix(ops): throttle GitHub fallback to protect free Neon compute budget (#159)
 - Tracked files: 504
 
 ### Recently changed files
 - `.github/workflows/paper-cycle.yml`
 - `README.md`
+- `tests/test_paper_cycle_workflow.py`
 - `infra/cloudflare-paper-scheduler/wrangler.toml`
 - `src/ai_trading/scheduler_endpoint.py`
 - `src/ai_trading/scheduler_fallback.py`
-- `tests/test_paper_cycle_workflow.py`
 - `tests/test_scheduler_endpoint.py`
 - `src/ai_trading/deployment_probe.py`
 - `tests/test_dashboard_health.py`
 - `.github/workflows/hosted-dashboard-probe.yml`
 - `render.yaml`
 - `src/ai_trading/dashboard.py`
-- `src/ai_trading/paper_cycle_service.py`
-- `tests/test_paper_cycle_service.py`
 
 ### Project signals
 - `pyproject.toml`
