@@ -1000,12 +1000,20 @@ initial_prompt: |
 ````javascript
 export async function invokePaperCycle(env, fetchImpl = fetch)
 ⋮----
+// Reject legacy HTTP 200 responses that still report partial failures.
+⋮----
 scheduled(_event, env, ctx)
 ````
 
 ## File: infra/cloudflare-paper-scheduler/test/index.test.js
 ````javascript
+return
+⋮----
 text: async ()
+⋮----
+json: async () => (
+⋮----
+json: async () =>
 ⋮----
 globalThis.fetch = async (url, options) =>
 ⋮----
@@ -4801,6 +4809,9 @@ remaining_backlog = remaining_backlog or result.remaining_backlog
 mtf_evaluated = mtf_evaluated or result.mtf_evaluated
 ⋮----
 last_processed = (
+⋮----
+# Record which known market failed without exposing provider exception text.
+known_symbols = {market.symbol for market in DEFAULT_MARKETS}
 ⋮----
 failure_codes = {code for _, code in failures}
 code = (
@@ -10692,13 +10703,15 @@ def test_configured_default_bundle_uses_34_33_33(monkeypatch) -> None
 ⋮----
 def test_configured_markets_preserve_known_and_custom_labels(monkeypatch) -> None
 ⋮----
-def test_multi_market_cycle_isolates_one_market_failure(monkeypatch) -> None
+def test_multi_market_cycle_isolates_one_market_failure(monkeypatch, capsys) -> None
 ⋮----
 calls: list[tuple[str, str]] = []
 ⋮----
 def fake_cycle(settings, *, persistence=None, **kwargs)
 ⋮----
 result = run_multi_market_paper_cycle(
+⋮----
+log_output = capsys.readouterr().out
 ⋮----
 def test_multi_market_overview_scales_normalized_sleeves_to_100k() -> None
 ⋮----
@@ -12595,6 +12608,12 @@ def test_http_scheduler_valid_token_runs_one_cycle_and_ignores_body(tmp_path) ->
 ⋮----
 def fake_cycle() -> PaperCycleResult
 ⋮----
+def test_http_scheduler_partial_cycle_records_real_http_failure(tmp_path) -> None
+⋮----
+result = PaperCycleResult(
+⋮----
+payload = json.loads(body)
+⋮----
 def test_http_scheduler_other_post_routes_are_not_exposed(tmp_path) -> None
 ⋮----
 def test_http_scheduler_failure_response_never_leaks_secrets(tmp_path) -> None
@@ -12619,8 +12638,6 @@ overview = scheduler_delivery_overview(
 ⋮----
 def test_http_scheduler_exposes_durable_cloudflare_delivery_evidence(tmp_path) -> None
 ⋮----
-payload = json.loads(body)
-⋮----
 def test_scheduler_delivery_verification_expires_when_latest_success_is_stale() -> None
 ⋮----
 now = datetime(2026, 9, 21, 17, 0, tzinfo=UTC)
@@ -12630,8 +12647,6 @@ overview = scheduler_delivery_overview(deliveries, now=now)
 def test_scheduler_delivery_overview_rejects_invalid_freshness_window() -> None
 ⋮----
 def test_scheduler_response_exposes_backlog_and_mtf_progress() -> None
-⋮----
-result = PaperCycleResult(
 ⋮----
 def test_scheduler_marks_partial_market_cycle_degraded() -> None
 ⋮----
@@ -13382,7 +13397,7 @@ This persistence layer does not enable live trading. Broker routing remains pape
 The production paper architecture separates execution from the hosted web process:
 
 ```text
-Cloudflare Worker (every 5 minutes)
+Cloudflare Worker (every 15 minutes)
         |
         | authenticated POST
         v
@@ -13400,9 +13415,9 @@ paper state/model/trades         Render dashboard
 GitHub Actions fallback scheduler
 ```
 
-The primary scheduler is the Cloudflare Worker under `infra/cloudflare-paper-scheduler/`. Its cron runs every five minutes and sends an authenticated POST to Render's `/internal/paper-cycle` endpoint. The Worker contains no database credentials and no trading logic. The existing `.github/workflows/paper-cycle.yml` schedule remains available as a fallback until external scheduler delivery has accumulated sufficient production evidence. The GitHub fallback runs **Gold (`GC=F`), DAX (`^GDAXI`) and BTC (`BTC-USD`)** independently against the durable database: one market's failure does not skip the others, but the workflow still fails visibly if any market fails. GitHub scheduled jobs can be delayed; this fallback does **not** guarantee a five-minute heartbeat.
+The primary scheduler is the Cloudflare Worker under `infra/cloudflare-paper-scheduler/`. Its cron runs every fifteen minutes and sends an authenticated POST to Render's `/internal/paper-cycle` endpoint. The Worker contains no database credentials and no trading logic. The hourly `.github/workflows/paper-cycle.yml` fallback calls the same authenticated Render endpoint, skipping the POST when Cloudflare succeeded recently. Render alone holds the database connection; GitHub Actions does not store it. Both schedulers process Gold (`GC=F`), DAX (`^GDAXI`) and BTC (`BTC-USD`) independently, so one market failure does not prevent the others from advancing. GitHub scheduled jobs can be delayed; this fallback does not guarantee an exact heartbeat.
 
-Scheduler delivery telemetry is sanitized and persisted durably. The application never persists the bearer token or raw authorization headers. Three consecutive successful Cloudflare deliveries are treated as the minimum verification threshold exposed by `/api/scheduler`.
+Scheduler delivery telemetry is sanitized and persisted durably. The application never persists the bearer token or raw authorization headers. A partially failed multi-market cycle returns **HTTP 503**, and the Cloudflare Worker also checks the JSON `ok` flag on successful HTTP responses. Failures are observable rather than falsely reported as successful; Render logs contain only known failed market symbols and sanitized failure codes, not provider exception text. Three consecutive successful Cloudflare deliveries are treated as the minimum verification threshold exposed by `/api/scheduler`.
 
 The production cycle is:
 
@@ -13488,8 +13503,9 @@ AI_TRADING_HOSTED_INTERVAL=5m
 
 The Render Blueprint (`render.yaml`) declares these paper-only variables and
 requests `AI_TRADING_DATABASE_URL` and `AI_TRADING_SCHEDULER_TOKEN` using
-`sync: false`. Set the database URL to the **same database as the GitHub
-fallback** and provide the same scheduler token used by Cloudflare. Neither
+`sync: false`. Set the database URL to the shared durable PostgreSQL/Neon database used
+by Render's web and paper-cycle endpoint; the GitHub fallback no longer
+requires a database URL. Provide the same scheduler token used by Cloudflare. Neither
 secret belongs in Git or in HTTP endpoints. Existing Render services must
 also have these values configured; changing the Blueprint does not prove
 the hosted service was successfully deployed.

@@ -2,26 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "fix: tolerate bounded provider corrections in paper catch-up (#72)",
-      "terms": [
-        "72",
-        "bounded",
-        "catch-up",
-        "corrections",
-        "paper",
-        "provider",
-        "tolerate"
-      ],
-      "tests": [],
-      "useful": [
-        "src/ai_trading/paper_cycle.py",
-        "src/ai_trading/paper_cycle_service.py",
-        "tests/test_paper_cycle.py",
-        "tests/test_paper_cycle_service.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "feat: add multi-market runtime health telemetry (#73)",
       "terms": [
         "73",
@@ -1239,6 +1219,31 @@
         "src/ai_trading/postgres_persistence.py",
         "tests/test_postgres_persistence.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "fix(scheduler): report degraded market cycles as failures, not success (#161)",
+      "terms": [
+        "161",
+        "as",
+        "cycles",
+        "degraded",
+        "failures",
+        "market",
+        "not",
+        "report",
+        "scheduler",
+        "success"
+      ],
+      "tests": [],
+      "useful": [
+        "infra/cloudflare-paper-scheduler/src/index.js",
+        "infra/cloudflare-paper-scheduler/test/index.test.js",
+        "src/ai_trading/multi_market.py",
+        "src/ai_trading/scheduler_endpoint.py",
+        "tests/test_multi_market.py",
+        "tests/test_scheduler_endpoint.py"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1314,6 +1319,14 @@
     "160": {
       "src/ai_trading/postgres_persistence.py": 4,
       "tests/test_postgres_persistence.py": 4
+    },
+    "161": {
+      "infra/cloudflare-paper-scheduler/src/index.js": 4,
+      "infra/cloudflare-paper-scheduler/test/index.test.js": 4,
+      "src/ai_trading/multi_market.py": 4,
+      "src/ai_trading/scheduler_endpoint.py": 4,
+      "tests/test_multi_market.py": 4,
+      "tests/test_scheduler_endpoint.py": 4
     },
     "56": {
       "src/ai_trading/command_app.py": 4,
@@ -1696,6 +1709,14 @@
       "tests/test_multiasset_checkpoint.py": 4,
       "tests/test_multiasset_checkpoint_manifest_binding.py": 4
     },
+    "as": {
+      "infra/cloudflare-paper-scheduler/src/index.js": 4,
+      "infra/cloudflare-paper-scheduler/test/index.test.js": 4,
+      "src/ai_trading/multi_market.py": 4,
+      "src/ai_trading/scheduler_endpoint.py": 4,
+      "tests/test_multi_market.py": 4,
+      "tests/test_scheduler_endpoint.py": 4
+    },
     "atomic": {
       "src/ai_trading/multiasset_checkpoint.py": 4,
       "src/ai_trading/multiasset_runtime.py": 4,
@@ -2043,13 +2064,15 @@
       "tests/test_scheduler_endpoint.py": 4
     },
     "cycles": {
-      "src/ai_trading/multi_market.py": 4,
+      "infra/cloudflare-paper-scheduler/src/index.js": 4,
+      "infra/cloudflare-paper-scheduler/test/index.test.js": 4,
+      "src/ai_trading/multi_market.py": 8,
       "src/ai_trading/paper_cycle.py": 4,
       "src/ai_trading/postgres_persistence.py": 4,
-      "src/ai_trading/scheduler_endpoint.py": 4,
-      "tests/test_multi_market.py": 4,
+      "src/ai_trading/scheduler_endpoint.py": 8,
+      "tests/test_multi_market.py": 8,
       "tests/test_postgres_persistence.py": 4,
-      "tests/test_scheduler_endpoint.py": 4
+      "tests/test_scheduler_endpoint.py": 8
     },
     "dashboard": {
       "src/ai_trading/backtest.py": 4,
@@ -2150,13 +2173,15 @@
       "tests/test_multiasset_runtime.py": 12
     },
     "degraded": {
+      "infra/cloudflare-paper-scheduler/src/index.js": 4,
+      "infra/cloudflare-paper-scheduler/test/index.test.js": 4,
       "src/ai_trading/dashboard.py": 4,
-      "src/ai_trading/multi_market.py": 4,
+      "src/ai_trading/multi_market.py": 8,
       "src/ai_trading/paper_cycle.py": 4,
-      "src/ai_trading/scheduler_endpoint.py": 8,
+      "src/ai_trading/scheduler_endpoint.py": 12,
       "tests/test_dashboard.py": 4,
-      "tests/test_multi_market.py": 4,
-      "tests/test_scheduler_endpoint.py": 8
+      "tests/test_multi_market.py": 8,
+      "tests/test_scheduler_endpoint.py": 12
     },
     "deliveries": {
       "src/ai_trading/dashboard.py": 4,
@@ -2338,8 +2363,14 @@
       "tests/test_multi_market.py": 4
     },
     "failures": {
+      "infra/cloudflare-paper-scheduler/src/index.js": 4,
+      "infra/cloudflare-paper-scheduler/test/index.test.js": 4,
       "src/ai_trading/deployment_probe.py": 4,
-      "tests/test_dashboard_health.py": 4
+      "src/ai_trading/multi_market.py": 4,
+      "src/ai_trading/scheduler_endpoint.py": 4,
+      "tests/test_dashboard_health.py": 4,
+      "tests/test_multi_market.py": 4,
+      "tests/test_scheduler_endpoint.py": 4
     },
     "fake": {
       "src/ai_trading/dashboard.py": 4,
@@ -2746,13 +2777,15 @@
       "tests/test_scheduler_endpoint.py": 4
     },
     "market": {
+      "infra/cloudflare-paper-scheduler/src/index.js": 4,
+      "infra/cloudflare-paper-scheduler/test/index.test.js": 4,
       "src/ai_trading/dashboard.py": 12,
       "src/ai_trading/data.py": 4,
       "src/ai_trading/data_quality.py": 4,
       "src/ai_trading/file_persistence.py": 4,
       "src/ai_trading/market_freshness.py": 4,
       "src/ai_trading/mtf_parameter_benchmark.py": 4,
-      "src/ai_trading/multi_market.py": 16,
+      "src/ai_trading/multi_market.py": 20,
       "src/ai_trading/multiasset_market_context.py": 4,
       "src/ai_trading/multiasset_runtime.py": 4,
       "src/ai_trading/operational_overview.py": 4,
@@ -2761,19 +2794,19 @@
       "src/ai_trading/performance_metrics.py": 4,
       "src/ai_trading/persistence.py": 4,
       "src/ai_trading/postgres_persistence.py": 4,
-      "src/ai_trading/scheduler_endpoint.py": 4,
+      "src/ai_trading/scheduler_endpoint.py": 8,
       "tests/test_dashboard_persistence.py": 4,
       "tests/test_data.py": 4,
       "tests/test_data_quality.py": 8,
       "tests/test_market_freshness.py": 4,
       "tests/test_mtf_parameter_benchmark.py": 4,
-      "tests/test_multi_market.py": 16,
+      "tests/test_multi_market.py": 20,
       "tests/test_multiasset_market_context.py": 4,
       "tests/test_paper_cycle.py": 4,
       "tests/test_paper_cycle_service.py": 4,
       "tests/test_performance_metrics.py": 4,
       "tests/test_postgres_persistence.py": 4,
-      "tests/test_scheduler_endpoint.py": 4
+      "tests/test_scheduler_endpoint.py": 8
     },
     "measured": {
       "src/ai_trading/dashboard.py": 4,
@@ -2914,6 +2947,14 @@
       "src/ai_trading/scheduler_fallback.py": 4,
       "tests/test_paper_cycle_workflow.py": 8,
       "tests/test_postgres_persistence.py": 4,
+      "tests/test_scheduler_endpoint.py": 4
+    },
+    "not": {
+      "infra/cloudflare-paper-scheduler/src/index.js": 4,
+      "infra/cloudflare-paper-scheduler/test/index.test.js": 4,
+      "src/ai_trading/multi_market.py": 4,
+      "src/ai_trading/scheduler_endpoint.py": 4,
+      "tests/test_multi_market.py": 4,
       "tests/test_scheduler_endpoint.py": 4
     },
     "observability": {
@@ -3364,6 +3405,14 @@
       "src/ai_trading/data_quality.py": 4,
       "tests/test_data_quality.py": 4
     },
+    "report": {
+      "infra/cloudflare-paper-scheduler/src/index.js": 4,
+      "infra/cloudflare-paper-scheduler/test/index.test.js": 4,
+      "src/ai_trading/multi_market.py": 4,
+      "src/ai_trading/scheduler_endpoint.py": 4,
+      "tests/test_multi_market.py": 4,
+      "tests/test_scheduler_endpoint.py": 4
+    },
     "reporting": {
       "src/ai_trading/multi_market.py": 4,
       "tests/test_multi_market.py": 4
@@ -3471,32 +3520,32 @@
       "tests/test_scheduler_endpoint.py": 4
     },
     "scheduler": {
-      "infra/cloudflare-paper-scheduler/src/index.js": 4,
-      "infra/cloudflare-paper-scheduler/test/index.test.js": 4,
+      "infra/cloudflare-paper-scheduler/src/index.js": 8,
+      "infra/cloudflare-paper-scheduler/test/index.test.js": 8,
       "src/ai_trading/backtest.py": 4,
       "src/ai_trading/broker.py": 4,
       "src/ai_trading/dashboard.py": 16,
       "src/ai_trading/engine.py": 4,
       "src/ai_trading/file_persistence.py": 4,
-      "src/ai_trading/multi_market.py": 4,
+      "src/ai_trading/multi_market.py": 8,
       "src/ai_trading/multiasset_backtest.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
       "src/ai_trading/paper_cycle_service.py": 4,
       "src/ai_trading/persistence.py": 4,
       "src/ai_trading/postgres_persistence.py": 4,
       "src/ai_trading/runtime.py": 4,
-      "src/ai_trading/scheduler_endpoint.py": 24,
+      "src/ai_trading/scheduler_endpoint.py": 28,
       "src/ai_trading/scheduler_fallback.py": 4,
       "tests/test_backtest.py": 4,
       "tests/test_broker.py": 4,
       "tests/test_dashboard.py": 8,
       "tests/test_file_persistence.py": 4,
-      "tests/test_multi_market.py": 4,
+      "tests/test_multi_market.py": 8,
       "tests/test_multiasset_backtest.py": 4,
       "tests/test_paper_cycle_service.py": 4,
       "tests/test_paper_cycle_workflow.py": 4,
       "tests/test_postgres_persistence.py": 4,
-      "tests/test_scheduler_endpoint.py": 24
+      "tests/test_scheduler_endpoint.py": 28
     },
     "scroll": {
       "src/ai_trading/dashboard.py": 4,
@@ -3659,6 +3708,14 @@
       "src/ai_trading/multi_market.py": 4,
       "tests/test_market_freshness.py": 4,
       "tests/test_multi_market.py": 4
+    },
+    "success": {
+      "infra/cloudflare-paper-scheduler/src/index.js": 4,
+      "infra/cloudflare-paper-scheduler/test/index.test.js": 4,
+      "src/ai_trading/multi_market.py": 4,
+      "src/ai_trading/scheduler_endpoint.py": 4,
+      "tests/test_multi_market.py": 4,
+      "tests/test_scheduler_endpoint.py": 4
     },
     "supply-chain": {
       "src/ai_trading/dashboard.py": 4,

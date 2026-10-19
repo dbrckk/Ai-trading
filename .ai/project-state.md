@@ -46,30 +46,31 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T19:21:10Z
+Generated: 2026-10-19T23:40:01Z
 
 ### Git
 - Branch: `main`
-- Head: `cdb5346f7eb5`
-- Commit date: 2026-10-19T15:20:56-04:00
-- Commit: fix(db): free idle Neon connections between paper cycles (#160)
+- Head: `69f9c0ac1a71`
+- Commit date: 2026-10-19T19:39:51-04:00
+- Commit: fix(scheduler): report degraded market cycles as failures, not success (#161)
 - Tracked files: 504
 
 ### Recently changed files
+- `README.md`
+- `infra/cloudflare-paper-scheduler/src/index.js`
+- `infra/cloudflare-paper-scheduler/test/index.test.js`
+- `src/ai_trading/multi_market.py`
+- `src/ai_trading/scheduler_endpoint.py`
+- `tests/test_multi_market.py`
+- `tests/test_scheduler_endpoint.py`
 - `src/ai_trading/postgres_persistence.py`
 - `tests/test_postgres_persistence.py`
 - `.github/workflows/paper-cycle.yml`
-- `README.md`
 - `tests/test_paper_cycle_workflow.py`
 - `infra/cloudflare-paper-scheduler/wrangler.toml`
-- `src/ai_trading/scheduler_endpoint.py`
 - `src/ai_trading/scheduler_fallback.py`
-- `tests/test_scheduler_endpoint.py`
 - `src/ai_trading/deployment_probe.py`
 - `tests/test_dashboard_health.py`
-- `.github/workflows/hosted-dashboard-probe.yml`
-- `render.yaml`
-- `src/ai_trading/dashboard.py`
 
 ### Project signals
 - `pyproject.toml`
