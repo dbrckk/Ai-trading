@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+from datetime import UTC, datetime, timedelta
+
 import pytest
 
+from ai_trading.market_freshness import paper_signal_snapshot
 from ai_trading.paper_cycle import PaperCycleResult
 from ai_trading.paper_cycle_service import (
     PaperCycleServiceError,
@@ -363,3 +366,138 @@ def test_market_data_quality_failure_writes_safe_diagnostic_code() -> None:
     assert backend.statuses[-1].engine_status == "ERROR"
     assert backend.statuses[-1].error == "RuntimeError: market_data_quality_failed"
     assert "cadence gaps" not in repr(backend.statuses[-1])
+
+
+def test_no_new_bar_keeps_last_completed_paper_decision() -> None:
+    last_processed = "2026-09-16 08:00:00+00:00"
+    backend = FakePersistence(
+        initial_status=HostedRuntimeStatus(
+            engine_status="RUNNING",
+            symbol="GC=F",
+            interval="5m",
+            updated_at_utc="2026-09-16T08:01:00+00:00",
+            last_cycle_timestamp=last_processed,
+            processed=True,
+            side=-1,
+            confidence=0.81,
+            approved=True,
+            decision_reason="approved",
+            reason="processed 1 bar(s)",
+            equity=99_702.0,
+            units=2.0,
+            processed_bars=4,
+            poll_seconds=300.0,
+        )
+    )
+
+    class NoNewBarRunner:
+        def run_once(self, **kwargs):
+            del kwargs
+            return PaperCycleResult(
+                processed=0,
+                remaining_backlog=False,
+                last_processed=last_processed,
+                processed_bars=4,
+                reason="no new eligible bar",
+            )
+
+    result = run_production_paper_cycle(
+        ProductionPaperCycleSettings(),
+        persistence=backend,
+        runner_factory=lambda persistence: NoNewBarRunner(),
+    )
+
+    assert result.processed == 0
+    starting, completed = backend.statuses
+    assert starting.engine_status == "STARTING"
+    assert starting.processed is False
+    assert starting.equity == 99_702.0
+    assert starting.units == 2.0
+    assert starting.processed_bars == 4
+
+    assert completed.engine_status == "RUNNING"
+    assert completed.reason == "no new eligible bar"
+    assert completed.processed is True
+    assert completed.last_cycle_timestamp == last_processed
+    assert completed.side == -1
+    assert completed.confidence == 0.81
+    assert completed.approved is True
+    assert completed.decision_reason == "approved"
+
+    # Repeated scheduler polls do not manufacture a fresh prediction.
+    recent = paper_signal_snapshot(
+        completed,
+        freshness="LIVE",
+        session_open=True,
+        now=datetime(2026, 9, 16, 8, 10, tzinfo=UTC),
+    )
+    assert recent["signal"] == "SHORT"
+    assert recent["signal_time"] == last_processed
+    assert recent["signal_age_seconds"] == 600.0
+    assert recent["risk_approved"] is True
+    expired = paper_signal_snapshot(
+        completed,
+        freshness="LIVE",
+        session_open=True,
+        now=datetime(2026, 9, 16, 8, 0, tzinfo=UTC) + timedelta(minutes=16),
+    )
+    assert expired["signal"] is None
+    assert expired["signal_state"] == "DELAYED"
+
+
+@pytest.mark.parametrize(
+    ("previous_engine", "previous_reason", "previous_bars", "previous_time"),
+    [
+        ("ERROR", "processed 1 bar(s)", 4, "2026-09-16 08:00:00+00:00"),
+        ("RUNNING", "catch-up pending", 4, "2026-09-16 08:00:00+00:00"),
+        ("RUNNING", "processed 1 bar(s)", 3, "2026-09-16 08:00:00+00:00"),
+        ("RUNNING", "processed 1 bar(s)", 4, "2026-09-16 07:55:00+00:00"),
+    ],
+)
+def test_no_new_bar_does_not_resurrect_unverified_decision(
+    previous_engine: str,
+    previous_reason: str,
+    previous_bars: int,
+    previous_time: str,
+) -> None:
+    backend = FakePersistence(
+        initial_status=HostedRuntimeStatus(
+            engine_status=previous_engine,
+            symbol="GC=F",
+            interval="5m",
+            updated_at_utc="2026-09-16T08:01:00+00:00",
+            last_cycle_timestamp=previous_time,
+            processed=True,
+            side=1,
+            confidence=0.92,
+            approved=True,
+            decision_reason="approved",
+            reason=previous_reason,
+            processed_bars=previous_bars,
+        )
+    )
+
+    class NoNewBarRunner:
+        def run_once(self, **kwargs):
+            del kwargs
+            return PaperCycleResult(
+                processed=0,
+                remaining_backlog=False,
+                last_processed="2026-09-16 08:00:00+00:00",
+                processed_bars=4,
+                reason="no new eligible bar",
+            )
+
+    run_production_paper_cycle(
+        ProductionPaperCycleSettings(),
+        persistence=backend,
+        runner_factory=lambda persistence: NoNewBarRunner(),
+    )
+
+    completed = backend.statuses[-1]
+    assert completed.reason == "no new eligible bar"
+    assert completed.processed is False
+    assert completed.side == 0
+    assert completed.confidence == 0.0
+    assert completed.approved is False
+    assert completed.decision_reason is None

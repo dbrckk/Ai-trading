@@ -64,6 +64,37 @@ def _safe_failure_detail(exc: Exception) -> str:
     return f"{type(exc).__name__}: worker failure"
 
 
+def _can_reuse_last_paper_decision(
+    previous: HostedRuntimeStatus | None,
+    result: PaperCycleResult,
+    *,
+    symbol: str,
+    interval: str,
+    processed_bars: int,
+) -> bool:
+    """Reuse a completed decision only when the durable runtime has not advanced.
+
+    The dashboard independently checks session state, heartbeat and bar age
+    before exposing this decision; a past decision never becomes a new trade.
+    """
+    return (
+        previous is not None
+        and previous.engine_status == "RUNNING"
+        and previous.error is None
+        and previous.processed
+        and previous.reason != "catch-up pending"
+        and previous.symbol == symbol
+        and previous.interval == interval
+        and previous.last_cycle_timestamp is not None
+        and previous.last_cycle_timestamp == result.last_processed
+        and previous.processed_bars == processed_bars
+        and result.processed_bars == processed_bars
+        and result.processed == 0
+        and result.reason == "no new eligible bar"
+        and not result.remaining_backlog
+    )
+
+
 def run_production_paper_cycle(
     settings: ProductionPaperCycleSettings,
     *,
@@ -102,7 +133,16 @@ def run_production_paper_cycle(
                 symbol=settings.symbol,
                 interval=settings.interval,
                 updated_at_utc=_now_utc(),
-                equity=starting_cash,
+                equity=(
+                    previous_status.equity
+                    if previous_status is not None and previous_status.equity > 0
+                    else starting_cash
+                ),
+                units=previous_status.units if previous_status is not None else 0.0,
+                processed_bars=(
+                    previous_status.processed_bars
+                    if previous_status is not None else 0
+                ),
                 poll_seconds=settings.poll_seconds,
                 consecutive_cycle_errors=previous_cycle_errors,
             ),
@@ -134,6 +174,14 @@ def run_production_paper_cycle(
         state = backend.load_runtime(runtime_key, starting_cash).state
         equity = state.cash + state.units * state.last_price
         cycle_duration_seconds = perf_counter() - cycle_started
+        reuse_decision = _can_reuse_last_paper_decision(
+            previous_status,
+            result,
+            symbol=settings.symbol,
+            interval=settings.interval,
+            processed_bars=state.processed_bars,
+        )
+        last_decision = previous_status if reuse_decision else None
         backend.save_runtime_status(
             runtime_key,
             HostedRuntimeStatus(
@@ -142,12 +190,27 @@ def run_production_paper_cycle(
                 interval=settings.interval,
                 updated_at_utc=_now_utc(),
                 last_cycle_timestamp=result.last_processed,
-                processed=result.processed > 0,
-                side=result.side if result.processed else 0,
-                confidence=result.confidence if result.processed else 0.0,
-                approved=result.approved if result.processed else False,
+                # A no-op poll must not erase a still-current paper decision.
+                # "reason" still describes this poll; time/approval stay unchanged.
+                processed=result.processed > 0 or reuse_decision,
+                side=(
+                    result.side if result.processed
+                    else last_decision.side if last_decision is not None else 0
+                ),
+                confidence=(
+                    result.confidence if result.processed
+                    else last_decision.confidence if last_decision is not None else 0.0
+                ),
+                approved=(
+                    result.approved if result.processed
+                    else last_decision.approved if last_decision is not None else False
+                ),
                 reason=result.reason,
-                decision_reason=result.decision_reason if result.processed else None,
+                decision_reason=(
+                    result.decision_reason if result.processed
+                    else last_decision.decision_reason
+                    if last_decision is not None else None
+                ),
                 equity=equity,
                 units=state.units,
                 processed_bars=state.processed_bars,
