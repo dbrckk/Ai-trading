@@ -8,6 +8,7 @@ from dataclasses import asdict
 import psycopg
 from psycopg.rows import dict_row
 from psycopg.types.json import Jsonb
+from psycopg_pool import ConnectionPool
 
 from .audit import build_audit_record
 from .burnin import BurnInSnapshot
@@ -287,12 +288,33 @@ class PostgresPaperPersistence(PaperPersistence):
         database_url: str,
         *,
         before_state_commit: Callable[[], None] | None = None,
+        pooled: bool = False,
     ) -> None:
         self.database_url = database_url
         self.before_state_commit = before_state_commit
+        # The hosted dashboard performs many sequential observer reads per request.
+        # Reuse at most four connections there; CLI jobs remain one-shot by default.
+        self._pool = (
+            ConnectionPool(
+                conninfo=database_url,
+                kwargs={"row_factory": dict_row},
+                min_size=0,
+                max_size=4,
+                timeout=10.0,
+                open=True,
+            )
+            if pooled
+            else None
+        )
 
     def _connect(self):
+        if self._pool is not None:
+            return self._pool.connection()
         return psycopg.connect(self.database_url, row_factory=dict_row)
+
+    def close(self) -> None:
+        if self._pool is not None:
+            self._pool.close()
 
     def initialize_schema(self) -> None:
         with self._connect() as connection, connection.cursor() as cursor:

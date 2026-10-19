@@ -11,11 +11,12 @@ from .postgres_persistence import PostgresPaperPersistence
 def build_paper_persistence(
     *,
     file_root: str | Path = "artifacts",
+    pool_connections: bool = False,
 ) -> PaperPersistence:
     database_url = os.getenv("AI_TRADING_DATABASE_URL", "").strip()
     if not database_url:
         return FilePaperPersistence(root=file_root)
 
-    persistence = PostgresPaperPersistence(database_url)
+    persistence = PostgresPaperPersistence(database_url, pooled=pool_connections)
     persistence.initialize_schema()
     return persistence

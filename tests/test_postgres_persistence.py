@@ -16,6 +16,26 @@ BTC_RUNTIME_KEY = "paper:BTC-USD:5m:online-river:v1"
 DAX_RUNTIME_KEY = "paper:^GDAXI:5m:online-river:v1"
 
 
+def test_opt_in_postgres_pool_reuses_connection_safely(backend) -> None:
+    from ai_trading.postgres_persistence import PostgresPaperPersistence
+
+    pooled = PostgresPaperPersistence(DATABASE_URL, pooled=True)
+    try:
+        pids = []
+        for _ in range(3):
+            with pooled._connect() as connection, connection.cursor() as cursor:
+                cursor.execute("SELECT pg_backend_pid() AS pid")
+                pids.append(int(cursor.fetchone()["pid"]))
+        assert len(set(pids)) == 1
+        assert pooled._pool is not None
+        assert pooled._pool.max_size == 4
+        assert pooled.load_runtime(RUNTIME_KEY, 100_000.0).revision >= 0
+    finally:
+        pooled.close()
+
+    assert pooled._pool.closed is True
+
+
 def test_postgres_16_is_reachable() -> None:
     with psycopg.connect(DATABASE_URL) as connection, connection.cursor() as cursor:
         cursor.execute("SHOW server_version_num")

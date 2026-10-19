@@ -1195,7 +1195,7 @@ def serve_dashboard(
     backend = persistence
     if backend is None:
         if os.getenv("AI_TRADING_DATABASE_URL", "").strip():
-            backend = build_paper_persistence()
+            backend = build_paper_persistence(pool_connections=True)
         else:
             root = Path(state_path).parent
             backend = FilePaperPersistence(
