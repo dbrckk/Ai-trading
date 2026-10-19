@@ -160,7 +160,7 @@ paper state/model/trades         Render dashboard
 GitHub Actions fallback scheduler
 ```
 
-The primary scheduler is the Cloudflare Worker under `infra/cloudflare-paper-scheduler/`. Its cron runs every five minutes and sends an authenticated POST to Render's `/internal/paper-cycle` endpoint. The Worker contains no database credentials and no trading logic. The existing `.github/workflows/paper-cycle.yml` schedule remains available as a fallback until external scheduler delivery has accumulated sufficient production evidence.
+The primary scheduler is the Cloudflare Worker under `infra/cloudflare-paper-scheduler/`. Its cron runs every five minutes and sends an authenticated POST to Render's `/internal/paper-cycle` endpoint. The Worker contains no database credentials and no trading logic. The existing `.github/workflows/paper-cycle.yml` schedule remains available as a fallback until external scheduler delivery has accumulated sufficient production evidence. The GitHub fallback runs **Gold (`GC=F`), DAX (`^GDAXI`) and BTC (`BTC-USD`)** independently against the durable database: one market's failure does not skip the others, but the workflow still fails visibly if any market fails. GitHub scheduled jobs can be delayed; this fallback does **not** guarantee a five-minute heartbeat.
 
 Scheduler delivery telemetry is sanitized and persisted durably. The application never persists the bearer token or raw authorization headers. Three consecutive successful Cloudflare deliveries are treated as the minimum verification threshold exposed by `/api/scheduler`.
 
