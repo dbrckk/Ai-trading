@@ -53,8 +53,8 @@ def test_fallback_runs_every_market_even_after_failure(tmp_path: Path) -> None:
         fake_cli = tmp_path / "ai-trading"
         fake_cli.write_text(
             "#!/bin/sh\n"
-            'printf "%s\\n" "$2" >> "$FAKE_MARKET_LOG"\n'
-            '[ "$2" != "$FAKE_FAIL_MARKET" ]\n',
+            'printf "%s\\n" "$3" >> "$FAKE_MARKET_LOG"\n'
+            '[ "$3" != "$FAKE_FAIL_MARKET" ]\n',
             encoding="utf-8",
         )
         fake_cli.chmod(0o755)
