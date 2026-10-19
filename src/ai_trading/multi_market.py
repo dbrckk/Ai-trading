@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
@@ -153,6 +154,25 @@ def run_multi_market_paper_cycle(
                     if last_processed is None
                     else max(last_processed, result.last_processed)
                 )
+
+    # Record which known market failed without exposing provider exception text.
+    known_symbols = {market.symbol for market in DEFAULT_MARKETS}
+    for symbol, code in failures:
+        print(
+            json.dumps(
+                {
+                    "event": "paper_market_cycle_failed",
+                    "symbol": symbol if symbol in known_symbols else "custom",
+                    "code": (
+                        code
+                        if code in {"storage_unavailable", "execution_failed"}
+                        else "execution_failed"
+                    ),
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
 
     if len(failures) == len(markets):
         failure_codes = {code for _, code in failures}
