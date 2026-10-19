@@ -286,6 +286,41 @@ def test_http_scheduler_valid_token_runs_one_cycle_and_ignores_body(tmp_path) ->
     }
 
 
+
+def test_http_scheduler_partial_cycle_records_real_http_failure(tmp_path) -> None:
+    result = PaperCycleResult(
+        processed=2,
+        remaining_backlog=False,
+        last_processed="2026-09-25 12:00:00+00:00",
+        processed_bars=42,
+        reason="processed 2 bar(s); isolated failures=1",
+        partial_failure=True,
+        failed_markets=1,
+    )
+    port = _start_scheduler_dashboard(
+        tmp_path,
+        scheduler_token="server-secret",
+        paper_cycle_executor=lambda: result,
+    )
+    status, body = _request(
+        f"http://127.0.0.1:{port}/internal/paper-cycle",
+        method="POST",
+        headers={
+            "Authorization": "Bearer server-secret",
+            "X-Scheduler-Source": "cloudflare",
+        },
+    )
+    assert status == 503
+    assert json.loads(body)["partial_failure"] is True
+
+    status, body = _request(f"http://127.0.0.1:{port}/api/scheduler")
+    payload = json.loads(body)
+    assert status == 200
+    assert payload["last_ok"] is False
+    assert payload["last_status_code"] == 503
+    assert payload["last_source"] == "cloudflare"
+
+
 def test_http_scheduler_other_post_routes_are_not_exposed(tmp_path) -> None:
     port = _start_scheduler_dashboard(
         tmp_path,
@@ -506,7 +541,7 @@ def test_scheduler_marks_partial_market_cycle_degraded() -> None:
         run_cycle=lambda: result,
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 503
     assert response.payload == {
         "ok": False,
         "processed": 4,

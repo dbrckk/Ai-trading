@@ -201,6 +201,6 @@ def handle_scheduler_request(
         payload["failed_markets"] = int(result.failed_markets)
 
     return SchedulerHttpResponse(
-        status_code=200,
+        status_code=503 if result.partial_failure else 200,
         payload=payload,
     )
