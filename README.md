@@ -21,7 +21,7 @@ Autonomous trading research platform focused on reproducible, risk-aware, out-of
 - correlation-aware portfolio de-risking and fail-closed configuration validation
 - bounded external paper-cycle scheduling with catch-up support
 - Cloudflare fifteen-minute scheduler with authenticated Render endpoint and durable delivery evidence
-- GitHub Actions authenticated scheduler retained as operational fallback (reuses Render/Neon; skips recent Cloudflare success)
+- GitHub Actions hourly authenticated fallback (reuses Render/Neon, skips recent Cloudflare success to conserve free compute)
 - read-only hosted dashboard backed by the same durable runtime state
 - CI with Ruff + Pytest + PostgreSQL 16 integration tests
 
