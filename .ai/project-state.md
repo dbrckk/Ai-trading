@@ -46,30 +46,28 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T14:21:04Z
+Generated: 2026-10-19T14:38:16Z
 
 ### Git
 - Branch: `main`
-- Head: `097c83c9ae41`
-- Commit date: 2026-10-19T10:20:53-04:00
-- Commit: fix(ops): fail-closed Render paper readiness and externally probe dashboard availability (#154)
+- Head: `05c929040f92`
+- Commit date: 2026-10-19T10:38:05-04:00
+- Commit: fix(ops): diagnose Render readiness failures without leaking secrets (#156)
 - Tracked files: 503
 
 ### Recently changed files
-- `.github/workflows/hosted-dashboard-probe.yml`
 - `README.md`
-- `render.yaml`
-- `src/ai_trading/dashboard.py`
 - `src/ai_trading/deployment_probe.py`
 - `tests/test_dashboard_health.py`
+- `.github/workflows/hosted-dashboard-probe.yml`
+- `render.yaml`
+- `src/ai_trading/dashboard.py`
 - `.github/workflows/paper-cycle.yml`
 - `tests/test_paper_cycle_workflow.py`
 - `src/ai_trading/paper_cycle_service.py`
 - `tests/test_paper_cycle_service.py`
 - `src/ai_trading/bootstrap_robustness.py`
 - `tests/test_bootstrap_robustness.py`
-- `src/ai_trading/multi_market.py`
-- `tests/test_multi_market.py`
 
 ### Project signals
 - `pyproject.toml`

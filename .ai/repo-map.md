@@ -2909,6 +2909,12 @@ request = Request(
 status = response.status
 body = response.read(128_001)
 ⋮----
+# Only surface known, public readiness error codes. Never print
+# arbitrary upstream bodies, database URLs or exception details.
+⋮----
+explanation = json.loads(exc.read(4096))
+reason = explanation.get("error") if isinstance(explanation, dict) else None
+⋮----
 payload = json.loads(body)
 ⋮----
 def probe_dashboard(base_url: str, *, timeout: float = 60.0) -> tuple[ProbeCheck, ...]
@@ -2926,8 +2932,15 @@ detail = "storage_ready" if valid else "storage_or_configuration_unready"
 markets = payload.get("markets")
 symbols = (
 expected = {"GC=F", "^GDAXI", "BTC-USD"}
-valid = expected.issubset(symbols)
-detail = "three_markets_present" if valid else "missing_market_cards"
+portfolio = payload.get("portfolio")
+complete = (
+valid = expected.issubset(symbols) and complete
+⋮----
+detail = "missing_market_cards"
+⋮----
+detail = "portfolio_or_market_unavailable"
+⋮----
+detail = "three_markets_healthy"
 ⋮----
 def main() -> int
 ⋮----
@@ -9352,6 +9365,8 @@ results = probe_dashboard(f"http://127.0.0.1:{port}", timeout=3)
 ⋮----
 port = _start_dashboard(
 ⋮----
+readiness = probe_dashboard(f"http://127.0.0.1:{port}", timeout=3)[1]
+⋮----
 def test_render_blueprint_declares_external_runtime_and_secret_inputs() -> None
 ⋮----
 text = Path("render.yaml").read_text(encoding="utf-8")
@@ -9359,6 +9374,22 @@ text = Path("render.yaml").read_text(encoding="utf-8")
 def fail_request(request, timeout)
 ⋮----
 results = probe_dashboard("https://example.invalid")
+⋮----
+def test_probe_rejects_market_cards_with_broken_portfolio(monkeypatch) -> None
+⋮----
+class FakeResponse
+⋮----
+status = 200
+⋮----
+def __init__(self, payload)
+⋮----
+def __enter__(self)
+⋮----
+def __exit__(self, *args)
+⋮----
+def read(self, count)
+⋮----
+def fake_urlopen(request, timeout)
 ````
 
 ## File: tests/test_dashboard_overview.py
@@ -13417,8 +13448,11 @@ Health probes intentionally have separate semantics: `/livez` checks only that t
 
 `.github/workflows/hosted-dashboard-probe.yml` runs a read-only external
 probe every two hours (plus pushes touching the hosted configuration). It
-separately checks `/livez`, `/readyz` and that `/api/markets` contains
-Gold, DAX and BTC, reporting a failing GitHub Actions job if the
+separately checks `/livez`, `/readyz`, and that `/api/markets` contains
+Gold, DAX and BTC **with complete portfolio data and no market storage errors**.
+Known readiness HTTP 503 responses distinguish `configuration_incomplete`
+from `storage_unavailable` without publishing exception text or secrets.
+It reports a failing GitHub Actions job if the
 publicly hosted service is unavailable or incomplete. This check **does
 not** invoke the scheduler, place trades, wake workers, or guarantee
 fresh market data. For manual diagnosis, use

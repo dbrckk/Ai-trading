@@ -1,24 +1,20 @@
 # Change impact
 
-Base: beb47ab60b401d5e62f150927cd07cfb0608a79a
-Head: 097c83c9ae41b6e6df09267a66122802077c14a9
+Base: 22ada96a0e8451ae6edb66a518170bc0ad39c337
+Head: 05c929040f928b48243a631bbbf2707a834aadd7
 
 ## Changed files
-- A .github/workflows/hosted-dashboard-probe.yml
 - M README.md
-- M render.yaml
-- M src/ai_trading/dashboard.py
-- A src/ai_trading/deployment_probe.py
+- M src/ai_trading/deployment_probe.py
 - M tests/test_dashboard_health.py
 
 ## Affected areas
-- .github
 - (root)
 - src
 - tests
 
 ## Related test candidates
-- tests/test_dashboard.py
+- No direct filename-based test match detected.
 
 ## Agent guidance
 - Read this file before broad repository exploration.

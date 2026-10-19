@@ -2,11 +2,11 @@
 
 - Index mode: incremental
 - Files indexed: 363
-- Files reparsed this run: 3
-- Symbols: 1810
+- Files reparsed this run: 2
+- Symbols: 1817
 - Internal import edges: 1220
-- Impacted files: 10
-- Selected tests: 7
+- Impacted files: 2
+- Selected tests: 2
 
 ## Languages
 - python: 361 files
@@ -27,12 +27,12 @@
 - tests/test_multiasset_runtime.py: 21 symbols
 - tests/test_multiasset_checkpoint.py: 20 symbols
 - src/ai_trading/postgres_persistence.py: 19 symbols
+- tests/test_dashboard_health.py: 18 symbols
 - src/ai_trading/mtf_parameter_benchmark.py: 17 symbols
 - src/ai_trading/multiasset_runtime.py: 17 symbols
 - tests/test_deployment_readiness.py: 17 symbols
 - src/ai_trading/file_persistence.py: 16 symbols
 - src/ai_trading/multiasset_checkpoint.py: 16 symbols
-- tests/test_runtime_persistence.py: 16 symbols
 
 ## Agent routing
 - Read impact.json first after project/change context.
@@ -43,9 +43,9 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 3
+- AST files reparsed this run: 2
 - outline files retained: 363
-- top-level items retained: 3141
+- top-level items retained: 3142
 - direct members retained: 1535
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard

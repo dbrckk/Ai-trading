@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 5 success / 0 failure / 3 active
+Summary: 0 success / 0 failure / 7 active
 
-- CodeQL: in_progress / pending (097c83c9)
-- CI: in_progress / pending (097c83c9)
-- Hosted Dashboard Probe: in_progress / pending (097c83c9)
-- CodeQL: completed / success (e44ffa50)
-- CI: completed / success (e44ffa50)
-- CI: completed / success (f87c562a)
-- CodeQL: completed / success (f87c562a)
-- CodeQL: completed / success (ffc6b9f1)
+- Hosted Dashboard Probe: in_progress / pending (05c92904)
+- CodeQL: queued / pending (05c92904)
+- CI: in_progress / pending (05c92904)
+- CodeQL: in_progress / pending (5475d0dc)
+- CI: in_progress / pending (5475d0dc)
+- Kronos Model Smoke: in_progress / pending (5475d0dc)
+- CI: in_progress / pending (91500f38)
+- CodeQL: completed / cancelled (91500f38)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
