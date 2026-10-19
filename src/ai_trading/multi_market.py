@@ -221,131 +221,139 @@ def build_multi_market_overview(
         except Exception:  # noqa: BLE001 - optional observer must not break overview
             portfolio_performance = empty_performance_payload()
 
-    for market in markets:
-        runtime_key = build_runtime_key(market.symbol, interval)
-        allocated_cash = portfolio_cash * market.allocation
-        try:
-            persisted = persistence.load_runtime(runtime_key, _NORMALIZED_RUNTIME_CASH)
-            normalized_equity = (
-                persisted.state.cash
-                + persisted.state.units * persisted.state.last_price
-            )
-            sleeve_equity = allocated_cash * normalized_equity / _NORMALIZED_RUNTIME_CASH
-            overview = build_operational_overview(
+    # Independent, read-only model diagnostics can run concurrently.
+    # Collect futures in input order to preserve stable market rows.
+    with ThreadPoolExecutor(max_workers=min(3, len(markets))) as executor:
+        overview_futures = {
+            market.symbol: executor.submit(
+                build_operational_overview,
                 persistence,
-                runtime_key,
+                build_runtime_key(market.symbol, interval),
                 _NORMALIZED_RUNTIME_CASH,
             )
-            status = persistence.load_runtime_status(runtime_key)
-            market_reason = None
-            cycle_duration_seconds = None
-            market_mtf_evaluated = False
-            heartbeat_age_seconds = None
-            freshness = "OFF"
-            if status is not None:
-                market_reason = status.reason
-                cycle_duration_seconds = status.cycle_duration_seconds
-                market_mtf_evaluated = status.mtf_evaluated
-                status_snapshot = runtime_status_snapshot(status, now=now)
-                heartbeat_age_seconds = status_snapshot.get("heartbeat_age_seconds")
-                freshness, session_open = classify_market_freshness(
-                    market.symbol,
+            for market in markets
+        }
+        for market in markets:
+            runtime_key = build_runtime_key(market.symbol, interval)
+            allocated_cash = portfolio_cash * market.allocation
+            try:
+                persisted = persistence.load_runtime(runtime_key, _NORMALIZED_RUNTIME_CASH)
+                normalized_equity = (
+                    persisted.state.cash
+                    + persisted.state.units * persisted.state.last_price
+                )
+                sleeve_equity = allocated_cash * normalized_equity / _NORMALIZED_RUNTIME_CASH
+                overview = overview_futures[market.symbol].result()
+                status = persistence.load_runtime_status(runtime_key)
+                market_reason = None
+                cycle_duration_seconds = None
+                market_mtf_evaluated = False
+                heartbeat_age_seconds = None
+                freshness = "OFF"
+                if status is not None:
+                    market_reason = status.reason
+                    cycle_duration_seconds = status.cycle_duration_seconds
+                    market_mtf_evaluated = status.mtf_evaluated
+                    status_snapshot = runtime_status_snapshot(status, now=now)
+                    heartbeat_age_seconds = status_snapshot.get("heartbeat_age_seconds")
+                    freshness, session_open = classify_market_freshness(
+                        market.symbol,
+                        status,
+                        status_snapshot,
+                        now=now,
+                    )
+                else:
+                    session_open = None
+                signal_snapshot = paper_signal_snapshot(
                     status,
-                    status_snapshot,
+                    freshness=freshness,
+                    session_open=session_open,
                     now=now,
                 )
-            else:
-                session_open = None
-            signal_snapshot = paper_signal_snapshot(
-                status,
-                freshness=freshness,
-                session_open=session_open,
-                now=now,
-            )
-            healthy = bool(overview.get("storage_healthy"))
-            if healthy:
-                healthy_markets += 1
+                healthy = bool(overview.get("storage_healthy"))
+                if healthy:
+                    healthy_markets += 1
 
-            engine_status = str(overview.get("engine_status") or "UNKNOWN").upper()
-            if engine_status == "RUNNING":
-                running_markets += 1
-            elif engine_status == "STALE":
-                stale_markets += 1
-            elif engine_status == "ERROR":
+                engine_status = str(overview.get("engine_status") or "UNKNOWN").upper()
+                if engine_status == "RUNNING":
+                    running_markets += 1
+                elif engine_status == "STALE":
+                    stale_markets += 1
+                elif engine_status == "ERROR":
+                    error_markets += 1
+                if overview.get("alerts"):
+                    alert_markets += 1
+                if freshness == "MARKET_CLOSED":
+                    closed_markets += 1
+                elif freshness == "CATCHING_UP":
+                    catching_up_markets += 1
+                elif freshness == "PROVIDER_GAP":
+                    provider_gap_markets += 1
+
+                portfolio_equity += sleeve_equity
+                market_rows.append(
+                    {
+                        "symbol": market.symbol,
+                        "label": market.label,
+                        "allocation": market.allocation,
+                        "allocated_cash": allocated_cash,
+                        "equity": sleeve_equity,
+                        "pnl": sleeve_equity - allocated_cash,
+                        "normalized_equity": normalized_equity,
+                        "runtime_key": runtime_key,
+                        "signal": signal_snapshot["signal"],
+                        "confidence": signal_snapshot["confidence"],
+                        "risk_approved": signal_snapshot["risk_approved"],
+                        "signal_state": signal_snapshot["signal_state"],
+                        "signal_time": signal_snapshot["signal_time"],
+                        "signal_age_seconds": signal_snapshot["signal_age_seconds"],
+                        "decision_reason": signal_snapshot["decision_reason"],
+                        "reason": market_reason,
+                        "cycle_duration_seconds": cycle_duration_seconds,
+                        "mtf_evaluated": market_mtf_evaluated,
+                        "heartbeat_age_seconds": heartbeat_age_seconds,
+                        "freshness": freshness,
+                        "session_open": session_open,
+                        "overview": overview,
+                    }
+                )
+            except Exception:  # noqa: BLE001 - isolate one market from the dashboard
+                portfolio_equity_complete = False
                 error_markets += 1
-            if overview.get("alerts"):
                 alert_markets += 1
-            if freshness == "MARKET_CLOSED":
-                closed_markets += 1
-            elif freshness == "CATCHING_UP":
-                catching_up_markets += 1
-            elif freshness == "PROVIDER_GAP":
-                provider_gap_markets += 1
-
-            portfolio_equity += sleeve_equity
-            market_rows.append(
-                {
-                    "symbol": market.symbol,
-                    "label": market.label,
-                    "allocation": market.allocation,
-                    "allocated_cash": allocated_cash,
-                    "equity": sleeve_equity,
-                    "pnl": sleeve_equity - allocated_cash,
-                    "normalized_equity": normalized_equity,
-                    "runtime_key": runtime_key,
-                    "signal": signal_snapshot["signal"],
-                    "confidence": signal_snapshot["confidence"],
-                    "risk_approved": signal_snapshot["risk_approved"],
-                    "signal_state": signal_snapshot["signal_state"],
-                    "signal_time": signal_snapshot["signal_time"],
-                    "signal_age_seconds": signal_snapshot["signal_age_seconds"],
-                    "decision_reason": signal_snapshot["decision_reason"],
-                    "reason": market_reason,
-                    "cycle_duration_seconds": cycle_duration_seconds,
-                    "mtf_evaluated": market_mtf_evaluated,
-                    "heartbeat_age_seconds": heartbeat_age_seconds,
-                    "freshness": freshness,
-                    "session_open": session_open,
-                    "overview": overview,
-                }
-            )
-        except Exception:  # noqa: BLE001 - isolate one market from the dashboard
-            portfolio_equity_complete = False
-            error_markets += 1
-            alert_markets += 1
-            market_rows.append(
-                {
-                    "symbol": market.symbol,
-                    "label": market.label,
-                    "allocation": market.allocation,
-                    "allocated_cash": allocated_cash,
-                    "equity": None,
-                    "pnl": None,
-                    "normalized_equity": None,
-                    "runtime_key": runtime_key,
-                    "signal": None,
-                    "confidence": None,
-                    "risk_approved": None,
-                    "signal_state": "UNAVAILABLE",
-                    "signal_time": None,
-                    "signal_age_seconds": None,
-                    "decision_reason": None,
-                    "heartbeat_age_seconds": None,
-                    "freshness": "ERROR",
-                    "session_open": None,
-                    "overview": {
-                        "storage_healthy": False,
-                        "engine_status": "ERROR",
-                        "processed_bars": None,
-                        "last_processed": None,
-                        "shadow_challenger": {
-                            "status": "unavailable",
-                            "observations": 0,
+                market_rows.append(
+                    {
+                        "symbol": market.symbol,
+                        "label": market.label,
+                        "allocation": market.allocation,
+                        "allocated_cash": allocated_cash,
+                        "equity": None,
+                        "pnl": None,
+                        "normalized_equity": None,
+                        "runtime_key": runtime_key,
+                        "signal": None,
+                        "confidence": None,
+                        "risk_approved": None,
+                        "signal_state": "UNAVAILABLE",
+                        "signal_time": None,
+                        "signal_age_seconds": None,
+                        "decision_reason": None,
+                        "heartbeat_age_seconds": None,
+                        "freshness": "ERROR",
+                        "session_open": None,
+                        "overview": {
+                            "storage_healthy": False,
+                            "engine_status": "ERROR",
+                            "processed_bars": None,
+                            "last_processed": None,
+                            "shadow_challenger": {
+                                "status": "unavailable",
+                                "observations": 0,
+                            },
+                            "alerts": ["market unavailable"],
                         },
-                        "alerts": ["market unavailable"],
-                    },
-                }
-            )
+                    }
+                )
 
     reported_portfolio_equity = (
         portfolio_equity if portfolio_equity_complete else None

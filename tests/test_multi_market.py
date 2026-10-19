@@ -324,6 +324,39 @@ def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
 
 
 
+def test_multi_market_overview_parallelizes_read_only_observers(monkeypatch) -> None:
+    backend = FakeMultiPersistence(
+        equities={
+            "GC=F": 100_000.0,
+            "^GDAXI": 100_000.0,
+            "BTC-USD": 100_000.0,
+        }
+    )
+    barrier = Barrier(len(DEFAULT_MARKETS))
+    original = multi_market_module.build_operational_overview
+
+    def concurrent_observer(persistence, runtime_key, starting_cash):
+        barrier.wait(timeout=10.0)
+        return original(persistence, runtime_key, starting_cash)
+
+    monkeypatch.setattr(
+        multi_market_module, "build_operational_overview", concurrent_observer
+    )
+    snapshot = build_multi_market_overview(
+        backend,
+        DEFAULT_MARKETS,
+        interval="5m",
+        now=TEST_MARKET_NOW,
+    )
+
+    assert snapshot["portfolio"]["healthy_markets"] == 3
+    assert [row["symbol"] for row in snapshot["markets"]] == [
+        "GC=F",
+        "^GDAXI",
+        "BTC-USD",
+    ]
+
+
 def test_multi_market_cycle_runs_markets_concurrently(monkeypatch) -> None:
     barrier = Barrier(len(DEFAULT_MARKETS))
 
