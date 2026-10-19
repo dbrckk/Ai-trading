@@ -335,6 +335,7 @@ def main() -> None:
         "model": f"NeoQuasar/Kronos-{args.model_size}",
         "source": "https://github.com/shiyu-coder/Kronos",
         "paper_only": True, "seed": 42,
+        "river_reference": "research_only_one_vs_rest_not_persisted_river_v1",
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
