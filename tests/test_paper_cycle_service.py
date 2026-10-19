@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import pytest
+from datetime import UTC, datetime, timedelta
 
+from ai_trading.market_freshness import paper_signal_snapshot
 from ai_trading.paper_cycle import PaperCycleResult
 from ai_trading.paper_cycle_service import (
     PaperCycleServiceError,
@@ -420,6 +422,26 @@ def test_no_new_bar_keeps_last_completed_paper_decision() -> None:
     assert completed.confidence == 0.81
     assert completed.approved is True
     assert completed.decision_reason == "approved"
+
+    # Repeated scheduler polls do not manufacture a fresh prediction.
+    recent = paper_signal_snapshot(
+        completed,
+        freshness="LIVE",
+        session_open=True,
+        now=datetime(2026, 9, 16, 8, 10, tzinfo=UTC),
+    )
+    assert recent["signal"] == "SHORT"
+    assert recent["signal_time"] == last_processed
+    assert recent["signal_age_seconds"] == 600.0
+    assert recent["risk_approved"] is True
+    expired = paper_signal_snapshot(
+        completed,
+        freshness="LIVE",
+        session_open=True,
+        now=datetime(2026, 9, 16, 8, 0, tzinfo=UTC) + timedelta(minutes=16),
+    )
+    assert expired["signal"] is None
+    assert expired["signal_state"] == "DELAYED"
 
 
 @pytest.mark.parametrize(
