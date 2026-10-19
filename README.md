@@ -246,11 +246,28 @@ AI_TRADING_HOSTED_PERIOD=5d
 AI_TRADING_HOSTED_INTERVAL=5m
 ```
 
+The Render Blueprint (`render.yaml`) declares these paper-only variables and
+requests `AI_TRADING_DATABASE_URL` and `AI_TRADING_SCHEDULER_TOKEN` using
+`sync: false`. Set the database URL to the **same database as the GitHub
+fallback** and provide the same scheduler token used by Cloudflare. Neither
+secret belongs in Git or in HTTP endpoints. Existing Render services must
+also have these values configured; changing the Blueprint does not prove
+the hosted service was successfully deployed.
+
 `AI_TRADING_EXTERNAL_SCHEDULER=1` explicitly suppresses the legacy in-process daemon worker. Render serves the dashboard and the authenticated cycle endpoint while external schedulers own delivery. The dashboard reads the shared durable state and exposes the last processed bar, processed-bar count, per-market freshness and durable scheduler evidence without exposing storage connection details.
 
 The scheduler verification endpoint reports recent sanitized deliveries, the current consecutive Cloudflare-success count and whether the three-delivery verification threshold has been reached. A successful HTTP trigger with zero newly processed bars is still a valid delivery: duplicate/overlapping invocations are intentionally benign and durable runtime revision protection prevents stale writers from overwriting newer state.
 
-Health probes intentionally have separate semantics: `/livez` checks only that the HTTP process is alive, `/readyz` returns HTTP 503 when durable storage is unavailable, and `/healthz` remains the backwards-compatible detailed runtime health view. Market/provider errors therefore do not masquerade as web-process failures.
+Health probes intentionally have separate semantics: `/livez` checks only that the HTTP process is alive, `/readyz` returns HTTP 503 when durable storage is unavailable **or** the external scheduler is enabled without its required token/durable database, and `/healthz` remains the backwards-compatible detailed runtime health view. Market/provider errors therefore do not masquerade as web-process failures.
+
+`.github/workflows/hosted-dashboard-probe.yml` runs a read-only external
+probe every two hours (plus pushes touching the hosted configuration). It
+separately checks `/livez`, `/readyz` and that `/api/markets` contains
+Gold, DAX and BTC, reporting a failing GitHub Actions job if the
+publicly hosted service is unavailable or incomplete. This check **does
+not** invoke the scheduler, place trades, wake workers, or guarantee
+fresh market data. For manual diagnosis, use
+`PYTHONPATH=src python -m ai_trading.deployment_probe --base-url https://ai-trading-dashboard-qyr2.onrender.com`.
 
 ## Walk-forward methodology
 

@@ -1212,6 +1212,19 @@ def serve_dashboard(
         if scheduler_token is not None
         else os.getenv("AI_TRADING_SCHEDULER_TOKEN", "").strip()
     )
+    # A hosted external scheduler needs an authenticated entry point and a
+    # shared durable database. In local/offline mode these are optional.
+    external_scheduler_configured = (
+        not effective_settings.external_scheduler
+        or (
+            effective_settings.enabled
+            and bool(effective_scheduler_token)
+            and (
+                persistence is not None
+                or bool(os.getenv("AI_TRADING_DATABASE_URL", "").strip())
+            )
+        )
+    )
     effective_cycle_executor = paper_cycle_executor
     if effective_cycle_executor is None:
         cycle_settings = ProductionPaperCycleSettings(
@@ -1338,18 +1351,23 @@ def serve_dashboard(
             if path == "/readyz":
                 snapshot = load_status_snapshot()
                 storage_healthy = snapshot.get("storage_healthy") is not False
+                ready = storage_healthy and external_scheduler_configured
                 self._send_json(
                     {
-                        "ready": storage_healthy,
-                        "storage_healthy": storage_healthy,
+                        "ready": True,
+                        "storage_healthy": True,
                     }
-                    if storage_healthy
+                    if ready
                     else {
                         "ready": False,
-                        "storage_healthy": False,
-                        "error": "storage unavailable",
+                        "storage_healthy": storage_healthy,
+                        "error": (
+                            "configuration incomplete"
+                            if not external_scheduler_configured
+                            else "storage unavailable"
+                        ),
                     },
-                    status_code=200 if storage_healthy else 503,
+                    status_code=200 if ready else 503,
                 )
                 return
             if path == "/healthz":
