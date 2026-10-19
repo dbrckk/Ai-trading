@@ -128,6 +128,39 @@ def test_configured_default_bundle_uses_34_33_33(monkeypatch) -> None:
     assert sum(market.allocation for market in markets) == pytest.approx(1.0)
 
 
+@pytest.mark.parametrize(
+    "raw",
+    [
+        "GC=F,GC=F",
+        " GC=F , BTC-USD , GC=F ",
+    ],
+)
+def test_configured_markets_reject_duplicate_symbols_early(
+    monkeypatch, raw: str
+) -> None:
+    monkeypatch.setenv("AI_TRADING_MARKETS", raw)
+    with pytest.raises(ValueError, match="unique"):
+        configured_markets_from_env()
+
+
+@pytest.mark.parametrize("raw", ["", ",", "GC=F,", ",BTC-USD", "GC=F,,BTC-USD"])
+def test_configured_markets_reject_missing_symbols(
+    monkeypatch, raw: str
+) -> None:
+    monkeypatch.setenv("AI_TRADING_MARKETS", raw or ",")
+    with pytest.raises(ValueError, match="non-empty"):
+        configured_markets_from_env()
+
+
+def test_configured_markets_preserve_known_and_custom_labels(monkeypatch) -> None:
+    monkeypatch.setenv("AI_TRADING_MARKETS", "BTC-USD, CUSTOM=X")
+    markets = configured_markets_from_env()
+    assert [(market.symbol, market.label, market.allocation) for market in markets] == [
+        ("BTC-USD", "BTC / USD", 0.5),
+        ("CUSTOM=X", "CUSTOM=X", 0.5),
+    ]
+
+
 def test_multi_market_cycle_isolates_one_market_failure(monkeypatch) -> None:
     calls: list[tuple[str, str]] = []
 
@@ -525,3 +558,51 @@ def test_multi_market_cycle_sanitizes_all_unexpected_failures(monkeypatch) -> No
     assert exc_info.value.code == "execution_failed"
     assert exc_info.value.error_type == "MultiMarketFailure"
     assert "sensitive provider internals" not in str(exc_info.value)
+
+
+@pytest.mark.parametrize(
+    ("codes", "expected"),
+    [
+        (
+            ("storage_unavailable", "storage_unavailable", "storage_unavailable"),
+            "storage_unavailable",
+        ),
+        (
+            ("execution_failed", "execution_failed", "execution_failed"),
+            "execution_failed",
+        ),
+        (
+            ("storage_unavailable", "execution_failed", "storage_unavailable"),
+            "execution_failed",
+        ),
+    ],
+)
+def test_multi_market_total_failure_classification(
+    monkeypatch, codes: tuple[str, str, str], expected: str
+) -> None:
+    failure_by_market = dict(
+        zip((market.symbol for market in DEFAULT_MARKETS), codes, strict=True)
+    )
+
+    def fake_cycle(settings, *, persistence=None):
+        del persistence
+        raise PaperCycleServiceError(
+            code=failure_by_market[settings.symbol],
+            error_type="RuntimeError",
+        )
+
+    monkeypatch.setattr(multi_market_module, "run_production_paper_cycle", fake_cycle)
+    with pytest.raises(PaperCycleServiceError) as caught:
+        run_multi_market_paper_cycle(
+            DEFAULT_MARKETS,
+            period="5d",
+            interval="5m",
+            max_catchup_bars=72,
+            poll_seconds=300.0,
+            shadow_challenger_enabled=False,
+            persistence=object(),
+        )
+
+    assert caught.value.code == expected
+    assert caught.value.error_type == "MultiMarketFailure"
+    assert caught.value.__cause__ is None
