@@ -5736,6 +5736,12 @@ def _safe_failure_detail(exc: Exception) -> str
 message = str(exc)
 code = _SAFE_RUNTIME_FAILURES.get(message)
 ⋮----
+"""Reuse a completed decision only when the durable runtime has not advanced.
+
+    The dashboard independently checks session state, heartbeat and bar age
+    before exposing this decision; a past decision never becomes a new trade.
+    """
+⋮----
 runtime_key = build_runtime_key(settings.symbol, settings.interval)
 starting_cash = RiskConfig().starting_cash
 cycle_started = perf_counter()
@@ -5757,6 +5763,11 @@ result = runner.run_once(
 state = backend.load_runtime(runtime_key, starting_cash).state
 equity = state.cash + state.units * state.last_price
 cycle_duration_seconds = perf_counter() - cycle_started
+reuse_decision = _can_reuse_last_paper_decision(
+last_decision = previous_status if reuse_decision else None
+⋮----
+# A no-op poll must not erase a still-current paper decision.
+# "reason" still describes this poll; time/approval stay unchanged.
 ⋮----
 except Exception as exc:  # noqa: BLE001 - sanitize execution/provider failures
 ⋮----
@@ -11107,6 +11118,19 @@ def test_known_runtime_failure_writes_safe_diagnostic_code() -> None
 def test_unknown_runtime_failure_stays_sanitized() -> None
 ⋮----
 def test_market_data_quality_failure_writes_safe_diagnostic_code() -> None
+⋮----
+def test_no_new_bar_keeps_last_completed_paper_decision() -> None
+⋮----
+last_processed = "2026-09-16 08:00:00+00:00"
+⋮----
+class NoNewBarRunner
+⋮----
+# Repeated scheduler polls do not manufacture a fresh prediction.
+recent = paper_signal_snapshot(
+⋮----
+expired = paper_signal_snapshot(
+⋮----
+completed = backend.statuses[-1]
 ````
 
 ## File: tests/test_paper_cycle_workflow.py
@@ -13206,6 +13230,9 @@ before a new signal becomes available. The per-market API exposes:
 - `signal_time`, `signal_age_seconds`: evidence of when the paper decision
   was processed. A stale, unparseable or timezone-naive timestamp suppresses
   signal publication. For a 5-minute market, decisions expire after 15 minutes.
+  A successful poll with **no new eligible bar** preserves the previous
+  completed paper decision only if the stored bar and revision agree; it
+  **does not** refresh the signal timestamp or represent a new trade.
 - `freshness` and `heartbeat_age_seconds`: separate scheduler/data health.
   A healthy heartbeat **alone** never makes an old prediction tradable.
 

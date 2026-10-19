@@ -1,18 +1,20 @@
 # Change impact
 
-Base: d769b8e744dd789e1fcfa649cb2d75a66d5d1652
-Head: 52492bad355f34fd6c9637ccf42d91894c6ad1f5
+Base: b70047d152365d930ea534d08619d63496ac107d
+Head: 8ee39d5cae6f0732a004a24395aa6f674bb3618d
 
 ## Changed files
-- M src/ai_trading/bootstrap_robustness.py
-- M tests/test_bootstrap_robustness.py
+- M README.md
+- M src/ai_trading/paper_cycle_service.py
+- M tests/test_paper_cycle_service.py
 
 ## Affected areas
+- (root)
 - src
 - tests
 
 ## Related test candidates
-- tests/test_bootstrap_robustness.py
+- tests/test_paper_cycle_service.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

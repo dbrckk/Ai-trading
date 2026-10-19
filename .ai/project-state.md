@@ -46,16 +46,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T07:51:17Z
+Generated: 2026-10-19T12:37:35Z
 
 ### Git
 - Branch: `main`
-- Head: `52492bad355f`
-- Commit date: 2026-10-19T03:51:08-04:00
-- Commit: perf: vectorize deterministic bootstrap to unblock historical dashboard (#151)
+- Head: `8ee39d5cae6f`
+- Commit date: 2026-10-19T08:37:24-04:00
+- Commit: fix: retain the latest verified paper signal across empty scheduler polls (#152)
 - Tracked files: 501
 
 ### Recently changed files
+- `README.md`
+- `src/ai_trading/paper_cycle_service.py`
+- `tests/test_paper_cycle_service.py`
 - `src/ai_trading/bootstrap_robustness.py`
 - `tests/test_bootstrap_robustness.py`
 - `src/ai_trading/multi_market.py`
@@ -65,16 +68,6 @@ Generated: 2026-10-19T07:51:17Z
 - `src/ai_trading/persistence_factory.py`
 - `src/ai_trading/postgres_persistence.py`
 - `tests/test_postgres_persistence.py`
-- `README.md`
-- `src/ai_trading/market_freshness.py`
-- `src/ai_trading/paper_cycle.py`
-- `src/ai_trading/paper_cycle_service.py`
-- `src/ai_trading/runtime_status.py`
-- `tests/test_dashboard.py`
-- `tests/test_dashboard_engine_status.py`
-- `tests/test_market_freshness.py`
-- `tests/test_paper_cycle.py`
-- `tests/test_paper_cycle_service.py`
 
 ### Project signals
 - `pyproject.toml`

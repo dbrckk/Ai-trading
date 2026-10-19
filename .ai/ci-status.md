@@ -2,13 +2,13 @@
 
 Summary: 6 success / 0 failure / 2 active
 
-- CodeQL: in_progress / pending (52492bad)
-- CI: in_progress / pending (52492bad)
-- CodeQL: completed / success (8874bcac)
-- CI: completed / success (8874bcac)
-- CodeQL: completed / success (ea3ee85a)
-- CI: completed / success (ea3ee85a)
-- CodeQL: completed / success (35f137c3)
-- CI: completed / success (35f137c3)
+- CodeQL: in_progress / pending (8ee39d5c)
+- CI: in_progress / pending (8ee39d5c)
+- CI: completed / success (70706640)
+- CodeQL: completed / success (70706640)
+- CodeQL: completed / success (b70047d1)
+- Precise semantic refresh: completed / success (b70047d1)
+- CodeQL: completed / success (52492bad)
+- CI: completed / success (52492bad)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

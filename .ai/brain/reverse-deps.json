@@ -1397,9 +1397,10 @@
       "dependents": [
         "src/ai_trading/dashboard.py",
         "src/ai_trading/multi_market.py",
-        "tests/test_market_freshness.py"
+        "tests/test_market_freshness.py",
+        "tests/test_paper_cycle_service.py"
       ],
-      "in_degree": 3,
+      "in_degree": 4,
       "out_degree": 1
     },
     "src/ai_trading/meta_router.py": {
@@ -1484,13 +1485,14 @@
         "tests/test_mtf_shadow_quality.py",
         "tests/test_online.py",
         "tests/test_paper_cycle.py",
+        "tests/test_paper_cycle_service.py",
         "tests/test_postgres_persistence.py",
         "tests/test_quality_store.py",
         "tests/test_risk.py",
         "tests/test_shadow_challenger.py",
         "tests/test_shadow_quality.py"
       ],
-      "in_degree": 35,
+      "in_degree": 36,
       "out_degree": 1
     },
     "src/ai_trading/model_blend.py": {
@@ -1911,7 +1913,8 @@
         "src/ai_trading/paper_cycle.py",
         "src/ai_trading/persistence.py",
         "src/ai_trading/persistence_factory.py",
-        "src/ai_trading/runtime_status.py"
+        "src/ai_trading/runtime_status.py",
+        "src/ai_trading/watchdog.py"
       ],
       "dependents": [
         "src/ai_trading/command_app.py",
@@ -1924,7 +1927,7 @@
         "tests/test_scheduler_endpoint.py"
       ],
       "in_degree": 8,
-      "out_degree": 5
+      "out_degree": 6
     },
     "src/ai_trading/paper_execution.py": {
       "dependencies": [],
@@ -3053,6 +3056,7 @@
         "src/ai_trading/metrics.py",
         "src/ai_trading/multiasset_scheduler.py",
         "src/ai_trading/operational_overview.py",
+        "src/ai_trading/paper_cycle_service.py",
         "src/ai_trading/readiness_handshake.py",
         "src/ai_trading/supervisor.py",
         "src/ai_trading/watchdog_enforcer.py",
@@ -3068,7 +3072,7 @@
         "tests/test_watchdog_enforcer.py",
         "tests/test_worker_monitor.py"
       ],
-      "in_degree": 20,
+      "in_degree": 21,
       "out_degree": 0
     },
     "src/ai_trading/watchdog_enforcer.py": {
@@ -4251,6 +4255,8 @@
     "tests/test_paper_cycle_service.py": {
       "dependencies": [
         "src/ai_trading/__init__.py",
+        "src/ai_trading/market_freshness.py",
+        "src/ai_trading/model.py",
         "src/ai_trading/paper_cycle.py",
         "src/ai_trading/paper_cycle_service.py",
         "src/ai_trading/persistence.py",
@@ -4259,7 +4265,7 @@
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 6
+      "out_degree": 8
     },
     "tests/test_paper_execution.py": {
       "dependencies": [
