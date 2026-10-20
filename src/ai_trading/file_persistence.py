@@ -10,7 +10,12 @@ from .mtf_shadow_quality import (
     MultiTimeframeShadowQuality,
     compare_mtf_shadow_audit_payloads,
 )
-from .performance_metrics import TradePerformanceMetrics, calculate_performance_metrics
+from .performance_metrics import (
+    TradePerformanceMetrics,
+    calculate_allocated_performance_metrics,
+    calculate_performance_metrics,
+    resolved_portfolio_allocations,
+)
 from .persistence import (
     CommitOutcome,
     ModelBlob,
