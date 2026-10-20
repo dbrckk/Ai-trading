@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 from dataclasses import dataclass
+from re import fullmatch
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
@@ -53,10 +54,14 @@ def _fetch_json(base_url: str, endpoint: str, timeout: float) -> tuple[dict, str
     return payload, "ok"
 
 
-def probe_dashboard(base_url: str, *, timeout: float = 60.0) -> tuple[ProbeCheck, ...]:
+def probe_dashboard(
+    base_url: str, *, timeout: float = 60.0, expected_sha: str | None = None
+) -> tuple[ProbeCheck, ...]:
     """Check web process, durable readiness and three market cards independently."""
     if timeout <= 0:
         raise ValueError("timeout must be positive")
+    if expected_sha is not None and fullmatch(r"[0-9a-f]{40}", expected_sha) is None:
+        raise ValueError("expected_sha must be a lowercase 40-character Git SHA")
 
     checks: list[ProbeCheck] = []
     for endpoint in ("/livez", "/readyz", "/api/markets"):
@@ -68,6 +73,12 @@ def probe_dashboard(base_url: str, *, timeout: float = 60.0) -> tuple[ProbeCheck
         if endpoint == "/livez":
             valid = payload.get("web_healthy") is True
             detail = "web_healthy" if valid else "liveness_unhealthy"
+            if valid and expected_sha is not None:
+                valid = payload.get("deployed_commit") == expected_sha
+                detail = (
+                    "deployed_commit_verified"
+                    if valid else "deployed_commit_missing_or_mismatched"
+                )
         elif endpoint == "/readyz":
             valid = (
                 payload.get("ready") is True
@@ -106,8 +117,11 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Probe read-only Trading AI endpoints")
     parser.add_argument("--base-url", required=True)
     parser.add_argument("--timeout", type=float, default=60.0)
+    parser.add_argument(
+        "--expected-sha", help="Require this exact 40-character deployed Git commit"
+    )
     args = parser.parse_args()
-    checks = probe_dashboard(args.base_url, timeout=args.timeout)
+    checks = probe_dashboard(args.base_url, timeout=args.timeout, expected_sha=args.expected_sha)
     for check in checks:
         print(
             f"{'PASS' if check.ok else 'FAIL'} {check.endpoint}: {check.detail}",

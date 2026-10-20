@@ -2,11 +2,11 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "main",
-  "pull_request": null,
-  "focus": "Offline Kronos-vs-research-ternary-River benchmark merged with explicit non-promotion; production paper River-v1 binary SHORT limitation and insufficient realized trade evidence remain priorities.",
+  "active_branch": "fix/expose-deployed-git-revision",
+  "pull_request": 169,
+  "focus": "Expose Render deployed git revision via /livez and verify optional expected SHA through read-only hosted probe, because previous healthy endpoints could not prove actual deployed code.",
   "production_evidence": {
-    "main_head": "081b34ec887496a30d8aed9cd1ec0dc38a658c1e",
+    "main_head": "1817749f243617d33a90fe991ae994840a5a9877",
     "render_shadow_challenger_enabled": true,
     "render_markets": "GC=F,^GDAXI,BTC-USD",
     "gold": {
@@ -24,8 +24,18 @@
       "processed_bars": 260,
       "consecutive_cycle_errors": 0
     },
-    "verified_at_utc": "2026-10-20T17:01:18Z",
-    "scheduler_recent_successes": 20
+    "verified_at_utc": "2026-10-20T21:52:00+00:00",
+    "scheduler_recent_successes": 20,
+    "public_api_verification": {
+      "liveness": true,
+      "readiness": true,
+      "running_markets": 3,
+      "error_markets": 0,
+      "portfolio_equity_complete": true,
+      "trade_count": 8,
+      "portfolio_realized_pnl": -0.5748106341489922,
+      "production_deployed_commit": "unverified_until_PR_169_is_deployed"
+    }
   },
   "completed_changes": [
     "PR #43 fixed the daily-loss baseline across intraday bars.",
@@ -58,9 +68,9 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Verify the actual Render deployment revision and read-only /api/markets session/heartbeat/signal accuracy; GitHub liveness probe alone does not prove the latest release is deployed.",
-    "Collect held-out, gap-checked non-overlapping Gold/DAX/BTC data and >=500 comparison windows per candidate; compare Kronos to River ternary and momentum with transaction costs, confidence intervals and forward shadow evidence. Keep Kronos unpromoted.",
-    "Design and separately verify an explicit backwards-compatible River-v2 three-class model/state migration to address binary-v1 inability to predict SHORT; do not rewrite persisted models or use live broker orders.",
-    "Accumulate and review enough net realized paper fills to estimate edge, drawdown, and uncertainty before changing strategy."
+    "PR #169: require CI, CodeQL and Cloudflare Worker integration green before merge; then verify Render /livez.deployed_commit matches the intended deployed release SHA (not necessarily metadata-only main HEAD).",
+    "Read-only /api/markets and /api/scheduler currently show healthy Gold/DAX/BTC paper engines, complete 100k portfolio, eight realized paper fills, and 20 successful Cloudflare deliveries. Continue monitoring with bounded free-tier usage.",
+    "Kronos-mini 40-window BTC research benchmark has negative net mean and no eligible promotion; use genuinely held-out non-overlapping samples and forward shadow before considering alternatives.",
+    "Production River-v1 is binary with zero SHORT probability; a future v2 must use an explicit independently validated state migration while retaining paper-only safety."
   ]
 }
