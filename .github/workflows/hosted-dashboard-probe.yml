@@ -2,6 +2,11 @@ name: Hosted Dashboard Probe
 
 on:
   workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: "Optional deployed Render Git SHA to verify (40 hex characters)"
+        required: false
+        type: string
   schedule:
     - cron: "17 */2 * * *"
   push:
@@ -27,9 +32,13 @@ jobs:
     env:
       DASHBOARD_URL: https://ai-trading-dashboard-qyr2.onrender.com
       PYTHONPATH: src
+      EXPECTED_DEPLOY_SHA: ${{ inputs.expected_sha }}
     steps:
       - uses: actions/checkout@v7
       - name: Verify liveness, durable readiness and market cards
         run: |
-          python -m ai_trading.deployment_probe \
-            --base-url "${DASHBOARD_URL}" --timeout 60
+          args=(--base-url "${DASHBOARD_URL}" --timeout 60)
+          if [ -n "${EXPECTED_DEPLOY_SHA}" ]; then
+            args+=(--expected-sha "${EXPECTED_DEPLOY_SHA}")
+          fi
+          python -m ai_trading.deployment_probe "${args[@]}"
