@@ -46,16 +46,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T23:46:20Z
+Generated: 2026-10-20T00:28:03Z
 
 ### Git
 - Branch: `main`
-- Head: `96962cfddcfb`
-- Commit date: 2026-10-19T19:46:11-04:00
-- Commit: fix(scheduler): avoid redundant GitHub fallback while Cloudflare is healthy (#162)
+- Head: `de2e19945e33`
+- Commit date: 2026-10-19T20:27:54-04:00
+- Commit: fix(scheduler): bound telemetry probe and allow longer fallback cycle (#163)
 - Tracked files: 504
 
 ### Recently changed files
+- `.github/workflows/paper-cycle.yml`
 - `README.md`
 - `src/ai_trading/scheduler_fallback.py`
 - `tests/test_paper_cycle_workflow.py`
@@ -67,8 +68,6 @@ Generated: 2026-10-19T23:46:20Z
 - `tests/test_scheduler_endpoint.py`
 - `src/ai_trading/postgres_persistence.py`
 - `tests/test_postgres_persistence.py`
-- `.github/workflows/paper-cycle.yml`
-- `infra/cloudflare-paper-scheduler/wrangler.toml`
 
 ### Project signals
 - `pyproject.toml`

@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 6 success / 0 failure / 2 active
+Summary: 4 success / 0 failure / 4 active
 
-- CI: in_progress / pending (96962cfd)
-- CodeQL: in_progress / pending (96962cfd)
-- CI: completed / success (0bf955f3)
-- CodeQL: completed / success (0bf955f3)
-- CI: completed / success (69f9c0ac)
-- Deploy Cloudflare Paper Scheduler: completed / success (69f9c0ac)
-- CodeQL: completed / success (69f9c0ac)
-- CI: completed / success (54345a83)
+- CI: in_progress / pending (de2e1994)
+- CodeQL: in_progress / pending (de2e1994)
+- CodeQL: in_progress / pending (946a86ea)
+- CI: in_progress / pending (946a86ea)
+- CI: completed / success (26bf2000)
+- CodeQL: completed / success (26bf2000)
+- CodeQL: completed / success (c0e5685f)
+- CI: completed / success (c0e5685f)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

@@ -777,7 +777,7 @@ jobs:
       - name: Run authenticated three-market fallback
         run: |
           python -m ai_trading.scheduler_fallback \
-            --base-url "${DASHBOARD_URL}" --timeout 90
+            --base-url "${DASHBOARD_URL}" --timeout 180
 ````
 
 ## File: .github/workflows/production-os-review-handoff.yml
@@ -8002,6 +8002,9 @@ age = payload.get("last_delivery_age_seconds")
 ⋮----
 origin = base_url.rstrip("/")
 status_request = Request(
+# Do not spend the execution budget waiting on optional scheduler telemetry.
+# Allow a slower cold-starting Render service to complete the actual cycle.
+status_timeout = min(timeout, 45.0)
 ⋮----
 status_payload = (
 ⋮----
@@ -13276,7 +13279,7 @@ Autonomous trading research platform focused on reproducible, risk-aware, out-of
 - correlation-aware portfolio de-risking and fail-closed configuration validation
 - bounded external paper-cycle scheduling with catch-up support
 - Cloudflare fifteen-minute scheduler with authenticated Render endpoint and durable delivery evidence
-- GitHub Actions hourly authenticated fallback (reuses Render/Neon, skips recent Cloudflare success to conserve free compute)
+- GitHub Actions hourly authenticated fallback (reuses Render/Neon, skips recent Cloudflare success to conserve free compute; 45-second maximum status probe and 180-second authenticated cycle timeout accommodate Render cold starts)
 - read-only hosted dashboard backed by the same durable runtime state
 - CI with Ruff + Pytest + PostgreSQL 16 integration tests
 

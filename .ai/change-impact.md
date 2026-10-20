@@ -1,14 +1,16 @@
 # Change impact
 
-Base: 01ddfe768f7756c6a631845bf6138cb45b9e2e82
-Head: 96962cfddcfb4dab8cb62a42826a5ea41eb7aea8
+Base: 453691344a69ae9581759ec2cb83f56bb361d117
+Head: de2e19945e334d7f8d6521ae82453a42544bc39b
 
 ## Changed files
+- M .github/workflows/paper-cycle.yml
 - M README.md
 - M src/ai_trading/scheduler_fallback.py
 - M tests/test_paper_cycle_workflow.py
 
 ## Affected areas
+- .github
 - (root)
 - src
 - tests
