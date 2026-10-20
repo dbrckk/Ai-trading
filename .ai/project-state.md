@@ -27,7 +27,7 @@ Status: active
 
 ## Current priority
 - On 2026-10-20 a direct read-only hosted probe found `/livez.web_healthy=true`, `/readyz.ready=true`, three `RUNNING` paper markets, no market errors, eight paper trades and portfolio realized PnL approximately -0.57481 (normalized portfolio simulation units), with 20 successful recent Cloudflare deliveries. This proves runtime health, not current release SHA or trading edge.
-- PR #169 adds `/livez.deployed_commit` from Render's documented `RENDER_GIT_COMMIT` and an opt-in exact SHA comparison via manual hosted GitHub probe. Existing scheduled checks stay backward-compatible; do not report production revision verified before checking the deployed endpoint.
+- PR #169 **merged and verified on Render**: public `/livez.deployed_commit` exactly matches release SHA `5e0ea79388915b0b357917896ec8ac2e687e1b27`; `/readyz` confirms healthy storage, `/api/markets` reports Gold/DAX/BTC all RUNNING with no errors, and `/api/scheduler` reports 20 consecutive Cloudflare successes. The optional SHA-aware probe fails closed on absent or mismatching deployments. No trading logic or paper state migrated.
 - PRs #166 and #167 are merged: hosted external heartbeat uses the 15-minute Cloudflare cadence while bar signals expire independently; dashboard session-expiry checks now use a deterministic time in CI.
 - PR #157 is merged as **offline research tooling only**. It adds genuine pinned upstream Kronos-mini inference and a corrected three-class River One-vs-Rest comparator without changing persisted River-v1 paper execution.
 - Latest real BTC-USD 5-minute Kronos smoke (2026-10-20, 40 windows, 29 directional) returned mean net Kronos **-0.0547%** per window, momentum **-0.0973%**, research River **+0.0041%**. Confidence lower bounds are negative and `review_eligible=false`; no profitable-trading claim or Kronos promotion is justified.
@@ -38,7 +38,7 @@ Status: active
 ## Validation
 - Main after PR #167: Ruff/Pytest/Cloudflare Worker checks and CodeQL passed (run 39499994723 and 39499994605).
 - PR #157 final head: CI run 39500880135, CodeQL run 39500880125 and actual pinned Kronos model smoke run 39500872405 all passed, with JSON artifact 12301525143.
-- Main-after-#157 CI and deploy verification are tracked separately; do not claim success from prior branch runs.
+- PR #169 head and main post-merge CI, CodeQL and hosted dashboard probe passed. Direct Render `/livez` deployed SHA matched the intended release; `/readyz`, `/api/markets` and `/api/scheduler` validated read-only.
 - Canonical validation: `ruff check src tests`, full Pytest against PostgreSQL 16, Cloudflare Worker tests and CodeQL.
 
 ## Last verified
