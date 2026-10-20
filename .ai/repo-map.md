@@ -636,6 +636,11 @@ name: Hosted Dashboard Probe
 
 on:
   workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: "Optional deployed Render Git SHA to verify (40 hex characters)"
+        required: false
+        type: string
   schedule:
     - cron: "17 */2 * * *"
   push:
@@ -661,12 +666,16 @@ jobs:
     env:
       DASHBOARD_URL: https://ai-trading-dashboard-qyr2.onrender.com
       PYTHONPATH: src
+      EXPECTED_DEPLOY_SHA: ${{ inputs.expected_sha }}
     steps:
       - uses: actions/checkout@v7
       - name: Verify liveness, durable readiness and market cards
         run: |
-          python -m ai_trading.deployment_probe \
-            --base-url "${DASHBOARD_URL}" --timeout 60
+          args=(--base-url "${DASHBOARD_URL}" --timeout 60)
+          if [ -n "${EXPECTED_DEPLOY_SHA}" ]; then
+            args+=(--expected-sha "${EXPECTED_DEPLOY_SHA}")
+          fi
+          python -m ai_trading.deployment_probe "${args[@]}"
 ````
 
 ## File: .github/workflows/kronos-model-smoke.yml
@@ -2762,6 +2771,9 @@ portfolio_pnl_css = (
 market_panel = (
 ⋮----
 effective_settings = settings or HostedPaperSettings.from_env()
+# Render publishes the exact deployed Git commit at runtime.
+revision = os.getenv("RENDER_GIT_COMMIT", "").strip().lower()
+deployed_commit = revision if fullmatch(r"[0-9a-f]{40}", revision) else None
 effective_markets = configured_markets_from_env()
 journal = TradeJournal(journal_path)
 state_store = RuntimeStateStore(state_path)
@@ -2808,6 +2820,8 @@ def do_GET(self) -> None
 path = urlsplit(self.path).path.rstrip("/")
 ⋮----
 deliveries = backend.list_scheduler_deliveries(limit=20)
+⋮----
+liveness: dict[str, object] = {"web_healthy": True}
 ⋮----
 snapshot = load_status_snapshot()
 storage_healthy = snapshot.get("storage_healthy") is not False
@@ -2975,14 +2989,15 @@ reason = explanation.get("error") if isinstance(explanation, dict) else None
 ⋮----
 payload = json.loads(body)
 ⋮----
-def probe_dashboard(base_url: str, *, timeout: float = 60.0) -> tuple[ProbeCheck, ...]
-⋮----
 """Check web process, durable readiness and three market cards independently."""
 ⋮----
 checks: list[ProbeCheck] = []
 ⋮----
 valid = payload.get("web_healthy") is True
 detail = "web_healthy" if valid else "liveness_unhealthy"
+⋮----
+valid = payload.get("deployed_commit") == expected_sha
+detail = (
 ⋮----
 valid = (
 detail = "storage_ready" if valid else "storage_or_configuration_unready"
@@ -3005,7 +3020,7 @@ def main() -> int
 parser = argparse.ArgumentParser(description="Probe read-only Trading AI endpoints")
 ⋮----
 args = parser.parse_args()
-checks = probe_dashboard(args.base_url, timeout=args.timeout)
+checks = probe_dashboard(args.base_url, timeout=args.timeout, expected_sha=args.expected_sha)
 ````
 
 ## File: src/ai_trading/deployment_readiness.py
@@ -9643,9 +9658,15 @@ payload = json.loads(body)
 ⋮----
 def test_healthz_keeps_web_liveness_separate_from_engine_health(tmp_path) -> None
 ⋮----
-def test_external_probe_checks_live_ready_and_all_markets(tmp_path) -> None
+def test_external_probe_checks_live_ready_and_all_markets(tmp_path, monkeypatch) -> None
 ⋮----
-results = probe_dashboard(f"http://127.0.0.1:{port}", timeout=3)
+deployed_sha = "a" * 40
+⋮----
+base_url = f"http://127.0.0.1:{port}"
+⋮----
+results = probe_dashboard(base_url, timeout=3, expected_sha=deployed_sha)
+⋮----
+mismatched = probe_dashboard(base_url, timeout=3, expected_sha="b" * 40)
 ⋮----
 port = _start_dashboard(
 ⋮----
@@ -13720,6 +13741,25 @@ GitHub Actions fallback scheduler
 The primary scheduler is the Cloudflare Worker under `infra/cloudflare-paper-scheduler/`. Its cron runs every fifteen minutes and sends an authenticated POST to Render's `/internal/paper-cycle` endpoint. The Worker contains no database credentials and no trading logic. The hourly `.github/workflows/paper-cycle.yml` fallback calls the same authenticated Render endpoint, skipping the POST when Cloudflare succeeded within the last 32 minutes (matching the dashboard's health window). Render alone holds the database connection; GitHub Actions does not store it. Both schedulers process Gold (`GC=F`), DAX (`^GDAXI`) and BTC (`BTC-USD`) independently, so one market failure does not prevent the others from advancing. GitHub scheduled jobs can be delayed; this fallback does not guarantee an exact heartbeat.
 
 The hosted runtime heartbeat uses the **15-minute external scheduler cadence**, not the **5-minute candle interval**. It reports a stale engine after roughly three missed scheduler periods (45 minutes); the dashboard's individual paper signal is independently withheld once its underlying 5-minute bar decision is older than 15 minutes, or if the market session is closed. This avoids falsely marking a healthy scheduler stale without treating an older signal as current.
+
+**Deployment provenance.** Render provides `RENDER_GIT_COMMIT` automatically.
+The read-only `/livez` endpoint includes `deployed_commit` when a valid
+40-character SHA is available. Use the manual **Hosted Dashboard Probe**
+GitHub Actions workflow with its optional `expected_sha` input. Alternatively,
+set `RENDER_RELEASE_SHA` to the intended 40-character deployed commit, then run:
+
+```bash
+python -m ai_trading.deployment_probe \
+  --base-url https://ai-trading-dashboard-qyr2.onrender.com \
+  --expected-sha "$RENDER_RELEASE_SHA"
+```
+
+A missing or mismatched deployed SHA fails that explicit check even when
+`/readyz` succeeds. Scheduled and automatic probes continue to check
+liveness, storage, and all three markets without requiring a particular SHA,
+because Render deploys asynchronously and `[skip render]` metadata-only
+commits can advance `main` without a new release. Compare against the
+intended **deployed release**, not blindly against the newest `main` commit.
 
 Scheduler delivery telemetry is sanitized and persisted durably. The application never persists the bearer token or raw authorization headers. A partially failed multi-market cycle returns **HTTP 503**, and the Cloudflare Worker also checks the JSON `ok` flag on successful HTTP responses. Failures are observable rather than falsely reported as successful; Render logs contain only known failed market symbols and sanitized failure codes, not provider exception text. Three consecutive successful Cloudflare deliveries are treated as the minimum verification threshold exposed by `/api/scheduler`.
 

@@ -1,16 +1,23 @@
 # Change impact
 
-Base: 4f97fed6691d22289f9c6f8f5f7f3f00b3d72064
-Head: 62519089cc0f035a6201d7828498fd44b61d36f0
+Base: 1817749f243617d33a90fe991ae994840a5a9877
+Head: 5e0ea79388915b0b357917896ec8ac2e687e1b27
 
 ## Changed files
-- M docs/kronos-research.md
+- M .github/workflows/hosted-dashboard-probe.yml
+- M README.md
+- M src/ai_trading/dashboard.py
+- M src/ai_trading/deployment_probe.py
+- M tests/test_dashboard_health.py
 
 ## Affected areas
-- docs
+- .github
+- (root)
+- src
+- tests
 
 ## Related test candidates
-- No direct filename-based test match detected.
+- tests/test_dashboard.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.
