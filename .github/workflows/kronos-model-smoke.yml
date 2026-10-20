@@ -30,6 +30,7 @@ jobs:
           git clone https://github.com/shiyu-coder/Kronos.git ../Kronos
           git -C ../Kronos checkout --detach 67b630e67f6a18c9e9be918d9b4337c960db1e9a
           python -m pip install -r ../Kronos/requirements.txt
+      # Inference interoperability only: a short smoke is never profit evidence.
       - name: Run original Kronos mini on real BTC history
         env:
           HF_HUB_DISABLE_TELEMETRY: '1'
