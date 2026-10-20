@@ -44,6 +44,7 @@ def test_paper_cycle_workflow_uses_authenticated_render_not_expired_db() -> None
         "python -m ai_trading.scheduler_fallback",
         "https://ai-trading-dashboard-qyr2.onrender.com",
         'PYTHONPATH: src',
+        '--timeout 180',
     )
     for expected in required:
         assert expected in text
@@ -73,7 +74,7 @@ def test_fallback_skips_healthy_recent_cloudflare_without_paper_post(
 
     outcome = run_fallback("https://example.invalid", "server-secret", opener=fake_open)
     assert outcome == "skipped_recent_cloudflare"
-    assert seen == [("GET", "https://example.invalid/api/scheduler", 90.0)]
+    assert seen == [("GET", "https://example.invalid/api/scheduler", 45.0)]
 
 
 @pytest.mark.parametrize(
@@ -107,6 +108,43 @@ def test_fallback_runs_one_authenticated_three_market_endpoint_cycle(
     assert calls[-1].get_header("Authorization") == "Bearer server-secret"
     assert calls[-1].get_header("X-scheduler-source") == "github"
     assert not any("postgres" in request.full_url for request in calls)
+
+
+def test_fallback_reserves_full_timeout_for_slow_paper_cycle() -> None:
+    calls = []
+
+    def fake_open(request, timeout):
+        calls.append((request.get_method(), timeout))
+        if request.get_method() == "GET":
+            return FakeResponse({"last_ok": False})
+        return FakeResponse({"ok": True, "processed": 3})
+
+    assert run_fallback(
+        "https://example.invalid", "server-secret", opener=fake_open
+    ) == "executed"
+    assert calls == [("GET", 45.0), ("POST", 180.0)]
+
+
+def test_fallback_honors_shorter_caller_timeout_and_rejects_nonfinite() -> None:
+    calls = []
+
+    def fake_open(request, timeout):
+        calls.append((request.get_method(), timeout))
+        if request.get_method() == "GET":
+            return FakeResponse({})
+        return FakeResponse({"ok": True})
+
+    assert run_fallback(
+        "https://example.invalid", "server-secret",
+        timeout=10.0, opener=fake_open,
+    ) == "executed"
+    assert calls == [("GET", 10.0), ("POST", 10.0)]
+    for invalid in (float("nan"), float("inf"), -1.0, 0.0):
+        with pytest.raises(ValueError, match="finite"):
+            run_fallback(
+                "https://example.invalid", "server-secret",
+                timeout=invalid, opener=fake_open,
+            )
 
 
 def test_fallback_runs_after_scheduler_telemetry_failure() -> None:
