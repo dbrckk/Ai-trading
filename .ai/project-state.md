@@ -42,16 +42,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-20T00:32:12Z
+Generated: 2026-10-20T17:15:18Z
 
 ### Git
 - Branch: `main`
-- Head: `24b4eb263e09`
-- Commit date: 2026-10-19T20:32:02-04:00
-- Commit: fix(paper): isolate concurrent Gold, DAX and BTC runtime locks (#164)
+- Head: `8e1d0185d313`
+- Commit date: 2026-10-20T13:15:08-04:00
+- Commit: fix(paper): report allocation-adjusted multi-market trade performance (#165)
 - Tracked files: 504
 
 ### Recently changed files
+- `src/ai_trading/dashboard.py`
+- `src/ai_trading/file_persistence.py`
+- `src/ai_trading/multi_market.py`
+- `src/ai_trading/performance_metrics.py`
+- `src/ai_trading/persistence.py`
+- `src/ai_trading/postgres_persistence.py`
+- `tests/test_cumulative_performance_persistence.py`
+- `tests/test_multi_market.py`
 - `src/ai_trading/runtime.py`
 - `tests/test_runtime_lock.py`
 - `.github/workflows/paper-cycle.yml`
@@ -60,12 +68,8 @@ Generated: 2026-10-20T00:32:12Z
 - `tests/test_paper_cycle_workflow.py`
 - `infra/cloudflare-paper-scheduler/src/index.js`
 - `infra/cloudflare-paper-scheduler/test/index.test.js`
-- `src/ai_trading/multi_market.py`
 - `src/ai_trading/scheduler_endpoint.py`
-- `tests/test_multi_market.py`
 - `tests/test_scheduler_endpoint.py`
-- `src/ai_trading/postgres_persistence.py`
-- `tests/test_postgres_persistence.py`
 
 ### Project signals
 - `pyproject.toml`

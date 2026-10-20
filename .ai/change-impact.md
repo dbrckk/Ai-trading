@@ -1,18 +1,29 @@
 # Change impact
 
-Base: 355b1d7e0c86d2ad3a469e3b3554b0a70c740d46
-Head: 24b4eb263e0946ae1a746bb84a392afa662b0490
+Base: a4e079fe3f12537c001fe38100be2f19b1efd980
+Head: 8e1d0185d313030801dfffebe44317b01cad5485
 
 ## Changed files
-- M src/ai_trading/runtime.py
-- M tests/test_runtime_lock.py
+- M src/ai_trading/dashboard.py
+- M src/ai_trading/file_persistence.py
+- M src/ai_trading/multi_market.py
+- M src/ai_trading/performance_metrics.py
+- M src/ai_trading/persistence.py
+- M src/ai_trading/postgres_persistence.py
+- M tests/test_cumulative_performance_persistence.py
+- M tests/test_multi_market.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_runtime.py
+- tests/test_dashboard.py
+- tests/test_file_persistence.py
+- tests/test_multi_market.py
+- tests/test_performance_metrics.py
+- tests/test_persistence.py
+- tests/test_postgres_persistence.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

@@ -2472,16 +2472,17 @@ load_portfolio_performance = getattr(
 ⋮----
 multi_runtime_keys = tuple(
 trade_performance = load_portfolio_performance(
-performance_scope = "full persisted cross-market history"
+performance_scope = "full persisted cross-market history (allocation-adjusted)"
 performance_is_recent = False
 ⋮----
-trade_performance = calculate_performance_metrics(recent)
-performance_scope = "latest 200 cross-market trade events"
+trade_performance = calculate_allocated_performance_metrics(
+performance_scope = "latest 200 cross-market trade events (allocation-adjusted)"
 performance_is_recent = True
 ⋮----
 trade_performance = load_performance(runtime_key)
 performance_scope = "full persisted history"
 ⋮----
+trade_performance = calculate_performance_metrics(recent)
 performance_scope = "latest 200 trade events"
 ⋮----
 load_burnin = getattr(persistence, "list_burnin_snapshots", None)
@@ -3710,6 +3711,10 @@ state = commit.state
 regimes = set(self.list_regimes(""))
 ⋮----
 def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics
+⋮----
+weights = resolved_portfolio_allocations(runtime_keys, allocations)
+⋮----
+allocation_by_symbol = {
 ⋮----
 def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]
 ⋮----
@@ -6128,6 +6133,13 @@ max_drawdown = 0.0
 peak_pnl = max(peak_pnl, cumulative_pnl)
 max_drawdown = max(max_drawdown, peak_pnl - cumulative_pnl)
 ⋮----
+"""Match normalized paper sleeves to the weights used in portfolio equity."""
+⋮----
+"""Compute cash PnL and drawdown at actual sleeve allocations.
+
+    Trade count and PnL coverage remain event counts, not fractional weights.
+    """
+⋮----
 def empty_performance_payload() -> dict[str, object]
 ⋮----
 def performance_payload(metrics: TradePerformanceMetrics) -> dict[str, object]
@@ -6600,6 +6612,8 @@ query = f"""
 rows = cursor.fetchall()
 ⋮----
 def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics
+⋮----
+weights = resolved_portfolio_allocations(runtime_keys, allocations)
 ⋮----
 def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]
 ⋮----
@@ -9364,6 +9378,9 @@ def test_postgres_persists_cumulative_trade_performance() -> None
 ⋮----
 backend = PostgresPaperPersistence(DATABASE_URL)
 ⋮----
+# Normalize the trade journal's 100k sleeve to its allocated paper capital.
+allocated = backend.load_portfolio_trade_performance(
+⋮----
 def test_postgres_duplicate_trade_does_not_double_count_performance() -> None
 ⋮----
 trade = _trade(12.5, 0)
@@ -10704,8 +10721,6 @@ def list_regimes(self, runtime_key: str)
 def list_trades(self, runtime_key: str | None = None, *, limit: int | None = None)
 ⋮----
 def load_trade_performance(self, runtime_key: str)
-⋮----
-def load_portfolio_trade_performance(self, runtime_keys: tuple[str, ...])
 ⋮----
 def test_configured_markets_default_to_full_bundle(monkeypatch) -> None
 ⋮----
