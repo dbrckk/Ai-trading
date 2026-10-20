@@ -26,6 +26,8 @@ Status: active
 - Free Render/Neon resources and occasional provider failures remain operational constraints; keep the hourly GitHub fallback.
 
 ## Current priority
+- On 2026-10-20 a direct read-only hosted probe found `/livez.web_healthy=true`, `/readyz.ready=true`, three `RUNNING` paper markets, no market errors, eight paper trades and portfolio realized PnL approximately -0.57481 (normalized portfolio simulation units), with 20 successful recent Cloudflare deliveries. This proves runtime health, not current release SHA or trading edge.
+- PR #169 adds `/livez.deployed_commit` from Render's documented `RENDER_GIT_COMMIT` and an opt-in exact SHA comparison via manual hosted GitHub probe. Existing scheduled checks stay backward-compatible; do not report production revision verified before checking the deployed endpoint.
 - PRs #166 and #167 are merged: hosted external heartbeat uses the 15-minute Cloudflare cadence while bar signals expire independently; dashboard session-expiry checks now use a deterministic time in CI.
 - PR #157 is merged as **offline research tooling only**. It adds genuine pinned upstream Kronos-mini inference and a corrected three-class River One-vs-Rest comparator without changing persisted River-v1 paper execution.
 - Latest real BTC-USD 5-minute Kronos smoke (2026-10-20, 40 windows, 29 directional) returned mean net Kronos **-0.0547%** per window, momentum **-0.0973%**, research River **+0.0041%**. Confidence lower bounds are negative and `review_eligible=false`; no profitable-trading claim or Kronos promotion is justified.

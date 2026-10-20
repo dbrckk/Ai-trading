@@ -164,6 +164,24 @@ The primary scheduler is the Cloudflare Worker under `infra/cloudflare-paper-sch
 
 The hosted runtime heartbeat uses the **15-minute external scheduler cadence**, not the **5-minute candle interval**. It reports a stale engine after roughly three missed scheduler periods (45 minutes); the dashboard's individual paper signal is independently withheld once its underlying 5-minute bar decision is older than 15 minutes, or if the market session is closed. This avoids falsely marking a healthy scheduler stale without treating an older signal as current.
 
+**Deployment provenance.** Render provides `RENDER_GIT_COMMIT` automatically.
+The read-only `/livez` endpoint includes `deployed_commit` when a valid
+40-character SHA is available. Use the manual **Hosted Dashboard Probe**
+GitHub Actions workflow with its optional `expected_sha` input, or run:
+
+```bash
+python -m ai_trading.deployment_probe \
+  --base-url https://ai-trading-dashboard-qyr2.onrender.com \
+  --expected-sha <40-character-intended-deployment-commit>
+```
+
+A missing or mismatched deployed SHA fails that explicit check even when
+`/readyz` succeeds. Scheduled and automatic probes continue to check
+liveness, storage, and all three markets without requiring a particular SHA,
+because Render deploys asynchronously and `[skip render]` metadata-only
+commits can advance `main` without a new release. Compare against the
+intended **deployed release**, not blindly against the newest `main` commit.
+
 Scheduler delivery telemetry is sanitized and persisted durably. The application never persists the bearer token or raw authorization headers. A partially failed multi-market cycle returns **HTTP 503**, and the Cloudflare Worker also checks the JSON `ok` flag on successful HTTP responses. Failures are observable rather than falsely reported as successful; Render logs contain only known failed market symbols and sanitized failure codes, not provider exception text. Three consecutive successful Cloudflare deliveries are treated as the minimum verification threshold exposed by `/api/scheduler`.
 
 The production cycle is:
