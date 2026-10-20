@@ -50,8 +50,10 @@ _STORAGE_ERROR_STATUS: dict[str, object] = {
 }
 
 
-def _public_runtime_snapshot(status: HostedRuntimeStatus | None) -> dict[str, object]:
-    snapshot = runtime_status_snapshot(status)
+def _public_runtime_snapshot(
+    status: HostedRuntimeStatus | None, *, now: datetime | None = None
+) -> dict[str, object]:
+    snapshot = runtime_status_snapshot(status, now=now)
     if snapshot.get("error"):
         snapshot["error"] = "worker failure"
     return snapshot
@@ -197,6 +199,7 @@ def render_dashboard(
     runtime_key: str | None = None,
     markets: tuple[MarketSpec, ...] | None = None,
     market_interval: str = "5m",
+    now: datetime | None = None,
 ) -> str:
     storage_error = False
     runtime_revision: int | None = None
@@ -338,7 +341,7 @@ def render_dashboard(
         str(state.processed_bars) if state is not None and not storage_error else "-"
     )
 
-    runtime_snapshot = _public_runtime_snapshot(runtime_status)
+    runtime_snapshot = _public_runtime_snapshot(runtime_status, now=now)
     engine_status = "ERROR" if storage_error else str(runtime_snapshot["engine_status"])
     market = (
         f"{runtime_status.symbol} · {runtime_status.interval}"
@@ -405,11 +408,13 @@ def render_dashboard(
         runtime_status.symbol if runtime_status is not None else "",
         runtime_status if not storage_error else None,
         runtime_snapshot,
+        now=now,
     )
     paper_signal = paper_signal_snapshot(
         runtime_status if not storage_error else None,
         freshness=signal_freshness,
         session_open=signal_session_open,
+        now=now,
     )
     if runtime_status is not None and not storage_error:
         decision_reason = (
@@ -608,6 +613,7 @@ def render_dashboard(
             markets,
             interval=market_interval,
             portfolio_cash=starting_cash,
+            now=now,
         )
         portfolio = snapshot["portfolio"]
         cards = []
