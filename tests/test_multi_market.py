@@ -91,12 +91,17 @@ class FakeMultiPersistence:
         )
 
 
-    def load_portfolio_trade_performance(self, runtime_keys: tuple[str, ...]):
+    def load_portfolio_trade_performance(
+        self,
+        runtime_keys: tuple[str, ...],
+        allocations: tuple[float, ...] | None = None,
+    ):
         assert runtime_keys == (
             "paper:GC=F:5m:online-river:v1",
             "paper:^GDAXI:5m:online-river:v1",
             "paper:BTC-USD:5m:online-river:v1",
         )
+        assert allocations == (0.34, 0.33, 0.33)
         from ai_trading.performance_metrics import performance_metrics_from_totals
 
         return performance_metrics_from_totals(

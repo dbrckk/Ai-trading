@@ -81,6 +81,16 @@ def test_postgres_persists_cumulative_trade_performance() -> None:
         )
 
     _assert_metrics(backend.load_trade_performance(RUNTIME_KEY))
+    # Normalize the trade journal's 100k sleeve to its allocated paper capital.
+    allocated = backend.load_portfolio_trade_performance(
+        (RUNTIME_KEY,), allocations=(0.25,)
+    )
+    assert allocated.trade_count == 4
+    assert allocated.pnl_observations == 4
+    assert allocated.realized_pnl == pytest.approx(-1.25)
+    assert allocated.gross_profit == pytest.approx(7.5)
+    assert allocated.gross_loss == pytest.approx(8.75)
+    assert allocated.max_drawdown == pytest.approx(8.75)
 
 
 def test_postgres_duplicate_trade_does_not_double_count_performance() -> None:
@@ -138,3 +148,9 @@ def test_file_backend_reports_full_journal_performance(tmp_path) -> None:
         backend.trade_journal.append(_trade(pnl, index))
 
     _assert_metrics(backend.load_trade_performance(RUNTIME_KEY))
+    allocated = backend.load_portfolio_trade_performance(
+        (RUNTIME_KEY,), allocations=(0.25,)
+    )
+    assert allocated.realized_pnl == pytest.approx(-1.25)
+    assert allocated.max_drawdown == pytest.approx(8.75)
+    assert allocated.trade_count == 4

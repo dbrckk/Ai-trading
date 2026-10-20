@@ -22,26 +22,22 @@ Status: active
 - PR #67 prepares those validated Gold/DAX configurations as versioned audit-only MTF candidates, resets their quality evidence logically by config name, and leaves BTC MTF disabled until a benchmark candidate passes.
 
 ## Broken / blockers
-- Render request logs do not expose the scheduler POST evidence needed to directly prove three consecutive Cloudflare heartbeats, so issue #40 remains open.
-- GitHub scheduled paper-cycle delivery has historically been sparse; keep it as fallback until the Cloudflare acceptance evidence is complete.
-- Repository-standards routing benchmark health is separate from the trading CI; trading CI is green.
+- Paper execution is operational on three markets, but the realized trade sample is statistically insufficient for quality or profitability claims.
+- Free Render/Neon resources and occasional provider failures remain operational constraints; keep the hourly GitHub fallback.
 
 ## Current priority
-- PR #146 (2026-10-19) fixes a paper-cycle signal status omission (side/confidence/risk approval), gates visibility on decision freshness/session/heartbeat, and corrects market-card scroll anchoring. Production deployment and post-merge end-to-end telemetry are not yet verified.
-- Collect new versioned MTF evidence independently for the validated Gold and DAX 45-minute candidates.
-- Require at least 500 realized MTF observations and at least 100 directional observations before MTF review eligibility.
-- Keep BTC MTF unvalidated/disabled until a leakage-safe benchmark candidate passes the active-direction gate.
-- Keep River authoritative and every challenger strictly observational until sustained out-of-sample improvement is demonstrated.
-- Keep production paper-only and retain the GitHub scheduled fallback until issue #40 acceptance criteria are fully evidenced.
+- PR #165 aligns cross-market realized PnL, gross profit/loss and drawdown with the 34%/33%/33% portfolio allocations. Per-market normalized 100k histories and River execution stay unchanged.
+- On 2026-10-20 production had 8 paper fills; cross-market unweighted realized PnL was about -1.67 simulation units, while the allocation-adjusted result is -0.575. Verify deployed /api/markets and dashboard after green CI and merge.
+- Keep monitoring authenticated Cloudflare delivery and the GitHub fallback. Recent cycles are healthy; scheduler telemetry verified at least 20 consecutive successful Cloudflare deliveries.
+- Continue leakage-safe out-of-sample evaluation of Gold/DAX/BTC and shadow-only Kronos benchmarking. Do not promote challengers based on too few trades or activate live orders.
 
 ## Validation
-- Canonical validation: `ruff check .` and `pytest`.
-- Cloudflare Worker tests must remain green.
-- PR #43, #44, #45, #47, #48, #49, #50, #51, and #52 are merged and passed the trading CI before production activation.
-- Live runtime remains `RUNNING` with zero consecutive cycle errors.
+- Canonical validation: ruff check . and pytest with PostgreSQL integration service; Cloudflare Worker tests and CodeQL must remain green.
+- The allocation-adjusted SQL was run read-only on Neon, yielding 8 events, realized PnL -0.574810634, gross profit 1.211721732, gross loss 1.786532367 and max drawdown 1.490124683.
+- PR #165 CI, CodeQL and deployment evidence pending at time of writing.
 
 ## Last verified
-- 2026-09-20
+- 2026-10-20
 
 <!-- AUTO:START -->
 ## Automatic repository state

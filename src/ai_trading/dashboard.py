@@ -26,7 +26,10 @@ from .paper_cycle_service import (
     run_production_paper_cycle,
 )
 from .paper_readiness_evidence import bootstrap_positive_probability
-from .performance_metrics import calculate_performance_metrics
+from .performance_metrics import (
+    calculate_allocated_performance_metrics,
+    calculate_performance_metrics,
+)
 from .persistence import PaperPersistence, SchedulerDelivery, build_runtime_key
 from .persistence_factory import build_paper_persistence
 from .readiness import ReadinessCheck, ReadinessPolicy, ReadinessReport, evaluate_readiness
@@ -225,13 +228,17 @@ def render_dashboard(
                     for market in markets or ()
                 )
                 trade_performance = load_portfolio_performance(
-                    multi_runtime_keys
+                    multi_runtime_keys,
+                    allocations=tuple(market.allocation for market in markets or ()),
                 )
-                performance_scope = "full persisted cross-market history"
+                performance_scope = "full persisted cross-market history (allocation-adjusted)"
                 performance_is_recent = False
             elif multi_market_view:
-                trade_performance = calculate_performance_metrics(recent)
-                performance_scope = "latest 200 cross-market trade events"
+                trade_performance = calculate_allocated_performance_metrics(
+                    recent,
+                    {market.symbol: market.allocation for market in markets or ()},
+                )
+                performance_scope = "latest 200 cross-market trade events (allocation-adjusted)"
                 performance_is_recent = True
             elif callable(load_performance):
                 trade_performance = load_performance(runtime_key)

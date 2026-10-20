@@ -10,7 +10,12 @@ from .mtf_shadow_quality import (
     MultiTimeframeShadowQuality,
     compare_mtf_shadow_audit_payloads,
 )
-from .performance_metrics import TradePerformanceMetrics, calculate_performance_metrics
+from .performance_metrics import (
+    TradePerformanceMetrics,
+    calculate_allocated_performance_metrics,
+    calculate_performance_metrics,
+    resolved_portfolio_allocations,
+)
 from .persistence import (
     CommitOutcome,
     ModelBlob,
@@ -117,9 +122,18 @@ class FilePaperPersistence(PaperPersistence):
     def load_portfolio_trade_performance(
         self,
         runtime_keys: tuple[str, ...],
+        allocations: tuple[float, ...] | None = None,
     ) -> TradePerformanceMetrics:
-        del runtime_keys
-        return calculate_performance_metrics(self.trade_journal.list())
+        weights = resolved_portfolio_allocations(runtime_keys, allocations)
+        if allocations is None:
+            return calculate_performance_metrics(self.trade_journal.list())
+        allocation_by_symbol = {
+            key.split(":", 2)[1]: weight
+            for key, weight in zip(runtime_keys, weights, strict=True)
+        }
+        return calculate_allocated_performance_metrics(
+            self.trade_journal.list(), allocation_by_symbol
+        )
 
     def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]:
         del runtime_key
