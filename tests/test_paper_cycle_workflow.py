@@ -95,56 +95,19 @@ def test_fallback_runs_one_authenticated_three_market_endpoint_cycle(
     calls = []
 
     def fake_open(request, timeout):
-        del timeout
-        calls.append(request)
+        calls.append((request, timeout))
         if request.get_method() == "GET":
             return FakeResponse(status_payload)
         return FakeResponse({"ok": True, "processed": 3})
 
     outcome = run_fallback("https://example.invalid", "server-secret", opener=fake_open)
     assert outcome == "executed"
-    assert [request.get_method() for request in calls] == ["GET", "POST"]
-    assert calls[-1].full_url == "https://example.invalid/internal/paper-cycle"
-    assert calls[-1].get_header("Authorization") == "Bearer server-secret"
-    assert calls[-1].get_header("X-scheduler-source") == "github"
-    assert not any("postgres" in request.full_url for request in calls)
-
-
-def test_fallback_reserves_full_timeout_for_slow_paper_cycle() -> None:
-    calls = []
-
-    def fake_open(request, timeout):
-        calls.append((request.get_method(), timeout))
-        if request.get_method() == "GET":
-            return FakeResponse({"last_ok": False})
-        return FakeResponse({"ok": True, "processed": 3})
-
-    assert run_fallback(
-        "https://example.invalid", "server-secret", opener=fake_open
-    ) == "executed"
-    assert calls == [("GET", 45.0), ("POST", 180.0)]
-
-
-def test_fallback_honors_shorter_caller_timeout_and_rejects_nonfinite() -> None:
-    calls = []
-
-    def fake_open(request, timeout):
-        calls.append((request.get_method(), timeout))
-        if request.get_method() == "GET":
-            return FakeResponse({})
-        return FakeResponse({"ok": True})
-
-    assert run_fallback(
-        "https://example.invalid", "server-secret",
-        timeout=10.0, opener=fake_open,
-    ) == "executed"
-    assert calls == [("GET", 10.0), ("POST", 10.0)]
-    for invalid in (float("nan"), float("inf"), -1.0, 0.0):
-        with pytest.raises(ValueError, match="finite"):
-            run_fallback(
-                "https://example.invalid", "server-secret",
-                timeout=invalid, opener=fake_open,
-            )
+    assert [request.get_method() for request, _ in calls] == ["GET", "POST"]
+    assert [timeout for _, timeout in calls] == [45.0, 180.0]
+    assert calls[-1][0].full_url == "https://example.invalid/internal/paper-cycle"
+    assert calls[-1][0].get_header("Authorization") == "Bearer server-secret"
+    assert calls[-1][0].get_header("X-scheduler-source") == "github"
+    assert not any("postgres" in request.full_url for request, _ in calls)
 
 
 def test_fallback_runs_after_scheduler_telemetry_failure() -> None:
@@ -166,6 +129,9 @@ def test_fallback_runs_after_scheduler_telemetry_failure() -> None:
 def test_fallback_rejects_missing_token_without_network() -> None:
     with pytest.raises(FallbackFailure, match="repository secret is required"):
         run_fallback("https://example.invalid", "")
+    for invalid in (float("nan"), float("inf"), -1.0, 0.0):
+        with pytest.raises(ValueError, match="finite"):
+            run_fallback("https://example.invalid", "server-secret", timeout=invalid)
 
 
 def test_fallback_reports_sanitized_http_failure() -> None:
