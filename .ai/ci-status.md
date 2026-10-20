@@ -2,13 +2,13 @@
 
 Summary: 4 success / 0 failure / 3 active
 
-- CI: in_progress / pending (8e1d0185)
-- CodeQL: in_progress / pending (8e1d0185)
-- Hosted Dashboard Probe: in_progress / pending (8e1d0185)
-- CodeQL: completed / success (8b156cf7)
-- CI: completed / success (8b156cf7)
-- CI: completed / success (8f92e332)
-- CodeQL: completed / cancelled (8f92e332)
-- CI: completed / success (1c5c0d2d)
+- Hosted Dashboard Probe: in_progress / pending (4a28ca29)
+- CI: in_progress / pending (4a28ca29)
+- CodeQL: in_progress / pending (4a28ca29)
+- CodeQL: completed / success (eca10074)
+- CI: completed / success (eca10074)
+- CodeQL: completed / cancelled (7fb20a55)
+- CI: completed / success (7fb20a55)
+- CI: completed / success (3ac472b9)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

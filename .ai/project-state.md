@@ -43,16 +43,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-20T17:15:18Z
+Generated: 2026-10-20T21:15:54Z
 
 ### Git
 - Branch: `main`
-- Head: `8e1d0185d313`
-- Commit date: 2026-10-20T13:15:08-04:00
-- Commit: fix(paper): report allocation-adjusted multi-market trade performance (#165)
+- Head: `4a28ca29029a`
+- Commit date: 2026-10-20T17:15:43-04:00
+- Commit: fix(dashboard): align hosted heartbeat with Cloudflare cadence (#166)
 - Tracked files: 504
 
 ### Recently changed files
+- `README.md`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/file_persistence.py`
 - `src/ai_trading/multi_market.py`
@@ -64,13 +65,8 @@ Generated: 2026-10-20T17:15:18Z
 - `src/ai_trading/runtime.py`
 - `tests/test_runtime_lock.py`
 - `.github/workflows/paper-cycle.yml`
-- `README.md`
 - `src/ai_trading/scheduler_fallback.py`
 - `tests/test_paper_cycle_workflow.py`
-- `infra/cloudflare-paper-scheduler/src/index.js`
-- `infra/cloudflare-paper-scheduler/test/index.test.js`
-- `src/ai_trading/scheduler_endpoint.py`
-- `tests/test_scheduler_endpoint.py`
 
 ### Project signals
 - `pyproject.toml`

@@ -1,29 +1,18 @@
 # Change impact
 
-Base: a4e079fe3f12537c001fe38100be2f19b1efd980
-Head: 8e1d0185d313030801dfffebe44317b01cad5485
+Base: 924353982d8204ac0e10a3703c47878d5c9692f5
+Head: 4a28ca29029a8d83f974d56252a668ff617f3378
 
 ## Changed files
+- M README.md
 - M src/ai_trading/dashboard.py
-- M src/ai_trading/file_persistence.py
-- M src/ai_trading/multi_market.py
-- M src/ai_trading/performance_metrics.py
-- M src/ai_trading/persistence.py
-- M src/ai_trading/postgres_persistence.py
-- M tests/test_cumulative_performance_persistence.py
-- M tests/test_multi_market.py
 
 ## Affected areas
+- (root)
 - src
-- tests
 
 ## Related test candidates
 - tests/test_dashboard.py
-- tests/test_file_persistence.py
-- tests/test_multi_market.py
-- tests/test_performance_metrics.py
-- tests/test_persistence.py
-- tests/test_postgres_persistence.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.
