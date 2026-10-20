@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import argparse
 import json
-from re import fullmatch
 from dataclasses import dataclass
+from re import fullmatch
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
