@@ -1239,7 +1239,9 @@ def serve_dashboard(
             period=effective_settings.period,
             interval=effective_settings.interval,
             max_catchup_bars=DEFAULT_MAX_CATCHUP_BARS,
-            poll_seconds=300.0,
+            # Cloudflare runs every 15 minutes; heartbeat cadence is not the 5m bar size.
+            # Keep the 5m cadence for manually initiated/in-process cycles.
+            poll_seconds=900.0 if effective_settings.external_scheduler else 300.0,
             shadow_challenger_enabled=effective_settings.shadow_challenger,
             mtf_period=effective_settings.mtf_period,
         )

@@ -26,15 +26,16 @@ Status: active
 - Free Render/Neon resources and occasional provider failures remain operational constraints; keep the hourly GitHub fallback.
 
 ## Current priority
-- PR #165 aligns cross-market realized PnL, gross profit/loss and drawdown with the 34%/33%/33% portfolio allocations. Per-market normalized 100k histories and River execution stay unchanged.
-- On 2026-10-20 production had 8 paper fills; cross-market unweighted realized PnL was about -1.67 simulation units, while the allocation-adjusted result is -0.575. Verify deployed /api/markets and dashboard after green CI and merge.
-- Keep monitoring authenticated Cloudflare delivery and the GitHub fallback. Recent cycles are healthy; scheduler telemetry verified at least 20 consecutive successful Cloudflare deliveries.
-- Continue leakage-safe out-of-sample evaluation of Gold/DAX/BTC and shadow-only Kronos benchmarking. Do not promote challengers based on too few trades or activate live orders.
+- PR #165 is merged in `main` (2026-10-20); cross-market realized paper performance is now allocation-adjusted (Gold 34%, DAX 33%, BTC 33%).
+- PR #166 corrects a dashboard telemetry cadence mismatch: Cloudflare schedules production every 15 minutes, but the runtime heartbeat previously advertised 5 minutes and could show a healthy engine as STALE after one interval. The external cadence is now 900 seconds, while signal expiry still follows the underlying 5-minute bars. Require CI and CodeQL before merging.
+- After PR #166 deployment, verify production /api/markets freshness against scheduler delivery history. Live broker routing remains disabled.
+- Kronos/River multiclass comparison remains offline only, with insufficient statistically significant out-of-sample evidence to change the production binary River paper model.
+- Keep observing the authenticated Cloudflare scheduler and the hourly GitHub fallback, while conserving Render/Neon free-tier compute.
 
 ## Validation
 - Canonical validation: ruff check . and pytest with PostgreSQL integration service; Cloudflare Worker tests and CodeQL must remain green.
 - The allocation-adjusted SQL was run read-only on Neon, yielding 8 events, realized PnL -0.574810634, gross profit 1.211721732, gross loss 1.786532367 and max drawdown 1.490124683.
-- PR #165 CI, CodeQL and deployment evidence pending at time of writing.
+- PR #165 merged with green CI and CodeQL. PR #166 validation is required before merge; production deployment of the heartbeat fix is not yet verified.
 
 ## Last verified
 - 2026-10-20
