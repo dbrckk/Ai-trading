@@ -134,15 +134,31 @@ def test_healthz_keeps_web_liveness_separate_from_engine_health(tmp_path) -> Non
     }
 
 
-def test_external_probe_checks_live_ready_and_all_markets(tmp_path) -> None:
+def test_external_probe_checks_live_ready_and_all_markets(tmp_path, monkeypatch) -> None:
+    deployed_sha = "a" * 40
+    monkeypatch.setenv("RENDER_GIT_COMMIT", deployed_sha)
     port = _start_dashboard(tmp_path)
-    results = probe_dashboard(f"http://127.0.0.1:{port}", timeout=3)
+    base_url = f"http://127.0.0.1:{port}"
+    status, _, body = _get(base_url + "/livez")
+    assert status == 200
+    assert json.loads(body) == {
+        "web_healthy": True,
+        "deployed_commit": deployed_sha,
+    }
+
+    results = probe_dashboard(base_url, timeout=3, expected_sha=deployed_sha)
     assert [item.endpoint for item in results] == [
         "/livez",
         "/readyz",
         "/api/markets",
     ]
     assert all(item.ok for item in results), results
+    assert results[0].detail == "deployed_commit_verified"
+
+    mismatched = probe_dashboard(base_url, timeout=3, expected_sha="b" * 40)
+    assert mismatched[0].ok is False
+    assert mismatched[0].detail == "deployed_commit_missing_or_mismatched"
+    assert all(item.ok for item in mismatched[1:])
 
 
 def test_external_scheduler_readiness_detects_missing_configuration(
