@@ -2,29 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "refactor: fail closed on invalid trading configuration (#80)",
-      "terms": [
-        "80",
-        "closed",
-        "configuration",
-        "fail",
-        "invalid",
-        "refactor",
-        "trading"
-      ],
-      "tests": [],
-      "useful": [
-        "src/ai_trading/alpha_allocation.py",
-        "src/ai_trading/config.py",
-        "src/ai_trading/global_allocator.py",
-        "src/ai_trading/portfolio.py",
-        "src/ai_trading/portfolio_intelligence.py",
-        "src/ai_trading/portfolio_risk.py",
-        "tests/test_config_validation.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "feat: add durable scheduler delivery observability (#81)",
       "terms": [
         "81",
@@ -1249,6 +1226,30 @@
         "src/ai_trading/dashboard.py",
         "tests/test_dashboard_engine_status.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "feat(research): add validated offline Kronos vs multiclass River benchmark (#157)",
+      "terms": [
+        "157",
+        "add",
+        "benchmark",
+        "feat",
+        "kronos",
+        "multiclass",
+        "offline",
+        "research",
+        "river",
+        "validated",
+        "vs"
+      ],
+      "tests": [],
+      "useful": [
+        "src/ai_trading/kronos_research.py",
+        "src/ai_trading/online.py",
+        "tests/test_online.py",
+        "tests/test_paper_cycle.py"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1311,6 +1312,12 @@
     "156": {
       "src/ai_trading/deployment_probe.py": 4,
       "tests/test_dashboard_health.py": 4
+    },
+    "157": {
+      "src/ai_trading/kronos_research.py": 4,
+      "src/ai_trading/online.py": 4,
+      "tests/test_online.py": 4,
+      "tests/test_paper_cycle.py": 4
     },
     "158": {
       "src/ai_trading/scheduler_endpoint.py": 4,
@@ -1664,6 +1671,7 @@
       "src/ai_trading/features.py": 4,
       "src/ai_trading/file_persistence.py": 8,
       "src/ai_trading/hosted_runtime.py": 4,
+      "src/ai_trading/kronos_research.py": 4,
       "src/ai_trading/market_freshness.py": 4,
       "src/ai_trading/mtf_parameter_benchmark.py": 4,
       "src/ai_trading/mtf_shadow_challenger.py": 4,
@@ -1671,6 +1679,7 @@
       "src/ai_trading/multi_market.py": 16,
       "src/ai_trading/multi_timeframe_features.py": 4,
       "src/ai_trading/multiasset_checkpoint.py": 4,
+      "src/ai_trading/online.py": 4,
       "src/ai_trading/operational_overview.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
       "src/ai_trading/paper_cycle_service.py": 4,
@@ -1698,7 +1707,8 @@
       "tests/test_multi_market.py": 16,
       "tests/test_multi_timeframe_features.py": 4,
       "tests/test_multiasset_checkpoint.py": 4,
-      "tests/test_paper_cycle.py": 4,
+      "tests/test_online.py": 4,
+      "tests/test_paper_cycle.py": 8,
       "tests/test_paper_cycle_service.py": 4,
       "tests/test_paper_cycle_workflow.py": 4,
       "tests/test_postgres_persistence.py": 8,
@@ -1799,8 +1809,12 @@
       "tests/test_multiasset_checkpoint.py": 4
     },
     "benchmark": {
+      "src/ai_trading/kronos_research.py": 4,
       "src/ai_trading/mtf_parameter_benchmark.py": 8,
-      "tests/test_mtf_parameter_benchmark.py": 8
+      "src/ai_trading/online.py": 4,
+      "tests/test_mtf_parameter_benchmark.py": 8,
+      "tests/test_online.py": 4,
+      "tests/test_paper_cycle.py": 4
     },
     "benchmark-validated": {
       "src/ai_trading/dashboard.py": 4,
@@ -2470,6 +2484,7 @@
       "src/ai_trading/features.py": 4,
       "src/ai_trading/file_persistence.py": 12,
       "src/ai_trading/hosted_runtime.py": 4,
+      "src/ai_trading/kronos_research.py": 4,
       "src/ai_trading/market_freshness.py": 4,
       "src/ai_trading/mtf_parameter_benchmark.py": 16,
       "src/ai_trading/mtf_shadow_challenger.py": 8,
@@ -2480,6 +2495,7 @@
       "src/ai_trading/multiasset_backtest.py": 4,
       "src/ai_trading/multiasset_checkpoint.py": 4,
       "src/ai_trading/multiasset_runtime.py": 8,
+      "src/ai_trading/online.py": 4,
       "src/ai_trading/operational_overview.py": 16,
       "src/ai_trading/paper_cycle.py": 12,
       "src/ai_trading/paper_cycle_service.py": 8,
@@ -2513,14 +2529,12 @@
       "tests/test_multi_timeframe_features.py": 4,
       "tests/test_multiasset_checkpoint.py": 4,
       "tests/test_multiasset_runtime.py": 8,
-      "tests/test_paper_cycle.py": 12,
+      "tests/test_online.py": 4,
+      "tests/test_paper_cycle.py": 16,
       "tests/test_paper_cycle_service.py": 8,
       "tests/test_paper_cycle_workflow.py": 4,
       "tests/test_portfolio_intelligence.py": 4,
       "tests/test_postgres_persistence.py": 8,
-      "tests/test_research_config_validation.py": 4,
-      "tests/test_runtime_persistence.py": 4,
-      "tests/test_runtime_status.py": 4,
       "tests/test_scheduler_endpoint.py": 12
     },
     "feature": {
@@ -2748,6 +2762,12 @@
     "keep": {
       "src/ai_trading/multiasset_checkpoint.py": 4,
       "tests/test_multiasset_checkpoint.py": 4
+    },
+    "kronos": {
+      "src/ai_trading/kronos_research.py": 4,
+      "src/ai_trading/online.py": 4,
+      "tests/test_online.py": 4,
+      "tests/test_paper_cycle.py": 4
     },
     "latency": {
       "src/ai_trading/dashboard.py": 4,
@@ -3041,6 +3061,12 @@
       "tests/test_multiasset_checkpoint.py": 16,
       "tests/test_multiasset_runtime.py": 28
     },
+    "multiclass": {
+      "src/ai_trading/kronos_research.py": 4,
+      "src/ai_trading/online.py": 4,
+      "tests/test_online.py": 4,
+      "tests/test_paper_cycle.py": 4
+    },
     "neon": {
       "src/ai_trading/postgres_persistence.py": 4,
       "src/ai_trading/scheduler_endpoint.py": 4,
@@ -3066,6 +3092,12 @@
       "tests/test_file_persistence.py": 4,
       "tests/test_postgres_persistence.py": 4,
       "tests/test_scheduler_endpoint.py": 4
+    },
+    "offline": {
+      "src/ai_trading/kronos_research.py": 4,
+      "src/ai_trading/online.py": 4,
+      "tests/test_online.py": 4,
+      "tests/test_paper_cycle.py": 4
     },
     "ones": {
       "src/ai_trading/dashboard.py": 4,
@@ -3556,8 +3588,11 @@
       "tests/test_multi_market.py": 4
     },
     "research": {
+      "src/ai_trading/kronos_research.py": 4,
+      "src/ai_trading/online.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
-      "tests/test_paper_cycle.py": 4
+      "tests/test_online.py": 4,
+      "tests/test_paper_cycle.py": 8
     },
     "respect": {
       "src/ai_trading/scheduler_endpoint.py": 4,
@@ -3604,6 +3639,12 @@
       "tests/test_dashboard_overview.py": 4,
       "tests/test_mtf_shadow_quality.py": 4,
       "tests/test_multi_market.py": 4
+    },
+    "river": {
+      "src/ai_trading/kronos_research.py": 4,
+      "src/ai_trading/online.py": 4,
+      "tests/test_online.py": 4,
+      "tests/test_paper_cycle.py": 4
     },
     "route": {
       "src/ai_trading/scheduler_endpoint.py": 4,
@@ -3979,6 +4020,12 @@
       "tests/test_multiasset_checkpoint_consistency.py": 4,
       "tests/test_multiasset_runtime.py": 8
     },
+    "validated": {
+      "src/ai_trading/kronos_research.py": 4,
+      "src/ai_trading/online.py": 4,
+      "tests/test_online.py": 4,
+      "tests/test_paper_cycle.py": 4
+    },
     "vectorize": {
       "src/ai_trading/bootstrap_robustness.py": 4,
       "tests/test_bootstrap_robustness.py": 4
@@ -3986,6 +4033,12 @@
     "verified": {
       "src/ai_trading/paper_cycle_service.py": 4,
       "tests/test_paper_cycle_service.py": 4
+    },
+    "vs": {
+      "src/ai_trading/kronos_research.py": 4,
+      "src/ai_trading/online.py": 4,
+      "tests/test_online.py": 4,
+      "tests/test_paper_cycle.py": 4
     },
     "when": {
       "src/ai_trading/dashboard.py": 4,

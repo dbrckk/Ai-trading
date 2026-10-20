@@ -45,6 +45,7 @@ The content is organized as follows:
     cloudflare-paper-scheduler-deploy.yml
     codeql.yml
     hosted-dashboard-probe.yml
+    kronos-model-smoke.yml
     mtf-parameter-benchmark.yml
     paper-cycle.yml
     production-os-review-handoff.yml
@@ -130,6 +131,7 @@ src/
     guardrails.py
     health_server.py
     hosted_runtime.py
+    kronos_research.py
     lifecycle_log.py
     maintenance.py
     marginal_alpha.py
@@ -665,6 +667,60 @@ jobs:
         run: |
           python -m ai_trading.deployment_probe \
             --base-url "${DASHBOARD_URL}" --timeout 60
+````
+
+## File: .github/workflows/kronos-model-smoke.yml
+````yaml
+name: Kronos Model Smoke
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - feat/kronos-river-reviewed
+    paths:
+      - src/ai_trading/kronos_research.py
+      - src/ai_trading/online.py
+      - .github/workflows/kronos-model-smoke.yml
+
+permissions:
+  contents: read
+
+jobs:
+  btc-offline-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install research dependencies and pinned upstream
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+          git clone https://github.com/shiyu-coder/Kronos.git ../Kronos
+          git -C ../Kronos checkout --detach 67b630e67f6a18c9e9be918d9b4337c960db1e9a
+          python -m pip install -r ../Kronos/requirements.txt
+      # Inference interoperability only: a short smoke is never profit evidence.
+      - name: Run original Kronos mini on real BTC history
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: |
+          python -m ai_trading.kronos_research \
+            --kronos-source ../Kronos \
+            --symbol BTC-USD --period 14d --interval 5m \
+            --model-size mini --lookback 256 --horizon-bars 9 \
+            --max-windows 40 --sample-count 1 --device cpu \
+            --transaction-cost-bps 3 --slippage-bps 2 \
+            --output artifacts/kronos-river-btc-smoke.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kronos-river-btc-smoke
+          path: artifacts/kronos-river-btc-smoke.json
+          if-no-files-found: ignore
 ````
 
 ## File: .github/workflows/mtf-parameter-benchmark.yml
@@ -4027,6 +4083,154 @@ effective_settings = settings or HostedPaperSettings.from_env()
 thread = Thread(
 ````
 
+## File: src/ai_trading/kronos_research.py
+````python
+"""Opt-in, offline Kronos challenger evaluation. Never routes or approves orders."""
+⋮----
+class ForecastPredictor(Protocol)
+⋮----
+def predict(self, **kwargs: object) -> pd.DataFrame: ...
+⋮----
+@dataclass(frozen=True)
+class ResearchConfig
+⋮----
+lookback: int = 256
+horizon_bars: int = 9
+max_windows: int = 40
+threshold_bps: float = 5.0
+transaction_cost_bps: float = 2.0
+slippage_bps: float = 1.0
+sample_count: int = 3
+river_min_confidence: float = 0.56
+⋮----
+def __post_init__(self) -> None
+⋮----
+def validate_market(frame: pd.DataFrame) -> pd.DataFrame
+⋮----
+"""Reject malformed time series rather than silently changing signal ordering."""
+⋮----
+required = ("Open", "High", "Low", "Close")
+⋮----
+result = frame.copy()
+⋮----
+columns = (*required, "Volume")
+result = result.loc[:, columns].apply(pd.to_numeric, errors="raise")
+⋮----
+def _side(return_fraction: float, threshold_bps: float) -> int
+⋮----
+def _net_return(side: int, forward_return: float, config: ResearchConfig) -> float
+⋮----
+round_trip_cost = 2 * (config.transaction_cost_bps + config.slippage_bps) / 10_000
+⋮----
+def _bootstrap_lower(values: list[float], *, seed: int = 42) -> float | None
+⋮----
+generator = np.random.default_rng(seed)
+samples = np.asarray(values, dtype=float)
+means = np.mean(generator.choice(samples, size=(2000, len(samples))), axis=1)
+⋮----
+"""Train on matured labels only, then predict on each shared signal bar.
+
+    This uses a corrected *research-only* three-class River model, not the
+    persisted production v1 binary model. Predictions share the exact entry
+    and exit with Kronos, but no forward outcome is available at inference.
+    """
+⋮----
+model = RiverMulticlassDirectionModel()
+features = make_features(market)
+labels = make_labels(
+results: dict[int, tuple[int, float, int]] = {}
+learned_through = -1
+⋮----
+matured_last = signal_pos - config.horizon_bars
+⋮----
+row = features.iloc[index]
+label = labels.iloc[index]
+⋮----
+learned_through = matured_last
+⋮----
+signal_features = features.iloc[signal_pos]
+⋮----
+prediction = model.predict_one(signal_features)
+side = (
+⋮----
+"""Evaluate non-overlapping realized windows; never send future OHLCV to Kronos."""
+market = validate_market(market)
+end_signal = len(market) - config.horizon_bars - 1
+⋮----
+# Spread bounded, non-overlapping windows over the available history,
+# rather than selecting only the most recent few hours of a long sample.
+candidates = list(range(config.lookback - 1, end_signal + 1, config.horizon_bars))
+⋮----
+signal_positions = candidates
+⋮----
+selected = np.linspace(0, len(candidates) - 1, config.max_windows, dtype=int)
+signal_positions = [candidates[int(i)] for i in selected]
+river_predictions = _river_predictions(market, signal_positions, config)
+observations: list[dict[str, object]] = []
+forecast_columns = {"Open": "open", "High": "high", "Low": "low", "Close": "close", "Volume": "volume"}
+⋮----
+history = market.iloc[signal_pos + 1 - config.lookback : signal_pos + 1]
+step = history.index.to_series().diff().dropna().median()
+future_times = pd.date_range(
+observed_times = market.index[signal_pos + 1 : signal_pos + config.horizon_bars + 1]
+⋮----
+continue  # Market closure or missing bars: do not infer unseen timestamps.
+forecast = predictor.predict(
+⋮----
+predicted_close = float(forecast["close"].iloc[-1])
+⋮----
+signal_close = float(history["Close"].iloc[-1])
+entry_open = float(market["Open"].iloc[signal_pos + 1])
+future_close = float(market["Close"].iloc[signal_pos + config.horizon_bars])
+predicted_return = predicted_close / signal_close - 1
+realized_return = future_close / entry_open - 1
+kronos_side = _side(predicted_return, config.threshold_bps)
+momentum_return = signal_close / float(history["Close"].iloc[-1 - config.horizon_bars]) - 1
+baseline_side = _side(momentum_return, config.threshold_bps)
+kronos_net = _net_return(kronos_side, realized_return, config)
+baseline_net = _net_return(baseline_side, realized_return, config)
+⋮----
+river_net = _net_return(river_side, realized_return, config)
+⋮----
+kronos = [float(item["kronos_net_return"]) for item in observations]
+baseline = [float(item["momentum_net_return"]) for item in observations]
+alpha = [k - b for k, b in zip(kronos, baseline, strict=True)]
+river = [float(item["river_net_return"]) for item in observations]
+river_alpha = [k - r for k, r in zip(kronos, river, strict=True)]
+directional = [item for item in observations if item["kronos_side"] != 0]
+mean_lower = _bootstrap_lower(kronos)
+alpha_lower = _bootstrap_lower(alpha)
+river_alpha_lower = _bootstrap_lower(river_alpha)
+summary = {
+⋮----
+def load_predictor(source_dir: Path, model_size: str, device: str) -> ForecastPredictor
+⋮----
+"""Load the original upstream implementation, never a substitute predictor."""
+source_dir = source_dir.expanduser().resolve()
+⋮----
+from model import Kronos, KronosPredictor, KronosTokenizer  # type: ignore[import-not-found]
+⋮----
+tokenizer_id = "NeoQuasar/Kronos-Tokenizer-2k" if model_size == "mini" else "NeoQuasar/Kronos-Tokenizer-base"
+tokenizer = KronosTokenizer.from_pretrained(tokenizer_id)
+model = Kronos.from_pretrained(f"NeoQuasar/Kronos-{model_size}")
+⋮----
+def main() -> None
+⋮----
+parser = argparse.ArgumentParser(description="Offline Kronos paper-only quality research")
+⋮----
+args = parser.parse_args()
+⋮----
+config = ResearchConfig(
+⋮----
+frame = pd.read_csv(args.csv)
+⋮----
+market = frame.set_index("timestamp")
+⋮----
+market = load_history(args.symbol, period=args.period, interval=args.interval)
+predictor = load_predictor(args.kronos_source, args.model_size, args.device)
+result = evaluate_walk_forward(market, predictor, config)
+````
+
 ## File: src/ai_trading/lifecycle_log.py
 ````python
 @dataclass(frozen=True)
@@ -5674,6 +5878,10 @@ probabilities = {-1: 0.0, 0: 1.0, 1: 0.0}
 probabilities = {k: v / total for k, v in probabilities.items()}
 ⋮----
 side = max(probabilities, key=probabilities.get)
+⋮----
+class RiverMulticlassDirectionModel(RiverDirectionModel)
+⋮----
+"""Research-only three-class River alternative; not loaded by paper v1."""
 ````
 
 ## File: src/ai_trading/operational_overview.py
@@ -11182,6 +11390,23 @@ model = RiverDirectionModel()
 label = 1 if value > 0.2 else (-1 if value < -0.2 else 0)
 ⋮----
 prediction = model.predict_one(row(0.9))
+⋮----
+def test_research_river_multiclass_learns_all_three_directions() -> None
+⋮----
+model = RiverMulticlassDirectionModel()
+⋮----
+label = -1 if value < -0.7 else (1 if value > 0.7 else 0)
+⋮----
+short = model.predict_one(row(-2.0))
+long = model.predict_one(row(2.0))
+⋮----
+def test_legacy_river_binary_probabilities_do_not_include_short() -> None
+⋮----
+# Document existing v1 limitation without silently changing stored models.
+⋮----
+label = -1 if value < -0.2 else (1 if value > 0.2 else 0)
+⋮----
+negative = model.predict_one(row(-0.9))
 ````
 
 ## File: tests/test_orchestrator_trigger.py
@@ -11538,6 +11763,48 @@ long_history = long_history.drop(index=recent[10:90:10])
 mtf_calls = 0
 ⋮----
 def fake_mtf(*args, **kwargs)
+⋮----
+def test_kronos_research_compares_same_windows_with_river_and_momentum() -> None
+⋮----
+market = sample_market(330)
+config = ResearchConfig(
+calls: list[tuple[pd.Timestamp, pd.Timestamp]] = []
+⋮----
+class FakeKronos
+⋮----
+def predict(self, **kwargs)
+⋮----
+history = kwargs["df"]
+x_times = kwargs["x_timestamp"]
+y_times = kwargs["y_timestamp"]
+⋮----
+result = evaluate_walk_forward(market, FakeKronos(), config)
+summary = result["summary"]
+observations = result["observations"]
+⋮----
+# River needs feature warm-up before 50 *matured* labels can be learned.
+# An initial cold-start window must remain FLAT, not fabricate a trade.
+⋮----
+def test_kronos_river_reference_never_trains_on_unmatured_labels(monkeypatch) -> None
+⋮----
+model_instances = []
+⋮----
+class RecordingRiver
+⋮----
+def __init__(self)
+⋮----
+def learn_one(self, row, label)
+⋮----
+def predict_one(self, row)
+⋮----
+market = sample_market(290)
+⋮----
+class FlatKronos
+⋮----
+report = evaluate_walk_forward(
+⋮----
+# The instrumented predictor is only called after 50 mature examples.
+# Earlier windows must not bypass the research model cold-start guard.
 ````
 
 ## File: tests/test_paper_execution.py
@@ -13296,7 +13563,7 @@ Autonomous trading research platform focused on reproducible, risk-aware, out-of
 
 - hardened OHLCV ingestion through `yfinance` with retries, sorting, timestamp deduplication and fail-closed OHLC validation
 - deterministic feature engineering
-- LONG / SHORT / FLAT probabilistic model
+- paper-direction model with explicit risk checks (legacy River-v1 is binary; a three-class River challenger is evaluated offline)
 - independent fail-closed risk engine
 - configurable transaction costs and slippage
 - paper broker
@@ -13502,6 +13769,17 @@ before a new signal becomes available. The per-market API exposes:
   **does not** refresh the signal timestamp or represent a new trade.
 - `freshness` and `heartbeat_age_seconds`: separate scheduler/data health.
   A healthy heartbeat **alone** never makes an old prediction tradable.
+
+**Model limitation:** the persisted River-v1 direction classifier uses a
+binary logistic regression despite carrying `-1 / 0 / +1` labels. Its
+current probability map cannot assign a nonzero probability to SHORT.
+Do not interpret this as validated bearish-market coverage. A
+**research-only** three-class River alternative is evaluated against
+the actual pretrained Kronos model and momentum in
+[the offline study](docs/kronos-research.md), using identical
+future-matured labels, next-bar entry, exit horizon and costs. Neither
+alternative is automatically promoted into the existing persisted
+production model or trading decisions.
 
 All trades are simulated. These fields do not include live quotes, broker fills,
 spread guarantees, stop loss or actionable entries; do not manually copy the

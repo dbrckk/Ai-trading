@@ -43,19 +43,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-20T21:23:52Z
+Generated: 2026-10-20T21:34:07Z
 
 ### Git
 - Branch: `main`
-- Head: `4bd83c03199c`
-- Commit date: 2026-10-20T17:23:41-04:00
-- Commit: fix(ci): pin dashboard signal freshness to deterministic session time (#167)
-- Tracked files: 504
+- Head: `081b34ec8874`
+- Commit date: 2026-10-20T17:33:57-04:00
+- Commit: feat(research): add validated offline Kronos vs multiclass River benchmark (#157)
+- Tracked files: 507
 
 ### Recently changed files
+- `.github/workflows/kronos-model-smoke.yml`
+- `README.md`
+- `docs/kronos-research.md`
+- `src/ai_trading/kronos_research.py`
+- `src/ai_trading/online.py`
+- `tests/test_online.py`
+- `tests/test_paper_cycle.py`
 - `src/ai_trading/dashboard.py`
 - `tests/test_dashboard_engine_status.py`
-- `README.md`
 - `src/ai_trading/file_persistence.py`
 - `src/ai_trading/multi_market.py`
 - `src/ai_trading/performance_metrics.py`
@@ -65,9 +71,6 @@ Generated: 2026-10-20T21:23:52Z
 - `tests/test_multi_market.py`
 - `src/ai_trading/runtime.py`
 - `tests/test_runtime_lock.py`
-- `.github/workflows/paper-cycle.yml`
-- `src/ai_trading/scheduler_fallback.py`
-- `tests/test_paper_cycle_workflow.py`
 
 ### Project signals
 - `pyproject.toml`

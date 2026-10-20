@@ -1,18 +1,26 @@
 # Change impact
 
-Base: 4f4977e136e8aa3722e19d19e6fbda406df32ca5
-Head: 4bd83c03199c961b2272f9068edba2f8a5fd42ac
+Base: 8e7bdd40b8b8d7d0ce19bfbf047b97e5b848fbbb
+Head: 081b34ec887496a30d8aed9cd1ec0dc38a658c1e
 
 ## Changed files
-- M src/ai_trading/dashboard.py
-- M tests/test_dashboard_engine_status.py
+- A .github/workflows/kronos-model-smoke.yml
+- M README.md
+- A docs/kronos-research.md
+- A src/ai_trading/kronos_research.py
+- M src/ai_trading/online.py
+- M tests/test_online.py
+- M tests/test_paper_cycle.py
 
 ## Affected areas
+- .github
+- (root)
+- docs
 - src
 - tests
 
 ## Related test candidates
-- tests/test_dashboard.py
+- tests/test_online.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.
