@@ -167,12 +167,13 @@ The hosted runtime heartbeat uses the **15-minute external scheduler cadence**, 
 **Deployment provenance.** Render provides `RENDER_GIT_COMMIT` automatically.
 The read-only `/livez` endpoint includes `deployed_commit` when a valid
 40-character SHA is available. Use the manual **Hosted Dashboard Probe**
-GitHub Actions workflow with its optional `expected_sha` input, or run:
+GitHub Actions workflow with its optional `expected_sha` input. Alternatively,
+set `RENDER_RELEASE_SHA` to the intended 40-character deployed commit, then run:
 
 ```bash
 python -m ai_trading.deployment_probe \
   --base-url https://ai-trading-dashboard-qyr2.onrender.com \
-  --expected-sha <40-character-intended-deployment-commit>
+  --expected-sha "$RENDER_RELEASE_SHA"
 ```
 
 A missing or mismatched deployed SHA fails that explicit check even when
