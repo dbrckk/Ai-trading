@@ -7,6 +7,7 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from re import fullmatch
 from urllib.parse import urlsplit
 
 from .burnin import BurnInSnapshot, calculate_burnin_metrics
@@ -1200,6 +1201,9 @@ def serve_dashboard(
     paper_cycle_executor: Callable[[], PaperCycleResult] | None = None,
 ) -> None:
     effective_settings = settings or HostedPaperSettings.from_env()
+    # Render publishes the exact deployed Git commit at runtime.
+    revision = os.getenv("RENDER_GIT_COMMIT", "").strip().lower()
+    deployed_commit = revision if fullmatch(r"[0-9a-f]{40}", revision) else None
     effective_markets = configured_markets_from_env()
     journal = TradeJournal(journal_path)
     state_store = RuntimeStateStore(state_path)
@@ -1361,7 +1365,10 @@ def serve_dashboard(
                 self._send_json(load_status_snapshot())
                 return
             if path == "/livez":
-                self._send_json({"web_healthy": True})
+                liveness: dict[str, object] = {"web_healthy": True}
+                if deployed_commit is not None:
+                    liveness["deployed_commit"] = deployed_commit
+                self._send_json(liveness)
                 return
             if path == "/readyz":
                 snapshot = load_status_snapshot()
