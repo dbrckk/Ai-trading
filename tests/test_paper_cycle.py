@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pandas as pd
@@ -9,6 +10,7 @@ import ai_trading.paper_cycle as paper_cycle_module
 import ai_trading.runtime as runtime_module
 from ai_trading.config import RiskConfig
 from ai_trading.file_persistence import FilePaperPersistence
+from ai_trading.kronos_research import ResearchConfig, evaluate_walk_forward
 from ai_trading.model import Prediction
 from ai_trading.mtf_shadow_challenger import MultiTimeframeShadowResult
 from ai_trading.paper_cycle import PaperCycleRunner
@@ -972,3 +974,102 @@ def test_degraded_mtf_history_is_skipped_without_disrupting_primary_cycle(
     assert calls == ["5d", "1mo"]
     assert mtf_calls == 0
     assert result.mtf_evaluated is False
+
+
+def test_kronos_research_compares_same_windows_with_river_and_momentum() -> None:
+    market = sample_market(330)
+    config = ResearchConfig(
+        lookback=64,
+        horizon_bars=3,
+        max_windows=6,
+        sample_count=1,
+        threshold_bps=5,
+    )
+    calls: list[tuple[pd.Timestamp, pd.Timestamp]] = []
+
+    class FakeKronos:
+        def predict(self, **kwargs):
+            history = kwargs["df"]
+            x_times = kwargs["x_timestamp"]
+            y_times = kwargs["y_timestamp"]
+            assert len(history) == config.lookback
+            assert kwargs["pred_len"] == config.horizon_bars
+            assert x_times.iloc[-1] < y_times.iloc[0]
+            calls.append((x_times.iloc[-1], y_times.iloc[-1]))
+            return pd.DataFrame(
+                {"close": [float(history["close"].iloc[-1]) * 1.002] * config.horizon_bars}
+            )
+
+    result = evaluate_walk_forward(market, FakeKronos(), config)
+    summary = result["summary"]
+    observations = result["observations"]
+    assert summary["windows"] == 6
+    assert len(calls) == 6
+    assert summary["directional_trades"] == 6
+    assert summary["review_eligible"] is False
+    # River needs feature warm-up before 50 *matured* labels can be learned.
+    # An initial cold-start window must remain FLAT, not fabricate a trade.
+    assert observations[0]["river_training_rows"] < 50
+    assert observations[0]["river_side"] == 0
+    assert any(item["river_training_rows"] >= 50 for item in observations[1:])
+    assert all(
+        item["river_side"] == 0
+        for item in observations if item["river_training_rows"] < 50
+    )
+    assert all(item["river_side"] in {-1, 0, 1} for item in observations)
+    assert summary["mean_alpha_vs_river"] == pytest.approx(
+        summary["mean_net_return"] - summary["river_mean_net_return"]
+    )
+    assert summary["mean_alpha_vs_river_ci95_lower"] is None
+    assert all(start < stop for start, stop in calls)
+    assert calls[-1][0] - calls[0][0] > pd.Timedelta(hours=12)
+
+
+def test_kronos_river_reference_never_trains_on_unmatured_labels(monkeypatch) -> None:
+    import ai_trading.online as online_module
+
+    model_instances = []
+
+    class RecordingRiver:
+        def __init__(self):
+            self.stats = SimpleNamespace(observations=0)
+            self.last_learn_time = None
+            model_instances.append(self)
+
+        def learn_one(self, row, label):
+            assert label in {-1, 0, 1}
+            self.last_learn_time = row.name
+            self.stats.observations += 1
+
+        def predict_one(self, row):
+            assert self.last_learn_time is not None
+            assert self.last_learn_time <= row.name - pd.Timedelta(minutes=15)
+            return Prediction(
+                side=-1,
+                confidence=0.91,
+                probabilities={-1: 0.91, 0: 0.04, 1: 0.05},
+            )
+
+    monkeypatch.setattr(online_module, "RiverMulticlassDirectionModel", RecordingRiver)
+    market = sample_market(290)
+
+    class FlatKronos:
+        def predict(self, **kwargs):
+            return pd.DataFrame(
+                {"close": [100.0] * kwargs["pred_len"]}
+            )
+
+    report = evaluate_walk_forward(
+        market,
+        FlatKronos(),
+        ResearchConfig(lookback=64, horizon_bars=3, max_windows=3),
+    )
+    assert len(model_instances) == 1
+    assert report["summary"]["windows"] == 3
+    # The instrumented predictor is only called after 50 mature examples.
+    # Earlier windows must not bypass the research model cold-start guard.
+    assert any(item["river_side"] == -1 for item in report["observations"])
+    assert all(
+        item["river_side"] == (-1 if item["river_training_rows"] >= 50 else 0)
+        for item in report["observations"]
+    )

@@ -6,7 +6,7 @@ Autonomous trading research platform focused on reproducible, risk-aware, out-of
 
 - hardened OHLCV ingestion through `yfinance` with retries, sorting, timestamp deduplication and fail-closed OHLC validation
 - deterministic feature engineering
-- LONG / SHORT / FLAT probabilistic model
+- paper-direction model with explicit risk checks (legacy River-v1 is binary; a three-class River challenger is evaluated offline)
 - independent fail-closed risk engine
 - configurable transaction costs and slippage
 - paper broker
@@ -212,6 +212,17 @@ before a new signal becomes available. The per-market API exposes:
   **does not** refresh the signal timestamp or represent a new trade.
 - `freshness` and `heartbeat_age_seconds`: separate scheduler/data health.
   A healthy heartbeat **alone** never makes an old prediction tradable.
+
+**Model limitation:** the persisted River-v1 direction classifier uses a
+binary logistic regression despite carrying `-1 / 0 / +1` labels. Its
+current probability map cannot assign a nonzero probability to SHORT.
+Do not interpret this as validated bearish-market coverage. A
+**research-only** three-class River alternative is evaluated against
+the actual pretrained Kronos model and momentum in
+[the offline study](docs/kronos-research.md), using identical
+future-matured labels, next-bar entry, exit horizon and costs. Neither
+alternative is automatically promoted into the existing persisted
+production model or trading decisions.
 
 All trades are simulated. These fields do not include live quotes, broker fills,
 spread guarantees, stop loss or actionable entries; do not manually copy the

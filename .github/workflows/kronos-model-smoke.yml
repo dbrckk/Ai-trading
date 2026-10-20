@@ -1,0 +1,50 @@
+name: Kronos Model Smoke
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - feat/kronos-river-reviewed
+    paths:
+      - src/ai_trading/kronos_research.py
+      - src/ai_trading/online.py
+      - .github/workflows/kronos-model-smoke.yml
+
+permissions:
+  contents: read
+
+jobs:
+  btc-offline-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install research dependencies and pinned upstream
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+          git clone https://github.com/shiyu-coder/Kronos.git ../Kronos
+          git -C ../Kronos checkout --detach 67b630e67f6a18c9e9be918d9b4337c960db1e9a
+          python -m pip install -r ../Kronos/requirements.txt
+      # Inference interoperability only: a short smoke is never profit evidence.
+      - name: Run original Kronos mini on real BTC history
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: |
+          python -m ai_trading.kronos_research \
+            --kronos-source ../Kronos \
+            --symbol BTC-USD --period 14d --interval 5m \
+            --model-size mini --lookback 256 --horizon-bars 9 \
+            --max-windows 40 --sample-count 1 --device cpu \
+            --transaction-cost-bps 3 --slippage-bps 2 \
+            --output artifacts/kronos-river-btc-smoke.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kronos-river-btc-smoke
+          path: artifacts/kronos-river-btc-smoke.json
+          if-no-files-found: ignore
