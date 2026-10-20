@@ -44,6 +44,7 @@ def test_paper_cycle_workflow_uses_authenticated_render_not_expired_db() -> None
         "python -m ai_trading.scheduler_fallback",
         "https://ai-trading-dashboard-qyr2.onrender.com",
         'PYTHONPATH: src',
+        '--timeout 180',
     )
     for expected in required:
         assert expected in text
@@ -73,7 +74,7 @@ def test_fallback_skips_healthy_recent_cloudflare_without_paper_post(
 
     outcome = run_fallback("https://example.invalid", "server-secret", opener=fake_open)
     assert outcome == "skipped_recent_cloudflare"
-    assert seen == [("GET", "https://example.invalid/api/scheduler", 90.0)]
+    assert seen == [("GET", "https://example.invalid/api/scheduler", 45.0)]
 
 
 @pytest.mark.parametrize(
@@ -94,19 +95,19 @@ def test_fallback_runs_one_authenticated_three_market_endpoint_cycle(
     calls = []
 
     def fake_open(request, timeout):
-        del timeout
-        calls.append(request)
+        calls.append((request, timeout))
         if request.get_method() == "GET":
             return FakeResponse(status_payload)
         return FakeResponse({"ok": True, "processed": 3})
 
     outcome = run_fallback("https://example.invalid", "server-secret", opener=fake_open)
     assert outcome == "executed"
-    assert [request.get_method() for request in calls] == ["GET", "POST"]
-    assert calls[-1].full_url == "https://example.invalid/internal/paper-cycle"
-    assert calls[-1].get_header("Authorization") == "Bearer server-secret"
-    assert calls[-1].get_header("X-scheduler-source") == "github"
-    assert not any("postgres" in request.full_url for request in calls)
+    assert [request.get_method() for request, _ in calls] == ["GET", "POST"]
+    assert [timeout for _, timeout in calls] == [45.0, 180.0]
+    assert calls[-1][0].full_url == "https://example.invalid/internal/paper-cycle"
+    assert calls[-1][0].get_header("Authorization") == "Bearer server-secret"
+    assert calls[-1][0].get_header("X-scheduler-source") == "github"
+    assert not any("postgres" in request.full_url for request, _ in calls)
 
 
 def test_fallback_runs_after_scheduler_telemetry_failure() -> None:
@@ -128,6 +129,9 @@ def test_fallback_runs_after_scheduler_telemetry_failure() -> None:
 def test_fallback_rejects_missing_token_without_network() -> None:
     with pytest.raises(FallbackFailure, match="repository secret is required"):
         run_fallback("https://example.invalid", "")
+    for invalid in (float("nan"), float("inf"), -1.0, 0.0):
+        with pytest.raises(ValueError, match="finite"):
+            run_fallback("https://example.invalid", "server-secret", timeout=invalid)
 
 
 def test_fallback_reports_sanitized_http_failure() -> None:

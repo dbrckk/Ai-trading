@@ -39,7 +39,7 @@ def run_fallback(
     base_url: str,
     token: str,
     *,
-    timeout: float = 90.0,
+    timeout: float = 180.0,
     opener=urlopen,
 ) -> str:
     """Skip a recent successful Cloudflare cycle, or trigger one paper-only cycle."""
@@ -47,16 +47,19 @@ def run_fallback(
         raise FallbackFailure("dashboard URL must use HTTPS")
     if not token.strip():
         raise FallbackFailure("AI_TRADING_SCHEDULER_TOKEN repository secret is required")
-    if timeout <= 0:
-        raise ValueError("timeout must be positive")
+    if not math.isfinite(timeout) or timeout <= 0:
+        raise ValueError("timeout must be positive and finite")
 
     origin = base_url.rstrip("/")
     status_request = Request(
         origin + "/api/scheduler",
         headers={"Accept": "application/json", "User-Agent": "ai-trading-github-fallback/1"},
     )
+    # Do not spend the execution budget waiting on optional scheduler telemetry.
+    # Allow a slower cold-starting Render service to complete the actual cycle.
+    status_timeout = min(timeout, 45.0)
     try:
-        with opener(status_request, timeout=timeout) as response:
+        with opener(status_request, timeout=status_timeout) as response:
             status_payload = (
                 json.loads(response.read(16_385))
                 if response.status == 200
@@ -101,7 +104,7 @@ def run_fallback(
 def main() -> int:
     parser = argparse.ArgumentParser(description="Neon-budgeted paper scheduler fallback")
     parser.add_argument("--base-url", required=True)
-    parser.add_argument("--timeout", type=float, default=90.0)
+    parser.add_argument("--timeout", type=float, default=180.0)
     args = parser.parse_args()
     try:
         outcome = run_fallback(
