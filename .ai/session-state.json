@@ -2,11 +2,11 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "fix/expose-deployed-git-revision",
-  "pull_request": 169,
-  "focus": "Expose Render deployed git revision via /livez and verify optional expected SHA through read-only hosted probe, because previous healthy endpoints could not prove actual deployed code.",
+  "active_branch": "main",
+  "pull_request": null,
+  "focus": "PR #169 merged: deployed SHA can now be checked via read-only /livez, but Render still returned legacy liveness during immediate post-merge checks. Verify actual release before claiming deployment; preserve paper-only risk gating.",
   "production_evidence": {
-    "main_head": "1817749f243617d33a90fe991ae994840a5a9877",
+    "main_head": "5e0ea79388915b0b357917896ec8ac2e687e1b27",
     "render_shadow_challenger_enabled": true,
     "render_markets": "GC=F,^GDAXI,BTC-USD",
     "gold": {
@@ -34,7 +34,7 @@
       "portfolio_equity_complete": true,
       "trade_count": 8,
       "portfolio_realized_pnl": -0.5748106341489922,
-      "production_deployed_commit": "unverified_until_PR_169_is_deployed"
+      "production_deployed_commit": "not_yet_exposed_in_post_merge_probe"
     }
   },
   "completed_changes": [
@@ -59,7 +59,8 @@
     "PR #165 merged allocation-adjusted paper performance into main on 2026-10-20, with green CI and CodeQL.",
     "PR #166 merged external Cloudflare 15m heartbeat/5m signal-age separation; CI, CodeQL and hosted liveness probe passed.",
     "PR #167 merged deterministic Gold market-session rendering tests; subsequent main CI and CodeQL passed.",
-    "PR #157 merged pinned real Kronos-mini research comparator and three-class River offline baseline; 40-window BTC smoke on 2026-10-20 had review_eligible=false and did not change production execution."
+    "PR #157 merged pinned real Kronos-mini research comparator and three-class River offline baseline; 40-window BTC smoke on 2026-10-20 had review_eligible=false and did not change production execution.",
+    "PR #169 merged 2026-10-20: published validated RENDER_GIT_COMMIT on /livez and optional exact deployment-probe SHA check; PR head CI, CodeQL and existing HTTP integration checks passed."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -68,9 +69,9 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "PR #169: require CI, CodeQL and Cloudflare Worker integration green before merge; then verify Render /livez.deployed_commit matches the intended deployed release SHA (not necessarily metadata-only main HEAD).",
-    "Read-only /api/markets and /api/scheduler currently show healthy Gold/DAX/BTC paper engines, complete 100k portfolio, eight realized paper fills, and 20 successful Cloudflare deliveries. Continue monitoring with bounded free-tier usage.",
-    "Kronos-mini 40-window BTC research benchmark has negative net mean and no eligible promotion; use genuinely held-out non-overlapping samples and forward shadow before considering alternatives.",
-    "Production River-v1 is binary with zero SHORT probability; a future v2 must use an explicit independently validated state migration while retaining paper-only safety."
+    "Check read-only https://ai-trading-dashboard-qyr2.onrender.com/livez for deployed_commit = 5e0ea79388915b0b357917896ec8ac2e687e1b27 (intended #169 release); if absent, treat deployment as unverified, not as a broken market engine. Metadata-only [skip render] commits do not change the expected deployed version.",
+    "After version match, run the Hosted Dashboard Probe manually with expected_sha 5e0ea79388915b0b357917896ec8ac2e687e1b27; confirm /readyz and /api/markets still healthy without invoking paper cycles.",
+    "Review Gold/DAX/BTC realized net paper metrics; eight fills still insufficient for model promotion or profitability claims.",
+    "Evaluate a separately versioned and backwards-compatible ternary River-v2 model in offline and forward shadow before considering migration of production River-v1; Kronos remains research-only."
   ]
 }
