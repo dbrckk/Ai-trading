@@ -28,10 +28,13 @@ def test_runtime_lock_is_exclusive(tmp_path: Path, monkeypatch) -> None:
     )
     assert gold.lock_path == same_gold.lock_path
     assert gold.lock_path != btc.lock_path
-    with RuntimeLock(gold.lock_path), RuntimeLock(btc.lock_path):
-        with pytest.raises(RuntimeError, match="runtime is already active"):
-            with RuntimeLock(same_gold.lock_path):
-                pass
+    with (
+        RuntimeLock(gold.lock_path),
+        RuntimeLock(btc.lock_path),
+        pytest.raises(RuntimeError, match="runtime is already active"),
+        RuntimeLock(same_gold.lock_path),
+    ):
+        pass
     assert not gold.lock_path.exists()
     assert not btc.lock_path.exists()
     assert PaperAutonomousRuntime().lock_path == Path("artifacts/runtime.lock")
