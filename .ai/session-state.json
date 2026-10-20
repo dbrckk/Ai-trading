@@ -2,11 +2,11 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "fix/external-scheduler-heartbeat-cadence",
-  "pull_request": 166,
-  "focus": "Fix externally scheduled production dashboard false STALE statuses: 15-minute Cloudflare cron vs persisted 5-minute heartbeat. Keep per-bar signal age guard and River paper-only execution unchanged.",
+  "active_branch": "main",
+  "pull_request": null,
+  "focus": "Offline Kronos-vs-research-ternary-River benchmark merged with explicit non-promotion; production paper River-v1 binary SHORT limitation and insufficient realized trade evidence remain priorities.",
   "production_evidence": {
-    "main_head": "924353982d8204ac0e10a3703c47878d5c9692f5",
+    "main_head": "081b34ec887496a30d8aed9cd1ec0dc38a658c1e",
     "render_shadow_challenger_enabled": true,
     "render_markets": "GC=F,^GDAXI,BTC-USD",
     "gold": {
@@ -46,7 +46,10 @@
     "PR #146 carries actual per-bar River side/confidence/risk decision into hosted status and makes stale/closed-session signals unavailable.",
     "PR #146 stabilizes mobile dashboard refresh by avoiding DOM changes during user interactions and anchoring market cards by stable symbol.",
     "PRs #160-#164 migrated paper storage to Neon free-tier, bounded idle DB connections, handled degraded scheduler cycles, avoided redundant fallbacks, extended fallback timeout, and isolated concurrent market locks.",
-    "PR #165 merged allocation-adjusted paper performance into main on 2026-10-20, with green CI and CodeQL."
+    "PR #165 merged allocation-adjusted paper performance into main on 2026-10-20, with green CI and CodeQL.",
+    "PR #166 merged external Cloudflare 15m heartbeat/5m signal-age separation; CI, CodeQL and hosted liveness probe passed.",
+    "PR #167 merged deterministic Gold market-session rendering tests; subsequent main CI and CodeQL passed.",
+    "PR #157 merged pinned real Kronos-mini research comparator and three-class River offline baseline; 40-window BTC smoke on 2026-10-20 had review_eligible=false and did not change production execution."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -55,8 +58,9 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "PR #166 aligns the persisted hosted heartbeat cadence with the 15-minute Cloudflare scheduler; require green CI and CodeQL before merge.",
-    "After merge/deployment, inspect /api/markets for RUNNING and correct per-signal DELAYED/NO_TRADE/PAPER_APPROVED states across Gold/DAX/BTC, without enabling live orders.",
-    "Continue gathering statistically adequate realized trade and held-out Kronos vs three-class River comparison evidence before considering any strategy changes."
+    "Verify the actual Render deployment revision and read-only /api/markets session/heartbeat/signal accuracy; GitHub liveness probe alone does not prove the latest release is deployed.",
+    "Collect held-out, gap-checked non-overlapping Gold/DAX/BTC data and >=500 comparison windows per candidate; compare Kronos to River ternary and momentum with transaction costs, confidence intervals and forward shadow evidence. Keep Kronos unpromoted.",
+    "Design and separately verify an explicit backwards-compatible River-v2 three-class model/state migration to address binary-v1 inability to predict SHORT; do not rewrite persisted models or use live broker orders.",
+    "Accumulate and review enough net realized paper fills to estimate edge, drawdown, and uncertainty before changing strategy."
   ]
 }

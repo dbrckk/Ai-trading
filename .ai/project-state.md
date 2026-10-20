@@ -9,7 +9,7 @@ Status: active
 - PR #43 fixed the paper runtime daily-loss baseline so it persists across bars within the same trading day and resets only on a new trading day.
 - PR #44 added a leakage-safe ensemble challenger evaluator trained only on labels observable by the signal bar.
 - PR #45 wired the ensemble challenger into paper cycles as an opt-in shadow observer. River remains the only model that can drive the RiskEngine and paper execution.
-- Render is live on commit `3e40c11` with `AI_TRADING_SHADOW_CHALLENGER=1` and `AI_TRADING_MARKETS=GC=F,^GDAXI,BTC-USD`.
+- An earlier hosted deployment was verified with `AI_TRADING_SHADOW_CHALLENGER=1` and `AI_TRADING_MARKETS=GC=F,^GDAXI,BTC-USD`; the current Render deployed SHA still requires independent verification.
 - PR #47 enriched only the shadow challenger to 14 features while keeping the production River feature set unchanged.
 - PR #48 aggregates River and challenger accuracy, Brier-style calibration error, directional edge, and composite quality from durable audit evidence and exposes it through `/api/overview`.
 - PR #49 adds a review-only eligibility gate requiring sustained evidence before a challenger can even be considered for promotion; it does not promote models automatically.
@@ -26,16 +26,18 @@ Status: active
 - Free Render/Neon resources and occasional provider failures remain operational constraints; keep the hourly GitHub fallback.
 
 ## Current priority
-- PR #165 is merged in `main` (2026-10-20); cross-market realized paper performance is now allocation-adjusted (Gold 34%, DAX 33%, BTC 33%).
-- PR #166 corrects a dashboard telemetry cadence mismatch: Cloudflare schedules production every 15 minutes, but the runtime heartbeat previously advertised 5 minutes and could show a healthy engine as STALE after one interval. The external cadence is now 900 seconds, while signal expiry still follows the underlying 5-minute bars. Require CI and CodeQL before merging.
-- After PR #166 deployment, verify production /api/markets freshness against scheduler delivery history. Live broker routing remains disabled.
-- Kronos/River multiclass comparison remains offline only, with insufficient statistically significant out-of-sample evidence to change the production binary River paper model.
-- Keep observing the authenticated Cloudflare scheduler and the hourly GitHub fallback, while conserving Render/Neon free-tier compute.
+- PRs #166 and #167 are merged: hosted external heartbeat uses the 15-minute Cloudflare cadence while bar signals expire independently; dashboard session-expiry checks now use a deterministic time in CI.
+- PR #157 is merged as **offline research tooling only**. It adds genuine pinned upstream Kronos-mini inference and a corrected three-class River One-vs-Rest comparator without changing persisted River-v1 paper execution.
+- Latest real BTC-USD 5-minute Kronos smoke (2026-10-20, 40 windows, 29 directional) returned mean net Kronos **-0.0547%** per window, momentum **-0.0973%**, research River **+0.0041%**. Confidence lower bounds are negative and `review_eligible=false`; no profitable-trading claim or Kronos promotion is justified.
+- Model-v1 limitation: the active binary logistic classifier has zero SHORT probability. Any three-class production migration requires an independently validated v2 state/model codec and controlled rollout, not a silent joblib rewrite.
+- Verify the **actual** Render deployment revision and read-only `/api/markets` behavior; the successful GitHub hosted probe alone confirms availability, not deployed SHA.
+- Preserve the free-tier Cloudflare/Render/Neon architecture and hourly GitHub fallback. Live order routing remains off.
 
 ## Validation
-- Canonical validation: ruff check . and pytest with PostgreSQL integration service; Cloudflare Worker tests and CodeQL must remain green.
-- The allocation-adjusted SQL was run read-only on Neon, yielding 8 events, realized PnL -0.574810634, gross profit 1.211721732, gross loss 1.786532367 and max drawdown 1.490124683.
-- PR #165 merged with green CI and CodeQL. PR #166 validation is required before merge; production deployment of the heartbeat fix is not yet verified.
+- Main after PR #167: Ruff/Pytest/Cloudflare Worker checks and CodeQL passed (run 39499994723 and 39499994605).
+- PR #157 final head: CI run 39500880135, CodeQL run 39500880125 and actual pinned Kronos model smoke run 39500872405 all passed, with JSON artifact 12301525143.
+- Main-after-#157 CI and deploy verification are tracked separately; do not claim success from prior branch runs.
+- Canonical validation: `ruff check src tests`, full Pytest against PostgreSQL 16, Cloudflare Worker tests and CodeQL.
 
 ## Last verified
 - 2026-10-20

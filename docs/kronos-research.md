@@ -81,5 +81,26 @@ at the time of prediction when claiming a historical simulation.
   financing and liquidity constraints. Results **cannot demonstrate**
   profitable live execution or materially improved trades.
 
+## Observed BTC research smoke (2026-10-20)
+
+The real original `Kronos-mini` workflow on BTC-USD 5-minute history succeeded
+([workflow run 39500872405](https://github.com/dbrckk/Ai-trading/actions/runs/39500872405),
+artifact `kronos-river-btc-smoke` ID `12301525143`). With 40 eligible,
+non-overlapping windows, 29 Kronos directional predictions and common costs:
+
+| Research comparator | Mean net return per evaluated window |
+| --- | ---: |
+| Kronos-mini | -0.0547% |
+| Same-horizon momentum | -0.0973% |
+| Corrected three-class River research baseline | +0.0041% |
+
+All relevant 95% bootstrap lower confidence bounds were negative and
+`review_eligible=false`. These 40 windows are **not** a held-out
+statistically adequate validation, even though Kronos outperformed the
+momentum baseline in this short run. The updated model is **not a trade
+signal**: keep River-v1 paper-only execution unchanged and obtain independent,
+held-out and forward-shadow results across markets before considering a new
+model version.
+
 Do not enable Kronos in execution, lower the current risk limits, or deploy
 PyTorch on the scheduler merely because an offline benchmark scores well.
