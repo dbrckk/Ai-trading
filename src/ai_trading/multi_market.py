@@ -236,7 +236,10 @@ def build_multi_market_overview(
     if callable(load_portfolio_performance):
         try:
             portfolio_performance = performance_payload(
-                load_portfolio_performance(runtime_keys)
+                load_portfolio_performance(
+                    runtime_keys,
+                    allocations=tuple(market.allocation for market in markets),
+                )
             )
         except Exception:  # noqa: BLE001 - optional observer must not break overview
             portfolio_performance = empty_performance_payload()
