@@ -1007,7 +1007,15 @@ def test_kronos_research_compares_same_windows_with_river_and_momentum() -> None
     assert len(calls) == 6
     assert summary["directional_trades"] == 6
     assert summary["review_eligible"] is False
-    assert all(item["river_training_rows"] >= 50 for item in observations)
+    # River needs feature warm-up before 50 *matured* labels can be learned.
+    # An initial cold-start window must remain FLAT, not fabricate a trade.
+    assert observations[0]["river_training_rows"] < 50
+    assert observations[0]["river_side"] == 0
+    assert any(item["river_training_rows"] >= 50 for item in observations[1:])
+    assert all(
+        item["river_side"] == 0
+        for item in observations if item["river_training_rows"] < 50
+    )
     assert all(item["river_side"] in {-1, 0, 1} for item in observations)
     assert summary["mean_alpha_vs_river"] == pytest.approx(
         summary["mean_net_return"] - summary["river_mean_net_return"]
@@ -1058,4 +1066,10 @@ def test_kronos_river_reference_never_trains_on_unmatured_labels(monkeypatch) ->
     )
     assert len(model_instances) == 1
     assert report["summary"]["windows"] == 3
-    assert all(item["river_side"] == -1 for item in report["observations"])
+    # The instrumented predictor is only called after 50 mature examples.
+    # Earlier windows must not bypass the research model cold-start guard.
+    assert any(item["river_side"] == -1 for item in report["observations"])
+    assert all(
+        item["river_side"] == (-1 if item["river_training_rows"] >= 50 else 0)
+        for item in report["observations"]
+    )
