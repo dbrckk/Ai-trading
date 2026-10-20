@@ -2380,9 +2380,7 @@ temp = self.path.with_suffix(".tmp")
 ````python
 _STORAGE_ERROR_STATUS: dict[str, object] = {
 ⋮----
-def _public_runtime_snapshot(status: HostedRuntimeStatus | None) -> dict[str, object]
-⋮----
-snapshot = runtime_status_snapshot(status)
+snapshot = runtime_status_snapshot(status, now=now)
 ⋮----
 def _display_money(value: float | None) -> str
 ⋮----
@@ -2545,7 +2543,7 @@ position_value = units * last_price
 last_processed = (
 processed_bars_display = (
 ⋮----
-runtime_snapshot = _public_runtime_snapshot(runtime_status)
+runtime_snapshot = _public_runtime_snapshot(runtime_status, now=now)
 engine_status = "ERROR" if storage_error else str(runtime_snapshot["engine_status"])
 market = (
 last_cycle = (
@@ -9401,6 +9399,8 @@ backend = FilePaperPersistence(root=tmp_path)
 ````python
 def test_dashboard_hides_expired_paper_decision(tmp_path) -> None
 ⋮----
+# Fixed open Gold session: wall-clock maintenance windows must not alter the assertion.
+now = datetime(2026, 9, 15, 19, 30, tzinfo=UTC)
 journal = TradeJournal(tmp_path / "trades.jsonl")
 state_store = RuntimeStateStore(tmp_path / "runtime_state.json")
 status_store = HostedRuntimeStatusStore(tmp_path / "runtime_status.json")

@@ -1,15 +1,15 @@
 # Change impact
 
-Base: 924353982d8204ac0e10a3703c47878d5c9692f5
-Head: 4a28ca29029a8d83f974d56252a668ff617f3378
+Base: 4f4977e136e8aa3722e19d19e6fbda406df32ca5
+Head: 4bd83c03199c961b2272f9068edba2f8a5fd42ac
 
 ## Changed files
-- M README.md
 - M src/ai_trading/dashboard.py
+- M tests/test_dashboard_engine_status.py
 
 ## Affected areas
-- (root)
 - src
+- tests
 
 ## Related test candidates
 - tests/test_dashboard.py

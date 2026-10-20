@@ -43,18 +43,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-20T21:15:54Z
+Generated: 2026-10-20T21:23:52Z
 
 ### Git
 - Branch: `main`
-- Head: `4a28ca29029a`
-- Commit date: 2026-10-20T17:15:43-04:00
-- Commit: fix(dashboard): align hosted heartbeat with Cloudflare cadence (#166)
+- Head: `4bd83c03199c`
+- Commit date: 2026-10-20T17:23:41-04:00
+- Commit: fix(ci): pin dashboard signal freshness to deterministic session time (#167)
 - Tracked files: 504
 
 ### Recently changed files
-- `README.md`
 - `src/ai_trading/dashboard.py`
+- `tests/test_dashboard_engine_status.py`
+- `README.md`
 - `src/ai_trading/file_persistence.py`
 - `src/ai_trading/multi_market.py`
 - `src/ai_trading/performance_metrics.py`
