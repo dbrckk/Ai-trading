@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -62,7 +63,7 @@ class PaperAutonomousRuntime:
         state_store: RuntimeStateStore | None = None,
         audit_log: AuditLog | None = None,
         online_model_path: str | Path = "artifacts/models/online-river.joblib",
-        lock_path: str | Path = "artifacts/runtime.lock",
+        lock_path: str | Path | None = None,
         learning_cycle_every_bars: int = 63,
         trade_journal: TradeJournal | None = None,
         symbol: str = "UNKNOWN",
@@ -79,7 +80,6 @@ class PaperAutonomousRuntime:
         self.state_store = state_store or RuntimeStateStore()
         self.audit = audit_log or AuditLog()
         self.online_model_path = Path(online_model_path)
-        self.lock_path = Path(lock_path)
         self.learning_cycle_every_bars = learning_cycle_every_bars
         self.trade_journal = trade_journal or TradeJournal()
         self.symbol = symbol
@@ -91,6 +91,17 @@ class PaperAutonomousRuntime:
             model_path=self.online_model_path,
         )
         self.runtime_key = runtime_key or f"paper:{symbol}:legacy:online-river:v1"
+        if lock_path is not None:
+            # Honor an explicit lock path, including legacy single-runtime callers.
+            self.lock_path = Path(lock_path)
+        elif persistence is None:
+            self.lock_path = Path("artifacts/runtime.lock")
+        else:
+            # Parallel markets must not contend for the same process-wide file.
+            # The same durable runtime key still gets an identical lock path,
+            # while PostgreSQL revision checks protect commits across hosts.
+            digest = hashlib.sha256(self.runtime_key.encode("utf-8")).hexdigest()
+            self.lock_path = Path("artifacts/runtime-locks") / f"{digest}.lock"
 
     def _broker_from_state(self, state: RuntimeState) -> PaperBroker:
         broker = PaperBroker(self.risk_config)

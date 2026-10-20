@@ -19,6 +19,7 @@ from .mtf_shadow_quality import (
 from .performance_metrics import (
     TradePerformanceMetrics,
     performance_metrics_from_totals,
+    resolved_portfolio_allocations,
 )
 from .persistence import (
     CommitOutcome,
@@ -292,14 +293,17 @@ class PostgresPaperPersistence(PaperPersistence):
     ) -> None:
         self.database_url = database_url
         self.before_state_commit = before_state_commit
-        # The hosted dashboard performs many sequential observer reads per request.
-        # Reuse at most four connections there; CLI jobs remain one-shot by default.
+        # Reuse up to four connections for bursty dashboard reads. With min_size=0,
+        # close idle connections promptly so serverless Postgres can scale to zero
+        # between 15-minute paper cycles instead of staying awake for 10 minutes.
+        # CLI jobs remain one-shot by default.
         self._pool = (
             ConnectionPool(
                 conninfo=database_url,
                 kwargs={"row_factory": dict_row},
                 min_size=0,
                 max_size=4,
+                max_idle=30.0,
                 timeout=10.0,
                 open=True,
             )
@@ -721,7 +725,9 @@ class PostgresPaperPersistence(PaperPersistence):
     def load_portfolio_trade_performance(
         self,
         runtime_keys: tuple[str, ...],
+        allocations: tuple[float, ...] | None = None,
     ) -> TradePerformanceMetrics:
+        weights = resolved_portfolio_allocations(runtime_keys, allocations)
         if not runtime_keys:
             return performance_metrics_from_totals(
                 trade_count=0,
@@ -735,10 +741,16 @@ class PostgresPaperPersistence(PaperPersistence):
         with self._connect() as connection, connection.cursor() as cursor:
             cursor.execute(
                 """
-                WITH source AS (
-                    SELECT id, pnl, pnl_known
-                    FROM paper_trades
-                    WHERE runtime_key = ANY(%s)
+                WITH sleeves AS (
+                    SELECT runtime_key, allocation
+                    FROM unnest(%s::text[], %s::double precision[])
+                        AS configured(runtime_key, allocation)
+                ),
+                source AS (
+                    SELECT trade.id, trade.pnl * sleeve.allocation AS pnl,
+                           trade.pnl_known
+                    FROM paper_trades AS trade
+                    JOIN sleeves AS sleeve ON trade.runtime_key = sleeve.runtime_key
                 ),
                 curve AS (
                     SELECT
@@ -796,7 +808,7 @@ class PostgresPaperPersistence(PaperPersistence):
                     ) AS max_drawdown
                 FROM peaks
                 """,
-                (list(runtime_keys),),
+                (list(runtime_keys), list(weights)),
             )
             row = cursor.fetchone()
 

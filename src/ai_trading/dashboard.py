@@ -26,7 +26,10 @@ from .paper_cycle_service import (
     run_production_paper_cycle,
 )
 from .paper_readiness_evidence import bootstrap_positive_probability
-from .performance_metrics import calculate_performance_metrics
+from .performance_metrics import (
+    calculate_allocated_performance_metrics,
+    calculate_performance_metrics,
+)
 from .persistence import PaperPersistence, SchedulerDelivery, build_runtime_key
 from .persistence_factory import build_paper_persistence
 from .readiness import ReadinessCheck, ReadinessPolicy, ReadinessReport, evaluate_readiness
@@ -47,8 +50,10 @@ _STORAGE_ERROR_STATUS: dict[str, object] = {
 }
 
 
-def _public_runtime_snapshot(status: HostedRuntimeStatus | None) -> dict[str, object]:
-    snapshot = runtime_status_snapshot(status)
+def _public_runtime_snapshot(
+    status: HostedRuntimeStatus | None, *, now: datetime | None = None
+) -> dict[str, object]:
+    snapshot = runtime_status_snapshot(status, now=now)
     if snapshot.get("error"):
         snapshot["error"] = "worker failure"
     return snapshot
@@ -194,6 +199,7 @@ def render_dashboard(
     runtime_key: str | None = None,
     markets: tuple[MarketSpec, ...] | None = None,
     market_interval: str = "5m",
+    now: datetime | None = None,
 ) -> str:
     storage_error = False
     runtime_revision: int | None = None
@@ -225,13 +231,17 @@ def render_dashboard(
                     for market in markets or ()
                 )
                 trade_performance = load_portfolio_performance(
-                    multi_runtime_keys
+                    multi_runtime_keys,
+                    allocations=tuple(market.allocation for market in markets or ()),
                 )
-                performance_scope = "full persisted cross-market history"
+                performance_scope = "full persisted cross-market history (allocation-adjusted)"
                 performance_is_recent = False
             elif multi_market_view:
-                trade_performance = calculate_performance_metrics(recent)
-                performance_scope = "latest 200 cross-market trade events"
+                trade_performance = calculate_allocated_performance_metrics(
+                    recent,
+                    {market.symbol: market.allocation for market in markets or ()},
+                )
+                performance_scope = "latest 200 cross-market trade events (allocation-adjusted)"
                 performance_is_recent = True
             elif callable(load_performance):
                 trade_performance = load_performance(runtime_key)
@@ -331,7 +341,7 @@ def render_dashboard(
         str(state.processed_bars) if state is not None and not storage_error else "-"
     )
 
-    runtime_snapshot = _public_runtime_snapshot(runtime_status)
+    runtime_snapshot = _public_runtime_snapshot(runtime_status, now=now)
     engine_status = "ERROR" if storage_error else str(runtime_snapshot["engine_status"])
     market = (
         f"{runtime_status.symbol} · {runtime_status.interval}"
@@ -398,11 +408,13 @@ def render_dashboard(
         runtime_status.symbol if runtime_status is not None else "",
         runtime_status if not storage_error else None,
         runtime_snapshot,
+        now=now,
     )
     paper_signal = paper_signal_snapshot(
         runtime_status if not storage_error else None,
         freshness=signal_freshness,
         session_open=signal_session_open,
+        now=now,
     )
     if runtime_status is not None and not storage_error:
         decision_reason = (
@@ -601,6 +613,7 @@ def render_dashboard(
             markets,
             interval=market_interval,
             portfolio_cash=starting_cash,
+            now=now,
         )
         portfolio = snapshot["portfolio"]
         cards = []
@@ -1232,7 +1245,9 @@ def serve_dashboard(
             period=effective_settings.period,
             interval=effective_settings.interval,
             max_catchup_bars=DEFAULT_MAX_CATCHUP_BARS,
-            poll_seconds=300.0,
+            # Cloudflare runs every 15 minutes; heartbeat cadence is not the 5m bar size.
+            # Keep the 5m cadence for manually initiated/in-process cycles.
+            poll_seconds=900.0 if effective_settings.external_scheduler else 300.0,
             shadow_challenger_enabled=effective_settings.shadow_challenger,
             mtf_period=effective_settings.mtf_period,
         )

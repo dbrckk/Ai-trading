@@ -210,6 +210,7 @@ src/
     runtime_status.py
     runtime.py
     scheduler_endpoint.py
+    scheduler_fallback.py
     scheduler.py
     sensitivity_gate.py
     session_integrity.py
@@ -739,8 +740,11 @@ jobs:
 name: Paper Cycle
 
 on:
+  # At most one backup probe per hour, 3 min after Cloudflare :00.
+  # Probing Neon at :07 every 15 minutes would wake it unnecessarily
+  # and risk exceeding 100 free CU-hours/month at 0.25 CU.
   schedule:
-    - cron: "7-57/5 * * * *"
+    - cron: "3 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -755,37 +759,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      AI_TRADING_DATABASE_URL: ${{ secrets.AI_TRADING_DATABASE_URL }}
+      AI_TRADING_SCHEDULER_TOKEN: ${{ secrets.AI_TRADING_SCHEDULER_TOKEN }}
+      DASHBOARD_URL: https://ai-trading-dashboard-qyr2.onrender.com
+      PYTHONPATH: src
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
-          cache: pip
-      - name: Require durable database
+      - name: Require authenticated scheduler
         shell: bash
         run: |
-          if [ -z "${AI_TRADING_DATABASE_URL:-}" ]; then
-            echo "::error::AI_TRADING_DATABASE_URL repository secret is required"
+          if [ -z "${AI_TRADING_SCHEDULER_TOKEN:-}" ]; then
+            echo "::error::AI_TRADING_SCHEDULER_TOKEN repository secret is required"
             exit 1
           fi
-      - name: Install
-        run: python -m pip install .
-      - name: Run all three paper markets
-        shell: bash
+      - name: Run authenticated three-market fallback
         run: |
-          failures=0
-          # Keep backup processing independent: DAX/BTC must still run if Gold fails.
-          for symbol in GC=F ^GDAXI BTC-USD; do
-            echo "Running paper cycle for ${symbol}"
-            ai-trading paper-cycle \
-              --symbol "${symbol}" --period 5d --interval 5m --max-catchup-bars 72 \
-              || failures=$((failures + 1))
-          done
-          if [ "${failures}" -gt 0 ]; then
-            echo "::error::${failures} market paper cycle(s) failed"
-            exit 1
-          fi
+          python -m ai_trading.scheduler_fallback \
+            --base-url "${DASHBOARD_URL}" --timeout 180
 ````
 
 ## File: .github/workflows/production-os-review-handoff.yml
@@ -1008,12 +1000,20 @@ initial_prompt: |
 ````javascript
 export async function invokePaperCycle(env, fetchImpl = fetch)
 ⋮----
+// Reject legacy HTTP 200 responses that still report partial failures.
+⋮----
 scheduled(_event, env, ctx)
 ````
 
 ## File: infra/cloudflare-paper-scheduler/test/index.test.js
 ````javascript
+return
+⋮----
 text: async ()
+⋮----
+json: async () => (
+⋮----
+json: async () =>
 ⋮----
 globalThis.fetch = async (url, options) =>
 ⋮----
@@ -1039,7 +1039,7 @@ main = "src/index.js"
 compatibility_date = "2026-09-16"
 
 [triggers]
-crons = ["*/5 * * * *"]
+crons = ["*/15 * * * *"]
 
 [vars]
 TARGET_URL = "https://ai-trading-dashboard-qyr2.onrender.com/internal/paper-cycle"
@@ -2380,9 +2380,7 @@ temp = self.path.with_suffix(".tmp")
 ````python
 _STORAGE_ERROR_STATUS: dict[str, object] = {
 ⋮----
-def _public_runtime_snapshot(status: HostedRuntimeStatus | None) -> dict[str, object]
-⋮----
-snapshot = runtime_status_snapshot(status)
+snapshot = runtime_status_snapshot(status, now=now)
 ⋮----
 def _display_money(value: float | None) -> str
 ⋮----
@@ -2472,16 +2470,17 @@ load_portfolio_performance = getattr(
 ⋮----
 multi_runtime_keys = tuple(
 trade_performance = load_portfolio_performance(
-performance_scope = "full persisted cross-market history"
+performance_scope = "full persisted cross-market history (allocation-adjusted)"
 performance_is_recent = False
 ⋮----
-trade_performance = calculate_performance_metrics(recent)
-performance_scope = "latest 200 cross-market trade events"
+trade_performance = calculate_allocated_performance_metrics(
+performance_scope = "latest 200 cross-market trade events (allocation-adjusted)"
 performance_is_recent = True
 ⋮----
 trade_performance = load_performance(runtime_key)
 performance_scope = "full persisted history"
 ⋮----
+trade_performance = calculate_performance_metrics(recent)
 performance_scope = "latest 200 trade events"
 ⋮----
 load_burnin = getattr(persistence, "list_burnin_snapshots", None)
@@ -2544,7 +2543,7 @@ position_value = units * last_price
 last_processed = (
 processed_bars_display = (
 ⋮----
-runtime_snapshot = _public_runtime_snapshot(runtime_status)
+runtime_snapshot = _public_runtime_snapshot(runtime_status, now=now)
 engine_status = "ERROR" if storage_error else str(runtime_snapshot["engine_status"])
 market = (
 last_cycle = (
@@ -2727,6 +2726,9 @@ external_scheduler_configured = (
 effective_cycle_executor = paper_cycle_executor
 ⋮----
 cycle_settings = ProductionPaperCycleSettings(
+⋮----
+# Cloudflare runs every 15 minutes; heartbeat cadence is not the 5m bar size.
+# Keep the 5m cadence for manually initiated/in-process cycles.
 ⋮----
 def execute_paper_cycle() -> PaperCycleResult
 ⋮----
@@ -3710,6 +3712,10 @@ state = commit.state
 regimes = set(self.list_regimes(""))
 ⋮----
 def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics
+⋮----
+weights = resolved_portfolio_allocations(runtime_keys, allocations)
+⋮----
+allocation_by_symbol = {
 ⋮----
 def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]
 ⋮----
@@ -4809,6 +4815,9 @@ remaining_backlog = remaining_backlog or result.remaining_backlog
 mtf_evaluated = mtf_evaluated or result.mtf_evaluated
 ⋮----
 last_processed = (
+⋮----
+# Record which known market failed without exposing provider exception text.
+known_symbols = {market.symbol for market in DEFAULT_MARKETS}
 ⋮----
 failure_codes = {code for _, code in failures}
 code = (
@@ -6125,6 +6134,13 @@ max_drawdown = 0.0
 peak_pnl = max(peak_pnl, cumulative_pnl)
 max_drawdown = max(max_drawdown, peak_pnl - cumulative_pnl)
 ⋮----
+"""Match normalized paper sleeves to the weights used in portfolio equity."""
+⋮----
+"""Compute cash PnL and drawdown at actual sleeve allocations.
+
+    Trade count and PnL coverage remain event counts, not fractional weights.
+    """
+⋮----
 def empty_performance_payload() -> dict[str, object]
 ⋮----
 def performance_payload(metrics: TradePerformanceMetrics) -> dict[str, object]
@@ -6544,8 +6560,10 @@ canonical = json.dumps(
 ⋮----
 class PostgresPaperPersistence(PaperPersistence)
 ⋮----
-# The hosted dashboard performs many sequential observer reads per request.
-# Reuse at most four connections there; CLI jobs remain one-shot by default.
+# Reuse up to four connections for bursty dashboard reads. With min_size=0,
+# close idle connections promptly so serverless Postgres can scale to zero
+# between 15-minute paper cycles instead of staying awake for 10 minutes.
+# CLI jobs remain one-shot by default.
 ⋮----
 def _connect(self)
 ⋮----
@@ -6595,6 +6613,8 @@ query = f"""
 rows = cursor.fetchall()
 ⋮----
 def load_trade_performance(self, runtime_key: str) -> TradePerformanceMetrics
+⋮----
+weights = resolved_portfolio_allocations(runtime_keys, allocations)
 ⋮----
 def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]
 ⋮----
@@ -7835,6 +7855,13 @@ class PaperAutonomousRuntime
 ⋮----
 base_risk_config = risk_config or RiskConfig()
 ⋮----
+# Honor an explicit lock path, including legacy single-runtime callers.
+⋮----
+# Parallel markets must not contend for the same process-wide file.
+# The same durable runtime key still gets an identical lock path,
+# while PostgreSQL revision checks protect commits across hosts.
+digest = hashlib.sha256(self.runtime_key.encode("utf-8")).hexdigest()
+⋮----
 def _broker_from_state(self, state: RuntimeState) -> PaperBroker
 ⋮----
 broker = PaperBroker(self.risk_config)
@@ -7931,8 +7958,8 @@ class SchedulerHttpResponse
 status_code: int
 payload: dict[str, object]
 ⋮----
-_ALLOWED_SCHEDULER_SOURCES = {"cloudflare"}
-_SCHEDULER_FRESHNESS_SECONDS = 12 * 60
+_ALLOWED_SCHEDULER_SOURCES = {"cloudflare", "github"}
+_SCHEDULER_FRESHNESS_SECONDS = 32 * 60
 ⋮----
 normalized_source = (source or "").strip().lower()
 ⋮----
@@ -7974,6 +8001,50 @@ def _authorized(authorization: str | None, configured_token: str) -> bool
 provided = authorization.removeprefix("Bearer ")
 ⋮----
 result = run_cycle()
+````
+
+## File: src/ai_trading/scheduler_fallback.py
+````python
+"""Authenticated GitHub scheduler fallback using Render as the single DB writer.
+
+The dashboard owns the Neon connection; GitHub never receives database credentials.
+"""
+⋮----
+class FallbackFailure(RuntimeError)
+⋮----
+"""Sanitized failure suitable for public CI logs."""
+⋮----
+_CLOUDFLARE_HEALTHY_WINDOW_SECONDS = 32 * 60
+⋮----
+def _recent_cloudflare(payload: object) -> bool
+⋮----
+age = payload.get("last_delivery_age_seconds")
+⋮----
+"""Skip a recent successful Cloudflare cycle, or trigger one paper-only cycle."""
+⋮----
+origin = base_url.rstrip("/")
+status_request = Request(
+# Do not spend the execution budget waiting on optional scheduler telemetry.
+# Allow a slower cold-starting Render service to complete the actual cycle.
+status_timeout = min(timeout, 45.0)
+⋮----
+status_payload = (
+⋮----
+status_payload = None
+⋮----
+cycle_request = Request(
+⋮----
+body = response.read(16_385)
+⋮----
+payload = json.loads(body)
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser(description="Neon-budgeted paper scheduler fallback")
+⋮----
+args = parser.parse_args()
+⋮----
+outcome = run_fallback(
 ````
 
 ## File: src/ai_trading/scheduler.py
@@ -9308,6 +9379,9 @@ def test_postgres_persists_cumulative_trade_performance() -> None
 ⋮----
 backend = PostgresPaperPersistence(DATABASE_URL)
 ⋮----
+# Normalize the trade journal's 100k sleeve to its allocated paper capital.
+allocated = backend.load_portfolio_trade_performance(
+⋮----
 def test_postgres_duplicate_trade_does_not_double_count_performance() -> None
 ⋮----
 trade = _trade(12.5, 0)
@@ -9325,6 +9399,8 @@ backend = FilePaperPersistence(root=tmp_path)
 ````python
 def test_dashboard_hides_expired_paper_decision(tmp_path) -> None
 ⋮----
+# Fixed open Gold session: wall-clock maintenance windows must not alter the assertion.
+now = datetime(2026, 9, 15, 19, 30, tzinfo=UTC)
 journal = TradeJournal(tmp_path / "trades.jsonl")
 state_store = RuntimeStateStore(tmp_path / "runtime_state.json")
 status_store = HostedRuntimeStatusStore(tmp_path / "runtime_status.json")
@@ -10649,8 +10725,6 @@ def list_trades(self, runtime_key: str | None = None, *, limit: int | None = Non
 ⋮----
 def load_trade_performance(self, runtime_key: str)
 ⋮----
-def load_portfolio_trade_performance(self, runtime_keys: tuple[str, ...])
-⋮----
 def test_configured_markets_default_to_full_bundle(monkeypatch) -> None
 ⋮----
 markets = configured_markets_from_env()
@@ -10659,13 +10733,15 @@ def test_configured_default_bundle_uses_34_33_33(monkeypatch) -> None
 ⋮----
 def test_configured_markets_preserve_known_and_custom_labels(monkeypatch) -> None
 ⋮----
-def test_multi_market_cycle_isolates_one_market_failure(monkeypatch) -> None
+def test_multi_market_cycle_isolates_one_market_failure(monkeypatch, capsys) -> None
 ⋮----
 calls: list[tuple[str, str]] = []
 ⋮----
 def fake_cycle(settings, *, persistence=None, **kwargs)
 ⋮----
 result = run_multi_market_paper_cycle(
+⋮----
+log_output = capsys.readouterr().out
 ⋮----
 def test_multi_market_overview_scales_normalized_sleeves_to_100k() -> None
 ⋮----
@@ -11283,26 +11359,43 @@ completed = backend.statuses[-1]
 ## File: tests/test_paper_cycle_workflow.py
 ````python
 WORKFLOW_PATH = Path(".github/workflows/paper-cycle.yml")
-STEP_HEADER = (
+WORKER_CONFIG_PATH = Path("infra/cloudflare-paper-scheduler/wrangler.toml")
 ⋮----
-def _fallback_script() -> str
+class FakeResponse
 ⋮----
-workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
-# This is the actual shell body GitHub Actions runs, not a copied command.
-body = workflow.split(STEP_HEADER, 1)[1]
+status = 200
 ⋮----
-def test_paper_cycle_workflow_structure() -> None
+def __init__(self, payload: dict[str, object], *, status: int = 200) -> None
+⋮----
+def __enter__(self)
+⋮----
+def __exit__(self, *_args)
+⋮----
+def read(self, size: int) -> bytes
+⋮----
+def test_paper_cycle_workflow_uses_authenticated_render_not_expired_db() -> None
 ⋮----
 text = WORKFLOW_PATH.read_text(encoding="utf-8")
-⋮----
+worker = WORKER_CONFIG_PATH.read_text(encoding="utf-8")
 required = (
 ⋮----
-def test_fallback_runs_every_market_even_after_failure(tmp_path: Path) -> None
+seen = []
 ⋮----
-market_log = tmp_path / "visited-markets.txt"
-fake_cli = tmp_path / "ai-trading"
+def fake_open(request, timeout)
 ⋮----
-result = subprocess.run(
+outcome = run_fallback("https://example.invalid", "server-secret", opener=fake_open)
+⋮----
+calls = []
+⋮----
+def test_fallback_runs_after_scheduler_telemetry_failure() -> None
+⋮----
+def test_fallback_rejects_missing_token_without_network() -> None
+⋮----
+def test_fallback_reports_sanitized_http_failure() -> None
+⋮----
+def test_fallback_fails_closed_when_paper_cycle_has_partial_market_failure() -> None
+⋮----
+def test_fallback_rejects_malformed_and_future_scheduler_ages() -> None
 ````
 
 ## File: tests/test_paper_cycle.py
@@ -11640,6 +11733,8 @@ def test_opt_in_postgres_pool_reuses_connection_safely(backend) -> None
 pooled = PostgresPaperPersistence(DATABASE_URL, pooled=True)
 ⋮----
 pids = []
+⋮----
+# The free Neon compute must be allowed to sleep between paper cycles.
 ⋮----
 def test_postgres_16_is_reachable() -> None
 ⋮----
@@ -12345,9 +12440,16 @@ root = tmp_path / "soak"
 
 ## File: tests/test_runtime_lock.py
 ````python
-def test_runtime_lock_is_exclusive(tmp_path: Path) -> None
+def test_runtime_lock_is_exclusive(tmp_path: Path, monkeypatch) -> None
 ⋮----
 path = tmp_path / "runtime.lock"
+⋮----
+shared_backend = object()
+gold = PaperAutonomousRuntime(
+same_gold = PaperAutonomousRuntime(
+btc = PaperAutonomousRuntime(
+⋮----
+custom = tmp_path / "custom.lock"
 ````
 
 ## File: tests/test_runtime_persistence.py
@@ -12541,6 +12643,12 @@ def test_http_scheduler_valid_token_runs_one_cycle_and_ignores_body(tmp_path) ->
 ⋮----
 def fake_cycle() -> PaperCycleResult
 ⋮----
+def test_http_scheduler_partial_cycle_records_real_http_failure(tmp_path) -> None
+⋮----
+result = PaperCycleResult(
+⋮----
+payload = json.loads(body)
+⋮----
 def test_http_scheduler_other_post_routes_are_not_exposed(tmp_path) -> None
 ⋮----
 def test_http_scheduler_failure_response_never_leaks_secrets(tmp_path) -> None
@@ -12565,8 +12673,6 @@ overview = scheduler_delivery_overview(
 ⋮----
 def test_http_scheduler_exposes_durable_cloudflare_delivery_evidence(tmp_path) -> None
 ⋮----
-payload = json.loads(body)
-⋮----
 def test_scheduler_delivery_verification_expires_when_latest_success_is_stale() -> None
 ⋮----
 now = datetime(2026, 9, 21, 17, 0, tzinfo=UTC)
@@ -12576,8 +12682,6 @@ overview = scheduler_delivery_overview(deliveries, now=now)
 def test_scheduler_delivery_overview_rejects_invalid_freshness_window() -> None
 ⋮----
 def test_scheduler_response_exposes_backlog_and_mtf_progress() -> None
-⋮----
-result = PaperCycleResult(
 ⋮----
 def test_scheduler_marks_partial_market_cycle_degraded() -> None
 ⋮----
@@ -13206,8 +13310,8 @@ Autonomous trading research platform focused on reproducible, risk-aware, out-of
 - multi-timeframe evidence across 5m / 15m / 1h / 4h
 - correlation-aware portfolio de-risking and fail-closed configuration validation
 - bounded external paper-cycle scheduling with catch-up support
-- Cloudflare five-minute scheduler with authenticated Render endpoint and durable delivery evidence
-- GitHub Actions scheduler retained as operational fallback
+- Cloudflare fifteen-minute scheduler with authenticated Render endpoint and durable delivery evidence
+- GitHub Actions hourly authenticated fallback (reuses Render/Neon, skips recent Cloudflare success to conserve free compute; 45-second maximum status probe and 180-second authenticated cycle timeout accommodate Render cold starts)
 - read-only hosted dashboard backed by the same durable runtime state
 - CI with Ruff + Pytest + PostgreSQL 16 integration tests
 
@@ -13328,7 +13432,7 @@ This persistence layer does not enable live trading. Broker routing remains pape
 The production paper architecture separates execution from the hosted web process:
 
 ```text
-Cloudflare Worker (every 5 minutes)
+Cloudflare Worker (every 15 minutes)
         |
         | authenticated POST
         v
@@ -13346,9 +13450,11 @@ paper state/model/trades         Render dashboard
 GitHub Actions fallback scheduler
 ```
 
-The primary scheduler is the Cloudflare Worker under `infra/cloudflare-paper-scheduler/`. Its cron runs every five minutes and sends an authenticated POST to Render's `/internal/paper-cycle` endpoint. The Worker contains no database credentials and no trading logic. The existing `.github/workflows/paper-cycle.yml` schedule remains available as a fallback until external scheduler delivery has accumulated sufficient production evidence. The GitHub fallback runs **Gold (`GC=F`), DAX (`^GDAXI`) and BTC (`BTC-USD`)** independently against the durable database: one market's failure does not skip the others, but the workflow still fails visibly if any market fails. GitHub scheduled jobs can be delayed; this fallback does **not** guarantee a five-minute heartbeat.
+The primary scheduler is the Cloudflare Worker under `infra/cloudflare-paper-scheduler/`. Its cron runs every fifteen minutes and sends an authenticated POST to Render's `/internal/paper-cycle` endpoint. The Worker contains no database credentials and no trading logic. The hourly `.github/workflows/paper-cycle.yml` fallback calls the same authenticated Render endpoint, skipping the POST when Cloudflare succeeded within the last 32 minutes (matching the dashboard's health window). Render alone holds the database connection; GitHub Actions does not store it. Both schedulers process Gold (`GC=F`), DAX (`^GDAXI`) and BTC (`BTC-USD`) independently, so one market failure does not prevent the others from advancing. GitHub scheduled jobs can be delayed; this fallback does not guarantee an exact heartbeat.
 
-Scheduler delivery telemetry is sanitized and persisted durably. The application never persists the bearer token or raw authorization headers. Three consecutive successful Cloudflare deliveries are treated as the minimum verification threshold exposed by `/api/scheduler`.
+The hosted runtime heartbeat uses the **15-minute external scheduler cadence**, not the **5-minute candle interval**. It reports a stale engine after roughly three missed scheduler periods (45 minutes); the dashboard's individual paper signal is independently withheld once its underlying 5-minute bar decision is older than 15 minutes, or if the market session is closed. This avoids falsely marking a healthy scheduler stale without treating an older signal as current.
+
+Scheduler delivery telemetry is sanitized and persisted durably. The application never persists the bearer token or raw authorization headers. A partially failed multi-market cycle returns **HTTP 503**, and the Cloudflare Worker also checks the JSON `ok` flag on successful HTTP responses. Failures are observable rather than falsely reported as successful; Render logs contain only known failed market symbols and sanitized failure codes, not provider exception text. Three consecutive successful Cloudflare deliveries are treated as the minimum verification threshold exposed by `/api/scheduler`.
 
 The production cycle is:
 
@@ -13434,8 +13540,9 @@ AI_TRADING_HOSTED_INTERVAL=5m
 
 The Render Blueprint (`render.yaml`) declares these paper-only variables and
 requests `AI_TRADING_DATABASE_URL` and `AI_TRADING_SCHEDULER_TOKEN` using
-`sync: false`. Set the database URL to the **same database as the GitHub
-fallback** and provide the same scheduler token used by Cloudflare. Neither
+`sync: false`. Set the database URL to the shared durable PostgreSQL/Neon database used
+by Render's web and paper-cycle endpoint; the GitHub fallback no longer
+requires a database URL. Provide the same scheduler token used by Cloudflare. Neither
 secret belongs in Git or in HTTP endpoints. Existing Render services must
 also have these values configured; changing the Blueprint does not prove
 the hosted service was successfully deployed.

@@ -2,37 +2,30 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "fix/paper-signal-integrity",
-  "pull_request": 146,
-  "focus": "Fix production paper decision persistence, stale signal suppression, and dashboard scroll-safe refresh; keep River authoritative and Kronos research-only.",
+  "active_branch": "fix/external-scheduler-heartbeat-cadence",
+  "pull_request": 166,
+  "focus": "Fix externally scheduled production dashboard false STALE statuses: 15-minute Cloudflare cron vs persisted 5-minute heartbeat. Keep per-bar signal age guard and River paper-only execution unchanged.",
   "production_evidence": {
-    "main_head": "3e40c11cd9cd923232b70f9b63dba71cee355f91",
-    "render_live_commit": "3e40c11cd9cd923232b70f9b63dba71cee355f91",
+    "main_head": "924353982d8204ac0e10a3703c47878d5c9692f5",
     "render_shadow_challenger_enabled": true,
     "render_markets": "GC=F,^GDAXI,BTC-USD",
     "gold": {
       "status": "RUNNING",
-      "processed_bars": 713,
-      "revision": 713,
-      "shadow_observations": 0,
+      "processed_bars": 250,
       "consecutive_cycle_errors": 0
     },
     "dax": {
       "status": "RUNNING",
-      "processed_bars": 1,
-      "revision": 1,
-      "shadow_observations": 1,
-      "consecutive_cycle_errors": 0,
-      "last_processed": "2026-09-18 17:25:00+02:00"
+      "processed_bars": 103,
+      "consecutive_cycle_errors": 0
     },
     "btc": {
       "status": "RUNNING",
-      "processed_bars": 15,
-      "revision": 15,
-      "shadow_observations": 15,
-      "consecutive_cycle_errors": 0,
-      "last_processed": "2026-09-19 20:15:00+00:00"
-    }
+      "processed_bars": 260,
+      "consecutive_cycle_errors": 0
+    },
+    "verified_at_utc": "2026-10-20T17:01:18Z",
+    "scheduler_recent_successes": 20
   },
   "completed_changes": [
     "PR #43 fixed the daily-loss baseline across intraday bars.",
@@ -51,7 +44,9 @@
     "PR #63 refined MTF benchmark scoring around confidence-gated directional evidence.",
     "PR #66 selected validated parameters independently per market: Gold 45m/5bp/ATR0.25/train1000/conf56, DAX 45m/5bp/ATR0.25/train1000/conf60; BTC remains unvalidated.",
     "PR #146 carries actual per-bar River side/confidence/risk decision into hosted status and makes stale/closed-session signals unavailable.",
-    "PR #146 stabilizes mobile dashboard refresh by avoiding DOM changes during user interactions and anchoring market cards by stable symbol."
+    "PR #146 stabilizes mobile dashboard refresh by avoiding DOM changes during user interactions and anchoring market cards by stable symbol.",
+    "PRs #160-#164 migrated paper storage to Neon free-tier, bounded idle DB connections, handled degraded scheduler cycles, avoided redundant fallbacks, extended fallback timeout, and isolated concurrent market locks.",
+    "PR #165 merged allocation-adjusted paper performance into main on 2026-10-20, with green CI and CodeQL."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -60,9 +55,8 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Finish PR #146 CI and CodeQL; merge only after successful checks.",
-    "Confirm Render production deployment of the merged main revision if accessible.",
-    "Observe real scheduler cycles and verify that /api/markets signal_state, risk_approved and signal_time are consistent.",
-    "Benchmark Kronos separately; do not promote until out-of-sample gains are demonstrated."
+    "PR #166 aligns the persisted hosted heartbeat cadence with the 15-minute Cloudflare scheduler; require green CI and CodeQL before merge.",
+    "After merge/deployment, inspect /api/markets for RUNNING and correct per-signal DELAYED/NO_TRADE/PAPER_APPROVED states across Gold/DAX/BTC, without enabling live orders.",
+    "Continue gathering statistically adequate realized trade and held-out Kronos vs three-class River comparison evidence before considering any strategy changes."
   ]
 }

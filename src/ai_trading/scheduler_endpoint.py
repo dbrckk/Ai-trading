@@ -16,8 +16,8 @@ class SchedulerHttpResponse:
     payload: dict[str, object]
 
 
-_ALLOWED_SCHEDULER_SOURCES = {"cloudflare"}
-_SCHEDULER_FRESHNESS_SECONDS = 12 * 60
+_ALLOWED_SCHEDULER_SOURCES = {"cloudflare", "github"}
+_SCHEDULER_FRESHNESS_SECONDS = 32 * 60
 
 
 def scheduler_telemetry_payload(
@@ -201,6 +201,6 @@ def handle_scheduler_request(
         payload["failed_markets"] = int(result.failed_markets)
 
     return SchedulerHttpResponse(
-        status_code=200,
+        status_code=503 if result.partial_failure else 200,
         payload=payload,
     )

@@ -91,12 +91,17 @@ class FakeMultiPersistence:
         )
 
 
-    def load_portfolio_trade_performance(self, runtime_keys: tuple[str, ...]):
+    def load_portfolio_trade_performance(
+        self,
+        runtime_keys: tuple[str, ...],
+        allocations: tuple[float, ...] | None = None,
+    ):
         assert runtime_keys == (
             "paper:GC=F:5m:online-river:v1",
             "paper:^GDAXI:5m:online-river:v1",
             "paper:BTC-USD:5m:online-river:v1",
         )
+        assert allocations == (0.34, 0.33, 0.33)
         from ai_trading.performance_metrics import performance_metrics_from_totals
 
         return performance_metrics_from_totals(
@@ -161,7 +166,7 @@ def test_configured_markets_preserve_known_and_custom_labels(monkeypatch) -> Non
     ]
 
 
-def test_multi_market_cycle_isolates_one_market_failure(monkeypatch) -> None:
+def test_multi_market_cycle_isolates_one_market_failure(monkeypatch, capsys) -> None:
     calls: list[tuple[str, str]] = []
 
     def fake_cycle(settings, *, persistence=None, **kwargs):
@@ -203,6 +208,11 @@ def test_multi_market_cycle_isolates_one_market_failure(monkeypatch) -> None:
     assert result.partial_failure is True
     assert result.failed_markets == 1
     assert "isolated failures=1" in result.reason
+    log_output = capsys.readouterr().out
+    assert '"event": "paper_market_cycle_failed"' in log_output
+    assert '"symbol": "^GDAXI"' in log_output
+    assert '"code": "execution_failed"' in log_output
+    assert "ProviderError" not in log_output
 
 
 def test_multi_market_overview_scales_normalized_sleeves_to_100k() -> None:

@@ -75,6 +75,7 @@ class PaperPersistence(Protocol):
     def load_portfolio_trade_performance(
         self,
         runtime_keys: tuple[str, ...],
+        allocations: tuple[float, ...] | None = None,
     ) -> TradePerformanceMetrics: ...
 
     def list_burnin_snapshots(self, runtime_key: str) -> tuple[BurnInSnapshot, ...]: ...

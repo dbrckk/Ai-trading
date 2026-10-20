@@ -9,6 +9,8 @@ from ai_trading.trade_journal import TradeJournal
 
 
 def test_dashboard_hides_expired_paper_decision(tmp_path) -> None:
+    # Fixed open Gold session: wall-clock maintenance windows must not alter the assertion.
+    now = datetime(2026, 9, 15, 19, 30, tzinfo=UTC)
     journal = TradeJournal(tmp_path / "trades.jsonl")
     state_store = RuntimeStateStore(tmp_path / "runtime_state.json")
     status_store = HostedRuntimeStatusStore(tmp_path / "runtime_status.json")
@@ -17,7 +19,7 @@ def test_dashboard_hides_expired_paper_decision(tmp_path) -> None:
             engine_status="RUNNING",
             symbol="GC=F",
             interval="5m",
-            updated_at_utc=datetime.now(UTC).isoformat(),
+            updated_at_utc=now.isoformat(),
             last_cycle_timestamp="2026-09-15 15:55:00+00:00",
             processed=True,
             side=1,
@@ -35,6 +37,7 @@ def test_dashboard_hides_expired_paper_decision(tmp_path) -> None:
         state_store,
         100_000.0,
         runtime_status_store=status_store,
+        now=now,
     )
 
     assert "RUNNING" in page

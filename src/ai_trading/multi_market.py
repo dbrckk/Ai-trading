@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
@@ -154,6 +155,25 @@ def run_multi_market_paper_cycle(
                     else max(last_processed, result.last_processed)
                 )
 
+    # Record which known market failed without exposing provider exception text.
+    known_symbols = {market.symbol for market in DEFAULT_MARKETS}
+    for symbol, code in failures:
+        print(
+            json.dumps(
+                {
+                    "event": "paper_market_cycle_failed",
+                    "symbol": symbol if symbol in known_symbols else "custom",
+                    "code": (
+                        code
+                        if code in {"storage_unavailable", "execution_failed"}
+                        else "execution_failed"
+                    ),
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
+
     if len(failures) == len(markets):
         failure_codes = {code for _, code in failures}
         code = (
@@ -216,7 +236,10 @@ def build_multi_market_overview(
     if callable(load_portfolio_performance):
         try:
             portfolio_performance = performance_payload(
-                load_portfolio_performance(runtime_keys)
+                load_portfolio_performance(
+                    runtime_keys,
+                    allocations=tuple(market.allocation for market in markets),
+                )
             )
         except Exception:  # noqa: BLE001 - optional observer must not break overview
             portfolio_performance = empty_performance_payload()

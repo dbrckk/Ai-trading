@@ -1,20 +1,18 @@
 # Change impact
 
-Base: 22ada96a0e8451ae6edb66a518170bc0ad39c337
-Head: 05c929040f928b48243a631bbbf2707a834aadd7
+Base: 4f4977e136e8aa3722e19d19e6fbda406df32ca5
+Head: 4bd83c03199c961b2272f9068edba2f8a5fd42ac
 
 ## Changed files
-- M README.md
-- M src/ai_trading/deployment_probe.py
-- M tests/test_dashboard_health.py
+- M src/ai_trading/dashboard.py
+- M tests/test_dashboard_engine_status.py
 
 ## Affected areas
-- (root)
 - src
 - tests
 
 ## Related test candidates
-- No direct filename-based test match detected.
+- tests/test_dashboard.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

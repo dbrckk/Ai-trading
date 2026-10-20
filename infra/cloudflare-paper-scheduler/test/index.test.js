@@ -13,7 +13,7 @@ test("invokePaperCycle sends only authenticated POST to configured target", asyn
 
   await invokePaperCycle(env, async (url, options) => {
     calls.push({ url, options });
-    return { ok: true, status: 200 };
+    return { ok: true, status: 200, json: async () => ({ ok: true }) };
   });
 
   assert.equal(calls.length, 1);
@@ -42,7 +42,7 @@ test("invokePaperCycle rejects missing TARGET_URL without fetching", async () =>
       { SCHEDULER_TOKEN: "scheduler-secret" },
       async () => {
         fetches += 1;
-        return { ok: true, status: 200 };
+        return { ok: true, status: 200, json: async () => ({ ok: true }) };
       },
     ),
     { message: "scheduler configuration missing" },
@@ -58,7 +58,7 @@ test("invokePaperCycle rejects missing SCHEDULER_TOKEN without fetching", async 
       { TARGET_URL: "https://example.test/internal/paper-cycle" },
       async () => {
         fetches += 1;
-        return { ok: true, status: 200 };
+        return { ok: true, status: 200, json: async () => ({ ok: true }) };
       },
     ),
     { message: "scheduler configuration missing" },
@@ -93,13 +93,47 @@ test("invokePaperCycle reports only HTTP status for provider failure", async () 
 });
 
 
+test("invokePaperCycle rejects partial success encoded in HTTP 200", async () => {
+  await assert.rejects(
+    invokePaperCycle(
+      {
+        TARGET_URL: "https://example.test/internal/paper-cycle",
+        SCHEDULER_TOKEN: "scheduler-secret",
+      },
+      async () => ({
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: false, partial_failure: true }),
+      }),
+    ),
+    { message: "paper cycle response not successful" },
+  );
+});
+
+test("invokePaperCycle rejects malformed success payloads", async () => {
+  await assert.rejects(
+    invokePaperCycle(
+      {
+        TARGET_URL: "https://example.test/internal/paper-cycle",
+        SCHEDULER_TOKEN: "scheduler-secret",
+      },
+      async () => ({
+        ok: true,
+        status: 200,
+        json: async () => { throw new SyntaxError("internal parse failure"); },
+      }),
+    ),
+    { message: "paper cycle response not successful" },
+  );
+});
+
 test("scheduled handler passes the invocation promise to waitUntil", async () => {
   const originalFetch = globalThis.fetch;
   const calls = [];
   let scheduledPromise;
   globalThis.fetch = async (url, options) => {
     calls.push({ url, options });
-    return { ok: true, status: 200 };
+    return { ok: true, status: 200, json: async () => ({ ok: true }) };
   };
 
   try {

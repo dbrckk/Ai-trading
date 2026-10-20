@@ -15,6 +15,12 @@ export async function invokePaperCycle(env, fetchImpl = fetch) {
   if (!response.ok) {
     throw new Error(`paper cycle failed with HTTP ${response.status}`);
   }
+
+  // Reject legacy HTTP 200 responses that still report partial failures.
+  const payload = await response.json().catch(() => null);
+  if (!payload || payload.ok !== true) {
+    throw new Error("paper cycle response not successful");
+  }
 }
 
 export default {

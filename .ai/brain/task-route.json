@@ -4,15 +4,15 @@
     "expand_to": 12,
     "max_files": 6,
     "requested_max_files": 12,
-    "score_margin": 0,
+    "score_margin": 3,
     "tier": "bounded",
-    "top_score": 17
+    "top_score": 26
   },
   "cache": {
-    "fingerprint": "54cbcfd0319bd20534a87bfc8ae503948be1b4afdb9e8827c427030b544565f3",
+    "fingerprint": "5c9a9ccf8eec3011f149431aab9510daec0b49e670c8787d21e03912e02c91c5",
     "hit": false
   },
-  "candidate_count": 12,
+  "candidate_count": 15,
   "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
   "files": [
     {
@@ -20,11 +20,47 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/cli.py",
+      "path": "src/ai_trading/dashboard.py",
       "reasons": [
+        "impact",
+        "recently-changed",
         "search-index"
       ],
-      "score": 17,
+      "score": 26,
+      "symbols": [
+        "Handler",
+        "_display_money",
+        "_display_ratio",
+        "_display_trade_pnl",
+        "_display_units",
+        "_equity_chart_svg",
+        "_public_runtime_snapshot",
+        "_readiness_number",
+        "_readiness_panel",
+        "_scheduler_display_state",
+        "_send_json",
+        "_trade_pnl_known",
+        "_write_response_body",
+        "do_GET",
+        "do_POST",
+        "end_headers",
+        "execute_paper_cycle",
+        "load_status_snapshot",
+        "log_message",
+        "render_dashboard"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "engine"
+      ],
+      "path": "src/ai_trading/cli.py",
+      "reasons": [
+        "impact",
+        "search-index"
+      ],
+      "score": 23,
       "symbols": [
         "compare_models",
         "create_readiness_release_command",
@@ -53,32 +89,14 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/dashboard.py",
+      "path": "tests/test_dashboard_engine_status.py",
       "reasons": [
-        "search-index"
+        "impact",
+        "recently-changed"
       ],
-      "score": 17,
+      "score": 19,
       "symbols": [
-        "Handler",
-        "_display_money",
-        "_display_ratio",
-        "_display_trade_pnl",
-        "_display_units",
-        "_equity_chart_svg",
-        "_public_runtime_snapshot",
-        "_readiness_number",
-        "_readiness_panel",
-        "_scheduler_display_state",
-        "_send_json",
-        "_trade_pnl_known",
-        "_write_response_body",
-        "do_GET",
-        "do_POST",
-        "end_headers",
-        "execute_paper_cycle",
-        "load_status_snapshot",
-        "log_message",
-        "render_dashboard"
+        "test_dashboard_hides_expired_paper_decision"
       ]
     },
     {
@@ -119,37 +137,6 @@
       "symbols": [
         "test_drawdown_limit_is_fail_closed",
         "test_low_confidence_is_rejected"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "engine"
-      ],
-      "path": "tests/test_dashboard_health.py",
-      "reasons": [
-        "impact",
-        "recently-changed"
-      ],
-      "score": 13,
-      "symbols": [
-        "FakeResponse",
-        "__enter__",
-        "__exit__",
-        "_free_port",
-        "_get",
-        "_start_dashboard",
-        "fail_request",
-        "fake_urlopen",
-        "read",
-        "test_api_status_reports_stale_worker_without_hiding_web_health",
-        "test_dashboard_marks_expired_worker_heartbeat_stale",
-        "test_external_probe_checks_live_ready_and_all_markets",
-        "test_external_probe_reports_connection_errors_without_exposing_details",
-        "test_external_scheduler_readiness_detects_missing_configuration",
-        "test_healthz_keeps_web_liveness_separate_from_engine_health",
-        "test_probe_rejects_market_cards_with_broken_portfolio",
-        "test_render_blueprint_declares_external_runtime_and_secret_inputs"
       ]
     },
     {

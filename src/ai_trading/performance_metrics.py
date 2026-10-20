@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from math import isfinite
 
 from .trade_journal import TradeSnapshot
@@ -79,6 +79,38 @@ def calculate_performance_metrics(
         max_drawdown=max_drawdown,
     )
 
+
+
+
+def resolved_portfolio_allocations(
+    runtime_keys: tuple[str, ...],
+    allocations: tuple[float, ...] | None,
+) -> tuple[float, ...]:
+    """Match normalized paper sleeves to the weights used in portfolio equity."""
+    if len(set(runtime_keys)) != len(runtime_keys):
+        raise ValueError("portfolio runtime keys must be unique")
+    if allocations is None:
+        return (1.0,) * len(runtime_keys)
+    if len(allocations) != len(runtime_keys):
+        raise ValueError("portfolio allocations must match runtime keys")
+    if any(not isfinite(value) or not 0.0 < value <= 1.0 for value in allocations):
+        raise ValueError("portfolio allocations must be finite and in (0, 1]")
+    return allocations
+
+
+def calculate_allocated_performance_metrics(
+    trades: Iterable[TradeSnapshot],
+    allocations_by_symbol: dict[str, float],
+) -> TradePerformanceMetrics:
+    """Compute cash PnL and drawdown at actual sleeve allocations.
+
+    Trade count and PnL coverage remain event counts, not fractional weights.
+    """
+    return calculate_performance_metrics(
+        replace(trade, pnl=trade.pnl * allocations_by_symbol[trade.symbol])
+        for trade in trades
+        if trade.symbol in allocations_by_symbol
+    )
 
 
 def empty_performance_payload() -> dict[str, object]:

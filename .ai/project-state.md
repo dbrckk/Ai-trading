@@ -22,52 +22,52 @@ Status: active
 - PR #67 prepares those validated Gold/DAX configurations as versioned audit-only MTF candidates, resets their quality evidence logically by config name, and leaves BTC MTF disabled until a benchmark candidate passes.
 
 ## Broken / blockers
-- Render request logs do not expose the scheduler POST evidence needed to directly prove three consecutive Cloudflare heartbeats, so issue #40 remains open.
-- GitHub scheduled paper-cycle delivery has historically been sparse; keep it as fallback until the Cloudflare acceptance evidence is complete.
-- Repository-standards routing benchmark health is separate from the trading CI; trading CI is green.
+- Paper execution is operational on three markets, but the realized trade sample is statistically insufficient for quality or profitability claims.
+- Free Render/Neon resources and occasional provider failures remain operational constraints; keep the hourly GitHub fallback.
 
 ## Current priority
-- PR #146 (2026-10-19) fixes a paper-cycle signal status omission (side/confidence/risk approval), gates visibility on decision freshness/session/heartbeat, and corrects market-card scroll anchoring. Production deployment and post-merge end-to-end telemetry are not yet verified.
-- Collect new versioned MTF evidence independently for the validated Gold and DAX 45-minute candidates.
-- Require at least 500 realized MTF observations and at least 100 directional observations before MTF review eligibility.
-- Keep BTC MTF unvalidated/disabled until a leakage-safe benchmark candidate passes the active-direction gate.
-- Keep River authoritative and every challenger strictly observational until sustained out-of-sample improvement is demonstrated.
-- Keep production paper-only and retain the GitHub scheduled fallback until issue #40 acceptance criteria are fully evidenced.
+- PR #165 is merged in `main` (2026-10-20); cross-market realized paper performance is now allocation-adjusted (Gold 34%, DAX 33%, BTC 33%).
+- PR #166 corrects a dashboard telemetry cadence mismatch: Cloudflare schedules production every 15 minutes, but the runtime heartbeat previously advertised 5 minutes and could show a healthy engine as STALE after one interval. The external cadence is now 900 seconds, while signal expiry still follows the underlying 5-minute bars. Require CI and CodeQL before merging.
+- After PR #166 deployment, verify production /api/markets freshness against scheduler delivery history. Live broker routing remains disabled.
+- Kronos/River multiclass comparison remains offline only, with insufficient statistically significant out-of-sample evidence to change the production binary River paper model.
+- Keep observing the authenticated Cloudflare scheduler and the hourly GitHub fallback, while conserving Render/Neon free-tier compute.
 
 ## Validation
-- Canonical validation: `ruff check .` and `pytest`.
-- Cloudflare Worker tests must remain green.
-- PR #43, #44, #45, #47, #48, #49, #50, #51, and #52 are merged and passed the trading CI before production activation.
-- Live runtime remains `RUNNING` with zero consecutive cycle errors.
+- Canonical validation: ruff check . and pytest with PostgreSQL integration service; Cloudflare Worker tests and CodeQL must remain green.
+- The allocation-adjusted SQL was run read-only on Neon, yielding 8 events, realized PnL -0.574810634, gross profit 1.211721732, gross loss 1.786532367 and max drawdown 1.490124683.
+- PR #165 merged with green CI and CodeQL. PR #166 validation is required before merge; production deployment of the heartbeat fix is not yet verified.
 
 ## Last verified
-- 2026-09-20
+- 2026-10-20
 
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T14:38:16Z
+Generated: 2026-10-20T21:23:52Z
 
 ### Git
 - Branch: `main`
-- Head: `05c929040f92`
-- Commit date: 2026-10-19T10:38:05-04:00
-- Commit: fix(ops): diagnose Render readiness failures without leaking secrets (#156)
-- Tracked files: 503
+- Head: `4bd83c03199c`
+- Commit date: 2026-10-20T17:23:41-04:00
+- Commit: fix(ci): pin dashboard signal freshness to deterministic session time (#167)
+- Tracked files: 504
 
 ### Recently changed files
-- `README.md`
-- `src/ai_trading/deployment_probe.py`
-- `tests/test_dashboard_health.py`
-- `.github/workflows/hosted-dashboard-probe.yml`
-- `render.yaml`
 - `src/ai_trading/dashboard.py`
+- `tests/test_dashboard_engine_status.py`
+- `README.md`
+- `src/ai_trading/file_persistence.py`
+- `src/ai_trading/multi_market.py`
+- `src/ai_trading/performance_metrics.py`
+- `src/ai_trading/persistence.py`
+- `src/ai_trading/postgres_persistence.py`
+- `tests/test_cumulative_performance_persistence.py`
+- `tests/test_multi_market.py`
+- `src/ai_trading/runtime.py`
+- `tests/test_runtime_lock.py`
 - `.github/workflows/paper-cycle.yml`
+- `src/ai_trading/scheduler_fallback.py`
 - `tests/test_paper_cycle_workflow.py`
-- `src/ai_trading/paper_cycle_service.py`
-- `tests/test_paper_cycle_service.py`
-- `src/ai_trading/bootstrap_robustness.py`
-- `tests/test_bootstrap_robustness.py`
 
 ### Project signals
 - `pyproject.toml`
