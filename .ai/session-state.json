@@ -4,7 +4,7 @@
   "base_branch": "main",
   "active_branch": "main",
   "pull_request": null,
-  "focus": "PR #169 merged: deployed SHA can now be checked via read-only /livez, but Render still returned legacy liveness during immediate post-merge checks. Verify actual release before claiming deployment; preserve paper-only risk gating.",
+  "focus": "PR #169 merged and Render deployment SHA positively verified. Paper engines, PostgreSQL readiness, and Cloudflare cadence are healthy; next priority is safe, separately versioned ternary River-v2 research and broader out-of-sample trading quality evidence.",
   "production_evidence": {
     "main_head": "5e0ea79388915b0b357917896ec8ac2e687e1b27",
     "render_shadow_challenger_enabled": true,
@@ -34,7 +34,21 @@
       "portfolio_equity_complete": true,
       "trade_count": 8,
       "portfolio_realized_pnl": -0.5748106341489922,
-      "production_deployed_commit": "not_yet_exposed_in_post_merge_probe"
+      "production_deployed_commit": "5e0ea79388915b0b357917896ec8ac2e687e1b27",
+      "intended_commit_match": true,
+      "render_release_verified": true,
+      "render_release_verification_date": "2026-10-20",
+      "scheduler_last_success_utc": "2026-10-20T22:00:59.440122+00:00",
+      "market_statuses": {
+        "GC=F": "RUNNING",
+        "^GDAXI": "RUNNING",
+        "BTC-USD": "RUNNING"
+      },
+      "market_signal_states": {
+        "GC=F": "DELAYED",
+        "^GDAXI": "UNAVAILABLE",
+        "BTC-USD": "NO_TRADE"
+      }
     }
   },
   "completed_changes": [
@@ -69,9 +83,9 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Check read-only https://ai-trading-dashboard-qyr2.onrender.com/livez for deployed_commit = 5e0ea79388915b0b357917896ec8ac2e687e1b27 (intended #169 release); if absent, treat deployment as unverified, not as a broken market engine. Metadata-only [skip render] commits do not change the expected deployed version.",
-    "After version match, run the Hosted Dashboard Probe manually with expected_sha 5e0ea79388915b0b357917896ec8ac2e687e1b27; confirm /readyz and /api/markets still healthy without invoking paper cycles.",
-    "Review Gold/DAX/BTC realized net paper metrics; eight fills still insufficient for model promotion or profitability claims.",
-    "Evaluate a separately versioned and backwards-compatible ternary River-v2 model in offline and forward shadow before considering migration of production River-v1; Kronos remains research-only."
+    "Render /livez was read-only verified as deployed_commit 5e0ea79388915b0b357917896ec8ac2e687e1b27, matching intended #169 release. Main CI/CodeQL, hosted probe and repository standards all passed after merge. Continue validating future releases against their own intended SHAs.",
+    "Live read-only APIs report three RUNNING markets with no errors, complete simulated portfolio PnL about -0.57481 from eight fills, and 20 consecutive Cloudflare successes. Gold paper signal DELAYED and DAX market closed correctly suppress actionable signal; BTC is NO_TRADE.",
+    "Design safe versioned River-v2 3-class offline/forward-shadow path, with explicit model-format version and state compatibility, without switching persisted production River-v1 or making live orders.",
+    "Expand Kronos vs ternary River vs momentum non-overlapping, independent held-out benchmarks and live shadow evidence across Gold, DAX and BTC before any promotion."
   ]
 }
