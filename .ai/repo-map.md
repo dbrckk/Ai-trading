@@ -7840,6 +7840,13 @@ class PaperAutonomousRuntime
 ⋮----
 base_risk_config = risk_config or RiskConfig()
 ⋮----
+# Honor an explicit lock path, including legacy single-runtime callers.
+⋮----
+# Parallel markets must not contend for the same process-wide file.
+# The same durable runtime key still gets an identical lock path,
+# while PostgreSQL revision checks protect commits across hosts.
+digest = hashlib.sha256(self.runtime_key.encode("utf-8")).hexdigest()
+⋮----
 def _broker_from_state(self, state: RuntimeState) -> PaperBroker
 ⋮----
 broker = PaperBroker(self.risk_config)
@@ -12415,9 +12422,16 @@ root = tmp_path / "soak"
 
 ## File: tests/test_runtime_lock.py
 ````python
-def test_runtime_lock_is_exclusive(tmp_path: Path) -> None
+def test_runtime_lock_is_exclusive(tmp_path: Path, monkeypatch) -> None
 ⋮----
 path = tmp_path / "runtime.lock"
+⋮----
+shared_backend = object()
+gold = PaperAutonomousRuntime(
+same_gold = PaperAutonomousRuntime(
+btc = PaperAutonomousRuntime(
+⋮----
+custom = tmp_path / "custom.lock"
 ````
 
 ## File: tests/test_runtime_persistence.py

@@ -1,22 +1,18 @@
 # Change impact
 
-Base: 453691344a69ae9581759ec2cb83f56bb361d117
-Head: de2e19945e334d7f8d6521ae82453a42544bc39b
+Base: 355b1d7e0c86d2ad3a469e3b3554b0a70c740d46
+Head: 24b4eb263e0946ae1a746bb84a392afa662b0490
 
 ## Changed files
-- M .github/workflows/paper-cycle.yml
-- M README.md
-- M src/ai_trading/scheduler_fallback.py
-- M tests/test_paper_cycle_workflow.py
+- M src/ai_trading/runtime.py
+- M tests/test_runtime_lock.py
 
 ## Affected areas
-- .github
-- (root)
 - src
 - tests
 
 ## Related test candidates
-- No direct filename-based test match detected.
+- tests/test_runtime.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

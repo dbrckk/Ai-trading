@@ -5,371 +5,439 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "FallbackFailure": {
+    "RuntimeStepResult": {
       "definition": {
-        "file": "src/ai_trading/scheduler_fallback.py",
-        "line": 16,
+        "file": "src/ai_trading/runtime.py",
+        "line": 29,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/scheduler_fallback.py",
+          "file": "src/ai_trading/orchestrator.py",
+          "line": 17,
+          "preview": "from .runtime import PaperAutonomousRuntime, RuntimeStepResult",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/orchestrator.py",
+          "line": 22,
+          "preview": "runtime: RuntimeStepResult",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 29,
+          "preview": "class RuntimeStepResult:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 176,
+          "preview": "def step(self, df: pd.DataFrame) -> RuntimeStepResult:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 182,
+          "preview": "def step_at(self, df: pd.DataFrame, execution_idx: object) -> RuntimeStepResult:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 207,
+          "preview": ") -> RuntimeStepResult:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 226,
+          "preview": ") -> RuntimeStepResult:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 259,
+          "preview": "return RuntimeStepResult(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 373,
+          "preview": "return RuntimeStepResult(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 386,
+          "preview": "return RuntimeStepResult(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
           "line": 16,
-          "preview": "class FallbackFailure(RuntimeError):",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 47,
-          "preview": "raise FallbackFailure(\"dashboard URL must use HTTPS\")",
+          "preview": "from ai_trading.runtime import PaperAutonomousRuntime, RuntimeStepResult",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 49,
-          "preview": "raise FallbackFailure(\"AI_TRADING_SCHEDULER_TOKEN repository secret is required\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 86,
-          "preview": "raise FallbackFailure(f\"paper cycle endpoint returned HTTP {response.status}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 89,
-          "preview": "raise FallbackFailure(f\"paper cycle endpoint returned HTTP {exc.code}\") from None",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 91,
-          "preview": "raise FallbackFailure(\"paper cycle endpoint unavailable\") from None",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 94,
-          "preview": "raise FallbackFailure(\"paper cycle response too large\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 98,
-          "preview": "raise FallbackFailure(\"paper cycle response invalid\") from None",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 100,
-          "preview": "raise FallbackFailure(\"paper cycle was not successful\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 113,
-          "preview": "except FallbackFailure as exc:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 10,
-          "preview": "from ai_trading.scheduler_fallback import FallbackFailure, _recent_cloudflare, run_fallback",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 130,
-          "preview": "with pytest.raises(FallbackFailure, match=\"repository secret is required\"):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 146,
-          "preview": "with pytest.raises(FallbackFailure) as error:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 159,
-          "preview": "with pytest.raises(FallbackFailure, match=\"was not successful\"):",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 14
-    },
-    "_recent_cloudflare": {
-      "definition": {
-        "file": "src/ai_trading/scheduler_fallback.py",
-        "line": 23,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 23,
-          "preview": "def _recent_cloudflare(payload: object) -> bool:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 71,
-          "preview": "if _recent_cloudflare(status_payload):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 10,
-          "preview": "from ai_trading.scheduler_fallback import FallbackFailure, _recent_cloudflare, run_fallback",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 165,
-          "preview": "assert not _recent_cloudflare({",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "run_fallback": {
-      "definition": {
-        "file": "src/ai_trading/scheduler_fallback.py",
-        "line": 38,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 38,
-          "preview": "def run_fallback(",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 110,
-          "preview": "outcome = run_fallback(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 10,
-          "preview": "from ai_trading.scheduler_fallback import FallbackFailure, _recent_cloudflare, run_fallback",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 75,
-          "preview": "outcome = run_fallback(\"https://example.invalid\", \"server-secret\", opener=fake_open)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 103,
-          "preview": "outcome = run_fallback(\"https://example.invalid\", \"server-secret\", opener=fake_open)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 123,
-          "preview": "assert run_fallback(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 131,
-          "preview": "run_fallback(\"https://example.invalid\", \"\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 134,
-          "preview": "run_fallback(\"https://example.invalid\", \"server-secret\", timeout=invalid)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 147,
-          "preview": "run_fallback(\"https://example.invalid\", \"server-secret\", opener=fake_open)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 160,
-          "preview": "run_fallback(\"https://example.invalid\", \"server-secret\", opener=fake_open)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 10
-    },
-    "main": {
-      "definition": {
-        "file": "src/ai_trading/scheduler_fallback.py",
-        "line": 104,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 810,
-          "preview": "main{{max-width:1580px;margin:auto;padding:18px 20px 48px;position:relative}}",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 929,
-          "preview": "@media (max-width:700px){{main{{padding:9px 8px 24px}}.top-nav{{top:5px;border-radius:13px;padding:8px 9px}}.brand span:last-child{{display:none}}.nav-links{{max-width:76vw}}.card{",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 932,
-          "preview": "</style></head><body><main>",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 1173,
-          "preview": "</div></main></body></html>\"\"\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 105,
-          "preview": "def main() -> int:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 120,
-          "preview": "raise SystemExit(main())",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/mtf_parameter_benchmark.py",
-          "line": 540,
-          "preview": "def main() -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/mtf_parameter_benchmark.py",
-          "line": 591,
-          "preview": "main()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 104,
-          "preview": "def main() -> int:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 121,
-          "preview": "raise SystemExit(main())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_cloudflare_scheduler_deploy_workflow.py",
-          "line": 11,
-          "preview": "'branches: [\"main\"]',",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 11
-    },
-    "FakeResponse": {
-      "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 16,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 213,
-          "preview": "class FakeResponse:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 231,
-          "preview": "return FakeResponse({\"web_healthy\": True})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 233,
-          "preview": "return FakeResponse({\"ready\": True, \"storage_healthy\": True})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 234,
-          "preview": "return FakeResponse({",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 16,
-          "preview": "class FakeResponse:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 66,
-          "preview": "return FakeResponse(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 100,
-          "preview": "return FakeResponse(status_payload)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 101,
-          "preview": "return FakeResponse({\"ok\": True, \"processed\": 3})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 121,
-          "preview": "return FakeResponse({\"ok\": True})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 141,
-          "preview": "return FakeResponse({})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 156,
-          "preview": "return FakeResponse({})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 157,
-          "preview": "return FakeResponse({\"ok\": False, \"partial_failure\": True})",
+          "file": "tests/test_paper_cycle.py",
+          "line": 280,
+          "preview": "return RuntimeStepResult(",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 12
     },
+    "PreparedRuntimeMarket": {
+      "definition": {
+        "file": "src/ai_trading/runtime.py",
+        "line": 43,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 43,
+          "preview": "class PreparedRuntimeMarket:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 161,
+          "preview": "def prepare_market(self, df: pd.DataFrame) -> PreparedRuntimeMarket:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 168,
+          "preview": "return PreparedRuntimeMarket(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 191,
+          "preview": "prepared = PreparedRuntimeMarket(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 202,
+          "preview": "prepared: PreparedRuntimeMarket,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 221,
+          "preview": "prepared: PreparedRuntimeMarket,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "PaperAutonomousRuntime": {
+      "definition": {
+        "file": "src/ai_trading/runtime.py",
+        "line": 51,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 89,
+          "preview": "from .runtime import PaperAutonomousRuntime",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 667,
+          "preview": "result = PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 698,
+          "preview": "runtime=PaperAutonomousRuntime(symbol=symbol),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 13,
+          "preview": "from .runtime import PaperAutonomousRuntime",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 94,
+          "preview": "runtime = PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/orchestrator.py",
+          "line": 17,
+          "preview": "from .runtime import PaperAutonomousRuntime, RuntimeStepResult",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/orchestrator.py",
+          "line": 34,
+          "preview": "runtime: PaperAutonomousRuntime | None = None,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/orchestrator.py",
+          "line": 39,
+          "preview": "self.runtime = runtime or PaperAutonomousRuntime()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle.py",
+          "line": 17,
+          "preview": "from .runtime import PaperAutonomousRuntime",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle.py",
+          "line": 70,
+          "preview": "runtime_factory: Callable[..., PaperAutonomousRuntime] = PaperAutonomousRuntime,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 51,
+          "preview": "class PaperAutonomousRuntime:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 5,
+          "preview": "from ai_trading.runtime import PaperAutonomousRuntime",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 59,
+          "preview": "runtime = PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 76,
+          "preview": "runtime = PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_persistence.py",
+          "line": 52,
+          "preview": "\"PaperAutonomousRuntime\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_persistence.py",
+          "line": 93,
+          "preview": "monkeypatch.setattr(hosted_runtime, \"PaperAutonomousRuntime\", fake_runtime)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_runtime.py",
+          "line": 92,
+          "preview": "\"PaperAutonomousRuntime\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_orchestrator_trigger.py",
+          "line": 6,
+          "preview": "from ai_trading.runtime import PaperAutonomousRuntime",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_orchestrator_trigger.py",
+          "line": 11,
+          "preview": "runtime = PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 16,
+          "preview": "from ai_trading.runtime import PaperAutonomousRuntime, RuntimeStepResult",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 39,
+          "preview": "def build(**kwargs) -> PaperAutonomousRuntime:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 40,
+          "preview": "return PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 67,
+          "preview": ") -> tuple[PaperAutonomousRuntime, tuple[object, ...]]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_materialized_fresh.py",
+          "line": 9,
+          "preview": "from ai_trading.runtime import PaperAutonomousRuntime",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_materialized_fresh.py",
+          "line": 46,
+          "preview": "def runtime_factory(**kwargs) -> PaperAutonomousRuntime:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_materialized_fresh.py",
+          "line": 47,
+          "preview": "return PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 13,
+          "preview": "from ai_trading.runtime import PaperAutonomousRuntime",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 34,
+          "preview": "def build(**kwargs) -> PaperAutonomousRuntime:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 35,
+          "preview": "return PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime.py",
+          "line": 8,
+          "preview": "from ai_trading.runtime import PaperAutonomousRuntime",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime.py",
+          "line": 30,
+          "preview": "runtime = PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_lock.py",
+          "line": 5,
+          "preview": "from ai_trading.runtime import PaperAutonomousRuntime",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_lock.py",
+          "line": 17,
+          "preview": "gold = PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_lock.py",
+          "line": 21,
+          "preview": "same_gold = PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_lock.py",
+          "line": 25,
+          "preview": "btc = PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_lock.py",
+          "line": 40,
+          "preview": "assert PaperAutonomousRuntime().lock_path == Path(\"artifacts/runtime.lock\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_lock.py",
+          "line": 42,
+          "preview": "assert PaperAutonomousRuntime(lock_path=custom).lock_path == custom",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 11,
+          "preview": "from ai_trading.runtime import PaperAutonomousRuntime",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 92,
+          "preview": "runtime = PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 127,
+          "preview": "runtime = PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 144,
+          "preview": "runtime = PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 171,
+          "preview": "probe = PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 198,
+          "preview": "runtime = PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 216,
+          "preview": "probe = PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 243,
+          "preview": "runtime = PaperAutonomousRuntime(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 9,
+          "preview": "from ai_trading.runtime import PaperAutonomousRuntime",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 30,
+          "preview": "def build_file_runtime(tmp_path: Path) -> PaperAutonomousRuntime:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 31,
+          "preview": "return PaperAutonomousRuntime(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 48
+    },
     "__init__": {
       "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 19,
+        "file": "src/ai_trading/runtime.py",
+        "line": 58,
         "kind": "function",
         "language": "python"
       },
@@ -646,9 +714,9 @@
         },
         {
           "file": "src/ai_trading/runtime.py",
-          "line": 57,
+          "line": 58,
           "preview": "def __init__(",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "src/ai_trading/runtime_lock.py",
@@ -804,7 +872,7 @@
           "file": "tests/test_paper_cycle_workflow.py",
           "line": 19,
           "preview": "def __init__(self, payload: dict[str, object], *, status: int = 200) -> None:",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tests/test_runtime_persistence.py",
@@ -833,457 +901,1041 @@
       ],
       "occurrence_count": 76
     },
-    "__enter__": {
+    "_broker_from_state": {
       "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 23,
+        "file": "src/ai_trading/runtime.py",
+        "line": 106,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/runtime_lock.py",
-          "line": 13,
-          "preview": "def __enter__(self) -> Self:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 219,
-          "preview": "def __enter__(self):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 23,
-          "preview": "def __enter__(self):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "__exit__": {
-      "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 26,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/runtime_lock.py",
-          "line": 22,
-          "preview": "def __exit__(self, exc_type, exc, tb) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 222,
-          "preview": "def __exit__(self, *args):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 26,
-          "preview": "def __exit__(self, *_args):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "read": {
-      "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 29,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 73,
-          "preview": "def read(self) -> list[BurnInSnapshot]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 85,
-          "preview": "return calculate_burnin_metrics(self.read())",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 88,
-          "preview": "snapshots = self.read()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 952,
-          "preview": "<small class=\"header-subtitle\">Premium read-only control center \u00b7 live refresh without page jumps \u00b7 durable hosted runtime</small>",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 1054,
-          "preview": "<div class=\"footer-note\">AI Trading \u00b7 paper runtime \u00b7 read-only observability</div>",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 27,
-          "preview": "body = response.read(128_001)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 33,
-          "preview": "explanation = json.loads(exc.read(4096))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
+          "file": "src/ai_trading/runtime.py",
           "line": 106,
-          "preview": "parser = argparse.ArgumentParser(description=\"Probe read-only Trading AI endpoints\")",
+          "preview": "def _broker_from_state(self, state: RuntimeState) -> PaperBroker:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 258,
+          "preview": "broker = self._broker_from_state(state)",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/file_persistence.py",
+          "file": "src/ai_trading/runtime.py",
+          "line": 292,
+          "preview": "broker = self._broker_from_state(state)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_state_from_broker": {
+      "definition": {
+        "file": "src/ai_trading/runtime.py",
+        "line": 117,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 117,
+          "preview": "def _state_from_broker(",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 339,
+          "preview": "new_state = self._state_from_broker(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_prepare_market_features": {
+      "definition": {
+        "file": "src/ai_trading/runtime.py",
+        "line": 136,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 136,
+          "preview": "def _prepare_market_features(",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 158,
+          "preview": "_, _, eligible = self._prepare_market_features(df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 162,
+          "preview": "features, valid, eligible = self._prepare_market_features(df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 183,
+          "preview": "features, valid, eligible = self._prepare_market_features(df)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "_eligible_execution_indices": {
+      "definition": {
+        "file": "src/ai_trading/runtime.py",
+        "line": 157,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 157,
+          "preview": "def _eligible_execution_indices(self, df: pd.DataFrame) -> tuple[object, ...]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 73,
+          "preview": "return runtime, runtime._eligible_execution_indices(df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_materialized_fresh.py",
+          "line": 58,
+          "preview": "eligible = runtime._eligible_execution_indices(market)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 84,
+          "preview": "expected_latest = eligibility_runtime._eligible_execution_indices(second_market)[-1]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 177,
+          "preview": "eligible = probe._eligible_execution_indices(market)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 222,
+          "preview": "eligible = probe._eligible_execution_indices(market)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 44,
+          "preview": "target = runtime._eligible_execution_indices(df)[-3]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 55,
+          "preview": "target = runtime._eligible_execution_indices(df)[-2]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 76,
+          "preview": "eligible = runtime._eligible_execution_indices(df)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 9
+    },
+    "prepare_market": {
+      "definition": {
+        "file": "src/ai_trading/runtime.py",
+        "line": 161,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/paper_cycle.py",
+          "line": 179,
+          "preview": "prepared = runtime.prepare_market(market)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 161,
+          "preview": "def prepare_market(self, df: pd.DataFrame) -> PreparedRuntimeMarket:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 177,
+          "preview": "prepared = self.prepare_market(df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 272,
+          "preview": "def prepare_market(self, market):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 273,
+          "preview": "return primary.prepare_market(market)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "step": {
+      "definition": {
+        "file": "src/ai_trading/runtime.py",
+        "line": 176,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/chaos.py",
+          "line": 11,
+          "preview": "step: int",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/chaos.py",
+          "line": 22,
+          "preview": "if current_step != scenario.step:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 167,
+          "preview": "table.add_row(\"Runtime step\", \"PASS\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 659,
+          "preview": "@app.command(\"runtime-step\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 670,
+          "preview": ").step(df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 821,
+          "preview": "@app.command(\"multiasset-step\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 832,
+          "preview": "result = MultiAssetPaperRuntime().step(markets)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 1772,
+          "preview": "step=chaos_step,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/evolution.py",
+          "line": 26,
+          "preview": "for step in config.horizon_steps:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/evolution.py",
+          "line": 27,
+          "preview": "horizon = max(1, parent.horizon_bars + step)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/evolution.py",
+          "line": 34,
+          "preview": "compute_cost=parent.compute_cost * (1.0 + 0.05 * abs(step)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 114,
+          "preview": "step = result.runtime",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 122,
+          "preview": "last_cycle_timestamp=step.timestamp,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 123,
+          "preview": "processed=step.processed,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 124,
+          "preview": "side=step.side,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 125,
+          "preview": "confidence=step.confidence,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
           "line": 126,
-          "preview": "return tuple(self.burnin_tracker.read())",
+          "preview": "approved=step.approved,",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/lifecycle_log.py",
-          "line": 79,
-          "preview": "for chunk in iter(lambda: handle.read(1024 * 1024), b\"\"):",
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 127,
+          "preview": "reason=step.reason,",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/multi_market.py",
-          "line": 244,
-          "preview": "# Independent, read-only model diagnostics can run concurrently.",
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 128,
+          "preview": "equity=step.equity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 129,
+          "preview": "units=step.units,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 130,
+          "preview": "processed_bars=step.processed_bars,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 136,
+          "preview": "f\"processed={step.processed} side={step.side} \"",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 137,
+          "preview": "f\"confidence={step.confidence:.3f} approved={step.approved}\",",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 46,
-          "preview": "for chunk in iter(lambda: handle.read(1024 * 1024), b\"\"):",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 64,
-          "preview": "json.loads(response.read(16_385))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 87,
-          "preview": "body = response.read(16_385)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/state_snapshot.py",
-          "line": 29,
-          "preview": "for chunk in iter(lambda: handle.read(65536), b\"\"):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_burnin.py",
-          "line": 24,
-          "preview": "snapshots = tracker.read()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 31,
-          "preview": "response.read().decode(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 34,
-          "preview": "return exc.code, exc.headers.get(\"Content-Type\", \"\"), exc.read().decode()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 225,
-          "preview": "def read(self, count):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 226,
-          "preview": "return self.body.read(count)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 471,
-          "preview": "payload = json.loads(response.read().decode())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 588,
-          "preview": "payload = json.loads(response.read().decode())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 151,
-          "preview": "return response.status, response.read().decode()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 153,
-          "preview": "return exc.code, exc.read().decode()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 158,
-          "preview": "return response.status, response.headers, response.read().decode()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_health_server.py",
-          "line": 16,
-          "preview": "body = response.read().decode(\"utf-8\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 29,
-          "preview": "def read(self, size: int) -> bytes:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 30,
-          "preview": "return self.content.read(size)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_endpoint.py",
-          "line": 55,
-          "preview": "return response.status, response.read().decode()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_endpoint.py",
-          "line": 57,
-          "preview": "return exc.code, exc.read().decode()",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 30
-    },
-    "test_paper_cycle_workflow_uses_authenticated_render_not_expired_db": {
-      "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 33,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
           "line": 33,
-          "preview": "def test_paper_cycle_workflow_uses_authenticated_render_not_expired_db() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_fallback_skips_healthy_recent_cloudflare_without_paper_post": {
-      "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 59,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 59,
-          "preview": "def test_fallback_skips_healthy_recent_cloudflare_without_paper_post(",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "fake_open": {
-      "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 64,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 64,
-          "preview": "def fake_open(request, timeout):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 75,
-          "preview": "outcome = run_fallback(\"https://example.invalid\", \"server-secret\", opener=fake_open)",
+          "preview": "if re.fullmatch(r\"step-\\d{12}\", generation) is None:",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 97,
-          "preview": "def fake_open(request, timeout):",
+          "file": "src/ai_trading/multiasset_checkpoint.py",
+          "line": 80,
+          "preview": "generation = self._validate_generation(f\"step-{state.processed_bars:012d}\")",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 103,
-          "preview": "outcome = run_fallback(\"https://example.invalid\", \"server-secret\", opener=fake_open)",
+          "file": "src/ai_trading/multiasset_checkpoint.py",
+          "line": 131,
+          "preview": "path for path in self.root.glob(\"step-*\")",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 116,
-          "preview": "def fake_open(request, timeout):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 124,
-          "preview": "\"https://example.invalid\", \"server-secret\", opener=fake_open",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 138,
-          "preview": "def fake_open(request, timeout):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 147,
-          "preview": "run_fallback(\"https://example.invalid\", \"server-secret\", opener=fake_open)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 153,
-          "preview": "def fake_open(request, timeout):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 160,
-          "preview": "run_fallback(\"https://example.invalid\", \"server-secret\", opener=fake_open)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 10
-    },
-    "test_fallback_runs_one_authenticated_three_market_endpoint_cycle": {
-      "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 92,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 92,
-          "preview": "def test_fallback_runs_one_authenticated_three_market_endpoint_cycle(",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_fallback_runs_after_scheduler_telemetry_failure": {
-      "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 113,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 113,
-          "preview": "def test_fallback_runs_after_scheduler_telemetry_failure() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_fallback_rejects_missing_token_without_network": {
-      "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 129,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 129,
-          "preview": "def test_fallback_rejects_missing_token_without_network() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_fallback_reports_sanitized_http_failure": {
-      "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 137,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 137,
-          "preview": "def test_fallback_reports_sanitized_http_failure() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_fallback_fails_closed_when_paper_cycle_has_partial_market_failure": {
-      "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 152,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 152,
-          "preview": "def test_fallback_fails_closed_when_paper_cycle_has_partial_market_failure() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_fallback_rejects_malformed_and_future_scheduler_ages": {
-      "definition": {
-        "file": "tests/test_paper_cycle_workflow.py",
-        "line": 163,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
+          "file": "src/ai_trading/multiasset_checkpoint.py",
           "line": 163,
-          "preview": "def test_fallback_rejects_malformed_and_future_scheduler_ages() -> None:",
+          "preview": "expected_generation = self._validate_generation(f\"step-{state.processed_bars:012d}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_checkpoint.py",
+          "line": 188,
+          "preview": "path.name for path in self.root.glob(\"step-*\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 316,
+          "preview": "def step(self, markets: dict[str, pd.DataFrame]) -> MultiAssetStepResult:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_scheduler.py",
+          "line": 226,
+          "preview": "result = self.runtime.step(markets)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/orchestrator.py",
+          "line": 71,
+          "preview": "def step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/orchestrator.py",
+          "line": 78,
+          "preview": "runtime_result = self.runtime.step(df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/qualification_suite.py",
+          "line": 29,
+          "preview": "def _chaos_cases(symbol: str, step: int) -> tuple[tuple[str, tuple[ChaosScenario, ...]], ...]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/qualification_suite.py",
+          "line": 32,
+          "preview": "(\"nan_last_close\", (ChaosScenario(\"nan_last_close\", step=step, symbol=symbol),)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/qualification_suite.py",
+          "line": 33,
+          "preview": "(\"duplicate_timestamp\", (ChaosScenario(\"duplicate_timestamp\", step=step, symbol=symbol),)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/qualification_suite.py",
+          "line": 34,
+          "preview": "(\"ohlc_violation\", (ChaosScenario(\"ohlc_violation\", step=step, symbol=symbol),)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/qualification_suite.py",
+          "line": 35,
+          "preview": "(\"stale_prices\", (ChaosScenario(\"stale_prices\", step=step, symbol=symbol),)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 52,
+          "preview": "\"\"\"One-step autonomous paper runtime.",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 54,
+          "preview": "A scheduler may call step repeatedly. The runtime itself never routes",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 176,
+          "preview": "def step(self, df: pd.DataFrame) -> RuntimeStepResult:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/scheduler.py",
+          "line": 74,
+          "preview": "result = self.orchestrator.step(df, symbol=self.symbol)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/scheduler.py",
+          "line": 76,
+          "preview": "result = self.orchestrator.step(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/soak.py",
+          "line": 70,
+          "preview": "result = runtime.step(window)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/tuning.py",
+          "line": 71,
+          "preview": "max_train_bars=trial.suggest_int(\"max_train_bars\", 504, 1260, step=126),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_chaos.py",
+          "line": 26,
+          "preview": "ChaosScenario(\"ohlc_violation\", step=0, symbol=\"GC=F\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 12,
+          "preview": "def state(step: int) -> MultiAssetState:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 14,
+          "preview": "cash=1000.0 - step,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 18,
+          "preview": "last_processed=f\"bar-{step}\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 19,
+          "preview": "processed_bars=step,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 29,
+          "preview": "assert generation == \"step-000000000007\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 42,
+          "preview": "unpublished = store.root / \"step-000000000004\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 85,
+          "preview": "for step in range(1, 5):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 86,
+          "preview": "store.commit(state(step), {\"A\": {\"learned\": step}})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 89,
+          "preview": "path.name for path in store.root.glob(\"step-*\") if path.is_dir()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 93,
+          "preview": "\"step-000000000003\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 94,
+          "preview": "\"step-000000000004\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 96,
+          "preview": "assert store.current_path.read_text(encoding=\"utf-8\") == \"step-000000000004\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 113,
+          "preview": "orphan = store.root / \"step-000000000002\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 124,
+          "preview": "\"generation\": \"step-000000000002\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 149,
+          "preview": "assert store.current_path.read_text(encoding=\"utf-8\") == \"step-000000000002\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 158,
+          "preview": "broken = store.root / \"step-000000000004\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 168,
+          "preview": "assert store.current_path.read_text(encoding=\"utf-8\") == \"step-000000000003\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 175,
+          "preview": "orphan = store.root / \"step-000000000004\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 200,
+          "preview": "assert store.current_path.read_text(encoding=\"utf-8\") == \"step-000000000003\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 286,
+          "preview": "assert generation == \"step-000000000002\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 302,
+          "preview": "newer = store._generation_dir(\"step-000000000002\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 303,
+          "preview": "staged = store.root / \".step-000000000002.tmp\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 310,
+          "preview": "\"generation\": \"step-000000000002\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 338,
+          "preview": "assert store.current_path.read_text(encoding=\"utf-8\") == \"step-000000000002\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 383,
+          "preview": "stale = store.root / \".step-000000000009.existing.tmp\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint.py",
+          "line": 390,
+          "preview": "assert generation == \"step-000000000009\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 12,
+          "preview": "def _state(step: int) -> MultiAssetState:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 17,
+          "preview": "last_processed=f\"bar-{step}\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 18,
+          "preview": "processed_bars=step,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 30,
+          "preview": "directory = store.root / f\"step-{directory_step:012d}\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_consistency.py",
+          "line": 72,
+          "preview": "assert store.current_path.read_text(encoding=\"utf-8\") == \"step-000000000003\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_manifest_binding.py",
+          "line": 10,
+          "preview": "def _state(step: int) -> MultiAssetState:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_manifest_binding.py",
+          "line": 15,
+          "preview": "last_processed=f\"bar-{step}\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_manifest_binding.py",
+          "line": 16,
+          "preview": "processed_bars=step,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_manifest_binding.py",
+          "line": 47,
+          "preview": "store._publish_current(\"step-000000000001\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_manifest_binding.py",
+          "line": 49,
+          "preview": "generation = \"step-000000000002\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_manifest_binding.py",
+          "line": 61,
+          "preview": "assert store.current_path.read_text(encoding=\"utf-8\") == \"step-000000000001\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_orphan_corruption.py",
+          "line": 9,
+          "preview": "def _state(step: int) -> MultiAssetState:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_orphan_corruption.py",
+          "line": 14,
+          "preview": "last_processed=f\"bar-{step}\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_orphan_corruption.py",
+          "line": 15,
+          "preview": "processed_bars=step,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_orphan_corruption.py",
+          "line": 23,
+          "preview": "orphan = store.root / \"step-000000000004\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_checkpoint_orphan_corruption.py",
+          "line": 58,
+          "preview": "assert store.current_path.read_text(encoding=\"utf-8\") == \"step-000000000003\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 64,
+          "preview": "first = runtime.step(markets)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 65,
+          "preview": "second = runtime.step(markets)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 127,
+          "preview": "result = runtime.step(markets)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 164,
+          "preview": "runtime.step({\"A\": market(21), \"B\": market(22)})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 193,
+          "preview": "first = runtime.step(markets)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 202,
+          "preview": "second = runtime.step(markets)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 263,
+          "preview": "result = runtime.step({\"A\": market(41), \"B\": market(42)})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 307,
+          "preview": "runtime.step({\"A\": market(51), \"B\": market(52)})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 354,
+          "preview": "runtime.step({\"A\": market(61), \"B\": market(62)})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 490,
+          "preview": "result = runtime.step({\"A\": market(71), \"B\": market(72)})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 531,
+          "preview": "runtime.step({\"A\": market(81), \"B\": market(82)})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime.py",
+          "line": 40,
+          "preview": "first = runtime.step(df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime.py",
+          "line": 41,
+          "preview": "second = runtime.step(df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime.py",
+          "line": 49,
+          "preview": "third = runtime.step(next_df)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 99,
+          "preview": "result = runtime.step(sample_market())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 134,
+          "preview": "result = runtime.step(sample_market())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 150,
+          "preview": "runtime.step(sample_market())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_scheduler.py",
+          "line": 11,
+          "preview": "def step(self, df: pd.DataFrame, *, symbol: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_scheduler_governor.py",
+          "line": 11,
+          "preview": "def step(self, df: pd.DataFrame, *, symbol: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_scheduler_iteration_callback.py",
+          "line": 16,
+          "preview": "def step(self, df: pd.DataFrame, *, symbol: str):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_scheduler_iteration_callback.py",
+          "line": 24,
+          "preview": "def step(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 108
+    },
+    "step_at": {
+      "definition": {
+        "file": "src/ai_trading/runtime.py",
+        "line": 182,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 182,
+          "preview": "def step_at(self, df: pd.DataFrame, execution_idx: object) -> RuntimeStepResult:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 106,
+          "preview": "assert runtime.step_at(df, eligible[-5]).processed is True",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 132,
+          "preview": "assert runtime.step_at(df, eligible[-6]).processed is True",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 155,
+          "preview": "assert runtime.step_at(df, eligible[-6]).processed is True",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 221,
+          "preview": "assert runtime.step_at(df, eligible[-1]).processed is True",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 255,
+          "preview": "assert seed_runtime.step_at(df, eligible[-4]).processed is True",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 205,
+          "preview": "result = runtime.step_at(market, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 250,
+          "preview": "result = runtime.step_at(market, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 46,
+          "preview": "result = runtime.step_at(df, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 57,
+          "preview": "first = runtime.step_at(df, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 58,
+          "preview": "second = runtime.step_at(df, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 70,
+          "preview": "runtime.step_at(df, df.index[0])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 80,
+          "preview": "first = runtime.step_at(df, newer)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 81,
+          "preview": "second = runtime.step_at(df, older)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 14
+    },
+    "step_prepared": {
+      "definition": {
+        "file": "src/ai_trading/runtime.py",
+        "line": 200,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/paper_cycle.py",
+          "line": 284,
+          "preview": "result = runtime.step_prepared(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 180,
+          "preview": "return self.step_prepared(prepared, prepared.eligible[-1])",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 198,
+          "preview": "return self.step_prepared(prepared, execution_idx)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 200,
+          "preview": "def step_prepared(",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 275,
+          "preview": "def step_prepared(self, prepared, target):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 278,
+          "preview": "assert competitor.step_prepared(prepared, target).processed is True",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 292,
+          "preview": "return primary.step_prepared(prepared, target)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "_step_prepared_locked": {
+      "definition": {
+        "file": "src/ai_trading/runtime.py",
+        "line": 219,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 212,
+          "preview": "return self._step_prepared_locked(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 219,
+          "preview": "def _step_prepared_locked(",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "test_runtime_lock_is_exclusive": {
+      "definition": {
+        "file": "tests/test_runtime_lock.py",
+        "line": 9,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_runtime_lock.py",
+          "line": 9,
+          "preview": "def test_runtime_lock_is_exclusive(tmp_path: Path, monkeypatch) -> None:",
           "definition_candidate": true
         }
       ],

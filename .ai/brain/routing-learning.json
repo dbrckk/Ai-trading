@@ -2,27 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "feat: add session-aware market freshness states (#75)",
-      "terms": [
-        "75",
-        "add",
-        "feat",
-        "freshness",
-        "market",
-        "session-aware",
-        "states"
-      ],
-      "tests": [],
-      "useful": [
-        "src/ai_trading/dashboard.py",
-        "src/ai_trading/market_freshness.py",
-        "src/ai_trading/multi_market.py",
-        "tests/test_market_freshness.py",
-        "tests/test_multi_market.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "feat: add sanitized scheduler delivery telemetry (#76)",
       "terms": [
         "76",
@@ -1248,6 +1227,26 @@
         "src/ai_trading/scheduler_fallback.py",
         "tests/test_paper_cycle_workflow.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "fix(paper): isolate concurrent Gold, DAX and BTC runtime locks (#164)",
+      "terms": [
+        "164",
+        "btc",
+        "concurrent",
+        "dax",
+        "gold",
+        "isolate",
+        "locks",
+        "paper",
+        "runtime"
+      ],
+      "tests": [],
+      "useful": [
+        "src/ai_trading/runtime.py",
+        "tests/test_runtime_lock.py"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1339,6 +1338,10 @@
     "163": {
       "src/ai_trading/scheduler_fallback.py": 4,
       "tests/test_paper_cycle_workflow.py": 4
+    },
+    "164": {
+      "src/ai_trading/runtime.py": 4,
+      "tests/test_runtime_lock.py": 4
     },
     "56": {
       "src/ai_trading/command_app.py": 4,
@@ -1827,11 +1830,13 @@
     "btc": {
       "src/ai_trading/mtf_shadow_config.py": 4,
       "src/ai_trading/multi_market.py": 8,
+      "src/ai_trading/runtime.py": 4,
       "tests/test_dashboard_overview.py": 4,
       "tests/test_mtf_shadow_config.py": 4,
       "tests/test_multi_market.py": 12,
       "tests/test_paper_cycle.py": 4,
-      "tests/test_paper_cycle_workflow.py": 4
+      "tests/test_paper_cycle_workflow.py": 4,
+      "tests/test_runtime_lock.py": 4
     },
     "budget": {
       "tests/test_paper_cycle_workflow.py": 4
@@ -1999,6 +2004,10 @@
     "compute": {
       "tests/test_paper_cycle_workflow.py": 4
     },
+    "concurrent": {
+      "src/ai_trading/runtime.py": 4,
+      "tests/test_runtime_lock.py": 4
+    },
     "confidence-gated": {
       "src/ai_trading/mtf_parameter_benchmark.py": 4,
       "tests/test_mtf_parameter_benchmark.py": 4
@@ -2164,13 +2173,15 @@
       "src/ai_trading/operational_overview.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
       "src/ai_trading/postgres_persistence.py": 4,
+      "src/ai_trading/runtime.py": 4,
       "tests/test_dashboard_overview.py": 4,
       "tests/test_mtf_shadow_challenger.py": 4,
       "tests/test_mtf_shadow_config.py": 4,
       "tests/test_mtf_shadow_quality.py": 4,
       "tests/test_multi_market.py": 12,
       "tests/test_paper_cycle.py": 4,
-      "tests/test_paper_cycle_workflow.py": 4
+      "tests/test_paper_cycle_workflow.py": 4,
+      "tests/test_runtime_lock.py": 4
     },
     "db": {
       "src/ai_trading/postgres_persistence.py": 4,
@@ -2551,13 +2562,15 @@
       "src/ai_trading/operational_overview.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
       "src/ai_trading/postgres_persistence.py": 4,
+      "src/ai_trading/runtime.py": 4,
       "tests/test_dashboard_overview.py": 4,
       "tests/test_mtf_shadow_challenger.py": 4,
       "tests/test_mtf_shadow_config.py": 4,
       "tests/test_mtf_shadow_quality.py": 4,
       "tests/test_multi_market.py": 12,
       "tests/test_paper_cycle.py": 4,
-      "tests/test_paper_cycle_workflow.py": 4
+      "tests/test_paper_cycle_workflow.py": 4,
+      "tests/test_runtime_lock.py": 4
     },
     "harden": {
       "src/ai_trading/dashboard.py": 4,
@@ -2684,12 +2697,14 @@
       "src/ai_trading/multiasset_runtime.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
       "src/ai_trading/paper_cycle_service.py": 4,
+      "src/ai_trading/runtime.py": 4,
       "tests/test_hosted_runtime.py": 4,
       "tests/test_multi_market.py": 4,
       "tests/test_multiasset_checkpoint.py": 4,
       "tests/test_multiasset_runtime.py": 4,
       "tests/test_paper_cycle.py": 4,
-      "tests/test_paper_cycle_service.py": 4
+      "tests/test_paper_cycle_service.py": 4,
+      "tests/test_runtime_lock.py": 4
     },
     "keep": {
       "src/ai_trading/multiasset_checkpoint.py": 4,
@@ -2772,6 +2787,10 @@
       "tests/test_dashboard_persistence.py": 4,
       "tests/test_multi_market.py": 4,
       "tests/test_research_config_validation.py": 4
+    },
+    "locks": {
+      "src/ai_trading/runtime.py": 4,
+      "tests/test_runtime_lock.py": 4
     },
     "long": {
       "src/ai_trading/dashboard.py": 4,
@@ -3057,7 +3076,7 @@
       "src/ai_trading/paper_execution.py": 8,
       "src/ai_trading/performance_metrics.py": 4,
       "src/ai_trading/postgres_persistence.py": 8,
-      "src/ai_trading/runtime.py": 8,
+      "src/ai_trading/runtime.py": 12,
       "src/ai_trading/runtime_state.py": 4,
       "src/ai_trading/runtime_status.py": 4,
       "src/ai_trading/scheduler_endpoint.py": 4,
@@ -3077,6 +3096,7 @@
       "tests/test_performance_metrics.py": 4,
       "tests/test_postgres_persistence.py": 8,
       "tests/test_realized_pnl_accounting.py": 4,
+      "tests/test_runtime_lock.py": 4,
       "tests/test_scheduler_endpoint.py": 4
     },
     "parallelize": {
@@ -3548,12 +3568,13 @@
       "src/ai_trading/multi_market.py": 4,
       "src/ai_trading/multiasset_backtest.py": 4,
       "src/ai_trading/multiasset_runtime.py": 8,
-      "src/ai_trading/runtime.py": 4,
+      "src/ai_trading/runtime.py": 8,
       "tests/test_backtest.py": 4,
       "tests/test_broker.py": 4,
       "tests/test_multi_market.py": 4,
       "tests/test_multiasset_backtest.py": 4,
-      "tests/test_multiasset_runtime.py": 8
+      "tests/test_multiasset_runtime.py": 8,
+      "tests/test_runtime_lock.py": 4
     },
     "sanitized": {
       "infra/cloudflare-paper-scheduler/src/index.js": 4,

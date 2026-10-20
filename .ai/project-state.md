@@ -46,16 +46,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-20T00:28:03Z
+Generated: 2026-10-20T00:32:12Z
 
 ### Git
 - Branch: `main`
-- Head: `de2e19945e33`
-- Commit date: 2026-10-19T20:27:54-04:00
-- Commit: fix(scheduler): bound telemetry probe and allow longer fallback cycle (#163)
+- Head: `24b4eb263e09`
+- Commit date: 2026-10-19T20:32:02-04:00
+- Commit: fix(paper): isolate concurrent Gold, DAX and BTC runtime locks (#164)
 - Tracked files: 504
 
 ### Recently changed files
+- `src/ai_trading/runtime.py`
+- `tests/test_runtime_lock.py`
 - `.github/workflows/paper-cycle.yml`
 - `README.md`
 - `src/ai_trading/scheduler_fallback.py`
