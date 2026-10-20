@@ -45,19 +45,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-20T21:34:07Z
+Generated: 2026-10-20T21:39:26Z
 
 ### Git
 - Branch: `main`
-- Head: `081b34ec8874`
-- Commit date: 2026-10-20T17:33:57-04:00
-- Commit: feat(research): add validated offline Kronos vs multiclass River benchmark (#157)
+- Head: `62519089cc0f`
+- Commit date: 2026-10-20T17:39:16-04:00
+- Commit: docs(research): record real Kronos evidence and project priorities (#168)
 - Tracked files: 507
 
 ### Recently changed files
+- `docs/kronos-research.md`
 - `.github/workflows/kronos-model-smoke.yml`
 - `README.md`
-- `docs/kronos-research.md`
 - `src/ai_trading/kronos_research.py`
 - `src/ai_trading/online.py`
 - `tests/test_online.py`
@@ -71,8 +71,6 @@ Generated: 2026-10-20T21:34:07Z
 - `src/ai_trading/postgres_persistence.py`
 - `tests/test_cumulative_performance_persistence.py`
 - `tests/test_multi_market.py`
-- `src/ai_trading/runtime.py`
-- `tests/test_runtime_lock.py`
 
 ### Project signals
 - `pyproject.toml`

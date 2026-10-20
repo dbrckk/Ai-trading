@@ -1,26 +1,16 @@
 # Change impact
 
-Base: 8e7bdd40b8b8d7d0ce19bfbf047b97e5b848fbbb
-Head: 081b34ec887496a30d8aed9cd1ec0dc38a658c1e
+Base: 4f97fed6691d22289f9c6f8f5f7f3f00b3d72064
+Head: 62519089cc0f035a6201d7828498fd44b61d36f0
 
 ## Changed files
-- A .github/workflows/kronos-model-smoke.yml
-- M README.md
-- A docs/kronos-research.md
-- A src/ai_trading/kronos_research.py
-- M src/ai_trading/online.py
-- M tests/test_online.py
-- M tests/test_paper_cycle.py
+- M docs/kronos-research.md
 
 ## Affected areas
-- .github
-- (root)
 - docs
-- src
-- tests
 
 ## Related test candidates
-- tests/test_online.py
+- No direct filename-based test match detected.
 
 ## Agent guidance
 - Read this file before broad repository exploration.
