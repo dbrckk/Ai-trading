@@ -2,11 +2,11 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "fix/shadow-review-directional-coverage",
+  "active_branch": "main",
   "pull_request": null,
-  "focus": "2026-10-21: direct public Render check confirms SHA 59e1610b deployed, all three paper markets RUNNING, no engine errors, Neon ready, 20 successful recent Cloudflare deliveries. MTF/ensemble review safety being tightened: require 100 realized directional labels and 50 confidence-gated challenger directional predictions, in addition to prior counts and quality gates; CI pending. River-v2 remains OFF, broker routing OFF.",
+  "focus": "PR #178 merged: conservative shadow promotion review gate now requires >=100 matched directional labels and >=50 confident directional predictions in addition to 250/500 samples, improvement/calibration gates; read-only dashboard updated. GitHub PR CI/CodeQL passed; latest direct public Render still serves old 59e1610b release. Gold/DAX/BTC RUNNING, scheduler 20 successes, v2 OFF. Next verify deployment and real forward performance, never promote from sparse research.",
   "production_evidence": {
-    "main_head": "9fdc0fc84d84bd57f8162af26c951222607b1920",
+    "main_head": "6009f0bf0df419a57bb994ac27e05a8c942e4abf",
     "render_shadow_challenger_enabled": true,
     "render_markets": "GC=F,^GDAXI,BTC-USD",
     "gold": {
@@ -66,17 +66,17 @@
         "BTC-USD": 0
       },
       "processed_bars": {
-        "GC=F": 514,
+        "GC=F": 517,
         "^GDAXI": 205,
-        "BTC-USD": 536
+        "BTC-USD": 539
       },
       "river_v2_status": "disabled",
       "river_v2_matured": 0,
-      "scheduler_last_confirmed_success_utc": "2026-10-21T16:16:23.406806+00:00",
+      "scheduler_last_confirmed_success_utc": "2026-10-21T16:31:24.159510+00:00",
       "scheduler_recent_successes": 20,
       "portfolio_paper_trade_count": 8,
       "portfolio_realized_pnl": -0.5748106341489922,
-      "note": "The earlier all-STARTING incident was no longer present. LIVE describes scheduler/engine health; Gold/BTC individual paper signals were DELAYED and DAX closed during the same read-only probe. Do not equate operational recovery with predictive profitability."
+      "note": "Post-PR #178 direct live read showed three RUNNING and 20 Cloudflare successes; live release SHA remained 59e1610b, not new merged #178 SHA. Do not claim release deployed before exact SHA verification. Gold signal DELAYED, DAX UNAVAILABLE (closed), BTC NO_TRADE."
     }
   },
   "completed_changes": [
@@ -108,7 +108,7 @@
     "21 Oct: observed deployed #174 live on Render 9f8d88ca, markets healthy but River-v2 0 pending/mature; diagnosed Yahoo mutable leading 5m candle and staged strict completed-candle filtering in fix/skip-unclosed-five-minute-bars.",
     "PR #175 merged b8669a71 on 2026-10-21: 5m incomplete Yahoo candles filtered before paper v1 and v2, CI/CodeQL and real Render SHA verified. Production cycle then remained STARTING >11 minutes; emergency v2 CPU/opt-in isolation staged but not yet merged.",
     "2026-10-21 read-only Render verification: deployed 59e1610b, database ready, Gold/DAX/BTC RUNNING, 20 Cloudflare successes, River-v2 disabled, zero engine errors. Earlier stalled STARTING incident recovered operationally; predictive samples still statistically insufficient.",
-    "Staged fix/shadow-review-directional-coverage: require realized directional labels and confidence-gated challenger directional predictions for ensemble/MTF review; expose counts in API and dashboard, no model promotion or paper-order changes. Await CI."
+    "PR #178 merged 2026-10-21: 250 ensemble/500 MTF samples PLUS 100 realized directional labels and 50 confident challenger directional predictions required for review, prior quality gates preserved, read-only API and dashboard counts, existing tests expanded; PR-head CI and CodeQL passed. No model promotion or paper execution change."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -117,8 +117,8 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Validate branch fix/shadow-review-directional-coverage with CI, CodeQL and repo standards, then merge on green.",
-    "After merge, verify deployed Render SHA, Cloudflare scheduler deliveries and all market RUNNING statuses; keep River-v2 independently disabled.",
-    "Accumulate broader genuinely forward, confidence-filtered and net-of-cost performance evidence across Gold/DAX/BTC before considering review or trading model changes."
+    "Check post-merge main CI/CodeQL/standards for #178 and exact Render /livez deployed SHA; never equate GitHub success to completed Render rollout.",
+    "Verify Gold/DAX/BTC remain RUNNING with Cloudflare consecutive successful deliveries and no errors after deployed review gate; do not enable resource-intensive River-v2 automatically.",
+    "Collect independent genuinely live forward predictions and net-of-cost evidence; enforce holdout/short-position/latency and statistical sample gates before any trade-quality claim."
   ]
 }
