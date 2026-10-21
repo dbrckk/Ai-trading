@@ -309,6 +309,16 @@ not** invoke the scheduler, place trades, wake workers, or guarantee
 fresh market data. For manual diagnosis, use
 `PYTHONPATH=src python -m ai_trading.deployment_probe --base-url https://ai-trading-dashboard-qyr2.onrender.com --require-running-markets`.
 
+## Hosted probe transient connection recovery
+
+The read-only hosted dashboard check makes **one bounded (10-second) retry**
+for an endpoint only if its first request had a transport connection failure,
+and only after checking the other endpoints. This handles the observed
+Render `/livez` transient failure followed by healthy `/readyz` and
+Gold/DAX/BTC readings. Persistent connection failures, HTTP errors,
+unhealthy services, non-running market engines and deployment SHA mismatches
+remain failures; the probe never places or schedules trades.
+
 ## Positive out-of-sample profitability is required
 
 The read-only walk-forward benchmark gate now fails closed when net

@@ -54,6 +54,80 @@ def _fetch_json(base_url: str, endpoint: str, timeout: float) -> tuple[dict, str
     return payload, "ok"
 
 
+def _probe_endpoint(
+    base_url: str,
+    endpoint: str,
+    timeout: float,
+    *,
+    expected_sha: str | None,
+    require_running_markets: bool,
+) -> ProbeCheck:
+    payload, fetch_state = _fetch_json(base_url, endpoint, timeout)
+    if fetch_state != "ok":
+        return ProbeCheck(endpoint, False, fetch_state)
+
+    if endpoint == "/livez":
+        valid = payload.get("web_healthy") is True
+        detail = "web_healthy" if valid else "liveness_unhealthy"
+        if valid and expected_sha is not None:
+            valid = payload.get("deployed_commit") == expected_sha
+            detail = (
+                "deployed_commit_verified"
+                if valid else "deployed_commit_missing_or_mismatched"
+            )
+    elif endpoint == "/readyz":
+        valid = (
+            payload.get("ready") is True
+            and payload.get("storage_healthy") is True
+        )
+        detail = "storage_ready" if valid else "storage_or_configuration_unready"
+    else:
+        markets = payload.get("markets")
+        symbols = (
+            {
+                item["symbol"] for item in markets
+                if isinstance(item, dict) and isinstance(item.get("symbol"), str)
+            }
+            if isinstance(markets, list)
+            else set()
+        )
+        expected = {"GC=F", "^GDAXI", "BTC-USD"}
+        portfolio = payload.get("portfolio")
+        complete = (
+            isinstance(portfolio, dict)
+            and portfolio.get("equity_complete") is True
+            and portfolio.get("error_markets") == 0
+        )
+        valid = expected.issubset(symbols) and complete
+        if not expected.issubset(symbols):
+            detail = "missing_market_cards"
+        elif not complete:
+            detail = "portfolio_or_market_unavailable"
+        elif require_running_markets:
+            # A complete portfolio alone can still report three STARTING
+            # engines during a stuck scheduler cycle. Check individual
+            # runtime health as well as the portfolio aggregate.
+            by_symbol = {
+                item["symbol"]: item
+                for item in markets
+                if isinstance(item, dict)
+                and isinstance(item.get("symbol"), str)
+                and item["symbol"] in expected
+            }
+            running = portfolio.get("running_markets") == len(expected)
+            engines = all(
+                isinstance(by_symbol[symbol].get("overview"), dict)
+                and by_symbol[symbol]["overview"].get("engine_status") == "RUNNING"
+                and by_symbol[symbol]["overview"].get("consecutive_cycle_errors") == 0
+                for symbol in expected
+            )
+            valid = running and engines
+            detail = "three_markets_running" if valid else "market_engines_not_running"
+        else:
+            detail = "three_market_cards_available"
+    return ProbeCheck(endpoint, valid, detail)
+
+
 def probe_dashboard(
     base_url: str,
     *,
@@ -67,75 +141,29 @@ def probe_dashboard(
     if expected_sha is not None and fullmatch(r"[0-9a-f]{40}", expected_sha) is None:
         raise ValueError("expected_sha must be a lowercase 40-character Git SHA")
 
-    checks: list[ProbeCheck] = []
-    for endpoint in ("/livez", "/readyz", "/api/markets"):
-        payload, fetch_state = _fetch_json(base_url, endpoint, timeout)
-        if fetch_state != "ok":
-            checks.append(ProbeCheck(endpoint, False, fetch_state))
-            continue
-
-        if endpoint == "/livez":
-            valid = payload.get("web_healthy") is True
-            detail = "web_healthy" if valid else "liveness_unhealthy"
-            if valid and expected_sha is not None:
-                valid = payload.get("deployed_commit") == expected_sha
-                detail = (
-                    "deployed_commit_verified"
-                    if valid else "deployed_commit_missing_or_mismatched"
-                )
-        elif endpoint == "/readyz":
-            valid = (
-                payload.get("ready") is True
-                and payload.get("storage_healthy") is True
+    checks = [
+        _probe_endpoint(
+            base_url,
+            endpoint,
+            timeout,
+            expected_sha=expected_sha,
+            require_running_markets=require_running_markets,
+        )
+        for endpoint in ("/livez", "/readyz", "/api/markets")
+    ]
+    # The free-tier host can briefly refuse the first connection while other
+    # endpoints recover. Retry only transport failures, once, after the first
+    # pass. HTTP errors, unhealthy payloads and SHA mismatches still fail.
+    for index, check in enumerate(checks):
+        if check.detail == "connection_failed":
+            checks[index] = _probe_endpoint(
+                base_url,
+                check.endpoint,
+                min(timeout, 10.0),
+                expected_sha=expected_sha,
+                require_running_markets=require_running_markets,
             )
-            detail = "storage_ready" if valid else "storage_or_configuration_unready"
-        else:
-            markets = payload.get("markets")
-            symbols = (
-                {
-                    item["symbol"] for item in markets
-                    if isinstance(item, dict) and isinstance(item.get("symbol"), str)
-                }
-                if isinstance(markets, list)
-                else set()
-            )
-            expected = {"GC=F", "^GDAXI", "BTC-USD"}
-            portfolio = payload.get("portfolio")
-            complete = (
-                isinstance(portfolio, dict)
-                and portfolio.get("equity_complete") is True
-                and portfolio.get("error_markets") == 0
-            )
-            valid = expected.issubset(symbols) and complete
-            if not expected.issubset(symbols):
-                detail = "missing_market_cards"
-            elif not complete:
-                detail = "portfolio_or_market_unavailable"
-            elif require_running_markets:
-                # A complete portfolio alone can still report three STARTING
-                # engines during a stuck scheduler cycle. Check individual
-                # runtime health as well as the portfolio aggregate.
-                by_symbol = {
-                    item["symbol"]: item
-                    for item in markets
-                    if isinstance(item, dict)
-                    and isinstance(item.get("symbol"), str)
-                    and item["symbol"] in expected
-                }
-                running = portfolio.get("running_markets") == len(expected)
-                engines = all(
-                    isinstance(by_symbol[symbol].get("overview"), dict)
-                    and by_symbol[symbol]["overview"].get("engine_status") == "RUNNING"
-                    and by_symbol[symbol]["overview"].get("consecutive_cycle_errors") == 0
-                    for symbol in expected
-                )
-                valid = running and engines
-                detail = "three_markets_running" if valid else "market_engines_not_running"
-            else:
-                detail = "three_market_cards_available"
-        checks.append(ProbeCheck(endpoint, valid, detail))
     return tuple(checks)
-
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Probe read-only Trading AI endpoints")
