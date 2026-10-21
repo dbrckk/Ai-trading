@@ -5944,6 +5944,7 @@ def _river_v2_forward_snapshot(comparison=None) -> dict[str, object]
 ⋮----
 """Presentation of *observed* forward labels; never a promotion signal."""
 count = int(comparison.observations) if comparison is not None else 0
+enabled = river_v2_observer_enabled()
 ⋮----
 # Directional classification is not proof of net-of-cost trading edge.
 ⋮----
@@ -5996,6 +5997,7 @@ shadow_quality = _shadow_quality_snapshot(shadow_loader(runtime_key))
 ⋮----
 river_v2_quality = _river_v2_forward_snapshot()
 river_v2_loader = getattr(persistence, "load_river_v2_forward_quality", None)
+# Do not wake/query free-tier Neon for an observer intentionally disabled.
 ⋮----
 river_v2_quality = _river_v2_forward_snapshot(river_v2_loader(runtime_key))
 except Exception:  # noqa: BLE001 - read-only research cannot break the dashboard
@@ -7996,6 +7998,10 @@ A forward observation is never given future market candles or future labels.
 ⋮----
 _INTERVAL = pd.Timedelta(minutes=5)
 ⋮----
+def river_v2_observer_enabled() -> bool
+⋮----
+"""Independent opt-in; a research model must never auto-start in production."""
+⋮----
 @dataclass(frozen=True)
 class RiverV2ForwardObservation
 ⋮----
@@ -8029,7 +8035,11 @@ river_v2: ModelQuality
     The current market's last row must be a fully closed candle. The next
     candle is not present. Older/catch-up observations are deliberately
     skipped to avoid representing retrospective predictions as forward ones.
+    Abort optional research after a strict wall-clock compute budget on
+    free-tier hosts, without changing the authoritative v1 decision.
     """
+⋮----
+compute_started = monotonic()
 ⋮----
 signal_time = pd.Timestamp(market.index[-1])
 ⋮----
@@ -8054,6 +8064,10 @@ signal_row = features.iloc[-1].loc[FEATURES]
 train_positions = candidates[-max_train_rows:]
 model = RiverMulticlassDirectionModel()
 ⋮----
+# River One-vs-Rest trains three classifiers. Keep the optional
+# observer within a tiny free-tier compute budget; never delay the
+# authoritative v1 scheduler for a research-only prediction.
+⋮----
 prediction = model.predict_one(signal_row)
 ⋮----
 return None  # Fail open for paper execution, closed for shadow evidence.
@@ -8061,6 +8075,7 @@ signal_close = float(observed["Close"].iloc[-1])
 ⋮----
 # The prediction must still be timely AFTER inference has completed.
 # A slow CPU/research run must not backdate evidence to its start time.
+⋮----
 completed_at = current if now is not None else pd.Timestamp(datetime.now(UTC))
 ⋮----
 """Evaluate only matured, matched v1/v2 signals stored on different cycles.
@@ -11941,7 +11956,7 @@ signal = df.index[int(df.index.get_loc(target)) - 1]
 train_end = df.index[int(df.index.get_loc(signal)) - 1]
 calls: list[object] = []
 ⋮----
-# Exercise the real audit attachment without allowing the observer
+# Exercise opt-in audit attachment without allowing the observer
 # to change the authoritative River-v1 decision.
 ⋮----
 payload = audit_rows[-1]["payload"]
@@ -13339,6 +13354,8 @@ expected_label = labels.loc[market.index[signal_pos]]
 live_market = market.tz_localize("UTC")
 last_bar_close = live_market.index[-1] + pd.Timedelta(minutes=5)
 forward = observe_river_v2_forward(
+⋮----
+# Research must fail closed when CPU budget expires, without affecting v1.
 ⋮----
 # Reject a future/unfinished candle instead of pretending to have
 # published a genuinely live prediction retrospectively.

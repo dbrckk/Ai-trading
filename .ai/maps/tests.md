@@ -2827,7 +2827,7 @@ signal = df.index[int(df.index.get_loc(target)) - 1]
 train_end = df.index[int(df.index.get_loc(signal)) - 1]
 calls: list[object] = []
 ⋮----
-# Exercise the real audit attachment without allowing the observer
+# Exercise opt-in audit attachment without allowing the observer
 # to change the authoritative River-v1 decision.
 ⋮----
 payload = audit_rows[-1]["payload"]
@@ -4225,6 +4225,8 @@ expected_label = labels.loc[market.index[signal_pos]]
 live_market = market.tz_localize("UTC")
 last_bar_close = live_market.index[-1] + pd.Timedelta(minutes=5)
 forward = observe_river_v2_forward(
+⋮----
+# Research must fail closed when CPU budget expires, without affecting v1.
 ⋮----
 # Reject a future/unfinished candle instead of pretending to have
 # published a genuinely live prediction retrospectively.
