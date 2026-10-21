@@ -152,13 +152,21 @@ class WalkForwardBacktester:
                 decision = self.risk.evaluate(prediction, snapshot)
                 decisions += 1
 
-                if decision.approved:
-                    broker.rebalance(decision.side, decision.target_notional, execution_price)
+                if not decision.approved:
+                    rejected += 1
+                if decision.approved or (
+                    decision.liquidate_existing and broker.state.units != 0
+                ):
+                    # Mirror paper runtime: stops reject entry but force a
+                    # cost-inclusive exit of the existing position.
+                    broker.rebalance(
+                        0 if decision.liquidate_existing else decision.side,
+                        0.0 if decision.liquidate_existing else decision.target_notional,
+                        execution_price,
+                    )
                     if broker.state.units != previous_units:
                         trades += 1
                         previous_units = broker.state.units
-                else:
-                    rejected += 1
 
                 broker.mark(close_price)
                 curve[execution_idx] = broker.state.equity
