@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from dataclasses import dataclass
+from math import isfinite
 from typing import Any
 
 import pandas as pd
@@ -17,6 +18,7 @@ class MultiTimeframeShadowQuality:
     long_labels: int = 0
     flat_labels: int = 0
     short_labels: int = 0
+    directional_predictions: int = 0
 
     @property
     def score_delta(self) -> float:
@@ -63,7 +65,7 @@ def compare_mtf_shadow_audit_payloads(
             except (KeyError, TypeError, ValueError):
                 pass
             else:
-                if side in {-1, 0, 1}:
+                if side in {-1, 0, 1} and isfinite(confidence) and 0 <= confidence <= 1:
                     river_by_execution[execution_time] = (side, confidence)
 
         shadow = payload.get("mtf_shadow_challenger")
@@ -86,7 +88,12 @@ def compare_mtf_shadow_audit_payloads(
             label = int(realized)
         except (KeyError, TypeError, ValueError):
             continue
-        if side not in {-1, 0, 1} or label not in {-1, 0, 1}:
+        if (
+            side not in {-1, 0, 1}
+            or label not in {-1, 0, 1}
+            or not isfinite(confidence)
+            or not 0 <= confidence <= 1
+        ):
             continue
         shadow_by_execution[shadow_execution] = (side, confidence, label)
 
@@ -139,4 +146,6 @@ def compare_mtf_shadow_audit_payloads(
         long_labels=sum(1 for label in labels if label == 1),
         flat_labels=sum(1 for label in labels if label == 0),
         short_labels=sum(1 for label in labels if label == -1),
+        # MTF evaluator has already applied its versioned confidence gate.
+        directional_predictions=sum(side != 0 for side in challenger_sides),
     )
