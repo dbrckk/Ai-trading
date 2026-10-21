@@ -8,6 +8,8 @@ from ai_trading.audit import AuditLog
 from ai_trading.config import RiskConfig
 from ai_trading.runtime import PaperAutonomousRuntime
 from ai_trading.runtime_state import RuntimeStateStore
+from ai_trading.risk import RiskDecision
+from ai_trading.trade_journal import TradeJournal
 
 
 def sample_market(n: int = 105) -> pd.DataFrame:
@@ -86,3 +88,45 @@ def test_step_at_cannot_regress_to_older_execution_bar(tmp_path: Path) -> None:
     assert second.reason == "bar already processed"
     assert state.last_processed == str(newer)
     assert state.processed_bars == 1
+
+
+def test_hard_risk_stop_liquidates_existing_paper_position_once(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """A rejected risk stop must not leave a previously opened position exposed."""
+    journal = TradeJournal(tmp_path / "trades.jsonl")
+    runtime = PaperAutonomousRuntime(
+        risk_config=RiskConfig(min_confidence=0.0),
+        state_store=RuntimeStateStore(tmp_path / "state.json"),
+        trade_journal=journal,
+        audit_log=AuditLog(tmp_path / "audit.jsonl"),
+        online_model_path=tmp_path / "online.joblib",
+        lock_path=tmp_path / "runtime.lock",
+        symbol="GC=F",
+    )
+    decisions = iter((
+        RiskDecision(True, 1, 10_000.0, "approved"),
+        RiskDecision(False, 0, 0.0, "max drawdown reached", liquidate_existing=True),
+        RiskDecision(False, 0, 0.0, "max drawdown reached", liquidate_existing=True),
+    ))
+    monkeypatch.setattr(runtime.risk, "evaluate", lambda prediction, snapshot: next(decisions))
+    df = sample_market()
+    eligible = runtime._eligible_execution_indices(df)
+
+    opened = runtime.step_at(df, eligible[-4])
+    assert opened.processed and opened.approved
+    assert runtime.state_store.load(100_000.0).units > 0
+
+    stopped = runtime.step_at(df, eligible[-3])
+    assert stopped.processed and not stopped.approved
+    assert stopped.reason == "max drawdown reached"
+    assert runtime.state_store.load(100_000.0).units == 0.0
+
+    still_stopped = runtime.step_at(df, eligible[-2])
+    assert still_stopped.processed and not still_stopped.approved
+    trades = journal.list()
+    assert len(trades) == 2
+    assert trades[0].side == "BUY"
+    assert trades[1].side == "SELL"
+    assert trades[1].pnl_known is True
+    assert runtime.state_store.load(100_000.0).units == 0.0
