@@ -645,6 +645,18 @@ def test_cost_stress_gate_accepts_resilient_strategy() -> None
 gate = evaluate_cost_stress_gate(
 ⋮----
 def test_cost_stress_gate_rejects_cost_fragility() -> None
+⋮----
+def test_cost_stress_gate_rejects_negative_net_returns_despite_positive_excess() -> None
+⋮----
+"""Beating a falling benchmark is not equivalent to making money."""
+scenarios = tuple(
+gate = evaluate_cost_stress_gate(scenarios)
+⋮----
+def test_cost_stress_gate_rejects_invalid_or_zero_trade_evidence() -> None
+⋮----
+scenarios = (
+⋮----
+def test_cost_stress_gate_counts_only_profitable_cost_scenarios() -> None
 ```
 
 ## File: test_cost_stress.py

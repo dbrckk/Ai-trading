@@ -2316,6 +2316,9 @@ class CostStressGatePolicy
 ⋮----
 min_pass_ratio: float = 0.67
 min_excess_return: float = -0.05
+# These total returns already include broker transaction costs and slippage.
+# Outperforming a falling benchmark while losing money is not profit.
+min_total_return: float = 0.0
 min_sharpe: float = 0.0
 max_drawdown: float = 0.30
 ⋮----
@@ -9816,6 +9819,18 @@ def test_cost_stress_gate_accepts_resilient_strategy() -> None
 gate = evaluate_cost_stress_gate(
 ⋮----
 def test_cost_stress_gate_rejects_cost_fragility() -> None
+⋮----
+def test_cost_stress_gate_rejects_negative_net_returns_despite_positive_excess() -> None
+⋮----
+"""Beating a falling benchmark is not equivalent to making money."""
+scenarios = tuple(
+gate = evaluate_cost_stress_gate(scenarios)
+⋮----
+def test_cost_stress_gate_rejects_invalid_or_zero_trade_evidence() -> None
+⋮----
+scenarios = (
+⋮----
+def test_cost_stress_gate_counts_only_profitable_cost_scenarios() -> None
 ````
 
 ## File: tests/test_cost_stress.py
@@ -14288,6 +14303,16 @@ The payload also reports `minimum_pnl_observations` and
 paper fills; further independent out-of-sample, regime, uncertainty and
 net-of-cost checks remain mandatory. No automated model promotion, paper
 order decision or live broker permission depends on this flag.
+
+### Net-of-cost research qualification
+
+Walk-forward cost stress uses the paper broker's transaction costs and
+slippage for each scenario. The research-only `CostStressGate` now rejects
+scenarios with **non-positive absolute net return**, invalid/non-finite
+performance metrics or no executions, even when a strategy loses less than
+a falling buy-and-hold benchmark. Its existing drawdown, Sharpe and excess
+return limits also remain enforced. This gate is not connected to live or
+paper order approval; a positive backtest is not proof of future profits.
 
 ## Walk-forward methodology
 

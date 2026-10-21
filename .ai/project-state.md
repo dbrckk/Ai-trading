@@ -4,6 +4,11 @@ Status: active
 
 ## Working
 
+- **2026-10-21:** PR #183 merged (`b966ed8`): API distinguishes populated paper performance from 30 known-PnL fill observations and 95% fill coverage. This is a **minimal data coverage check, not proof of a profitable strategy**.
+- **2026-10-21:** PR #184 merged (`3c8f77e`): existing simulated long/short positions are exited at the next eligible bar after a hard drawdown, daily loss or depleted-equity stop; net fill costs are accounted for in runtime and walk-forward backtesting. Green PR CI/CodeQL. Future gaps/slippage mean a configured loss limit is not a guarantee of a capped realized loss.
+- **Follow-up research:** `fix/research-cost-stress-positive-net-return` rejects non-positive absolute net returns and invalid/no-execution scenarios in the research cost-stress gate, in addition to relative benchmark/drawdown/Sharpe checks; no change to production trading decisions. Exact live Render deployed SHA still needs independent checking.
+
+
 - **2026-10-21**: PR #181 strict hosted probe merged; GitHub run 39650367492 reported `web_healthy`, `storage_ready` and `three_markets_running`. Paper Cycle run 39659602972 completed `skipped_recent_cloudflare`, not an additional paper execution. Current branch `feat/paper-performance-evidence-gate` adds a **read-only** paper PnL sample-coverage diagnostic (30 known PnL events, >=95% coverage). Neither sample size nor positive PnL alone establishes profitability. Exact Render deployment SHA is not verified in this step.
 
 - Central AI repo-map generation is configured through dbrckk/repo-standards.
@@ -69,23 +74,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-21T20:02:35Z
+Generated: 2026-10-21T20:07:57Z
 
 ### Git
 - Branch: `main`
-- Head: `3c8f77e42ee6`
-- Commit date: 2026-10-21T16:02:25-04:00
-- Commit: fix(risk): liquidate existing paper exposure on hard loss stops (#184)
+- Head: `876a5f114849`
+- Commit date: 2026-10-21T16:07:47-04:00
+- Commit: fix(research): reject non-profitable net-of-cost stress scenarios (#185)
 - Tracked files: 513
 
 ### Recently changed files
+- `README.md`
+- `src/ai_trading/cost_stress_gate.py`
+- `tests/test_cost_stress_gate.py`
 - `src/ai_trading/backtest.py`
 - `src/ai_trading/risk.py`
 - `src/ai_trading/runtime.py`
 - `tests/test_backtest.py`
 - `tests/test_risk.py`
 - `tests/test_runtime_targeted_step.py`
-- `README.md`
 - `src/ai_trading/performance_metrics.py`
 - `tests/test_dashboard_overview.py`
 - `tests/test_multi_market.py`
@@ -97,8 +104,6 @@ Generated: 2026-10-21T20:02:35Z
 - `src/ai_trading/operational_overview.py`
 - `src/ai_trading/river_v2_shadow.py`
 - `tests/test_shadow_quality.py`
-- `src/ai_trading/dashboard.py`
-- `src/ai_trading/mtf_shadow_quality.py`
 
 ### Project signals
 - `pyproject.toml`
