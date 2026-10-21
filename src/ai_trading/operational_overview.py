@@ -129,6 +129,32 @@ def _shadow_quality_snapshot(comparison) -> dict[str, object]:
     }
 
 
+def _river_v2_forward_snapshot(comparison=None) -> dict[str, object]:
+    """Presentation of *observed* forward labels; never a promotion signal."""
+    count = int(comparison.observations) if comparison is not None else 0
+    return {
+        "available": count >= 5,
+        "status": "comparable" if count >= 5 else "collecting",
+        "model_format": "joblib-river-ovr-v2",
+        "model_version": 2,
+        "observations": count,
+        "pending": int(comparison.pending) if comparison is not None else 0,
+        "short_predictions": (
+            int(comparison.short_predictions) if comparison is not None else 0
+        ),
+        "river_accuracy": (
+            float(comparison.river.accuracy) if count >= 5 else None
+        ),
+        "river_v2_accuracy": (
+            float(comparison.river_v2.accuracy) if count >= 5 else None
+        ),
+        "score_delta": comparison.score_delta if comparison is not None else None,
+        # Directional classification is not proof of net-of-cost trading edge.
+        "eligible_for_review": False,
+        "actionable": False,
+    }
+
+
 def _mtf_shadow_quality_snapshot(
     comparison,
     config: ValidatedMTFShadowConfig,
@@ -317,6 +343,7 @@ def build_operational_overview(
             },
             "readiness": _empty_readiness_snapshot(),
             "shadow_challenger": _empty_shadow_quality_snapshot(),
+            "river_v2_shadow": _river_v2_forward_snapshot(),
             "mtf_shadow_challenger": _empty_mtf_shadow_quality_snapshot(mtf_config),
             "alerts": ["storage unavailable"],
         }
@@ -336,6 +363,14 @@ def build_operational_overview(
             shadow_quality = _shadow_quality_snapshot(shadow_loader(runtime_key))
         except Exception:  # noqa: BLE001 - optional observability must not break runtime status
             shadow_quality = _empty_shadow_quality_snapshot()
+
+    river_v2_quality = _river_v2_forward_snapshot()
+    river_v2_loader = getattr(persistence, "load_river_v2_forward_quality", None)
+    if callable(river_v2_loader):
+        try:
+            river_v2_quality = _river_v2_forward_snapshot(river_v2_loader(runtime_key))
+        except Exception:  # noqa: BLE001 - read-only research cannot break the dashboard
+            river_v2_quality = _river_v2_forward_snapshot()
 
     mtf_shadow_quality = _empty_mtf_shadow_quality_snapshot(mtf_config)
     mtf_shadow_loader = getattr(persistence, "load_mtf_shadow_quality", None)
@@ -394,6 +429,7 @@ def build_operational_overview(
         "burnin": burnin,
         "readiness": readiness,
         "shadow_challenger": shadow_quality,
+        "river_v2_shadow": river_v2_quality,
         "mtf_shadow_challenger": mtf_shadow_quality,
         "alerts": alerts,
     }
