@@ -2,11 +2,11 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "feat/river-v2-forward-audit-shadow",
+  "active_branch": "main",
   "pull_request": null,
-  "focus": "River-v2 optional forward shadow on 5m Gold/DAX/BTC staged on feat/river-v2-forward-audit-shadow: latest closed/fresh candle only, bounded matured-label OVR training, atomic audit prediction, delayed v1/v2 same-signal directional comparison in read-only API. Await PR CI. v1 still executes paper orders; real orders disabled.",
+  "focus": "PR #173 merged on 2026-10-21: optional 5m River-v2 forward audit for Gold/DAX/BTC with fresh completed candle, matured-label training and delayed same-signal v1/v2 quality. PR-head CI/CodeQL passed. Production still River-v1 paper-only; verify Render release SHA and accrue authentic live shadow observations before evaluating any improvement.",
   "production_evidence": {
-    "main_head": "50459b6abb01b6197c41d36bcb27815ce67d43e9",
+    "main_head": "6f3fe1df3e49137e900d5a67a9a57d42f37d286c",
     "render_shadow_challenger_enabled": true,
     "render_markets": "GC=F,^GDAXI,BTC-USD",
     "gold": {
@@ -76,7 +76,7 @@
     "PR #157 merged pinned real Kronos-mini research comparator and three-class River offline baseline; 40-window BTC smoke on 2026-10-20 had review_eligible=false and did not change production execution.",
     "PR #169 merged 2026-10-20: published validated RENDER_GIT_COMMIT on /livez and optional exact deployment-probe SHA check; PR head CI, CodeQL and existing HTTP integration checks passed.",
     "PR #171 merged on 2026-10-21: isolated OVR-v2 research artifact and exact-type River-v1 production guard; existing codec/online checks expanded; PR CI, CodeQL passed. No paper runtime migration.",
-    "River-v2 forward shadow research branch introduces time-gated independent observations and delayed matched audit metrics with no broker/risk impact; CI not yet verified."
+    "PR #173 merged 2026-10-21: River-v2 forward observer on fresh completed 5m Gold/DAX/BTC bars, atomic audit predictions and delayed matched v1/v2 directional quality in read-only API; CI/CodeQL succeeded. No model promotion or trade execution changes."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -85,8 +85,8 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Run PR CI/CodeQL and repair any failures; merge only when checks pass.",
-    "After merge, verify Render deployed SHA and observe genuine non-stale River-v2 audit evidence in /api/markets; do not mistake successful CI for production deployment.",
-    "Accumulate independent matured Gold/DAX/BTC forward comparisons and cost-aware trading evidence; River-v2 is not review eligible or promoted."
+    "Confirm post-merge main CI, CodeQL and repository standards for #173; deployed Render SHA must be verified independently.",
+    "Validate live /api/markets overview.river_v2_shadow evidence under actual installed revision; do not count stale or late-committed predictions.",
+    "Accumulate sufficient independent Gold/DAX/BTC forward sample, cost-aware held-out returns, and evaluate River-v2 vs v1 and Kronos without enabling live orders or promoting models."
   ]
 }
