@@ -1,24 +1,18 @@
 # Change impact
 
-Base: cf5321e3b9967a4fc073947392dab5610a92b97c
-Head: 661f9d455a6d71086e142bd30c41a58ae7c25fc4
+Base: 7962119d983fc100b3f4d2ce3ecda9460aaaf7f9
+Head: 59e1610b31b43c4067c9840467d740bc3095a956
 
 ## Changed files
-- M docs/kronos-research.md
-- M src/ai_trading/operational_overview.py
-- M src/ai_trading/paper_cycle.py
-- M src/ai_trading/river_v2_shadow.py
-- M tests/test_dashboard_overview.py
-- M tests/test_paper_cycle.py
-- M tests/test_shadow_challenger.py
+- M src/ai_trading/runtime_status.py
+- M tests/test_runtime_status.py
 
 ## Affected areas
-- docs
 - src
 - tests
 
 ## Related test candidates
-- tests/test_paper_cycle.py
+- tests/test_runtime_status.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

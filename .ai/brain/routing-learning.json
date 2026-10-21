@@ -2,24 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "refactor: extract multi-asset market preparation (#88)",
-      "terms": [
-        "88",
-        "extract",
-        "market",
-        "multi-asset",
-        "preparation",
-        "refactor"
-      ],
-      "tests": [],
-      "useful": [
-        "src/ai_trading/multiasset_market_context.py",
-        "src/ai_trading/multiasset_runtime.py",
-        "tests/test_multiasset_market_context.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "refactor: centralize paper execution calculations (#89)",
       "terms": [
         "89",
@@ -1258,6 +1240,25 @@
         "tests/test_paper_cycle.py",
         "tests/test_shadow_challenger.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "fix(ops): detect stale STARTING paper cycles promptly (#177)",
+      "terms": [
+        "177",
+        "cycles",
+        "detect",
+        "ops",
+        "paper",
+        "promptly",
+        "stale",
+        "starting"
+      ],
+      "tests": [],
+      "useful": [
+        "src/ai_trading/runtime_status.py",
+        "tests/test_runtime_status.py"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1411,6 +1412,10 @@
       "tests/test_dashboard_overview.py": 4,
       "tests/test_paper_cycle.py": 4,
       "tests/test_shadow_challenger.py": 4
+    },
+    "177": {
+      "src/ai_trading/runtime_status.py": 4,
+      "tests/test_runtime_status.py": 4
     },
     "56": {
       "src/ai_trading/command_app.py": 4,
@@ -2230,9 +2235,11 @@
       "src/ai_trading/multi_market.py": 8,
       "src/ai_trading/paper_cycle.py": 4,
       "src/ai_trading/postgres_persistence.py": 4,
+      "src/ai_trading/runtime_status.py": 4,
       "src/ai_trading/scheduler_endpoint.py": 8,
       "tests/test_multi_market.py": 8,
       "tests/test_postgres_persistence.py": 4,
+      "tests/test_runtime_status.py": 4,
       "tests/test_scheduler_endpoint.py": 8
     },
     "dashboard": {
@@ -2371,7 +2378,9 @@
     },
     "detect": {
       "src/ai_trading/data_quality.py": 4,
-      "tests/test_data_quality.py": 4
+      "src/ai_trading/runtime_status.py": 4,
+      "tests/test_data_quality.py": 4,
+      "tests/test_runtime_status.py": 4
     },
     "deterministic": {
       "src/ai_trading/bootstrap_robustness.py": 4,
@@ -3281,10 +3290,12 @@
       "src/ai_trading/operational_overview.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
       "src/ai_trading/river_v2_shadow.py": 4,
+      "src/ai_trading/runtime_status.py": 4,
       "tests/test_dashboard_health.py": 12,
       "tests/test_dashboard_overview.py": 4,
       "tests/test_paper_cycle.py": 4,
       "tests/test_paper_cycle_workflow.py": 4,
+      "tests/test_runtime_status.py": 4,
       "tests/test_shadow_challenger.py": 4
     },
     "orphan": {
@@ -3323,7 +3334,7 @@
       "src/ai_trading/research_model_codec.py": 4,
       "src/ai_trading/runtime.py": 12,
       "src/ai_trading/runtime_state.py": 4,
-      "src/ai_trading/runtime_status.py": 4,
+      "src/ai_trading/runtime_status.py": 8,
       "src/ai_trading/scheduler_endpoint.py": 4,
       "src/ai_trading/scheduler_fallback.py": 4,
       "src/ai_trading/trade_journal.py": 4,
@@ -3345,6 +3356,7 @@
       "tests/test_postgres_persistence.py": 8,
       "tests/test_realized_pnl_accounting.py": 4,
       "tests/test_runtime_lock.py": 4,
+      "tests/test_runtime_status.py": 4,
       "tests/test_scheduler_endpoint.py": 4
     },
     "parallelize": {
@@ -3575,6 +3587,10 @@
     "progress": {
       "src/ai_trading/scheduler_endpoint.py": 4,
       "tests/test_scheduler_endpoint.py": 4
+    },
+    "promptly": {
+      "src/ai_trading/runtime_status.py": 4,
+      "tests/test_runtime_status.py": 4
     },
     "protect": {
       "tests/test_paper_cycle_workflow.py": 4
@@ -4060,7 +4076,7 @@
       "src/ai_trading/multi_market.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
       "src/ai_trading/paper_cycle_service.py": 4,
-      "src/ai_trading/runtime_status.py": 4,
+      "src/ai_trading/runtime_status.py": 8,
       "src/ai_trading/scheduler_endpoint.py": 4,
       "tests/test_dashboard.py": 8,
       "tests/test_dashboard_engine_status.py": 4,
@@ -4068,7 +4084,12 @@
       "tests/test_multi_market.py": 4,
       "tests/test_paper_cycle.py": 4,
       "tests/test_paper_cycle_service.py": 4,
+      "tests/test_runtime_status.py": 4,
       "tests/test_scheduler_endpoint.py": 4
+    },
+    "starting": {
+      "src/ai_trading/runtime_status.py": 4,
+      "tests/test_runtime_status.py": 4
     },
     "state": {
       "src/ai_trading/multiasset_checkpoint.py": 8,

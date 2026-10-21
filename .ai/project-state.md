@@ -57,16 +57,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-21T10:15:46Z
+Generated: 2026-10-21T10:19:35Z
 
 ### Git
 - Branch: `main`
-- Head: `661f9d455a6d`
-- Commit date: 2026-10-21T06:15:37-04:00
-- Commit: fix(ops): isolate River v2 research and bound free-tier CPU (#176)
+- Head: `59e1610b31b4`
+- Commit date: 2026-10-21T06:19:23-04:00
+- Commit: fix(ops): detect stale STARTING paper cycles promptly (#177)
 - Tracked files: 513
 
 ### Recently changed files
+- `src/ai_trading/runtime_status.py`
+- `tests/test_runtime_status.py`
 - `docs/kronos-research.md`
 - `src/ai_trading/operational_overview.py`
 - `src/ai_trading/paper_cycle.py`
@@ -82,11 +84,6 @@ Generated: 2026-10-21T10:15:46Z
 - `src/ai_trading/research_model_codec.py`
 - `tests/test_model_codec.py`
 - `tests/test_online.py`
-- `.github/workflows/hosted-dashboard-probe.yml`
-- `README.md`
-- `src/ai_trading/dashboard.py`
-- `src/ai_trading/deployment_probe.py`
-- `tests/test_dashboard_health.py`
 
 ### Project signals
 - `pyproject.toml`

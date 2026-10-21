@@ -711,6 +711,37 @@
       "path": "src/ai_trading/runtime_state.py"
     },
     {
+      "dependencies": [],
+      "dependents": [
+        "src/ai_trading/cli.py",
+        "src/ai_trading/dashboard.py",
+        "src/ai_trading/health_server.py",
+        "src/ai_trading/metrics.py",
+        "src/ai_trading/multiasset_scheduler.py",
+        "src/ai_trading/operational_overview.py",
+        "src/ai_trading/paper_cycle_service.py",
+        "src/ai_trading/readiness_handshake.py",
+        "src/ai_trading/runtime_status.py",
+        "src/ai_trading/supervisor.py",
+        "src/ai_trading/watchdog_enforcer.py",
+        "src/ai_trading/worker_monitor.py",
+        "tests/test_cli_self_test.py",
+        "tests/test_dashboard_health.py",
+        "tests/test_dashboard_overview.py",
+        "tests/test_metrics.py",
+        "tests/test_multi_market.py",
+        "tests/test_readiness_handshake.py",
+        "tests/test_runtime_status.py",
+        "tests/test_smoke_e2e.py",
+        "tests/test_watchdog.py",
+        "tests/test_watchdog_enforcer.py",
+        "tests/test_worker_monitor.py"
+      ],
+      "in_degree": 23,
+      "out_degree": 0,
+      "path": "src/ai_trading/watchdog.py"
+    },
+    {
       "dependencies": [
         "src/ai_trading/allocation_state.py",
         "src/ai_trading/allocator_config_store.py",
@@ -801,33 +832,34 @@
       "path": "src/ai_trading/lifecycle_log.py"
     },
     {
-      "dependencies": [],
+      "dependencies": [
+        "src/ai_trading/watchdog.py"
+      ],
       "dependents": [
-        "src/ai_trading/cli.py",
         "src/ai_trading/dashboard.py",
-        "src/ai_trading/health_server.py",
-        "src/ai_trading/metrics.py",
-        "src/ai_trading/multiasset_scheduler.py",
+        "src/ai_trading/file_persistence.py",
+        "src/ai_trading/hosted_runtime.py",
+        "src/ai_trading/market_freshness.py",
+        "src/ai_trading/multi_market.py",
         "src/ai_trading/operational_overview.py",
         "src/ai_trading/paper_cycle_service.py",
-        "src/ai_trading/readiness_handshake.py",
-        "src/ai_trading/supervisor.py",
-        "src/ai_trading/watchdog_enforcer.py",
-        "src/ai_trading/worker_monitor.py",
-        "tests/test_cli_self_test.py",
+        "src/ai_trading/persistence.py",
+        "src/ai_trading/postgres_persistence.py",
+        "tests/test_dashboard_engine_status.py",
         "tests/test_dashboard_health.py",
         "tests/test_dashboard_overview.py",
-        "tests/test_metrics.py",
+        "tests/test_dashboard_persistence.py",
+        "tests/test_hosted_persistence.py",
+        "tests/test_market_freshness.py",
         "tests/test_multi_market.py",
-        "tests/test_readiness_handshake.py",
-        "tests/test_smoke_e2e.py",
-        "tests/test_watchdog.py",
-        "tests/test_watchdog_enforcer.py",
-        "tests/test_worker_monitor.py"
+        "tests/test_paper_cycle_service.py",
+        "tests/test_postgres_persistence.py",
+        "tests/test_runtime_persistence.py",
+        "tests/test_runtime_status.py"
       ],
-      "in_degree": 21,
-      "out_degree": 0,
-      "path": "src/ai_trading/watchdog.py"
+      "in_degree": 20,
+      "out_degree": 1,
+      "path": "src/ai_trading/runtime_status.py"
     },
     {
       "dependencies": [
@@ -858,34 +890,6 @@
       "in_degree": 12,
       "out_degree": 9,
       "path": "src/ai_trading/paper_cycle.py"
-    },
-    {
-      "dependencies": [],
-      "dependents": [
-        "src/ai_trading/dashboard.py",
-        "src/ai_trading/file_persistence.py",
-        "src/ai_trading/hosted_runtime.py",
-        "src/ai_trading/market_freshness.py",
-        "src/ai_trading/multi_market.py",
-        "src/ai_trading/operational_overview.py",
-        "src/ai_trading/paper_cycle_service.py",
-        "src/ai_trading/persistence.py",
-        "src/ai_trading/postgres_persistence.py",
-        "tests/test_dashboard_engine_status.py",
-        "tests/test_dashboard_health.py",
-        "tests/test_dashboard_overview.py",
-        "tests/test_dashboard_persistence.py",
-        "tests/test_hosted_persistence.py",
-        "tests/test_market_freshness.py",
-        "tests/test_multi_market.py",
-        "tests/test_paper_cycle_service.py",
-        "tests/test_postgres_persistence.py",
-        "tests/test_runtime_persistence.py",
-        "tests/test_runtime_status.py"
-      ],
-      "in_degree": 20,
-      "out_degree": 0,
-      "path": "src/ai_trading/runtime_status.py"
     },
     {
       "dependencies": [
@@ -1888,7 +1892,7 @@
       "path": "src/ai_trading/model_quarantine.py"
     }
   ],
-  "edge_count": 2037,
+  "edge_count": 2039,
   "generated_by": "dbrckk/repo-brain-v7-graph",
   "node_count": 366,
   "schema_version": 1

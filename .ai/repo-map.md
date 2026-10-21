@@ -8239,6 +8239,11 @@ current_time = current_time.replace(tzinfo=UTC)
 current_time = current_time.astimezone(UTC)
 ⋮----
 stale_after_seconds = max(30.0, status.poll_seconds * 3.0)
+⋮----
+# A 15-minute external scheduler may legitimately have a 45-minute
+# RUNNING heartbeat window, but a paper cycle cannot stay STARTING
+# for that long without surfacing an operational warning.
+stale_after_seconds = min(stale_after_seconds, 300.0)
 heartbeat_age_seconds: float | None
 heartbeat_stale = False
 ⋮----
@@ -13074,6 +13079,14 @@ def test_runtime_status_store_round_trip(tmp_path) -> None
 ⋮----
 store = HostedRuntimeStatusStore(tmp_path / "runtime_status.json")
 status = HostedRuntimeStatus(
+⋮----
+# 15m cron permits a longer RUNNING heartbeat, never an indefinitely
+# STARTING paper cycle with no completed scheduler delivery.
+current = datetime(2026, 9, 15, 16, 5, 1, tzinfo=UTC)
+starting = replace(status, engine_status="STARTING", poll_seconds=900.0)
+blocked = runtime_status_snapshot(starting, now=current)
+⋮----
+running = runtime_status_snapshot(
 ````
 
 ## File: tests/test_runtime_targeted_step.py
