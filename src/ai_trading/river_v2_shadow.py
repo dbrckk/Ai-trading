@@ -216,14 +216,14 @@ def compare_river_v2_forward_audit_payloads(
 
         realized_return = next_close / signal_close - 1.0
         label = int(realized_return > threshold) - int(realized_return < -threshold)
-        gated_v1 = side_v1 if confidence_v1 >= minimum else 0
-        gated_v2 = side_v2 if confidence_v2 >= minimum else 0
-        sides_v1.append(gated_v1)
-        conf_v1.append(confidence_v1 if gated_v1 else 1.0 - confidence_v1)
-        sides_v2.append(gated_v2)
-        conf_v2.append(confidence_v2 if gated_v2 else 1.0 - confidence_v2)
+        # Compare identical raw side/confidence definitions for both models.
+        # Minimum confidence applies only to the separate directional count.
+        sides_v1.append(side_v1)
+        conf_v1.append(confidence_v1)
+        sides_v2.append(side_v2)
+        conf_v2.append(confidence_v2)
         labels.append(label)
-        shorts += int(gated_v2 == -1)
+        shorts += int(side_v2 == -1 and confidence_v2 >= minimum)
 
     def quality(sides: list[int], confidences: list[float]) -> ModelQuality:
         return evaluate_model_quality(
