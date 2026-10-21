@@ -69,36 +69,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-21T18:10:55Z
+Generated: 2026-10-21T19:55:20Z
 
 ### Git
 - Branch: `main`
-- Head: `a02c2a6c9c11`
-- Commit date: 2026-10-21T14:10:40-04:00
-- Commit: fix(ops): fail hosted probe on stuck paper market engines (#181)
+- Head: `b966ed8ebd5d`
+- Commit date: 2026-10-21T15:55:09-04:00
+- Commit: feat(metrics): report paper PnL sample coverage separately from availability (#183)
 - Tracked files: 513
 
 ### Recently changed files
-- `.github/workflows/hosted-dashboard-probe.yml`
 - `README.md`
+- `src/ai_trading/performance_metrics.py`
+- `tests/test_dashboard_overview.py`
+- `tests/test_multi_market.py`
+- `tests/test_performance_metrics.py`
+- `.github/workflows/hosted-dashboard-probe.yml`
 - `src/ai_trading/deployment_probe.py`
 - `tests/test_dashboard_health.py`
 - `docs/kronos-research.md`
 - `src/ai_trading/operational_overview.py`
 - `src/ai_trading/river_v2_shadow.py`
-- `tests/test_dashboard_overview.py`
 - `tests/test_shadow_quality.py`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/mtf_shadow_quality.py`
 - `src/ai_trading/shadow_promotion_gate.py`
 - `src/ai_trading/shadow_quality.py`
 - `tests/test_mtf_shadow_quality.py`
-- `tests/test_multi_market.py`
 - `tests/test_shadow_promotion_gate.py`
 - `src/ai_trading/runtime_status.py`
 - `tests/test_runtime_status.py`
-- `src/ai_trading/paper_cycle.py`
-- `tests/test_paper_cycle.py`
 
 ### Project signals
 - `pyproject.toml`

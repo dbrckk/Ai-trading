@@ -3008,6 +3008,10 @@ metrics = performance_metrics_from_totals(
 def test_performance_payload_serializes_infinite_profit_factor_explicitly() -> None
 ⋮----
 payload = performance_payload(metrics)
+⋮----
+def test_paper_performance_evidence_requires_sample_and_pnl_coverage() -> None
+⋮----
+def evidence(trades: int, observed: int) -> bool
 ```
 
 ## File: test_performance.py

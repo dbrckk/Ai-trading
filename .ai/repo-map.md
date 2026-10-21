@@ -12171,6 +12171,10 @@ metrics = performance_metrics_from_totals(
 def test_performance_payload_serializes_infinite_profit_factor_explicitly() -> None
 ⋮----
 payload = performance_payload(metrics)
+⋮----
+def test_paper_performance_evidence_requires_sample_and_pnl_coverage() -> None
+⋮----
+def evidence(trades: int, observed: int) -> bool
 ````
 
 ## File: tests/test_performance.py
@@ -14228,6 +14232,19 @@ publicly hosted service is unavailable or incomplete. This check **does
 not** invoke the scheduler, place trades, wake workers, or guarantee
 fresh market data. For manual diagnosis, use
 `PYTHONPATH=src python -m ai_trading.deployment_probe --base-url https://ai-trading-dashboard-qyr2.onrender.com --require-running-markets`.
+
+## Paper trade performance evidence
+
+The read-only performance API exposes `evidence_sufficient` separately from
+`available`: at least **30 trades with known realized PnL** and at least
+**95% PnL coverage** are required before even treating headline paper PnL,
+profit factor or drawdown as a minimally populated sample. These thresholds
+are a descriptive sample-coverage check, **not statistical proof of edge**.
+The payload also reports `minimum_pnl_observations` and
+`minimum_pnl_coverage`. Actual execution costs must be accounted for in
+paper fills; further independent out-of-sample, regime, uncertainty and
+net-of-cost checks remain mandatory. No automated model promotion, paper
+order decision or live broker permission depends on this flag.
 
 ## Walk-forward methodology
 

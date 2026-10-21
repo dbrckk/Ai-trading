@@ -2,26 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "feat: detect repeated cadence gaps in market data quality (#92)",
-      "terms": [
-        "92",
-        "cadence",
-        "data",
-        "detect",
-        "feat",
-        "gaps",
-        "market",
-        "quality",
-        "repeated"
-      ],
-      "tests": [],
-      "useful": [
-        "src/ai_trading/data_quality.py",
-        "tests/test_data_quality.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "fix: calculate and persist realized paper PnL (#94)",
       "terms": [
         "94",
@@ -1265,6 +1245,30 @@
         "src/ai_trading/deployment_probe.py",
         "tests/test_dashboard_health.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "feat(metrics): report paper PnL sample coverage separately from availability (#183)",
+      "terms": [
+        "183",
+        "availability",
+        "coverage",
+        "feat",
+        "from",
+        "metrics",
+        "paper",
+        "pnl",
+        "report",
+        "sample",
+        "separately"
+      ],
+      "tests": [],
+      "useful": [
+        "src/ai_trading/performance_metrics.py",
+        "tests/test_dashboard_overview.py",
+        "tests/test_multi_market.py",
+        "tests/test_performance_metrics.py"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1444,6 +1448,12 @@
     "181": {
       "src/ai_trading/deployment_probe.py": 4,
       "tests/test_dashboard_health.py": 4
+    },
+    "183": {
+      "src/ai_trading/performance_metrics.py": 4,
+      "tests/test_dashboard_overview.py": 4,
+      "tests/test_multi_market.py": 4,
+      "tests/test_performance_metrics.py": 4
     },
     "56": {
       "src/ai_trading/command_app.py": 4,
@@ -1873,7 +1883,11 @@
     "availability": {
       "src/ai_trading/dashboard.py": 4,
       "src/ai_trading/deployment_probe.py": 4,
-      "tests/test_dashboard_health.py": 4
+      "src/ai_trading/performance_metrics.py": 4,
+      "tests/test_dashboard_health.py": 4,
+      "tests/test_dashboard_overview.py": 4,
+      "tests/test_multi_market.py": 4,
+      "tests/test_performance_metrics.py": 4
     },
     "avoid": {
       "src/ai_trading/dashboard.py": 4,
@@ -2237,10 +2251,13 @@
     "coverage": {
       "src/ai_trading/dashboard.py": 8,
       "src/ai_trading/operational_overview.py": 8,
+      "src/ai_trading/performance_metrics.py": 4,
       "src/ai_trading/river_v2_shadow.py": 4,
       "tests/test_dashboard.py": 4,
-      "tests/test_dashboard_overview.py": 8,
+      "tests/test_dashboard_overview.py": 12,
       "tests/test_dashboard_persistence.py": 8,
+      "tests/test_multi_market.py": 4,
+      "tests/test_performance_metrics.py": 4,
       "tests/test_shadow_quality.py": 4
     },
     "cpu": {
@@ -2655,6 +2672,7 @@
       "src/ai_trading/paper_cycle.py": 16,
       "src/ai_trading/paper_cycle_service.py": 8,
       "src/ai_trading/paper_readiness_evidence.py": 4,
+      "src/ai_trading/performance_metrics.py": 4,
       "src/ai_trading/persistence.py": 4,
       "src/ai_trading/portfolio_intelligence.py": 4,
       "src/ai_trading/postgres_persistence.py": 16,
@@ -2668,7 +2686,7 @@
       "src/ai_trading/shadow_quality.py": 4,
       "tests/test_cloudflare_scheduler_deploy_workflow.py": 4,
       "tests/test_dashboard.py": 8,
-      "tests/test_dashboard_overview.py": 28,
+      "tests/test_dashboard_overview.py": 32,
       "tests/test_dashboard_persistence.py": 8,
       "tests/test_data.py": 4,
       "tests/test_data_quality.py": 4,
@@ -2678,12 +2696,11 @@
       "tests/test_file_persistence.py": 8,
       "tests/test_hosted_runtime.py": 4,
       "tests/test_market_freshness.py": 4,
-      "tests/test_model_codec.py": 4,
       "tests/test_mtf_parameter_benchmark.py": 12,
       "tests/test_mtf_shadow_challenger.py": 8,
       "tests/test_mtf_shadow_config.py": 8,
       "tests/test_mtf_shadow_quality.py": 12,
-      "tests/test_multi_market.py": 36,
+      "tests/test_multi_market.py": 40,
       "tests/test_multiasset_runtime.py": 8,
       "tests/test_online.py": 8,
       "tests/test_paper_cycle.py": 20,
@@ -2754,16 +2771,19 @@
       "src/ai_trading/multiasset_runtime.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
       "src/ai_trading/paper_cycle_service.py": 4,
+      "src/ai_trading/performance_metrics.py": 4,
       "src/ai_trading/research_model_codec.py": 4,
       "src/ai_trading/scheduler_endpoint.py": 4,
       "tests/test_dashboard.py": 4,
+      "tests/test_dashboard_overview.py": 4,
       "tests/test_hosted_runtime.py": 4,
       "tests/test_model_codec.py": 4,
-      "tests/test_multi_market.py": 4,
+      "tests/test_multi_market.py": 8,
       "tests/test_multiasset_runtime.py": 4,
       "tests/test_online.py": 4,
       "tests/test_paper_cycle.py": 4,
       "tests/test_paper_cycle_service.py": 4,
+      "tests/test_performance_metrics.py": 4,
       "tests/test_scheduler_endpoint.py": 4
     },
     "fsync": {
@@ -3149,9 +3169,13 @@
       "src/ai_trading/data.py": 4,
       "src/ai_trading/marginal_alpha.py": 4,
       "src/ai_trading/performance.py": 4,
+      "src/ai_trading/performance_metrics.py": 4,
       "tests/test_cloudflare_scheduler_deploy_workflow.py": 4,
+      "tests/test_dashboard_overview.py": 4,
       "tests/test_data.py": 4,
-      "tests/test_performance.py": 4
+      "tests/test_multi_market.py": 4,
+      "tests/test_performance.py": 4,
+      "tests/test_performance_metrics.py": 4
     },
     "mirrors": {
       "src/ai_trading/multiasset_runtime.py": 4,
@@ -3387,7 +3411,7 @@
       "src/ai_trading/paper_cycle.py": 20,
       "src/ai_trading/paper_cycle_service.py": 16,
       "src/ai_trading/paper_execution.py": 8,
-      "src/ai_trading/performance_metrics.py": 8,
+      "src/ai_trading/performance_metrics.py": 12,
       "src/ai_trading/persistence.py": 4,
       "src/ai_trading/postgres_persistence.py": 12,
       "src/ai_trading/research_model_codec.py": 4,
@@ -3401,17 +3425,18 @@
       "tests/test_dashboard.py": 4,
       "tests/test_dashboard_engine_status.py": 4,
       "tests/test_dashboard_health.py": 8,
+      "tests/test_dashboard_overview.py": 4,
       "tests/test_execution_costs.py": 4,
       "tests/test_hosted_runtime.py": 4,
       "tests/test_market_freshness.py": 4,
       "tests/test_model_codec.py": 4,
-      "tests/test_multi_market.py": 12,
+      "tests/test_multi_market.py": 16,
       "tests/test_online.py": 4,
       "tests/test_paper_cycle.py": 20,
       "tests/test_paper_cycle_service.py": 16,
       "tests/test_paper_cycle_workflow.py": 4,
       "tests/test_paper_execution.py": 4,
-      "tests/test_performance_metrics.py": 4,
+      "tests/test_performance_metrics.py": 8,
       "tests/test_postgres_persistence.py": 8,
       "tests/test_realized_pnl_accounting.py": 4,
       "tests/test_runtime_lock.py": 4,
@@ -3512,15 +3537,16 @@
       "src/ai_trading/dashboard.py": 4,
       "src/ai_trading/operational_overview.py": 4,
       "src/ai_trading/paper_execution.py": 4,
-      "src/ai_trading/performance_metrics.py": 4,
+      "src/ai_trading/performance_metrics.py": 8,
       "src/ai_trading/postgres_persistence.py": 4,
       "src/ai_trading/runtime.py": 4,
       "src/ai_trading/runtime_state.py": 4,
       "src/ai_trading/trade_journal.py": 4,
       "tests/test_dashboard.py": 4,
-      "tests/test_dashboard_overview.py": 4,
+      "tests/test_dashboard_overview.py": 8,
       "tests/test_dashboard_persistence.py": 4,
-      "tests/test_performance_metrics.py": 4,
+      "tests/test_multi_market.py": 4,
+      "tests/test_performance_metrics.py": 8,
       "tests/test_postgres_persistence.py": 4,
       "tests/test_realized_pnl_accounting.py": 4
     },
@@ -3812,14 +3838,15 @@
       "src/ai_trading/file_persistence.py": 4,
       "src/ai_trading/multi_market.py": 8,
       "src/ai_trading/operational_overview.py": 4,
-      "src/ai_trading/performance_metrics.py": 4,
+      "src/ai_trading/performance_metrics.py": 8,
       "src/ai_trading/persistence.py": 4,
       "src/ai_trading/postgres_persistence.py": 4,
       "src/ai_trading/river_v2_shadow.py": 4,
       "src/ai_trading/scheduler_endpoint.py": 4,
       "tests/test_cumulative_performance_persistence.py": 4,
-      "tests/test_dashboard_overview.py": 4,
-      "tests/test_multi_market.py": 8,
+      "tests/test_dashboard_overview.py": 8,
+      "tests/test_multi_market.py": 12,
+      "tests/test_performance_metrics.py": 4,
       "tests/test_scheduler_endpoint.py": 4,
       "tests/test_shadow_quality.py": 4
     },
@@ -3981,6 +4008,12 @@
       "tests/test_multiasset_runtime.py": 8,
       "tests/test_runtime_lock.py": 4
     },
+    "sample": {
+      "src/ai_trading/performance_metrics.py": 4,
+      "tests/test_dashboard_overview.py": 4,
+      "tests/test_multi_market.py": 4,
+      "tests/test_performance_metrics.py": 4
+    },
     "sanitized": {
       "infra/cloudflare-paper-scheduler/src/index.js": 4,
       "infra/cloudflare-paper-scheduler/test/index.test.js": 4,
@@ -4046,6 +4079,12 @@
       "tests/test_dashboard_persistence.py": 4,
       "tests/test_multi_market.py": 4,
       "tests/test_research_config_validation.py": 4
+    },
+    "separately": {
+      "src/ai_trading/performance_metrics.py": 4,
+      "tests/test_dashboard_overview.py": 4,
+      "tests/test_multi_market.py": 4,
+      "tests/test_performance_metrics.py": 4
     },
     "session": {
       "src/ai_trading/dashboard.py": 4,
