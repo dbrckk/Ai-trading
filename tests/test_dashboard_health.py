@@ -211,14 +211,21 @@ def test_external_probe_reports_connection_errors_without_exposing_details(
 
     from ai_trading import deployment_probe
 
+    calls = []
+
     def fail_request(request, timeout):
-        del request, timeout
+        calls.append((request.full_url, timeout))
         raise URLError("private endpoint secret")
 
     monkeypatch.setattr(deployment_probe, "urlopen", fail_request)
     results = probe_dashboard("https://example.invalid")
     assert len(results) == 3
     assert all(item.ok is False and item.detail == "connection_failed" for item in results)
+    # Exactly one short retry per unreachable endpoint, no secret disclosure.
+    assert [url.split("/")[-1] for url, _ in calls] == [
+        "livez", "readyz", "markets", "livez", "readyz", "markets"
+    ]
+    assert all(timeout == 10.0 for _, timeout in calls[3:])
 
 
 def test_probe_rejects_market_cards_with_broken_portfolio(monkeypatch) -> None:
@@ -241,9 +248,15 @@ def test_probe_rejects_market_cards_with_broken_portfolio(monkeypatch) -> None:
         def read(self, count):
             return self.body.read(count)
 
+    livez_calls = 0
+
     def fake_urlopen(request, timeout):
+        nonlocal livez_calls
         del timeout
         if request.full_url.endswith("/livez"):
+            livez_calls += 1
+            if livez_calls == 1:
+                raise URLError("transient Render connection reset")
             return FakeResponse({"web_healthy": True})
         if request.full_url.endswith("/readyz"):
             return FakeResponse({"ready": True, "storage_healthy": True})
@@ -259,6 +272,7 @@ def test_probe_rejects_market_cards_with_broken_portfolio(monkeypatch) -> None:
     monkeypatch.setattr(deployment_probe, "urlopen", fake_urlopen)
     results = probe_dashboard("https://example.invalid")
     assert results[0].ok is True
+    assert livez_calls == 2
     assert results[1].ok is True
     assert results[2].ok is False
     assert results[2].detail == "portfolio_or_market_unavailable"
