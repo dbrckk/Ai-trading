@@ -39,6 +39,8 @@ Status: active
 
 - River-v2 versioned artifact work was merged in **PR #171**: the production v1 codec now refuses v2 subclasses, and a separate `joblib-river-ovr-v2` research codec round-trips only trusted ternary OVR models. This is **offline research only**, with no changes to paper runtime keys, persisted v1 states or live routing. Forward shadow is not yet installed; isolated read-only evaluation and independent evidence are next. PR-head CI and CodeQL passed.
 
+- Live public read-only Render probe on 2026-10-21: `/livez.web_healthy=true`, the paper engines for Gold/DAX/BTC were `RUNNING` without cycle errors, but `/livez.deployed_commit` was **`3c2bf9c1`**, not the new PR #173 source release **`6f3fe1df`**. No `river_v2_shadow` API field was visible yet; deployment of this feature remains unconfirmed. Check again after Render rollout, never infer deployment from GitHub CI alone.
+
 ## Validation
 - Main after PR #167: Ruff/Pytest/Cloudflare Worker checks and CodeQL passed (run 39499994723 and 39499994605).
 - PR #157 final head: CI run 39500880135, CodeQL run 39500880125 and actual pinned Kronos model smoke run 39500872405 all passed, with JSON artifact 12301525143.
