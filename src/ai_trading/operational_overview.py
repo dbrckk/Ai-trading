@@ -370,7 +370,8 @@ def build_operational_overview(
 
     river_v2_quality = _river_v2_forward_snapshot()
     river_v2_loader = getattr(persistence, "load_river_v2_forward_quality", None)
-    if callable(river_v2_loader):
+    # Do not wake/query free-tier Neon for an observer intentionally disabled.
+    if river_v2_observer_enabled() and callable(river_v2_loader):
         try:
             river_v2_quality = _river_v2_forward_snapshot(river_v2_loader(runtime_key))
         except Exception:  # noqa: BLE001 - read-only research cannot break the dashboard
