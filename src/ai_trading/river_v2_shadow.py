@@ -10,6 +10,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from math import isfinite
+from os import getenv
 from time import monotonic
 from typing import Any
 
@@ -22,6 +23,13 @@ from .online import RiverMulticlassDirectionModel
 from .research_model_codec import RESEARCH_MODEL_FORMAT, RESEARCH_MODEL_VERSION
 
 _INTERVAL = pd.Timedelta(minutes=5)
+
+
+def river_v2_observer_enabled() -> bool:
+    """Independent opt-in; a research model must never auto-start in production."""
+    return getenv("AI_TRADING_RIVER_V2_SHADOW", "0").strip().lower() in {
+        "1", "true", "yes", "on",
+    }
 
 
 @dataclass(frozen=True)
