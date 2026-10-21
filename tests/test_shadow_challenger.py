@@ -11,6 +11,7 @@ from ai_trading.features import (
 )
 from ai_trading.model import Prediction
 from ai_trading.shadow_challenger import evaluate_shadow_challenger
+from ai_trading.river_v2_shadow import observe_river_v2_forward
 
 
 def sample_market(n: int = 220) -> pd.DataFrame:
@@ -83,6 +84,42 @@ def test_shadow_challenger_purges_unobservable_training_labels(monkeypatch) -> N
     assert result.regime == captured["regime"]
     expected_label = labels.loc[market.index[signal_pos]]
     assert result.realized_label == int(expected_label)
+
+    # A forward River-v2 sample uses a *closed* last bar and only matured
+    # labels; its prediction must not require a future OHLCV row.
+    live_market = market.tz_localize("UTC")
+    last_bar_close = live_market.index[-1] + pd.Timedelta(minutes=5)
+    forward = observe_river_v2_forward(
+        live_market,
+        horizon_bars=3,
+        return_threshold=0.001,
+        min_confidence=0.56,
+        now=last_bar_close + pd.Timedelta(minutes=1),
+        min_train_rows=100,
+    )
+    assert forward is not None
+    assert forward.training_rows >= 100
+    assert forward.horizon_bars == 3
+    assert pd.Timestamp(forward.training_end) <= live_market.index[-4]
+    assert forward.signal_time == str(live_market.index[-1])
+    assert forward.signal_close == live_market["Close"].iloc[-1]
+    assert forward.model_version == 2
+    # Reject a future/unfinished candle instead of pretending to have
+    # published a genuinely live prediction retrospectively.
+    assert observe_river_v2_forward(
+        live_market,
+        horizon_bars=3,
+        return_threshold=0.001,
+        min_confidence=0.56,
+        now=last_bar_close - pd.Timedelta(seconds=1),
+    ) is None
+    assert observe_river_v2_forward(
+        live_market,
+        horizon_bars=3,
+        return_threshold=0.001,
+        min_confidence=0.56,
+        now=last_bar_close + pd.Timedelta(minutes=6),
+    ) is None
 
 
 def test_shadow_challenger_skips_when_history_is_insufficient() -> None:
