@@ -367,8 +367,9 @@ def test_shadow_challenger_is_recorded_without_controlling_execution(
             probabilities={-1: 0.05, 0: 0.05, 1: 0.90},
         ),
     )
-    # Exercise the real audit attachment without allowing the observer
+    # Exercise opt-in audit attachment without allowing the observer
     # to change the authoritative River-v1 decision.
+    monkeypatch.setattr(paper_cycle_module, "river_v2_observer_enabled", lambda: True)
     monkeypatch.setattr(
         paper_cycle_module,
         "observe_river_v2_forward",

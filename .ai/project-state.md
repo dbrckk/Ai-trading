@@ -25,6 +25,8 @@ Status: active
 
 - 2026-10-21 live Render probe at SHA `9f8d88ca`: `/livez` and `/readyz` healthy, three paper markets `RUNNING`, no market errors, 20 successful recent Cloudflare deliveries; however River-v2 `pending=0`/`observations=0` for Gold/DAX/BTC. Suspected reason: Yahoo's leading-edge 5m OHLC can be unfinished, making the River-v2 forward gate reject it. A targeted branch `fix/skip-unclosed-five-minute-bars` discards such mutable provider rows **before** paper execution and forward prediction. CI and deployed SHA verification still required; no profitability evidence.
 
+- **2026-10-21 operational incident:** despite green PR #175 CI and positively verified Render release `b8669a71`, all three paper market statuses remained `STARTING` for over eleven minutes after a Cloudflare cycle began; the latest confirmed successful delivery was `2026-10-21T09:46:41Z`. The cause is not confirmed; potentially expensive newly unlocked River-v2 research was not isolated behind its own opt-in. Emergency `fix/river-v2-forward-compute-budget` isolates it with `AI_TRADING_RIVER_V2_SHADOW=0` by default, no disabled audit scan, and bounded optional OVR work (128 rows/3s). No success or recovery claim until live release and scheduler are rechecked.
+
 ## Broken / blockers
 - Paper execution is operational on three markets, but the realized trade sample is statistically insufficient for quality or profitability claims.
 - Free Render/Neon resources and occasional provider failures remain operational constraints; keep the hourly GitHub fallback.

@@ -107,9 +107,15 @@ River-v2 is not an actionable trade signal.
 
 ## River-v2: first live-cycle forward observer (audit only)
 
-The existing `AI_TRADING_SHADOW_CHALLENGER=1` flag now also enables a
-lightweight ternary River-v2 observer for **5-minute paper markets only**
-(Gold, DAX and BTC). It runs independently of River-v1 trade decisions:
+River-v2 now requires **both** `AI_TRADING_SHADOW_CHALLENGER=1`
+and a **separate explicit opt-in** `AI_TRADING_RIVER_V2_SHADOW=1`.
+The new research flag defaults to **OFF** for the free Render worker,
+even when the existing shadow challenger remains enabled. The
+`/api/markets` River-v2 status then reads `disabled` and skips the
+optional historical audit query. Do not enable this research path on
+Render until CPU/scheduler latency is independently validated. When
+explicitly enabled it observes **5-minute paper markets only**
+(Gold, DAX and BTC), independently of River-v1 decisions:
 
 - At most one v2 observation is attached to a cycle, and **only** if the
   latest completed provider candle has closed less than five minutes ago.
@@ -118,9 +124,11 @@ lightweight ternary River-v2 observer for **5-minute paper markets only**
   two-second finality buffer). This prevents a mutable partial OHLC close
   from entering the committed paper model state. Stale and catch-up
   signals remain excluded. No future OHLCV
-  is passed to the observer; it trains from up to 384 historical rows
+  is passed to the observer; it trains from up to 128 historical rows
   with labels matured before the observed signal. At least 100 valid
-  training rows are required.
+  training rows are required. A strict three-second compute budget applies
+  per market on free-tier hosts: unfinished research is skipped rather
+  than delaying the authoritative River-v1 paper cycle.
 - A v2 side, confidence, three-class probabilities, model format/version,
   signal close, UTC observation time, label horizon, and training cutoff
   are appended to the **existing, atomic paper audit transaction** under
@@ -147,6 +155,9 @@ lightweight ternary River-v2 observer for **5-minute paper markets only**
 
 Because no separate River-v2 training state is persisted yet, it
 retrains from a bounded recent window for each fresh observation.
+A timed-out research run does **not** count as forward evidence; a long
+hosted scheduler cycle remains an operational concern until completion
+is independently verified.
 **Do not infer increased profitability from this feature.**
 
 ## Forward shadow operational follow-up (2026-10-21)

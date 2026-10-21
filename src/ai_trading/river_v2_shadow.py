@@ -10,6 +10,8 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from math import isfinite
+from os import getenv
+from time import monotonic
 from typing import Any
 
 import pandas as pd
@@ -21,6 +23,13 @@ from .online import RiverMulticlassDirectionModel
 from .research_model_codec import RESEARCH_MODEL_FORMAT, RESEARCH_MODEL_VERSION
 
 _INTERVAL = pd.Timedelta(minutes=5)
+
+
+def river_v2_observer_enabled() -> bool:
+    """Independent opt-in; a research model must never auto-start in production."""
+    return getenv("AI_TRADING_RIVER_V2_SHADOW", "0").strip().lower() in {
+        "1", "true", "yes", "on",
+    }
 
 
 @dataclass(frozen=True)
@@ -62,13 +71,16 @@ def observe_river_v2_forward(
     min_confidence: float,
     now: datetime | None = None,
     min_train_rows: int = 100,
-    max_train_rows: int = 384,
+    max_train_rows: int = 128,
+    max_compute_seconds: float = 3.0,
 ) -> RiverV2ForwardObservation | None:
     """Predict only from the latest *completed, recent* five-minute signal.
 
     The current market's last row must be a fully closed candle. The next
     candle is not present. Older/catch-up observations are deliberately
     skipped to avoid representing retrospective predictions as forward ones.
+    Abort optional research after a strict wall-clock compute budget on
+    free-tier hosts, without changing the authoritative v1 decision.
     """
     if horizon_bars < 1 or not 0 <= return_threshold:
         raise ValueError("invalid research label horizon/threshold")
@@ -76,6 +88,9 @@ def observe_river_v2_forward(
         raise ValueError("invalid research confidence/training minimum")
     if max_train_rows < min_train_rows:
         raise ValueError("research training window must contain the minimum")
+    if not isfinite(max_compute_seconds) or max_compute_seconds <= 0:
+        raise ValueError("max_compute_seconds must be finite and positive")
+    compute_started = monotonic()
     if market.empty or not isinstance(market.index, pd.DatetimeIndex):
         return None
     if (
@@ -96,6 +111,8 @@ def observe_river_v2_forward(
     # Allow a short provider delay, but never score signals observed after
     # their next five-minute outcome could already have completed.
     if age < pd.Timedelta(0) or age >= _INTERVAL:
+        return None
+    if monotonic() - compute_started >= max_compute_seconds:
         return None
 
     # Slice first: even accidental future columns cannot reach the trainer.
@@ -121,10 +138,19 @@ def observe_river_v2_forward(
     signal_row = features.iloc[-1].loc[FEATURES]
     if not signal_row.notna().all():
         return None
+    if monotonic() - compute_started >= max_compute_seconds:
+        return None
     train_positions = candidates[-max_train_rows:]
     model = RiverMulticlassDirectionModel()
-    for pos in train_positions:
+    for sample_idx, pos in enumerate(train_positions):
+        # River One-vs-Rest trains three classifiers. Keep the optional
+        # observer within a tiny free-tier compute budget; never delay the
+        # authoritative v1 scheduler for a research-only prediction.
+        if sample_idx % 8 == 0 and monotonic() - compute_started >= max_compute_seconds:
+            return None
         model.learn_one(features.iloc[pos].loc[FEATURES], int(labels.iloc[pos]))
+    if monotonic() - compute_started >= max_compute_seconds:
+        return None
     prediction = model.predict_one(signal_row)
     if (
         prediction.side not in (-1, 0, 1)
@@ -143,6 +169,8 @@ def observe_river_v2_forward(
         return None
     # The prediction must still be timely AFTER inference has completed.
     # A slow CPU/research run must not backdate evidence to its start time.
+    if monotonic() - compute_started >= max_compute_seconds:
+        return None
     completed_at = current if now is not None else pd.Timestamp(datetime.now(UTC))
     if completed_at - (signal_utc + _INTERVAL) >= _INTERVAL:
         return None

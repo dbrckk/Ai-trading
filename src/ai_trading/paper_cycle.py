@@ -15,7 +15,7 @@ from .mtf_shadow_challenger import (
 )
 from .mtf_shadow_config import validated_mtf_shadow_config
 from .persistence import PaperPersistence, PersistedRuntime, build_runtime_key
-from .river_v2_shadow import observe_river_v2_forward
+from .river_v2_shadow import observe_river_v2_forward, river_v2_observer_enabled
 from .runtime import PaperAutonomousRuntime
 from .shadow_challenger import evaluate_shadow_challenger
 
@@ -325,6 +325,7 @@ class PaperCycleRunner:
                 observer_kwargs["mtf_shadow_challenger"] = mtf_shadow_result
             if (
                 shadow_challenger_enabled
+                and river_v2_observer_enabled()
                 and interval == "5m"
                 and str(target) == str(eligible[-1])
             ):

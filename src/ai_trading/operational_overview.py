@@ -9,6 +9,7 @@ from .paper_readiness_evidence import bootstrap_positive_probability
 from .performance_metrics import empty_performance_payload, performance_payload
 from .persistence import PaperPersistence, PersistedRuntime
 from .readiness import ReadinessPolicy, evaluate_readiness
+from .river_v2_shadow import river_v2_observer_enabled
 from .runtime_status import HostedRuntimeStatus, runtime_status_snapshot
 from .shadow_promotion_gate import (
     ShadowPromotionPolicy,
@@ -132,9 +133,12 @@ def _shadow_quality_snapshot(comparison) -> dict[str, object]:
 def _river_v2_forward_snapshot(comparison=None) -> dict[str, object]:
     """Presentation of *observed* forward labels; never a promotion signal."""
     count = int(comparison.observations) if comparison is not None else 0
+    enabled = river_v2_observer_enabled()
     return {
         "available": count >= 5,
-        "status": "comparable" if count >= 5 else "collecting",
+        "status": (
+            "disabled" if not enabled else "comparable" if count >= 5 else "collecting"
+        ),
         "model_format": "joblib-river-ovr-v2",
         "model_version": 2,
         "observations": count,
@@ -366,7 +370,8 @@ def build_operational_overview(
 
     river_v2_quality = _river_v2_forward_snapshot()
     river_v2_loader = getattr(persistence, "load_river_v2_forward_quality", None)
-    if callable(river_v2_loader):
+    # Do not wake/query free-tier Neon for an observer intentionally disabled.
+    if river_v2_observer_enabled() and callable(river_v2_loader):
         try:
             river_v2_quality = _river_v2_forward_snapshot(river_v2_loader(runtime_key))
         except Exception:  # noqa: BLE001 - read-only research cannot break the dashboard
