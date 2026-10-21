@@ -1,7 +1,7 @@
 import pandas as pd
 
-from ai_trading.shadow_quality import compare_shadow_audit_payloads
 from ai_trading.river_v2_shadow import compare_river_v2_forward_audit_payloads
+from ai_trading.shadow_quality import compare_shadow_audit_payloads
 
 
 def payload(
