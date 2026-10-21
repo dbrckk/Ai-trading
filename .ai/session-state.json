@@ -2,9 +2,9 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "main",
+  "active_branch": "feat/river-v2-isolated-codec",
   "pull_request": null,
-  "focus": "PR #169 merged and Render deployment SHA positively verified. Paper engines, PostgreSQL readiness, and Cloudflare cadence are healthy; next priority is safe, separately versioned ternary River-v2 research and broader out-of-sample trading quality evidence.",
+  "focus": "River-v2 separately versioned research-only persistence: exact-type v1 production codec and isolated OVR-v2 research codec; CI review pending. Production River-v1 remains authoritative for paper trades.",
   "production_evidence": {
     "main_head": "5e0ea79388915b0b357917896ec8ac2e687e1b27",
     "render_shadow_challenger_enabled": true,
@@ -74,7 +74,8 @@
     "PR #166 merged external Cloudflare 15m heartbeat/5m signal-age separation; CI, CodeQL and hosted liveness probe passed.",
     "PR #167 merged deterministic Gold market-session rendering tests; subsequent main CI and CodeQL passed.",
     "PR #157 merged pinned real Kronos-mini research comparator and three-class River offline baseline; 40-window BTC smoke on 2026-10-20 had review_eligible=false and did not change production execution.",
-    "PR #169 merged 2026-10-20: published validated RENDER_GIT_COMMIT on /livez and optional exact deployment-probe SHA check; PR head CI, CodeQL and existing HTTP integration checks passed."
+    "PR #169 merged 2026-10-20: published validated RENDER_GIT_COMMIT on /livez and optional exact deployment-probe SHA check; PR head CI, CodeQL and existing HTTP integration checks passed.",
+    "River-v2 isolated research codec implementation on feat/river-v2-isolated-codec: exact-class v1 guard, separately tagged OVR-v2 trusted artifact and extended existing codec/online tests; awaiting CI."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -83,9 +84,9 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Render /livez was read-only verified as deployed_commit 5e0ea79388915b0b357917896ec8ac2e687e1b27, matching intended #169 release. Main CI/CodeQL, hosted probe and repository standards all passed after merge. Continue validating future releases against their own intended SHAs.",
-    "Live read-only APIs report three RUNNING markets with no errors, complete simulated portfolio PnL about -0.57481 from eight fills, and 20 consecutive Cloudflare successes. Gold paper signal DELAYED and DAX market closed correctly suppress actionable signal; BTC is NO_TRADE.",
-    "Design safe versioned River-v2 3-class offline/forward-shadow path, with explicit model-format version and state compatibility, without switching persisted production River-v1 or making live orders.",
-    "Expand Kronos vs ternary River vs momentum non-overlapping, independent held-out benchmarks and live shadow evidence across Gold, DAX and BTC before any promotion."
+    "Validate River-v2 isolated codec PR CI, CodeQL and repository checks; merge only when green.",
+    "Introduce read-only, independently persisted River-v2 forward-shadow evaluation across Gold/DAX/BTC without modifying production River-v1 state, keys, risk, or orders.",
+    "Gather statistically robust held-out and forward evidence; do not promote River-v2 or Kronos without explicit separate rollout gates.",
+    "Render /livez was read-only verified as deployed_commit 5e0ea79388915b0b357917896ec8ac2e687e1b27, matching intended #169 release. Main CI/CodeQL, hosted probe and repository standards all passed after merge. Continue validating future releases against their own intended SHAs."
   ]
 }
