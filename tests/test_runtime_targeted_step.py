@@ -90,8 +90,9 @@ def test_step_at_cannot_regress_to_older_execution_bar(tmp_path: Path) -> None:
     assert state.processed_bars == 1
 
 
+@pytest.mark.parametrize("entry_side", [-1, 1])
 def test_hard_risk_stop_liquidates_existing_paper_position_once(
-    tmp_path: Path, monkeypatch
+    tmp_path: Path, monkeypatch, entry_side: int
 ) -> None:
     """A rejected risk stop must not leave a previously opened position exposed."""
     journal = TradeJournal(tmp_path / "trades.jsonl")
@@ -105,7 +106,7 @@ def test_hard_risk_stop_liquidates_existing_paper_position_once(
         symbol="GC=F",
     )
     decisions = iter((
-        RiskDecision(True, 1, 10_000.0, "approved"),
+        RiskDecision(True, entry_side, 10_000.0, "approved"),
         RiskDecision(False, 0, 0.0, "max drawdown reached", liquidate_existing=True),
         RiskDecision(False, 0, 0.0, "max drawdown reached", liquidate_existing=True),
     ))
@@ -115,7 +116,7 @@ def test_hard_risk_stop_liquidates_existing_paper_position_once(
 
     opened = runtime.step_at(df, eligible[-4])
     assert opened.processed and opened.approved
-    assert runtime.state_store.load(100_000.0).units > 0
+    assert runtime.state_store.load(100_000.0).units * entry_side > 0
 
     stopped = runtime.step_at(df, eligible[-3])
     assert stopped.processed and not stopped.approved
@@ -126,7 +127,7 @@ def test_hard_risk_stop_liquidates_existing_paper_position_once(
     assert still_stopped.processed and not still_stopped.approved
     trades = journal.list()
     assert len(trades) == 2
-    assert trades[0].side == "BUY"
-    assert trades[1].side == "SELL"
+    assert trades[0].side == ("BUY" if entry_side > 0 else "SELL")
+    assert trades[1].side == ("SELL" if entry_side > 0 else "BUY")
     assert trades[1].pnl_known is True
     assert runtime.state_store.load(100_000.0).units == 0.0
