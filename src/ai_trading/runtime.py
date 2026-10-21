@@ -17,6 +17,7 @@ from .model_codec import deserialize_model, serialize_model
 from .mtf_shadow_challenger import MultiTimeframeShadowResult
 from .online import RiverDirectionModel
 from .persistence import CommitOutcome, PaperPersistence, RuntimeStepCommit
+from .river_v2_shadow import RiverV2ForwardObservation
 from .regime import detect_regime
 from .risk import PortfolioSnapshot, RiskEngine
 from .runtime_lock import RuntimeLock
@@ -204,6 +205,7 @@ class PaperAutonomousRuntime:
         *,
         shadow_challenger: ShadowChallengerResult | None = None,
         mtf_shadow_challenger: MultiTimeframeShadowResult | None = None,
+        river_v2_shadow: RiverV2ForwardObservation | None = None,
     ) -> RuntimeStepResult:
         if execution_idx not in prepared.eligible:
             raise ValueError("Requested index is not an eligible execution bar")
@@ -214,6 +216,7 @@ class PaperAutonomousRuntime:
                 execution_idx,
                 shadow_challenger=shadow_challenger,
                 mtf_shadow_challenger=mtf_shadow_challenger,
+                river_v2_shadow=river_v2_shadow,
             )
 
     def _step_prepared_locked(
@@ -345,6 +348,7 @@ class PaperAutonomousRuntime:
         audit_payload = {
             "signal_time": str(signal_idx),
             "execution_time": execution_time,
+            "execution_close": close_price,
             "prediction": asdict(prediction),
             "risk_decision": asdict(decision),
             "equity": broker.state.equity,
@@ -357,6 +361,8 @@ class PaperAutonomousRuntime:
             audit_payload["shadow_challenger"] = asdict(shadow_challenger)
         if mtf_shadow_challenger is not None:
             audit_payload["mtf_shadow_challenger"] = asdict(mtf_shadow_challenger)
+        if river_v2_shadow is not None:
+            audit_payload["river_v2_shadow"] = asdict(river_v2_shadow)
         outcome = self.persistence.commit_step(
             self.runtime_key,
             RuntimeStepCommit(
