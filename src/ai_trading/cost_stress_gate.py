@@ -13,6 +13,8 @@ class CostStressGatePolicy:
     # These total returns already include broker transaction costs and slippage.
     # Outperforming a falling benchmark while losing money is not profit.
     min_total_return: float = 0.0
+    # A high pass ratio must not hide a loss in the most expensive scenario.
+    require_worst_cost_positive: bool = True
     min_sharpe: float = 0.0
     max_drawdown: float = 0.30
 
@@ -66,6 +68,20 @@ def evaluate_cost_stress_gate(
     ]
     ratio = len(passing) / len(results)
     reasons: list[str] = []
+    if policy.require_worst_cost_positive:
+        worst_cost = max(
+            results,
+            key=lambda result: (
+                result.scenario.transaction_cost_bps
+                + result.scenario.slippage_bps
+            ),
+        )
+        if (
+            not isfinite(worst_cost.total_return)
+            or worst_cost.total_return <= policy.min_total_return
+            or worst_cost.trades <= 0
+        ):
+            reasons.append("worst-cost scenario lacks positive net return")
     if ratio < policy.min_pass_ratio:
         reasons.append("cost stress pass ratio below threshold")
         if not any(

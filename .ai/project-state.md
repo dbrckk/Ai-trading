@@ -2,6 +2,8 @@
 
 Status: active
 
+- **2026-10-21 cost-stress follow-up**: PR #183 was merged and current `main` CI/CodeQL are green after an initial PR test failure from stale exact-payload assertions. This branch strengthens the backtest cost-stress gate: highest combined transaction-cost/slippage scenario must have positive net return, even if most cheap scenarios pass. This is a conservative research gate, not a guarantee of profit or a live broker change.
+
 ## Working
 
 - **2026-10-21 profit-preservation milestone:** PR #183 merged (30 known-PnL fill / 95% coverage *diagnostic*); PR #184 merged (existing long/short paper exposure forcibly flattened at next eligible bar after daily-loss/drawdown/insolvency hard stop, with fees and matching backtest, CI/CodeQL green); PR #185 merged (research cost-stress gate requires positive modeled **absolute net return**, finite metrics and at least one fill); PR #186 merged (Gold/DAX/BTC portfolio UI now distinguishes allocation-adjusted realized net PnL, mark-to-market PnL, and preliminary sample evidence, CI/CodeQL green).

@@ -309,6 +309,16 @@ not** invoke the scheduler, place trades, wake workers, or guarantee
 fresh market data. For manual diagnosis, use
 `PYTHONPATH=src python -m ai_trading.deployment_probe --base-url https://ai-trading-dashboard-qyr2.onrender.com --require-running-markets`.
 
+## Profit resilience under execution costs
+
+The cost-stress gate now requires the **highest transaction-cost-plus-slippage
+scenario** to retain positive net return, in addition to the existing
+minimum pass ratio, Sharpe and drawdown checks. This prevents a favorable
+majority of cheap scenarios from concealing losses when execution becomes
+expensive. The strict requirement is on by default and can be explicitly
+disabled in `CostStressGatePolicy` for research comparisons; it does not
+enable live execution or prove future profitability.
+
 ## Paper trade performance evidence
 
 The read-only performance API exposes `evidence_sufficient` separately from
