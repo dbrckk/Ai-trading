@@ -319,6 +319,16 @@ passing comparisons. This is additional research validation alongside the
 existing Sharpe, Sortino, Calmar, drawdown, fold and trade-count thresholds,
 not an automatic model promotion or permission to trade live.
 
+## Parameter sensitivity and net profitability
+
+Parameter sensitivity tests now count a scenario as passing only if it
+contains trades, all relevant metrics are finite, drawdown is nonnegative,
+and its **net total return is positive** alongside the existing excess
+return, Sharpe and drawdown thresholds. This prevents a strategy that merely
+loses less than a declining benchmark from passing sensitivity checks.
+It remains research evidence, not a promise of future profits or permission
+for live trading.
+
 ## Profit resilience under execution costs
 
 The cost-stress gate now requires the **highest transaction-cost-plus-slippage
