@@ -927,10 +927,18 @@ def test_paper_cycle_blocks_repeated_market_data_gaps_before_state_mutation(
     assert not backend.audit_log.path.exists()
 
 
-def test_paper_cycle_accepts_single_tolerated_market_gap(tmp_path: Path) -> None:
+def test_paper_cycle_accepts_single_tolerated_market_gap(
+    tmp_path: Path, monkeypatch,
+) -> None:
     backend = FilePaperPersistence(tmp_path)
-    df = sample_market(120)
-    df = df.drop(index=df.index[50])
+    df = sample_market(220)
+    df = df.drop(index=df.index[150])
+    # The provider can include the current, unfinished five-minute candle.
+    # Freeze the clock to prove the authoritative paper step discards it.
+    now = pd.Timestamp("2026-10-21T12:02:00+00:00")
+    last = df.index[-1].tz_localize("UTC")
+    df.index = df.index.tz_localize("UTC") + (now.floor("5min") - last)
+    monkeypatch.setattr(paper_cycle_module, "_utc_now", lambda: now)
     runner = build_runner(tmp_path, backend, df)
 
     result = runner.run_once(
@@ -939,8 +947,32 @@ def test_paper_cycle_accepts_single_tolerated_market_gap(tmp_path: Path) -> None
         interval="5m",
         max_catchup_bars=12,
     )
+    audit = json.loads(backend.audit_log.path.read_text(encoding="utf-8").splitlines()[-1])
 
     assert result.processed == 1
+    assert result.last_processed == str(df.index[-2])
+    assert audit["payload"]["execution_time"] == str(df.index[-2])
+    assert audit["payload"]["execution_close"] == float(df["Close"].iloc[-2])
+    assert backend.load_runtime(build_runtime_key("GC=F", "5m"), 100_000).model.format == (
+        "joblib-river-v1"
+    )
+
+    # A forward River-v2 signal can now use the latest *completed* bar,
+    # instead of silently skipping a still-forming provider candle.
+    from ai_trading.river_v2_shadow import observe_river_v2_forward
+
+    complete = paper_cycle_module._completed_market_bars(df, interval="5m", now=now)
+    sample = observe_river_v2_forward(
+        complete,
+        horizon_bars=1,
+        return_threshold=0.001,
+        min_confidence=0.56,
+        now=now,
+        min_train_rows=100,
+    )
+    assert sample is not None
+    assert sample.signal_time == str(df.index[-2])
+    assert pd.Timestamp(sample.training_end) <= df.index[-3]
 
 
 

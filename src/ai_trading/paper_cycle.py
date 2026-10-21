@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from datetime import UTC, datetime
 
 import pandas as pd
 
@@ -20,6 +21,43 @@ from .shadow_challenger import evaluate_shadow_challenger
 
 DEFAULT_MAX_CATCHUP_BARS = 72
 _MAX_PROVIDER_GAP_RESUME = pd.Timedelta(days=3)
+_FIVE_MINUTES = pd.Timedelta(minutes=5)
+_CANDLE_FINALITY_BUFFER = pd.Timedelta(seconds=2)
+
+
+def _utc_now() -> pd.Timestamp:
+    return pd.Timestamp(datetime.now(UTC))
+
+
+def _completed_market_bars(
+    market: pd.DataFrame,
+    *,
+    interval: str,
+    now: pd.Timestamp | None = None,
+) -> pd.DataFrame:
+    """Exclude provider candles that have not finished before paper execution.
+
+    Yahoo's intraday response can contain an OHLC row whose timestamp is the
+    *start* of the currently forming candle. Executing its partial close would
+    permanently persist a decision against a price that later changes.
+    Date-only and historical non-5m pipelines keep their prior behaviour.
+    Naive timestamps are interpreted as UTC, as in the existing paper runner.
+    """
+    if interval != "5m":
+        return market
+    if not isinstance(market.index, pd.DatetimeIndex) or market.index.hasnans:
+        raise ValueError("5m paper market requires valid datetime timestamps")
+    current = _utc_now() if now is None else pd.Timestamp(now)
+    if current.tzinfo is None:
+        raise ValueError("observation time must be timezone-aware")
+    current = current.tz_convert("UTC")
+    timestamps = (
+        market.index.tz_localize("UTC")
+        if market.index.tz is None
+        else market.index.tz_convert("UTC")
+    )
+    completed = timestamps + _FIVE_MINUTES + _CANDLE_FINALITY_BUFFER <= current
+    return market.iloc[completed]
 
 
 def _utc_timestamp(value: object) -> pd.Timestamp:
@@ -172,7 +210,10 @@ class PaperCycleRunner:
             persistence=self.persistence,
             runtime_key=runtime_key,
         )
-        market = self.data_loader(symbol, period, interval)
+        market = _completed_market_bars(
+            self.data_loader(symbol, period, interval),
+            interval=interval,
+        )
         quality = evaluate_market_data_quality(market)
         if not quality.valid:
             reasons = ",".join(quality.reasons) or "score below threshold"

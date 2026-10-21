@@ -23,6 +23,8 @@ Status: active
 
 - PR #173 merged on 2026-10-21: opt-in 5m River-v2 forward observer for Gold/DAX/BTC: fresh completed-bar gating, strictly matured-label bounded OVR training, atomic audit predictions, and next-cycle delayed v1/v2 directional scoring exposed read-only. **PR-head and post-merge main CI/CodeQL passed. Render /livez exact-deployment SHA verified on 2026-10-21.** River-v1 continues paper execution and v2 is not an approved trading signal.
 
+- 2026-10-21 live Render probe at SHA `9f8d88ca`: `/livez` and `/readyz` healthy, three paper markets `RUNNING`, no market errors, 20 successful recent Cloudflare deliveries; however River-v2 `pending=0`/`observations=0` for Gold/DAX/BTC. Suspected reason: Yahoo's leading-edge 5m OHLC can be unfinished, making the River-v2 forward gate reject it. A targeted branch `fix/skip-unclosed-five-minute-bars` discards such mutable provider rows **before** paper execution and forward prediction. CI and deployed SHA verification still required; no profitability evidence.
+
 ## Broken / blockers
 - Paper execution is operational on three markets, but the realized trade sample is statistically insufficient for quality or profitability claims.
 - Free Render/Neon resources and occasional provider failures remain operational constraints; keep the hourly GitHub fallback.

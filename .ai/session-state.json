@@ -2,11 +2,11 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "main",
+  "active_branch": "fix/skip-unclosed-five-minute-bars",
   "pull_request": null,
-  "focus": "PR #173 merged and positively verified on Render commit 6f3fe1df on 2026-10-21. /livez web healthy, /readyz ready, River-v2 forward fields visible on Gold/DAX/BTC, no market errors, 0 matured observations at first post-release probe. River-v1 remains authoritative paper-only. Next step: collect real forward evidence.",
+  "focus": "After #173 / #174 verified deployed, direct read-only hosted probe found Gold/DAX/BTC RUNNING and River-v2 0 pending / 0 mature evidence. Bug fix in progress: trim unclosed 5m Yahoo provider candle before paper runtime and v2 forward observer. Keep River-v1 only paper decisions and no live orders.",
   "production_evidence": {
-    "main_head": "6f3fe1df3e49137e900d5a67a9a57d42f37d286c",
+    "main_head": "9f8d88ca7609d92e306c8222c95e7b2a46d73cf2",
     "render_shadow_challenger_enabled": true,
     "render_markets": "GC=F,^GDAXI,BTC-USD",
     "gold": {
@@ -52,31 +52,29 @@
     },
     "latest_public_probe": {
       "checked_on": "2026-10-21",
-      "deployed_commit": "6f3fe1df3e49137e900d5a67a9a57d42f37d286c",
-      "source_release_to_verify": "6f3fe1df3e49137e900d5a67a9a57d42f37d286c",
-      "release_match": true,
+      "deployed_commit": "9f8d88ca7609d92e306c8222c95e7b2a46d73cf2",
       "web_healthy": true,
       "storage_ready": true,
       "market_statuses_at_probe": {
-        "GC=F": "STARTING",
-        "^GDAXI": "STARTING",
-        "BTC-USD": "STARTING"
+        "GC=F": "RUNNING",
+        "^GDAXI": "RUNNING",
+        "BTC-USD": "RUNNING"
       },
-      "observed_market_errors": 0,
-      "model_format_by_market": {
-        "GC=F": "joblib-river-v1",
-        "^GDAXI": "joblib-river-v1",
-        "BTC-USD": "joblib-river-v1"
-      },
-      "river_v2_forward_api_visible": true,
-      "river_v2_forward_matured_observations_by_market": {
+      "market_errors": 0,
+      "river_v2_observations": {
         "GC=F": 0,
         "^GDAXI": 0,
         "BTC-USD": 0
       },
-      "river_v2_actionable": false,
-      "portfolio_realized_pnl": -0.5748106341489922,
-      "statement": "Direct public read-only /livez /readyz /api/markets probe verified exact #173 source SHA on Render. Three paper markets transiently STARTING during scheduler cycle with zero reported market errors. V2 observer reporting available but no matured evidence yet. No trading-edge claim."
+      "river_v2_pending": {
+        "GC=F": 0,
+        "^GDAXI": 0,
+        "BTC-USD": 0
+      },
+      "scheduler_recent_successes": 20,
+      "production_river_format": "joblib-river-v1",
+      "trade_count": 8,
+      "note": "Public verified runtime health but no forward v2 observations yet. Probe before unclosed-candle fix."
     }
   },
   "completed_changes": [
@@ -104,7 +102,8 @@
     "PR #157 merged pinned real Kronos-mini research comparator and three-class River offline baseline; 40-window BTC smoke on 2026-10-20 had review_eligible=false and did not change production execution.",
     "PR #169 merged 2026-10-20: published validated RENDER_GIT_COMMIT on /livez and optional exact deployment-probe SHA check; PR head CI, CodeQL and existing HTTP integration checks passed.",
     "PR #171 merged on 2026-10-21: isolated OVR-v2 research artifact and exact-type River-v1 production guard; existing codec/online checks expanded; PR CI, CodeQL passed. No paper runtime migration.",
-    "PR #173 merged 2026-10-21: River-v2 forward observer on fresh completed 5m Gold/DAX/BTC bars, atomic audit predictions and delayed matched v1/v2 directional quality in read-only API; CI/CodeQL succeeded. No model promotion or trade execution changes."
+    "PR #173 merged 2026-10-21: River-v2 forward observer on fresh completed 5m Gold/DAX/BTC bars, atomic audit predictions and delayed matched v1/v2 directional quality in read-only API; CI/CodeQL succeeded. No model promotion or trade execution changes.",
+    "21 Oct: observed deployed #174 live on Render 9f8d88ca, markets healthy but River-v2 0 pending/mature; diagnosed Yahoo mutable leading 5m candle and staged strict completed-candle filtering in fix/skip-unclosed-five-minute-bars."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -113,8 +112,8 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Allow and verify subsequent Cloudflare paper-cycle iterations on deployed 6f3fe1df, confirming GC=F/^GDAXI/BTC-USD return from transient STARTING to RUNNING with no errors.",
-    "Collect only time-gated, durably audited River-v2 forward samples and matured one-bar outcomes from /api/markets; validate data coverage, latency and provider gaps without promoting River-v2.",
-    "Gather independent held-out, post-cost and forward comparisons for River-v2 and Kronos before considering separate paper-only rollout; live broker remains disabled."
+    "Validate 5m completed-candle paper input fix in PR CI (Ruff, full Pytest with Postgres, Cloudflare tests, CodeQL); merge only when green.",
+    "Verify resulting Render deployed SHA and that recent 5m closed bars produce >0 actual River-v2 pending then matured audit observations across Gold/DAX/BTC.",
+    "Do not promote River-v2 or Kronos; gather net-of-cost independent held-out and forward evidence; live orders remain disabled."
   ]
 }
