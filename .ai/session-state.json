@@ -2,11 +2,11 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "feat/river-v2-forward-audit-shadow",
+  "active_branch": "main",
   "pull_request": null,
-  "focus": "River-v2 optional forward shadow on 5m Gold/DAX/BTC staged on feat/river-v2-forward-audit-shadow: latest closed/fresh candle only, bounded matured-label OVR training, atomic audit prediction, delayed v1/v2 same-signal directional comparison in read-only API. Await PR CI. v1 still executes paper orders; real orders disabled.",
+  "focus": "PR #173 merged and positively verified on Render commit 6f3fe1df on 2026-10-21. /livez web healthy, /readyz ready, River-v2 forward fields visible on Gold/DAX/BTC, no market errors, 0 matured observations at first post-release probe. River-v1 remains authoritative paper-only. Next step: collect real forward evidence.",
   "production_evidence": {
-    "main_head": "50459b6abb01b6197c41d36bcb27815ce67d43e9",
+    "main_head": "6f3fe1df3e49137e900d5a67a9a57d42f37d286c",
     "render_shadow_challenger_enabled": true,
     "render_markets": "GC=F,^GDAXI,BTC-USD",
     "gold": {
@@ -49,6 +49,34 @@
         "^GDAXI": "UNAVAILABLE",
         "BTC-USD": "NO_TRADE"
       }
+    },
+    "latest_public_probe": {
+      "checked_on": "2026-10-21",
+      "deployed_commit": "6f3fe1df3e49137e900d5a67a9a57d42f37d286c",
+      "source_release_to_verify": "6f3fe1df3e49137e900d5a67a9a57d42f37d286c",
+      "release_match": true,
+      "web_healthy": true,
+      "storage_ready": true,
+      "market_statuses_at_probe": {
+        "GC=F": "STARTING",
+        "^GDAXI": "STARTING",
+        "BTC-USD": "STARTING"
+      },
+      "observed_market_errors": 0,
+      "model_format_by_market": {
+        "GC=F": "joblib-river-v1",
+        "^GDAXI": "joblib-river-v1",
+        "BTC-USD": "joblib-river-v1"
+      },
+      "river_v2_forward_api_visible": true,
+      "river_v2_forward_matured_observations_by_market": {
+        "GC=F": 0,
+        "^GDAXI": 0,
+        "BTC-USD": 0
+      },
+      "river_v2_actionable": false,
+      "portfolio_realized_pnl": -0.5748106341489922,
+      "statement": "Direct public read-only /livez /readyz /api/markets probe verified exact #173 source SHA on Render. Three paper markets transiently STARTING during scheduler cycle with zero reported market errors. V2 observer reporting available but no matured evidence yet. No trading-edge claim."
     }
   },
   "completed_changes": [
@@ -76,7 +104,7 @@
     "PR #157 merged pinned real Kronos-mini research comparator and three-class River offline baseline; 40-window BTC smoke on 2026-10-20 had review_eligible=false and did not change production execution.",
     "PR #169 merged 2026-10-20: published validated RENDER_GIT_COMMIT on /livez and optional exact deployment-probe SHA check; PR head CI, CodeQL and existing HTTP integration checks passed.",
     "PR #171 merged on 2026-10-21: isolated OVR-v2 research artifact and exact-type River-v1 production guard; existing codec/online checks expanded; PR CI, CodeQL passed. No paper runtime migration.",
-    "River-v2 forward shadow research branch introduces time-gated independent observations and delayed matched audit metrics with no broker/risk impact; CI not yet verified."
+    "PR #173 merged 2026-10-21: River-v2 forward observer on fresh completed 5m Gold/DAX/BTC bars, atomic audit predictions and delayed matched v1/v2 directional quality in read-only API; CI/CodeQL succeeded. No model promotion or trade execution changes."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -85,8 +113,8 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Run PR CI/CodeQL and repair any failures; merge only when checks pass.",
-    "After merge, verify Render deployed SHA and observe genuine non-stale River-v2 audit evidence in /api/markets; do not mistake successful CI for production deployment.",
-    "Accumulate independent matured Gold/DAX/BTC forward comparisons and cost-aware trading evidence; River-v2 is not review eligible or promoted."
+    "Allow and verify subsequent Cloudflare paper-cycle iterations on deployed 6f3fe1df, confirming GC=F/^GDAXI/BTC-USD return from transient STARTING to RUNNING with no errors.",
+    "Collect only time-gated, durably audited River-v2 forward samples and matured one-bar outcomes from /api/markets; validate data coverage, latency and provider gaps without promoting River-v2.",
+    "Gather independent held-out, post-cost and forward comparisons for River-v2 and Kronos before considering separate paper-only rollout; live broker remains disabled."
   ]
 }
