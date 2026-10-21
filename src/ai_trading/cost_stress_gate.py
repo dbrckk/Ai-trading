@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import isfinite
 
 from .cost_stress import CostStressResult
 
@@ -9,6 +10,9 @@ from .cost_stress import CostStressResult
 class CostStressGatePolicy:
     min_pass_ratio: float = 0.67
     min_excess_return: float = -0.05
+    # These total returns already include broker transaction costs and slippage.
+    # Outperforming a falling benchmark while losing money is not profit.
+    min_total_return: float = 0.0
     min_sharpe: float = 0.0
     max_drawdown: float = 0.30
 
@@ -45,14 +49,31 @@ def evaluate_cost_stress_gate(
     passing = [
         result
         for result in results
-        if result.excess_return >= policy.min_excess_return
+        if all(
+            isfinite(value)
+            for value in (
+                result.total_return,
+                result.excess_return,
+                result.sharpe,
+                result.max_drawdown,
+            )
+        )
+        and result.trades > 0
+        and result.total_return > policy.min_total_return
+        and result.excess_return >= policy.min_excess_return
         and result.sharpe >= policy.min_sharpe
-        and result.max_drawdown <= policy.max_drawdown
+        and 0.0 <= result.max_drawdown <= policy.max_drawdown
     ]
     ratio = len(passing) / len(results)
     reasons: list[str] = []
     if ratio < policy.min_pass_ratio:
         reasons.append("cost stress pass ratio below threshold")
+        if not any(
+            isfinite(result.total_return)
+            and result.total_return > policy.min_total_return
+            for result in results
+        ):
+            reasons.append("no cost-stress scenario has positive net return")
 
     return CostStressGateResult(
         passed=not reasons,
