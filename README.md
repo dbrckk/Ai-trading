@@ -322,6 +322,16 @@ paper fills; further independent out-of-sample, regime, uncertainty and
 net-of-cost checks remain mandatory. No automated model promotion, paper
 order decision or live broker permission depends on this flag.
 
+### Net-of-cost research qualification
+
+Walk-forward cost stress uses the paper broker's transaction costs and
+slippage for each scenario. The research-only `CostStressGate` now rejects
+scenarios with **non-positive absolute net return**, invalid/non-finite
+performance metrics or no executions, even when a strategy loses less than
+a falling buy-and-hold benchmark. Its existing drawdown, Sharpe and excess
+return limits also remain enforced. This gate is not connected to live or
+paper order approval; a positive backtest is not proof of future profits.
+
 ## Walk-forward methodology
 
 The V1 evaluator uses sequential out-of-sample folds.

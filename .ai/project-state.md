@@ -4,6 +4,11 @@ Status: active
 
 ## Working
 
+- **2026-10-21:** PR #183 merged (`b966ed8`): API distinguishes populated paper performance from 30 known-PnL fill observations and 95% fill coverage. This is a **minimal data coverage check, not proof of a profitable strategy**.
+- **2026-10-21:** PR #184 merged (`3c8f77e`): existing simulated long/short positions are exited at the next eligible bar after a hard drawdown, daily loss or depleted-equity stop; net fill costs are accounted for in runtime and walk-forward backtesting. Green PR CI/CodeQL. Future gaps/slippage mean a configured loss limit is not a guarantee of a capped realized loss.
+- **Follow-up research:** `fix/research-cost-stress-positive-net-return` rejects non-positive absolute net returns and invalid/no-execution scenarios in the research cost-stress gate, in addition to relative benchmark/drawdown/Sharpe checks; no change to production trading decisions. Exact live Render deployed SHA still needs independent checking.
+
+
 - **2026-10-21**: PR #181 strict hosted probe merged; GitHub run 39650367492 reported `web_healthy`, `storage_ready` and `three_markets_running`. Paper Cycle run 39659602972 completed `skipped_recent_cloudflare`, not an additional paper execution. Current branch `feat/paper-performance-evidence-gate` adds a **read-only** paper PnL sample-coverage diagnostic (30 known PnL events, >=95% coverage). Neither sample size nor positive PnL alone establishes profitability. Exact Render deployment SHA is not verified in this step.
 
 - Central AI repo-map generation is configured through dbrckk/repo-standards.

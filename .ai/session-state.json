@@ -2,9 +2,9 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "feat/paper-performance-evidence-gate",
+  "active_branch": "fix/research-cost-stress-positive-net-return",
   "pull_request": null,
-  "focus": "PR #181 strict hosted probe merged; scheduled GitHub probe run 39650367492 confirms livez/readyz and three_markets_running, but exact Render SHA not checked. Paper Cycle run 39659602972 skipped_recent_cloudflare, not new execution. New branch adds read-only minimum sample/coverage gate to paper performance metrics (30 known PnL events and >=95% coverage), not a profitability or trading gate.",
+  "focus": "PR #183 merged (b966ed8): PnL sample coverage needs >=30 known fills and >=95% coverage, diagnostic not proof. PR #184 merged (3c8f77e): hard paper risk stops now liquidate open long/short at next simulated execution bar including costs, backtest mirrors exits; CI/CodeQL green. Current branch strengthens research cost-stress gate: positive absolute net-of-cost return, finite quality and executed trades required, never relative-only gains in falling benchmark. No live execution.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -115,7 +115,9 @@
     "PR #178 merged 2026-10-21: 250 ensemble/500 MTF samples PLUS 100 realized directional labels and 50 confident challenger directional predictions required for review, prior quality gates preserved, read-only API and dashboard counts, existing tests expanded; PR-head CI and CodeQL passed. No model promotion or paper execution change.",
     "PR #180 merged 2026-10-21 (b74881b): read-only River-v2 forward comparison reports matched directional labels and confidence-gated v1/v2 directional predictions, plus sample-size diagnostic. CI and CodeQL green; no decision changes.",
     "PR #181 merged 2026-10-21 (a02c2a6): GitHub Hosted Dashboard Probe now requires 3 RUNNING Gold/DAX/BTC engines with zero consecutive errors, not merely complete portfolio/storage; test scenarios for STARTING, STALE and errors passed CI/CodeQL. Strict production GH probe 39650367492 succeeded at 18:10:56Z.",
-    "PR #181 merged 2026-10-21: scheduled hosted dashboard probe now rejects stuck STARTING/STALE/error paper engines; strict live probe success 39650367492; CI and CodeQL green."
+    "PR #181 merged 2026-10-21: scheduled hosted dashboard probe now rejects stuck STARTING/STALE/error paper engines; strict live probe success 39650367492; CI and CodeQL green.",
+    "PR #183 merged 2026-10-21 b966ed8: read-only 30 known paper fill/95% PnL coverage diagnostic; PR CI/CodeQL green. This counts paper fill events, not independent completed trades.",
+    "PR #184 merged 2026-10-21 3c8f77e: hard drawdown/daily-loss/equity-exhaustion risk stops now flatten existing simulated long/short exposures at next eligible bar, with costs and corresponding backtest behavior. CI/CodeQL green."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -124,8 +126,8 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Validate CI and CodeQL for paper performance sample-coverage diagnostic; merge only if green.",
-    "Continue exact deployed Render SHA and Cloudflare/Gold/DAX/BTC health checks; do not equate fallback skipped_recent_cloudflare with a new cycle.",
-    "Keep River-v2 research and live broker disabled; require real out-of-sample net-of-cost directional and paper PnL evidence before any trading claim."
+    "Require green CI and CodeQL before merging the research-only positive-net-return cost-stress gate; do not equate relative benchmark outperformance with profit.",
+    "Verify latest actual Render commit via /livez (GitHub strict hosted probe previously showed three RUNNING); monitor Gold/DAX/BTC and scheduler, preserving free-tier resource envelope.",
+    "Collect out-of-sample trading evidence after fees/slippage and prevent live broker activation without separate explicit safety and profitability verification."
   ]
 }
