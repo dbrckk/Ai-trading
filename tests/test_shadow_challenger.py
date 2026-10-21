@@ -104,6 +104,15 @@ def test_shadow_challenger_purges_unobservable_training_labels(monkeypatch) -> N
     assert forward.signal_time == str(live_market.index[-1])
     assert forward.signal_close == live_market["Close"].iloc[-1]
     assert forward.model_version == 2
+    # Research must fail closed when CPU budget expires, without affecting v1.
+    assert observe_river_v2_forward(
+        live_market,
+        horizon_bars=3,
+        return_threshold=0.001,
+        min_confidence=0.56,
+        now=last_bar_close + pd.Timedelta(minutes=1),
+        max_compute_seconds=1e-9,
+    ) is None
     # Reject a future/unfinished candle instead of pretending to have
     # published a genuinely live prediction retrospectively.
     assert observe_river_v2_forward(
