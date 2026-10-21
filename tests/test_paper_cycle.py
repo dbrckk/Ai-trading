@@ -15,10 +15,10 @@ from ai_trading.model import Prediction
 from ai_trading.mtf_shadow_challenger import MultiTimeframeShadowResult
 from ai_trading.paper_cycle import PaperCycleRunner
 from ai_trading.persistence import PersistedRuntime, build_runtime_key
+from ai_trading.river_v2_shadow import RiverV2ForwardObservation
 from ai_trading.runtime import PaperAutonomousRuntime, RuntimeStepResult
 from ai_trading.runtime_state import RuntimeState
 from ai_trading.shadow_challenger import ShadowChallengerResult
-from ai_trading.river_v2_shadow import RiverV2ForwardObservation
 
 
 def sample_market(n: int = 110) -> pd.DataFrame:
