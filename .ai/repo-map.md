@@ -3023,10 +3023,6 @@ reason = explanation.get("error") if isinstance(explanation, dict) else None
 ⋮----
 payload = json.loads(body)
 ⋮----
-"""Check web, storage and markets; optionally require healthy live engines."""
-⋮----
-checks: list[ProbeCheck] = []
-⋮----
 valid = payload.get("web_healthy") is True
 detail = "web_healthy" if valid else "liveness_unhealthy"
 ⋮----
@@ -3057,6 +3053,13 @@ valid = running and engines
 detail = "three_markets_running" if valid else "market_engines_not_running"
 ⋮----
 detail = "three_market_cards_available"
+⋮----
+"""Check web, storage and markets; optionally require healthy live engines."""
+⋮----
+checks = [
+# The free-tier host can briefly refuse the first connection while other
+# endpoints recover. Retry only transport failures, once, after the first
+# pass. HTTP errors, unhealthy payloads and SHA mismatches still fail.
 ⋮----
 def main() -> int
 ⋮----
@@ -10015,9 +10018,13 @@ def test_render_blueprint_declares_external_runtime_and_secret_inputs() -> None
 ⋮----
 text = Path("render.yaml").read_text(encoding="utf-8")
 ⋮----
+calls = []
+⋮----
 def fail_request(request, timeout)
 ⋮----
 results = probe_dashboard("https://example.invalid")
+⋮----
+# Exactly one short retry per unreachable endpoint, no secret disclosure.
 ⋮----
 def test_probe_rejects_market_cards_with_broken_portfolio(monkeypatch) -> None
 ⋮----
@@ -10032,6 +10039,8 @@ def __enter__(self)
 def __exit__(self, *args)
 ⋮----
 def read(self, count)
+⋮----
+livez_calls = 0
 ⋮----
 def fake_urlopen(request, timeout)
 ⋮----
@@ -14348,6 +14357,16 @@ publicly hosted service is unavailable or incomplete. This check **does
 not** invoke the scheduler, place trades, wake workers, or guarantee
 fresh market data. For manual diagnosis, use
 `PYTHONPATH=src python -m ai_trading.deployment_probe --base-url https://ai-trading-dashboard-qyr2.onrender.com --require-running-markets`.
+
+## Hosted probe transient connection recovery
+
+The read-only hosted dashboard check makes **one bounded (10-second) retry**
+for an endpoint only if its first request had a transport connection failure,
+and only after checking the other endpoints. This handles the observed
+Render `/livez` transient failure followed by healthy `/readyz` and
+Gold/DAX/BTC readings. Persistent connection failures, HTTP errors,
+unhealthy services, non-running market engines and deployment SHA mismatches
+remain failures; the probe never places or schedules trades.
 
 ## Positive out-of-sample profitability is required
 

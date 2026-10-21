@@ -5,62 +5,499 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "SensitivityGatePolicy": {
+    "ProbeCheck": {
       "source": {
-        "file": "src/ai_trading/sensitivity_gate.py",
-        "start": 10,
-        "end": 16
+        "file": "src/ai_trading/deployment_probe.py",
+        "start": 14,
+        "end": 17
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "SensitivityGateResult": {
+    "_fetch_json": {
       "source": {
-        "file": "src/ai_trading/sensitivity_gate.py",
+        "file": "src/ai_trading/deployment_probe.py",
         "start": 20,
-        "end": 28
+        "end": 54
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "evaluate_sensitivity_gate": {
+    "_probe_endpoint": {
       "source": {
-        "file": "src/ai_trading/sensitivity_gate.py",
-        "start": 31,
-        "end": 91
+        "file": "src/ai_trading/deployment_probe.py",
+        "start": 57,
+        "end": 128
       },
       "symbol_dependencies": [
         {
-          "symbol": "SensitivityGatePolicy",
+          "symbol": "ProbeCheck",
           "definitions": [
             {
-              "file": "src/ai_trading/sensitivity_gate.py",
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 14,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_fetch_json",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 20,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "probe_dashboard": {
+      "source": {
+        "file": "src/ai_trading/deployment_probe.py",
+        "start": 131,
+        "end": 166
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "ProbeCheck",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 14,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_probe_endpoint",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 57,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "main": {
+      "source": {
+        "file": "src/ai_trading/deployment_probe.py",
+        "start": 168,
+        "end": 192
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 131,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "_free_port": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 19,
+        "end": 22
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "_get": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 25,
+        "end": 34
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "_start_dashboard": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 37,
+        "end": 62
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "HostedPaperSettings",
+          "definitions": [
+            {
+              "file": "src/ai_trading/hosted_runtime.py",
+              "line": 19,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_free_port",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 19,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_get",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "serve_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/dashboard.py",
+              "line": 1229,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "test_dashboard_marks_expired_worker_heartbeat_stale": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 65,
+        "end": 88
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Heartbeat",
+          "definitions": [
+            {
+              "file": "src/ai_trading/watchdog.py",
               "line": 10,
               "kind": "class",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "class_like"
         },
         {
-          "symbol": "SensitivityGateResult",
+          "symbol": "HostedRuntimeStatus",
           "definitions": [
             {
-              "file": "src/ai_trading/sensitivity_gate.py",
-              "line": 20,
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 10,
               "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "HostedRuntimeStatusStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 91,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RuntimeStateStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_state.py",
+              "line": 21,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "TradeJournal",
+          "definitions": [
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 26,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "render_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/dashboard.py",
+              "line": 193,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_state.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 100,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "test_api_status_reports_stale_worker_without_hiding_web_health": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 91,
+        "end": 110
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "HostedRuntimeStatus",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "HostedRuntimeStatusStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 91,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_get",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 25,
+              "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
         },
         {
-          "symbol": "SensitivityResult",
+          "symbol": "_start_dashboard",
           "definitions": [
             {
-              "file": "src/ai_trading/parameter_sensitivity.py",
-              "line": 19,
+              "file": "tests/test_dashboard_health.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_state.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 100,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "test_healthz_keeps_web_liveness_separate_from_engine_health": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 113,
+        "end": 134
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "HostedRuntimeStatus",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 10,
               "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "HostedRuntimeStatusStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 91,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_get",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_start_dashboard",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_state.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 100,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "test_external_probe_checks_live_ready_and_all_markets": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 137,
+        "end": 161
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_get",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_start_dashboard",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 131,
+              "kind": "function",
               "language": "python"
             }
           ],
@@ -69,18 +506,18 @@
       ],
       "dependency_count": 3
     },
-    "result": {
+    "test_external_scheduler_readiness_detects_missing_configuration": {
       "source": {
-        "file": "tests/test_sensitivity_gate.py",
-        "start": 7,
-        "end": 21
+        "file": "tests/test_dashboard_health.py",
+        "start": 164,
+        "end": 192
       },
       "symbol_dependencies": [
         {
-          "symbol": "SensitivityResult",
+          "symbol": "HostedPaperSettings",
           "definitions": [
             {
-              "file": "src/ai_trading/parameter_sensitivity.py",
+              "file": "src/ai_trading/hosted_runtime.py",
               "line": 19,
               "kind": "class",
               "language": "python"
@@ -89,33 +526,166 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "SensitivityScenario",
+          "symbol": "_get",
           "definitions": [
             {
-              "file": "src/ai_trading/parameter_sensitivity.py",
-              "line": 11,
+              "file": "tests/test_dashboard_health.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_start_dashboard",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 131,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "test_render_blueprint_declares_external_runtime_and_secret_inputs": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 195,
+        "end": 204
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "test_external_probe_reports_connection_errors_without_exposing_details": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 207,
+        "end": 228
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "append",
+          "definitions": [
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 32,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "fail_request",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 216,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 131,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "fail_request": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 216,
+        "end": 336
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "FakeResponse",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 236,
+              "kind": "class",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 292,
               "kind": "class",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_sensitivity_gate_accepts_stable_neighborhood": {
-      "source": {
-        "file": "tests/test_sensitivity_gate.py",
-        "start": 24,
-        "end": 31
-      },
-      "symbol_dependencies": [
+          "relation": "same_file"
+        },
         {
-          "symbol": "evaluate_sensitivity_gate",
+          "symbol": "__enter__",
           "definitions": [
             {
-              "file": "src/ai_trading/sensitivity_gate.py",
-              "line": 31,
+              "file": "tests/test_dashboard_health.py",
+              "line": 242,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 298,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__exit__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 245,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 301,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "append",
+          "definitions": [
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 32,
               "kind": "function",
               "language": "python"
             }
@@ -123,33 +693,29 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "result",
+          "symbol": "fake_urlopen",
           "definitions": [
             {
-              "file": "tests/test_sensitivity_gate.py",
-              "line": 7,
+              "file": "tests/test_dashboard_health.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 307,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_sensitivity_gate_rejects_narrow_optimum": {
-      "source": {
-        "file": "tests/test_sensitivity_gate.py",
-        "start": 34,
-        "end": 70
-      },
-      "symbol_dependencies": [
+        },
         {
-          "symbol": "evaluate_sensitivity_gate",
+          "symbol": "probe_dashboard",
           "definitions": [
             {
-              "file": "src/ai_trading/sensitivity_gate.py",
-              "line": 31,
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 131,
               "kind": "function",
               "language": "python"
             }
@@ -157,11 +723,41 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "result",
+          "symbol": "read",
           "definitions": [
             {
-              "file": "tests/test_sensitivity_gate.py",
-              "line": 7,
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 281,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_probe_rejects_market_cards_with_broken_portfolio",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 231,
               "kind": "function",
               "language": "python"
             }
@@ -169,7 +765,885 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 2
+      "dependency_count": 9
+    },
+    "test_probe_rejects_market_cards_with_broken_portfolio": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 231,
+        "end": 278
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "FakeResponse",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 236,
+              "kind": "class",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 292,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__enter__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 242,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 298,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__exit__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 245,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 301,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fake_urlopen",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 307,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 131,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "FakeResponse": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 236,
+        "end": 356
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "__enter__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 242,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 298,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__exit__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 245,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 301,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fake_urlopen",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 307,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 131,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 281,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "__init__": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 239,
+        "end": 359
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "FakeResponse",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 236,
+              "kind": "class",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 292,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__enter__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 242,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 298,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__exit__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 245,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 301,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fake_urlopen",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 307,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 131,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 281,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "__enter__": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 242,
+        "end": 362
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "FakeResponse",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 236,
+              "kind": "class",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 292,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__exit__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 245,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 301,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fake_urlopen",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 307,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 131,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 281,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "__exit__": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 245,
+        "end": 365
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "FakeResponse",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 236,
+              "kind": "class",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 292,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__enter__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 242,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 298,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fake_urlopen",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 307,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 131,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 281,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "read": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 248,
+        "end": 368
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "FakeResponse",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 236,
+              "kind": "class",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 292,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__enter__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 242,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 298,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__exit__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 245,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 301,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fake_urlopen",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 307,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 131,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 281,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "fake_urlopen": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 253,
+        "end": 373
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "FakeResponse",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 236,
+              "kind": "class",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 292,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__enter__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 242,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 298,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__exit__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 245,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 301,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 131,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 281,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "test_hosted_probe_requires_running_engines_not_only_complete_portfolio": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 281,
+        "end": 355
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "FakeResponse",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 236,
+              "kind": "class",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 292,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__enter__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 242,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 298,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__exit__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 245,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 301,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fake_urlopen",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 307,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 131,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 6
     }
   }
 }

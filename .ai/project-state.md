@@ -89,17 +89,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-21T23:06:08Z
+Generated: 2026-10-21T23:13:47Z
 
 ### Git
 - Branch: `main`
-- Head: `303bdfcc2745`
-- Commit date: 2026-10-21T19:05:57-04:00
-- Commit: fix(research): reject losing parameter sensitivity scenarios (#192)
+- Head: `ac22f99aef5f`
+- Commit date: 2026-10-21T19:13:36-04:00
+- Commit: fix(ops): retry transient hosted probe connections once (#193)
 - Tracked files: 513
 
 ### Recently changed files
 - `README.md`
+- `src/ai_trading/deployment_probe.py`
+- `tests/test_dashboard_health.py`
 - `src/ai_trading/sensitivity_gate.py`
 - `tests/test_sensitivity_gate.py`
 - `src/ai_trading/benchmark_gate.py`

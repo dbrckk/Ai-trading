@@ -816,9 +816,13 @@ def test_render_blueprint_declares_external_runtime_and_secret_inputs() -> None
 ⋮----
 text = Path("render.yaml").read_text(encoding="utf-8")
 ⋮----
+calls = []
+⋮----
 def fail_request(request, timeout)
 ⋮----
 results = probe_dashboard("https://example.invalid")
+⋮----
+# Exactly one short retry per unreachable endpoint, no secret disclosure.
 ⋮----
 def test_probe_rejects_market_cards_with_broken_portfolio(monkeypatch) -> None
 ⋮----
@@ -833,6 +837,8 @@ def __enter__(self)
 def __exit__(self, *args)
 ⋮----
 def read(self, count)
+⋮----
+livez_calls = 0
 ⋮----
 def fake_urlopen(request, timeout)
 ⋮----

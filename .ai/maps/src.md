@@ -2128,10 +2128,6 @@ reason = explanation.get("error") if isinstance(explanation, dict) else None
 ⋮----
 payload = json.loads(body)
 ⋮----
-"""Check web, storage and markets; optionally require healthy live engines."""
-⋮----
-checks: list[ProbeCheck] = []
-⋮----
 valid = payload.get("web_healthy") is True
 detail = "web_healthy" if valid else "liveness_unhealthy"
 ⋮----
@@ -2162,6 +2158,13 @@ valid = running and engines
 detail = "three_markets_running" if valid else "market_engines_not_running"
 ⋮----
 detail = "three_market_cards_available"
+⋮----
+"""Check web, storage and markets; optionally require healthy live engines."""
+⋮----
+checks = [
+# The free-tier host can briefly refuse the first connection while other
+# endpoints recover. Retry only transport failures, once, after the first
+# pass. HTTP errors, unhealthy payloads and SHA mismatches still fail.
 ⋮----
 def main() -> int
 ⋮----

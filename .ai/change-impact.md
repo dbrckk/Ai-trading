@@ -1,12 +1,12 @@
 # Change impact
 
-Base: 6462e25605d0cf0bede01a57944b6fd1fe86ea88
-Head: 303bdfcc274518d9c5979665482d8659e2d512b8
+Base: 2b9874141f15ea1ffa3d3ea286992c8e181611f0
+Head: ac22f99aef5f8e9ddfa4954ebb0e40f4e80ded4b
 
 ## Changed files
 - M README.md
-- M src/ai_trading/sensitivity_gate.py
-- M tests/test_sensitivity_gate.py
+- M src/ai_trading/deployment_probe.py
+- M tests/test_dashboard_health.py
 
 ## Affected areas
 - (root)
@@ -14,7 +14,7 @@ Head: 303bdfcc274518d9c5979665482d8659e2d512b8
 - tests
 
 ## Related test candidates
-- tests/test_sensitivity_gate.py
+- No direct filename-based test match detected.
 
 ## Agent guidance
 - Read this file before broad repository exploration.
