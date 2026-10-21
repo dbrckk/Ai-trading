@@ -16,8 +16,8 @@ from ai_trading.multi_market import (
     run_multi_market_paper_cycle,
 )
 from ai_trading.paper_cycle import PaperCycleResult
-from ai_trading.performance_metrics import performance_metrics_from_totals
 from ai_trading.paper_cycle_service import PaperCycleServiceError
+from ai_trading.performance_metrics import performance_metrics_from_totals
 from ai_trading.persistence import PersistedRuntime
 from ai_trading.runtime_state import RuntimeState
 from ai_trading.runtime_status import HostedRuntimeStatus
