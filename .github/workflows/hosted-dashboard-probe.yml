@@ -37,7 +37,7 @@ jobs:
       - uses: actions/checkout@v7
       - name: Verify liveness, durable readiness and market cards
         run: |
-          args=(--base-url "${DASHBOARD_URL}" --timeout 60)
+          args=(--base-url "${DASHBOARD_URL}" --timeout 60 --require-running-markets)
           if [ -n "${EXPECTED_DEPLOY_SHA}" ]; then
             args+=(--expected-sha "${EXPECTED_DEPLOY_SHA}")
           fi

@@ -262,3 +262,80 @@ def test_probe_rejects_market_cards_with_broken_portfolio(monkeypatch) -> None:
     assert results[1].ok is True
     assert results[2].ok is False
     assert results[2].detail == "portfolio_or_market_unavailable"
+
+
+def test_hosted_probe_requires_running_engines_not_only_complete_portfolio(
+    monkeypatch,
+) -> None:
+    """An all-STARTING service must not pass the production health probe."""
+    from io import BytesIO
+
+    from ai_trading import deployment_probe
+
+    statuses = {"GC=F": "STARTING", "^GDAXI": "STARTING", "BTC-USD": "STARTING"}
+    cycle_errors = {"GC=F": 0, "^GDAXI": 0, "BTC-USD": 0}
+
+    class FakeResponse:
+        status = 200
+
+        def __init__(self, payload):
+            self.body = BytesIO(json.dumps(payload).encode())
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self, count):
+            return self.body.read(count)
+
+    def fake_urlopen(request, timeout):
+        del timeout
+        if request.full_url.endswith("/livez"):
+            return FakeResponse({"web_healthy": True})
+        if request.full_url.endswith("/readyz"):
+            return FakeResponse({"ready": True, "storage_healthy": True})
+        return FakeResponse({
+            "portfolio": {
+                "equity_complete": True,
+                "error_markets": 0,
+                "running_markets": sum(s == "RUNNING" for s in statuses.values()),
+            },
+            "markets": [
+                {
+                    "symbol": symbol,
+                    "overview": {
+                        "engine_status": status,
+                        "consecutive_cycle_errors": cycle_errors[symbol],
+                    },
+                }
+                for symbol, status in statuses.items()
+            ],
+        })
+
+    monkeypatch.setattr(deployment_probe, "urlopen", fake_urlopen)
+    base = "https://example.invalid"
+    cards_only = probe_dashboard(base)
+    assert cards_only[2].ok is True  # Backward-compatible card-level check.
+
+    starting = probe_dashboard(base, require_running_markets=True)
+    assert starting[0].ok and starting[1].ok
+    assert starting[2].ok is False
+    assert starting[2].detail == "market_engines_not_running"
+
+    statuses.update({symbol: "RUNNING" for symbol in statuses})
+    healthy = probe_dashboard(base, require_running_markets=True)
+    assert healthy[2].ok is True
+    assert healthy[2].detail == "three_markets_running"
+
+    cycle_errors["BTC-USD"] = 1
+    degraded = probe_dashboard(base, require_running_markets=True)
+    assert degraded[2].ok is False
+    assert degraded[2].detail == "market_engines_not_running"
+
+    cycle_errors["BTC-USD"] = 0
+    statuses["GC=F"] = "STALE"
+    stale = probe_dashboard(base, require_running_markets=True)
+    assert stale[2].ok is False
+    assert stale[2].detail == "market_engines_not_running"
