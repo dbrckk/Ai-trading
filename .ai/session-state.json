@@ -2,11 +2,11 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "fix/probe-running-market-status",
+  "active_branch": "main",
   "pull_request": null,
-  "focus": "PR #180 merged after green CI/CodeQL: River-v2 matured directional coverage exposed (no trading effect). New branch hardens GitHub hosted read-only dashboard probe: scheduled probe must verify three RUNNING paper engines with no consecutive cycle errors, not merely complete portfolio and zero storage errors; this prevents green checks on stuck STARTING. Await PR CI/CodeQL and exact Render deployment verification; live broker OFF and River-v2 research OFF by default.",
+  "focus": "PR #180 and #181 merged 2026-10-21, green PR CI/CodeQL; strict GitHub Hosted Dashboard Probe 39650367492 on merged #181 SHA a02c2a6c passed 2026-10-21T18:10:56Z: /livez web_healthy, /readyz storage_ready, /api/markets three_markets_running (Gold, DAX, BTC RUNNING and zero cycle errors). GitHub probe checks health, NOT exact deployed Render commit: release SHA still unverified. River-v2 remains independent research OFF by default; no live trading, no proven profitable edge.",
   "production_evidence": {
-    "main_head": "6009f0bf0df419a57bb994ac27e05a8c942e4abf",
+    "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
     "render_markets": "GC=F,^GDAXI,BTC-USD",
     "gold": {
@@ -52,7 +52,7 @@
     },
     "latest_public_probe": {
       "checked_on": "2026-10-21",
-      "deployed_commit": "59e1610b31b43c4067c9840467d740bc3095a956",
+      "deployed_commit": "unknown_in_latest_strict_probe",
       "web_healthy": true,
       "storage_ready": true,
       "market_statuses_at_probe": {
@@ -76,7 +76,11 @@
       "scheduler_recent_successes": 20,
       "portfolio_paper_trade_count": 8,
       "portfolio_realized_pnl": -0.5748106341489922,
-      "note": "Post-PR #178 direct live read showed three RUNNING and 20 Cloudflare successes; live release SHA remained 59e1610b, not new merged #178 SHA. Do not claim release deployed before exact SHA verification. Gold signal DELAYED, DAX UNAVAILABLE (closed), BTC NO_TRADE."
+      "note": "Strong current read-only external evidence three Gold/DAX/BTC motors RUNNING and zero consecutive errors as of 18:10:56Z, verified by strict post-merge workflow 39650367492. It did not request --expected-sha and therefore cannot verify the Render deployed commit. Earlier directly observed SHA 59e1610b belongs to prior probe, not this run. Keep v2 off by default; no profitability demonstrated.",
+      "verification_source": "GitHub Actions strict Hosted Dashboard Probe run 39650367492; proof in log (PASS /livez, PASS /readyz, PASS /api/markets: three_markets_running)",
+      "verification_time_utc": "2026-10-21T18:10:56Z",
+      "strict_three_market_running_verified": true,
+      "deployed_commit_verified": false
     }
   },
   "completed_changes": [
@@ -109,7 +113,8 @@
     "PR #175 merged b8669a71 on 2026-10-21: 5m incomplete Yahoo candles filtered before paper v1 and v2, CI/CodeQL and real Render SHA verified. Production cycle then remained STARTING >11 minutes; emergency v2 CPU/opt-in isolation staged but not yet merged.",
     "2026-10-21 read-only Render verification: deployed 59e1610b, database ready, Gold/DAX/BTC RUNNING, 20 Cloudflare successes, River-v2 disabled, zero engine errors. Earlier stalled STARTING incident recovered operationally; predictive samples still statistically insufficient.",
     "PR #178 merged 2026-10-21: 250 ensemble/500 MTF samples PLUS 100 realized directional labels and 50 confident challenger directional predictions required for review, prior quality gates preserved, read-only API and dashboard counts, existing tests expanded; PR-head CI and CodeQL passed. No model promotion or paper execution change.",
-    "PR #180 merged 2026-10-21 (b74881b): read-only River-v2 forward comparison reports matched directional labels and confidence-gated v1/v2 directional predictions, plus sample-size diagnostic. CI and CodeQL green; no decision changes."
+    "PR #180 merged 2026-10-21 (b74881b): read-only River-v2 forward comparison reports matched directional labels and confidence-gated v1/v2 directional predictions, plus sample-size diagnostic. CI and CodeQL green; no decision changes.",
+    "PR #181 merged 2026-10-21 (a02c2a6): GitHub Hosted Dashboard Probe now requires 3 RUNNING Gold/DAX/BTC engines with zero consecutive errors, not merely complete portfolio/storage; test scenarios for STARTING, STALE and errors passed CI/CodeQL. Strict production GH probe 39650367492 succeeded at 18:10:56Z."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -118,8 +123,8 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Require green CI/CodeQL and merge strict hosted probe PR; verify hosted probe detects stuck STARTING rather than reporting healthy.",
-    "Confirm Render deployed SHA independently, three RUNNING Gold/DAX/BTC statuses and current authenticated scheduler successes; direct public Render access unavailable from this environment at this check.",
-    "Leave River-v2 OFF by default pending host resource/latency evidence; collect genuine live forward directional outcomes and net-of-cost paper strategy evidence, never claim profitability from classifier accuracy."
+    "Verify post-merge main CI and CodeQL for a02c2a6 and independently verify Render exact deployed SHA; strict green GitHub probe does not prove release parity.",
+    "Keep external scheduler healthy and all three motors RUNNING under 15-minute Cloudflare cadence, inspect stale and STARTING alerts via 2-hour strict hosted probes.",
+    "Leave River-v2 research OFF until resource use safely verified; require adequate independent forward directional and net-of-cost evidence before any review or trade quality claim."
   ]
 }
