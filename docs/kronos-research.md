@@ -118,9 +118,11 @@ lightweight ternary River-v2 observer for **5-minute paper markets only**
   two-second finality buffer). This prevents a mutable partial OHLC close
   from entering the committed paper model state. Stale and catch-up
   signals remain excluded. No future OHLCV
-  is passed to the observer; it trains from up to 384 historical rows
+  is passed to the observer; it trains from up to 128 historical rows
   with labels matured before the observed signal. At least 100 valid
-  training rows are required.
+  training rows are required. A strict three-second compute budget applies
+  per market on free-tier hosts: unfinished research is skipped rather
+  than delaying the authoritative River-v1 paper cycle.
 - A v2 side, confidence, three-class probabilities, model format/version,
   signal close, UTC observation time, label horizon, and training cutoff
   are appended to the **existing, atomic paper audit transaction** under
@@ -147,6 +149,9 @@ lightweight ternary River-v2 observer for **5-minute paper markets only**
 
 Because no separate River-v2 training state is persisted yet, it
 retrains from a bounded recent window for each fresh observation.
+A timed-out research run does **not** count as forward evidence; a long
+hosted scheduler cycle remains an operational concern until completion
+is independently verified.
 **Do not infer increased profitability from this feature.**
 
 ## Forward shadow operational follow-up (2026-10-21)
