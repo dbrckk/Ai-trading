@@ -105,6 +105,46 @@ separate holdout and forward evidence, audited risk/short-position
 handling, a versioned rollout and rollback protocol. Until then,
 River-v2 is not an actionable trade signal.
 
+## River-v2: first live-cycle forward observer (audit only)
+
+The existing `AI_TRADING_SHADOW_CHALLENGER=1` flag now also enables a
+lightweight ternary River-v2 observer for **5-minute paper markets only**
+(Gold, DAX and BTC). It runs independently of River-v1 trade decisions:
+
+- At most one v2 observation is attached to a cycle, and **only** if the
+  latest provider candle has fully closed less than five minutes ago.
+  Stale, unfinished and catch-up signals are excluded. No future OHLCV
+  is passed to the observer; it trains from up to 384 historical rows
+  with labels matured before the observed signal. At least 100 valid
+  training rows are required.
+- A v2 side, confidence, three-class probabilities, model format/version,
+  signal close, UTC observation time, label horizon, and training cutoff
+  are appended to the **existing, atomic paper audit transaction** under
+  `river_v2_shadow`. It does not persist/rewrite a v2 joblib model or
+  change the v1 model key, paper positions, risk approvals or orders.
+- Each later processed paper bar also records its actual
+  `execution_close` price in the audit. The optional read-only
+  `load_river_v2_forward_quality` reader joins v2 observations with
+  later River-v1 decisions for the **same signal timestamp**, requiring
+  an actual consecutive 5-minute bar and both v2 inference **and its
+  durable audit commit** before the next bar closed. Missing, stale,
+  late-committed or incomplete outcomes are excluded.
+- Per-market `/api/markets` includes `overview.river_v2_shadow` with
+  matured observations, pending observations, confidence-gated v2
+  SHORT count and matching v1/v2 directional quality when at least
+  five observations exist. The data is read-only; if the storage is
+  unavailable, the observer does not break the dashboard.
+- Evaluation is directional classification, **not** executable
+  next-open fills or net-of-cost returns. Real-world decision latency
+  and market spread can erase apparent prediction accuracy. No automatic
+  promotion exists and `eligible_for_review=false` until a separate
+  statistically adequate holdout, forward audit and controlled rollout
+  are implemented.
+
+Because no separate River-v2 training state is persisted yet, it
+retrains from a bounded recent window for each fresh observation.
+**Do not infer increased profitability from this feature.**
+
 ## Observed BTC research smoke (2026-10-20)
 
 The real original `Kronos-mini` workflow on BTC-USD 5-minute history succeeded

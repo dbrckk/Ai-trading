@@ -15,6 +15,7 @@ from ai_trading.model import Prediction
 from ai_trading.mtf_shadow_challenger import MultiTimeframeShadowResult
 from ai_trading.paper_cycle import PaperCycleRunner
 from ai_trading.persistence import PersistedRuntime, build_runtime_key
+from ai_trading.river_v2_shadow import RiverV2ForwardObservation
 from ai_trading.runtime import PaperAutonomousRuntime, RuntimeStepResult
 from ai_trading.runtime_state import RuntimeState
 from ai_trading.shadow_challenger import ShadowChallengerResult
@@ -366,6 +367,27 @@ def test_shadow_challenger_is_recorded_without_controlling_execution(
             probabilities={-1: 0.05, 0: 0.05, 1: 0.90},
         ),
     )
+    # Exercise the real audit attachment without allowing the observer
+    # to change the authoritative River-v1 decision.
+    monkeypatch.setattr(
+        paper_cycle_module,
+        "observe_river_v2_forward",
+        lambda *args, **kwargs: RiverV2ForwardObservation(
+            prediction=Prediction(
+                side=-1, confidence=0.88,
+                probabilities={-1: 0.88, 0: 0.06, 1: 0.06},
+            ),
+            signal_time=str(df.index[-1]),
+            signal_close=float(df["Close"].iloc[-1]),
+            observed_at_utc="2025-01-01T09:15:00+00:00",
+            training_rows=101,
+            training_end=str(df.index[-3]),
+            horizon_bars=1,
+            return_threshold=0.001,
+            min_confidence=0.56,
+            gated_side=-1,
+        ),
+    )
 
     runner = build_runner(tmp_path, backend, df)
     result = runner.run_once(
@@ -388,6 +410,10 @@ def test_shadow_challenger_is_recorded_without_controlling_execution(
     assert payload["risk_decision"]["side"] == 1
     assert payload["shadow_challenger"]["prediction"]["side"] == -1
     assert payload["shadow_challenger"]["execution_time"] == str(target)
+    assert payload["river_v2_shadow"]["prediction"]["side"] == -1
+    assert payload["river_v2_shadow"]["model_format"] == "joblib-river-ovr-v2"
+    assert payload["river_v2_shadow"]["signal_time"] == str(df.index[-1])
+    assert payload["execution_close"] == float(df["Close"].loc[target])
     assert runtime.runtime_key == build_runtime_key("GC=F", "5m")
 
 

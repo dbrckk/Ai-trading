@@ -14,6 +14,7 @@ from .mtf_shadow_challenger import (
 )
 from .mtf_shadow_config import validated_mtf_shadow_config
 from .persistence import PaperPersistence, PersistedRuntime, build_runtime_key
+from .river_v2_shadow import observe_river_v2_forward
 from .runtime import PaperAutonomousRuntime
 from .shadow_challenger import evaluate_shadow_challenger
 
@@ -281,6 +282,22 @@ class PaperCycleRunner:
                 observer_kwargs["shadow_challenger"] = shadow_result
             if mtf_shadow_result is not None and str(target) == mtf_attach_target:
                 observer_kwargs["mtf_shadow_challenger"] = mtf_shadow_result
+            if (
+                shadow_challenger_enabled
+                and interval == "5m"
+                and str(target) == str(eligible[-1])
+            ):
+                try:
+                    river_v2 = observe_river_v2_forward(
+                        market,
+                        horizon_bars=runtime.model_config.horizon_bars,
+                        return_threshold=runtime.model_config.return_threshold,
+                        min_confidence=runtime.risk_config.min_confidence,
+                    )
+                    if river_v2 is not None:
+                        observer_kwargs["river_v2_shadow"] = river_v2
+                except Exception:  # noqa: BLE001 - research observer cannot stop paper trades
+                    observer_kwargs.pop("river_v2_shadow", None)
             result = runtime.step_prepared(
                 prepared,
                 target,

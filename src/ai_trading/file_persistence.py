@@ -24,6 +24,10 @@ from .persistence import (
     RuntimeStepCommit,
     SchedulerDelivery,
 )
+from .river_v2_shadow import (
+    RiverV2ForwardComparison,
+    compare_river_v2_forward_audit_payloads,
+)
 from .runtime_state import RuntimeStateStore
 from .runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore
 from .shadow_quality import ShadowQualityComparison, compare_shadow_audit_payloads
@@ -166,6 +170,30 @@ class FilePaperPersistence(PaperPersistence):
                 if isinstance(payload, dict) and "shadow_challenger" in payload:
                     payloads.append(payload)
         return compare_shadow_audit_payloads(payloads)
+
+    def load_river_v2_forward_quality(self, runtime_key: str) -> RiverV2ForwardComparison:
+        """Read-only forward evidence from committed paper audit observations."""
+        del runtime_key
+        if not self.audit_log.path.exists():
+            return compare_river_v2_forward_audit_payloads(())
+        payloads = []
+        with self.audit_log.path.open("r", encoding="utf-8") as handle:
+            for line in handle:
+                if not line.strip():
+                    continue
+                try:
+                    record = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                payload = record.get("payload")
+                if isinstance(payload, dict) and (
+                    "river_v2_shadow" in payload or "execution_close" in payload
+                ):
+                    payloads.append({
+                        **payload,
+                        "_audit_timestamp_utc": record.get("timestamp_utc"),
+                    })
+        return compare_river_v2_forward_audit_payloads(payloads[-4000:])
 
     def load_mtf_shadow_quality(
         self,
