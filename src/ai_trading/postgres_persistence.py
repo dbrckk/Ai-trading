@@ -900,8 +900,8 @@ class PostgresPaperPersistence(PaperPersistence):
         with self._connect() as connection, connection.cursor() as cursor:
             cursor.execute(
                 """
-                SELECT payload FROM (
-                    SELECT id, payload
+                SELECT payload, timestamp_utc FROM (
+                    SELECT id, payload, timestamp_utc
                     FROM paper_audit_events
                     WHERE runtime_key = %s
                       AND event = 'runtime_step'
@@ -919,7 +919,10 @@ class PostgresPaperPersistence(PaperPersistence):
             if not isinstance(payload, dict):
                 payload = json.loads(payload)
             if isinstance(payload, dict):
-                payloads.append(payload)
+                payloads.append({
+                    **payload,
+                    "_audit_timestamp_utc": str(row["timestamp_utc"]),
+                })
         return compare_river_v2_forward_audit_payloads(payloads)
 
     def load_mtf_shadow_quality(
