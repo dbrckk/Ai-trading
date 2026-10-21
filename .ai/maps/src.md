@@ -1424,6 +1424,8 @@ min_excess_return: float = -0.05
 # These total returns already include broker transaction costs and slippage.
 # Outperforming a falling benchmark while losing money is not profit.
 min_total_return: float = 0.0
+# A high pass ratio must not hide a loss in the most expensive scenario.
+require_worst_cost_positive: bool = True
 min_sharpe: float = 0.0
 max_drawdown: float = 0.30
 ⋮----
@@ -1444,6 +1446,8 @@ policy = policy or CostStressGatePolicy()
 passing = [
 ratio = len(passing) / len(results)
 reasons: list[str] = []
+⋮----
+worst_cost = max(
 ```
 
 ## File: ai_trading/cost_stress.py

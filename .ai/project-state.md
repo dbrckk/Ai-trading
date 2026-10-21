@@ -80,21 +80,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-21T20:14:19Z
+Generated: 2026-10-21T21:01:21Z
 
 ### Git
 - Branch: `main`
-- Head: `5931a3a010b9`
-- Commit date: 2026-10-21T16:14:09-04:00
-- Commit: feat(dashboard): expose allocation-adjusted net paper PnL and sample evidence (#186)
+- Head: `b8f8ff1ff57a`
+- Commit date: 2026-10-21T17:01:10-04:00
+- Commit: fix(risk): require positive net return in worst execution-cost scenario (#188)
 - Tracked files: 513
 
 ### Recently changed files
 - `README.md`
-- `src/ai_trading/dashboard.py`
-- `tests/test_multi_market.py`
 - `src/ai_trading/cost_stress_gate.py`
 - `tests/test_cost_stress_gate.py`
+- `src/ai_trading/dashboard.py`
+- `tests/test_multi_market.py`
 - `src/ai_trading/backtest.py`
 - `src/ai_trading/risk.py`
 - `src/ai_trading/runtime.py`
@@ -104,9 +104,6 @@ Generated: 2026-10-21T20:14:19Z
 - `src/ai_trading/performance_metrics.py`
 - `tests/test_dashboard_overview.py`
 - `tests/test_performance_metrics.py`
-- `.github/workflows/hosted-dashboard-probe.yml`
-- `src/ai_trading/deployment_probe.py`
-- `tests/test_dashboard_health.py`
 
 ### Project signals
 - `pyproject.toml`

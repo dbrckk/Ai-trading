@@ -2319,6 +2319,8 @@ min_excess_return: float = -0.05
 # These total returns already include broker transaction costs and slippage.
 # Outperforming a falling benchmark while losing money is not profit.
 min_total_return: float = 0.0
+# A high pass ratio must not hide a loss in the most expensive scenario.
+require_worst_cost_positive: bool = True
 min_sharpe: float = 0.0
 max_drawdown: float = 0.30
 ⋮----
@@ -2339,6 +2341,8 @@ policy = policy or CostStressGatePolicy()
 passing = [
 ratio = len(passing) / len(results)
 reasons: list[str] = []
+⋮----
+worst_cost = max(
 ````
 
 ## File: src/ai_trading/cost_stress.py
@@ -9845,6 +9849,10 @@ def test_cost_stress_gate_rejects_invalid_or_zero_trade_evidence() -> None
 scenarios = (
 ⋮----
 def test_cost_stress_gate_counts_only_profitable_cost_scenarios() -> None
+⋮----
+def test_cost_stress_gate_rejects_loss_at_highest_cost_even_with_high_pass_ratio() -> None
+⋮----
+def test_cost_stress_gate_can_opt_out_of_worst_cost_requirement() -> None
 ````
 
 ## File: tests/test_cost_stress.py
@@ -14311,6 +14319,16 @@ publicly hosted service is unavailable or incomplete. This check **does
 not** invoke the scheduler, place trades, wake workers, or guarantee
 fresh market data. For manual diagnosis, use
 `PYTHONPATH=src python -m ai_trading.deployment_probe --base-url https://ai-trading-dashboard-qyr2.onrender.com --require-running-markets`.
+
+## Profit resilience under execution costs
+
+The cost-stress gate now requires the **highest transaction-cost-plus-slippage
+scenario** to retain positive net return, in addition to the existing
+minimum pass ratio, Sharpe and drawdown checks. This prevents a favorable
+majority of cheap scenarios from concealing losses when execution becomes
+expensive. The strict requirement is on by default and can be explicitly
+disabled in `CostStressGatePolicy` for research comparisons; it does not
+enable live execution or prove future profitability.
 
 ## Paper trade performance evidence
 

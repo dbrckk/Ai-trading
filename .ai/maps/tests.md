@@ -657,6 +657,10 @@ def test_cost_stress_gate_rejects_invalid_or_zero_trade_evidence() -> None
 scenarios = (
 ⋮----
 def test_cost_stress_gate_counts_only_profitable_cost_scenarios() -> None
+⋮----
+def test_cost_stress_gate_rejects_loss_at_highest_cost_even_with_high_pass_ratio() -> None
+⋮----
+def test_cost_stress_gate_can_opt_out_of_worst_cost_requirement() -> None
 ```
 
 ## File: test_cost_stress.py

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "876a5f1148493a7ee4309c96314e83cf191ac5bf",
-  "head": "5931a3a010b99bb47ecd979fc727fb57d49dc444",
+  "base": "5931a3a010b99bb47ecd979fc727fb57d49dc444",
+  "head": "b8f8ff1ff57a67e4208c18f8a018b960f95a014c",
   "index_mode": "incremental",
   "changed_files": [
     {
@@ -10,28 +10,26 @@
       "status": "M"
     },
     {
-      "path": "src/ai_trading/dashboard.py",
+      "path": "src/ai_trading/cost_stress_gate.py",
       "status": "M"
     },
     {
-      "path": "tests/test_multi_market.py",
+      "path": "tests/test_cost_stress_gate.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "src/ai_trading/dashboard.py",
-    "tests/test_multi_market.py"
+    "src/ai_trading/cost_stress_gate.py",
+    "tests/test_cost_stress_gate.py"
   ],
   "impacted_files": [
     "src/ai_trading/cli.py",
-    "src/ai_trading/dashboard.py",
-    "tests/test_dashboard.py",
-    "tests/test_dashboard_engine_status.py",
-    "tests/test_dashboard_health.py",
-    "tests/test_dashboard_overview.py",
-    "tests/test_dashboard_persistence.py",
-    "tests/test_multi_market.py",
-    "tests/test_scheduler_endpoint.py"
+    "src/ai_trading/cost_stress_gate.py",
+    "src/ai_trading/quantitative_artifact.py",
+    "src/ai_trading/quantitative_qualification.py",
+    "tests/test_cost_stress_gate.py",
+    "tests/test_quantitative_artifact.py",
+    "tests/test_reproducibility.py"
   ],
   "impacted_symbols": [
     {
@@ -287,1177 +285,184 @@
       "line": 1882
     },
     {
-      "name": "_public_runtime_snapshot",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 54
-    },
-    {
-      "name": "_display_money",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 63
-    },
-    {
-      "name": "_display_units",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 67
-    },
-    {
-      "name": "_display_ratio",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 71
-    },
-    {
-      "name": "_scheduler_display_state",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 79
-    },
-    {
-      "name": "_trade_pnl_known",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 111
-    },
-    {
-      "name": "_display_trade_pnl",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 118
-    },
-    {
-      "name": "_equity_chart_svg",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 124
-    },
-    {
-      "name": "_readiness_number",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 164
-    },
-    {
-      "name": "_readiness_panel",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 172
-    },
-    {
-      "name": "render_dashboard",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 193
-    },
-    {
-      "name": "serve_dashboard",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 1229
-    },
-    {
-      "name": "execute_paper_cycle",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 1298
-    },
-    {
-      "name": "load_status_snapshot",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 1322
-    },
-    {
-      "name": "Handler",
+      "name": "CostStressGatePolicy",
       "kind": "class",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 1328
+      "file": "src/ai_trading/cost_stress_gate.py",
+      "line": 10
     },
     {
-      "name": "end_headers",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 1332
-    },
-    {
-      "name": "_write_response_body",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 1349
-    },
-    {
-      "name": "_send_json",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 1355
-    },
-    {
-      "name": "do_GET",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 1369
-    },
-    {
-      "name": "do_POST",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 1475
-    },
-    {
-      "name": "log_message",
-      "kind": "function",
-      "file": "src/ai_trading/dashboard.py",
-      "line": 1521
-    },
-    {
-      "name": "test_trade_journal_round_trip",
-      "kind": "function",
-      "file": "tests/test_dashboard.py",
-      "line": 5
-    },
-    {
-      "name": "test_dashboard_renders_trade_and_escapes_text",
-      "kind": "function",
-      "file": "tests/test_dashboard.py",
+      "name": "CostStressGateResult",
+      "kind": "class",
+      "file": "src/ai_trading/cost_stress_gate.py",
       "line": 23
     },
     {
-      "name": "test_trade_journal_limit_returns_latest_events",
+      "name": "evaluate_cost_stress_gate",
       "kind": "function",
-      "file": "tests/test_dashboard.py",
-      "line": 45
+      "file": "src/ai_trading/cost_stress_gate.py",
+      "line": 34
     },
     {
-      "name": "test_dashboard_renders_portfolio_summary",
-      "kind": "function",
-      "file": "tests/test_dashboard.py",
-      "line": 62
-    },
-    {
-      "name": "test_dashboard_renders_recent_trade_performance_metrics",
-      "kind": "function",
-      "file": "tests/test_dashboard.py",
-      "line": 85
-    },
-    {
-      "name": "test_dashboard_renders_premium_terminal_shell",
-      "kind": "function",
-      "file": "tests/test_dashboard.py",
-      "line": 110
-    },
-    {
-      "name": "test_dashboard_live_refresh_preserves_scroll_without_meta_reload",
-      "kind": "function",
-      "file": "tests/test_dashboard.py",
-      "line": 121
-    },
-    {
-      "name": "test_dashboard_does_not_render_legacy_unknown_pnl_as_zero",
-      "kind": "function",
-      "file": "tests/test_dashboard.py",
-      "line": 137
-    },
-    {
-      "name": "test_scheduler_display_state_reports_waiting_collecting_stale_and_verified",
-      "kind": "function",
-      "file": "tests/test_dashboard.py",
-      "line": 158
-    },
-    {
-      "name": "test_dashboard_hides_expired_paper_decision",
-      "kind": "function",
-      "file": "tests/test_dashboard_engine_status.py",
-      "line": 11
-    },
-    {
-      "name": "_free_port",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
+      "name": "QuantitativeQualificationArtifact",
+      "kind": "class",
+      "file": "src/ai_trading/quantitative_artifact.py",
       "line": 19
     },
     {
-      "name": "_get",
+      "name": "_evidence_payload",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 25
+      "file": "src/ai_trading/quantitative_artifact.py",
+      "line": 38
     },
     {
-      "name": "_start_dashboard",
+      "name": "quantitative_artifact_hash",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 37
+      "file": "src/ai_trading/quantitative_artifact.py",
+      "line": 44
     },
     {
-      "name": "test_dashboard_marks_expired_worker_heartbeat_stale",
+      "name": "build_quantitative_artifact",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 65
+      "file": "src/ai_trading/quantitative_artifact.py",
+      "line": 55
     },
     {
-      "name": "test_api_status_reports_stale_worker_without_hiding_web_health",
+      "name": "save_quantitative_artifact",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 91
+      "file": "src/ai_trading/quantitative_artifact.py",
+      "line": 107
     },
     {
-      "name": "test_healthz_keeps_web_liveness_separate_from_engine_health",
+      "name": "load_quantitative_artifact",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 113
+      "file": "src/ai_trading/quantitative_artifact.py",
+      "line": 121
     },
     {
-      "name": "test_external_probe_checks_live_ready_and_all_markets",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 137
-    },
-    {
-      "name": "test_external_scheduler_readiness_detects_missing_configuration",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 164
-    },
-    {
-      "name": "test_render_blueprint_declares_external_runtime_and_secret_inputs",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 195
-    },
-    {
-      "name": "test_external_probe_reports_connection_errors_without_exposing_details",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 207
-    },
-    {
-      "name": "fail_request",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 214
-    },
-    {
-      "name": "test_probe_rejects_market_cards_with_broken_portfolio",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 224
-    },
-    {
-      "name": "FakeResponse",
+      "name": "QuantitativeQualification",
       "kind": "class",
-      "file": "tests/test_dashboard_health.py",
-      "line": 229
+      "file": "src/ai_trading/quantitative_qualification.py",
+      "line": 14
     },
     {
-      "name": "__init__",
+      "name": "evaluate_quantitative_qualification",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 232
+      "file": "src/ai_trading/quantitative_qualification.py",
+      "line": 21
     },
     {
-      "name": "__enter__",
+      "name": "result",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 235
+      "file": "tests/test_cost_stress_gate.py",
+      "line": 7
     },
     {
-      "name": "__exit__",
+      "name": "test_cost_stress_gate_accepts_resilient_strategy",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 238
-    },
-    {
-      "name": "read",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 241
-    },
-    {
-      "name": "fake_urlopen",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 244
-    },
-    {
-      "name": "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 267
-    },
-    {
-      "name": "FakeResponse",
-      "kind": "class",
-      "file": "tests/test_dashboard_health.py",
-      "line": 278
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 281
-    },
-    {
-      "name": "__enter__",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 284
-    },
-    {
-      "name": "__exit__",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 287
-    },
-    {
-      "name": "read",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 290
-    },
-    {
-      "name": "fake_urlopen",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 293
-    },
-    {
-      "name": "OverviewPersistence",
-      "kind": "class",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 26
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 27
-    },
-    {
-      "name": "load_runtime",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 74
-    },
-    {
-      "name": "list_trades",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 79
-    },
-    {
-      "name": "list_burnin_snapshots",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 84
-    },
-    {
-      "name": "list_regimes",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 105
-    },
-    {
-      "name": "load_runtime_status",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 109
-    },
-    {
-      "name": "load_trade_performance",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 113
-    },
-    {
-      "name": "load_shadow_quality",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 124
-    },
-    {
-      "name": "load_mtf_shadow_quality",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 146
-    },
-    {
-      "name": "ReadinessOverviewPersistence",
-      "kind": "class",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 178
-    },
-    {
-      "name": "list_burnin_snapshots",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 179
-    },
-    {
-      "name": "FailingOverviewPersistence",
-      "kind": "class",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 209
-    },
-    {
-      "name": "load_runtime",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 210
-    },
-    {
-      "name": "load_runtime_status",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 214
-    },
-    {
-      "name": "_free_port",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 219
-    },
-    {
-      "name": "_start_overview_dashboard",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 225
-    },
-    {
-      "name": "test_operational_overview_exposes_model_and_runtime_metadata",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 253
-    },
-    {
-      "name": "test_operational_overview_flags_stale_runtime",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 332
-    },
-    {
-      "name": "test_operational_overview_flags_missing_model_after_processing",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 342
-    },
-    {
-      "name": "test_operational_overview_flags_inconsistent_runtime",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 357
-    },
-    {
-      "name": "test_operational_overview_storage_failure_is_sanitized",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 379
-    },
-    {
-      "name": "test_dashboard_exposes_operational_overview_endpoint",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 511
-    },
-    {
-      "name": "test_dashboard_renders_model_and_revision_metadata",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 532
-    },
-    {
-      "name": "test_dashboard_renders_operational_alerts",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 546
-    },
-    {
-      "name": "test_dashboard_renders_inconsistent_runtime_alert",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 556
-    },
-    {
-      "name": "test_operational_overview_flags_cycle_reliability_degradation",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 582
-    },
-    {
-      "name": "test_dashboard_renders_cycle_reliability_alert",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 592
-    },
-    {
-      "name": "test_operational_overview_exposes_structured_readiness",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 603
-    },
-    {
-      "name": "test_overview_endpoint_includes_readiness_evidence",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 630
-    },
-    {
-      "name": "BtcOverviewPersistence",
-      "kind": "class",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 643
-    },
-    {
-      "name": "load_runtime",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 644
-    },
-    {
-      "name": "load_runtime_status",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 649
-    },
-    {
-      "name": "list_burnin_snapshots",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 659
-    },
-    {
-      "name": "list_regimes",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 663
-    },
-    {
-      "name": "load_shadow_quality",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 667
-    },
-    {
-      "name": "load_mtf_shadow_quality",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 671
-    },
-    {
-      "name": "test_btc_overview_exposes_validated_mtf_candidate",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 677
-    },
-    {
-      "name": "NoMeasuredPnlOverviewPersistence",
-      "kind": "class",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 697
-    },
-    {
-      "name": "load_trade_performance",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 698
-    },
-    {
-      "name": "test_operational_overview_does_not_expose_unknown_pnl_as_zero",
-      "kind": "function",
-      "file": "tests/test_dashboard_overview.py",
-      "line": 710
-    },
-    {
-      "name": "DurablePersistence",
-      "kind": "class",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 23
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
+      "file": "tests/test_cost_stress_gate.py",
       "line": 24
     },
     {
-      "name": "load_runtime",
+      "name": "test_cost_stress_gate_rejects_cost_fragility",
       "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 61
-    },
-    {
-      "name": "list_trades",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 66
-    },
-    {
-      "name": "load_trade_performance",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 71
-    },
-    {
-      "name": "list_burnin_snapshots",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 81
-    },
-    {
-      "name": "list_regimes",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 102
-    },
-    {
-      "name": "load_runtime_status",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 106
-    },
-    {
-      "name": "list_scheduler_deliveries",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 110
-    },
-    {
-      "name": "FailingPersistence",
-      "kind": "class",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 125
-    },
-    {
-      "name": "_fail",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 126
-    },
-    {
-      "name": "load_runtime",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 129
-    },
-    {
-      "name": "list_trades",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 133
-    },
-    {
-      "name": "load_runtime_status",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 137
-    },
-    {
-      "name": "_free_port",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 142
-    },
-    {
-      "name": "_get",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 148
-    },
-    {
-      "name": "_get_with_headers",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 156
-    },
-    {
-      "name": "_start_failure_dashboard",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 161
-    },
-    {
-      "name": "test_dashboard_uses_durable_state_trades_and_status",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 189
-    },
-    {
-      "name": "test_dashboard_storage_failure_is_sanitized",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 220
-    },
-    {
-      "name": "test_liveness_stays_healthy_when_storage_is_unavailable",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 233
-    },
-    {
-      "name": "test_readiness_fails_when_durable_storage_is_unavailable",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 242
-    },
-    {
-      "name": "test_status_endpoints_fail_closed_without_leaking_storage_details",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 257
-    },
-    {
-      "name": "test_dashboard_surfaces_verified_scheduler_delivery",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 286
-    },
-    {
-      "name": "test_dashboard_http_responses_include_security_headers",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 302
-    },
-    {
-      "name": "test_dashboard_v2_groups_critical_sections_and_renders_equity_chart",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 315
-    },
-    {
-      "name": "test_dashboard_premium_shell_and_navigation",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 333
-    },
-    {
-      "name": "test_dashboard_quant_evidence_is_explicit_and_non_misleading",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 352
-    },
-    {
-      "name": "ReadinessPersistence",
-      "kind": "class",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 373
-    },
-    {
-      "name": "list_burnin_snapshots",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 374
-    },
-    {
-      "name": "test_dashboard_readiness_panel_shows_eight_criteria_with_thresholds",
-      "kind": "function",
-      "file": "tests/test_dashboard_persistence.py",
-      "line": 404
-    },
-    {
-      "name": "FakeMultiPersistence",
-      "kind": "class",
-      "file": "tests/test_multi_market.py",
-      "line": 30
-    },
-    {
-      "name": "load_runtime",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
+      "file": "tests/test_cost_stress_gate.py",
       "line": 33
     },
     {
-      "name": "load_runtime_status",
+      "name": "test_cost_stress_gate_rejects_negative_net_returns_despite_positive_excess",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 52
+      "file": "tests/test_cost_stress_gate.py",
+      "line": 46
     },
     {
-      "name": "list_burnin_snapshots",
+      "name": "test_cost_stress_gate_rejects_invalid_or_zero_trade_evidence",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 70
+      "file": "tests/test_cost_stress_gate.py",
+      "line": 59
     },
     {
-      "name": "list_regimes",
+      "name": "test_cost_stress_gate_counts_only_profitable_cost_scenarios",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 74
+      "file": "tests/test_cost_stress_gate.py",
+      "line": 72
     },
     {
-      "name": "list_trades",
+      "name": "test_cost_stress_gate_rejects_loss_at_highest_cost_even_with_high_pass_ratio",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 78
+      "file": "tests/test_cost_stress_gate.py",
+      "line": 85
     },
     {
-      "name": "load_trade_performance",
+      "name": "test_cost_stress_gate_can_opt_out_of_worst_cost_requirement",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 82
+      "file": "tests/test_cost_stress_gate.py",
+      "line": 104
     },
     {
-      "name": "load_portfolio_trade_performance",
+      "name": "_dataset",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 95
+      "file": "tests/test_quantitative_artifact.py",
+      "line": 14
     },
     {
-      "name": "test_configured_markets_default_to_full_bundle",
+      "name": "_common",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 118
+      "file": "tests/test_quantitative_artifact.py",
+      "line": 27
     },
     {
-      "name": "test_configured_default_bundle_uses_34_33_33",
+      "name": "test_quantitative_artifact_hash_matches_content",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 128
+      "file": "tests/test_quantitative_artifact.py",
+      "line": 46
     },
     {
-      "name": "test_configured_markets_reject_duplicate_symbols_early",
+      "name": "test_artifact_identity_changes_with_config_hash",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 144
+      "file": "tests/test_quantitative_artifact.py",
+      "line": 58
     },
     {
-      "name": "test_configured_markets_reject_missing_symbols",
+      "name": "market",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 153
+      "file": "tests/test_reproducibility.py",
+      "line": 14
     },
     {
-      "name": "test_configured_markets_preserve_known_and_custom_labels",
+      "name": "artifact",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 161
+      "file": "tests/test_reproducibility.py",
+      "line": 28
     },
     {
-      "name": "test_multi_market_cycle_isolates_one_market_failure",
+      "name": "test_reproducibility_accepts_exact_inputs",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 170
+      "file": "tests/test_reproducibility.py",
+      "line": 51
     },
     {
-      "name": "fake_cycle",
+      "name": "test_reproducibility_rejects_dataset_tampering",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 173
+      "file": "tests/test_reproducibility.py",
+      "line": 63
     },
     {
-      "name": "test_multi_market_overview_scales_normalized_sleeves_to_100k",
+      "name": "test_reproducibility_rejects_provider_change",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 219
+      "file": "tests/test_reproducibility.py",
+      "line": 73
     },
     {
-      "name": "test_dashboard_renders_multi_market_cards",
+      "name": "test_reproducibility_rejects_config_change",
       "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 274
-    },
-    {
-      "name": "test_multi_market_overview_parallelizes_read_only_observers",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 375
-    },
-    {
-      "name": "concurrent_observer",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 386
-    },
-    {
-      "name": "test_multi_market_cycle_runs_markets_concurrently",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 408
-    },
-    {
-      "name": "fake_cycle",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 411
-    },
-    {
-      "name": "test_multi_market_overview_marks_stale_heartbeat_as_delayed",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 442
-    },
-    {
-      "name": "stale_status",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 453
-    },
-    {
-      "name": "test_market_spec_rejects_invalid_fields",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 489
-    },
-    {
-      "name": "test_multi_market_cycle_rejects_duplicate_symbols",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 494
-    },
-    {
-      "name": "test_multi_market_cycle_rejects_invalid_allocation_sum",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 512
-    },
-    {
-      "name": "test_multi_market_overview_marks_portfolio_totals_unknown_on_market_error",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 531
-    },
-    {
-      "name": "test_dashboard_does_not_render_market_unavailability_as_portfolio_loss",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 557
-    },
-    {
-      "name": "test_multi_market_cycle_isolates_unexpected_market_exception",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 582
-    },
-    {
-      "name": "fake_cycle",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 583
-    },
-    {
-      "name": "test_multi_market_cycle_sanitizes_all_unexpected_failures",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 617
-    },
-    {
-      "name": "fake_cycle",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 618
-    },
-    {
-      "name": "test_multi_market_total_failure_classification",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 661
-    },
-    {
-      "name": "fake_cycle",
-      "kind": "function",
-      "file": "tests/test_multi_market.py",
-      "line": 668
-    },
-    {
-      "name": "successful_result",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 25
-    },
-    {
-      "name": "_free_port",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 39
-    },
-    {
-      "name": "_request",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 45
-    },
-    {
-      "name": "_start_scheduler_dashboard",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 60
-    },
-    {
-      "name": "test_missing_server_token_fails_closed",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 92
-    },
-    {
-      "name": "run_cycle",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 95
-    },
-    {
-      "name": "test_missing_authorization_is_unauthorized",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 111
-    },
-    {
-      "name": "test_wrong_scheme_is_unauthorized",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 122
-    },
-    {
-      "name": "test_wrong_bearer_token_is_unauthorized",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 133
-    },
-    {
-      "name": "test_valid_token_runs_exactly_one_cycle",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 144
-    },
-    {
-      "name": "run_cycle",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 147
-    },
-    {
-      "name": "test_concurrent_progress_is_successful_noop",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 170
-    },
-    {
-      "name": "test_storage_failure_is_sanitized",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 191
-    },
-    {
-      "name": "run_cycle",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 192
-    },
-    {
-      "name": "test_execution_failure_is_sanitized",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 212
-    },
-    {
-      "name": "run_cycle",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 213
-    },
-    {
-      "name": "test_http_scheduler_rejects_missing_and_wrong_authorization",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 233
-    },
-    {
-      "name": "test_http_scheduler_valid_token_runs_one_cycle_and_ignores_body",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 254
-    },
-    {
-      "name": "fake_cycle",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 257
-    },
-    {
-      "name": "test_http_scheduler_partial_cycle_records_real_http_failure",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 290
-    },
-    {
-      "name": "test_http_scheduler_other_post_routes_are_not_exposed",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 324
-    },
-    {
-      "name": "test_http_scheduler_failure_response_never_leaks_secrets",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 340
-    },
-    {
-      "name": "fail_cycle",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 341
-    },
-    {
-      "name": "test_scheduler_telemetry_is_sanitized_and_identifies_cloudflare",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 365
-    },
-    {
-      "name": "test_scheduler_telemetry_does_not_trust_arbitrary_source_headers",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 394
-    },
-    {
-      "name": "test_scheduler_delivery_overview_verifies_three_consecutive_cloudflare_successes",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 414
-    },
-    {
-      "name": "test_http_scheduler_exposes_durable_cloudflare_delivery_evidence",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 439
-    },
-    {
-      "name": "test_scheduler_delivery_verification_expires_when_latest_success_is_stale",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 470
-    },
-    {
-      "name": "test_scheduler_delivery_overview_rejects_invalid_freshness_window",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 491
-    },
-    {
-      "name": "test_scheduler_response_exposes_backlog_and_mtf_progress",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 499
-    },
-    {
-      "name": "test_scheduler_marks_partial_market_cycle_degraded",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 527
-    },
-    {
-      "name": "test_scheduler_delivery_overview_exposes_recent_failed_delivery",
-      "kind": "function",
-      "file": "tests/test_scheduler_endpoint.py",
-      "line": 563
+      "file": "tests/test_reproducibility.py",
+      "line": 84
     }
   ],
   "selected_tests": [
-    "tests/test_dashboard.py",
-    "tests/test_dashboard_engine_status.py",
-    "tests/test_dashboard_health.py",
-    "tests/test_dashboard_overview.py",
-    "tests/test_dashboard_persistence.py",
-    "tests/test_multi_market.py",
-    "tests/test_scheduler_endpoint.py"
+    "tests/test_cost_stress.py",
+    "tests/test_cost_stress_gate.py",
+    "tests/test_quantitative_artifact.py",
+    "tests/test_reproducibility.py"
   ]
 }
