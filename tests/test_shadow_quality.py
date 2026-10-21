@@ -83,6 +83,9 @@ def test_shadow_quality_compares_both_models_on_identical_labels() -> None:
     assert forward.observations == 5
     assert forward.pending == 0
     assert forward.short_predictions == 3
+    assert forward.directional_labels == 5
+    assert forward.river_directional_predictions == 0
+    assert forward.river_v2_directional_predictions == 5
     assert forward.river_v2.accuracy == 1.0
     assert forward.river.accuracy == 0.0
     assert forward.score_delta is not None and forward.score_delta > 0
