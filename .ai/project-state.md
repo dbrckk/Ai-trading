@@ -21,7 +21,7 @@ Status: active
 - PR #66 added per-market leakage-safe parameter selection. Latest validated research result: Gold uses 45m / 5bp / ATR 0.25 / train 1000 / confidence 56%; DAX uses 45m / 5bp / ATR 0.25 / train 1000 / confidence 60%; BTC has no candidate that passes the directional gate, including the focused 45m/60m/90m search.
 - PR #67 prepares those validated Gold/DAX configurations as versioned audit-only MTF candidates, resets their quality evidence logically by config name, and leaves BTC MTF disabled until a benchmark candidate passes.
 
-- PR #173 merged on 2026-10-21: opt-in 5m River-v2 forward observer for Gold/DAX/BTC: fresh completed-bar gating, strictly matured-label bounded OVR training, atomic audit predictions, and next-cycle delayed v1/v2 directional scoring exposed read-only. **PR-head CI/CodeQL passed, but actual Render deployment of this revision has not been verified.** River-v1 continues paper execution and v2 is not an approved trading signal.
+- PR #173 merged on 2026-10-21: opt-in 5m River-v2 forward observer for Gold/DAX/BTC: fresh completed-bar gating, strictly matured-label bounded OVR training, atomic audit predictions, and next-cycle delayed v1/v2 directional scoring exposed read-only. **PR-head and post-merge main CI/CodeQL passed. Render /livez exact-deployment SHA verified on 2026-10-21.** River-v1 continues paper execution and v2 is not an approved trading signal.
 
 ## Broken / blockers
 - Paper execution is operational on three markets, but the realized trade sample is statistically insufficient for quality or profitability claims.
@@ -39,7 +39,7 @@ Status: active
 
 - River-v2 versioned artifact work was merged in **PR #171**: the production v1 codec now refuses v2 subclasses, and a separate `joblib-river-ovr-v2` research codec round-trips only trusted ternary OVR models. This is **offline research only**, with no changes to paper runtime keys, persisted v1 states or live routing. Forward shadow is not yet installed; isolated read-only evaluation and independent evidence are next. PR-head CI and CodeQL passed.
 
-- Live public read-only Render probe on 2026-10-21: `/livez.web_healthy=true`, the paper engines for Gold/DAX/BTC were `RUNNING` without cycle errors, but `/livez.deployed_commit` was **`3c2bf9c1`**, not the new PR #173 source release **`6f3fe1df`**. No `river_v2_shadow` API field was visible yet; deployment of this feature remains unconfirmed. Check again after Render rollout, never infer deployment from GitHub CI alone.
+- Read-only Render verification on 2026-10-21: initial `/livez.deployed_commit` was old `3c2bf9c1`, but the later direct probe **confirmed deployed commit `6f3fe1df` exactly**, matching merged PR #173, with `/livez.web_healthy=true` and `/readyz.ready=true`/`storage_healthy=true`. The new `overview.river_v2_shadow` fields were present for Gold, DAX, BTC, all non-actionable, with **0 matured observations** immediately after rollout. All three market statuses were transiently `STARTING` during the paper cycle, with zero market errors; verify normal return to `RUNNING` on a later probe. No new model evidence or profitable trade claim.
 
 ## Validation
 - Main after PR #167: Ruff/Pytest/Cloudflare Worker checks and CodeQL passed (run 39499994723 and 39499994605).
