@@ -31,7 +31,7 @@ class RiskEngine:
 
     def evaluate(self, prediction: Prediction, portfolio: PortfolioSnapshot) -> RiskDecision:
         if portfolio.equity <= 0:
-            return RiskDecision(False, 0, 0.0, "non-positive equity")
+            return RiskDecision(False, 0, 0.0, "non-positive equity", liquidate_existing=True)
 
         drawdown = 1.0 - portfolio.equity / max(portfolio.peak_equity, portfolio.equity)
         if drawdown >= self.config.max_drawdown_fraction:
