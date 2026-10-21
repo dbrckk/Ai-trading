@@ -10,6 +10,7 @@ from ai_trading.backtest import (
 from ai_trading.broker import PaperBroker
 from ai_trading.config import ModelConfig, RiskConfig
 from ai_trading.performance import compute_metrics, infer_periods_per_year
+from ai_trading.risk import RiskDecision, RiskEngine
 
 
 def sample_market(n: int = 360) -> pd.DataFrame:
@@ -96,3 +97,37 @@ def test_walk_forward_annualizes_from_actual_oos_timestamps_by_default() -> None
     assert report.metrics.annualized_volatility == pytest.approx(
         expected.annualized_volatility
     )
+
+
+def test_walk_forward_exits_position_after_hard_risk_stop(monkeypatch) -> None:
+    """Backtest must account for a stop exit and its turnover/costs."""
+    decisions = 0
+
+    def configured_risk(self, prediction, portfolio):
+        nonlocal decisions
+        decisions += 1
+        if decisions == 1:
+            return RiskDecision(True, 1, 10_000.0, "approved")
+        return RiskDecision(
+            False, 0, 0.0, "daily loss limit reached", liquidate_existing=True
+        )
+
+    monkeypatch.setattr(RiskEngine, "evaluate", configured_risk)
+    rebalances: list[tuple[int, float]] = []
+    original_rebalance = PaperBroker.rebalance
+
+    def tracked_rebalance(self, side, target_notional, price):
+        rebalances.append((side, target_notional))
+        return original_rebalance(self, side, target_notional, price)
+
+    monkeypatch.setattr(PaperBroker, "rebalance", tracked_rebalance)
+    report = WalkForwardBacktester(
+        risk_config=RiskConfig(min_confidence=0.0),
+        model_config=ModelConfig(),
+        config=WalkForwardConfig(min_train_bars=120, test_window_bars=40),
+    ).run(sample_market())
+
+    assert report.decisions == decisions
+    assert report.trades == 2
+    assert report.rejected_decisions == decisions - 1
+    assert rebalances == [(1, 10_000.0), (0, 0.0)]
