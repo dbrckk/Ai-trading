@@ -79,3 +79,12 @@ def test_benchmark_gate_rejects_nonfinite_metrics_that_skip_thresholds() -> None
     assert decision.passed is False
     assert "non-finite out-of-sample performance metric" in decision.reasons
     assert "non-positive net out-of-sample return" in decision.reasons
+
+
+def test_benchmark_gate_rejects_infinite_annualized_volatility() -> None:
+    report = _report()
+    report.metrics = replace(report.metrics, annualized_volatility=float("inf"))
+    decision = evaluate_benchmark_gate(report)
+
+    assert decision.passed is False
+    assert "non-finite out-of-sample performance metric" in decision.reasons
