@@ -38,6 +38,8 @@ def evaluate_benchmark_gate(
         isfinite(value)
         for value in (
             report.metrics.total_return,
+            report.metrics.annualized_return,
+            report.metrics.annualized_volatility,
             report.metrics.sharpe,
             report.metrics.sortino,
             report.metrics.calmar,
