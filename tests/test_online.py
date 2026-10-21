@@ -37,6 +37,17 @@ def test_research_river_multiclass_learns_all_three_directions() -> None:
     assert long.side == 1
     assert abs(sum(short.probabilities.values()) - 1.0) < 1e-9
 
+    # The research state survives a v2-only round trip after actual learning.
+    from ai_trading.research_model_codec import (
+        deserialize_research_model,
+        serialize_research_model,
+    )
+
+    restored = deserialize_research_model(serialize_research_model(model))
+    assert restored.stats.observations == 540
+    assert restored.predict_one(row(-2.0)).side == short.side
+    assert restored.predict_one(row(2.0)).side == long.side
+
 
 def test_legacy_river_binary_probabilities_do_not_include_short() -> None:
     # Document existing v1 limitation without silently changing stored models.
