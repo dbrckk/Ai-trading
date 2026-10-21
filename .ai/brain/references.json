@@ -5,1058 +5,351 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "CostStressGatePolicy": {
+    "BenchmarkGatePolicy": {
       "definition": {
-        "file": "src/ai_trading/cost_stress_gate.py",
+        "file": "src/ai_trading/benchmark_gate.py",
         "line": 10,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/cost_stress_gate.py",
+          "file": "src/ai_trading/benchmark_gate.py",
           "line": 10,
-          "preview": "class CostStressGatePolicy:",
+          "preview": "class BenchmarkGatePolicy:",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/cost_stress_gate.py",
-          "line": 36,
-          "preview": "policy: CostStressGatePolicy | None = None,",
+          "file": "src/ai_trading/benchmark_gate.py",
+          "line": 30,
+          "preview": "policy: BenchmarkGatePolicy | None = None,",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/cost_stress_gate.py",
-          "line": 38,
-          "preview": "policy = policy or CostStressGatePolicy()",
+          "file": "src/ai_trading/benchmark_gate.py",
+          "line": 32,
+          "preview": "policy = policy or BenchmarkGatePolicy()",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_cost_stress_gate.py",
-          "line": 105,
-          "preview": "from ai_trading.cost_stress_gate import CostStressGatePolicy",
+          "file": "tests/test_benchmark_gate.py",
+          "line": 4,
+          "preview": "from ai_trading.benchmark_gate import BenchmarkGatePolicy, evaluate_benchmark_gate",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_cost_stress_gate.py",
-          "line": 119,
-          "preview": "policy=CostStressGatePolicy(require_worst_cost_positive=False),",
+          "file": "tests/test_benchmark_gate.py",
+          "line": 45,
+          "preview": "BenchmarkGatePolicy(),",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 5
     },
-    "CostStressGateResult": {
+    "BenchmarkGateResult": {
       "definition": {
-        "file": "src/ai_trading/cost_stress_gate.py",
+        "file": "src/ai_trading/benchmark_gate.py",
         "line": 23,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/cost_stress_gate.py",
+          "file": "src/ai_trading/benchmark_gate.py",
           "line": 23,
-          "preview": "class CostStressGateResult:",
+          "preview": "class BenchmarkGateResult:",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/cost_stress_gate.py",
-          "line": 37,
-          "preview": ") -> CostStressGateResult:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cost_stress_gate.py",
-          "line": 40,
-          "preview": "return CostStressGateResult(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cost_stress_gate.py",
-          "line": 94,
-          "preview": "return CostStressGateResult(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/quantitative_artifact.py",
-          "line": 11,
-          "preview": "from .cost_stress_gate import CostStressGateResult",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/quantitative_artifact.py",
-          "line": 34,
-          "preview": "cost_stress: CostStressGateResult",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/quantitative_artifact.py",
-          "line": 67,
-          "preview": "cost_stress: CostStressGateResult,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/quantitative_qualification.py",
-          "line": 7,
-          "preview": "from .cost_stress_gate import CostStressGateResult",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/quantitative_qualification.py",
-          "line": 27,
-          "preview": "cost_stress: CostStressGateResult | None = None,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_quantitative_artifact.py",
-          "line": 3,
-          "preview": "from ai_trading.cost_stress_gate import CostStressGateResult",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_quantitative_artifact.py",
-          "line": 40,
-          "preview": "\"cost_stress\": CostStressGateResult(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_reproducibility.py",
-          "line": 5,
-          "preview": "from ai_trading.cost_stress_gate import CostStressGateResult",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_reproducibility.py",
-          "line": 47,
-          "preview": "cost_stress=CostStressGateResult(True, 3, 3, 1.0, 0.01, 0.5, 0.1, ()),",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 13
-    },
-    "evaluate_cost_stress_gate": {
-      "definition": {
-        "file": "src/ai_trading/cost_stress_gate.py",
-        "line": 34,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/cli.py",
+          "file": "src/ai_trading/benchmark_gate.py",
           "line": 31,
-          "preview": "from .cost_stress_gate import evaluate_cost_stress_gate",
+          "preview": ") -> BenchmarkGateResult:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/benchmark_gate.py",
+          "line": 69,
+          "preview": "return BenchmarkGateResult(passed=not reasons, reasons=tuple(reasons))",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/quantitative_artifact.py",
+          "line": 9,
+          "preview": "from .benchmark_gate import BenchmarkGateResult",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/quantitative_artifact.py",
+          "line": 30,
+          "preview": "benchmark: BenchmarkGateResult",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/quantitative_artifact.py",
+          "line": 63,
+          "preview": "benchmark: BenchmarkGateResult,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/quantitative_qualification.py",
+          "line": 5,
+          "preview": "from .benchmark_gate import BenchmarkGateResult",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/quantitative_qualification.py",
+          "line": 23,
+          "preview": "benchmark: BenchmarkGateResult,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_quantitative_artifact.py",
+          "line": 1,
+          "preview": "from ai_trading.benchmark_gate import BenchmarkGateResult",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_quantitative_artifact.py",
+          "line": 34,
+          "preview": "\"benchmark\": BenchmarkGateResult(True, ()),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_reproducibility.py",
+          "line": 3,
+          "preview": "from ai_trading.benchmark_gate import BenchmarkGateResult",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_reproducibility.py",
+          "line": 43,
+          "preview": "benchmark=BenchmarkGateResult(True, ()),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 12
+    },
+    "evaluate_benchmark_gate": {
+      "definition": {
+        "file": "src/ai_trading/benchmark_gate.py",
+        "line": 28,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/benchmark_gate.py",
+          "line": 28,
+          "preview": "def evaluate_benchmark_gate(",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 22,
+          "preview": "from .benchmark_gate import evaluate_benchmark_gate",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/cli.py",
-          "line": 342,
-          "preview": "cost_stress_gate = evaluate_cost_stress_gate(cost_stress)",
+          "line": 280,
+          "preview": "gate = evaluate_benchmark_gate(report)",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/cost_stress_gate.py",
-          "line": 34,
-          "preview": "def evaluate_cost_stress_gate(",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_cost_stress_gate.py",
+          "file": "tests/test_benchmark_gate.py",
           "line": 4,
-          "preview": "from ai_trading.cost_stress_gate import evaluate_cost_stress_gate",
+          "preview": "from ai_trading.benchmark_gate import BenchmarkGatePolicy, evaluate_benchmark_gate",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_cost_stress_gate.py",
-          "line": 25,
-          "preview": "gate = evaluate_cost_stress_gate(",
+          "file": "tests/test_benchmark_gate.py",
+          "line": 36,
+          "preview": "result = evaluate_benchmark_gate(_report())",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_cost_stress_gate.py",
-          "line": 34,
-          "preview": "gate = evaluate_cost_stress_gate(",
+          "file": "tests/test_benchmark_gate.py",
+          "line": 43,
+          "preview": "result = evaluate_benchmark_gate(",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_cost_stress_gate.py",
-          "line": 52,
-          "preview": "gate = evaluate_cost_stress_gate(scenarios)",
+          "file": "tests/test_benchmark_gate.py",
+          "line": 58,
+          "preview": "decision = evaluate_benchmark_gate(report)",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_cost_stress_gate.py",
-          "line": 65,
-          "preview": "gate = evaluate_cost_stress_gate(scenarios)",
+          "file": "tests/test_benchmark_gate.py",
+          "line": 68,
+          "preview": "decision = evaluate_benchmark_gate(report)",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_cost_stress_gate.py",
-          "line": 78,
-          "preview": "gate = evaluate_cost_stress_gate(scenarios)",
+          "file": "tests/test_benchmark_gate.py",
+          "line": 77,
+          "preview": "decision = evaluate_benchmark_gate(report)",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_cost_stress_gate.py",
-          "line": 96,
-          "preview": "gate = evaluate_cost_stress_gate(scenarios)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_cost_stress_gate.py",
-          "line": 117,
-          "preview": "gate = evaluate_cost_stress_gate(",
+          "file": "tests/test_benchmark_gate.py",
+          "line": 87,
+          "preview": "decision = evaluate_benchmark_gate(report)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 11
+      "occurrence_count": 10
     },
-    "result": {
+    "_report": {
       "definition": {
-        "file": "tests/test_cost_stress_gate.py",
-        "line": 7,
+        "file": "tests/test_benchmark_gate.py",
+        "line": 8,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/alpha_allocation.py",
-          "line": 46,
-          "preview": "result = raw.copy()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/alpha_allocation.py",
-          "line": 48,
-          "preview": "residual = config.target_gross_exposure - float(result.sum())",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/alpha_allocation.py",
-          "line": 51,
-          "preview": "free = result[result < config.max_asset_weight - 1e-12]",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/alpha_allocation.py",
-          "line": 57,
-          "preview": "result.loc[asset] = min(config.max_asset_weight, result.loc[asset] + add)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/alpha_allocation.py",
-          "line": 60,
-          "preview": "return result * signs",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 197,
-          "preview": "result = TradingEngine().paper_run(df)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 202,
-          "preview": "table.add_row(\"Starting equity\", f\"{result.starting_equity:,.2f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 203,
-          "preview": "table.add_row(\"Final equity\", f\"{result.final_equity:,.2f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 204,
-          "preview": "table.add_row(\"Total return\", f\"{result.total_return:.2%}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 205,
-          "preview": "table.add_row(\"Max drawdown\", f\"{result.max_drawdown:.2%}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 206,
-          "preview": "table.add_row(\"Trades\", str(result.trades))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 207,
-          "preview": "table.add_row(\"Decisions\", str(result.decisions))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 545,
-          "preview": "result = tune_walk_forward(df, trials=trials, use_ensemble=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 550,
-          "preview": "table.add_row(\"Best score\", f\"{result.best_score:.6f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 551,
-          "preview": "table.add_row(\"Trials\", str(result.trials))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 552,
-          "preview": "for key, value in sorted(result.best_params.items()):",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 635,
-          "preview": "result = run_learning_cycle(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 646,
-          "preview": "table.add_row(\"Tuning score\", f\"{result.tuning.best_score:.6f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 647,
-          "preview": "table.add_row(\"Promotion policy\", \"PASS\" if result.promotion.promote else \"FAIL\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 648,
-          "preview": "table.add_row(\"Regime validation\", \"PASS\" if result.regime_validation.valid else \"FAIL\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 651,
-          "preview": "f\"{result.robustness.probability_positive:.2%}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 653,
-          "preview": "table.add_row(\"5th percentile return\", f\"{result.robustness.p05_return:.2%}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 654,
-          "preview": "table.add_row(\"Promoted\", \"YES\" if result.promoted else \"NO\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 655,
-          "preview": "table.add_row(\"Champion version\", result.champion_version or \"-\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 667,
-          "preview": "result = PaperAutonomousRuntime(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 675,
-          "preview": "table.add_row(\"Processed\", \"YES\" if result.processed else \"NO\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 676,
-          "preview": "table.add_row(\"Timestamp\", result.timestamp or \"-\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 677,
-          "preview": "table.add_row(\"Side\", str(result.side))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 678,
-          "preview": "table.add_row(\"Confidence\", f\"{result.confidence:.3f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 679,
-          "preview": "table.add_row(\"Risk approved\", \"YES\" if result.approved else \"NO\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 680,
-          "preview": "table.add_row(\"Reason\", result.reason)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 681,
-          "preview": "table.add_row(\"Equity\", f\"{result.equity:,.2f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 682,
-          "preview": "table.add_row(\"Units\", f\"{result.units:.6f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 683,
-          "preview": "table.add_row(\"Processed bars\", str(result.processed_bars))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 684,
-          "preview": "table.add_row(\"Learning cycle due\", \"YES\" if result.retrain_due else \"NO\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 832,
-          "preview": "result = MultiAssetPaperRuntime().step(markets)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 837,
-          "preview": "table.add_row(\"Processed\", \"YES\" if result.processed else \"NO\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 838,
-          "preview": "table.add_row(\"Timestamp\", result.timestamp or \"-\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 839,
-          "preview": "table.add_row(\"Equity\", f\"{result.equity:,.2f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 840,
-          "preview": "table.add_row(\"Cash\", f\"{result.cash:,.2f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 841,
-          "preview": "table.add_row(\"Risk approved\", \"YES\" if result.risk_approved else \"NO\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 844,
-          "preview": "if result.weights:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 851,
-          "preview": "for name in sorted(result.weights):",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 854,
-          "preview": "f\"{result.weights[name]:.2%}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 855,
-          "preview": "f\"{result.notionals[name]:,.2f}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 856,
-          "preview": "str(result.signals.get(name, 0)),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 857,
-          "preview": "f\"{result.confidences.get(name, 0.0):.3f}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 861,
-          "preview": "if result.risk_reasons:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 862,
-          "preview": "console.print(\"; \".join(result.risk_reasons))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 904,
-          "preview": "result = validate_specialist(df, kind=kind)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 913,
-          "preview": "score=result.validation_score,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 914,
-          "preview": "validation_score=result.validation_score,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 915,
-          "preview": "observations=result.observations,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 927,
-          "preview": "table.add_row(\"Validation score\", f\"{result.validation_score:.3f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 928,
-          "preview": "table.add_row(\"Accuracy\", f\"{result.accuracy:.3f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 929,
-          "preview": "table.add_row(\"Sharpe\", f\"{result.metrics.sharpe:.3f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 930,
-          "preview": "table.add_row(\"Sortino\", f\"{result.metrics.sortino:.3f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 931,
-          "preview": "table.add_row(\"Max drawdown\", f\"{result.metrics.max_drawdown:.2%}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 932,
-          "preview": "table.add_row(\"Observations\", str(result.observations))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 943,
-          "preview": "result = refresh_expert_pool(df, symbol=symbol)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 952,
-          "preview": "for name, record in sorted(result.records.items()):",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 974,
-          "preview": "result = run_expert_factory(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 986,
-          "preview": "table.add_row(\"Evaluated\", str(result.evaluated))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 987,
-          "preview": "table.add_row(\"Promoted\", str(result.promoted))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 988,
-          "preview": "table.add_row(\"Generated candidates\", str(len(result.candidates)))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1000,
-          "preview": "result = run_evolution_cycle(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1009,
-          "preview": "table.add_row(\"Generation\", str(result.generation))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1010,
-          "preview": "table.add_row(\"Mutations evaluated\", str(result.evaluated))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1011,
-          "preview": "table.add_row(\"Accepted\", str(result.accepted))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1012,
-          "preview": "table.add_row(\"Portfolio replacements\", str(result.replaced))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1013,
-          "preview": "table.add_row(\"Generation rollback\", \"YES\" if result.rolled_back else \"NO\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1021,
-          "preview": "result = rollback_generation(pool, generations)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1026,
-          "preview": "table.add_row(\"Restored generation\", str(result.restored.generation))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1027,
-          "preview": "table.add_row(\"Portfolio score\", f\"{result.restored.portfolio_score:.4f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1028,
-          "preview": "table.add_row(\"Active experts\", \", \".join(result.active_experts) or \"-\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1045,
-          "preview": "result = run_multiasset_evolution_cycle(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1054,
-          "preview": "table.add_row(\"Generation\", str(result.generation))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1055,
-          "preview": "table.add_row(\"Symbols\", \", \".join(result.symbols))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1056,
-          "preview": "table.add_row(\"Evolved symbols\", str(result.evolved_symbols))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1057,
-          "preview": "table.add_row(\"Portfolio score\", f\"{result.portfolio_score:.4f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1058,
-          "preview": "table.add_row(\"Diversified\", \"YES\" if result.diversified else \"NO\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1059,
-          "preview": "table.add_row(\"Max pair correlation\", f\"{result.max_pair_correlation:.3f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1060,
-          "preview": "table.add_row(\"Accepted\", \"YES\" if result.accepted else \"NO\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1061,
-          "preview": "table.add_row(\"Rolled back\", \"YES\" if result.rolled_back else \"NO\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1062,
-          "preview": "table.add_row(\"Reason\", result.reason)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1131,
-          "preview": "result = tune_global_allocator(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1136,
-          "preview": "AllocatorConfigStore().save(result.best_config)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1141,
-          "preview": "table.add_row(\"Best score\", f\"{result.best_score:.6f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1142,
-          "preview": "table.add_row(\"Trials\", str(result.trials))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1143,
-          "preview": "table.add_row(\"CVaR alpha\", f\"{result.best_config.cvar_alpha:.4f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1144,
-          "preview": "table.add_row(\"Max CVaR\", f\"{result.best_config.max_cvar:.4f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1145,
-          "preview": "table.add_row(\"Max asset weight\", f\"{result.best_config.max_asset_weight:.4f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1146,
-          "preview": "table.add_row(\"Max expert weight\", f\"{result.best_config.max_expert_weight:.4f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1147,
-          "preview": "table.add_row(\"Max turnover\", f\"{result.best_config.max_turnover:.4f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1148,
-          "preview": "table.add_row(\"Target gross\", f\"{result.best_config.target_gross_exposure:.4f}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1247,
-          "preview": "composite = history[-1].result",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1371,
-          "preview": "composite = readiness_history[-1].result if readiness_history else None",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1593,
-          "preview": "result = enforce_watchdog(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1605,
-          "preview": "table.add_row(\"Healthy\", \"YES\" if result.healthy else \"NO\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1606,
-          "preview": "table.add_row(\"Halted\", \"YES\" if result.halted else \"NO\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1609,
-          "preview": "\"-\" if not result.reasons else \"; \".join(result.reasons),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1725,
-          "preview": "result = supervisor.run()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1727,
-          "preview": "table = Table(title=\"Paper supervisor result\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1730,
-          "preview": "table.add_row(\"Restarts\", str(result.restarts))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1733,
-          "preview": "\"YES\" if result.stopped_for_maintenance else \"NO\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1737,
-          "preview": "\"YES\" if result.crash_loop_detected else \"NO\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1741,
-          "preview": "\"-\" if result.final_exit_code is None else str(result.final_exit_code),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1777,
-          "preview": "result = run_multiasset_soak(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1787,
-          "preview": "table.add_row(\"Cycles\", str(result.cycles))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1788,
-          "preview": "table.add_row(\"Successes\", str(result.successes))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1789,
-          "preview": "table.add_row(\"Failures\", str(result.failures))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1792,
-          "preview": "\"-\" if result.final_equity is None else f\"{result.final_equity:,.2f}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1796,
-          "preview": "\"-\" if result.min_equity is None else f\"{result.min_equity:,.2f}\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1798,
-          "preview": "table.add_row(\"Max drawdown\", f\"{result.max_drawdown:.2%}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1799,
-          "preview": "qualification = evaluate_soak_qualification(result)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1801,
-          "preview": "result,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1807,
-          "preview": "table.add_row(\"Governor\", result.governor_verdict)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1808,
-          "preview": "table.add_row(\"Crisis mode\", result.crisis_mode)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1824,
-          "preview": "if result.errors:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 1826,
-          "preview": "for error in result.errors[-10:]:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 120
-    },
-    "test_cost_stress_gate_accepts_resilient_strategy": {
-      "definition": {
-        "file": "tests/test_cost_stress_gate.py",
-        "line": 24,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_cost_stress_gate.py",
-          "line": 24,
-          "preview": "def test_cost_stress_gate_accepts_resilient_strategy() -> None:",
+          "file": "tests/test_benchmark_gate.py",
+          "line": 8,
+          "preview": "def _report(",
           "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_cost_stress_gate_rejects_cost_fragility": {
-      "definition": {
-        "file": "tests/test_cost_stress_gate.py",
-        "line": 33,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
+        },
         {
-          "file": "tests/test_cost_stress_gate.py",
-          "line": 33,
-          "preview": "def test_cost_stress_gate_rejects_cost_fragility() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_cost_stress_gate_rejects_negative_net_returns_despite_positive_excess": {
-      "definition": {
-        "file": "tests/test_cost_stress_gate.py",
-        "line": 46,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
+          "file": "tests/test_benchmark_gate.py",
+          "line": 36,
+          "preview": "result = evaluate_benchmark_gate(_report())",
+          "definition_candidate": false
+        },
         {
-          "file": "tests/test_cost_stress_gate.py",
-          "line": 46,
-          "preview": "def test_cost_stress_gate_rejects_negative_net_returns_despite_positive_excess() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_cost_stress_gate_rejects_invalid_or_zero_trade_evidence": {
-      "definition": {
-        "file": "tests/test_cost_stress_gate.py",
-        "line": 59,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
+          "file": "tests/test_benchmark_gate.py",
+          "line": 44,
+          "preview": "_report(sharpe=0.1, drawdown=0.35, excess=-0.03, trades=5),",
+          "definition_candidate": false
+        },
         {
-          "file": "tests/test_cost_stress_gate.py",
-          "line": 59,
-          "preview": "def test_cost_stress_gate_rejects_invalid_or_zero_trade_evidence() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_cost_stress_gate_counts_only_profitable_cost_scenarios": {
-      "definition": {
-        "file": "tests/test_cost_stress_gate.py",
-        "line": 72,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
+          "file": "tests/test_benchmark_gate.py",
+          "line": 56,
+          "preview": "report = _report(excess=0.20)",
+          "definition_candidate": false
+        },
         {
-          "file": "tests/test_cost_stress_gate.py",
-          "line": 72,
-          "preview": "def test_cost_stress_gate_counts_only_profitable_cost_scenarios() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_cost_stress_gate_rejects_loss_at_highest_cost_even_with_high_pass_ratio": {
-      "definition": {
-        "file": "tests/test_cost_stress_gate.py",
-        "line": 85,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
+          "file": "tests/test_benchmark_gate.py",
+          "line": 66,
+          "preview": "report = _report()",
+          "definition_candidate": false
+        },
         {
-          "file": "tests/test_cost_stress_gate.py",
+          "file": "tests/test_benchmark_gate.py",
+          "line": 75,
+          "preview": "report = _report()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_benchmark_gate.py",
           "line": 85,
-          "preview": "def test_cost_stress_gate_rejects_loss_at_highest_cost_even_with_high_pass_ratio() -> None:",
-          "definition_candidate": true
+          "preview": "report = _report()",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 7
     },
-    "test_cost_stress_gate_can_opt_out_of_worst_cost_requirement": {
+    "test_benchmark_gate_accepts_qualified_report": {
       "definition": {
-        "file": "tests/test_cost_stress_gate.py",
-        "line": 104,
+        "file": "tests/test_benchmark_gate.py",
+        "line": 35,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_cost_stress_gate.py",
-          "line": 104,
-          "preview": "def test_cost_stress_gate_can_opt_out_of_worst_cost_requirement() -> None:",
+          "file": "tests/test_benchmark_gate.py",
+          "line": 35,
+          "preview": "def test_benchmark_gate_accepts_qualified_report() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_benchmark_gate_rejects_weak_out_of_sample_result": {
+      "definition": {
+        "file": "tests/test_benchmark_gate.py",
+        "line": 42,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_benchmark_gate.py",
+          "line": 42,
+          "preview": "def test_benchmark_gate_rejects_weak_out_of_sample_result() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_benchmark_gate_rejects_net_loss_even_if_benchmark_loses_more": {
+      "definition": {
+        "file": "tests/test_benchmark_gate.py",
+        "line": 55,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_benchmark_gate.py",
+          "line": 55,
+          "preview": "def test_benchmark_gate_rejects_net_loss_even_if_benchmark_loses_more() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_benchmark_gate_rejects_break_even_return_by_default": {
+      "definition": {
+        "file": "tests/test_benchmark_gate.py",
+        "line": 65,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_benchmark_gate.py",
+          "line": 65,
+          "preview": "def test_benchmark_gate_rejects_break_even_return_by_default() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_benchmark_gate_rejects_nonfinite_metrics_that_skip_thresholds": {
+      "definition": {
+        "file": "tests/test_benchmark_gate.py",
+        "line": 74,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_benchmark_gate.py",
+          "line": 74,
+          "preview": "def test_benchmark_gate_rejects_nonfinite_metrics_that_skip_thresholds() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_benchmark_gate_rejects_infinite_annualized_volatility": {
+      "definition": {
+        "file": "tests/test_benchmark_gate.py",
+        "line": 84,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_benchmark_gate.py",
+          "line": 84,
+          "preview": "def test_benchmark_gate_rejects_infinite_annualized_volatility() -> None:",
           "definition_candidate": true
         }
       ],

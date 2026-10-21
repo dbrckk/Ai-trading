@@ -5,36 +5,48 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "CostStressGatePolicy": {
+    "BenchmarkGatePolicy": {
       "source": {
-        "file": "src/ai_trading/cost_stress_gate.py",
+        "file": "src/ai_trading/benchmark_gate.py",
         "start": 10,
         "end": 19
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "CostStressGateResult": {
+    "BenchmarkGateResult": {
       "source": {
-        "file": "src/ai_trading/cost_stress_gate.py",
+        "file": "src/ai_trading/benchmark_gate.py",
         "start": 23,
-        "end": 31
+        "end": 25
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "evaluate_cost_stress_gate": {
+    "evaluate_benchmark_gate": {
       "source": {
-        "file": "src/ai_trading/cost_stress_gate.py",
-        "start": 34,
-        "end": 103
+        "file": "src/ai_trading/benchmark_gate.py",
+        "start": 28,
+        "end": 69
       },
       "symbol_dependencies": [
         {
-          "symbol": "CostStressGatePolicy",
+          "symbol": "BacktestReport",
           "definitions": [
             {
-              "file": "src/ai_trading/cost_stress_gate.py",
+              "file": "src/ai_trading/backtest.py",
+              "line": 52,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "BenchmarkGatePolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/benchmark_gate.py",
               "line": 10,
               "kind": "class",
               "language": "python"
@@ -43,57 +55,33 @@
           "relation": "same_file"
         },
         {
-          "symbol": "CostStressGateResult",
+          "symbol": "BenchmarkGateResult",
           "definitions": [
             {
-              "file": "src/ai_trading/cost_stress_gate.py",
+              "file": "src/ai_trading/benchmark_gate.py",
               "line": 23,
               "kind": "class",
               "language": "python"
             }
           ],
           "relation": "same_file"
-        },
-        {
-          "symbol": "CostStressResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/cost_stress.py",
-              "line": 19,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
         }
       ],
       "dependency_count": 3
     },
-    "result": {
+    "_report": {
       "source": {
-        "file": "tests/test_cost_stress_gate.py",
-        "start": 7,
-        "end": 21
+        "file": "tests/test_benchmark_gate.py",
+        "start": 8,
+        "end": 32
       },
       "symbol_dependencies": [
         {
-          "symbol": "CostStressResult",
+          "symbol": "PerformanceMetrics",
           "definitions": [
             {
-              "file": "src/ai_trading/cost_stress.py",
-              "line": 19,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "CostStressScenario",
-          "definitions": [
-            {
-              "file": "src/ai_trading/cost_stress.py",
-              "line": 12,
+              "file": "src/ai_trading/performance.py",
+              "line": 10,
               "kind": "class",
               "language": "python"
             }
@@ -101,236 +89,54 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 2
+      "dependency_count": 1
     },
-    "test_cost_stress_gate_accepts_resilient_strategy": {
+    "test_benchmark_gate_accepts_qualified_report": {
       "source": {
-        "file": "tests/test_cost_stress_gate.py",
-        "start": 24,
-        "end": 30
+        "file": "tests/test_benchmark_gate.py",
+        "start": 35,
+        "end": 39
       },
       "symbol_dependencies": [
         {
-          "symbol": "evaluate_cost_stress_gate",
+          "symbol": "_report",
           "definitions": [
             {
-              "file": "src/ai_trading/cost_stress_gate.py",
-              "line": 34,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "result",
-          "definitions": [
-            {
-              "file": "tests/test_cost_stress_gate.py",
-              "line": 7,
+              "file": "tests/test_benchmark_gate.py",
+              "line": 8,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_benchmark_gate",
+          "definitions": [
+            {
+              "file": "src/ai_trading/benchmark_gate.py",
+              "line": 28,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
         }
       ],
       "dependency_count": 2
     },
-    "test_cost_stress_gate_rejects_cost_fragility": {
+    "test_benchmark_gate_rejects_weak_out_of_sample_result": {
       "source": {
-        "file": "tests/test_cost_stress_gate.py",
-        "start": 33,
-        "end": 43
+        "file": "tests/test_benchmark_gate.py",
+        "start": 42,
+        "end": 52
       },
       "symbol_dependencies": [
         {
-          "symbol": "evaluate_cost_stress_gate",
+          "symbol": "BenchmarkGatePolicy",
           "definitions": [
             {
-              "file": "src/ai_trading/cost_stress_gate.py",
-              "line": 34,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "result",
-          "definitions": [
-            {
-              "file": "tests/test_cost_stress_gate.py",
-              "line": 7,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_cost_stress_gate_rejects_negative_net_returns_despite_positive_excess": {
-      "source": {
-        "file": "tests/test_cost_stress_gate.py",
-        "start": 46,
-        "end": 56
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "evaluate_cost_stress_gate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/cost_stress_gate.py",
-              "line": 34,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "result",
-          "definitions": [
-            {
-              "file": "tests/test_cost_stress_gate.py",
-              "line": 7,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_cost_stress_gate_rejects_invalid_or_zero_trade_evidence": {
-      "source": {
-        "file": "tests/test_cost_stress_gate.py",
-        "start": 59,
-        "end": 69
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "evaluate_cost_stress_gate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/cost_stress_gate.py",
-              "line": 34,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "result",
-          "definitions": [
-            {
-              "file": "tests/test_cost_stress_gate.py",
-              "line": 7,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_cost_stress_gate_counts_only_profitable_cost_scenarios": {
-      "source": {
-        "file": "tests/test_cost_stress_gate.py",
-        "start": 72,
-        "end": 82
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "evaluate_cost_stress_gate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/cost_stress_gate.py",
-              "line": 34,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "result",
-          "definitions": [
-            {
-              "file": "tests/test_cost_stress_gate.py",
-              "line": 7,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_cost_stress_gate_rejects_loss_at_highest_cost_even_with_high_pass_ratio": {
-      "source": {
-        "file": "tests/test_cost_stress_gate.py",
-        "start": 85,
-        "end": 101
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "CostStressScenario",
-          "definitions": [
-            {
-              "file": "src/ai_trading/cost_stress.py",
-              "line": 12,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_cost_stress_gate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/cost_stress_gate.py",
-              "line": 34,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "result",
-          "definitions": [
-            {
-              "file": "tests/test_cost_stress_gate.py",
-              "line": 7,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "test_cost_stress_gate_can_opt_out_of_worst_cost_requirement": {
-      "source": {
-        "file": "tests/test_cost_stress_gate.py",
-        "start": 104,
-        "end": 122
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "CostStressGatePolicy",
-          "definitions": [
-            {
-              "file": "src/ai_trading/cost_stress_gate.py",
+              "file": "src/ai_trading/benchmark_gate.py",
               "line": 10,
               "kind": "class",
               "language": "python"
@@ -339,43 +145,167 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "CostStressScenario",
+          "symbol": "_report",
           "definitions": [
             {
-              "file": "src/ai_trading/cost_stress.py",
-              "line": 12,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_cost_stress_gate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/cost_stress_gate.py",
-              "line": 34,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "result",
-          "definitions": [
-            {
-              "file": "tests/test_cost_stress_gate.py",
-              "line": 7,
+              "file": "tests/test_benchmark_gate.py",
+              "line": 8,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_benchmark_gate",
+          "definitions": [
+            {
+              "file": "src/ai_trading/benchmark_gate.py",
+              "line": 28,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
         }
       ],
-      "dependency_count": 4
+      "dependency_count": 3
+    },
+    "test_benchmark_gate_rejects_net_loss_even_if_benchmark_loses_more": {
+      "source": {
+        "file": "tests/test_benchmark_gate.py",
+        "start": 55,
+        "end": 62
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_report",
+          "definitions": [
+            {
+              "file": "tests/test_benchmark_gate.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_benchmark_gate",
+          "definitions": [
+            {
+              "file": "src/ai_trading/benchmark_gate.py",
+              "line": 28,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_benchmark_gate_rejects_break_even_return_by_default": {
+      "source": {
+        "file": "tests/test_benchmark_gate.py",
+        "start": 65,
+        "end": 71
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_report",
+          "definitions": [
+            {
+              "file": "tests/test_benchmark_gate.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_benchmark_gate",
+          "definitions": [
+            {
+              "file": "src/ai_trading/benchmark_gate.py",
+              "line": 28,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_benchmark_gate_rejects_nonfinite_metrics_that_skip_thresholds": {
+      "source": {
+        "file": "tests/test_benchmark_gate.py",
+        "start": 74,
+        "end": 81
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_report",
+          "definitions": [
+            {
+              "file": "tests/test_benchmark_gate.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_benchmark_gate",
+          "definitions": [
+            {
+              "file": "src/ai_trading/benchmark_gate.py",
+              "line": 28,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_benchmark_gate_rejects_infinite_annualized_volatility": {
+      "source": {
+        "file": "tests/test_benchmark_gate.py",
+        "start": 84,
+        "end": 90
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_report",
+          "definitions": [
+            {
+              "file": "tests/test_benchmark_gate.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_benchmark_gate",
+          "definitions": [
+            {
+              "file": "src/ai_trading/benchmark_gate.py",
+              "line": 28,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
     }
   }
 }

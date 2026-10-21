@@ -404,6 +404,20 @@ result = evaluate_benchmark_gate(_report())
 def test_benchmark_gate_rejects_weak_out_of_sample_result() -> None
 ⋮----
 result = evaluate_benchmark_gate(
+⋮----
+def test_benchmark_gate_rejects_net_loss_even_if_benchmark_loses_more() -> None
+⋮----
+report = _report(excess=0.20)
+⋮----
+decision = evaluate_benchmark_gate(report)
+⋮----
+def test_benchmark_gate_rejects_break_even_return_by_default() -> None
+⋮----
+report = _report()
+⋮----
+def test_benchmark_gate_rejects_nonfinite_metrics_that_skip_thresholds() -> None
+⋮----
+def test_benchmark_gate_rejects_infinite_annualized_volatility() -> None
 ```
 
 ## File: test_bootstrap_gate.py

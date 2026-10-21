@@ -83,17 +83,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-21T21:01:21Z
+Generated: 2026-10-21T21:08:10Z
 
 ### Git
 - Branch: `main`
-- Head: `b8f8ff1ff57a`
-- Commit date: 2026-10-21T17:01:10-04:00
-- Commit: fix(risk): require positive net return in worst execution-cost scenario (#188)
+- Head: `5cad2590a97f`
+- Commit date: 2026-10-21T17:07:59-04:00
+- Commit: fix(research): require positive net out-of-sample benchmark returns (#189)
 - Tracked files: 513
 
 ### Recently changed files
 - `README.md`
+- `src/ai_trading/benchmark_gate.py`
+- `tests/test_benchmark_gate.py`
 - `src/ai_trading/cost_stress_gate.py`
 - `tests/test_cost_stress_gate.py`
 - `src/ai_trading/dashboard.py`
@@ -104,9 +106,6 @@ Generated: 2026-10-21T21:01:21Z
 - `tests/test_backtest.py`
 - `tests/test_risk.py`
 - `tests/test_runtime_targeted_step.py`
-- `src/ai_trading/performance_metrics.py`
-- `tests/test_dashboard_overview.py`
-- `tests/test_performance_metrics.py`
 
 ### Project signals
 - `pyproject.toml`

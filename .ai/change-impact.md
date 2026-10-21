@@ -1,12 +1,12 @@
 # Change impact
 
-Base: 803bc6b8c643e7999358ea76f295f883ec893a61
-Head: b8f8ff1ff57a67e4208c18f8a018b960f95a014c
+Base: 7f83a9bd872e1e48728d14a09fd766da7c6023c1
+Head: 5cad2590a97f62999181cd3febec55fb92624329
 
 ## Changed files
 - M README.md
-- M src/ai_trading/cost_stress_gate.py
-- M tests/test_cost_stress_gate.py
+- M src/ai_trading/benchmark_gate.py
+- M tests/test_benchmark_gate.py
 
 ## Affected areas
 - (root)
@@ -14,7 +14,7 @@ Head: b8f8ff1ff57a67e4208c18f8a018b960f95a014c
 - tests
 
 ## Related test candidates
-- tests/test_cost_stress_gate.py
+- tests/test_benchmark_gate.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

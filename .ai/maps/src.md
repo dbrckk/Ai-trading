@@ -577,6 +577,8 @@ min_sortino: float = 0.7
 min_calmar: float = 0.5
 max_drawdown: float = 0.25
 min_excess_return: float = 0.0
+# Outperforming a losing benchmark is not equivalent to making money.
+min_total_return: float = 0.0
 ⋮----
 @dataclass(frozen=True)
 class BenchmarkGateResult
@@ -586,6 +588,9 @@ reasons: tuple[str, ...]
 ⋮----
 policy = policy or BenchmarkGatePolicy()
 reasons: list[str] = []
+⋮----
+# NaNs silently bypass ordinary comparisons and infinities make ratios
+# deceptively favorable: reject invalid research evidence explicitly.
 ```
 
 ## File: ai_trading/bootstrap_gate.py

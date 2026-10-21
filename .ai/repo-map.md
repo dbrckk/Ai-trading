@@ -1472,6 +1472,8 @@ min_sortino: float = 0.7
 min_calmar: float = 0.5
 max_drawdown: float = 0.25
 min_excess_return: float = 0.0
+# Outperforming a losing benchmark is not equivalent to making money.
+min_total_return: float = 0.0
 ⋮----
 @dataclass(frozen=True)
 class BenchmarkGateResult
@@ -1481,6 +1483,9 @@ reasons: tuple[str, ...]
 ⋮----
 policy = policy or BenchmarkGatePolicy()
 reasons: list[str] = []
+⋮----
+# NaNs silently bypass ordinary comparisons and infinities make ratios
+# deceptively favorable: reject invalid research evidence explicitly.
 ````
 
 ## File: src/ai_trading/bootstrap_gate.py
@@ -9596,6 +9601,20 @@ result = evaluate_benchmark_gate(_report())
 def test_benchmark_gate_rejects_weak_out_of_sample_result() -> None
 ⋮----
 result = evaluate_benchmark_gate(
+⋮----
+def test_benchmark_gate_rejects_net_loss_even_if_benchmark_loses_more() -> None
+⋮----
+report = _report(excess=0.20)
+⋮----
+decision = evaluate_benchmark_gate(report)
+⋮----
+def test_benchmark_gate_rejects_break_even_return_by_default() -> None
+⋮----
+report = _report()
+⋮----
+def test_benchmark_gate_rejects_nonfinite_metrics_that_skip_thresholds() -> None
+⋮----
+def test_benchmark_gate_rejects_infinite_annualized_volatility() -> None
 ````
 
 ## File: tests/test_bootstrap_gate.py
@@ -14319,6 +14338,16 @@ publicly hosted service is unavailable or incomplete. This check **does
 not** invoke the scheduler, place trades, wake workers, or guarantee
 fresh market data. For manual diagnosis, use
 `PYTHONPATH=src python -m ai_trading.deployment_probe --base-url https://ai-trading-dashboard-qyr2.onrender.com --require-running-markets`.
+
+## Positive out-of-sample profitability is required
+
+The read-only walk-forward benchmark gate now fails closed when net
+out-of-sample total return is **zero or negative**, even when the strategy
+beats a more strongly declining buy-and-hold benchmark. Non-finite
+performance statistics also fail the benchmark gate rather than silently
+passing comparisons. This is additional research validation alongside the
+existing Sharpe, Sortino, Calmar, drawdown, fold and trade-count thresholds,
+not an automatic model promotion or permission to trade live.
 
 ## Profit resilience under execution costs
 

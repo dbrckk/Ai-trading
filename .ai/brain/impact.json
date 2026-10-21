@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "5931a3a010b99bb47ecd979fc727fb57d49dc444",
-  "head": "b8f8ff1ff57a67e4208c18f8a018b960f95a014c",
+  "base": "b8f8ff1ff57a67e4208c18f8a018b960f95a014c",
+  "head": "5cad2590a97f62999181cd3febec55fb92624329",
   "index_mode": "incremental",
   "changed_files": [
     {
@@ -10,28 +10,46 @@
       "status": "M"
     },
     {
-      "path": "src/ai_trading/cost_stress_gate.py",
+      "path": "src/ai_trading/benchmark_gate.py",
       "status": "M"
     },
     {
-      "path": "tests/test_cost_stress_gate.py",
+      "path": "tests/test_benchmark_gate.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "src/ai_trading/cost_stress_gate.py",
-    "tests/test_cost_stress_gate.py"
+    "src/ai_trading/benchmark_gate.py",
+    "tests/test_benchmark_gate.py"
   ],
   "impacted_files": [
+    "src/ai_trading/benchmark_gate.py",
     "src/ai_trading/cli.py",
-    "src/ai_trading/cost_stress_gate.py",
     "src/ai_trading/quantitative_artifact.py",
     "src/ai_trading/quantitative_qualification.py",
-    "tests/test_cost_stress_gate.py",
+    "tests/test_benchmark_gate.py",
     "tests/test_quantitative_artifact.py",
     "tests/test_reproducibility.py"
   ],
   "impacted_symbols": [
+    {
+      "name": "BenchmarkGatePolicy",
+      "kind": "class",
+      "file": "src/ai_trading/benchmark_gate.py",
+      "line": 10
+    },
+    {
+      "name": "BenchmarkGateResult",
+      "kind": "class",
+      "file": "src/ai_trading/benchmark_gate.py",
+      "line": 23
+    },
+    {
+      "name": "evaluate_benchmark_gate",
+      "kind": "function",
+      "file": "src/ai_trading/benchmark_gate.py",
+      "line": 28
+    },
     {
       "name": "self_test",
       "kind": "function",
@@ -285,24 +303,6 @@
       "line": 1882
     },
     {
-      "name": "CostStressGatePolicy",
-      "kind": "class",
-      "file": "src/ai_trading/cost_stress_gate.py",
-      "line": 10
-    },
-    {
-      "name": "CostStressGateResult",
-      "kind": "class",
-      "file": "src/ai_trading/cost_stress_gate.py",
-      "line": 23
-    },
-    {
-      "name": "evaluate_cost_stress_gate",
-      "kind": "function",
-      "file": "src/ai_trading/cost_stress_gate.py",
-      "line": 34
-    },
-    {
       "name": "QuantitativeQualificationArtifact",
       "kind": "class",
       "file": "src/ai_trading/quantitative_artifact.py",
@@ -351,52 +351,46 @@
       "line": 21
     },
     {
-      "name": "result",
+      "name": "_report",
       "kind": "function",
-      "file": "tests/test_cost_stress_gate.py",
-      "line": 7
+      "file": "tests/test_benchmark_gate.py",
+      "line": 8
     },
     {
-      "name": "test_cost_stress_gate_accepts_resilient_strategy",
+      "name": "test_benchmark_gate_accepts_qualified_report",
       "kind": "function",
-      "file": "tests/test_cost_stress_gate.py",
-      "line": 24
+      "file": "tests/test_benchmark_gate.py",
+      "line": 35
     },
     {
-      "name": "test_cost_stress_gate_rejects_cost_fragility",
+      "name": "test_benchmark_gate_rejects_weak_out_of_sample_result",
       "kind": "function",
-      "file": "tests/test_cost_stress_gate.py",
-      "line": 33
+      "file": "tests/test_benchmark_gate.py",
+      "line": 42
     },
     {
-      "name": "test_cost_stress_gate_rejects_negative_net_returns_despite_positive_excess",
+      "name": "test_benchmark_gate_rejects_net_loss_even_if_benchmark_loses_more",
       "kind": "function",
-      "file": "tests/test_cost_stress_gate.py",
-      "line": 46
+      "file": "tests/test_benchmark_gate.py",
+      "line": 55
     },
     {
-      "name": "test_cost_stress_gate_rejects_invalid_or_zero_trade_evidence",
+      "name": "test_benchmark_gate_rejects_break_even_return_by_default",
       "kind": "function",
-      "file": "tests/test_cost_stress_gate.py",
-      "line": 59
+      "file": "tests/test_benchmark_gate.py",
+      "line": 65
     },
     {
-      "name": "test_cost_stress_gate_counts_only_profitable_cost_scenarios",
+      "name": "test_benchmark_gate_rejects_nonfinite_metrics_that_skip_thresholds",
       "kind": "function",
-      "file": "tests/test_cost_stress_gate.py",
-      "line": 72
+      "file": "tests/test_benchmark_gate.py",
+      "line": 74
     },
     {
-      "name": "test_cost_stress_gate_rejects_loss_at_highest_cost_even_with_high_pass_ratio",
+      "name": "test_benchmark_gate_rejects_infinite_annualized_volatility",
       "kind": "function",
-      "file": "tests/test_cost_stress_gate.py",
-      "line": 85
-    },
-    {
-      "name": "test_cost_stress_gate_can_opt_out_of_worst_cost_requirement",
-      "kind": "function",
-      "file": "tests/test_cost_stress_gate.py",
-      "line": 104
+      "file": "tests/test_benchmark_gate.py",
+      "line": 84
     },
     {
       "name": "_dataset",
@@ -460,8 +454,7 @@
     }
   ],
   "selected_tests": [
-    "tests/test_cost_stress.py",
-    "tests/test_cost_stress_gate.py",
+    "tests/test_benchmark_gate.py",
     "tests/test_quantitative_artifact.py",
     "tests/test_reproducibility.py"
   ]
