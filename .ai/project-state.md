@@ -35,6 +35,8 @@ Status: active
 - Verify the **actual** Render deployment revision and read-only `/api/markets` behavior; the successful GitHub hosted probe alone confirms availability, not deployed SHA.
 - Preserve the free-tier Cloudflare/Render/Neon architecture and hourly GitHub fallback. Live order routing remains off.
 
+- River-v2 versioned artifact work is staged on `feat/river-v2-isolated-codec`: the production v1 codec now refuses v2 subclasses, and a separate `joblib-river-ovr-v2` research codec round-trips only trusted ternary OVR models. This is **offline research only**, with no changes to paper runtime keys, persisted v1 states or live routing. Forward shadow is not yet installed; validating the PR is next.
+
 ## Validation
 - Main after PR #167: Ruff/Pytest/Cloudflare Worker checks and CodeQL passed (run 39499994723 and 39499994605).
 - PR #157 final head: CI run 39500880135, CodeQL run 39500880125 and actual pinned Kronos model smoke run 39500872405 all passed, with JSON artifact 12301525143.
