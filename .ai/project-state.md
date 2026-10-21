@@ -60,33 +60,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-21T10:19:35Z
+Generated: 2026-10-21T16:39:05Z
 
 ### Git
 - Branch: `main`
-- Head: `59e1610b31b4`
-- Commit date: 2026-10-21T06:19:23-04:00
-- Commit: fix(ops): detect stale STARTING paper cycles promptly (#177)
+- Head: `6009f0bf0df4`
+- Commit date: 2026-10-21T12:38:54-04:00
+- Commit: fix(research): require directional shadow evidence before review (#178)
 - Tracked files: 513
 
 ### Recently changed files
+- `docs/kronos-research.md`
+- `src/ai_trading/dashboard.py`
+- `src/ai_trading/mtf_shadow_quality.py`
+- `src/ai_trading/operational_overview.py`
+- `src/ai_trading/shadow_promotion_gate.py`
+- `src/ai_trading/shadow_quality.py`
+- `tests/test_dashboard_overview.py`
+- `tests/test_mtf_shadow_quality.py`
+- `tests/test_multi_market.py`
+- `tests/test_shadow_promotion_gate.py`
+- `tests/test_shadow_quality.py`
 - `src/ai_trading/runtime_status.py`
 - `tests/test_runtime_status.py`
-- `docs/kronos-research.md`
-- `src/ai_trading/operational_overview.py`
 - `src/ai_trading/paper_cycle.py`
 - `src/ai_trading/river_v2_shadow.py`
-- `tests/test_dashboard_overview.py`
 - `tests/test_paper_cycle.py`
 - `tests/test_shadow_challenger.py`
 - `src/ai_trading/file_persistence.py`
 - `src/ai_trading/postgres_persistence.py`
 - `src/ai_trading/runtime.py`
-- `tests/test_shadow_quality.py`
-- `src/ai_trading/model_codec.py`
-- `src/ai_trading/research_model_codec.py`
-- `tests/test_model_codec.py`
-- `tests/test_online.py`
 
 ### Project signals
 - `pyproject.toml`

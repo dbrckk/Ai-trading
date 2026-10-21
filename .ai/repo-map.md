@@ -2741,8 +2741,11 @@ mtf_candidate_name = (
 mtf_label = (
 mtf_cycle_display = (
 observations = shadow.get("observations", 0)
+shadow_directional_labels = shadow.get("directional_observations", 0)
+shadow_directional_predictions = shadow.get("directional_predictions", 0)
 mtf_observations = mtf_shadow.get("observations", 0)
 mtf_directional = mtf_shadow.get("directional_observations", 0)
+mtf_directional_predictions = mtf_shadow.get("directional_predictions", 0)
 mtf_directional_rate = float(mtf_shadow.get("directional_rate", 0.0) or 0.0)
 mtf_distribution = mtf_shadow.get("label_distribution", {})
 review = "ELIGIBLE" if gate.get("eligible_for_review") else "COLLECTING"
@@ -4933,6 +4936,7 @@ challenger: ModelQuality
 long_labels: int = 0
 flat_labels: int = 0
 short_labels: int = 0
+directional_predictions: int = 0
 ⋮----
 @property
     def score_delta(self) -> float
@@ -4982,6 +4986,8 @@ index = pd.RangeIndex(observations)
 realized = pd.Series(labels, index=index, dtype="int64")
 river = evaluate_model_quality(
 challenger = evaluate_model_quality(
+⋮----
+# MTF evaluator has already applied its versioned confidence gate.
 ````
 
 ## File: src/ai_trading/multi_market.py
@@ -5917,7 +5923,7 @@ def _empty_shadow_quality_snapshot() -> dict[str, object]
 ⋮----
 policy = ShadowPromotionPolicy()
 ⋮----
-policy = ShadowPromotionPolicy(min_observations=500)
+policy = ShadowPromotionPolicy(
 ⋮----
 reasons = ["no benchmark-validated MTF configuration for this market"]
 status = "unvalidated"
@@ -5951,8 +5957,7 @@ enabled = river_v2_observer_enabled()
 directional_observations = int(comparison.directional_observations)
 directional_rate = float(comparison.directional_rate)
 gate_reasons = list(gate.reasons)
-⋮----
-eligible_for_review = gate.eligible_for_review and not gate_reasons
+eligible_for_review = gate.eligible_for_review
 ⋮----
 def runtime_is_consistent(persisted: PersistedRuntime) -> bool
 ⋮----
@@ -8650,6 +8655,8 @@ realized_label = int(realized) if pd.notna(realized) else None
 class ShadowPromotionPolicy
 ⋮----
 min_observations: int = 250
+min_directional_observations: int = 100
+min_directional_predictions: int = 50
 min_score_delta: float = 0.02
 min_accuracy_delta: float = 0.0
 max_brier_increase: float = 0.02
@@ -8661,6 +8668,8 @@ class ShadowPromotionGate
 eligible_for_review: bool
 reasons: tuple[str, ...]
 observations: int
+directional_observations: int
+directional_predictions: int
 score_delta: float
 accuracy_delta: float
 brier_delta: float
@@ -8683,6 +8692,11 @@ class ShadowQualityComparison
 observations: int
 river: ModelQuality
 challenger: ModelQuality
+directional_labels: int = 0
+directional_predictions: int = 0
+⋮----
+@property
+    def directional_observations(self) -> int
 ⋮----
 @property
     def score_delta(self) -> float
@@ -13396,6 +13410,13 @@ gate = evaluate_shadow_promotion_gate(comparison(observations=300))
 def test_shadow_promotion_gate_rejects_calibration_degradation() -> None
 ⋮----
 gate = evaluate_shadow_promotion_gate(
+⋮----
+# High aggregate accuracy alone must not qualify an all-flat model.
+flat = evaluate_shadow_promotion_gate(
+⋮----
+# A market with mostly flat realized labels cannot establish
+# a meaningful directional trading edge, even at 500 samples.
+missing_directional_labels = evaluate_shadow_promotion_gate(
 ````
 
 ## File: tests/test_shadow_quality.py
@@ -13414,6 +13435,9 @@ side = -1 if i % 2 == 0 else 1
 forward = compare_river_v2_forward_audit_payloads(audit_rows)
 ⋮----
 def test_shadow_quality_ignores_unusable_audit_rows() -> None
+⋮----
+# Malformed confidence cannot inflate genuine directional evidence.
+invalid = compare_shadow_audit_payloads(
 ⋮----
 # No hindsight: malformed, stale or not-yet-matured samples cannot
 # manufacture additional v2 forward evidence.

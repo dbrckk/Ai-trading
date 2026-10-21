@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 6 success / 0 failure / 2 active
+Summary: 5 success / 0 failure / 3 active
 
-- CI: queued / pending (59e1610b)
-- CodeQL: in_progress / pending (59e1610b)
-- CI: completed / success (e5e8c723)
-- CodeQL: completed / success (e5e8c723)
-- CI: completed / success (661f9d45)
-- CodeQL: completed / success (661f9d45)
-- CodeQL: completed / success (20b4f1a0)
-- CI: completed / success (20b4f1a0)
+- CI: in_progress / pending (6009f0bf)
+- CodeQL: in_progress / pending (6009f0bf)
+- Hosted Dashboard Probe: in_progress / pending (6009f0bf)
+- CodeQL: completed / success (da6850f0)
+- CI: completed / success (da6850f0)
+- Paper Cycle: completed / success (9fdc0fc8)
+- Hosted Dashboard Probe: completed / success (9fdc0fc8)
+- CI: completed / success (59e1610b)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

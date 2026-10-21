@@ -4262,6 +4262,13 @@ gate = evaluate_shadow_promotion_gate(comparison(observations=300))
 def test_shadow_promotion_gate_rejects_calibration_degradation() -> None
 ⋮----
 gate = evaluate_shadow_promotion_gate(
+⋮----
+# High aggregate accuracy alone must not qualify an all-flat model.
+flat = evaluate_shadow_promotion_gate(
+⋮----
+# A market with mostly flat realized labels cannot establish
+# a meaningful directional trading edge, even at 500 samples.
+missing_directional_labels = evaluate_shadow_promotion_gate(
 ```
 
 ## File: test_shadow_quality.py
@@ -4280,6 +4287,9 @@ side = -1 if i % 2 == 0 else 1
 forward = compare_river_v2_forward_audit_payloads(audit_rows)
 ⋮----
 def test_shadow_quality_ignores_unusable_audit_rows() -> None
+⋮----
+# Malformed confidence cannot inflate genuine directional evidence.
+invalid = compare_shadow_audit_payloads(
 ⋮----
 # No hindsight: malformed, stale or not-yet-matured samples cannot
 # manufacture additional v2 forward evidence.
