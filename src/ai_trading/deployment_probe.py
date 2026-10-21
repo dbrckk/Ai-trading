@@ -118,7 +118,9 @@ def probe_dashboard(
                 by_symbol = {
                     item["symbol"]: item
                     for item in markets
-                    if isinstance(item, dict) and item.get("symbol") in expected
+                    if isinstance(item, dict)
+                    and isinstance(item.get("symbol"), str)
+                    and item["symbol"] in expected
                 }
                 running = portfolio.get("running_markets") == len(expected)
                 engines = all(
