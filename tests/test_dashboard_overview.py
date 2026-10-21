@@ -297,6 +297,7 @@ def test_operational_overview_exposes_model_and_runtime_metadata() -> None:
     assert payload["river_v2_shadow"]["observations"] == 0
     assert payload["river_v2_shadow"]["eligible_for_review"] is False
     assert payload["river_v2_shadow"]["actionable"] is False
+    assert payload["river_v2_shadow"]["directional_evidence_sufficient"] is False
     assert payload["river_v2_shadow"]["status"] == "disabled"
     assert payload["mtf_shadow_challenger"]["observations"] == 8
     assert payload["mtf_shadow_challenger"]["horizon_minutes"] == 45
@@ -444,6 +445,10 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
             "observations": 0,
             "pending": 0,
             "short_predictions": 0,
+            "directional_labels": 0,
+            "river_directional_predictions": 0,
+            "river_v2_directional_predictions": 0,
+            "directional_evidence_sufficient": False,
             "river_accuracy": None,
             "river_v2_accuracy": None,
             "score_delta": None,
