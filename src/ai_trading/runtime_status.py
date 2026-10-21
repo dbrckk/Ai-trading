@@ -50,6 +50,11 @@ def runtime_status_snapshot(
         current_time = current_time.astimezone(UTC)
 
     stale_after_seconds = max(30.0, status.poll_seconds * 3.0)
+    if status.engine_status == "STARTING":
+        # A 15-minute external scheduler may legitimately have a 45-minute
+        # RUNNING heartbeat window, but a paper cycle cannot stay STARTING
+        # for that long without surfacing an operational warning.
+        stale_after_seconds = min(stale_after_seconds, 300.0)
     heartbeat_age_seconds: float | None
     heartbeat_stale = False
     try:
