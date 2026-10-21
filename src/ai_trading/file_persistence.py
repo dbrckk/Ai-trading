@@ -189,7 +189,10 @@ class FilePaperPersistence(PaperPersistence):
                 if isinstance(payload, dict) and (
                     "river_v2_shadow" in payload or "execution_close" in payload
                 ):
-                    payloads.append(payload)
+                    payloads.append({
+                        **payload,
+                        "_audit_timestamp_utc": record.get("timestamp_utc"),
+                    })
         return compare_river_v2_forward_audit_payloads(payloads[-4000:])
 
     def load_mtf_shadow_quality(
