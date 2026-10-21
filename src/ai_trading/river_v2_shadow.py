@@ -141,11 +141,16 @@ def observe_river_v2_forward(
     signal_close = float(observed["Close"].iloc[-1])
     if not isfinite(signal_close) or signal_close <= 0:
         return None
+    # The prediction must still be timely AFTER inference has completed.
+    # A slow CPU/research run must not backdate evidence to its start time.
+    completed_at = current if now is not None else pd.Timestamp(datetime.now(UTC))
+    if completed_at - (signal_utc + _INTERVAL) >= _INTERVAL:
+        return None
     return RiverV2ForwardObservation(
         prediction=prediction,
         signal_time=str(market.index[-1]),
         signal_close=signal_close,
-        observed_at_utc=current.isoformat(),
+        observed_at_utc=completed_at.isoformat(),
         training_rows=len(train_positions),
         training_end=str(market.index[train_positions[-1]]),
         horizon_bars=horizon_bars,
@@ -202,15 +207,22 @@ def compare_river_v2_forward_audit_payloads(
             signal_time = pd.Timestamp(signal)
             execution_time = pd.Timestamp(later["execution_time"])
             observed_time = pd.Timestamp(shadow["observed_at_utc"])
-            if any(t.tzinfo is None for t in (signal_time, execution_time, observed_time)):
+            committed_time = pd.Timestamp(payload["_audit_timestamp_utc"])
+            if any(
+                t.tzinfo is None
+                for t in (signal_time, execution_time, observed_time, committed_time)
+            ):
                 continue
             signal_time = signal_time.tz_convert("UTC")
             execution_time = execution_time.tz_convert("UTC")
             observed_time = observed_time.tz_convert("UTC")
+            committed_time = committed_time.tz_convert("UTC")
             if execution_time != signal_time + _INTERVAL:
                 continue  # No imputed result across session/provider gaps.
             if not signal_time + _INTERVAL <= observed_time < execution_time + _INTERVAL:
                 continue  # Must have been observed before the outcome closed.
+            if not observed_time <= committed_time < execution_time + _INTERVAL:
+                continue  # Must also have been DURABLY audited before outcome closed.
             signal_close = float(shadow["signal_close"])
             next_close = float(later["execution_close"])
             threshold = float(shadow["return_threshold"])
