@@ -78,7 +78,11 @@ def observe_river_v2_forward(
         raise ValueError("research training window must contain the minimum")
     if market.empty or not isinstance(market.index, pd.DatetimeIndex):
         return None
-    if market.index.has_duplicates or market.index.hasnans or not market.index.is_monotonic_increasing:
+    if (
+        market.index.has_duplicates
+        or market.index.hasnans
+        or not market.index.is_monotonic_increasing
+    ):
         return None
     signal_time = pd.Timestamp(market.index[-1])
     if signal_time.tzinfo is None:
@@ -122,6 +126,18 @@ def observe_river_v2_forward(
     for pos in train_positions:
         model.learn_one(features.iloc[pos].loc[FEATURES], int(labels.iloc[pos]))
     prediction = model.predict_one(signal_row)
+    if (
+        prediction.side not in (-1, 0, 1)
+        or not isfinite(prediction.confidence)
+        or not 0 <= prediction.confidence <= 1
+        or set(prediction.probabilities) != {-1, 0, 1}
+        or any(
+            not isfinite(p) or p < 0 or p > 1
+            for p in prediction.probabilities.values()
+        )
+        or abs(sum(prediction.probabilities.values()) - 1.0) > 1e-6
+    ):
+        return None  # Fail open for paper execution, closed for shadow evidence.
     signal_close = float(observed["Close"].iloc[-1])
     if not isfinite(signal_close) or signal_close <= 0:
         return None
