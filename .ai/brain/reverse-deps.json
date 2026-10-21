@@ -1847,6 +1847,7 @@
         "src/ai_trading/kronos_research.py",
         "src/ai_trading/model_codec.py",
         "src/ai_trading/multiasset_runtime.py",
+        "src/ai_trading/research_model_codec.py",
         "src/ai_trading/runtime.py",
         "tests/test_cumulative_performance_persistence.py",
         "tests/test_durable_burnin_persistence.py",
@@ -1858,7 +1859,7 @@
         "tests/test_postgres_persistence.py",
         "tests/test_runtime_persistence.py"
       ],
-      "in_degree": 13,
+      "in_degree": 14,
       "out_degree": 2
     },
     "src/ai_trading/operational_overview.py": {
@@ -2069,6 +2070,7 @@
         "src/ai_trading/paper_cycle_service.py",
         "src/ai_trading/persistence_factory.py",
         "src/ai_trading/postgres_persistence.py",
+        "src/ai_trading/research_model_codec.py",
         "src/ai_trading/runtime.py",
         "src/ai_trading/scheduler_endpoint.py",
         "tests/test_active_model.py",
@@ -2088,7 +2090,7 @@
         "tests/test_runtime_persistence.py",
         "tests/test_scheduler_endpoint.py"
       ],
-      "in_degree": 30,
+      "in_degree": 31,
       "out_degree": 5
     },
     "src/ai_trading/persistence_factory.py": {
@@ -2545,6 +2547,18 @@
       "dependents": [
         "src/ai_trading/cli.py",
         "tests/test_reproducibility.py"
+      ],
+      "in_degree": 2,
+      "out_degree": 2
+    },
+    "src/ai_trading/research_model_codec.py": {
+      "dependencies": [
+        "src/ai_trading/online.py",
+        "src/ai_trading/persistence.py"
+      ],
+      "dependents": [
+        "tests/test_model_codec.py",
+        "tests/test_online.py"
       ],
       "in_degree": 2,
       "out_degree": 2
@@ -3986,11 +4000,12 @@
       "dependencies": [
         "src/ai_trading/__init__.py",
         "src/ai_trading/model_codec.py",
-        "src/ai_trading/online.py"
+        "src/ai_trading/online.py",
+        "src/ai_trading/research_model_codec.py"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 3
+      "out_degree": 4
     },
     "tests/test_model_quality.py": {
       "dependencies": [
@@ -4217,11 +4232,12 @@
         "src/ai_trading/__init__.py",
         "src/ai_trading/features.py",
         "src/ai_trading/model.py",
-        "src/ai_trading/online.py"
+        "src/ai_trading/online.py",
+        "src/ai_trading/research_model_codec.py"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 4
+      "out_degree": 5
     },
     "tests/test_orchestrator_trigger.py": {
       "dependencies": [

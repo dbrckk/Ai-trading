@@ -200,6 +200,7 @@ src/
     reliability.py
     replay.py
     reproducibility.py
+    research_model_codec.py
     resilience_stability.py
     resilience.py
     restart_log.py
@@ -4521,6 +4522,8 @@ MODEL_VERSION = 1
 ⋮----
 def serialize_model(model: RiverDirectionModel) -> ModelBlob
 ⋮----
+# Production persistence must never silently accept research v2 subclasses.
+⋮----
 buffer = BytesIO()
 ⋮----
 payload = buffer.getvalue()
@@ -7702,6 +7705,34 @@ current = build_dataset_evidence(
 """Convenience predicate for exact market-data identity."""
 ````
 
+## File: src/ai_trading/research_model_codec.py
+````python
+"""Versioned River-v2 research codec, isolated from paper production storage.
+
+This module is opt-in for offline and read-only shadow studies only.
+The production model_codec continues to accept *only* joblib-river-v1.
+Joblib deserialization is unsafe for untrusted payloads; only load artifacts
+from a trusted research run, never remote or user-supplied model blobs.
+"""
+⋮----
+RESEARCH_MODEL_FORMAT = "joblib-river-ovr-v2"
+RESEARCH_MODEL_VERSION = 2
+⋮----
+def serialize_research_model(model: RiverMulticlassDirectionModel) -> ModelBlob
+⋮----
+"""Serialize a ternary River challenger without using the production codec."""
+⋮----
+buffer = BytesIO()
+⋮----
+payload = buffer.getvalue()
+⋮----
+def deserialize_research_model(blob: ModelBlob) -> RiverMulticlassDirectionModel
+⋮----
+"""Load only a trusted, versioned v2 challenger blob; never accept v1."""
+⋮----
+model = joblib.load(BytesIO(blob.payload))
+````
+
 ## File: src/ai_trading/resilience_stability.py
 ````python
 @dataclass(frozen=True)
@@ -10763,7 +10794,13 @@ def test_model_codec_round_trip() -> None
 blob = serialize_model(RiverDirectionModel())
 restored = deserialize_model(blob)
 ⋮----
+research = RiverMulticlassDirectionModel()
+research_blob = serialize_research_model(research)
+research_restored = deserialize_research_model(research_blob)
+⋮----
 def test_model_codec_rejects_corrupt_payload() -> None
+⋮----
+research_blob = serialize_research_model(RiverMulticlassDirectionModel())
 ⋮----
 def test_model_codec_rejects_unknown_version() -> None
 ````
@@ -11420,6 +11457,10 @@ label = -1 if value < -0.7 else (1 if value > 0.7 else 0)
 ⋮----
 short = model.predict_one(row(-2.0))
 long = model.predict_one(row(2.0))
+⋮----
+# The research state survives a v2-only round trip after actual learning.
+⋮----
+restored = deserialize_research_model(serialize_research_model(model))
 ⋮----
 def test_legacy_river_binary_probabilities_do_not_include_short() -> None
 ⋮----

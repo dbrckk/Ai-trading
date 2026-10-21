@@ -1,23 +1,22 @@
 # Change impact
 
-Base: 1817749f243617d33a90fe991ae994840a5a9877
-Head: 5e0ea79388915b0b357917896ec8ac2e687e1b27
+Base: c8873838ca238c0fd5b32c0394afa189998058cb
+Head: 50459b6abb01b6197c41d36bcb27815ce67d43e9
 
 ## Changed files
-- M .github/workflows/hosted-dashboard-probe.yml
-- M README.md
-- M src/ai_trading/dashboard.py
-- M src/ai_trading/deployment_probe.py
-- M tests/test_dashboard_health.py
+- M docs/kronos-research.md
+- M src/ai_trading/model_codec.py
+- A src/ai_trading/research_model_codec.py
+- M tests/test_model_codec.py
+- M tests/test_online.py
 
 ## Affected areas
-- .github
-- (root)
+- docs
 - src
 - tests
 
 ## Related test candidates
-- tests/test_dashboard.py
+- tests/test_model_codec.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

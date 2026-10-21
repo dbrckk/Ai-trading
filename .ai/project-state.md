@@ -49,26 +49,29 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-20T22:02:23Z
+Generated: 2026-10-21T07:45:44Z
 
 ### Git
 - Branch: `main`
-- Head: `5e0ea7938891`
-- Commit date: 2026-10-20T18:02:14-04:00
-- Commit: fix(ops): expose and verify deployed Render git revision (#169)
-- Tracked files: 508
+- Head: `50459b6abb01`
+- Commit date: 2026-10-21T03:45:35-04:00
+- Commit: feat(research): isolate versioned River v2 codec from paper v1 (#171)
+- Tracked files: 509
 
 ### Recently changed files
+- `docs/kronos-research.md`
+- `src/ai_trading/model_codec.py`
+- `src/ai_trading/research_model_codec.py`
+- `tests/test_model_codec.py`
+- `tests/test_online.py`
 - `.github/workflows/hosted-dashboard-probe.yml`
 - `README.md`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/deployment_probe.py`
 - `tests/test_dashboard_health.py`
-- `docs/kronos-research.md`
 - `.github/workflows/kronos-model-smoke.yml`
 - `src/ai_trading/kronos_research.py`
 - `src/ai_trading/online.py`
-- `tests/test_online.py`
 - `tests/test_paper_cycle.py`
 - `tests/test_dashboard_engine_status.py`
 

@@ -2,29 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "refactor: harden core data, metrics, and CI foundations (#79)",
-      "terms": [
-        "79",
-        "ci",
-        "core",
-        "data",
-        "foundations",
-        "harden",
-        "metrics",
-        "refactor"
-      ],
-      "tests": [],
-      "useful": [
-        "src/ai_trading/data.py",
-        "src/ai_trading/marginal_alpha.py",
-        "src/ai_trading/performance.py",
-        "tests/test_cloudflare_scheduler_deploy_workflow.py",
-        "tests/test_data.py",
-        "tests/test_performance.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "ci: add supply-chain and CodeQL security coverage (#83)",
       "terms": [
         "83",
@@ -1246,6 +1223,30 @@
         "src/ai_trading/deployment_probe.py",
         "tests/test_dashboard_health.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "feat(research): isolate versioned River v2 codec from paper v1 (#171)",
+      "terms": [
+        "171",
+        "codec",
+        "feat",
+        "from",
+        "isolate",
+        "paper",
+        "research",
+        "river",
+        "v1",
+        "v2",
+        "versioned"
+      ],
+      "tests": [],
+      "useful": [
+        "src/ai_trading/model_codec.py",
+        "src/ai_trading/research_model_codec.py",
+        "tests/test_model_codec.py",
+        "tests/test_online.py"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1369,6 +1370,12 @@
       "src/ai_trading/dashboard.py": 4,
       "src/ai_trading/deployment_probe.py": 4,
       "tests/test_dashboard_health.py": 4
+    },
+    "171": {
+      "src/ai_trading/model_codec.py": 4,
+      "src/ai_trading/research_model_codec.py": 4,
+      "tests/test_model_codec.py": 4,
+      "tests/test_online.py": 4
     },
     "56": {
       "src/ai_trading/command_app.py": 4,
@@ -2017,6 +2024,12 @@
       "src/ai_trading/scheduler_fallback.py": 4,
       "tests/test_paper_cycle_workflow.py": 4
     },
+    "codec": {
+      "src/ai_trading/model_codec.py": 4,
+      "src/ai_trading/research_model_codec.py": 4,
+      "tests/test_model_codec.py": 4,
+      "tests/test_online.py": 4
+    },
     "codeql": {
       "src/ai_trading/dashboard.py": 4,
       "tests/test_dashboard_persistence.py": 4
@@ -2494,6 +2507,7 @@
       "src/ai_trading/hosted_runtime.py": 4,
       "src/ai_trading/kronos_research.py": 4,
       "src/ai_trading/market_freshness.py": 4,
+      "src/ai_trading/model_codec.py": 4,
       "src/ai_trading/mtf_parameter_benchmark.py": 16,
       "src/ai_trading/mtf_shadow_challenger.py": 8,
       "src/ai_trading/mtf_shadow_config.py": 8,
@@ -2511,6 +2525,7 @@
       "src/ai_trading/persistence.py": 4,
       "src/ai_trading/portfolio_intelligence.py": 4,
       "src/ai_trading/postgres_persistence.py": 12,
+      "src/ai_trading/research_model_codec.py": 4,
       "src/ai_trading/runtime.py": 8,
       "src/ai_trading/runtime_status.py": 4,
       "src/ai_trading/scheduler_endpoint.py": 12,
@@ -2529,19 +2544,17 @@
       "tests/test_file_persistence.py": 8,
       "tests/test_hosted_runtime.py": 4,
       "tests/test_market_freshness.py": 4,
+      "tests/test_model_codec.py": 4,
       "tests/test_mtf_parameter_benchmark.py": 12,
       "tests/test_mtf_shadow_challenger.py": 8,
       "tests/test_mtf_shadow_config.py": 8,
       "tests/test_mtf_shadow_quality.py": 12,
       "tests/test_multi_market.py": 36,
       "tests/test_multi_timeframe_features.py": 4,
-      "tests/test_multiasset_checkpoint.py": 4,
       "tests/test_multiasset_runtime.py": 8,
-      "tests/test_online.py": 4,
+      "tests/test_online.py": 8,
       "tests/test_paper_cycle.py": 16,
       "tests/test_paper_cycle_service.py": 8,
-      "tests/test_paper_cycle_workflow.py": 4,
-      "tests/test_portfolio_intelligence.py": 4,
       "tests/test_postgres_persistence.py": 8,
       "tests/test_scheduler_endpoint.py": 12
     },
@@ -2579,15 +2592,19 @@
     "from": {
       "src/ai_trading/dashboard.py": 8,
       "src/ai_trading/hosted_runtime.py": 4,
+      "src/ai_trading/model_codec.py": 4,
       "src/ai_trading/multi_market.py": 4,
       "src/ai_trading/multiasset_runtime.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
       "src/ai_trading/paper_cycle_service.py": 4,
+      "src/ai_trading/research_model_codec.py": 4,
       "src/ai_trading/scheduler_endpoint.py": 4,
       "tests/test_dashboard.py": 4,
       "tests/test_hosted_runtime.py": 4,
+      "tests/test_model_codec.py": 4,
       "tests/test_multi_market.py": 4,
       "tests/test_multiasset_runtime.py": 4,
+      "tests/test_online.py": 4,
       "tests/test_paper_cycle.py": 4,
       "tests/test_paper_cycle_service.py": 4,
       "tests/test_scheduler_endpoint.py": 4
@@ -2758,16 +2775,20 @@
     "isolate": {
       "src/ai_trading/dashboard.py": 4,
       "src/ai_trading/hosted_runtime.py": 4,
+      "src/ai_trading/model_codec.py": 4,
       "src/ai_trading/multi_market.py": 4,
       "src/ai_trading/multiasset_checkpoint.py": 4,
       "src/ai_trading/multiasset_runtime.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
       "src/ai_trading/paper_cycle_service.py": 4,
+      "src/ai_trading/research_model_codec.py": 4,
       "src/ai_trading/runtime.py": 4,
       "tests/test_hosted_runtime.py": 4,
+      "tests/test_model_codec.py": 4,
       "tests/test_multi_market.py": 4,
       "tests/test_multiasset_checkpoint.py": 4,
       "tests/test_multiasset_runtime.py": 4,
+      "tests/test_online.py": 4,
       "tests/test_paper_cycle.py": 4,
       "tests/test_paper_cycle_service.py": 4,
       "tests/test_runtime_lock.py": 4
@@ -3158,6 +3179,7 @@
       "src/ai_trading/file_persistence.py": 4,
       "src/ai_trading/hosted_runtime.py": 4,
       "src/ai_trading/market_freshness.py": 4,
+      "src/ai_trading/model_codec.py": 4,
       "src/ai_trading/multi_market.py": 12,
       "src/ai_trading/multiasset_backtest.py": 4,
       "src/ai_trading/multiasset_runtime.py": 4,
@@ -3167,6 +3189,7 @@
       "src/ai_trading/performance_metrics.py": 8,
       "src/ai_trading/persistence.py": 4,
       "src/ai_trading/postgres_persistence.py": 12,
+      "src/ai_trading/research_model_codec.py": 4,
       "src/ai_trading/runtime.py": 12,
       "src/ai_trading/runtime_state.py": 4,
       "src/ai_trading/runtime_status.py": 4,
@@ -3180,7 +3203,9 @@
       "tests/test_execution_costs.py": 4,
       "tests/test_hosted_runtime.py": 4,
       "tests/test_market_freshness.py": 4,
+      "tests/test_model_codec.py": 4,
       "tests/test_multi_market.py": 12,
+      "tests/test_online.py": 4,
       "tests/test_paper_cycle.py": 16,
       "tests/test_paper_cycle_service.py": 16,
       "tests/test_paper_cycle_workflow.py": 4,
@@ -3602,9 +3627,12 @@
     },
     "research": {
       "src/ai_trading/kronos_research.py": 4,
+      "src/ai_trading/model_codec.py": 4,
       "src/ai_trading/online.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
-      "tests/test_online.py": 4,
+      "src/ai_trading/research_model_codec.py": 4,
+      "tests/test_model_codec.py": 4,
+      "tests/test_online.py": 8,
       "tests/test_paper_cycle.py": 8
     },
     "respect": {
@@ -3660,8 +3688,11 @@
     },
     "river": {
       "src/ai_trading/kronos_research.py": 4,
+      "src/ai_trading/model_codec.py": 4,
       "src/ai_trading/online.py": 4,
-      "tests/test_online.py": 4,
+      "src/ai_trading/research_model_codec.py": 4,
+      "tests/test_model_codec.py": 4,
+      "tests/test_online.py": 8,
       "tests/test_paper_cycle.py": 4
     },
     "route": {
@@ -4026,6 +4057,18 @@
       "src/ai_trading/multiasset_runtime.py": 12,
       "tests/test_multiasset_runtime.py": 12
     },
+    "v1": {
+      "src/ai_trading/model_codec.py": 4,
+      "src/ai_trading/research_model_codec.py": 4,
+      "tests/test_model_codec.py": 4,
+      "tests/test_online.py": 4
+    },
+    "v2": {
+      "src/ai_trading/model_codec.py": 4,
+      "src/ai_trading/research_model_codec.py": 4,
+      "tests/test_model_codec.py": 4,
+      "tests/test_online.py": 4
+    },
     "valid": {
       "src/ai_trading/multiasset_checkpoint.py": 4,
       "tests/test_multiasset_checkpoint.py": 4
@@ -4056,6 +4099,12 @@
       "src/ai_trading/dashboard.py": 4,
       "src/ai_trading/deployment_probe.py": 4,
       "tests/test_dashboard_health.py": 4
+    },
+    "versioned": {
+      "src/ai_trading/model_codec.py": 4,
+      "src/ai_trading/research_model_codec.py": 4,
+      "tests/test_model_codec.py": 4,
+      "tests/test_online.py": 4
     },
     "vs": {
       "src/ai_trading/kronos_research.py": 4,
