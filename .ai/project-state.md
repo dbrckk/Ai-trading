@@ -62,36 +62,33 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-21T16:39:05Z
+Generated: 2026-10-21T18:02:23Z
 
 ### Git
 - Branch: `main`
-- Head: `6009f0bf0df4`
-- Commit date: 2026-10-21T12:38:54-04:00
-- Commit: fix(research): require directional shadow evidence before review (#178)
+- Head: `b74881b50004`
+- Commit date: 2026-10-21T14:02:12-04:00
+- Commit: feat(research): report directional coverage of River-v2 forward evidence (#180)
 - Tracked files: 513
 
 ### Recently changed files
 - `docs/kronos-research.md`
+- `src/ai_trading/operational_overview.py`
+- `src/ai_trading/river_v2_shadow.py`
+- `tests/test_dashboard_overview.py`
+- `tests/test_shadow_quality.py`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/mtf_shadow_quality.py`
-- `src/ai_trading/operational_overview.py`
 - `src/ai_trading/shadow_promotion_gate.py`
 - `src/ai_trading/shadow_quality.py`
-- `tests/test_dashboard_overview.py`
 - `tests/test_mtf_shadow_quality.py`
 - `tests/test_multi_market.py`
 - `tests/test_shadow_promotion_gate.py`
-- `tests/test_shadow_quality.py`
 - `src/ai_trading/runtime_status.py`
 - `tests/test_runtime_status.py`
 - `src/ai_trading/paper_cycle.py`
-- `src/ai_trading/river_v2_shadow.py`
 - `tests/test_paper_cycle.py`
 - `tests/test_shadow_challenger.py`
-- `src/ai_trading/file_persistence.py`
-- `src/ai_trading/postgres_persistence.py`
-- `src/ai_trading/runtime.py`
 
 ### Project signals
 - `pyproject.toml`

@@ -2,11 +2,11 @@
 
 - Index mode: incremental
 - Files indexed: 367
-- Files reparsed this run: 10
+- Files reparsed this run: 4
 - Symbols: 1880
 - Internal import edges: 1246
-- Impacted files: 19
-- Selected tests: 11
+- Impacted files: 12
+- Selected tests: 6
 
 ## Languages
 - python: 365 files
@@ -43,10 +43,10 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 10
+- AST files reparsed this run: 4
 - outline files retained: 367
 - top-level items retained: 3236
-- direct members retained: 1579
+- direct members retained: 1582
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 

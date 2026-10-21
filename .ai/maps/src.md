@@ -7134,6 +7134,9 @@ class RiverV2ForwardComparison
 observations: int
 pending: int
 short_predictions: int
+directional_labels: int
+river_directional_predictions: int
+river_v2_directional_predictions: int
 river: ModelQuality
 river_v2: ModelQuality
 ⋮----
@@ -7206,6 +7209,9 @@ conf_v2: list[float] = []
 labels: list[int] = []
 pending = 0
 shorts = 0
+directional_labels = 0
+v1_directional = 0
+v2_directional = 0
 seen: set[str] = set()
 ⋮----
 shadow = payload.get("river_v2_shadow")
