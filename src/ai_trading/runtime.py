@@ -313,10 +313,12 @@ class PaperAutonomousRuntime:
 
         trade: TradeSnapshot | None = None
         previous_units = broker.state.units
-        if decision.approved:
+        if decision.approved or (decision.liquidate_existing and previous_units != 0):
+            # Hard risk stops are exit-only. Do not leave an existing losing
+            # position open merely because fresh exposure was rejected.
             fill = broker.rebalance(
-                decision.side,
-                decision.target_notional,
+                0 if decision.liquidate_existing else decision.side,
+                0.0 if decision.liquidate_existing else decision.target_notional,
                 execution_price,
             )
             delta_units = broker.state.units - previous_units
