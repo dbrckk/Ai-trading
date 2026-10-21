@@ -6,9 +6,9 @@ import pytest
 
 from ai_trading.audit import AuditLog
 from ai_trading.config import RiskConfig
+from ai_trading.risk import RiskDecision
 from ai_trading.runtime import PaperAutonomousRuntime
 from ai_trading.runtime_state import RuntimeStateStore
-from ai_trading.risk import RiskDecision
 from ai_trading.trade_journal import TradeJournal
 
 
