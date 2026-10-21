@@ -17,9 +17,9 @@ from .model_codec import deserialize_model, serialize_model
 from .mtf_shadow_challenger import MultiTimeframeShadowResult
 from .online import RiverDirectionModel
 from .persistence import CommitOutcome, PaperPersistence, RuntimeStepCommit
-from .river_v2_shadow import RiverV2ForwardObservation
 from .regime import detect_regime
 from .risk import PortfolioSnapshot, RiskEngine
+from .river_v2_shadow import RiverV2ForwardObservation
 from .runtime_lock import RuntimeLock
 from .runtime_state import RuntimeState, RuntimeStateStore
 from .shadow_challenger import ShadowChallengerResult
@@ -226,6 +226,7 @@ class PaperAutonomousRuntime:
         *,
         shadow_challenger: ShadowChallengerResult | None = None,
         mtf_shadow_challenger: MultiTimeframeShadowResult | None = None,
+        river_v2_shadow: RiverV2ForwardObservation | None = None,
     ) -> RuntimeStepResult:
         df = prepared.market
         features = prepared.features
