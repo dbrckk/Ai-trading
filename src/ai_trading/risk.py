@@ -20,6 +20,9 @@ class RiskDecision:
     side: int
     target_notional: float
     reason: str
+    # A risk stop rejects new exposure but must close any existing position.
+    # Execution paths treat this as exit-only, never as trade approval.
+    liquidate_existing: bool = False
 
 
 class RiskEngine:
@@ -32,11 +35,11 @@ class RiskEngine:
 
         drawdown = 1.0 - portfolio.equity / max(portfolio.peak_equity, portfolio.equity)
         if drawdown >= self.config.max_drawdown_fraction:
-            return RiskDecision(False, 0, 0.0, "max drawdown reached")
+            return RiskDecision(False, 0, 0.0, "max drawdown reached", liquidate_existing=True)
 
         daily_loss = 1.0 - portfolio.equity / max(portfolio.day_start_equity, portfolio.equity)
         if daily_loss >= self.config.max_daily_loss_fraction:
-            return RiskDecision(False, 0, 0.0, "daily loss limit reached")
+            return RiskDecision(False, 0, 0.0, "daily loss limit reached", liquidate_existing=True)
 
         if prediction.side == 0:
             return RiskDecision(True, 0, 0.0, "model is flat")
