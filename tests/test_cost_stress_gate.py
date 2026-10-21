@@ -80,3 +80,43 @@ def test_cost_stress_gate_counts_only_profitable_cost_scenarios() -> None:
     assert gate.passed is False
     assert gate.passing_scenarios == 2
     assert gate.pass_ratio == 2 / 3
+
+
+def test_cost_stress_gate_rejects_loss_at_highest_cost_even_with_high_pass_ratio() -> None:
+    scenarios = (
+        result("base"),
+        result("elevated"),
+        result("extra"),
+        replace(
+            result("severe"),
+            scenario=CostStressScenario("severe", 5.0, 10.0),
+            total_return=-0.01,
+        ),
+    )
+    gate = evaluate_cost_stress_gate(scenarios)
+
+    assert gate.pass_ratio == 0.75
+    assert gate.passing_scenarios == 3
+    assert gate.passed is False
+    assert "worst-cost scenario lacks positive net return" in gate.reasons
+
+
+def test_cost_stress_gate_can_opt_out_of_worst_cost_requirement() -> None:
+    from ai_trading.cost_stress_gate import CostStressGatePolicy
+
+    scenarios = (
+        result("base"),
+        result("elevated"),
+        result("extra"),
+        replace(
+            result("severe"),
+            scenario=CostStressScenario("severe", 5.0, 10.0),
+            total_return=-0.01,
+        ),
+    )
+    gate = evaluate_cost_stress_gate(
+        scenarios,
+        policy=CostStressGatePolicy(require_worst_cost_positive=False),
+    )
+
+    assert gate.passed is True
