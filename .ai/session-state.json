@@ -2,9 +2,9 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "fix/benchmark-positive-net-return",
+  "active_branch": "fix/sensitivity-positive-net-return",
   "pull_request": null,
-  "focus": "PR #188 merged (b8f8ff1ff57a67e4208c18f8a018b960f95a014c): require positive return under worst combined execution cost, CI and CodeQL green. Benchmark gate follow-up rejects non-positive out-of-sample net return even when benchmark does worse, and non-finite performance metrics (no execution change).",
+  "focus": "PR #188 already merged the highest-cost scenario positive-net-return safeguard; duplicate PR #190 closed unmerged. This branch fixes a separate weakness in parameter sensitivity research: scenarios losing net money, without trades, with NaN/Inf or negative drawdown could pass. Require positive net return and finite, traded evidence while preserving existing policy thresholds.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -138,8 +138,8 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Verify new benchmark gate CI and CodeQL before merge.",
-    "Check current Render deployment SHA and strict three-market readiness separately.",
-    "Evaluate genuinely independent completed paper trades, PnL after spread/slippage and statistically meaningful out-of-sample returns before tuning or promoting any model."
+    "Validate sensitivity profitability PR CI and CodeQL; merge only when green.",
+    "Continue verified Gold/DAX/BTC hosted runtime and actual paper performance assessment; avoid untested profit claims.",
+    "Keep live broker and River-v2 research disabled pending sufficient evidence."
   ]
 }
