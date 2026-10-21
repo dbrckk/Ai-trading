@@ -13,6 +13,9 @@ MODEL_VERSION = 1
 
 
 def serialize_model(model: RiverDirectionModel) -> ModelBlob:
+    # Production persistence must never silently accept research v2 subclasses.
+    if type(model) is not RiverDirectionModel:
+        raise TypeError("production model must be exactly RiverDirectionModel")
     buffer = BytesIO()
     joblib.dump(model, buffer)
     payload = buffer.getvalue()
@@ -30,6 +33,6 @@ def deserialize_model(blob: ModelBlob) -> RiverDirectionModel:
     if hashlib.sha256(blob.payload).hexdigest() != blob.sha256:
         raise ValueError("model checksum mismatch")
     model = joblib.load(BytesIO(blob.payload))
-    if not isinstance(model, RiverDirectionModel):
+    if type(model) is not RiverDirectionModel:
         raise TypeError("persisted model has unexpected type")
     return model
