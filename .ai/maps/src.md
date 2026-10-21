@@ -549,6 +549,9 @@ prediction = model.predict_one(feature_row)
 snapshot = PortfolioSnapshot(
 decision = self.risk.evaluate(prediction, snapshot)
 ⋮----
+# Mirror paper runtime: stops reject entry but force a
+# cost-inclusive exit of the existing position.
+⋮----
 start = test_end
 ⋮----
 equity = pd.Series(curve, dtype=float).sort_index()
@@ -7092,6 +7095,9 @@ approved: bool
 side: int
 target_notional: float
 reason: str
+# A risk stop rejects new exposure but must close any existing position.
+# Execution paths treat this as exit-only, never as trade approval.
+liquidate_existing: bool = False
 ⋮----
 class RiskEngine
 ⋮----
@@ -7515,6 +7521,8 @@ decision = self.risk.evaluate(prediction, snapshot)
 trade: TradeSnapshot | None = None
 previous_units = broker.state.units
 ⋮----
+# Hard risk stops are exit-only. Do not leave an existing losing
+# position open merely because fresh exposure was rejected.
 fill = broker.rebalance(
 delta_units = broker.state.units - previous_units
 ⋮----

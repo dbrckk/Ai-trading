@@ -1,22 +1,24 @@
 # Change impact
 
-Base: 9ccf468f787d38ad249aac6e364e46b0e6301429
-Head: b966ed8ebd5d55f00b4236b40ec6ad419d23ec52
+Base: 5eda197cdf22f19fbb4ff02588bb0cb7d841513b
+Head: 3c8f77e42ee638d26de3431d6df792906e0e994d
 
 ## Changed files
-- M README.md
-- M src/ai_trading/performance_metrics.py
-- M tests/test_dashboard_overview.py
-- M tests/test_multi_market.py
-- M tests/test_performance_metrics.py
+- M src/ai_trading/backtest.py
+- M src/ai_trading/risk.py
+- M src/ai_trading/runtime.py
+- M tests/test_backtest.py
+- M tests/test_risk.py
+- M tests/test_runtime_targeted_step.py
 
 ## Affected areas
-- (root)
 - src
 - tests
 
 ## Related test candidates
-- tests/test_performance_metrics.py
+- tests/test_backtest.py
+- tests/test_risk.py
+- tests/test_runtime.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

@@ -69,16 +69,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-21T19:55:20Z
+Generated: 2026-10-21T20:02:35Z
 
 ### Git
 - Branch: `main`
-- Head: `b966ed8ebd5d`
-- Commit date: 2026-10-21T15:55:09-04:00
-- Commit: feat(metrics): report paper PnL sample coverage separately from availability (#183)
+- Head: `3c8f77e42ee6`
+- Commit date: 2026-10-21T16:02:25-04:00
+- Commit: fix(risk): liquidate existing paper exposure on hard loss stops (#184)
 - Tracked files: 513
 
 ### Recently changed files
+- `src/ai_trading/backtest.py`
+- `src/ai_trading/risk.py`
+- `src/ai_trading/runtime.py`
+- `tests/test_backtest.py`
+- `tests/test_risk.py`
+- `tests/test_runtime_targeted_step.py`
 - `README.md`
 - `src/ai_trading/performance_metrics.py`
 - `tests/test_dashboard_overview.py`
@@ -93,12 +99,6 @@ Generated: 2026-10-21T19:55:20Z
 - `tests/test_shadow_quality.py`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/mtf_shadow_quality.py`
-- `src/ai_trading/shadow_promotion_gate.py`
-- `src/ai_trading/shadow_quality.py`
-- `tests/test_mtf_shadow_quality.py`
-- `tests/test_shadow_promotion_gate.py`
-- `src/ai_trading/runtime_status.py`
-- `tests/test_runtime_status.py`
 
 ### Project signals
 - `pyproject.toml`

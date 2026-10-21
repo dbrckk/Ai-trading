@@ -1444,6 +1444,9 @@ prediction = model.predict_one(feature_row)
 snapshot = PortfolioSnapshot(
 decision = self.risk.evaluate(prediction, snapshot)
 ⋮----
+# Mirror paper runtime: stops reject entry but force a
+# cost-inclusive exit of the existing position.
+⋮----
 start = test_end
 ⋮----
 equity = pd.Series(curve, dtype=float).sort_index()
@@ -7987,6 +7990,9 @@ approved: bool
 side: int
 target_notional: float
 reason: str
+# A risk stop rejects new exposure but must close any existing position.
+# Execution paths treat this as exit-only, never as trade approval.
+liquidate_existing: bool = False
 ⋮----
 class RiskEngine
 ⋮----
@@ -8410,6 +8416,8 @@ decision = self.risk.evaluate(prediction, snapshot)
 trade: TradeSnapshot | None = None
 previous_units = broker.state.units
 ⋮----
+# Hard risk stops are exit-only. Do not leave an existing losing
+# position open merely because fresh exposure was rejected.
 fill = broker.rebalance(
 delta_units = broker.state.units - previous_units
 ⋮----
@@ -9542,6 +9550,18 @@ def test_walk_forward_annualizes_from_actual_oos_timestamps_by_default() -> None
 ⋮----
 periods = infer_periods_per_year(report.equity_curve.index)
 expected = compute_metrics(report.equity_curve, periods)
+⋮----
+def test_walk_forward_exits_position_after_hard_risk_stop(monkeypatch) -> None
+⋮----
+"""Backtest must account for a stop exit and its turnover/costs."""
+decisions = 0
+⋮----
+def configured_risk(self, prediction, portfolio)
+⋮----
+rebalances: list[tuple[int, float]] = []
+original_rebalance = PaperBroker.rebalance
+⋮----
+def tracked_rebalance(self, side, target_notional, price)
 ````
 
 ## File: tests/test_benchmark_gate.py
@@ -12997,6 +13017,16 @@ def test_drawdown_limit_is_fail_closed() -> None
 engine = RiskEngine(RiskConfig(max_drawdown_fraction=0.10))
 pred = Prediction(side=1, confidence=0.90, probabilities={-1: 0.05, 0: 0.05, 1: 0.90})
 snap = PortfolioSnapshot(89_000, 100_000, 100_000)
+⋮----
+def test_daily_loss_stop_marks_existing_position_for_exit() -> None
+⋮----
+engine = RiskEngine(RiskConfig(max_daily_loss_fraction=0.02))
+pred = Prediction(
+snap = PortfolioSnapshot(
+⋮----
+def test_low_confidence_rejection_does_not_force_liquidation() -> None
+⋮----
+engine = RiskEngine(RiskConfig(min_confidence=0.70))
 ````
 
 ## File: tests/test_robustness.py
@@ -13176,6 +13206,19 @@ newer = eligible[-2]
 first = runtime.step_at(df, newer)
 second = runtime.step_at(df, older)
 state = runtime.state_store.load(runtime.risk_config.starting_cash)
+⋮----
+"""A rejected risk stop must not leave a previously opened position exposed."""
+journal = TradeJournal(tmp_path / "trades.jsonl")
+runtime = PaperAutonomousRuntime(
+decisions = iter((
+⋮----
+opened = runtime.step_at(df, eligible[-4])
+⋮----
+stopped = runtime.step_at(df, eligible[-3])
+⋮----
+still_stopped = runtime.step_at(df, eligible[-2])
+⋮----
+trades = journal.list()
 ````
 
 ## File: tests/test_runtime.py
