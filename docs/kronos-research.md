@@ -172,7 +172,13 @@ explicitly enabled it observes **5-minute paper markets only**
 - Per-market `/api/markets` includes `overview.river_v2_shadow` with
   matured observations, pending observations, confidence-gated v2
   SHORT count and matching v1/v2 directional quality when at least
-  five observations exist. The data is read-only; if the storage is
+  five observations exist. It also reports **directional ground-truth
+  labels** and **confidence-gated directional predictions** separately
+  for River-v1 and River-v2; the evidence gate requires 250 matched
+  observations, 100 directional outcomes and 50 confident River-v2
+  directional predictions. Passing these counts is only a sample-size
+  diagnostic, never an approval to trade or proof of positive returns.
+  The data is read-only; if the storage is
   unavailable, the observer does not break the dashboard.
 - Evaluation is directional classification, **not** executable
   next-open fills or net-of-cost returns. Real-world decision latency

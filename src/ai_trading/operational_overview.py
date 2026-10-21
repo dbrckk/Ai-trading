@@ -171,6 +171,23 @@ def _river_v2_forward_snapshot(comparison=None) -> dict[str, object]:
         "short_predictions": (
             int(comparison.short_predictions) if comparison is not None else 0
         ),
+        "directional_labels": (
+            int(comparison.directional_labels) if comparison is not None else 0
+        ),
+        "river_directional_predictions": (
+            int(comparison.river_directional_predictions)
+            if comparison is not None else 0
+        ),
+        "river_v2_directional_predictions": (
+            int(comparison.river_v2_directional_predictions)
+            if comparison is not None else 0
+        ),
+        "directional_evidence_sufficient": (
+            count >= 250
+            and comparison is not None
+            and comparison.directional_labels >= 100
+            and comparison.river_v2_directional_predictions >= 50
+        ),
         "river_accuracy": (
             float(comparison.river.accuracy) if count >= 5 else None
         ),
