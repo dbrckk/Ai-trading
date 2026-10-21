@@ -74,23 +74,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-21T20:02:35Z
+Generated: 2026-10-21T20:07:57Z
 
 ### Git
 - Branch: `main`
-- Head: `3c8f77e42ee6`
-- Commit date: 2026-10-21T16:02:25-04:00
-- Commit: fix(risk): liquidate existing paper exposure on hard loss stops (#184)
+- Head: `876a5f114849`
+- Commit date: 2026-10-21T16:07:47-04:00
+- Commit: fix(research): reject non-profitable net-of-cost stress scenarios (#185)
 - Tracked files: 513
 
 ### Recently changed files
+- `README.md`
+- `src/ai_trading/cost_stress_gate.py`
+- `tests/test_cost_stress_gate.py`
 - `src/ai_trading/backtest.py`
 - `src/ai_trading/risk.py`
 - `src/ai_trading/runtime.py`
 - `tests/test_backtest.py`
 - `tests/test_risk.py`
 - `tests/test_runtime_targeted_step.py`
-- `README.md`
 - `src/ai_trading/performance_metrics.py`
 - `tests/test_dashboard_overview.py`
 - `tests/test_multi_market.py`
@@ -102,8 +104,6 @@ Generated: 2026-10-21T20:02:35Z
 - `src/ai_trading/operational_overview.py`
 - `src/ai_trading/river_v2_shadow.py`
 - `tests/test_shadow_quality.py`
-- `src/ai_trading/dashboard.py`
-- `src/ai_trading/mtf_shadow_quality.py`
 
 ### Project signals
 - `pyproject.toml`

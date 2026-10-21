@@ -1,24 +1,20 @@
 # Change impact
 
-Base: 5eda197cdf22f19fbb4ff02588bb0cb7d841513b
-Head: 3c8f77e42ee638d26de3431d6df792906e0e994d
+Base: c94b8d780b87b01ecfd79a09416b60b142a5988c
+Head: 876a5f1148493a7ee4309c96314e83cf191ac5bf
 
 ## Changed files
-- M src/ai_trading/backtest.py
-- M src/ai_trading/risk.py
-- M src/ai_trading/runtime.py
-- M tests/test_backtest.py
-- M tests/test_risk.py
-- M tests/test_runtime_targeted_step.py
+- M README.md
+- M src/ai_trading/cost_stress_gate.py
+- M tests/test_cost_stress_gate.py
 
 ## Affected areas
+- (root)
 - src
 - tests
 
 ## Related test candidates
-- tests/test_backtest.py
-- tests/test_risk.py
-- tests/test_runtime.py
+- tests/test_cost_stress_gate.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.
