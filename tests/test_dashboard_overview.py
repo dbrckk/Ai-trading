@@ -293,6 +293,7 @@ def test_operational_overview_exposes_model_and_runtime_metadata() -> None:
     assert payload["river_v2_shadow"]["observations"] == 0
     assert payload["river_v2_shadow"]["eligible_for_review"] is False
     assert payload["river_v2_shadow"]["actionable"] is False
+    assert payload["river_v2_shadow"]["status"] == "disabled"
     assert payload["mtf_shadow_challenger"]["observations"] == 8
     assert payload["mtf_shadow_challenger"]["horizon_minutes"] == 45
     assert payload["mtf_shadow_challenger"]["candidate_config"]["config_name"] == (
@@ -426,7 +427,7 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
         },
         "river_v2_shadow": {
             "available": False,
-            "status": "collecting",
+            "status": "disabled",
             "model_format": "joblib-river-ovr-v2",
             "model_version": 2,
             "observations": 0,
