@@ -289,6 +289,10 @@ def test_operational_overview_exposes_model_and_runtime_metadata() -> None:
     assert payload["shadow_challenger"]["observations"] == 8
     assert round(payload["shadow_challenger"]["score_delta"], 2) == 0.12
     assert payload["shadow_challenger"]["challenger"]["accuracy"] == 0.70
+    assert payload["river_v2_shadow"]["available"] is False
+    assert payload["river_v2_shadow"]["observations"] == 0
+    assert payload["river_v2_shadow"]["eligible_for_review"] is False
+    assert payload["river_v2_shadow"]["actionable"] is False
     assert payload["mtf_shadow_challenger"]["observations"] == 8
     assert payload["mtf_shadow_challenger"]["horizon_minutes"] == 45
     assert payload["mtf_shadow_challenger"]["candidate_config"]["config_name"] == (
@@ -478,6 +482,8 @@ def test_dashboard_exposes_operational_overview_endpoint() -> None:
     assert payload["burnin"]["samples"] == 2
     assert payload["shadow_challenger"]["observations"] == 8
     assert payload["shadow_challenger"]["available"] is True
+    assert payload["river_v2_shadow"]["model_version"] == 2
+    assert payload["river_v2_shadow"]["actionable"] is False
     assert payload["mtf_shadow_challenger"]["observations"] == 8
     assert payload["mtf_shadow_challenger"]["available"] is True
     assert payload["alerts"] == []
