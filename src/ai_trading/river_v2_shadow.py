@@ -53,6 +53,9 @@ class RiverV2ForwardComparison:
     observations: int
     pending: int
     short_predictions: int
+    directional_labels: int
+    river_directional_predictions: int
+    river_v2_directional_predictions: int
     river: ModelQuality
     river_v2: ModelQuality
 
@@ -211,6 +214,9 @@ def compare_river_v2_forward_audit_payloads(
     labels: list[int] = []
     pending = 0
     shorts = 0
+    directional_labels = 0
+    v1_directional = 0
+    v2_directional = 0
     seen: set[str] = set()
 
     for payload in audit_rows:
@@ -279,6 +285,9 @@ def compare_river_v2_forward_audit_payloads(
         sides_v2.append(side_v2)
         conf_v2.append(confidence_v2)
         labels.append(label)
+        directional_labels += int(label != 0)
+        v1_directional += int(side_v1 != 0 and confidence_v1 >= minimum)
+        v2_directional += int(side_v2 != 0 and confidence_v2 >= minimum)
         shorts += int(side_v2 == -1 and confidence_v2 >= minimum)
 
     def quality(sides: list[int], confidences: list[float]) -> ModelQuality:
@@ -292,6 +301,9 @@ def compare_river_v2_forward_audit_payloads(
         observations=len(labels),
         pending=pending,
         short_predictions=shorts,
+        directional_labels=directional_labels,
+        river_directional_predictions=v1_directional,
+        river_v2_directional_predictions=v2_directional,
         river=quality(sides_v1, conf_v1),
         river_v2=quality(sides_v2, conf_v2),
     )
