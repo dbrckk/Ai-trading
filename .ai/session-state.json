@@ -2,11 +2,11 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "fix/skip-unclosed-five-minute-bars",
+  "active_branch": "fix/river-v2-forward-compute-budget",
   "pull_request": null,
-  "focus": "After #173 / #174 verified deployed, direct read-only hosted probe found Gold/DAX/BTC RUNNING and River-v2 0 pending / 0 mature evidence. Bug fix in progress: trim unclosed 5m Yahoo provider candle before paper runtime and v2 forward observer. Keep River-v1 only paper decisions and no live orders.",
+  "focus": "Operational safety response 2026-10-21: PR #175 fully green and Render b8669a71 verified, but all three hosted market statuses remained STARTING for >11m and Cloudflare had not registered a new success. Root cause not yet proven. Emergency hotfix stages River-v2 independent flag default OFF, no DB scan while disabled, max128 training rows and 3s hard budget when explicitly on. Keep v1 paper-only and alert until scheduler restores RUNNING.",
   "production_evidence": {
-    "main_head": "9f8d88ca7609d92e306c8222c95e7b2a46d73cf2",
+    "main_head": "b8669a71aca664ffd85f2805a7ce6692098ca04a",
     "render_shadow_challenger_enabled": true,
     "render_markets": "GC=F,^GDAXI,BTC-USD",
     "gold": {
@@ -52,29 +52,26 @@
     },
     "latest_public_probe": {
       "checked_on": "2026-10-21",
-      "deployed_commit": "9f8d88ca7609d92e306c8222c95e7b2a46d73cf2",
+      "deployed_commit": "b8669a71aca664ffd85f2805a7ce6692098ca04a",
       "web_healthy": true,
       "storage_ready": true,
       "market_statuses_at_probe": {
-        "GC=F": "RUNNING",
-        "^GDAXI": "RUNNING",
-        "BTC-USD": "RUNNING"
-      },
-      "market_errors": 0,
-      "river_v2_observations": {
-        "GC=F": 0,
-        "^GDAXI": 0,
-        "BTC-USD": 0
+        "GC=F": "STARTING",
+        "^GDAXI": "STARTING",
+        "BTC-USD": "STARTING"
       },
       "river_v2_pending": {
         "GC=F": 0,
         "^GDAXI": 0,
         "BTC-USD": 0
       },
-      "scheduler_recent_successes": 20,
-      "production_river_format": "joblib-river-v1",
-      "trade_count": 8,
-      "note": "Public verified runtime health but no forward v2 observations yet. Probe before unclosed-candle fix."
+      "river_v2_observations": {
+        "GC=F": 0,
+        "^GDAXI": 0,
+        "BTC-USD": 0
+      },
+      "scheduler_last_confirmed_success_utc": "2026-10-21T09:46:41.707903+00:00",
+      "note": "All three markets remained STARTING >11 minutes after new cycle; this is not validated recovery. Direct health/API reachable. Safety hotfix PR pending."
     }
   },
   "completed_changes": [
@@ -103,7 +100,8 @@
     "PR #169 merged 2026-10-20: published validated RENDER_GIT_COMMIT on /livez and optional exact deployment-probe SHA check; PR head CI, CodeQL and existing HTTP integration checks passed.",
     "PR #171 merged on 2026-10-21: isolated OVR-v2 research artifact and exact-type River-v1 production guard; existing codec/online checks expanded; PR CI, CodeQL passed. No paper runtime migration.",
     "PR #173 merged 2026-10-21: River-v2 forward observer on fresh completed 5m Gold/DAX/BTC bars, atomic audit predictions and delayed matched v1/v2 directional quality in read-only API; CI/CodeQL succeeded. No model promotion or trade execution changes.",
-    "21 Oct: observed deployed #174 live on Render 9f8d88ca, markets healthy but River-v2 0 pending/mature; diagnosed Yahoo mutable leading 5m candle and staged strict completed-candle filtering in fix/skip-unclosed-five-minute-bars."
+    "21 Oct: observed deployed #174 live on Render 9f8d88ca, markets healthy but River-v2 0 pending/mature; diagnosed Yahoo mutable leading 5m candle and staged strict completed-candle filtering in fix/skip-unclosed-five-minute-bars.",
+    "PR #175 merged b8669a71 on 2026-10-21: 5m incomplete Yahoo candles filtered before paper v1 and v2, CI/CodeQL and real Render SHA verified. Production cycle then remained STARTING >11 minutes; emergency v2 CPU/opt-in isolation staged but not yet merged."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -112,8 +110,8 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Validate 5m completed-candle paper input fix in PR CI (Ruff, full Pytest with Postgres, Cloudflare tests, CodeQL); merge only when green.",
-    "Verify resulting Render deployed SHA and that recent 5m closed bars produce >0 actual River-v2 pending then matured audit observations across Gold/DAX/BTC.",
-    "Do not promote River-v2 or Kronos; gather net-of-cost independent held-out and forward evidence; live orders remain disabled."
+    "Require PR CI and CodeQL for emergency v2 compute/opt-in fix; merge and verify Render SHA when green.",
+    "Inspect post-release Cloudflare deliveries and RUNNING Gold/DAX/BTC with no errors. If STARTING persists, investigate provider/network and backend locks before restoring research.",
+    "Leave River-v2 shadow disabled by default until runtime throughput verified with a strict CPU budget, and retain all live brokers OFF."
   ]
 }
