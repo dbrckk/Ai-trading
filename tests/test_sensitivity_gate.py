@@ -48,7 +48,10 @@ def test_sensitivity_gate_rejects_narrow_optimum() -> None:
 
     # These used to pass the gate despite losing money, missing trades,
     # or emitting invalid/non-physical research measurements.
-    losses = tuple(replace(result(f"loss{i}", excess=0.15), total_return=-0.02) for i in range(6))
+    losses = tuple(
+        replace(result(f"loss{i}", excess=0.15), total_return=-0.02)
+        for i in range(6)
+    )
     loss_gate = evaluate_sensitivity_gate(losses)
     assert loss_gate.passed is False
     assert loss_gate.passing_scenarios == 0
