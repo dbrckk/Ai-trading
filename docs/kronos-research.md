@@ -81,6 +81,30 @@ at the time of prediction when claiming a historical simulation.
   financing and liquidity constraints. Results **cannot demonstrate**
   profitable live execution or materially improved trades.
 
+## Isolated River-v2 research artifact
+
+River-v2 uses `RiverMulticlassDirectionModel` (three-class One-vs-Rest)
+rather than the production River-v1 binary logistic classifier. The
+`research_model_codec` exposes `serialize_research_model` and
+`deserialize_research_model` for **trusted offline artifacts only**,
+labeled `joblib-river-ovr-v2`, version 2, with a payload checksum.
+It preserves trained probabilities and observation counters across a
+round trip. Joblib/pickle is **not safe for untrusted input**; a SHA-256
+checksum detects corruption, not maliciously generated objects.
+
+The production `model_codec` continues to accept **only the exact**
+`RiverDirectionModel` and `joblib-river-v1`; it refuses River-v2
+subclasses on write and v2 blobs on read. Neither existing PostgreSQL
+paper runtime keys nor stored v1 model states are migrated. There is
+**no** River-v2 activation path in hosted paper execution.
+
+The existing walk-forward Kronos research comparator supplies offline
+side-by-side evidence; there is not yet an independently verified,
+persisted River-v2 **forward shadow** feed. Promotion would require
+separate holdout and forward evidence, audited risk/short-position
+handling, a versioned rollout and rollback protocol. Until then,
+River-v2 is not an actionable trade signal.
+
 ## Observed BTC research smoke (2026-10-20)
 
 The real original `Kronos-mini` workflow on BTC-USD 5-minute history succeeded
