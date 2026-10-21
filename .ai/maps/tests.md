@@ -2885,9 +2885,18 @@ persisted = market.index[0] - pd.Timedelta(days=4)
 df = sample_market(120)
 df = df.drop(index=df.index[10:110:10])
 ⋮----
-def test_paper_cycle_accepts_single_tolerated_market_gap(tmp_path: Path) -> None
+df = sample_market(220)
+df = df.drop(index=df.index[150])
+# The provider can include the current, unfinished five-minute candle.
+# Freeze the clock to prove the authoritative paper step discards it.
+now = pd.Timestamp("2026-10-21T12:02:00+00:00")
+last = df.index[-1].tz_localize("UTC")
 ⋮----
-df = df.drop(index=df.index[50])
+# A forward River-v2 signal can now use the latest *completed* bar,
+# instead of silently skipping a still-forming provider candle.
+⋮----
+complete = paper_cycle_module._completed_market_bars(df, interval="5m", now=now)
+sample = observe_river_v2_forward(
 ⋮----
 recent = long_history.index[-100:]
 long_history = long_history.drop(index=recent[10:90:10])

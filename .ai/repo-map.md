@@ -6148,6 +6148,25 @@ except Exception:  # noqa: BLE001, S110 - best-effort failure reporting
 ````python
 DEFAULT_MAX_CATCHUP_BARS = 72
 _MAX_PROVIDER_GAP_RESUME = pd.Timedelta(days=3)
+_FIVE_MINUTES = pd.Timedelta(minutes=5)
+_CANDLE_FINALITY_BUFFER = pd.Timedelta(seconds=2)
+⋮----
+def _utc_now() -> pd.Timestamp
+⋮----
+"""Exclude provider candles that have not finished before paper execution.
+
+    Yahoo's intraday response can contain an OHLC row whose timestamp is the
+    *start* of the currently forming candle. Executing its partial close would
+    permanently persist a decision against a price that later changes.
+    Date-only and historical non-5m pipelines keep their prior behaviour.
+    Naive timestamps are interpreted as UTC, as in the existing paper runner.
+    """
+⋮----
+current = _utc_now() if now is None else pd.Timestamp(now)
+⋮----
+current = current.tz_convert("UTC")
+timestamps = (
+completed = timestamps + _FIVE_MINUTES + _CANDLE_FINALITY_BUFFER <= current
 ⋮----
 def _utc_timestamp(value: object) -> pd.Timestamp
 ⋮----
@@ -6198,7 +6217,7 @@ last_raw = raw_times[-1]
 ⋮----
 runtime_key = build_runtime_key(symbol, interval)
 runtime = self.runtime_factory(
-market = self.data_loader(symbol, period, interval)
+market = _completed_market_bars(
 quality = evaluate_market_data_quality(market)
 ⋮----
 reasons = ",".join(quality.reasons) or "score below threshold"
@@ -11980,9 +11999,18 @@ persisted = market.index[0] - pd.Timedelta(days=4)
 df = sample_market(120)
 df = df.drop(index=df.index[10:110:10])
 ⋮----
-def test_paper_cycle_accepts_single_tolerated_market_gap(tmp_path: Path) -> None
+df = sample_market(220)
+df = df.drop(index=df.index[150])
+# The provider can include the current, unfinished five-minute candle.
+# Freeze the clock to prove the authoritative paper step discards it.
+now = pd.Timestamp("2026-10-21T12:02:00+00:00")
+last = df.index[-1].tz_localize("UTC")
 ⋮----
-df = df.drop(index=df.index[50])
+# A forward River-v2 signal can now use the latest *completed* bar,
+# instead of silently skipping a still-forming provider candle.
+⋮----
+complete = paper_cycle_module._completed_market_bars(df, interval="5m", now=now)
+sample = observe_river_v2_forward(
 ⋮----
 recent = long_history.index[-100:]
 long_history = long_history.drop(index=recent[10:90:10])

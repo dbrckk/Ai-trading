@@ -5253,6 +5253,25 @@ except Exception:  # noqa: BLE001, S110 - best-effort failure reporting
 ```python
 DEFAULT_MAX_CATCHUP_BARS = 72
 _MAX_PROVIDER_GAP_RESUME = pd.Timedelta(days=3)
+_FIVE_MINUTES = pd.Timedelta(minutes=5)
+_CANDLE_FINALITY_BUFFER = pd.Timedelta(seconds=2)
+⋮----
+def _utc_now() -> pd.Timestamp
+⋮----
+"""Exclude provider candles that have not finished before paper execution.
+
+    Yahoo's intraday response can contain an OHLC row whose timestamp is the
+    *start* of the currently forming candle. Executing its partial close would
+    permanently persist a decision against a price that later changes.
+    Date-only and historical non-5m pipelines keep their prior behaviour.
+    Naive timestamps are interpreted as UTC, as in the existing paper runner.
+    """
+⋮----
+current = _utc_now() if now is None else pd.Timestamp(now)
+⋮----
+current = current.tz_convert("UTC")
+timestamps = (
+completed = timestamps + _FIVE_MINUTES + _CANDLE_FINALITY_BUFFER <= current
 ⋮----
 def _utc_timestamp(value: object) -> pd.Timestamp
 ⋮----
@@ -5303,7 +5322,7 @@ last_raw = raw_times[-1]
 ⋮----
 runtime_key = build_runtime_key(symbol, interval)
 runtime = self.runtime_factory(
-market = self.data_loader(symbol, period, interval)
+market = _completed_market_bars(
 quality = evaluate_market_data_quality(market)
 ⋮----
 reasons = ",".join(quality.reasons) or "score below threshold"

@@ -55,25 +55,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-21T08:28:52Z
+Generated: 2026-10-21T09:59:27Z
 
 ### Git
 - Branch: `main`
-- Head: `6f3fe1df3e49`
-- Commit date: 2026-10-21T04:28:42-04:00
-- Commit: feat(research): audit River v2 forward observations without trading impact (#173)
-- Tracked files: 510
+- Head: `b8669a71aca6`
+- Commit date: 2026-10-21T05:59:16-04:00
+- Commit: fix(paper): discard incomplete five-minute Yahoo candles (#175)
+- Tracked files: 513
 
 ### Recently changed files
 - `docs/kronos-research.md`
+- `src/ai_trading/paper_cycle.py`
+- `tests/test_paper_cycle.py`
 - `src/ai_trading/file_persistence.py`
 - `src/ai_trading/operational_overview.py`
-- `src/ai_trading/paper_cycle.py`
 - `src/ai_trading/postgres_persistence.py`
 - `src/ai_trading/river_v2_shadow.py`
 - `src/ai_trading/runtime.py`
 - `tests/test_dashboard_overview.py`
-- `tests/test_paper_cycle.py`
 - `tests/test_shadow_challenger.py`
 - `tests/test_shadow_quality.py`
 - `src/ai_trading/model_codec.py`
