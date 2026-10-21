@@ -302,6 +302,10 @@ def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
     assert 'class="market-card btc"' in page
     assert "confidence-meter" in page
     assert "5m challenger evidence" in page
+    assert "5m directional evidence" in page
+    assert "100 labels" in page
+    assert "50 predictions" in page
+    assert "MTF confident directions" in page
     assert "MTF 45m" in page
     assert "h45m-min5bp-atr0.25-train1000-conf56" in page
     assert "h45m-min5bp-atr0.25-train1000-conf60" in page

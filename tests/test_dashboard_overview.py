@@ -289,6 +289,10 @@ def test_operational_overview_exposes_model_and_runtime_metadata() -> None:
     assert payload["shadow_challenger"]["observations"] == 8
     assert round(payload["shadow_challenger"]["score_delta"], 2) == 0.12
     assert payload["shadow_challenger"]["challenger"]["accuracy"] == 0.70
+    assert payload["shadow_challenger"]["directional_observations"] == 0
+    assert payload["shadow_challenger"]["directional_predictions"] == 0
+    assert payload["shadow_challenger"]["promotion_gate"]["min_directional_observations"] == 100
+    assert payload["shadow_challenger"]["promotion_gate"]["min_directional_predictions"] == 50
     assert payload["river_v2_shadow"]["available"] is False
     assert payload["river_v2_shadow"]["observations"] == 0
     assert payload["river_v2_shadow"]["eligible_for_review"] is False
@@ -303,6 +307,7 @@ def test_operational_overview_exposes_model_and_runtime_metadata() -> None:
     assert payload["mtf_shadow_challenger"]["timeframes"] == ["5m", "15m", "1h", "4h"]
     assert payload["mtf_shadow_challenger"]["promotion_gate"]["min_observations"] == 500
     assert payload["mtf_shadow_challenger"]["directional_observations"] == 5
+    assert payload["mtf_shadow_challenger"]["directional_predictions"] == 0
     assert payload["mtf_shadow_challenger"]["directional_rate"] == 0.625
     assert payload["mtf_shadow_challenger"]["label_distribution"] == {
         "long": 3,
@@ -414,14 +419,20 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
             "available": False,
             "status": "collecting",
             "observations": 0,
+            "directional_observations": 0,
+            "directional_predictions": 0,
             "score_delta": None,
             "river": None,
             "challenger": None,
             "promotion_gate": {
                 "eligible_for_review": False,
                 "min_observations": 250,
+                "min_directional_observations": 100,
+                "min_directional_predictions": 50,
                 "reasons": [
-                    "need at least 250 realized shadow observations"
+                    "need at least 250 realized shadow observations",
+                    "need at least 100 realized directional shadow observations",
+                    "need at least 50 confident directional challenger predictions",
                 ],
             },
         },
@@ -455,6 +466,7 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
             },
             "observations": 0,
             "directional_observations": 0,
+            "directional_predictions": 0,
             "directional_rate": 0.0,
             "label_distribution": {"long": 0, "flat": 0, "short": 0},
             "score_delta": None,
@@ -471,9 +483,11 @@ def test_operational_overview_storage_failure_is_sanitized() -> None:
                 "eligible_for_review": False,
                 "min_observations": 500,
                 "min_directional_observations": 100,
+                "min_directional_predictions": 50,
                 "reasons": [
                     "need at least 500 realized MTF observations",
-                    "need at least 100 directional MTF observations",
+                    "need at least 100 realized directional shadow observations",
+                    "need at least 50 confident directional challenger predictions",
                 ],
             },
         },

@@ -8,6 +8,8 @@ from .shadow_quality import ShadowQualityComparison
 @dataclass(frozen=True)
 class ShadowPromotionPolicy:
     min_observations: int = 250
+    min_directional_observations: int = 100
+    min_directional_predictions: int = 50
     min_score_delta: float = 0.02
     min_accuracy_delta: float = 0.0
     max_brier_increase: float = 0.02
@@ -19,6 +21,8 @@ class ShadowPromotionGate:
     eligible_for_review: bool
     reasons: tuple[str, ...]
     observations: int
+    directional_observations: int
+    directional_predictions: int
     score_delta: float
     accuracy_delta: float
     brier_delta: float
@@ -46,6 +50,16 @@ def evaluate_shadow_promotion_gate(
         reasons.append(
             f"need at least {policy.min_observations} realized shadow observations"
         )
+    if comparison.directional_observations < policy.min_directional_observations:
+        reasons.append(
+            f"need at least {policy.min_directional_observations} realized "
+            "directional shadow observations"
+        )
+    if comparison.directional_predictions < policy.min_directional_predictions:
+        reasons.append(
+            f"need at least {policy.min_directional_predictions} confident "
+            "directional challenger predictions"
+        )
     if score_delta < policy.min_score_delta:
         reasons.append("composite quality improvement below threshold")
     if accuracy_delta < policy.min_accuracy_delta:
@@ -59,6 +73,8 @@ def evaluate_shadow_promotion_gate(
         eligible_for_review=not reasons,
         reasons=tuple(reasons),
         observations=int(comparison.observations),
+        directional_observations=int(comparison.directional_observations),
+        directional_predictions=int(comparison.directional_predictions),
         score_delta=score_delta,
         accuracy_delta=accuracy_delta,
         brier_delta=brier_delta,

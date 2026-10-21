@@ -63,6 +63,7 @@ def test_mtf_quality_joins_river_prediction_by_delayed_execution_time() -> None:
     assert comparison.challenger.accuracy > comparison.river.accuracy
     assert comparison.score_delta > 0.0
     assert comparison.directional_observations == 3
+    assert comparison.directional_predictions == 3
     assert comparison.directional_rate == 0.6
     assert comparison.long_labels == 1
     assert comparison.flat_labels == 2
@@ -98,6 +99,7 @@ def test_mtf_quality_exposes_flat_only_evidence() -> None:
 
     assert comparison.observations == 2
     assert comparison.directional_observations == 0
+    assert comparison.directional_predictions == 0
     assert comparison.directional_rate == 0.0
     assert comparison.flat_labels == 2
 
@@ -120,3 +122,4 @@ def test_mtf_quality_filters_evidence_by_candidate_version() -> None:
     assert comparison.directional_observations == 1
     assert comparison.short_labels == 1
     assert comparison.long_labels == 0
+    assert comparison.directional_predictions == 1

@@ -81,6 +81,34 @@ at the time of prediction when claiming a historical simulation.
   financing and liquidity constraints. Results **cannot demonstrate**
   profitable live execution or materially improved trades.
 
+## Paper challenger review: minimum directional evidence
+
+The existing **ensemble 5m shadow** and validated **multi-timeframe
+shadow** are evaluated in parallel with the River-v1 paper engine. A
+high raw accuracy can be misleading when a challenger frequently
+predicts FLAT/NO_TRADE, so review eligibility now requires **all**
+of the following:
+
+- Ensemble 5m: at least **250** matched realized samples, **100**
+  realized directional labels (LONG or SHORT), and **50 confident
+  directional challenger predictions**. For the ensemble comparison,
+  a directional prediction must have confidence of at least **0.56**.
+- MTF: at least **500** matched realized samples, **100** realized
+  directional labels, and **50** challenger directional predictions
+  after the candidate's own versioned minimum-confidence gate.
+- Previously existing composite-score improvement, accuracy,
+  calibration and directional-edge non-degradation checks **still
+  apply**. Invalid confidence values are excluded rather than
+  counted toward any evidence threshold.
+
+The live `/api/markets` model diagnostics expose the counts and
+thresholds independently for each Gold, DAX and BTC market. The
+dashboard shows both realized directional examples and confident
+directional candidate predictions. These are **review-only
+safeguards**, not proof of net-of-cost profitability or forward
+validity. No challenger can place trades or promote itself, and
+River-v2 remains disabled by default on Render.
+
 ## Isolated River-v2 research artifact
 
 River-v2 uses `RiverMulticlassDirectionModel` (three-class One-vs-Rest)

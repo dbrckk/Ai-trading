@@ -34,14 +34,26 @@ def _empty_shadow_quality_snapshot() -> dict[str, object]:
         "available": False,
         "status": "collecting",
         "observations": 0,
+        "directional_observations": 0,
+        "directional_predictions": 0,
         "score_delta": None,
         "river": None,
         "challenger": None,
         "promotion_gate": {
             "eligible_for_review": False,
             "min_observations": policy.min_observations,
+            "min_directional_observations": policy.min_directional_observations,
+            "min_directional_predictions": policy.min_directional_predictions,
             "reasons": [
-                f"need at least {policy.min_observations} realized shadow observations"
+                f"need at least {policy.min_observations} realized shadow observations",
+                (
+                    f"need at least {policy.min_directional_observations} "
+                    "realized directional shadow observations"
+                ),
+                (
+                    f"need at least {policy.min_directional_predictions} "
+                    "confident directional challenger predictions"
+                ),
             ],
         },
     }
@@ -50,7 +62,10 @@ def _empty_shadow_quality_snapshot() -> dict[str, object]:
 def _empty_mtf_shadow_quality_snapshot(
     config: ValidatedMTFShadowConfig | None = None,
 ) -> dict[str, object]:
-    policy = ShadowPromotionPolicy(min_observations=500)
+    policy = ShadowPromotionPolicy(
+        min_observations=500,
+        min_directional_observations=_MTF_MIN_DIRECTIONAL_OBSERVATIONS,
+    )
     if config is None:
         reasons = ["no benchmark-validated MTF configuration for this market"]
         status = "unvalidated"
@@ -62,7 +77,11 @@ def _empty_mtf_shadow_quality_snapshot(
             f"need at least {policy.min_observations} realized MTF observations",
             (
                 "need at least "
-                f"{_MTF_MIN_DIRECTIONAL_OBSERVATIONS} directional MTF observations"
+                f"{_MTF_MIN_DIRECTIONAL_OBSERVATIONS} realized directional shadow observations"
+            ),
+            (
+                f"need at least {policy.min_directional_predictions} "
+                "confident directional challenger predictions"
             ),
         ]
         status = "collecting"
@@ -79,6 +98,7 @@ def _empty_mtf_shadow_quality_snapshot(
         "candidate_config": candidate_config,
         "observations": 0,
         "directional_observations": 0,
+        "directional_predictions": 0,
         "directional_rate": 0.0,
         "label_distribution": {"long": 0, "flat": 0, "short": 0},
         "score_delta": None,
@@ -90,7 +110,8 @@ def _empty_mtf_shadow_quality_snapshot(
         "promotion_gate": {
             "eligible_for_review": False,
             "min_observations": policy.min_observations,
-            "min_directional_observations": _MTF_MIN_DIRECTIONAL_OBSERVATIONS,
+            "min_directional_observations": policy.min_directional_observations,
+            "min_directional_predictions": policy.min_directional_predictions,
             "reasons": reasons,
         },
     }
@@ -115,12 +136,16 @@ def _shadow_quality_snapshot(comparison) -> dict[str, object]:
         "available": available,
         "status": "comparable" if available else "collecting",
         "observations": observations,
+        "directional_observations": int(comparison.directional_observations),
+        "directional_predictions": int(comparison.directional_predictions),
         "score_delta": float(comparison.score_delta) if available else None,
         "river": quality_payload(comparison.river) if observations else None,
         "challenger": quality_payload(comparison.challenger) if observations else None,
         "promotion_gate": {
             "eligible_for_review": gate.eligible_for_review,
             "min_observations": policy.min_observations,
+            "min_directional_observations": policy.min_directional_observations,
+            "min_directional_predictions": policy.min_directional_predictions,
             "reasons": list(gate.reasons),
             "score_delta": gate.score_delta,
             "accuracy_delta": gate.accuracy_delta,
@@ -175,23 +200,22 @@ def _mtf_shadow_quality_snapshot(
             "observations": int(quality.observations),
         }
 
-    policy = ShadowPromotionPolicy(min_observations=500)
+    policy = ShadowPromotionPolicy(
+        min_observations=500,
+        min_directional_observations=_MTF_MIN_DIRECTIONAL_OBSERVATIONS,
+    )
     gate = evaluate_shadow_promotion_gate(comparison, policy)
     directional_observations = int(comparison.directional_observations)
     directional_rate = float(comparison.directional_rate)
     gate_reasons = list(gate.reasons)
-    if directional_observations < _MTF_MIN_DIRECTIONAL_OBSERVATIONS:
-        gate_reasons.append(
-            "need at least "
-            f"{_MTF_MIN_DIRECTIONAL_OBSERVATIONS} directional MTF observations"
-        )
-    eligible_for_review = gate.eligible_for_review and not gate_reasons
+    eligible_for_review = gate.eligible_for_review
     return {
         "available": available,
         "status": "comparable" if available else "collecting",
         "candidate_config": config.as_dict(),
         "observations": observations,
         "directional_observations": directional_observations,
+        "directional_predictions": int(comparison.directional_predictions),
         "directional_rate": directional_rate,
         "label_distribution": {
             "long": int(comparison.long_labels),
@@ -211,7 +235,8 @@ def _mtf_shadow_quality_snapshot(
         "promotion_gate": {
             "eligible_for_review": eligible_for_review,
             "min_observations": policy.min_observations,
-            "min_directional_observations": _MTF_MIN_DIRECTIONAL_OBSERVATIONS,
+            "min_directional_observations": policy.min_directional_observations,
+            "min_directional_predictions": policy.min_directional_predictions,
             "reasons": gate_reasons,
             "score_delta": gate.score_delta,
             "accuracy_delta": gate.accuracy_delta,

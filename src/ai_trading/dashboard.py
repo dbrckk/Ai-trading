@@ -670,8 +670,11 @@ def render_dashboard(
                 else ("YES" if item.get("mtf_evaluated") else "NO")
             )
             observations = shadow.get("observations", 0)
+            shadow_directional_labels = shadow.get("directional_observations", 0)
+            shadow_directional_predictions = shadow.get("directional_predictions", 0)
             mtf_observations = mtf_shadow.get("observations", 0)
             mtf_directional = mtf_shadow.get("directional_observations", 0)
+            mtf_directional_predictions = mtf_shadow.get("directional_predictions", 0)
             mtf_directional_rate = float(mtf_shadow.get("directional_rate", 0.0) or 0.0)
             mtf_distribution = mtf_shadow.get("label_distribution", {})
             review = "ELIGIBLE" if gate.get("eligible_for_review") else "COLLECTING"
@@ -759,7 +762,9 @@ def render_dashboard(
                 f'<div><small>Risk reason</small><strong>{paper_risk_reason}</strong></div>'
                 f'<div><small>MTF this cycle</small><strong>{mtf_cycle_display}</strong></div>'
                 f'<div><small>Shadow 5m</small><strong>{observations}</strong></div>'
+                f'<div><small>5m directional evidence</small><strong>{shadow_directional_labels} / 100 labels · {shadow_directional_predictions} / 50 predictions</strong></div>'
                 f'<div><small>{mtf_label}</small><strong>{mtf_observations}</strong></div>'
+                f'<div><small>MTF confident directions</small><strong>{mtf_directional_predictions} / 50</strong></div>'
                 f'<div><small>MTF candidate</small><strong>{mtf_candidate_name}</strong></div>'
                 f'<div><small>Directional MTF</small><strong>{mtf_directional} · {mtf_directional_rate:.0%}</strong></div>'
                 f'<div><small>MTF labels</small><strong>L {mtf_distribution.get("long", 0)} · F {mtf_distribution.get("flat", 0)} · S {mtf_distribution.get("short", 0)}</strong></div>'

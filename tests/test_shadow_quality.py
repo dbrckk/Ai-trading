@@ -44,6 +44,8 @@ def test_shadow_quality_compares_both_models_on_identical_labels() -> None:
     assert comparison.challenger.observations == 5
     assert comparison.challenger.accuracy > comparison.river.accuracy
     assert comparison.score_delta > 0.0
+    assert comparison.directional_observations == 3
+    assert comparison.directional_predictions == 3
 
     # Forward observations are stored one cycle *before* their outcomes.
     # Compare them with the same later audit record that holds the v1 side.
@@ -96,6 +98,15 @@ def test_shadow_quality_ignores_unusable_audit_rows() -> None:
     )
 
     assert comparison.observations == 1
+    assert comparison.directional_observations == 1
+    assert comparison.directional_predictions == 1
+
+    # Malformed confidence cannot inflate genuine directional evidence.
+    invalid = compare_shadow_audit_payloads(
+        [payload(1, 0.7, 1, float("nan"), 1)]
+    )
+    assert invalid.observations == 0
+    assert invalid.directional_predictions == 0
 
     # No hindsight: malformed, stale or not-yet-matured samples cannot
     # manufacture additional v2 forward evidence.

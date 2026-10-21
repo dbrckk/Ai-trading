@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from dataclasses import dataclass
+from math import isfinite
 from typing import Any
 
 import pandas as pd
@@ -14,6 +15,12 @@ class ShadowQualityComparison:
     observations: int
     river: ModelQuality
     challenger: ModelQuality
+    directional_labels: int = 0
+    directional_predictions: int = 0
+
+    @property
+    def directional_observations(self) -> int:
+        return self.directional_labels
 
     @property
     def score_delta(self) -> float:
@@ -60,6 +67,11 @@ def compare_shadow_audit_payloads(
             continue
         if label not in {-1, 0, 1}:
             continue
+        if not all(
+            isfinite(confidence) and 0.0 <= confidence <= 1.0
+            for confidence in (river_confidence, challenger_confidence)
+        ):
+            continue
 
         river_sides.append(river_side)
         river_confidences.append(river_confidence)
@@ -92,4 +104,11 @@ def compare_shadow_audit_payloads(
         observations=observations,
         river=river,
         challenger=challenger,
+        directional_labels=sum(label != 0 for label in labels),
+        directional_predictions=sum(
+            side != 0 and confidence >= 0.56
+            for side, confidence in zip(
+                challenger_sides, challenger_confidences, strict=True
+            )
+        ),
     )
