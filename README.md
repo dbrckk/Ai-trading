@@ -312,15 +312,23 @@ fresh market data. For manual diagnosis, use
 ## Paper trade performance evidence
 
 The read-only performance API exposes `evidence_sufficient` separately from
-`available`: at least **30 trades with known realized PnL** and at least
+`available`: at least **30 paper fill events with known realized PnL** and at least
 **95% PnL coverage** are required before even treating headline paper PnL,
-profit factor or drawdown as a minimally populated sample. These thresholds
+profit factor or drawdown as a minimally populated sample. These are **fill
+events, not 30 independent completed trades**, so no statistical conclusion
+follows from satisfying them. These thresholds
 are a descriptive sample-coverage check, **not statistical proof of edge**.
 The payload also reports `minimum_pnl_observations` and
 `minimum_pnl_coverage`. Actual execution costs must be accounted for in
 paper fills; further independent out-of-sample, regime, uncertainty and
 net-of-cost checks remain mandatory. No automated model promotion, paper
 order decision or live broker permission depends on this flag.
+
+The dashboard now shows **net realized paper PnL** alongside portfolio
+mark-to-market PnL and per-market allocation-adjusted realized PnL, plus
+observed PnL fill coverage and `PRELIMINARY` / `DATA MINIMUM` sample
+labels. `DATA MINIMUM` means coverage thresholds were met, **not** that
+the strategy is profitable. These are read-only reporting fields.
 
 ### Net-of-cost research qualification
 

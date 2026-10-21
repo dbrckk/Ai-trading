@@ -617,9 +617,38 @@ def render_dashboard(
             now=now,
         )
         portfolio = snapshot["portfolio"]
+        portfolio_performance = portfolio.get("performance", {})
+        portfolio_realized = portfolio_performance.get("realized_pnl")
+        portfolio_realized_display = _display_money(
+            None if portfolio_realized is None else float(portfolio_realized)
+        )
+        portfolio_known = int(portfolio_performance.get("pnl_observations") or 0)
+        portfolio_fills = int(portfolio_performance.get("trade_count") or 0)
+        portfolio_sample_status = (
+            "DATA MINIMUM" if portfolio_performance.get("evidence_sufficient")
+            else "PRELIMINARY"
+        )
         cards = []
         for item in snapshot["markets"]:
             overview = item["overview"]
+            market_performance = overview.get("performance", {})
+            market_realized = market_performance.get("realized_pnl")
+            market_realized_display = _display_money(
+                None
+                if market_realized is None
+                else float(market_realized) * float(item["allocation"])
+            )
+            market_known = int(market_performance.get("pnl_observations") or 0)
+            market_fills = int(market_performance.get("trade_count") or 0)
+            market_coverage = market_performance.get("pnl_coverage")
+            market_coverage_display = (
+                "-" if market_coverage is None
+                else f"{float(market_coverage):.0%}"
+            )
+            market_sample_status = (
+                "DATA MINIMUM" if market_performance.get("evidence_sufficient")
+                else "PRELIMINARY"
+            )
             shadow = overview.get("shadow_challenger", {})
             gate = shadow.get("promotion_gate", {})
             mtf_shadow = overview.get("mtf_shadow_challenger", {})
@@ -754,6 +783,9 @@ def render_dashboard(
                 '<div class="market-grid">'
                 f'<div><small>Equity</small><strong>{_display_money(sleeve_equity)}</strong></div>'
                 f'<div><small>PnL</small><strong class="{pnl_css}">{_display_money(sleeve_pnl)}</strong></div>'
+                f'<div><small>Realized net · sleeve</small><strong>{market_realized_display}</strong></div>'
+                f'<div><small>Known PnL fills</small><strong>{market_known} / {market_fills} · {market_coverage_display}</strong></div>'
+                f'<div><small>Profit sample</small><strong>{market_sample_status}</strong></div>'
                 f'<div><small>Processed bars</small><strong>{"-" if processed is None else processed}</strong></div>'
                 f'<div><small>Cycle latency</small><strong>{cycle_duration_display}</strong></div>'
                 f'<div><small>Freshness</small><strong>{html.escape(freshness)}</strong></div>'
@@ -803,6 +835,8 @@ def render_dashboard(
             '<div class="portfolio-ribbon">'
             f'<div><small>Portfolio equity</small><strong>{_display_money(None if portfolio["equity"] is None else float(portfolio["equity"]))}</strong></div>'
             f'<div><small>Portfolio PnL</small><strong class="{portfolio_pnl_css}">{_display_money(portfolio_pnl)}</strong></div>'
+            f'<div><small>Realized net · portfolio</small><strong>{portfolio_realized_display}</strong></div>'
+            f'<div><small>Profit sample</small><strong>{portfolio_sample_status} · {portfolio_known} / {portfolio_fills} fills</strong></div>'
             f'<div><small>Storage healthy</small><strong>{portfolio["healthy_markets"]} / {portfolio["markets"]}</strong></div>'
             f'<div><small>Engines running</small><strong>{portfolio["running_markets"]} / {portfolio["markets"]}</strong></div>'
             f'<div><small>Markets with alerts</small><strong>{portfolio["alert_markets"]}</strong></div>'

@@ -17,6 +17,7 @@ from ai_trading.multi_market import (
 )
 from ai_trading.paper_cycle import PaperCycleResult
 from ai_trading.paper_cycle_service import PaperCycleServiceError
+from ai_trading.performance_metrics import performance_metrics_from_totals
 from ai_trading.persistence import PersistedRuntime
 from ai_trading.runtime_state import RuntimeState
 from ai_trading.runtime_status import HostedRuntimeStatus
@@ -270,7 +271,7 @@ def test_multi_market_overview_scales_normalized_sleeves_to_100k() -> None:
     assert {row["signal_state"] for row in snapshot["markets"]} == {"DELAYED"}
 
 
-def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
+def test_dashboard_renders_multi_market_cards(tmp_path, monkeypatch) -> None:
     backend = FakeMultiPersistence(
         equities={
             "GC=F": 100_000.0,
@@ -338,6 +339,36 @@ def test_dashboard_renders_multi_market_cards(tmp_path) -> None:
     assert '<small>Trades</small><strong>600</strong>' in page
     assert '<small>PnL coverage</small><strong>300 / 600</strong>' in page
     assert '<small>Realized PnL</small><strong>150.00</strong>' in page
+    assert '<small>Realized net · portfolio</small><strong>150.00</strong>' in page
+    assert '<small>Profit sample</small><strong>PRELIMINARY · 300 / 600 fills</strong>' in page
+    assert page.count('<small>Realized net · sleeve</small><strong>-</strong>') == 3
+    assert page.count('<small>Known PnL fills</small><strong>0 / 0 · -</strong>') == 3
+
+    # Market PnL is computed on normalized 100k runtimes, so the displayed
+    # sleeve value MUST be allocation-scaled rather than showing 3x PnL.
+    monkeypatch.setattr(
+        backend,
+        "load_trade_performance",
+        lambda runtime_key: performance_metrics_from_totals(
+            trade_count=40,
+            pnl_observations=40,
+            realized_pnl=100.0,
+            gross_profit=120.0,
+            gross_loss=20.0,
+            max_drawdown=10.0,
+        ),
+    )
+    populated = render_dashboard(
+        TradeJournal(tmp_path / "empty.jsonl"),
+        persistence=backend,
+        runtime_key="paper:GC=F:5m:online-river:v1",
+        markets=DEFAULT_MARKETS,
+        market_interval="5m",
+    )
+    for allocated_net in (34.0, 33.0):
+        expected = f'<small>Realized net · sleeve</small><strong>{allocated_net:.2f}</strong>'
+        assert expected in populated
+    assert populated.count('<small>Profit sample</small><strong>DATA MINIMUM</strong>') == 3
 
 
 
