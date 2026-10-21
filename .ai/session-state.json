@@ -2,9 +2,9 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "fix/research-cost-stress-positive-net-return",
+  "active_branch": "main",
   "pull_request": null,
-  "focus": "PR #183 merged (b966ed8): PnL sample coverage needs >=30 known fills and >=95% coverage, diagnostic not proof. PR #184 merged (3c8f77e): hard paper risk stops now liquidate open long/short at next simulated execution bar including costs, backtest mirrors exits; CI/CodeQL green. Current branch strengthens research cost-stress gate: positive absolute net-of-cost return, finite quality and executed trades required, never relative-only gains in falling benchmark. No live execution.",
+  "focus": "2026-10-21: PR #183-#186 merged. Paper PnL sample sufficiency diagnostic, forced liquidation of existing long/short on daily-loss/drawdown/equity exhaustion, research cost-stress gate requires positive absolute net returns, and dashboard shows allocation-adjusted net realized PnL with fill coverage. PR CI and CodeQL green. Latest GitHub strict hosted probe 39668531496 passed /livez /readyz three_markets_running; exact Render deployed SHA NOT checked. River-v2 remains disabled by default and live broker OFF. Next validate long-term net after-cost OOS profitability before any model promotion.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -81,6 +81,16 @@
       "verification_time_utc": "2026-10-21T18:10:56Z",
       "strict_three_market_running_verified": true,
       "deployed_commit_verified": false
+    },
+    "latest_github_strict_probe": {
+      "checked_on": "2026-10-21",
+      "run_id": 39668531496,
+      "checked_at_utc": "2026-10-21T20:14:20Z",
+      "liveness": true,
+      "readiness": true,
+      "three_markets_running": true,
+      "exact_deployed_sha_verified": false,
+      "note": "GitHub hosted workflow read-only probe passed; did not include --expected-sha. This verifies live engine health, not current code deployment identity or profitability."
     }
   },
   "completed_changes": [
@@ -117,7 +127,9 @@
     "PR #181 merged 2026-10-21 (a02c2a6): GitHub Hosted Dashboard Probe now requires 3 RUNNING Gold/DAX/BTC engines with zero consecutive errors, not merely complete portfolio/storage; test scenarios for STARTING, STALE and errors passed CI/CodeQL. Strict production GH probe 39650367492 succeeded at 18:10:56Z.",
     "PR #181 merged 2026-10-21: scheduled hosted dashboard probe now rejects stuck STARTING/STALE/error paper engines; strict live probe success 39650367492; CI and CodeQL green.",
     "PR #183 merged 2026-10-21 b966ed8: read-only 30 known paper fill/95% PnL coverage diagnostic; PR CI/CodeQL green. This counts paper fill events, not independent completed trades.",
-    "PR #184 merged 2026-10-21 3c8f77e: hard drawdown/daily-loss/equity-exhaustion risk stops now flatten existing simulated long/short exposures at next eligible bar, with costs and corresponding backtest behavior. CI/CodeQL green."
+    "PR #184 merged 2026-10-21 3c8f77e: hard drawdown/daily-loss/equity-exhaustion risk stops now flatten existing simulated long/short exposures at next eligible bar, with costs and corresponding backtest behavior. CI/CodeQL green.",
+    "PR #185 merged 2026-10-21 876a5f1: research-only cost-stress gate requires positive absolute modeled net return, finite metrics and at least one execution; green CI/CodeQL.",
+    "PR #186 merged 2026-10-21 5931a3a: dashboard portfolio and Gold/DAX/BTC cards show allocation-adjusted net realized paper PnL, known fill coverage and PRELIMINARY/DATA MINIMUM sample labels; PR CI/CodeQL green."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -126,8 +138,8 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Require green CI and CodeQL before merging the research-only positive-net-return cost-stress gate; do not equate relative benchmark outperformance with profit.",
-    "Verify latest actual Render commit via /livez (GitHub strict hosted probe previously showed three RUNNING); monitor Gold/DAX/BTC and scheduler, preserving free-tier resource envelope.",
-    "Collect out-of-sample trading evidence after fees/slippage and prevent live broker activation without separate explicit safety and profitability verification."
+    "Confirm exact deployed Render /livez SHA independently; latest strict GitHub hosted probe 39668531496 passed three RUNNING but SHA was not pinned.",
+    "Validate rolling realized net-of-fee PnL, trade coverage and performance across Gold/DAX/BTC with independent walk-forward cost stress and uncertainty/regime checks; 30 fills is only a minimum sample coverage diagnostic.",
+    "Investigate bounded offline three-class River-v2 and Kronos evidence without enabling it on resource-limited production or promoting an unvalidated model; keep live trading disabled."
   ]
 }
