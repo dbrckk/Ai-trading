@@ -21,7 +21,7 @@ Status: active
 - PR #66 added per-market leakage-safe parameter selection. Latest validated research result: Gold uses 45m / 5bp / ATR 0.25 / train 1000 / confidence 56%; DAX uses 45m / 5bp / ATR 0.25 / train 1000 / confidence 60%; BTC has no candidate that passes the directional gate, including the focused 45m/60m/90m search.
 - PR #67 prepares those validated Gold/DAX configurations as versioned audit-only MTF candidates, resets their quality evidence logically by config name, and leaves BTC MTF disabled until a benchmark candidate passes.
 
-- Branch `feat/river-v2-forward-audit-shadow` stages an opt-in 5m River-v2 forward observer for Gold/DAX/BTC: fresh completed-bar gating, strictly matured-label bounded OVR training, atomic audit predictions, and next-cycle delayed v1/v2 directional scoring exposed read-only. **Not yet merged or deployed; CI pending.** River-v1 continues paper execution and v2 is not an approved trading signal.
+- PR #173 merged on 2026-10-21: opt-in 5m River-v2 forward observer for Gold/DAX/BTC: fresh completed-bar gating, strictly matured-label bounded OVR training, atomic audit predictions, and next-cycle delayed v1/v2 directional scoring exposed read-only. **PR-head CI/CodeQL passed, but actual Render deployment of this revision has not been verified.** River-v1 continues paper execution and v2 is not an approved trading signal.
 
 ## Broken / blockers
 - Paper execution is operational on three markets, but the realized trade sample is statistically insufficient for quality or profitability claims.
