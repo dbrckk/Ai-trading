@@ -793,6 +793,23 @@ def __exit__(self, *args)
 def read(self, count)
 ⋮----
 def fake_urlopen(request, timeout)
+⋮----
+"""An all-STARTING service must not pass the production health probe."""
+⋮----
+statuses = {"GC=F": "STARTING", "^GDAXI": "STARTING", "BTC-USD": "STARTING"}
+cycle_errors = {"GC=F": 0, "^GDAXI": 0, "BTC-USD": 0}
+⋮----
+base = "https://example.invalid"
+cards_only = probe_dashboard(base)
+assert cards_only[2].ok is True  # Backward-compatible card-level check.
+⋮----
+starting = probe_dashboard(base, require_running_markets=True)
+⋮----
+healthy = probe_dashboard(base, require_running_markets=True)
+⋮----
+degraded = probe_dashboard(base, require_running_markets=True)
+⋮----
+stale = probe_dashboard(base, require_running_markets=True)
 ```
 
 ## File: test_dashboard_overview.py

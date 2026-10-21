@@ -2099,7 +2099,7 @@ reason = explanation.get("error") if isinstance(explanation, dict) else None
 ⋮----
 payload = json.loads(body)
 ⋮----
-"""Check web process, durable readiness and three market cards independently."""
+"""Check web, storage and markets; optionally require healthy live engines."""
 ⋮----
 checks: list[ProbeCheck] = []
 ⋮----
@@ -2123,14 +2123,23 @@ detail = "missing_market_cards"
 ⋮----
 detail = "portfolio_or_market_unavailable"
 ⋮----
-detail = "three_markets_healthy"
+# A complete portfolio alone can still report three STARTING
+# engines during a stuck scheduler cycle. Check individual
+# runtime health as well as the portfolio aggregate.
+by_symbol = {
+running = portfolio.get("running_markets") == len(expected)
+engines = all(
+valid = running and engines
+detail = "three_markets_running" if valid else "market_engines_not_running"
+⋮----
+detail = "three_market_cards_available"
 ⋮----
 def main() -> int
 ⋮----
 parser = argparse.ArgumentParser(description="Probe read-only Trading AI endpoints")
 ⋮----
 args = parser.parse_args()
-checks = probe_dashboard(args.base_url, timeout=args.timeout, expected_sha=args.expected_sha)
+checks = probe_dashboard(
 ```
 
 ## File: ai_trading/deployment_readiness.py

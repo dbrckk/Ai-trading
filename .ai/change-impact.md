@@ -1,17 +1,17 @@
 # Change impact
 
-Base: 71f7a5085a8aaf061812581318d3a8f919945c8e
-Head: b74881b500046031a6e6b49320c90a4fa8a3a2af
+Base: 004ff71891d7cc29241462f572685f5d61fd5205
+Head: a02c2a6c9c11044a33c1c7694891c29250c8d785
 
 ## Changed files
-- M docs/kronos-research.md
-- M src/ai_trading/operational_overview.py
-- M src/ai_trading/river_v2_shadow.py
-- M tests/test_dashboard_overview.py
-- M tests/test_shadow_quality.py
+- M .github/workflows/hosted-dashboard-probe.yml
+- M README.md
+- M src/ai_trading/deployment_probe.py
+- M tests/test_dashboard_health.py
 
 ## Affected areas
-- docs
+- .github
+- (root)
 - src
 - tests
 

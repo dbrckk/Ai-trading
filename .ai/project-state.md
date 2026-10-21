@@ -64,16 +64,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-21T18:02:23Z
+Generated: 2026-10-21T18:10:55Z
 
 ### Git
 - Branch: `main`
-- Head: `b74881b50004`
-- Commit date: 2026-10-21T14:02:12-04:00
-- Commit: feat(research): report directional coverage of River-v2 forward evidence (#180)
+- Head: `a02c2a6c9c11`
+- Commit date: 2026-10-21T14:10:40-04:00
+- Commit: fix(ops): fail hosted probe on stuck paper market engines (#181)
 - Tracked files: 513
 
 ### Recently changed files
+- `.github/workflows/hosted-dashboard-probe.yml`
+- `README.md`
+- `src/ai_trading/deployment_probe.py`
+- `tests/test_dashboard_health.py`
 - `docs/kronos-research.md`
 - `src/ai_trading/operational_overview.py`
 - `src/ai_trading/river_v2_shadow.py`
@@ -90,7 +94,6 @@ Generated: 2026-10-21T18:02:23Z
 - `tests/test_runtime_status.py`
 - `src/ai_trading/paper_cycle.py`
 - `tests/test_paper_cycle.py`
-- `tests/test_shadow_challenger.py`
 
 ### Project signals
 - `pyproject.toml`

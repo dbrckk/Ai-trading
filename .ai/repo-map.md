@@ -673,7 +673,7 @@ jobs:
       - uses: actions/checkout@v7
       - name: Verify liveness, durable readiness and market cards
         run: |
-          args=(--base-url "${DASHBOARD_URL}" --timeout 60)
+          args=(--base-url "${DASHBOARD_URL}" --timeout 60 --require-running-markets)
           if [ -n "${EXPECTED_DEPLOY_SHA}" ]; then
             args+=(--expected-sha "${EXPECTED_DEPLOY_SHA}")
           fi
@@ -2994,7 +2994,7 @@ reason = explanation.get("error") if isinstance(explanation, dict) else None
 ⋮----
 payload = json.loads(body)
 ⋮----
-"""Check web process, durable readiness and three market cards independently."""
+"""Check web, storage and markets; optionally require healthy live engines."""
 ⋮----
 checks: list[ProbeCheck] = []
 ⋮----
@@ -3018,14 +3018,23 @@ detail = "missing_market_cards"
 ⋮----
 detail = "portfolio_or_market_unavailable"
 ⋮----
-detail = "three_markets_healthy"
+# A complete portfolio alone can still report three STARTING
+# engines during a stuck scheduler cycle. Check individual
+# runtime health as well as the portfolio aggregate.
+by_symbol = {
+running = portfolio.get("running_markets") == len(expected)
+engines = all(
+valid = running and engines
+detail = "three_markets_running" if valid else "market_engines_not_running"
+⋮----
+detail = "three_market_cards_available"
 ⋮----
 def main() -> int
 ⋮----
 parser = argparse.ArgumentParser(description="Probe read-only Trading AI endpoints")
 ⋮----
 args = parser.parse_args()
-checks = probe_dashboard(args.base_url, timeout=args.timeout, expected_sha=args.expected_sha)
+checks = probe_dashboard(
 ````
 
 ## File: src/ai_trading/deployment_readiness.py
@@ -9947,6 +9956,23 @@ def __exit__(self, *args)
 def read(self, count)
 ⋮----
 def fake_urlopen(request, timeout)
+⋮----
+"""An all-STARTING service must not pass the production health probe."""
+⋮----
+statuses = {"GC=F": "STARTING", "^GDAXI": "STARTING", "BTC-USD": "STARTING"}
+cycle_errors = {"GC=F": 0, "^GDAXI": 0, "BTC-USD": 0}
+⋮----
+base = "https://example.invalid"
+cards_only = probe_dashboard(base)
+assert cards_only[2].ok is True  # Backward-compatible card-level check.
+⋮----
+starting = probe_dashboard(base, require_running_markets=True)
+⋮----
+healthy = probe_dashboard(base, require_running_markets=True)
+⋮----
+degraded = probe_dashboard(base, require_running_markets=True)
+⋮----
+stale = probe_dashboard(base, require_running_markets=True)
 ````
 
 ## File: tests/test_dashboard_overview.py
@@ -14190,14 +14216,18 @@ Health probes intentionally have separate semantics: `/livez` checks only that t
 `.github/workflows/hosted-dashboard-probe.yml` runs a read-only external
 probe every two hours (plus pushes touching the hosted configuration). It
 separately checks `/livez`, `/readyz`, and that `/api/markets` contains
-Gold, DAX and BTC **with complete portfolio data and no market storage errors**.
+Gold, DAX and BTC **with complete portfolio data, no market storage errors,
+and all three engines RUNNING with zero consecutive cycle errors**.
+This stricter scheduled probe prevents a misleading green result when engines
+remain stuck in `STARTING` or turn `STALE`; a routine dashboard-only
+inspection can omit `--require-running-markets`.
 Known readiness HTTP 503 responses distinguish `configuration_incomplete`
 from `storage_unavailable` without publishing exception text or secrets.
 It reports a failing GitHub Actions job if the
 publicly hosted service is unavailable or incomplete. This check **does
 not** invoke the scheduler, place trades, wake workers, or guarantee
 fresh market data. For manual diagnosis, use
-`PYTHONPATH=src python -m ai_trading.deployment_probe --base-url https://ai-trading-dashboard-qyr2.onrender.com`.
+`PYTHONPATH=src python -m ai_trading.deployment_probe --base-url https://ai-trading-dashboard-qyr2.onrender.com --require-running-markets`.
 
 ## Walk-forward methodology
 

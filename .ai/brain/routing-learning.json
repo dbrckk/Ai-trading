@@ -2,30 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "feat: separate dashboard liveness and readiness probes (#93)",
-      "terms": [
-        "93",
-        "dashboard",
-        "feat",
-        "liveness",
-        "probes",
-        "readiness",
-        "separate"
-      ],
-      "tests": [],
-      "useful": [
-        "src/ai_trading/backtest.py",
-        "src/ai_trading/dashboard.py",
-        "src/ai_trading/mtf_parameter_benchmark.py",
-        "src/ai_trading/multi_market.py",
-        "src/ai_trading/multiasset_backtest.py",
-        "tests/test_dashboard_persistence.py",
-        "tests/test_multi_market.py",
-        "tests/test_research_config_validation.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "feat: detect repeated cadence gaps in market data quality (#92)",
       "terms": [
         "92",
@@ -1269,6 +1245,26 @@
         "tests/test_dashboard_overview.py",
         "tests/test_shadow_quality.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "fix(ops): fail hosted probe on stuck paper market engines (#181)",
+      "terms": [
+        "181",
+        "engines",
+        "fail",
+        "hosted",
+        "market",
+        "ops",
+        "paper",
+        "probe",
+        "stuck"
+      ],
+      "tests": [],
+      "useful": [
+        "src/ai_trading/deployment_probe.py",
+        "tests/test_dashboard_health.py"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1444,6 +1440,10 @@
       "src/ai_trading/river_v2_shadow.py": 4,
       "tests/test_dashboard_overview.py": 4,
       "tests/test_shadow_quality.py": 4
+    },
+    "181": {
+      "src/ai_trading/deployment_probe.py": 4,
+      "tests/test_dashboard_health.py": 4
     },
     "56": {
       "src/ai_trading/command_app.py": 4,
@@ -2519,6 +2519,10 @@
       "tests/test_postgres_persistence.py": 4,
       "tests/test_scheduler_endpoint.py": 4
     },
+    "engines": {
+      "src/ai_trading/deployment_probe.py": 4,
+      "tests/test_dashboard_health.py": 4
+    },
     "evidence": {
       "src/ai_trading/dashboard.py": 8,
       "src/ai_trading/mtf_shadow_quality.py": 8,
@@ -2577,11 +2581,13 @@
     "fail": {
       "src/ai_trading/alpha_allocation.py": 4,
       "src/ai_trading/config.py": 4,
+      "src/ai_trading/deployment_probe.py": 4,
       "src/ai_trading/global_allocator.py": 4,
       "src/ai_trading/portfolio.py": 4,
       "src/ai_trading/portfolio_intelligence.py": 4,
       "src/ai_trading/portfolio_risk.py": 4,
-      "tests/test_config_validation.py": 4
+      "tests/test_config_validation.py": 4,
+      "tests/test_dashboard_health.py": 4
     },
     "fail-closed": {
       "src/ai_trading/dashboard.py": 4,
@@ -2856,8 +2862,10 @@
     },
     "hosted": {
       "src/ai_trading/dashboard.py": 12,
+      "src/ai_trading/deployment_probe.py": 4,
       "src/ai_trading/persistence_factory.py": 4,
       "src/ai_trading/postgres_persistence.py": 4,
+      "tests/test_dashboard_health.py": 4,
       "tests/test_dashboard_persistence.py": 4,
       "tests/test_postgres_persistence.py": 4
     },
@@ -3102,6 +3110,7 @@
       "src/ai_trading/dashboard.py": 12,
       "src/ai_trading/data.py": 4,
       "src/ai_trading/data_quality.py": 4,
+      "src/ai_trading/deployment_probe.py": 4,
       "src/ai_trading/file_persistence.py": 4,
       "src/ai_trading/market_freshness.py": 4,
       "src/ai_trading/mtf_parameter_benchmark.py": 4,
@@ -3115,6 +3124,7 @@
       "src/ai_trading/persistence.py": 4,
       "src/ai_trading/postgres_persistence.py": 4,
       "src/ai_trading/scheduler_endpoint.py": 8,
+      "tests/test_dashboard_health.py": 4,
       "tests/test_dashboard_persistence.py": 4,
       "tests/test_data.py": 4,
       "tests/test_data_quality.py": 8,
@@ -3335,12 +3345,12 @@
     },
     "ops": {
       "src/ai_trading/dashboard.py": 8,
-      "src/ai_trading/deployment_probe.py": 12,
+      "src/ai_trading/deployment_probe.py": 16,
       "src/ai_trading/operational_overview.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
       "src/ai_trading/river_v2_shadow.py": 4,
       "src/ai_trading/runtime_status.py": 4,
-      "tests/test_dashboard_health.py": 12,
+      "tests/test_dashboard_health.py": 16,
       "tests/test_dashboard_overview.py": 4,
       "tests/test_paper_cycle.py": 4,
       "tests/test_paper_cycle_workflow.py": 4,
@@ -3365,7 +3375,7 @@
     "paper": {
       "src/ai_trading/broker.py": 8,
       "src/ai_trading/dashboard.py": 16,
-      "src/ai_trading/deployment_probe.py": 4,
+      "src/ai_trading/deployment_probe.py": 8,
       "src/ai_trading/execution_costs.py": 4,
       "src/ai_trading/file_persistence.py": 4,
       "src/ai_trading/hosted_runtime.py": 4,
@@ -3390,7 +3400,7 @@
       "tests/test_cumulative_performance_persistence.py": 4,
       "tests/test_dashboard.py": 4,
       "tests/test_dashboard_engine_status.py": 4,
-      "tests/test_dashboard_health.py": 4,
+      "tests/test_dashboard_health.py": 8,
       "tests/test_execution_costs.py": 4,
       "tests/test_hosted_runtime.py": 4,
       "tests/test_market_freshness.py": 4,
@@ -3587,9 +3597,9 @@
     },
     "probe": {
       "src/ai_trading/dashboard.py": 4,
-      "src/ai_trading/deployment_probe.py": 4,
+      "src/ai_trading/deployment_probe.py": 8,
       "src/ai_trading/scheduler_fallback.py": 4,
-      "tests/test_dashboard_health.py": 4,
+      "tests/test_dashboard_health.py": 8,
       "tests/test_paper_cycle_workflow.py": 4
     },
     "probes": {
@@ -4178,6 +4188,10 @@
       "src/ai_trading/multi_market.py": 4,
       "tests/test_market_freshness.py": 4,
       "tests/test_multi_market.py": 4
+    },
+    "stuck": {
+      "src/ai_trading/deployment_probe.py": 4,
+      "tests/test_dashboard_health.py": 4
     },
     "success": {
       "infra/cloudflare-paper-scheduler/src/index.js": 4,
