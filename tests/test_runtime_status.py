@@ -1,6 +1,13 @@
 from __future__ import annotations
 
-from ai_trading.runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore
+from dataclasses import replace
+from datetime import UTC, datetime
+
+from ai_trading.runtime_status import (
+    HostedRuntimeStatus,
+    HostedRuntimeStatusStore,
+    runtime_status_snapshot,
+)
 
 
 def test_runtime_status_store_round_trip(tmp_path) -> None:
@@ -26,3 +33,20 @@ def test_runtime_status_store_round_trip(tmp_path) -> None:
     store.save(status)
 
     assert store.load() == status
+
+    # 15m cron permits a longer RUNNING heartbeat, never an indefinitely
+    # STARTING paper cycle with no completed scheduler delivery.
+    current = datetime(2026, 9, 15, 16, 5, 1, tzinfo=UTC)
+    starting = replace(status, engine_status="STARTING", poll_seconds=900.0)
+    blocked = runtime_status_snapshot(starting, now=current)
+    assert blocked["engine_status"] == "STALE"
+    assert blocked["heartbeat_stale_after_seconds"] == 300.0
+    assert blocked["engine_healthy"] is False
+
+    running = runtime_status_snapshot(
+        replace(starting, engine_status="RUNNING"),
+        now=current,
+    )
+    assert running["engine_status"] == "RUNNING"
+    assert running["heartbeat_stale_after_seconds"] == 2700.0
+    assert running["engine_healthy"] is True
