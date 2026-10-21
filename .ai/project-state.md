@@ -3,6 +3,9 @@
 Status: active
 
 ## Working
+
+- **2026-10-21**: PR #181 strict hosted probe merged; GitHub run 39650367492 reported `web_healthy`, `storage_ready` and `three_markets_running`. Paper Cycle run 39659602972 completed `skipped_recent_cloudflare`, not an additional paper execution. Current branch `feat/paper-performance-evidence-gate` adds a **read-only** paper PnL sample-coverage diagnostic (30 known PnL events, >=95% coverage). Neither sample size nor positive PnL alone establishes profitability. Exact Render deployment SHA is not verified in this step.
+
 - Central AI repo-map generation is configured through dbrckk/repo-standards.
 - Hosted paper runtime uses durable PostgreSQL persistence, bounded catch-up, a read-only Render dashboard, and an authenticated external scheduler endpoint.
 - The Cloudflare paper scheduler deployment path is configured and has deployed successfully; the GitHub paper-cycle schedule remains enabled as fallback.

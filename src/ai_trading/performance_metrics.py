@@ -119,6 +119,9 @@ def empty_performance_payload() -> dict[str, object]:
         "trade_count": 0,
         "pnl_observations": 0,
         "pnl_coverage": None,
+        "evidence_sufficient": False,
+        "minimum_pnl_observations": 30,
+        "minimum_pnl_coverage": 0.95,
         "realized_pnl": None,
         "average_pnl": None,
         "gross_profit": None,
@@ -142,6 +145,13 @@ def performance_payload(metrics: TradePerformanceMetrics) -> dict[str, object]:
         "trade_count": trade_count,
         "pnl_observations": observations,
         "pnl_coverage": observations / trade_count if trade_count > 0 else None,
+        "evidence_sufficient": (
+            observations >= 30
+            and trade_count > 0
+            and observations / trade_count >= 0.95
+        ),
+        "minimum_pnl_observations": 30,
+        "minimum_pnl_coverage": 0.95,
         "realized_pnl": float(metrics.realized_pnl) if available else None,
         "average_pnl": float(metrics.average_pnl) if available else None,
         "gross_profit": float(metrics.gross_profit) if available else None,
