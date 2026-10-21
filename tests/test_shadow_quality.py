@@ -55,6 +55,7 @@ def test_shadow_quality_compares_both_models_on_identical_labels() -> None:
         side = -1 if i % 2 == 0 else 1
         audit_rows.append(
             {
+                "_audit_timestamp_utc": str(signal + pd.Timedelta(minutes=7)),
                 "river_v2_shadow": {
                     "signal_time": str(signal),
                     "signal_close": 100.0,
