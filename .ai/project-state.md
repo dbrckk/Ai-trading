@@ -6,6 +6,9 @@ Status: active
 
 ## Working
 
+- **2026-10-21**: PR #188 merged with green CI/CodeQL; worst trading-cost scenario must have positive net return before cost-stress research gate passes. Current `fix/benchmark-positive-net-return` strengthens the separate walk-forward benchmark gate: reject negative/break-even net OOS returns even if relative return beats a declining index, and fail closed on NaN/Infinity. No live execution or automatic promotion.
+
+
 - **2026-10-21 profit-preservation milestone:** PR #183 merged (30 known-PnL fill / 95% coverage *diagnostic*); PR #184 merged (existing long/short paper exposure forcibly flattened at next eligible bar after daily-loss/drawdown/insolvency hard stop, with fees and matching backtest, CI/CodeQL green); PR #185 merged (research cost-stress gate requires positive modeled **absolute net return**, finite metrics and at least one fill); PR #186 merged (Gold/DAX/BTC portfolio UI now distinguishes allocation-adjusted realized net PnL, mark-to-market PnL, and preliminary sample evidence, CI/CodeQL green).
 - **2026-10-21 20:14 UTC strict GitHub hosted probe** run `39668531496` confirmed public `/livez`, `/readyz` and **three markets RUNNING**; it did **not** specify an expected SHA, so latest application release identity remains unverified. Real broker execution remains disabled, River-v2 shadow remains independently OFF by default. Minimal fill coverage is not profitability proof; next work must be net-of-cost out-of-sample evaluation, exact release validation, and bounded research.
 

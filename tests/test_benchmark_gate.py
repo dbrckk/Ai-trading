@@ -1,3 +1,4 @@
+from dataclasses import replace
 from types import SimpleNamespace
 
 from ai_trading.benchmark_gate import BenchmarkGatePolicy, evaluate_benchmark_gate
@@ -49,3 +50,41 @@ def test_benchmark_gate_rejects_weak_out_of_sample_result() -> None:
     assert "maximum drawdown above threshold" in result.reasons
     assert "strategy underperformed buy-and-hold" in result.reasons
     assert "insufficient out-of-sample trades" in result.reasons
+
+
+def test_benchmark_gate_rejects_net_loss_even_if_benchmark_loses_more() -> None:
+    report = _report(excess=0.20)
+    report.metrics = replace(report.metrics, total_return=-0.02)
+    decision = evaluate_benchmark_gate(report)
+
+    assert decision.passed is False
+    assert "non-positive net out-of-sample return" in decision.reasons
+    assert "strategy underperformed buy-and-hold" not in decision.reasons
+
+
+def test_benchmark_gate_rejects_break_even_return_by_default() -> None:
+    report = _report()
+    report.metrics = replace(report.metrics, total_return=0.0)
+    decision = evaluate_benchmark_gate(report)
+
+    assert decision.passed is False
+    assert "non-positive net out-of-sample return" in decision.reasons
+
+
+def test_benchmark_gate_rejects_nonfinite_metrics_that_skip_thresholds() -> None:
+    report = _report()
+    report.metrics = replace(report.metrics, total_return=float("nan"), sharpe=float("nan"))
+    decision = evaluate_benchmark_gate(report)
+
+    assert decision.passed is False
+    assert "non-finite out-of-sample performance metric" in decision.reasons
+    assert "non-positive net out-of-sample return" in decision.reasons
+
+
+def test_benchmark_gate_rejects_infinite_annualized_volatility() -> None:
+    report = _report()
+    report.metrics = replace(report.metrics, annualized_volatility=float("inf"))
+    decision = evaluate_benchmark_gate(report)
+
+    assert decision.passed is False
+    assert "non-finite out-of-sample performance metric" in decision.reasons

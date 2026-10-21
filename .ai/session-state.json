@@ -2,9 +2,9 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "fix/cost-stress-worst-case-profit",
+  "active_branch": "fix/benchmark-positive-net-return",
   "pull_request": null,
-  "focus": "PR #183 already merged, current main 803bc6b8 has green CI/CodeQL after previous PR CI failures (3 stale dashboard exact-payload assertions). New cost stress policy default requires positive net total return under highest combined transaction costs and slippage, beyond aggregate pass ratio; opt-out explicit for research. No live trading enabled.",
+  "focus": "PR #188 merged (b8f8ff1ff57a67e4208c18f8a018b960f95a014c): require positive return under worst combined execution cost, CI and CodeQL green. Benchmark gate follow-up rejects non-positive out-of-sample net return even when benchmark does worse, and non-finite performance metrics (no execution change).",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -138,8 +138,8 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Validate cost-stress worst-case profit PR CI and CodeQL; merge only after green.",
-    "Verify current Render SHA and latest hosted three RUNNING statuses; preserve Cloudflare-first scheduler.",
-    "Gather net-of-cost paper performance with sufficient sample and uncertainty before tuning for profit."
+    "Verify new benchmark gate CI and CodeQL before merge.",
+    "Check current Render deployment SHA and strict three-market readiness separately.",
+    "Evaluate genuinely independent completed paper trades, PnL after spread/slippage and statistically meaningful out-of-sample returns before tuning or promoting any model."
   ]
 }

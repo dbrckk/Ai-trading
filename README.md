@@ -309,6 +309,16 @@ not** invoke the scheduler, place trades, wake workers, or guarantee
 fresh market data. For manual diagnosis, use
 `PYTHONPATH=src python -m ai_trading.deployment_probe --base-url https://ai-trading-dashboard-qyr2.onrender.com --require-running-markets`.
 
+## Positive out-of-sample profitability is required
+
+The read-only walk-forward benchmark gate now fails closed when net
+out-of-sample total return is **zero or negative**, even when the strategy
+beats a more strongly declining buy-and-hold benchmark. Non-finite
+performance statistics also fail the benchmark gate rather than silently
+passing comparisons. This is additional research validation alongside the
+existing Sharpe, Sortino, Calmar, drawdown, fold and trade-count thresholds,
+not an automatic model promotion or permission to trade live.
+
 ## Profit resilience under execution costs
 
 The cost-stress gate now requires the **highest transaction-cost-plus-slippage

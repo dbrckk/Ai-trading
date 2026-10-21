@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import isfinite
 
 from .backtest import BacktestReport
 
@@ -14,6 +15,8 @@ class BenchmarkGatePolicy:
     min_calmar: float = 0.5
     max_drawdown: float = 0.25
     min_excess_return: float = 0.0
+    # Outperforming a losing benchmark is not equivalent to making money.
+    min_total_return: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -28,6 +31,25 @@ def evaluate_benchmark_gate(
 ) -> BenchmarkGateResult:
     policy = policy or BenchmarkGatePolicy()
     reasons: list[str] = []
+
+    # NaNs silently bypass ordinary comparisons and infinities make ratios
+    # deceptively favorable: reject invalid research evidence explicitly.
+    if not all(
+        isfinite(value)
+        for value in (
+            report.metrics.total_return,
+            report.metrics.annualized_return,
+            report.metrics.annualized_volatility,
+            report.metrics.sharpe,
+            report.metrics.sortino,
+            report.metrics.calmar,
+            report.metrics.max_drawdown,
+            report.excess_return,
+        )
+    ):
+        reasons.append("non-finite out-of-sample performance metric")
+    if not isfinite(report.metrics.total_return) or report.metrics.total_return <= policy.min_total_return:
+        reasons.append("non-positive net out-of-sample return")
 
     if report.folds < policy.min_folds:
         reasons.append("insufficient walk-forward folds")
