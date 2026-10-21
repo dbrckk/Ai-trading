@@ -14,8 +14,8 @@ from .mtf_shadow_challenger import (
 )
 from .mtf_shadow_config import validated_mtf_shadow_config
 from .persistence import PaperPersistence, PersistedRuntime, build_runtime_key
-from .runtime import PaperAutonomousRuntime
 from .river_v2_shadow import observe_river_v2_forward
+from .runtime import PaperAutonomousRuntime
 from .shadow_challenger import evaluate_shadow_challenger
 
 DEFAULT_MAX_CATCHUP_BARS = 72
@@ -297,7 +297,7 @@ class PaperCycleRunner:
                     if river_v2 is not None:
                         observer_kwargs["river_v2_shadow"] = river_v2
                 except Exception:  # noqa: BLE001 - research observer cannot stop paper trades
-                    pass
+                    observer_kwargs.pop("river_v2_shadow", None)
             result = runtime.step_prepared(
                 prepared,
                 target,
