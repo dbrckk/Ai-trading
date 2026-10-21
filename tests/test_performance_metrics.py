@@ -77,6 +77,9 @@ def test_performance_payload_marks_unmeasured_history_unavailable() -> None:
         "trade_count": 12,
         "pnl_observations": 0,
         "pnl_coverage": 0.0,
+        "evidence_sufficient": False,
+        "minimum_pnl_observations": 30,
+        "minimum_pnl_coverage": 0.95,
         "realized_pnl": None,
         "average_pnl": None,
         "gross_profit": None,
@@ -106,3 +109,28 @@ def test_performance_payload_serializes_infinite_profit_factor_explicitly() -> N
     assert payload["available"] is True
     assert payload["profit_factor"] is None
     assert payload["profit_factor_infinite"] is True
+
+
+def test_paper_performance_evidence_requires_sample_and_pnl_coverage() -> None:
+    from ai_trading.performance_metrics import (
+        performance_metrics_from_totals,
+        performance_payload,
+    )
+
+    def evidence(trades: int, observed: int) -> bool:
+        metrics = performance_metrics_from_totals(
+            trade_count=trades,
+            pnl_observations=observed,
+            realized_pnl=10.0,
+            gross_profit=20.0,
+            gross_loss=10.0,
+            max_drawdown=5.0,
+        )
+        return performance_payload(metrics)["evidence_sufficient"]
+
+    assert evidence(8, 8) is False
+    assert evidence(30, 29) is False
+    assert evidence(30, 30) is True
+    assert evidence(100, 94) is False
+    assert evidence(100, 95) is True
+    assert evidence(100, 100) is True
