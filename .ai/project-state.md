@@ -6,6 +6,9 @@ Status: active
 
 ## Working
 
+- **2026-10-22 operational follow-up:** the latest GitHub Hosted Dashboard Probe run `39680748089` failed at `/livez: connection_failed`, but in the same run `/readyz: storage_ready` and `/api/markets: three_markets_running` passed. This does **not** establish a sustained Render outage. A bounded one-time read-only recheck of transport connection failures after the initial endpoint pass is being validated; persistent failures, bad HTTP/payload/engine and SHA mismatch still fail. PR #192 sensitivity net-return evidence gate merged with PR CI and CodeQL success; profit improvement remains unproven.
+
+
 - **2026-10-22 sensitivity profit follow-up:** merged PR #188 already covered worst execution-cost losses; conflicting duplicate PR #190 was closed unmerged. This branch strengthens parameter sensitivity selection to require positive **absolute net** return, executed trades and finite performance per passing perturbation. Existing tests were extended in place; no new test modules, no changes to live broker, paper order routing or model promotion.
 
 
