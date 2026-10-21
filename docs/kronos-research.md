@@ -107,9 +107,15 @@ River-v2 is not an actionable trade signal.
 
 ## River-v2: first live-cycle forward observer (audit only)
 
-The existing `AI_TRADING_SHADOW_CHALLENGER=1` flag now also enables a
-lightweight ternary River-v2 observer for **5-minute paper markets only**
-(Gold, DAX and BTC). It runs independently of River-v1 trade decisions:
+River-v2 now requires **both** `AI_TRADING_SHADOW_CHALLENGER=1`
+and a **separate explicit opt-in** `AI_TRADING_RIVER_V2_SHADOW=1`.
+The new research flag defaults to **OFF** for the free Render worker,
+even when the existing shadow challenger remains enabled. The
+`/api/markets` River-v2 status then reads `disabled` and skips the
+optional historical audit query. Do not enable this research path on
+Render until CPU/scheduler latency is independently validated. When
+explicitly enabled it observes **5-minute paper markets only**
+(Gold, DAX and BTC), independently of River-v1 decisions:
 
 - At most one v2 observation is attached to a cycle, and **only** if the
   latest completed provider candle has closed less than five minutes ago.
