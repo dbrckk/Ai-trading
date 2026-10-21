@@ -8604,6 +8604,8 @@ class SensitivityGatePolicy
 ⋮----
 min_pass_ratio: float = 0.67
 min_excess_return: float = -0.05
+# Net of modeled transaction costs and slippage in the walk-forward report.
+min_total_return: float = 0.0
 min_sharpe: float = 0.0
 max_drawdown: float = 0.30
 ⋮----
@@ -13474,6 +13476,14 @@ gate = evaluate_sensitivity_gate(results)
 def test_sensitivity_gate_rejects_narrow_optimum() -> None
 ⋮----
 results = (
+⋮----
+# These used to pass the gate despite losing money, missing trades,
+# or emitting invalid/non-physical research measurements.
+losses = tuple(
+loss_gate = evaluate_sensitivity_gate(losses)
+⋮----
+candidates = tuple(invalid for _ in range(6))
+decision = evaluate_sensitivity_gate(candidates)
 ````
 
 ## File: tests/test_session_integrity.py
@@ -14348,6 +14358,16 @@ performance statistics also fail the benchmark gate rather than silently
 passing comparisons. This is additional research validation alongside the
 existing Sharpe, Sortino, Calmar, drawdown, fold and trade-count thresholds,
 not an automatic model promotion or permission to trade live.
+
+## Parameter sensitivity requires actual net-profit evidence
+
+The read-only parameter-sensitivity research gate rejects scenarios with
+**non-positive net total return**, zero executed trades, non-finite
+performance metrics or negative drawdown values. A strategy that merely
+outperforms a declining benchmark cannot pass based on relative excess
+return alone. The existing minimum scenario pass ratio, Sharpe and
+drawdown constraints remain in effect; this is not a model promotion or
+permission to trade live.
 
 ## Profit resilience under execution costs
 

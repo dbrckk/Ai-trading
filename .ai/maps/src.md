@@ -7709,6 +7709,8 @@ class SensitivityGatePolicy
 ⋮----
 min_pass_ratio: float = 0.67
 min_excess_return: float = -0.05
+# Net of modeled transaction costs and slippage in the walk-forward report.
+min_total_return: float = 0.0
 min_sharpe: float = 0.0
 max_drawdown: float = 0.30
 ⋮----

@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 6 success / 0 failure / 2 active
+Summary: 5 success / 1 failure / 2 active
 
-- CI: in_progress / pending (5cad2590)
-- CodeQL: in_progress / pending (5cad2590)
-- CodeQL: completed / success (ceb58892)
-- CI: completed / success (ceb58892)
-- CI: completed / success (b8f8ff1f)
-- CodeQL: completed / success (b8f8ff1f)
-- CodeQL: completed / success (1ced7bed)
-- CI: completed / success (1ced7bed)
+- CodeQL: in_progress / pending (303bdfcc)
+- CI: in_progress / pending (303bdfcc)
+- CI: completed / success (68b2f679)
+- CodeQL: completed / success (68b2f679)
+- CI: completed / success (c0422549)
+- CodeQL: completed / success (c0422549)
+- Hosted Dashboard Probe: completed / failure (6462e256)
+- CI: completed / success (5cad2590)
+
+## Latest failed run structure
+- Job: probe
+  - Failed step: Verify liveness, durable readiness and market cards
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

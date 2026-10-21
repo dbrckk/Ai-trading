@@ -1,12 +1,12 @@
 # Change impact
 
-Base: 7f83a9bd872e1e48728d14a09fd766da7c6023c1
-Head: 5cad2590a97f62999181cd3febec55fb92624329
+Base: 6462e25605d0cf0bede01a57944b6fd1fe86ea88
+Head: 303bdfcc274518d9c5979665482d8659e2d512b8
 
 ## Changed files
 - M README.md
-- M src/ai_trading/benchmark_gate.py
-- M tests/test_benchmark_gate.py
+- M src/ai_trading/sensitivity_gate.py
+- M tests/test_sensitivity_gate.py
 
 ## Affected areas
 - (root)
@@ -14,7 +14,7 @@ Head: 5cad2590a97f62999181cd3febec55fb92624329
 - tests
 
 ## Related test candidates
-- tests/test_benchmark_gate.py
+- tests/test_sensitivity_gate.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

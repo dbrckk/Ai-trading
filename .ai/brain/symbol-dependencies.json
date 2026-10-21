@@ -5,48 +5,36 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "BenchmarkGatePolicy": {
+    "SensitivityGatePolicy": {
       "source": {
-        "file": "src/ai_trading/benchmark_gate.py",
+        "file": "src/ai_trading/sensitivity_gate.py",
         "start": 10,
-        "end": 19
+        "end": 16
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "BenchmarkGateResult": {
+    "SensitivityGateResult": {
       "source": {
-        "file": "src/ai_trading/benchmark_gate.py",
-        "start": 23,
-        "end": 25
+        "file": "src/ai_trading/sensitivity_gate.py",
+        "start": 20,
+        "end": 28
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "evaluate_benchmark_gate": {
+    "evaluate_sensitivity_gate": {
       "source": {
-        "file": "src/ai_trading/benchmark_gate.py",
-        "start": 28,
-        "end": 69
+        "file": "src/ai_trading/sensitivity_gate.py",
+        "start": 31,
+        "end": 91
       },
       "symbol_dependencies": [
         {
-          "symbol": "BacktestReport",
+          "symbol": "SensitivityGatePolicy",
           "definitions": [
             {
-              "file": "src/ai_trading/backtest.py",
-              "line": 52,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "BenchmarkGatePolicy",
-          "definitions": [
-            {
-              "file": "src/ai_trading/benchmark_gate.py",
+              "file": "src/ai_trading/sensitivity_gate.py",
               "line": 10,
               "kind": "class",
               "language": "python"
@@ -55,114 +43,24 @@
           "relation": "same_file"
         },
         {
-          "symbol": "BenchmarkGateResult",
+          "symbol": "SensitivityGateResult",
           "definitions": [
             {
-              "file": "src/ai_trading/benchmark_gate.py",
-              "line": 23,
+              "file": "src/ai_trading/sensitivity_gate.py",
+              "line": 20,
               "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "_report": {
-      "source": {
-        "file": "tests/test_benchmark_gate.py",
-        "start": 8,
-        "end": 32
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "PerformanceMetrics",
-          "definitions": [
-            {
-              "file": "src/ai_trading/performance.py",
-              "line": 10,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_benchmark_gate_accepts_qualified_report": {
-      "source": {
-        "file": "tests/test_benchmark_gate.py",
-        "start": 35,
-        "end": 39
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_report",
-          "definitions": [
-            {
-              "file": "tests/test_benchmark_gate.py",
-              "line": 8,
-              "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
         },
         {
-          "symbol": "evaluate_benchmark_gate",
+          "symbol": "SensitivityResult",
           "definitions": [
             {
-              "file": "src/ai_trading/benchmark_gate.py",
-              "line": 28,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_benchmark_gate_rejects_weak_out_of_sample_result": {
-      "source": {
-        "file": "tests/test_benchmark_gate.py",
-        "start": 42,
-        "end": 52
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "BenchmarkGatePolicy",
-          "definitions": [
-            {
-              "file": "src/ai_trading/benchmark_gate.py",
-              "line": 10,
+              "file": "src/ai_trading/parameter_sensitivity.py",
+              "line": 19,
               "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "_report",
-          "definitions": [
-            {
-              "file": "tests/test_benchmark_gate.py",
-              "line": 8,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "evaluate_benchmark_gate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/benchmark_gate.py",
-              "line": 28,
-              "kind": "function",
               "language": "python"
             }
           ],
@@ -171,32 +69,32 @@
       ],
       "dependency_count": 3
     },
-    "test_benchmark_gate_rejects_net_loss_even_if_benchmark_loses_more": {
+    "result": {
       "source": {
-        "file": "tests/test_benchmark_gate.py",
-        "start": 55,
-        "end": 62
+        "file": "tests/test_sensitivity_gate.py",
+        "start": 7,
+        "end": 21
       },
       "symbol_dependencies": [
         {
-          "symbol": "_report",
+          "symbol": "SensitivityResult",
           "definitions": [
             {
-              "file": "tests/test_benchmark_gate.py",
-              "line": 8,
-              "kind": "function",
+              "file": "src/ai_trading/parameter_sensitivity.py",
+              "line": 19,
+              "kind": "class",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         },
         {
-          "symbol": "evaluate_benchmark_gate",
+          "symbol": "SensitivityScenario",
           "definitions": [
             {
-              "file": "src/ai_trading/benchmark_gate.py",
-              "line": 28,
-              "kind": "function",
+              "file": "src/ai_trading/parameter_sensitivity.py",
+              "line": 11,
+              "kind": "class",
               "language": "python"
             }
           ],
@@ -205,104 +103,70 @@
       ],
       "dependency_count": 2
     },
-    "test_benchmark_gate_rejects_break_even_return_by_default": {
+    "test_sensitivity_gate_accepts_stable_neighborhood": {
       "source": {
-        "file": "tests/test_benchmark_gate.py",
-        "start": 65,
-        "end": 71
+        "file": "tests/test_sensitivity_gate.py",
+        "start": 24,
+        "end": 31
       },
       "symbol_dependencies": [
         {
-          "symbol": "_report",
+          "symbol": "evaluate_sensitivity_gate",
           "definitions": [
             {
-              "file": "tests/test_benchmark_gate.py",
-              "line": 8,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "evaluate_benchmark_gate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/benchmark_gate.py",
-              "line": 28,
+              "file": "src/ai_trading/sensitivity_gate.py",
+              "line": 31,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
+        },
+        {
+          "symbol": "result",
+          "definitions": [
+            {
+              "file": "tests/test_sensitivity_gate.py",
+              "line": 7,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
         }
       ],
       "dependency_count": 2
     },
-    "test_benchmark_gate_rejects_nonfinite_metrics_that_skip_thresholds": {
+    "test_sensitivity_gate_rejects_narrow_optimum": {
       "source": {
-        "file": "tests/test_benchmark_gate.py",
-        "start": 74,
-        "end": 81
+        "file": "tests/test_sensitivity_gate.py",
+        "start": 34,
+        "end": 70
       },
       "symbol_dependencies": [
         {
-          "symbol": "_report",
+          "symbol": "evaluate_sensitivity_gate",
           "definitions": [
             {
-              "file": "tests/test_benchmark_gate.py",
-              "line": 8,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "evaluate_benchmark_gate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/benchmark_gate.py",
-              "line": 28,
+              "file": "src/ai_trading/sensitivity_gate.py",
+              "line": 31,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_benchmark_gate_rejects_infinite_annualized_volatility": {
-      "source": {
-        "file": "tests/test_benchmark_gate.py",
-        "start": 84,
-        "end": 90
-      },
-      "symbol_dependencies": [
+        },
         {
-          "symbol": "_report",
+          "symbol": "result",
           "definitions": [
             {
-              "file": "tests/test_benchmark_gate.py",
-              "line": 8,
+              "file": "tests/test_sensitivity_gate.py",
+              "line": 7,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
-        },
-        {
-          "symbol": "evaluate_benchmark_gate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/benchmark_gate.py",
-              "line": 28,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
         }
       ],
       "dependency_count": 2

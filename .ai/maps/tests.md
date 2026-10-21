@@ -4277,6 +4277,14 @@ gate = evaluate_sensitivity_gate(results)
 def test_sensitivity_gate_rejects_narrow_optimum() -> None
 ⋮----
 results = (
+⋮----
+# These used to pass the gate despite losing money, missing trades,
+# or emitting invalid/non-physical research measurements.
+losses = tuple(
+loss_gate = evaluate_sensitivity_gate(losses)
+⋮----
+candidates = tuple(invalid for _ in range(6))
+decision = evaluate_sensitivity_gate(candidates)
 ```
 
 ## File: test_session_integrity.py

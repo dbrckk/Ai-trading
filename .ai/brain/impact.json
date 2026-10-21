@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "b8f8ff1ff57a67e4208c18f8a018b960f95a014c",
-  "head": "5cad2590a97f62999181cd3febec55fb92624329",
+  "base": "5cad2590a97f62999181cd3febec55fb92624329",
+  "head": "303bdfcc274518d9c5979665482d8659e2d512b8",
   "index_mode": "incremental",
   "changed_files": [
     {
@@ -10,46 +10,28 @@
       "status": "M"
     },
     {
-      "path": "src/ai_trading/benchmark_gate.py",
+      "path": "src/ai_trading/sensitivity_gate.py",
       "status": "M"
     },
     {
-      "path": "tests/test_benchmark_gate.py",
+      "path": "tests/test_sensitivity_gate.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "src/ai_trading/benchmark_gate.py",
-    "tests/test_benchmark_gate.py"
+    "src/ai_trading/sensitivity_gate.py",
+    "tests/test_sensitivity_gate.py"
   ],
   "impacted_files": [
-    "src/ai_trading/benchmark_gate.py",
     "src/ai_trading/cli.py",
     "src/ai_trading/quantitative_artifact.py",
     "src/ai_trading/quantitative_qualification.py",
-    "tests/test_benchmark_gate.py",
+    "src/ai_trading/sensitivity_gate.py",
     "tests/test_quantitative_artifact.py",
-    "tests/test_reproducibility.py"
+    "tests/test_reproducibility.py",
+    "tests/test_sensitivity_gate.py"
   ],
   "impacted_symbols": [
-    {
-      "name": "BenchmarkGatePolicy",
-      "kind": "class",
-      "file": "src/ai_trading/benchmark_gate.py",
-      "line": 10
-    },
-    {
-      "name": "BenchmarkGateResult",
-      "kind": "class",
-      "file": "src/ai_trading/benchmark_gate.py",
-      "line": 23
-    },
-    {
-      "name": "evaluate_benchmark_gate",
-      "kind": "function",
-      "file": "src/ai_trading/benchmark_gate.py",
-      "line": 28
-    },
     {
       "name": "self_test",
       "kind": "function",
@@ -351,46 +333,22 @@
       "line": 21
     },
     {
-      "name": "_report",
-      "kind": "function",
-      "file": "tests/test_benchmark_gate.py",
-      "line": 8
+      "name": "SensitivityGatePolicy",
+      "kind": "class",
+      "file": "src/ai_trading/sensitivity_gate.py",
+      "line": 10
     },
     {
-      "name": "test_benchmark_gate_accepts_qualified_report",
-      "kind": "function",
-      "file": "tests/test_benchmark_gate.py",
-      "line": 35
+      "name": "SensitivityGateResult",
+      "kind": "class",
+      "file": "src/ai_trading/sensitivity_gate.py",
+      "line": 20
     },
     {
-      "name": "test_benchmark_gate_rejects_weak_out_of_sample_result",
+      "name": "evaluate_sensitivity_gate",
       "kind": "function",
-      "file": "tests/test_benchmark_gate.py",
-      "line": 42
-    },
-    {
-      "name": "test_benchmark_gate_rejects_net_loss_even_if_benchmark_loses_more",
-      "kind": "function",
-      "file": "tests/test_benchmark_gate.py",
-      "line": 55
-    },
-    {
-      "name": "test_benchmark_gate_rejects_break_even_return_by_default",
-      "kind": "function",
-      "file": "tests/test_benchmark_gate.py",
-      "line": 65
-    },
-    {
-      "name": "test_benchmark_gate_rejects_nonfinite_metrics_that_skip_thresholds",
-      "kind": "function",
-      "file": "tests/test_benchmark_gate.py",
-      "line": 74
-    },
-    {
-      "name": "test_benchmark_gate_rejects_infinite_annualized_volatility",
-      "kind": "function",
-      "file": "tests/test_benchmark_gate.py",
-      "line": 84
+      "file": "src/ai_trading/sensitivity_gate.py",
+      "line": 31
     },
     {
       "name": "_dataset",
@@ -451,11 +409,29 @@
       "kind": "function",
       "file": "tests/test_reproducibility.py",
       "line": 84
+    },
+    {
+      "name": "result",
+      "kind": "function",
+      "file": "tests/test_sensitivity_gate.py",
+      "line": 7
+    },
+    {
+      "name": "test_sensitivity_gate_accepts_stable_neighborhood",
+      "kind": "function",
+      "file": "tests/test_sensitivity_gate.py",
+      "line": 24
+    },
+    {
+      "name": "test_sensitivity_gate_rejects_narrow_optimum",
+      "kind": "function",
+      "file": "tests/test_sensitivity_gate.py",
+      "line": 34
     }
   ],
   "selected_tests": [
-    "tests/test_benchmark_gate.py",
     "tests/test_quantitative_artifact.py",
-    "tests/test_reproducibility.py"
+    "tests/test_reproducibility.py",
+    "tests/test_sensitivity_gate.py"
   ]
 }
