@@ -55,9 +55,13 @@ def _fetch_json(base_url: str, endpoint: str, timeout: float) -> tuple[dict, str
 
 
 def probe_dashboard(
-    base_url: str, *, timeout: float = 60.0, expected_sha: str | None = None
+    base_url: str,
+    *,
+    timeout: float = 60.0,
+    expected_sha: str | None = None,
+    require_running_markets: bool = False,
 ) -> tuple[ProbeCheck, ...]:
-    """Check web process, durable readiness and three market cards independently."""
+    """Check web, storage and markets; optionally require healthy live engines."""
     if timeout <= 0:
         raise ValueError("timeout must be positive")
     if expected_sha is not None and fullmatch(r"[0-9a-f]{40}", expected_sha) is None:
@@ -107,8 +111,26 @@ def probe_dashboard(
                 detail = "missing_market_cards"
             elif not complete:
                 detail = "portfolio_or_market_unavailable"
+            elif require_running_markets:
+                # A complete portfolio alone can still report three STARTING
+                # engines during a stuck scheduler cycle. Check individual
+                # runtime health as well as the portfolio aggregate.
+                by_symbol = {
+                    item["symbol"]: item
+                    for item in markets
+                    if isinstance(item, dict) and item.get("symbol") in expected
+                }
+                running = portfolio.get("running_markets") == len(expected)
+                engines = all(
+                    isinstance(by_symbol[symbol].get("overview"), dict)
+                    and by_symbol[symbol]["overview"].get("engine_status") == "RUNNING"
+                    and by_symbol[symbol]["overview"].get("consecutive_cycle_errors") == 0
+                    for symbol in expected
+                )
+                valid = running and engines
+                detail = "three_markets_running" if valid else "market_engines_not_running"
             else:
-                detail = "three_markets_healthy"
+                detail = "three_market_cards_available"
         checks.append(ProbeCheck(endpoint, valid, detail))
     return tuple(checks)
 
@@ -120,8 +142,18 @@ def main() -> int:
     parser.add_argument(
         "--expected-sha", help="Require this exact 40-character deployed Git commit"
     )
+    parser.add_argument(
+        "--require-running-markets",
+        action="store_true",
+        help="Fail if Gold, DAX or BTC is STARTING, STALE, ERROR or has cycle errors",
+    )
     args = parser.parse_args()
-    checks = probe_dashboard(args.base_url, timeout=args.timeout, expected_sha=args.expected_sha)
+    checks = probe_dashboard(
+        args.base_url,
+        timeout=args.timeout,
+        expected_sha=args.expected_sha,
+        require_running_markets=args.require_running_markets,
+    )
     for check in checks:
         print(
             f"{'PASS' if check.ok else 'FAIL'} {check.endpoint}: {check.detail}",
