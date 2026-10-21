@@ -7,4 +7,9 @@ Primary context files:
 - .ai/commands.json
 - .ai/repo-health.md
 
-Repository map is compact enough; use .ai/repo-map.md.
+Large repository detected. Prefer the relevant segmented map before .ai/repo-map.md.
+
+## Segmented maps
+- .ai/maps/tests.md (191 source/config files)
+- .ai/maps/src.md (174 source/config files)
+- .ai/maps/infra.md (4 source/config files)

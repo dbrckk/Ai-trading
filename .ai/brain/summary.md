@@ -1,15 +1,15 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 366
-- Files reparsed this run: 4
-- Symbols: 1867
-- Internal import edges: 1233
-- Impacted files: 10
-- Selected tests: 7
+- Files indexed: 367
+- Files reparsed this run: 10
+- Symbols: 1876
+- Internal import edges: 1245
+- Impacted files: 36
+- Selected tests: 31
 
 ## Languages
-- python: 364 files
+- python: 365 files
 - javascript: 2 files
 
 ## Highest-density symbol files
@@ -25,14 +25,14 @@
 - tests/test_postgres_persistence.py: 22 symbols
 - src/ai_trading/dashboard.py: 21 symbols
 - tests/test_multiasset_runtime.py: 21 symbols
+- src/ai_trading/postgres_persistence.py: 20 symbols
 - tests/test_multiasset_checkpoint.py: 20 symbols
-- src/ai_trading/postgres_persistence.py: 19 symbols
 - tests/test_dashboard_health.py: 18 symbols
 - tests/test_paper_cycle_workflow.py: 18 symbols
+- src/ai_trading/file_persistence.py: 17 symbols
 - src/ai_trading/mtf_parameter_benchmark.py: 17 symbols
 - src/ai_trading/multiasset_runtime.py: 17 symbols
 - tests/test_deployment_readiness.py: 17 symbols
-- src/ai_trading/file_persistence.py: 16 symbols
 
 ## Agent routing
 - Read impact.json first after project/change context.
@@ -43,10 +43,10 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 4
-- outline files retained: 366
-- top-level items retained: 3201
-- direct members retained: 1551
+- AST files reparsed this run: 10
+- outline files retained: 367
+- top-level items retained: 3224
+- direct members retained: 1571
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 

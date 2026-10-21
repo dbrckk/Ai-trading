@@ -206,6 +206,7 @@ src/
     restart_log.py
     risk_governor.py
     risk.py
+    river_v2_shadow.py
     robustness.py
     runtime_factory.py
     runtime_lock.py
@@ -3801,6 +3802,10 @@ record = json.loads(line)
 ⋮----
 payload = record.get("payload")
 ⋮----
+def load_river_v2_forward_quality(self, runtime_key: str) -> RiverV2ForwardComparison
+⋮----
+"""Read-only forward evidence from committed paper audit observations."""
+⋮----
 def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None
 ⋮----
 def load_runtime_status(self, runtime_key: str) -> HostedRuntimeStatus | None
@@ -5935,6 +5940,13 @@ def quality_payload(quality) -> dict[str, object]
 ⋮----
 gate = evaluate_shadow_promotion_gate(comparison, policy)
 ⋮----
+def _river_v2_forward_snapshot(comparison=None) -> dict[str, object]
+⋮----
+"""Presentation of *observed* forward labels; never a promotion signal."""
+count = int(comparison.observations) if comparison is not None else 0
+⋮----
+# Directional classification is not proof of net-of-cost trading edge.
+⋮----
 directional_observations = int(comparison.directional_observations)
 directional_rate = float(comparison.directional_rate)
 gate_reasons = list(gate.reasons)
@@ -5981,6 +5993,12 @@ shadow_quality = _empty_shadow_quality_snapshot()
 shadow_loader = getattr(persistence, "load_shadow_quality", None)
 ⋮----
 shadow_quality = _shadow_quality_snapshot(shadow_loader(runtime_key))
+⋮----
+river_v2_quality = _river_v2_forward_snapshot()
+river_v2_loader = getattr(persistence, "load_river_v2_forward_quality", None)
+⋮----
+river_v2_quality = _river_v2_forward_snapshot(river_v2_loader(runtime_key))
+except Exception:  # noqa: BLE001 - read-only research cannot break the dashboard
 ⋮----
 mtf_shadow_quality = _empty_mtf_shadow_quality_snapshot(mtf_config)
 mtf_shadow_loader = getattr(persistence, "load_mtf_shadow_quality", None)
@@ -6224,6 +6242,10 @@ last_decision = None
 ⋮----
 target = pending[0]
 observer_kwargs = {}
+⋮----
+river_v2 = observe_river_v2_forward(
+⋮----
+except Exception:  # noqa: BLE001 - research observer cannot stop paper trades
 ⋮----
 result = runtime.step_prepared(
 ⋮----
@@ -6853,6 +6875,10 @@ payloads = []
 payload = row["payload"]
 ⋮----
 payload = json.loads(payload)
+⋮----
+def load_river_v2_forward_quality(self, runtime_key: str) -> RiverV2ForwardComparison
+⋮----
+"""Bounded, read-only audit replay for one-bar v1/v2 forward comparison."""
 ⋮----
 def save_runtime_status(self, runtime_key: str, status: HostedRuntimeStatus) -> None
 ⋮----
@@ -7939,6 +7965,142 @@ daily_loss = 1.0 - portfolio.equity / max(portfolio.day_start_equity, portfolio.
 ⋮----
 confidence_scale = min(1.0, max(0.0, (prediction.confidence - 0.5) / 0.5))
 target = (
+````
+
+## File: src/ai_trading/river_v2_shadow.py
+````python
+"""Opt-in River-v2 forward observer and delayed, audit-only label comparison.
+
+Neither the observer nor its quality calculation can place or approve trades.
+A forward observation is never given future market candles or future labels.
+"""
+⋮----
+_INTERVAL = pd.Timedelta(minutes=5)
+⋮----
+@dataclass(frozen=True)
+class RiverV2ForwardObservation
+⋮----
+prediction: Prediction
+signal_time: str
+signal_close: float
+observed_at_utc: str
+training_rows: int
+training_end: str
+horizon_bars: int
+return_threshold: float
+min_confidence: float
+gated_side: int
+model_format: str = RESEARCH_MODEL_FORMAT
+model_version: int = RESEARCH_MODEL_VERSION
+⋮----
+@dataclass(frozen=True)
+class RiverV2ForwardComparison
+⋮----
+observations: int
+pending: int
+short_predictions: int
+river: ModelQuality
+river_v2: ModelQuality
+⋮----
+@property
+    def score_delta(self) -> float | None
+⋮----
+"""Predict only from the latest *completed, recent* five-minute signal.
+
+    The current market's last row must be a fully closed candle. The next
+    candle is not present. Older/catch-up observations are deliberately
+    skipped to avoid representing retrospective predictions as forward ones.
+    """
+⋮----
+signal_time = pd.Timestamp(market.index[-1])
+⋮----
+signal_utc = signal_time.tz_convert("UTC")
+current = pd.Timestamp(now or datetime.now(UTC))
+⋮----
+current = current.tz_convert("UTC")
+age = current - (signal_utc + _INTERVAL)
+# Allow a short provider delay, but never score signals observed after
+# their next five-minute outcome could already have completed.
+⋮----
+# Slice first: even accidental future columns cannot reach the trainer.
+observed = market.iloc[:].copy()
+features = make_features(observed)
+labels = make_labels(
+last_train_pos = len(observed) - 1 - horizon_bars
+⋮----
+candidates = [
+⋮----
+signal_row = features.iloc[-1].loc[FEATURES]
+⋮----
+train_positions = candidates[-max_train_rows:]
+model = RiverMulticlassDirectionModel()
+⋮----
+prediction = model.predict_one(signal_row)
+⋮----
+return None  # Fail open for paper execution, closed for shadow evidence.
+signal_close = float(observed["Close"].iloc[-1])
+⋮----
+# The prediction must still be timely AFTER inference has completed.
+# A slow CPU/research run must not backdate evidence to its start time.
+completed_at = current if now is not None else pd.Timestamp(datetime.now(UTC))
+⋮----
+"""Evaluate only matured, matched v1/v2 signals stored on different cycles.
+
+    v2 predictions were committed in an earlier audit row. The v1
+    `execution_close` and v1 prediction arrive in a later audit row.
+    The comparison is directional accuracy, NOT a tradable return backtest.
+    """
+audit_rows = tuple(payloads)
+v1_by_signal: dict[str, dict[str, Any]] = {}
+⋮----
+signal = payload.get("signal_time")
+⋮----
+sides_v1: list[int] = []
+conf_v1: list[float] = []
+sides_v2: list[int] = []
+conf_v2: list[float] = []
+labels: list[int] = []
+pending = 0
+shorts = 0
+seen: set[str] = set()
+⋮----
+shadow = payload.get("river_v2_shadow")
+⋮----
+signal = shadow.get("signal_time")
+⋮----
+later = v1_by_signal.get(signal)
+⋮----
+continue  # This matching is defined for one-bar outcomes only.
+signal_time = pd.Timestamp(signal)
+execution_time = pd.Timestamp(later["execution_time"])
+observed_time = pd.Timestamp(shadow["observed_at_utc"])
+committed_time = pd.Timestamp(payload["_audit_timestamp_utc"])
+⋮----
+signal_time = signal_time.tz_convert("UTC")
+execution_time = execution_time.tz_convert("UTC")
+observed_time = observed_time.tz_convert("UTC")
+committed_time = committed_time.tz_convert("UTC")
+⋮----
+continue  # No imputed result across session/provider gaps.
+⋮----
+continue  # Must have been observed before the outcome closed.
+⋮----
+continue  # Must also have been DURABLY audited before outcome closed.
+signal_close = float(shadow["signal_close"])
+next_close = float(later["execution_close"])
+threshold = float(shadow["return_threshold"])
+⋮----
+v1 = later["prediction"]
+v2 = shadow["prediction"]
+⋮----
+minimum = float(shadow["min_confidence"])
+⋮----
+realized_return = next_close / signal_close - 1.0
+label = int(realized_return > threshold) - int(realized_return < -threshold)
+# Compare identical raw side/confidence definitions for both models.
+# Minimum confidence applies only to the separate directional count.
+⋮----
+def quality(sides: list[int], confidences: list[float]) -> ModelQuality
 ````
 
 ## File: src/ai_trading/robustness.py
@@ -11760,6 +11922,9 @@ signal = df.index[int(df.index.get_loc(target)) - 1]
 train_end = df.index[int(df.index.get_loc(signal)) - 1]
 calls: list[object] = []
 ⋮----
+# Exercise the real audit attachment without allowing the observer
+# to change the authoritative River-v1 decision.
+⋮----
 payload = audit_rows[-1]["payload"]
 ⋮----
 df = sample_market(109)
@@ -13141,6 +13306,15 @@ train_index = captured["train_index"]
 ⋮----
 expected_label = labels.loc[market.index[signal_pos]]
 ⋮----
+# A forward River-v2 sample uses a *closed* last bar and only matured
+# labels; its prediction must not require a future OHLCV row.
+live_market = market.tz_localize("UTC")
+last_bar_close = live_market.index[-1] + pd.Timedelta(minutes=5)
+forward = observe_river_v2_forward(
+⋮----
+# Reject a future/unfinished candle instead of pretending to have
+# published a genuinely live prediction retrospectively.
+⋮----
 def test_shadow_challenger_skips_when_history_is_insufficient() -> None
 ⋮----
 market = sample_market(90)
@@ -13172,7 +13346,20 @@ def test_shadow_quality_compares_both_models_on_identical_labels() -> None
 ⋮----
 comparison = compare_shadow_audit_payloads(
 ⋮----
+# Forward observations are stored one cycle *before* their outcomes.
+# Compare them with the same later audit record that holds the v1 side.
+audit_rows = []
+⋮----
+signal = pd.Timestamp("2026-10-21T08:00:00+00:00") + pd.Timedelta(
+side = -1 if i % 2 == 0 else 1
+⋮----
+forward = compare_river_v2_forward_audit_payloads(audit_rows)
+⋮----
 def test_shadow_quality_ignores_unusable_audit_rows() -> None
+⋮----
+# No hindsight: malformed, stale or not-yet-matured samples cannot
+# manufacture additional v2 forward evidence.
+forward = compare_river_v2_forward_audit_payloads(
 ````
 
 ## File: tests/test_smoke_e2e.py

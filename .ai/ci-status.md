@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 6 success / 0 failure / 2 active
+Summary: 3 success / 2 failure / 2 active
 
-- CI: in_progress / pending (50459b6a)
-- CodeQL: queued / pending (50459b6a)
-- CodeQL: completed / success (b418d508)
-- CI: completed / success (b418d508)
-- Hosted Dashboard Probe: completed / success (c8873838)
-- Paper Cycle: completed / success (c8873838)
-- Hosted Dashboard Probe: completed / success (c8873838)
-- Paper Cycle: completed / success (c8873838)
+- CodeQL: in_progress / pending (6f3fe1df)
+- CI: in_progress / pending (6f3fe1df)
+- CI: completed / success (6d699ddd)
+- CodeQL: completed / success (6d699ddd)
+- CodeQL: completed / success (9ca5cbad)
+- CI: completed / failure (9ca5cbad)
+- CodeQL: completed / cancelled (244f954d)
+- CI: completed / failure (244f954d)
+
+## Latest failed run structure
+- Job: test
+  - Failed step: Pytest
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

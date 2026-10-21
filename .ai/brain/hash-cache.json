@@ -1,12 +1,12 @@
 {
   "files": {
-    "docs/kronos-research.md": {
-      "sha256": "b654b4ada88965d357bc00a1da5450b649540df65a05d24875bd8aab0823e77d",
-      "size": 6950
-    },
     "src/ai_trading/__init__.py": {
       "sha256": "b9dff288ae98d64dec4345a3704aad0406f0fa2784917ca65cf68f4d6f55d28f",
       "size": 49
+    },
+    "src/ai_trading/audit.py": {
+      "sha256": "2d621175ab9010a7459c59d22063f95938cd8ac1fa1f63f2ae3bbc1397b0777a",
+      "size": 1760
     },
     "src/ai_trading/cli.py": {
       "sha256": "b6d24a3a50190918b90bf0b17cf7632e454d801ac52dae02c64d7cded21ca392",
@@ -16,9 +16,13 @@
       "sha256": "435c24e9fe374563e2cd615664a85eb2291dc965b4cb1cec28b269e1f9e197ac",
       "size": 1386
     },
+    "src/ai_trading/dashboard.py": {
+      "sha256": "06cc109ed74131f90cbe0a1c718b09403c5190e6a4872e2002521a022daa2c31",
+      "size": 76944
+    },
     "src/ai_trading/file_persistence.py": {
-      "sha256": "71ffdfb7a42a926debf89b4fe3dd702c6b935a8256439d093d2a8b7454633319",
-      "size": 9632
+      "sha256": "6add4e8be2cdc366ffe0e172ea17591c1c72503d21e200bd40925fd9bb66bc51",
+      "size": 10824
     },
     "src/ai_trading/hosted_runtime.py": {
       "sha256": "3488733cc4d53c0dbdddabb62a157246cc6c68f62936a382c68a4a84f2ec2379",
@@ -28,37 +32,49 @@
       "sha256": "0cb0f97af30cf1067c8ae209413d468a3190cb87dee3230f2e6ae9627c68318b",
       "size": 2017
     },
-    "src/ai_trading/model_codec.py": {
-      "sha256": "a18eeccc4a7623154afebcad7f0629cab23124681d9b08b12d6884e52e2d5ad6",
-      "size": 1224
+    "src/ai_trading/multi_market.py": {
+      "sha256": "fabda53dc953f3c7e29648096383a22d30d4454803f981b729cf833b793a1b9a",
+      "size": 15622
     },
     "src/ai_trading/online.py": {
       "sha256": "48aa2ab275b796f789a55473979b53552810cd2421f8be7880cf9572bc8548a7",
       "size": 2238
+    },
+    "src/ai_trading/operational_overview.py": {
+      "sha256": "e4f3e5d556a7315f4267ccb617ecce57b40f294d830f9d32fea4b90b6188a9bc",
+      "size": 16328
     },
     "src/ai_trading/orchestrator.py": {
       "sha256": "08c9d15c323010cbf4ffae61bcaadd040b42bda431b82c894acc09b9e1df22a2",
       "size": 5489
     },
     "src/ai_trading/paper_cycle.py": {
-      "sha256": "306e511442c1c5a15bbd7ef7365710605cd333404466deacd8bb7c01a68c5a7a",
-      "size": 12424
+      "sha256": "3516380696abbc36b595be91b3e36ff93d0ead63a22a2d15faac002ebb9dd62f",
+      "size": 13276
+    },
+    "src/ai_trading/paper_cycle_service.py": {
+      "sha256": "bd2761cbb66b0fcafa43d8a79d56f01865e1f5140e7cc1c2229421137beecb11",
+      "size": 9235
     },
     "src/ai_trading/persistence.py": {
       "sha256": "e2a9d2fb81ac91d6d295f0f25f2d3558b3d669aa02ac3a1716694cc98e41a61e",
       "size": 4475
     },
-    "src/ai_trading/postgres_persistence.py": {
-      "sha256": "a9231b738c7576e4a459d2a686db5e2badce096e8f1db7738e6121d33b18f37b",
-      "size": 36429
+    "src/ai_trading/persistence_factory.py": {
+      "sha256": "b1cbcae3c6d0b5fdf9a624f87c80b109e59094c9f5c8f939850216c3848c9371",
+      "size": 649
     },
-    "src/ai_trading/research_model_codec.py": {
-      "sha256": "b8373675be1e8475dc914a8e5eb3f0f03c4e3777befe8c5171f2b24894fbb044",
-      "size": 1839
+    "src/ai_trading/postgres_persistence.py": {
+      "sha256": "0a4f842be3f9593105ecb023608ce2905a874dfa09270ecae97aff00f242e321",
+      "size": 37749
+    },
+    "src/ai_trading/river_v2_shadow.py": {
+      "sha256": "ae37d9d0772c7ebe0217780ff0cde4178ec353f80b44a6886ed8d355c88b3754",
+      "size": 10495
     },
     "src/ai_trading/runtime.py": {
-      "sha256": "08152bc0e26db323d264989a26b8a789cea9e68db6f27cb85f298e9ac26c9cab",
-      "size": 15305
+      "sha256": "7dc5d3ee81c2e8a35ae170f551277d38ae62f1d399beca5252c2b8244ef7c144",
+      "size": 15696
     },
     "src/ai_trading/runtime_state.py": {
       "sha256": "c7e5739549e9134b89fe1f217570c01927c2b67f8db0ee3c63f8c6f5ae3b208e",
@@ -72,37 +88,17 @@
       "sha256": "02f5cf98729b621da5a234e1b497b1163a82f7e38066b7b3e4ce9468f790c392",
       "size": 1440
     },
-    "tests/test_cumulative_performance_persistence.py": {
-      "sha256": "9f07ab12bd83b446dd712bbffcb5a2c95c70858048a754f08dcb653f00bccb1e",
-      "size": 5877
+    "tests/test_dashboard_overview.py": {
+      "sha256": "3e97555c100d3ae0ef3e416f4740091ddd31819580d8104bac8055c8e89e019e",
+      "size": 24110
     },
-    "tests/test_durable_burnin_persistence.py": {
-      "sha256": "b43044e48885afda4536bc1d3b238f6a46f4f18f4d61963d674524a387955f1e",
-      "size": 4454
-    },
-    "tests/test_execution_costs.py": {
-      "sha256": "20da554299328e64c2a5169812717c6eac155bb7b51be5bd94c9681703ca3335",
-      "size": 2505
-    },
-    "tests/test_file_persistence.py": {
-      "sha256": "58ad24c182b6e7631bf8633d1ea05c7b164a104d61d30ecc17cafd523aa39317",
-      "size": 5397
-    },
-    "tests/test_model_codec.py": {
-      "sha256": "1879653108f9952aadc4e748673abfcf7801ccafa029ba893dcf1838ffa3c818",
-      "size": 2546
-    },
-    "tests/test_online.py": {
-      "sha256": "20836eb0ebda8c324e013764740a68908e8c32dd0c85cf92474cbf417c9ce941",
-      "size": 2231
-    },
-    "tests/test_orchestrator_trigger.py": {
-      "sha256": "041e661b3fab0d5f37009cd5aa9cddb602cc76a93885190e0ef92f754dda6b83",
-      "size": 892
+    "tests/test_multi_market.py": {
+      "sha256": "ff9be9b0fd54574a7b55a3f24a6a5c100d47cd19730f2c67798915ee28a6ffe4",
+      "size": 20456
     },
     "tests/test_paper_cycle.py": {
-      "sha256": "a1e21368572241ef30592cc157a0cf8fe35dc969cf3ae85091b06dc5f67f52c1",
-      "size": 32550
+      "sha256": "842719c0f48c2ba5b54b7296a47d825a49e4f1a39808c1f930747f4e3accdc5e",
+      "size": 33700
     },
     "tests/test_paper_cycle_materialized_fresh.py": {
       "sha256": "f76f6632f41c68e933bcf4f2f5e085047bef41755df6ac423aa054f163ad74c7",
@@ -112,21 +108,25 @@
       "sha256": "a4886c81cd6352101cee69154fd27c2dd3a6788a53f6975c436444f0c3392645",
       "size": 3406
     },
+    "tests/test_paper_cycle_service.py": {
+      "sha256": "35e38936ec513c4f092d48002f871aa5f53980b08bdf11aa3a43dff1f64f5fc2",
+      "size": 16525
+    },
     "tests/test_postgres_persistence.py": {
       "sha256": "766d198fe17d324d3e93cdf66127c7f19429989d5acfd7e6a4056a37918a5d1b",
       "size": 16823
     },
-    "tests/test_runtime.py": {
-      "sha256": "d350721a6b0cbb6fbd42928464c728cf12cfbf67a7fe69894436ca5154ba09bb",
-      "size": 1592
+    "tests/test_scheduler_endpoint.py": {
+      "sha256": "0fe279673a9e8ce913c4a9662facd73fe0d1b2967935a30a8de5903b03db9c63",
+      "size": 17234
     },
-    "tests/test_runtime_lock.py": {
-      "sha256": "fa42203196b780c5ffe2764a87e2731127520ad635bc7c33231a2df5566a0950",
-      "size": 1458
+    "tests/test_shadow_challenger.py": {
+      "sha256": "1ac86d0144acd80f91d2cb9b9dfa7e6073d4a3765f246b9cf3a94d4ce93a29d4",
+      "size": 4722
     },
-    "tests/test_runtime_persistence.py": {
-      "sha256": "f85951d6da6b3a399f5d6b0c595b75203db9fa641c92caa22930f6c80745501c",
-      "size": 8136
+    "tests/test_shadow_quality.py": {
+      "sha256": "889af830e6e4db9453a17de49daaa6062251f6c7f10df742a9e800e0746976a1",
+      "size": 3893
     }
   },
   "generated_by": "dbrckk/repo-brain-v6",
