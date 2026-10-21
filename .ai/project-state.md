@@ -6,6 +6,9 @@ Status: active
 
 ## Working
 
+- **2026-10-22 sensitivity profit follow-up:** merged PR #188 already covered worst execution-cost losses; conflicting duplicate PR #190 was closed unmerged. This branch strengthens parameter sensitivity selection to require positive **absolute net** return, executed trades and finite performance per passing perturbation. Existing tests were extended in place; no new test modules, no changes to live broker, paper order routing or model promotion.
+
+
 - **2026-10-21**: PR #188 merged with green CI/CodeQL; worst trading-cost scenario must have positive net return before cost-stress research gate passes. Current `fix/benchmark-positive-net-return` strengthens the separate walk-forward benchmark gate: reject negative/break-even net OOS returns even if relative return beats a declining index, and fail closed on NaN/Infinity. No live execution or automatic promotion.
 
 

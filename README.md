@@ -319,6 +319,16 @@ passing comparisons. This is additional research validation alongside the
 existing Sharpe, Sortino, Calmar, drawdown, fold and trade-count thresholds,
 not an automatic model promotion or permission to trade live.
 
+## Parameter sensitivity requires actual net-profit evidence
+
+The read-only parameter-sensitivity research gate rejects scenarios with
+**non-positive net total return**, zero executed trades, non-finite
+performance metrics or negative drawdown values. A strategy that merely
+outperforms a declining benchmark cannot pass based on relative excess
+return alone. The existing minimum scenario pass ratio, Sharpe and
+drawdown constraints remain in effect; this is not a model promotion or
+permission to trade live.
+
 ## Profit resilience under execution costs
 
 The cost-stress gate now requires the **highest transaction-cost-plus-slippage
