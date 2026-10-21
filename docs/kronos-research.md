@@ -112,8 +112,12 @@ lightweight ternary River-v2 observer for **5-minute paper markets only**
 (Gold, DAX and BTC). It runs independently of River-v1 trade decisions:
 
 - At most one v2 observation is attached to a cycle, and **only** if the
-  latest provider candle has fully closed less than five minutes ago.
-  Stale, unfinished and catch-up signals are excluded. No future OHLCV
+  latest completed provider candle has closed less than five minutes ago.
+  The 5m paper-cycle input now **discards a still-forming Yahoo candle**
+  before both River-v1 paper execution and River-v2 evaluation (with a
+  two-second finality buffer). This prevents a mutable partial OHLC close
+  from entering the committed paper model state. Stale and catch-up
+  signals remain excluded. No future OHLCV
   is passed to the observer; it trains from up to 384 historical rows
   with labels matured before the observed signal. At least 100 valid
   training rows are required.
@@ -144,6 +148,20 @@ lightweight ternary River-v2 observer for **5-minute paper markets only**
 Because no separate River-v2 training state is persisted yet, it
 retrains from a bounded recent window for each fresh observation.
 **Do not infer increased profitability from this feature.**
+
+## Forward shadow operational follow-up (2026-10-21)
+
+A live read-only Render probe of deployed `9f8d88ca` verified `/livez`
+and `/readyz`, Gold/DAX/BTC all `RUNNING`, zero market errors and 20
+recent successful Cloudflare deliveries. Nevertheless
+`overview.river_v2_shadow.observations=0` and `pending=0` for all
+three markets: release health **did not prove** the observer was
+producing real samples. The 5m input filter above addresses a specific
+cause: Yahoo can include an unfinished leading-edge candle even when
+the previous candle is complete. A successful CI after this change
+is **not** equivalent to verified live River-v2 samples. Confirm the
+actual deployed SHA, then look for >0 durably committed pending and
+subsequently matured observations before assessing model quality.
 
 ## Observed BTC research smoke (2026-10-20)
 
