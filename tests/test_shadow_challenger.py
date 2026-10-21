@@ -10,8 +10,8 @@ from ai_trading.features import (
     make_labels,
 )
 from ai_trading.model import Prediction
-from ai_trading.shadow_challenger import evaluate_shadow_challenger
 from ai_trading.river_v2_shadow import observe_river_v2_forward
+from ai_trading.shadow_challenger import evaluate_shadow_challenger
 
 
 def sample_market(n: int = 220) -> pd.DataFrame:
