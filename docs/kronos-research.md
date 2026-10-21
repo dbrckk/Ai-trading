@@ -126,8 +126,9 @@ lightweight ternary River-v2 observer for **5-minute paper markets only**
   `execution_close` price in the audit. The optional read-only
   `load_river_v2_forward_quality` reader joins v2 observations with
   later River-v1 decisions for the **same signal timestamp**, requiring
-  an actual consecutive 5-minute bar and a v2 observation before the
-  next bar closed. Missing, stale or incomplete outcomes are excluded.
+  an actual consecutive 5-minute bar and both v2 inference **and its
+  durable audit commit** before the next bar closed. Missing, stale,
+  late-committed or incomplete outcomes are excluded.
 - Per-market `/api/markets` includes `overview.river_v2_shadow` with
   matured observations, pending observations, confidence-gated v2
   SHORT count and matching v1/v2 directional quality when at least
