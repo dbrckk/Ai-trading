@@ -2722,9 +2722,23 @@ market_panel = ""
 ⋮----
 snapshot = build_multi_market_overview(
 portfolio = snapshot["portfolio"]
+portfolio_performance = portfolio.get("performance", {})
+portfolio_realized = portfolio_performance.get("realized_pnl")
+portfolio_realized_display = _display_money(
+portfolio_known = int(portfolio_performance.get("pnl_observations") or 0)
+portfolio_fills = int(portfolio_performance.get("trade_count") or 0)
+portfolio_sample_status = (
 cards = []
 ⋮----
 overview = item["overview"]
+market_performance = overview.get("performance", {})
+market_realized = market_performance.get("realized_pnl")
+market_realized_display = _display_money(
+market_known = int(market_performance.get("pnl_observations") or 0)
+market_fills = int(market_performance.get("trade_count") or 0)
+market_coverage = market_performance.get("pnl_coverage")
+market_coverage_display = (
+market_sample_status = (
 shadow = overview.get("shadow_challenger", {})
 gate = shadow.get("promotion_gate", {})
 mtf_shadow = overview.get("mtf_shadow_challenger", {})
@@ -11297,9 +11311,16 @@ backend = FakeMultiPersistence(
 ⋮----
 snapshot = build_multi_market_overview(
 ⋮----
-def test_dashboard_renders_multi_market_cards(tmp_path) -> None
+def test_dashboard_renders_multi_market_cards(tmp_path, monkeypatch) -> None
 ⋮----
 page = render_dashboard(
+⋮----
+# Market PnL is computed on normalized 100k runtimes, so the displayed
+# sleeve value MUST be allocation-scaled rather than showing 3x PnL.
+⋮----
+populated = render_dashboard(
+⋮----
+expected = f'<small>Realized net · sleeve</small><strong>{allocated_net:.2f}</strong>'
 ⋮----
 def test_multi_market_overview_parallelizes_read_only_observers(monkeypatch) -> None
 ⋮----
@@ -14294,15 +14315,23 @@ fresh market data. For manual diagnosis, use
 ## Paper trade performance evidence
 
 The read-only performance API exposes `evidence_sufficient` separately from
-`available`: at least **30 trades with known realized PnL** and at least
+`available`: at least **30 paper fill events with known realized PnL** and at least
 **95% PnL coverage** are required before even treating headline paper PnL,
-profit factor or drawdown as a minimally populated sample. These thresholds
+profit factor or drawdown as a minimally populated sample. These are **fill
+events, not 30 independent completed trades**, so no statistical conclusion
+follows from satisfying them. These thresholds
 are a descriptive sample-coverage check, **not statistical proof of edge**.
 The payload also reports `minimum_pnl_observations` and
 `minimum_pnl_coverage`. Actual execution costs must be accounted for in
 paper fills; further independent out-of-sample, regime, uncertainty and
 net-of-cost checks remain mandatory. No automated model promotion, paper
 order decision or live broker permission depends on this flag.
+
+The dashboard now shows **net realized paper PnL** alongside portfolio
+mark-to-market PnL and per-market allocation-adjusted realized PnL, plus
+observed PnL fill coverage and `PRELIMINARY` / `DATA MINIMUM` sample
+labels. `DATA MINIMUM` means coverage thresholds were met, **not** that
+the strategy is profitable. These are read-only reporting fields.
 
 ### Net-of-cost research qualification
 

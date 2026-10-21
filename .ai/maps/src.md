@@ -1827,9 +1827,23 @@ market_panel = ""
 ⋮----
 snapshot = build_multi_market_overview(
 portfolio = snapshot["portfolio"]
+portfolio_performance = portfolio.get("performance", {})
+portfolio_realized = portfolio_performance.get("realized_pnl")
+portfolio_realized_display = _display_money(
+portfolio_known = int(portfolio_performance.get("pnl_observations") or 0)
+portfolio_fills = int(portfolio_performance.get("trade_count") or 0)
+portfolio_sample_status = (
 cards = []
 ⋮----
 overview = item["overview"]
+market_performance = overview.get("performance", {})
+market_realized = market_performance.get("realized_pnl")
+market_realized_display = _display_money(
+market_known = int(market_performance.get("pnl_observations") or 0)
+market_fills = int(market_performance.get("trade_count") or 0)
+market_coverage = market_performance.get("pnl_coverage")
+market_coverage_display = (
+market_sample_status = (
 shadow = overview.get("shadow_challenger", {})
 gate = shadow.get("promotion_gate", {})
 mtf_shadow = overview.get("mtf_shadow_challenger", {})

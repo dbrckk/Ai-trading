@@ -2123,9 +2123,16 @@ backend = FakeMultiPersistence(
 ⋮----
 snapshot = build_multi_market_overview(
 ⋮----
-def test_dashboard_renders_multi_market_cards(tmp_path) -> None
+def test_dashboard_renders_multi_market_cards(tmp_path, monkeypatch) -> None
 ⋮----
 page = render_dashboard(
+⋮----
+# Market PnL is computed on normalized 100k runtimes, so the displayed
+# sleeve value MUST be allocation-scaled rather than showing 3x PnL.
+⋮----
+populated = render_dashboard(
+⋮----
+expected = f'<small>Realized net · sleeve</small><strong>{allocated_net:.2f}</strong>'
 ⋮----
 def test_multi_market_overview_parallelizes_read_only_observers(monkeypatch) -> None
 ⋮----

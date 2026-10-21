@@ -74,17 +74,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-21T20:07:57Z
+Generated: 2026-10-21T20:14:19Z
 
 ### Git
 - Branch: `main`
-- Head: `876a5f114849`
-- Commit date: 2026-10-21T16:07:47-04:00
-- Commit: fix(research): reject non-profitable net-of-cost stress scenarios (#185)
+- Head: `5931a3a010b9`
+- Commit date: 2026-10-21T16:14:09-04:00
+- Commit: feat(dashboard): expose allocation-adjusted net paper PnL and sample evidence (#186)
 - Tracked files: 513
 
 ### Recently changed files
 - `README.md`
+- `src/ai_trading/dashboard.py`
+- `tests/test_multi_market.py`
 - `src/ai_trading/cost_stress_gate.py`
 - `tests/test_cost_stress_gate.py`
 - `src/ai_trading/backtest.py`
@@ -95,15 +97,10 @@ Generated: 2026-10-21T20:07:57Z
 - `tests/test_runtime_targeted_step.py`
 - `src/ai_trading/performance_metrics.py`
 - `tests/test_dashboard_overview.py`
-- `tests/test_multi_market.py`
 - `tests/test_performance_metrics.py`
 - `.github/workflows/hosted-dashboard-probe.yml`
 - `src/ai_trading/deployment_probe.py`
 - `tests/test_dashboard_health.py`
-- `docs/kronos-research.md`
-- `src/ai_trading/operational_overview.py`
-- `src/ai_trading/river_v2_shadow.py`
-- `tests/test_shadow_quality.py`
 
 ### Project signals
 - `pyproject.toml`
