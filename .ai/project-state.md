@@ -6,6 +6,9 @@ Status: active
 
 ## Working
 
+- **2026-10-22**: PR #188 already merged worst-cost positive net-return protection; redundant #190 closed unmerged. Current change strengthens the *separate* parameter-sensitivity research gate: require traded, finite, positive-net-return scenarios, not merely positive excess return versus a falling benchmark. No live trading changes.
+
+
 - **2026-10-21**: PR #188 merged with green CI/CodeQL; worst trading-cost scenario must have positive net return before cost-stress research gate passes. Current `fix/benchmark-positive-net-return` strengthens the separate walk-forward benchmark gate: reject negative/break-even net OOS returns even if relative return beats a declining index, and fail closed on NaN/Infinity. No live execution or automatic promotion.
 
 
