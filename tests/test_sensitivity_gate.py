@@ -1,3 +1,5 @@
+from dataclasses import replace
+
 from ai_trading.parameter_sensitivity import SensitivityResult, SensitivityScenario
 from ai_trading.sensitivity_gate import evaluate_sensitivity_gate
 
@@ -42,3 +44,45 @@ def test_sensitivity_gate_rejects_narrow_optimum() -> None:
 
     assert not gate.passed
     assert gate.pass_ratio < 0.67
+
+
+def test_sensitivity_gate_rejects_losses_despite_positive_benchmark_excess() -> None:
+    scenarios = tuple(
+        replace(result(f"s{i}", excess=0.12), total_return=-0.01)
+        for i in range(6)
+    )
+    gate = evaluate_sensitivity_gate(scenarios)
+
+    assert gate.passed is False
+    assert gate.passing_scenarios == 0
+    assert "no sensitivity scenario has positive net return" in gate.reasons
+
+
+def test_sensitivity_gate_rejects_invalid_and_nontrading_scenarios() -> None:
+    scenarios = (
+        replace(result("nan"), total_return=float("nan")),
+        replace(result("infinite"), sharpe=float("inf")),
+        replace(result("no_trades"), trades=0),
+        replace(result("invalid_drawdown"), max_drawdown=-0.1),
+    )
+    gate = evaluate_sensitivity_gate(scenarios)
+
+    assert gate.passed is False
+    assert gate.passing_scenarios == 0
+    assert gate.scenarios == 4
+
+
+def test_sensitivity_gate_requires_profitable_majority() -> None:
+    scenarios = (
+        result("a"),
+        result("b"),
+        result("c"),
+        replace(result("d"), total_return=-0.02),
+        replace(result("e"), total_return=-0.01),
+        replace(result("f"), total_return=-0.03),
+    )
+    gate = evaluate_sensitivity_gate(scenarios)
+
+    assert gate.passed is False
+    assert gate.passing_scenarios == 3
+    assert gate.pass_ratio == 0.5
