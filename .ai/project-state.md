@@ -6,6 +6,10 @@ Status: active
 
 ## Working
 
+- **2026-10-22 bootstrap research validation:** PR #192 already merged the positive-net-return parameter sensitivity safeguard; duplicate #191 closed. PR #193 merged bounded retries for transient hosted probe connections, with green hosted probe and CI. This branch requires bootstrap reports to contain finite, internally coherent probability and quantile evidence from at least 100 simulations; previous NaN/Inf values could silently evade comparisons. Research-only validation; live broker stays OFF.
+
+
+
 - **2026-10-22 operational follow-up:** the latest GitHub Hosted Dashboard Probe run `39680748089` failed at `/livez: connection_failed`, but in the same run `/readyz: storage_ready` and `/api/markets: three_markets_running` passed. This does **not** establish a sustained Render outage. A bounded one-time read-only recheck of transport connection failures after the initial endpoint pass is being validated; persistent failures, bad HTTP/payload/engine and SHA mismatch still fail. PR #192 sensitivity net-return evidence gate merged with PR CI and CodeQL success; profit improvement remains unproven.
 
 
