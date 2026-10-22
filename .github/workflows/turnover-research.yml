@@ -2,11 +2,12 @@ name: Turnover Research
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - feat/turnover-validation-study
+  pull_request:
     paths:
       - .github/workflows/turnover-research.yml
+      - src/ai_trading/turnover_study.py
+      - src/ai_trading/backtest.py
+      - src/ai_trading/broker.py
 
 permissions:
   contents: read
