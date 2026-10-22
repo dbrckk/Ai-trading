@@ -336,7 +336,7 @@ def test_hosted_probe_requires_running_engines_not_only_complete_portfolio(
     starting = probe_dashboard(base, require_running_markets=True)
     assert starting[0].ok and starting[1].ok
     assert starting[2].ok is False
-    assert starting[2].detail == "market_engines_not_running"
+    assert starting[2].detail == "market_engines_not_running:BTC-USD:STARTING,GC=F:STARTING,^GDAXI:STARTING"
 
     statuses.update({symbol: "RUNNING" for symbol in statuses})
     healthy = probe_dashboard(base, require_running_markets=True)
@@ -346,10 +346,10 @@ def test_hosted_probe_requires_running_engines_not_only_complete_portfolio(
     cycle_errors["BTC-USD"] = 1
     degraded = probe_dashboard(base, require_running_markets=True)
     assert degraded[2].ok is False
-    assert degraded[2].detail == "market_engines_not_running"
+    assert degraded[2].detail == "market_engines_not_running:BTC-USD:RUNNING"
 
     cycle_errors["BTC-USD"] = 0
     statuses["GC=F"] = "STALE"
     stale = probe_dashboard(base, require_running_markets=True)
     assert stale[2].ok is False
-    assert stale[2].detail == "market_engines_not_running"
+    assert stale[2].detail == "market_engines_not_running:GC=F:STALE"
