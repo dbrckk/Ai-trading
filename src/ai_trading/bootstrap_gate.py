@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import isfinite
 
 from .bootstrap_robustness import BootstrapReport
 
@@ -25,6 +26,29 @@ def evaluate_bootstrap_gate(
 ) -> BootstrapGateResult:
     policy = policy or BootstrapGatePolicy()
     reasons: list[str] = []
+
+    if report.simulations < 100:
+        reasons.append("insufficient bootstrap simulations")
+
+    metrics = (
+        report.probability_positive,
+        report.probability_loss,
+        report.median_return,
+        report.lower_return,
+        report.upper_return,
+        report.median_max_drawdown,
+        report.upper_max_drawdown,
+    )
+    if not all(isfinite(value) for value in metrics):
+        reasons.append("non-finite bootstrap distribution")
+    elif not (
+        0.0 <= report.probability_positive <= 1.0
+        and 0.0 <= report.probability_loss <= 1.0
+        and report.probability_positive + report.probability_loss <= 1.0 + 1e-9
+        and report.lower_return <= report.median_return <= report.upper_return
+        and 0.0 <= report.median_max_drawdown <= report.upper_max_drawdown <= 1.0
+    ):
+        reasons.append("incoherent bootstrap distribution")
 
     if report.probability_positive < policy.min_probability_positive:
         reasons.append("bootstrap positive-return probability below threshold")
