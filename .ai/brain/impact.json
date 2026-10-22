@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "ac22f99aef5f8e9ddfa4954ebb0e40f4e80ded4b",
-  "head": "659f2bb4ddb99181e17f36840f495f48570e8418",
+  "base": "659f2bb4ddb99181e17f36840f495f48570e8418",
+  "head": "2b33e938f89616db85a937fac2a734561f5a3d72",
   "index_mode": "incremental",
   "changed_files": [
     {
@@ -10,46 +10,28 @@
       "status": "M"
     },
     {
-      "path": "src/ai_trading/bootstrap_gate.py",
+      "path": "src/ai_trading/regime_gate.py",
       "status": "M"
     },
     {
-      "path": "tests/test_bootstrap_gate.py",
+      "path": "tests/test_regime_gate.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "src/ai_trading/bootstrap_gate.py",
-    "tests/test_bootstrap_gate.py"
+    "src/ai_trading/regime_gate.py",
+    "tests/test_regime_gate.py"
   ],
   "impacted_files": [
-    "src/ai_trading/bootstrap_gate.py",
     "src/ai_trading/cli.py",
     "src/ai_trading/quantitative_artifact.py",
     "src/ai_trading/quantitative_qualification.py",
-    "tests/test_bootstrap_gate.py",
+    "src/ai_trading/regime_gate.py",
     "tests/test_quantitative_artifact.py",
+    "tests/test_regime_gate.py",
     "tests/test_reproducibility.py"
   ],
   "impacted_symbols": [
-    {
-      "name": "BootstrapGatePolicy",
-      "kind": "class",
-      "file": "src/ai_trading/bootstrap_gate.py",
-      "line": 10
-    },
-    {
-      "name": "BootstrapGateResult",
-      "kind": "class",
-      "file": "src/ai_trading/bootstrap_gate.py",
-      "line": 18
-    },
-    {
-      "name": "evaluate_bootstrap_gate",
-      "kind": "function",
-      "file": "src/ai_trading/bootstrap_gate.py",
-      "line": 23
-    },
     {
       "name": "self_test",
       "kind": "function",
@@ -351,22 +333,22 @@
       "line": 21
     },
     {
-      "name": "report",
-      "kind": "function",
-      "file": "tests/test_bootstrap_gate.py",
-      "line": 7
+      "name": "RegimeGatePolicy",
+      "kind": "class",
+      "file": "src/ai_trading/regime_gate.py",
+      "line": 10
     },
     {
-      "name": "test_bootstrap_gate_accepts_robust_distribution",
+      "name": "RegimeGateResult",
+      "kind": "class",
+      "file": "src/ai_trading/regime_gate.py",
+      "line": 17
+    },
+    {
+      "name": "evaluate_regime_gate",
       "kind": "function",
-      "file": "tests/test_bootstrap_gate.py",
+      "file": "src/ai_trading/regime_gate.py",
       "line": 26
-    },
-    {
-      "name": "test_bootstrap_gate_rejects_fragile_distribution",
-      "kind": "function",
-      "file": "tests/test_bootstrap_gate.py",
-      "line": 32
     },
     {
       "name": "_dataset",
@@ -391,6 +373,30 @@
       "kind": "function",
       "file": "tests/test_quantitative_artifact.py",
       "line": 58
+    },
+    {
+      "name": "test_regime_gate_accepts_balanced_regime_results",
+      "kind": "function",
+      "file": "tests/test_regime_gate.py",
+      "line": 6
+    },
+    {
+      "name": "test_regime_gate_rejects_fragile_regime_profile",
+      "kind": "function",
+      "file": "tests/test_regime_gate.py",
+      "line": 22
+    },
+    {
+      "name": "test_regime_gate_rejects_nan_return_instead_of_passing",
+      "kind": "function",
+      "file": "tests/test_regime_gate.py",
+      "line": 44
+    },
+    {
+      "name": "test_regime_gate_rejects_infinite_return_instead_of_passing",
+      "kind": "function",
+      "file": "tests/test_regime_gate.py",
+      "line": 57
     },
     {
       "name": "market",
@@ -430,8 +436,9 @@
     }
   ],
   "selected_tests": [
-    "tests/test_bootstrap_gate.py",
     "tests/test_quantitative_artifact.py",
+    "tests/test_regime.py",
+    "tests/test_regime_gate.py",
     "tests/test_reproducibility.py"
   ]
 }

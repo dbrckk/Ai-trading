@@ -3681,6 +3681,10 @@ result = evaluate_regime_gate(report)
 def test_regime_gate_rejects_fragile_regime_profile() -> None
 ⋮----
 result = evaluate_regime_gate(
+⋮----
+def test_regime_gate_rejects_nan_return_instead_of_passing() -> None
+⋮----
+def test_regime_gate_rejects_infinite_return_instead_of_passing() -> None
 ```
 
 ## File: test_regime_validation.py

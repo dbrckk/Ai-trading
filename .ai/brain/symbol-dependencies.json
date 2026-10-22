@@ -5,36 +5,48 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "BootstrapGatePolicy": {
+    "RegimeGatePolicy": {
       "source": {
-        "file": "src/ai_trading/bootstrap_gate.py",
+        "file": "src/ai_trading/regime_gate.py",
         "start": 10,
-        "end": 14
+        "end": 13
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "BootstrapGateResult": {
+    "RegimeGateResult": {
       "source": {
-        "file": "src/ai_trading/bootstrap_gate.py",
-        "start": 18,
-        "end": 20
+        "file": "src/ai_trading/regime_gate.py",
+        "start": 17,
+        "end": 23
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "evaluate_bootstrap_gate": {
+    "evaluate_regime_gate": {
       "source": {
-        "file": "src/ai_trading/bootstrap_gate.py",
-        "start": 23,
-        "end": 62
+        "file": "src/ai_trading/regime_gate.py",
+        "start": 26,
+        "end": 64
       },
       "symbol_dependencies": [
         {
-          "symbol": "BootstrapGatePolicy",
+          "symbol": "BacktestReport",
           "definitions": [
             {
-              "file": "src/ai_trading/bootstrap_gate.py",
+              "file": "src/ai_trading/backtest.py",
+              "line": 52,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RegimeGatePolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/regime_gate.py",
               "line": 10,
               "kind": "class",
               "language": "python"
@@ -43,46 +55,34 @@
           "relation": "same_file"
         },
         {
-          "symbol": "BootstrapGateResult",
+          "symbol": "RegimeGateResult",
           "definitions": [
             {
-              "file": "src/ai_trading/bootstrap_gate.py",
-              "line": 18,
+              "file": "src/ai_trading/regime_gate.py",
+              "line": 17,
               "kind": "class",
               "language": "python"
             }
           ],
           "relation": "same_file"
-        },
-        {
-          "symbol": "BootstrapReport",
-          "definitions": [
-            {
-              "file": "src/ai_trading/bootstrap_robustness.py",
-              "line": 18,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
         }
       ],
       "dependency_count": 3
     },
-    "report": {
+    "test_regime_gate_accepts_balanced_regime_results": {
       "source": {
-        "file": "tests/test_bootstrap_gate.py",
-        "start": 7,
-        "end": 23
+        "file": "tests/test_regime_gate.py",
+        "start": 6,
+        "end": 19
       },
       "symbol_dependencies": [
         {
-          "symbol": "BootstrapReport",
+          "symbol": "evaluate_regime_gate",
           "definitions": [
             {
-              "file": "src/ai_trading/bootstrap_robustness.py",
-              "line": 18,
-              "kind": "class",
+              "file": "src/ai_trading/regime_gate.py",
+              "line": 26,
+              "kind": "function",
               "language": "python"
             }
           ],
@@ -91,52 +91,18 @@
       ],
       "dependency_count": 1
     },
-    "test_bootstrap_gate_accepts_robust_distribution": {
+    "test_regime_gate_rejects_fragile_regime_profile": {
       "source": {
-        "file": "tests/test_bootstrap_gate.py",
-        "start": 26,
-        "end": 29
+        "file": "tests/test_regime_gate.py",
+        "start": 22,
+        "end": 41
       },
       "symbol_dependencies": [
         {
-          "symbol": "evaluate_bootstrap_gate",
+          "symbol": "RegimeGatePolicy",
           "definitions": [
             {
-              "file": "src/ai_trading/bootstrap_gate.py",
-              "line": 23,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "report",
-          "definitions": [
-            {
-              "file": "tests/test_bootstrap_gate.py",
-              "line": 7,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_bootstrap_gate_rejects_fragile_distribution": {
-      "source": {
-        "file": "tests/test_bootstrap_gate.py",
-        "start": 32,
-        "end": 66
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "BootstrapGatePolicy",
-          "definitions": [
-            {
-              "file": "src/ai_trading/bootstrap_gate.py",
+              "file": "src/ai_trading/regime_gate.py",
               "line": 10,
               "kind": "class",
               "language": "python"
@@ -145,31 +111,63 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "evaluate_bootstrap_gate",
+          "symbol": "evaluate_regime_gate",
           "definitions": [
             {
-              "file": "src/ai_trading/bootstrap_gate.py",
-              "line": 23,
+              "file": "src/ai_trading/regime_gate.py",
+              "line": 26,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        },
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_regime_gate_rejects_nan_return_instead_of_passing": {
+      "source": {
+        "file": "tests/test_regime_gate.py",
+        "start": 44,
+        "end": 54
+      },
+      "symbol_dependencies": [
         {
-          "symbol": "report",
+          "symbol": "evaluate_regime_gate",
           "definitions": [
             {
-              "file": "tests/test_bootstrap_gate.py",
-              "line": 7,
+              "file": "src/ai_trading/regime_gate.py",
+              "line": 26,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         }
       ],
-      "dependency_count": 3
+      "dependency_count": 1
+    },
+    "test_regime_gate_rejects_infinite_return_instead_of_passing": {
+      "source": {
+        "file": "tests/test_regime_gate.py",
+        "start": 57,
+        "end": 64
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "evaluate_regime_gate",
+          "definitions": [
+            {
+              "file": "src/ai_trading/regime_gate.py",
+              "line": 26,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
     }
   }
 }

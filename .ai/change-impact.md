@@ -1,12 +1,12 @@
 # Change impact
 
-Base: 414596442874677f43a0e1cfe05408cc22b7208e
-Head: 659f2bb4ddb99181e17f36840f495f48570e8418
+Base: 7dd08c47d739a69ed96822dd7840eecd660664a4
+Head: 2b33e938f89616db85a937fac2a734561f5a3d72
 
 ## Changed files
 - M README.md
-- M src/ai_trading/bootstrap_gate.py
-- M tests/test_bootstrap_gate.py
+- M src/ai_trading/regime_gate.py
+- M tests/test_regime_gate.py
 
 ## Affected areas
 - (root)
@@ -14,7 +14,7 @@ Head: 659f2bb4ddb99181e17f36840f495f48570e8418
 - tests
 
 ## Related test candidates
-- tests/test_bootstrap_gate.py
+- tests/test_regime_gate.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

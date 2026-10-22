@@ -12885,6 +12885,10 @@ result = evaluate_regime_gate(report)
 def test_regime_gate_rejects_fragile_regime_profile() -> None
 ⋮----
 result = evaluate_regime_gate(
+⋮----
+def test_regime_gate_rejects_nan_return_instead_of_passing() -> None
+⋮----
+def test_regime_gate_rejects_infinite_return_instead_of_passing() -> None
 ````
 
 ## File: tests/test_regime_validation.py
@@ -14510,6 +14514,12 @@ The predictive model cannot bypass the risk engine. A future live adapter must r
 - [ ] V4 — external live execution adapter (NautilusTrader or Lean)
 - [x] V5 — multi-asset portfolio allocation and portfolio-level risk
 - [x] V6 — guarded continuous learning, drift detection, rollback and resilience governance
+## Regime robustness validation
+
+Market-regime research rejects NaN and infinite regime returns before
+ranking worst regimes or checking return dispersion. Invalid results must
+not qualify a strategy. This is a research-only diagnostic; no broker,
+execution or risk-sizing configuration is changed.
 ````
 
 ## File: render.yaml

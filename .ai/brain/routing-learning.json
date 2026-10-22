@@ -2,25 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "feat: add atomic generation checkpoints for multiasset state and models",
-      "terms": [
-        "add",
-        "atomic",
-        "checkpoints",
-        "feat",
-        "generation",
-        "models",
-        "multiasset",
-        "state"
-      ],
-      "tests": [],
-      "useful": [
-        "src/ai_trading/multiasset_checkpoint.py",
-        "tests/test_multiasset_checkpoint.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "feat: wire atomic checkpoints into multiasset runtime",
       "terms": [
         "atomic",
@@ -1255,6 +1236,23 @@
       "useful": [
         "src/ai_trading/bootstrap_gate.py",
         "tests/test_bootstrap_gate.py"
+      ]
+    },
+    {
+      "rejected": [],
+      "task": "fix(research): reject non-finite market regime returns",
+      "terms": [
+        "market",
+        "non-finite",
+        "regime",
+        "reject",
+        "research",
+        "returns"
+      ],
+      "tests": [],
+      "useful": [
+        "src/ai_trading/regime_gate.py",
+        "tests/test_regime_gate.py"
       ]
     }
   ],
@@ -3224,6 +3222,7 @@
       "src/ai_trading/performance_metrics.py": 4,
       "src/ai_trading/persistence.py": 4,
       "src/ai_trading/postgres_persistence.py": 4,
+      "src/ai_trading/regime_gate.py": 4,
       "src/ai_trading/scheduler_endpoint.py": 8,
       "tests/test_dashboard_health.py": 4,
       "tests/test_dashboard_persistence.py": 4,
@@ -3237,6 +3236,7 @@
       "tests/test_paper_cycle_service.py": 4,
       "tests/test_performance_metrics.py": 4,
       "tests/test_postgres_persistence.py": 4,
+      "tests/test_regime_gate.py": 4,
       "tests/test_scheduler_endpoint.py": 8
     },
     "measured": {
@@ -3406,6 +3406,10 @@
     "net-of-cost": {
       "src/ai_trading/cost_stress_gate.py": 4,
       "tests/test_cost_stress_gate.py": 4
+    },
+    "non-finite": {
+      "src/ai_trading/regime_gate.py": 4,
+      "tests/test_regime_gate.py": 4
     },
     "non-profitable": {
       "src/ai_trading/cost_stress_gate.py": 4,
@@ -3936,12 +3940,18 @@
       "tests/test_dashboard.py": 4,
       "tests/test_multi_market.py": 4
     },
+    "regime": {
+      "src/ai_trading/regime_gate.py": 4,
+      "tests/test_regime_gate.py": 4
+    },
     "reject": {
       "src/ai_trading/bootstrap_gate.py": 4,
       "src/ai_trading/cost_stress_gate.py": 4,
+      "src/ai_trading/regime_gate.py": 4,
       "src/ai_trading/sensitivity_gate.py": 4,
       "tests/test_bootstrap_gate.py": 4,
       "tests/test_cost_stress_gate.py": 4,
+      "tests/test_regime_gate.py": 4,
       "tests/test_sensitivity_gate.py": 4
     },
     "render": {
@@ -4009,6 +4019,7 @@
       "src/ai_trading/operational_overview.py": 16,
       "src/ai_trading/paper_cycle.py": 12,
       "src/ai_trading/postgres_persistence.py": 4,
+      "src/ai_trading/regime_gate.py": 4,
       "src/ai_trading/research_model_codec.py": 4,
       "src/ai_trading/river_v2_shadow.py": 12,
       "src/ai_trading/runtime.py": 4,
@@ -4024,6 +4035,7 @@
       "tests/test_multi_market.py": 4,
       "tests/test_online.py": 8,
       "tests/test_paper_cycle.py": 16,
+      "tests/test_regime_gate.py": 4,
       "tests/test_sensitivity_gate.py": 4,
       "tests/test_shadow_challenger.py": 8,
       "tests/test_shadow_promotion_gate.py": 4,
@@ -4077,7 +4089,9 @@
     },
     "returns": {
       "src/ai_trading/benchmark_gate.py": 4,
-      "tests/test_benchmark_gate.py": 4
+      "src/ai_trading/regime_gate.py": 4,
+      "tests/test_benchmark_gate.py": 4,
+      "tests/test_regime_gate.py": 4
     },
     "review": {
       "src/ai_trading/dashboard.py": 8,

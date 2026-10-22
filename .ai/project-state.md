@@ -96,17 +96,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-22T00:47:12Z
+Generated: 2026-10-22T10:14:04Z
 
 ### Git
 - Branch: `main`
-- Head: `659f2bb4ddb9`
-- Commit date: 2026-10-21T20:47:02-04:00
-- Commit: fix(research): reject invalid bootstrap robustness evidence (#194)
+- Head: `2b33e938f896`
+- Commit date: 2026-10-22T06:13:53-04:00
+- Commit: fix(research): reject non-finite market regime returns
 - Tracked files: 513
 
 ### Recently changed files
 - `README.md`
+- `src/ai_trading/regime_gate.py`
+- `tests/test_regime_gate.py`
 - `src/ai_trading/bootstrap_gate.py`
 - `tests/test_bootstrap_gate.py`
 - `src/ai_trading/deployment_probe.py`
@@ -115,8 +117,6 @@ Generated: 2026-10-22T00:47:12Z
 - `tests/test_sensitivity_gate.py`
 - `src/ai_trading/benchmark_gate.py`
 - `tests/test_benchmark_gate.py`
-- `src/ai_trading/cost_stress_gate.py`
-- `tests/test_cost_stress_gate.py`
 
 ### Project signals
 - `pyproject.toml`
