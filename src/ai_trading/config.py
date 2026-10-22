@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from math import isfinite
 
 
 @dataclass(frozen=True)
@@ -10,6 +11,8 @@ class RiskConfig:
     min_confidence: float = 0.56
     transaction_cost_bps: float = 2.0
     slippage_bps: float = 1.0
+    # Optional same-direction turnover filter; disabled until backtested.
+    min_rebalance_fraction: float = 0.0
 
     def __post_init__(self) -> None:
         if self.starting_cash <= 0:
@@ -26,6 +29,8 @@ class RiskConfig:
             raise ValueError("min_confidence must be in [0, 1]")
         if self.transaction_cost_bps < 0 or self.slippage_bps < 0:
             raise ValueError("transaction costs and slippage must be non-negative")
+        if not isfinite(self.min_rebalance_fraction) or not 0.0 <= self.min_rebalance_fraction <= 1.0:
+            raise ValueError("min_rebalance_fraction must be finite and in [0, 1]")
 
 
 @dataclass(frozen=True)
