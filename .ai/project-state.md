@@ -6,6 +6,9 @@ Status: active
 
 ## Working
 
+- **2026-10-22 Gold/DAX/BTC turnover evaluation:** new read-only comparison of four optional paper rebalance thresholds (0, 0.1%, 0.25%, 0.5% of equity), with fees and slippage, market-history SHA, early purged walk-forward validation and later holdout. Research uses offline proxy, not hosted River-v1; no automatic activation. The initial GitHub action returned false success without running command due to missing module entrypoint; fixed `command_app.__main__` and made missing artifact/command fatal; recheck workflow. PR #196 merged, post-merge main CI and CodeQL green.
+
+
 - **2026-10-22 turnover research:** PR #195 merged after green CI and CodeQL. Added a disabled-by-default same-direction paper rebalance deadband to reduce simulated micro-order costs; preserved entries, flips and forced stop exits. The same broker is used by production paper runtime and walk-forward backtester, and per-market configuration can opt into the threshold. This remains unvalidated on actual multi-market paper returns; no live broker enabled.
 
 
