@@ -50,6 +50,7 @@ The content is organized as follows:
     paper-cycle.yml
     production-os-review-handoff.yml
     semantic-refresh.yml
+    turnover-research.yml
   dependabot.yml
 .serena/
   project.yml
@@ -234,6 +235,7 @@ src/
     temporal_cv.py
     trade_journal.py
     tuning.py
+    turnover_study.py
     watchdog_enforcer.py
     watchdog.py
     worker_monitor.py
@@ -1003,6 +1005,49 @@ jobs:
     uses: dbrckk/repo-brain/.github/workflows/reusable-semantic.yml@main
     with:
       commit_changes: true
+````
+
+## File: .github/workflows/turnover-research.yml
+````yaml
+name: Turnover Research
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/turnover-validation-study
+    paths:
+      - .github/workflows/turnover-research.yml
+
+permissions:
+  contents: read
+
+jobs:
+  validate-net-turnover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Install research dependencies
+        run: python -m pip install -e .
+      - name: Verify research command is registered
+        run: python -m ai_trading.command_app turnover-study --help
+      - name: Compare Gold, DAX and BTC on completed five-minute bars
+        run: |
+          python -m ai_trading.command_app turnover-study \
+            --symbols 'GC=F,^GDAXI,BTC-USD' \
+            --period 1mo --interval 5m --max-bars 1800 \
+            --output artifacts/turnover-study.json
+      - name: Preserve reproducible diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: turnover-study-diagnostic
+          path: artifacts/turnover-study.json
+          if-no-files-found: error
 ````
 
 ## File: .github/dependabot.yml
@@ -2163,6 +2208,21 @@ PAPER_CYCLE_POLL_SECONDS = 300.0
 settings = ProductionPaperCycleSettings(
 ⋮----
 result = run_production_paper_cycle(settings)
+⋮----
+"""Compare paper turnover thresholds offline; never change runtime settings."""
+⋮----
+names = tuple(s.strip() for s in symbols.split(",") if s.strip())
+⋮----
+results: list[dict[str, object]] = []
+failures: list[dict[str, str]] = []
+⋮----
+market = _completed_market_bars(
+result = compare_rebalance_thresholds(
+⋮----
+except Exception as exc:  # noqa: BLE001 - report missing provider evidence
+⋮----
+payload = {
+destination = Path(output)
 ````
 
 ## File: src/ai_trading/compute_budget.py
@@ -9359,6 +9419,61 @@ wf = WalkForwardConfig(
 report = WalkForwardBacktester(
 ````
 
+## File: src/ai_trading/turnover_study.py
+````python
+"""Read-only, chronological study of paper rebalance thresholds.
+
+This is an offline walk-forward *proxy* model, not the hosted River-v1 model.
+It must not automatically change paper configuration or enable live trading.
+"""
+⋮----
+DEFAULT_THRESHOLDS = (0.0, 0.001, 0.0025, 0.005)
+MIN_OOS_BARS = 240
+MIN_OOS_TRADES = 30
+MIN_FOLDS = 4
+MIN_RETURN_ADVANTAGE = 0.0005
+MAX_EXTRA_DRAWDOWN = 0.01
+⋮----
+def _segment_performance(equity: pd.Series) -> tuple[float, float]
+⋮----
+"""Total return and peak-to-trough drawdown for a chronological segment."""
+⋮----
+values = equity.astype(float)
+⋮----
+net_return = float(values.iloc[-1] / values.iloc[0] - 1.0)
+drawdown = float((1.0 - values / values.cummax()).max())
+⋮----
+"""Choose on early OOS validation, inspect untouched later OOS holdout.
+
+    All strategies see the same chronological bars and cost model. The
+    research model refits only on prior bars inside each purged WF fold.
+    Comparing the holdout after selecting on validation avoids selecting
+    thresholds based on a future period's returns.
+    """
+⋮----
+risk = risk_config or RiskConfig()
+model = model_config or ModelConfig()
+config = walk_forward_config or WalkForwardConfig(
+rows: list[dict[str, float | int]] = []
+reference_index: pd.Index | None = None
+split = 0
+⋮----
+scenario = replace(risk, min_rebalance_fraction=threshold)
+report = WalkForwardBacktester(
+equity = report.equity_curve
+⋮----
+reference_index = equity.index
+⋮----
+split = int((len(equity) - 1) * (1.0 - holdout_fraction))
+⋮----
+baseline = rows[0]
+enough_samples = (
+# Candidate choice uses ONLY validation returns, not holdout performance.
+candidates = [
+candidate = max(
+holdout_passed = bool(
+````
+
 ## File: src/ai_trading/watchdog_enforcer.py
 ````python
 @dataclass(frozen=True)
@@ -9603,6 +9718,23 @@ rebalances: list[tuple[int, float]] = []
 original_rebalance = PaperBroker.rebalance
 ⋮----
 def tracked_rebalance(self, side, target_notional, price)
+⋮----
+endpoints = {
+⋮----
+0.001: (109.0, 107.0),  # Best validation, bad later holdout
+0.005: (108.0, 116.0),  # Worse validation, attractive holdout
+⋮----
+def fake_backtest(self, market)
+⋮----
+equity = pd.Series(
+⋮----
+result = compare_rebalance_thresholds(
+⋮----
+better = self.risk_config.min_rebalance_fraction > 0.0
+first_end = 109.0 if better else 106.0
+last_end = 118.0 if better else 108.0
+⋮----
+def test_turnover_study_rejects_small_out_of_sample_history(monkeypatch) -> None
 ````
 
 ## File: tests/test_benchmark_gate.py
@@ -14570,6 +14702,33 @@ This is **not enabled by default** and must first demonstrate improvement in
 walk-forward net-of-cost performance across representative market conditions.
 A deadband can reduce fees but may also delay beneficial risk adjustments;
 there is no assurance it will improve PnL.
+
+## Gold, DAX and BTC turnover comparison (research only)
+
+Run a fee-inclusive, purged walk-forward comparison of the optional
+same-direction rebalance deadband without touching hosted paper settings:
+
+`python -m ai_trading.command_app turnover-study --symbols 'GC=F,^GDAXI,BTC-USD' --period 1mo --interval 5m --max-bars 1800 --output artifacts/turnover-study.json`
+
+The report compares thresholds 0%, 0.10%, 0.25% and 0.50% of equity
+using the same Yahoo Finance history, transaction costs and slippage
+per market. It records the market-history SHA-256, sample window,
+trade count, drawdown, and net returns for each threshold. A candidate
+is chosen **only on earlier out-of-sample validation bars**; a later
+out-of-sample holdout is reported separately. Insufficient evidence
+(under 240 out-of-sample bars, 30 transactions or 4 folds), unprofitable
+holdout returns, or excessive holdout drawdown prevents a positive
+review result. The report remains review-only even if its holdout check
+passes; this is not a statistically proven edge or an activation gate.
+
+The analysis uses the offline `WalkForwardBacktester` prediction model,
+**not the authoritative hosted River-v1 model**. Its results are only
+proxy evidence, not a production profit forecast. Yahoo history can
+change or fail to download; missing market data is explicitly reported,
+never silently replaced by fabricated numbers. A manual GitHub Action
+**Turnover Research** can run this comparison and retain a JSON
+diagnostic artifact. No runtime, Cloudflare scheduler, live broker or
+model-promotion setting is changed.
 ````
 
 ## File: render.yaml

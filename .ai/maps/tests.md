@@ -391,6 +391,23 @@ rebalances: list[tuple[int, float]] = []
 original_rebalance = PaperBroker.rebalance
 ⋮----
 def tracked_rebalance(self, side, target_notional, price)
+⋮----
+endpoints = {
+⋮----
+0.001: (109.0, 107.0),  # Best validation, bad later holdout
+0.005: (108.0, 116.0),  # Worse validation, attractive holdout
+⋮----
+def fake_backtest(self, market)
+⋮----
+equity = pd.Series(
+⋮----
+result = compare_rebalance_thresholds(
+⋮----
+better = self.risk_config.min_rebalance_fraction > 0.0
+first_end = 109.0 if better else 106.0
+last_end = 118.0 if better else 108.0
+⋮----
+def test_turnover_study_rejects_small_out_of_sample_history(monkeypatch) -> None
 ```
 
 ## File: test_benchmark_gate.py

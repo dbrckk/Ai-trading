@@ -470,6 +470,7 @@
         "src/ai_trading/risk.py",
         "src/ai_trading/runtime.py",
         "src/ai_trading/tuning.py",
+        "src/ai_trading/turnover_study.py",
         "tests/test_backtest.py",
         "tests/test_backtest_ensemble.py",
         "tests/test_broker.py",
@@ -489,7 +490,7 @@
         "tests/test_runtime_persistence.py",
         "tests/test_runtime_targeted_step.py"
       ],
-      "in_degree": 33,
+      "in_degree": 34,
       "out_degree": 0,
       "path": "src/ai_trading/config.py"
     },
@@ -865,6 +866,36 @@
     },
     {
       "dependencies": [
+        "src/ai_trading/broker.py",
+        "src/ai_trading/config.py",
+        "src/ai_trading/ensemble.py",
+        "src/ai_trading/features.py",
+        "src/ai_trading/model.py",
+        "src/ai_trading/performance.py",
+        "src/ai_trading/regime.py",
+        "src/ai_trading/risk.py"
+      ],
+      "dependents": [
+        "src/ai_trading/benchmark_gate.py",
+        "src/ai_trading/cli.py",
+        "src/ai_trading/continuous.py",
+        "src/ai_trading/cost_stress.py",
+        "src/ai_trading/orchestrator.py",
+        "src/ai_trading/parameter_sensitivity.py",
+        "src/ai_trading/regime_gate.py",
+        "src/ai_trading/tuning.py",
+        "src/ai_trading/turnover_study.py",
+        "tests/test_backtest.py",
+        "tests/test_backtest_ensemble.py",
+        "tests/test_cost_stress.py",
+        "tests/test_research_config_validation.py"
+      ],
+      "in_degree": 13,
+      "out_degree": 8,
+      "path": "src/ai_trading/backtest.py"
+    },
+    {
+      "dependencies": [
         "src/ai_trading/data.py",
         "src/ai_trading/data_quality.py",
         "src/ai_trading/features.py",
@@ -892,35 +923,6 @@
       "in_degree": 12,
       "out_degree": 9,
       "path": "src/ai_trading/paper_cycle.py"
-    },
-    {
-      "dependencies": [
-        "src/ai_trading/broker.py",
-        "src/ai_trading/config.py",
-        "src/ai_trading/ensemble.py",
-        "src/ai_trading/features.py",
-        "src/ai_trading/model.py",
-        "src/ai_trading/performance.py",
-        "src/ai_trading/regime.py",
-        "src/ai_trading/risk.py"
-      ],
-      "dependents": [
-        "src/ai_trading/benchmark_gate.py",
-        "src/ai_trading/cli.py",
-        "src/ai_trading/continuous.py",
-        "src/ai_trading/cost_stress.py",
-        "src/ai_trading/orchestrator.py",
-        "src/ai_trading/parameter_sensitivity.py",
-        "src/ai_trading/regime_gate.py",
-        "src/ai_trading/tuning.py",
-        "tests/test_backtest.py",
-        "tests/test_backtest_ensemble.py",
-        "tests/test_cost_stress.py",
-        "tests/test_research_config_validation.py"
-      ],
-      "in_degree": 12,
-      "out_degree": 8,
-      "path": "src/ai_trading/backtest.py"
     },
     {
       "dependencies": [
@@ -1895,8 +1897,8 @@
       "path": "src/ai_trading/model_quarantine.py"
     }
   ],
-  "edge_count": 2048,
+  "edge_count": 2056,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 366,
+  "node_count": 367,
   "schema_version": 1
 }

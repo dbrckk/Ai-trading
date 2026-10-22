@@ -105,17 +105,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-22T10:24:20Z
+Generated: 2026-10-22T11:07:43Z
 
 ### Git
 - Branch: `main`
-- Head: `cfe170789409`
-- Commit date: 2026-10-22T06:24:08-04:00
-- Commit: feat(paper): add optional low-turnover rebalance buffer for net cost research
-- Tracked files: 513
+- Head: `2cf14ca39109`
+- Commit date: 2026-10-22T07:07:32-04:00
+- Commit: feat(research): compare Gold DAX BTC turnover thresholds with fee-inclusive OOS holdout
+- Tracked files: 515
 
 ### Recently changed files
+- `.github/workflows/turnover-research.yml`
 - `README.md`
+- `src/ai_trading/command_app.py`
+- `src/ai_trading/turnover_study.py`
+- `tests/test_backtest.py`
 - `src/ai_trading/broker.py`
 - `src/ai_trading/config.py`
 - `src/ai_trading/execution_costs.py`
@@ -127,8 +131,6 @@ Generated: 2026-10-22T10:24:20Z
 - `tests/test_bootstrap_gate.py`
 - `src/ai_trading/deployment_probe.py`
 - `tests/test_dashboard_health.py`
-- `src/ai_trading/sensitivity_gate.py`
-- `tests/test_sensitivity_gate.py`
 
 ### Project signals
 - `pyproject.toml`

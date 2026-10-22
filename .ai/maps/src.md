@@ -210,6 +210,7 @@ ai_trading/
   temporal_cv.py
   trade_journal.py
   tuning.py
+  turnover_study.py
   watchdog_enforcer.py
   watchdog.py
   worker_monitor.py
@@ -1268,6 +1269,21 @@ PAPER_CYCLE_POLL_SECONDS = 300.0
 settings = ProductionPaperCycleSettings(
 ⋮----
 result = run_production_paper_cycle(settings)
+⋮----
+"""Compare paper turnover thresholds offline; never change runtime settings."""
+⋮----
+names = tuple(s.strip() for s in symbols.split(",") if s.strip())
+⋮----
+results: list[dict[str, object]] = []
+failures: list[dict[str, str]] = []
+⋮----
+market = _completed_market_bars(
+result = compare_rebalance_thresholds(
+⋮----
+except Exception as exc:  # noqa: BLE001 - report missing provider evidence
+⋮----
+payload = {
+destination = Path(output)
 ```
 
 ## File: ai_trading/compute_budget.py
@@ -8462,6 +8478,61 @@ risk = RiskConfig(
 model = ModelConfig(
 wf = WalkForwardConfig(
 report = WalkForwardBacktester(
+```
+
+## File: ai_trading/turnover_study.py
+```python
+"""Read-only, chronological study of paper rebalance thresholds.
+
+This is an offline walk-forward *proxy* model, not the hosted River-v1 model.
+It must not automatically change paper configuration or enable live trading.
+"""
+⋮----
+DEFAULT_THRESHOLDS = (0.0, 0.001, 0.0025, 0.005)
+MIN_OOS_BARS = 240
+MIN_OOS_TRADES = 30
+MIN_FOLDS = 4
+MIN_RETURN_ADVANTAGE = 0.0005
+MAX_EXTRA_DRAWDOWN = 0.01
+⋮----
+def _segment_performance(equity: pd.Series) -> tuple[float, float]
+⋮----
+"""Total return and peak-to-trough drawdown for a chronological segment."""
+⋮----
+values = equity.astype(float)
+⋮----
+net_return = float(values.iloc[-1] / values.iloc[0] - 1.0)
+drawdown = float((1.0 - values / values.cummax()).max())
+⋮----
+"""Choose on early OOS validation, inspect untouched later OOS holdout.
+
+    All strategies see the same chronological bars and cost model. The
+    research model refits only on prior bars inside each purged WF fold.
+    Comparing the holdout after selecting on validation avoids selecting
+    thresholds based on a future period's returns.
+    """
+⋮----
+risk = risk_config or RiskConfig()
+model = model_config or ModelConfig()
+config = walk_forward_config or WalkForwardConfig(
+rows: list[dict[str, float | int]] = []
+reference_index: pd.Index | None = None
+split = 0
+⋮----
+scenario = replace(risk, min_rebalance_fraction=threshold)
+report = WalkForwardBacktester(
+equity = report.equity_curve
+⋮----
+reference_index = equity.index
+⋮----
+split = int((len(equity) - 1) * (1.0 - holdout_fraction))
+⋮----
+baseline = rows[0]
+enough_samples = (
+# Candidate choice uses ONLY validation returns, not holdout performance.
+candidates = [
+candidate = max(
+holdout_passed = bool(
 ```
 
 ## File: ai_trading/watchdog_enforcer.py

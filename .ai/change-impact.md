@@ -1,24 +1,23 @@
 # Change impact
 
-Base: f53d2929aafc161f2ee00e7fd6ea59622fc32637
-Head: cfe170789409b0020ce21b9475054b58a9eda405
+Base: 4d610c7c7a1ab38bb950fa852c2c11495dd5abd8
+Head: 2cf14ca3910982b7ca3367f843798879ea4ec82f
 
 ## Changed files
+- A .github/workflows/turnover-research.yml
 - M README.md
-- M src/ai_trading/broker.py
-- M src/ai_trading/config.py
-- M src/ai_trading/execution_costs.py
-- M tests/test_broker.py
-- M tests/test_execution_costs.py
+- M src/ai_trading/command_app.py
+- A src/ai_trading/turnover_study.py
+- M tests/test_backtest.py
 
 ## Affected areas
+- .github
 - (root)
 - src
 - tests
 
 ## Related test candidates
-- tests/test_broker.py
-- tests/test_execution_costs.py
+- No direct filename-based test match detected.
 
 ## Agent guidance
 - Read this file before broad repository exploration.
