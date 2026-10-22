@@ -6,6 +6,9 @@ Status: active
 
 ## Working
 
+- **2026-10-22**: PR #192 merged profitable/finite parameter sensitivity gate; duplicate #191 closed without merge, though its CI/CodeQL were green. PR #194 merged bootstrap validity checks. This branch rejects non-finite market regime returns before worst-regime ranking or dispersion calculation. No live trading changes.
+
+
 - **2026-10-22 bootstrap research validation:** PR #192 already merged the positive-net-return parameter sensitivity safeguard; duplicate #191 closed. PR #193 merged bounded retries for transient hosted probe connections, with green hosted probe and CI. This branch requires bootstrap reports to contain finite, internally coherent probability and quantile evidence from at least 100 simulations; previous NaN/Inf values could silently evade comparisons. Research-only validation; live broker stays OFF.
 
 
