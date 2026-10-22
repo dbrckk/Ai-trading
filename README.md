@@ -462,6 +462,21 @@ not qualify a strategy. This is a research-only diagnostic; no broker,
 execution or risk-sizing configuration is changed.
 
 
+## Execution-cost attribution research
+
+The read-only `turnover-study` comparison additionally reruns the **baseline
+(0% turnover deadband)** with the same chronological walk-forward configuration
+but zero modeled transaction costs and slippage. Its JSON
+`baseline_cost_sensitivity` section reports zero-cost validation/holdout/full
+returns, the corresponding differences versus the fee-inclusive baseline,
+and whether the strategy was positive only in this hypothetical zero-cost
+setting. The difference is **not** an exact fee ledger: altered portfolio
+equity can affect subsequent position sizing and risk decisions.
+
+This diagnostic distinguishes an execution-friction sensitivity problem from
+an already-unprofitable zero-cost proxy. It does not validate the hosted
+River-v1 model, authorize parameter changes, or guarantee profits.
+
 ## Experimental turnover control (paper trading only)
 
 Excessive small same-direction rebalances can consume paper PnL through
