@@ -108,16 +108,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-22T11:07:43Z
+Generated: 2026-10-22T16:26:53Z
 
 ### Git
 - Branch: `main`
-- Head: `2cf14ca39109`
-- Commit date: 2026-10-22T07:07:32-04:00
-- Commit: feat(research): compare Gold DAX BTC turnover thresholds with fee-inclusive OOS holdout
+- Head: `88e8cf64d714`
+- Commit date: 2026-10-22T12:26:41-04:00
+- Commit: fix(probe): identify unhealthy market engines in safe hosted probe output
 - Tracked files: 515
 
 ### Recently changed files
+- `src/ai_trading/deployment_probe.py`
+- `tests/test_dashboard_health.py`
 - `.github/workflows/turnover-research.yml`
 - `README.md`
 - `src/ai_trading/command_app.py`
@@ -132,8 +134,6 @@ Generated: 2026-10-22T11:07:43Z
 - `tests/test_regime_gate.py`
 - `src/ai_trading/bootstrap_gate.py`
 - `tests/test_bootstrap_gate.py`
-- `src/ai_trading/deployment_probe.py`
-- `tests/test_dashboard_health.py`
 
 ### Project signals
 - `pyproject.toml`

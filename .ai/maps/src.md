@@ -2181,7 +2181,18 @@ by_symbol = {
 running = portfolio.get("running_markets") == len(expected)
 engines = all(
 valid = running and engines
-detail = "three_markets_running" if valid else "market_engines_not_running"
+⋮----
+detail = "three_markets_running"
+⋮----
+# Only fixed, expected symbols and sanitized states enter CI logs.
+# Identify which engine failed without exposing arbitrary API data.
+safe_states = {"RUNNING", "STARTING", "STALE", "ERROR", "OFF", "UNKNOWN"}
+failures = []
+⋮----
+overview = by_symbol[symbol].get("overview")
+status = (
+state = status if isinstance(status, str) and status in safe_states else "UNKNOWN"
+errors = (
 ⋮----
 detail = "three_market_cards_available"
 ⋮----

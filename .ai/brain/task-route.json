@@ -4,17 +4,37 @@
     "expand_to": 12,
     "max_files": 6,
     "requested_max_files": 12,
-    "score_margin": 0,
+    "score_margin": 9,
     "tier": "bounded",
-    "top_score": 17
+    "top_score": 26
   },
   "cache": {
-    "fingerprint": "390645fbd468b736216b9382d16870e5ee0415c9844ff513d03f2157dd2ea48c",
+    "fingerprint": "d1ddb787c80f85be503ad6497b726bd46a26dcf9c5ce7ff4b0fe8f0b76d89941",
     "hit": false
   },
-  "candidate_count": 15,
+  "candidate_count": 11,
   "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
   "files": [
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "engine"
+      ],
+      "path": "src/ai_trading/deployment_probe.py",
+      "reasons": [
+        "impact",
+        "recently-changed",
+        "search-index"
+      ],
+      "score": 26,
+      "symbols": [
+        "ProbeCheck",
+        "_fetch_json",
+        "_probe_endpoint",
+        "main",
+        "probe_dashboard"
+      ]
+    },
     {
       "learning_score": 0,
       "matched_terms": [
@@ -128,31 +148,31 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/engine.py",
-      "reasons": [],
-      "score": 10,
-      "symbols": [
-        "RunResult",
-        "TradingEngine",
-        "__init__",
-        "paper_run",
-        "train"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "engine"
+      "path": "tests/test_dashboard_health.py",
+      "reasons": [
+        "impact",
+        "recently-changed"
       ],
-      "path": "src/ai_trading/stress_engine.py",
-      "reasons": [],
-      "score": 10,
+      "score": 13,
       "symbols": [
-        "StressPolicy",
-        "StressReport",
-        "StressScenario",
-        "_stressed_covariance",
-        "run_stress_test"
+        "FakeResponse",
+        "__enter__",
+        "__exit__",
+        "_free_port",
+        "_get",
+        "_start_dashboard",
+        "fail_request",
+        "fake_urlopen",
+        "read",
+        "test_api_status_reports_stale_worker_without_hiding_web_health",
+        "test_dashboard_marks_expired_worker_heartbeat_stale",
+        "test_external_probe_checks_live_ready_and_all_markets",
+        "test_external_probe_reports_connection_errors_without_exposing_details",
+        "test_external_scheduler_readiness_detects_missing_configuration",
+        "test_healthz_keeps_web_liveness_separate_from_engine_health",
+        "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
+        "test_probe_rejects_market_cards_with_broken_portfolio",
+        "test_render_blueprint_declares_external_runtime_and_secret_inputs"
       ]
     }
   ],
