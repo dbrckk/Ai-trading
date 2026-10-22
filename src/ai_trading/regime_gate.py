@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import isfinite
 
 from .backtest import BacktestReport
 
@@ -32,6 +33,17 @@ def evaluate_regime_gate(
 
     if len(returns) < policy.min_observed_regimes:
         reasons.append("insufficient regime coverage")
+
+    if any(not isfinite(value) for value in returns.values()):
+        reasons.append("non-finite regime return")
+        return RegimeGateResult(
+            passed=False,
+            observed_regimes=len(returns),
+            worst_regime=None,
+            worst_return=None,
+            return_spread=0.0,
+            reasons=tuple(reasons),
+        )
 
     worst_regime = min(returns, key=returns.get) if returns else None
     worst_return = returns[worst_regime] if worst_regime is not None else None
