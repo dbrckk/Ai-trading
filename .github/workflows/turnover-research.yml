@@ -1,0 +1,37 @@
+name: Turnover Research
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/turnover-validation-study
+    paths:
+      - .github/workflows/turnover-research.yml
+
+permissions:
+  contents: read
+
+jobs:
+  validate-net-turnover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Install research dependencies
+        run: python -m pip install -e .
+      - name: Compare Gold, DAX and BTC on completed five-minute bars
+        run: |
+          python -m ai_trading.command_app turnover-study \
+            --symbols 'GC=F,^GDAXI,BTC-USD' \
+            --period 1mo --interval 5m --max-bars 1800 \
+            --output artifacts/turnover-study.json
+      - name: Preserve reproducible diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: turnover-study-diagnostic
+          path: artifacts/turnover-study.json
+          if-no-files-found: warn
