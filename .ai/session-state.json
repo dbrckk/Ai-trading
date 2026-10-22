@@ -2,9 +2,9 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "feat/paper-rebalance-deadband-research",
+  "active_branch": "feat/turnover-validation-study",
   "pull_request": null,
-  "focus": "PR #195 merged with green CI/CodeQL (market-regime NaN/Inf fail-closed). Experimental opt-in paper/backtest same-side rebalance deadband reduces tiny, cost-incurring adjustments, without suppressing initial entries, flips or stop exits; disabled by default pending out-of-sample net-of-cost evidence.",
+  "focus": "Develop read-only Gold/DAX/BTC cost-aware paper rebalance threshold comparison. Four thresholds, matching bars/fees, purged walk-forward offline proxy, candidate selected on early OOS validation and checked once against later holdout. No auto activation, no River-v1 replacement or live broker. Turnover Research workflow initially falsely green without module entrypoint/artifact; corrected CLI __main__ and strict artifact verification, now rerun.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -129,7 +129,8 @@
     "PR #183 merged 2026-10-21 b966ed8: read-only 30 known paper fill/95% PnL coverage diagnostic; PR CI/CodeQL green. This counts paper fill events, not independent completed trades.",
     "PR #184 merged 2026-10-21 3c8f77e: hard drawdown/daily-loss/equity-exhaustion risk stops now flatten existing simulated long/short exposures at next eligible bar, with costs and corresponding backtest behavior. CI/CodeQL green.",
     "PR #185 merged 2026-10-21 876a5f1: research-only cost-stress gate requires positive absolute modeled net return, finite metrics and at least one execution; green CI/CodeQL.",
-    "PR #186 merged 2026-10-21 5931a3a: dashboard portfolio and Gold/DAX/BTC cards show allocation-adjusted net realized paper PnL, known fill coverage and PRELIMINARY/DATA MINIMUM sample labels; PR CI/CodeQL green."
+    "PR #186 merged 2026-10-21 5931a3a: dashboard portfolio and Gold/DAX/BTC cards show allocation-adjusted net realized paper PnL, known fill coverage and PRELIMINARY/DATA MINIMUM sample labels; PR CI/CodeQL green.",
+    "2026-10-22: PR #196 merged disabled-by-default rebalance deadband; post-merge CI and CodeQL green. New turnover study compares four thresholds on purged chronological walk-forward validation and later OOS holdout per Gold/DAX/BTC with recorded data SHA and net costs, research only."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -138,8 +139,9 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Validate deadband feature PR CI/CodeQL; merge only on green.",
-    "Backtest 0 vs nonzero turnover threshold separately on Gold/DAX/BTC after costs and across market regimes; retain disabled default until evidence.",
-    "Inspect hosted three-market health and paper PnL coverage, confirm deployed SHA separately from strict probe."
+    "Check the strict Turnover Research GitHub Action actually creates JSON and inspect each of Gold, DAX, BTC results or provider failures.",
+    "Open PR and verify CI plus CodeQL; fix any failures before merging.",
+    "If no statistically adequate positive holdout evidence, keep turnover threshold disabled; do not claim improved profit.",
+    "Verify latest strict hosted probe and no unintended scheduler effect."
   ]
 }
