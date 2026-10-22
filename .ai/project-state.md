@@ -6,7 +6,9 @@ Status: active
 
 ## Working
 
-- **2026-10-22 turnover research:** PR #195 merged after green CI and CodeQL. Added a disabled-by-default same-direction paper rebalance deadband to reduce simulated micro-order costs; preserved entries, flips and forced stop exits. The same broker is used by production paper runtime and walk-forward backtester, and per-market configuration can opt into the threshold. This remains unvalidated on actual multi-market paper returns; no live broker enabled.\n\n
+- **2026-10-22 turnover research:** PR #195 merged after green CI and CodeQL. Added a disabled-by-default same-direction paper rebalance deadband to reduce simulated micro-order costs; preserved entries, flips and forced stop exits. The same broker is used by production paper runtime and walk-forward backtester, and per-market configuration can opt into the threshold. This remains unvalidated on actual multi-market paper returns; no live broker enabled.
+
+
 - **2026-10-22**: PR #192 merged profitable/finite parameter sensitivity gate; duplicate #191 closed without merge, though its CI/CodeQL were green. PR #194 merged bootstrap validity checks. This branch rejects non-finite market regime returns before worst-regime ranking or dispersion calculation. No live trading changes.
 
 
