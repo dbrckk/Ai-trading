@@ -227,3 +227,78 @@ def test_turnover_study_rejects_small_out_of_sample_history(monkeypatch) -> None
     assert result["sample_sufficient"] is False
     assert result["validation_selected_threshold"] is None
     assert result["holdout_passed"] is False
+
+
+def test_turnover_study_reports_zero_cost_counterfactual_without_promoting(
+    monkeypatch,
+) -> None:
+    from types import SimpleNamespace
+
+    from ai_trading.turnover_study import compare_rebalance_thresholds
+
+    calls: list[tuple[float, float, float]] = []
+
+    def fake_backtest(self, market):
+        config = self.risk_config
+        calls.append((
+            config.min_rebalance_fraction,
+            config.transaction_cost_bps,
+            config.slippage_bps,
+        ))
+        endpoint = (
+            112.0
+            if config.transaction_cost_bps == 0 and config.slippage_bps == 0
+            else 98.0
+        )
+        equity = pd.Series(
+            np.linspace(100.0, endpoint, len(market)),
+            index=market.index,
+        )
+        return SimpleNamespace(equity_curve=equity, trades=45, folds=5)
+
+    monkeypatch.setattr(WalkForwardBacktester, "run", fake_backtest)
+    study = compare_rebalance_thresholds(
+        "GC=F",
+        sample_market(500),
+        thresholds=(0.0, 0.005),
+    )
+
+    diagnostic = study["baseline_cost_sensitivity"]
+    assert diagnostic["classification"] == "positive_zero_cost_counterfactual_only"
+    assert diagnostic["zero_cost_full_return"] == pytest.approx(0.12)
+    assert study["trials"][0]["full_net_return"] == pytest.approx(-0.02)
+    assert diagnostic["modeled_full_return_gap"] == pytest.approx(0.14)
+    assert diagnostic["exact_paid_fees"] is False
+    assert calls == [(0.0, 2.0, 1.0), (0.005, 2.0, 1.0), (0.0, 0.0, 0.0)]
+    assert study["auto_enable"] is False
+
+
+def test_turnover_study_does_not_repeat_frictionless_backtest(monkeypatch) -> None:
+    from types import SimpleNamespace
+
+    from ai_trading.turnover_study import compare_rebalance_thresholds
+
+    calls = 0
+
+    def fake_backtest(self, market):
+        nonlocal calls
+        calls += 1
+        equity = pd.Series(
+            np.linspace(100.0, 99.0, len(market)),
+            index=market.index,
+        )
+        return SimpleNamespace(equity_curve=equity, trades=45, folds=5)
+
+    monkeypatch.setattr(WalkForwardBacktester, "run", fake_backtest)
+    study = compare_rebalance_thresholds(
+        "BTC-USD",
+        sample_market(500),
+        risk_config=RiskConfig(transaction_cost_bps=0.0, slippage_bps=0.0),
+        thresholds=(0.0, 0.001),
+    )
+
+    assert calls == 2
+    diagnostic = study["baseline_cost_sensitivity"]
+    assert diagnostic["classification"] == "nonpositive_even_without_modeled_costs"
+    assert diagnostic["modeled_full_return_gap"] == pytest.approx(0.0)
+    assert diagnostic["modeled_holdout_return_gap"] == pytest.approx(0.0)
