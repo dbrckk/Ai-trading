@@ -6,6 +6,9 @@ Status: active
 
 ## Working
 
+- **2026-10-22 hosted incident:** probe #39789764311 passed /livez and /readyz but failed strict Gold/DAX/BTC engine health; requested one diagnostic rerun to distinguish transient from persistent issue. This branch adds sanitized per-symbol status to future strict probe failure logs; it does not weaken health checks, touch scheduler/order execution, or change paper risk. The turnover study #197 found no profitable alternative and the default remains unchanged.
+
+
 
 - **2026-10-22 confirmed research result:** GitHub run #39767234077 produced downloadable JSON artifact #12421490257 after correcting the command entrypoint. Each market: 1,800 5m candles; 1,516 OOS evaluations; 7 folds; costs 2bp plus 1bp slippage. Baseline net total return Gold -0.19833% (205 fills), DAX -0.24241% (238), BTC -0.36508% (273). Variants 0.1%/0.25%/0.5% of equity all remained net negative; selected validation threshold null for all three; holdout check false. Evidence covers short market windows and the offline proxy, not actual hosted River-v1 profitability. Keep the deadband OFF; do not infer profit improvement.
 

@@ -122,7 +122,33 @@ def _probe_endpoint(
                 for symbol in expected
             )
             valid = running and engines
-            detail = "three_markets_running" if valid else "market_engines_not_running"
+            if valid:
+                detail = "three_markets_running"
+            else:
+                # Only fixed, expected symbols and sanitized states enter CI logs.
+                # Identify which engine failed without exposing arbitrary API data.
+                safe_states = {"RUNNING", "STARTING", "STALE", "ERROR", "OFF", "UNKNOWN"}
+                failures = []
+                for symbol in sorted(expected):
+                    overview = by_symbol[symbol].get("overview")
+                    status = (
+                        overview.get("engine_status")
+                        if isinstance(overview, dict)
+                        else None
+                    )
+                    state = status if isinstance(status, str) and status in safe_states else "UNKNOWN"
+                    errors = (
+                        overview.get("consecutive_cycle_errors")
+                        if isinstance(overview, dict)
+                        else None
+                    )
+                    if state != "RUNNING" or errors != 0:
+                        failures.append(f"{symbol}:{state}")
+                detail = (
+                    "market_engines_not_running:" + ",".join(failures)
+                    if failures
+                    else "market_running_count_mismatch"
+                )
         else:
             detail = "three_market_cards_available"
     return ProbeCheck(endpoint, valid, detail)

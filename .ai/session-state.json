@@ -2,9 +2,9 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "feat/turnover-validation-study",
-  "pull_request": 197,
-  "focus": "PR #197 compares 0/0.1/0.25/0.5% paper rebalance deadbands on completed 5m Yahoo Gold, DAX and BTC data using offline purged walk-forward, earlier validation / later holdout. Real GitHub Action #39767234077 passed after fixing false-green CLI, published JSON artifact #12421490257: baseline net returns Gold -0.19833%, DAX -0.24241%, BTC -0.36508%; all selected thresholds null and holdout_passed false. No profit advantage demonstrated; 1800 bars each, 1516 OOS, 7 folds; offline proxy NOT River-v1. CI/CodeQL PR checks pending (CodeQL success observed). No production changes.",
+  "active_branch": "fix/probe-market-engine-diagnostics",
+  "pull_request": null,
+  "focus": "PR #197 merged: offline Gold/DAX/BTC turnover study found no profitable threshold, keep disabled. Hosted probe run 39789764311 at 13:47Z passed /livez and /readyz but failed strict engine check. Rerun requested to determine whether transient; add sanitized per-symbol diagnostic to strict probe so future incidents identify impacted engines without exposing arbitrary API fields.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -158,9 +158,8 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Get PR #197 green CI/CodeQL, merge only then verify main checks.",
-    "Preserve baseline 0% paper turnover threshold; no data-supported positive holdout in short 5m study.",
-    "Compare frictionless versus fee-inclusive OOS results to estimate whether cost drag or weak directional edge dominates, still research only.",
-    "Collect enough real River-v1 paper PnL per market before any live or exposure increase."
+    "Review rerun of hosted probe 39789764311; if still failing, investigate paper scheduler, runtime heartbeat and per-market errors before tuning.",
+    "Validate diagnostic PR CI/CodeQL and merge only on green.",
+    "Do not enable turnover deadband, River-v2 or live broker without demonstrated evidence."
   ]
 }
