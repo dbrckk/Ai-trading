@@ -478,3 +478,30 @@ This is **not enabled by default** and must first demonstrate improvement in
 walk-forward net-of-cost performance across representative market conditions.
 A deadband can reduce fees but may also delay beneficial risk adjustments;
 there is no assurance it will improve PnL.
+
+## Gold, DAX and BTC turnover comparison (research only)
+
+Run a fee-inclusive, purged walk-forward comparison of the optional
+same-direction rebalance deadband without touching hosted paper settings:
+
+`python -m ai_trading.command_app turnover-study --symbols 'GC=F,^GDAXI,BTC-USD' --period 1mo --interval 5m --max-bars 1800 --output artifacts/turnover-study.json`
+
+The report compares thresholds 0%, 0.10%, 0.25% and 0.50% of equity
+using the same Yahoo Finance history, transaction costs and slippage
+per market. It records the market-history SHA-256, sample window,
+trade count, drawdown, and net returns for each threshold. A candidate
+is chosen **only on earlier out-of-sample validation bars**; a later
+out-of-sample holdout is reported separately. Insufficient evidence
+(under 240 out-of-sample bars, 30 transactions or 4 folds), unprofitable
+holdout returns, or excessive holdout drawdown prevents a positive
+review result. The report remains review-only even if its holdout check
+passes; this is not a statistically proven edge or an activation gate.
+
+The analysis uses the offline `WalkForwardBacktester` prediction model,
+**not the authoritative hosted River-v1 model**. Its results are only
+proxy evidence, not a production profit forecast. Yahoo history can
+change or fail to download; missing market data is explicitly reported,
+never silently replaced by fabricated numbers. A manual GitHub Action
+**Turnover Research** can run this comparison and retain a JSON
+diagnostic artifact. No runtime, Cloudflare scheduler, live broker or
+model-promotion setting is changed.
