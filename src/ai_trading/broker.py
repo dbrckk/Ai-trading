@@ -49,6 +49,16 @@ class PaperBroker:
             raise ValueError("target_notional must be finite and non-negative")
         self.mark(price)
         signed_target_notional = 0.0 if side == 0 else side * target_notional
+        # Ignore only small, same-direction adjustments when explicitly enabled.
+        # Always execute initial entries, flips and full exits (including hard stops).
+        current_notional = self.state.units * price
+        minimum_turnover = self.state.equity * self.config.min_rebalance_fraction
+        if (
+            minimum_turnover > 0.0
+            and current_notional * signed_target_notional > 0.0
+            and abs(signed_target_notional - current_notional) < minimum_turnover
+        ):
+            signed_target_notional = current_notional
         fill = calculate_rebalance_fill(
             current_units=self.state.units,
             current_average_entry_price=self.state.average_entry_price,
