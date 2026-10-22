@@ -460,3 +460,21 @@ Market-regime research rejects NaN and infinite regime returns before
 ranking worst regimes or checking return dispersion. Invalid results must
 not qualify a strategy. This is a research-only diagnostic; no broker,
 execution or risk-sizing configuration is changed.
+
+
+## Experimental turnover control (paper trading only)
+
+Excessive small same-direction rebalances can consume paper PnL through
+transaction costs and slippage. The broker and walk-forward backtester now
+share an optional `RiskConfig.min_rebalance_fraction` setting (default
+**0.0 / disabled**). When explicitly enabled, a proposed same-direction
+notional adjustment smaller than this fraction of current equity is skipped
+and incurs no simulated trading costs. Opening from flat, changing direction,
+and exiting to flat (including loss-limit forced exits) are never skipped.
+
+The per-market JSON override can set e.g.
+`AI_TRADING_EXECUTION_COSTS_JSON='{"GC=F":{"min_rebalance_fraction":0.005}}'`.
+This is **not enabled by default** and must first demonstrate improvement in
+walk-forward net-of-cost performance across representative market conditions.
+A deadband can reduce fees but may also delay beneficial risk adjustments;
+there is no assurance it will improve PnL.

@@ -36,7 +36,7 @@ def risk_config_for_symbol(
     if not isinstance(override, dict):
         raise TypeError(f"{_ENV_NAME}[{symbol!r}] must be a JSON object")
 
-    allowed = {"transaction_cost_bps", "slippage_bps"}
+    allowed = {"transaction_cost_bps", "slippage_bps", "min_rebalance_fraction"}
     unknown = set(override).difference(allowed)
     if unknown:
         raise ValueError(
@@ -53,9 +53,11 @@ def risk_config_for_symbol(
             raise ValueError(
                 f"{_ENV_NAME}[{symbol!r}].{name} must be numeric"
             ) from exc
-        if not isfinite(value) or value < 0:
+        if not isfinite(value) or value < 0 or (
+            name == "min_rebalance_fraction" and value > 1.0
+        ):
             raise ValueError(
-                f"{_ENV_NAME}[{symbol!r}].{name} must be finite and non-negative"
+                f"{_ENV_NAME}[{symbol!r}].{name} must be finite and in its allowed range"
             )
         values[name] = value
 
