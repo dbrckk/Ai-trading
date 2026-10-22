@@ -1,3 +1,5 @@
+from dataclasses import replace
+
 from ai_trading.bootstrap_gate import BootstrapGatePolicy, evaluate_bootstrap_gate
 from ai_trading.bootstrap_robustness import BootstrapReport
 
@@ -35,3 +37,30 @@ def test_bootstrap_gate_rejects_fragile_distribution() -> None:
 
     assert not result.passed
     assert len(result.reasons) == 4
+
+    # The research gate must fail closed on malformed bootstrap evidence.
+    invalid_cases = (
+        (
+            replace(report(), probability_positive=float("nan")),
+            "non-finite bootstrap distribution",
+        ),
+        (
+            replace(report(), probability_loss=float("inf")),
+            "non-finite bootstrap distribution",
+        ),
+        (replace(report(), probability_positive=1.1), "incoherent bootstrap distribution"),
+        (
+            replace(report(), probability_positive=0.8, probability_loss=0.5),
+            "incoherent bootstrap distribution",
+        ),
+        (replace(report(), lower_return=0.2), "incoherent bootstrap distribution"),
+        (
+            replace(report(), upper_max_drawdown=-0.1),
+            "incoherent bootstrap distribution",
+        ),
+        (replace(report(), simulations=0), "insufficient bootstrap simulations"),
+    )
+    for invalid, expected_reason in invalid_cases:
+        decision = evaluate_bootstrap_gate(invalid)
+        assert decision.passed is False
+        assert expected_reason in decision.reasons

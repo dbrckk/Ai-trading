@@ -2,9 +2,9 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "fix/probe-transient-connection-retry",
+  "active_branch": "fix/bootstrap-gate-invalid-evidence",
   "pull_request": null,
-  "focus": "PR #192 merged on 2026-10-21T~23:00 UTC after green CI and CodeQL: sensitivity robustness excludes losing, non-trading or invalid scenarios. Latest Hosted Dashboard Probe 39680748089 (2026-10-21T21:42Z) had transient /livez: connection_failed although /readyz storage_ready and /api/markets three_markets_running passed. This branch retries only connection_failed once after full pass, 10s max, without masking persistent or semantic failures. PR #190 cost-stress duplicate and PR #191 sensitivity duplicate closed.",
+  "focus": "PR #192 parameter sensitivity profitability safeguard merged; duplicate #191 closed. PR #193 bounded hosted probe transient transport recovery merged; latest hosted probe and CI/CodeQL green. This branch fixes bootstrap research qualification accepting malformed/non-finite distributions: require >=100 simulations, finite metrics, coherent probabilities and ordered drawdown/return quantiles. Read-only research gate; live broker and River-v2 remain off.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -138,8 +138,8 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Validate strict probe retry CI, CodeQL; merge if green.",
-    "Recheck hosted three-market health and exact deployed SHA when reachable; one prior failed /livez does not prove sustained outage.",
-    "Measure sufficient out-of-sample after-cost and paper PnL per Gold/DAX/BTC before assuming profitable trading; keep River-v2 and live brokerage off."
+    "Run branch CI and CodeQL for bootstrap evidence validation; merge only after green.",
+    "Verify latest hosted Gold/DAX/BTC three engines RUNNING and distinguish Cloudflare-triggered cycles from skipped GitHub fallback.",
+    "Continue net-of-cost paper PnL and walk-forward performance evaluation before proposing any higher risk."
   ]
 }
