@@ -3,8 +3,8 @@
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
   "active_branch": "feat/turnover-validation-study",
-  "pull_request": null,
-  "focus": "Develop read-only Gold/DAX/BTC cost-aware paper rebalance threshold comparison. Four thresholds, matching bars/fees, purged walk-forward offline proxy, candidate selected on early OOS validation and checked once against later holdout. No auto activation, no River-v1 replacement or live broker. Turnover Research workflow initially falsely green without module entrypoint/artifact; corrected CLI __main__ and strict artifact verification, now rerun.",
+  "pull_request": 197,
+  "focus": "PR #197 compares 0/0.1/0.25/0.5% paper rebalance deadbands on completed 5m Yahoo Gold, DAX and BTC data using offline purged walk-forward, earlier validation / later holdout. Real GitHub Action #39767234077 passed after fixing false-green CLI, published JSON artifact #12421490257: baseline net returns Gold -0.19833%, DAX -0.24241%, BTC -0.36508%; all selected thresholds null and holdout_passed false. No profit advantage demonstrated; 1800 bars each, 1516 OOS, 7 folds; offline proxy NOT River-v1. CI/CodeQL PR checks pending (CodeQL success observed). No production changes.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -91,6 +91,25 @@
       "three_markets_running": true,
       "exact_deployed_sha_verified": false,
       "note": "GitHub hosted workflow read-only probe passed; did not include --expected-sha. This verifies live engine health, not current code deployment identity or profitability."
+    },
+    "latest_turnover_research": {
+      "checked_on": "2026-10-22",
+      "workflow_run_id": 39767234077,
+      "artifact_id": 12421490257,
+      "mode": "offline_walk_forward_proxy_not_hosted_river_v1",
+      "source": "Yahoo Finance completed 5m bars",
+      "market_bars_per_symbol": 1800,
+      "oos_bars_per_symbol": 1516,
+      "folds_per_symbol": 7,
+      "baseline_net_return": {
+        "GC=F": -0.0019833113640750355,
+        "^GDAXI": -0.0024240785133894382,
+        "BTC-USD": -0.003650848310420285
+      },
+      "validation_candidate_for_all": null,
+      "holdout_passed_for_all": false,
+      "threshold_enabled": false,
+      "note": "All four thresholds have negative full net return per market; negligible differences. No setting changed."
     }
   },
   "completed_changes": [
@@ -139,9 +158,9 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Check the strict Turnover Research GitHub Action actually creates JSON and inspect each of Gold, DAX, BTC results or provider failures.",
-    "Open PR and verify CI plus CodeQL; fix any failures before merging.",
-    "If no statistically adequate positive holdout evidence, keep turnover threshold disabled; do not claim improved profit.",
-    "Verify latest strict hosted probe and no unintended scheduler effect."
+    "Get PR #197 green CI/CodeQL, merge only then verify main checks.",
+    "Preserve baseline 0% paper turnover threshold; no data-supported positive holdout in short 5m study.",
+    "Compare frictionless versus fee-inclusive OOS results to estimate whether cost drag or weak directional edge dominates, still research only.",
+    "Collect enough real River-v1 paper PnL per market before any live or exposure increase."
   ]
 }
