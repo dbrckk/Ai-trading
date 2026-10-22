@@ -429,6 +429,11 @@ result = evaluate_bootstrap_gate(report())
 def test_bootstrap_gate_rejects_fragile_distribution() -> None
 ⋮----
 result = evaluate_bootstrap_gate(
+⋮----
+# The research gate must fail closed on malformed bootstrap evidence.
+invalid_cases = (
+⋮----
+decision = evaluate_bootstrap_gate(invalid)
 ```
 
 ## File: test_bootstrap_robustness.py

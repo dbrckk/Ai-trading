@@ -1506,6 +1506,8 @@ reasons: tuple[str, ...]
 ⋮----
 policy = policy or BootstrapGatePolicy()
 reasons: list[str] = []
+⋮----
+metrics = (
 ````
 
 ## File: src/ai_trading/bootstrap_robustness.py
@@ -9631,6 +9633,11 @@ result = evaluate_bootstrap_gate(report())
 def test_bootstrap_gate_rejects_fragile_distribution() -> None
 ⋮----
 result = evaluate_bootstrap_gate(
+⋮----
+# The research gate must fail closed on malformed bootstrap evidence.
+invalid_cases = (
+⋮----
+decision = evaluate_bootstrap_gate(invalid)
 ````
 
 ## File: tests/test_bootstrap_robustness.py
@@ -14377,6 +14384,14 @@ performance statistics also fail the benchmark gate rather than silently
 passing comparisons. This is additional research validation alongside the
 existing Sharpe, Sortino, Calmar, drawdown, fold and trade-count thresholds,
 not an automatic model promotion or permission to trade live.
+
+## Bootstrap research evidence validation
+
+The bootstrap robustness gate fails closed on fewer than 100 simulations,
+non-finite statistics, impossible outcome probabilities, or incoherent
+return and drawdown quantiles. NaN comparisons must never pass research
+qualification. This check neither enables live trading nor proves an
+investment edge.
 
 ## Parameter sensitivity requires actual net-profit evidence
 

@@ -1,12 +1,12 @@
 # Change impact
 
-Base: 2b9874141f15ea1ffa3d3ea286992c8e181611f0
-Head: ac22f99aef5f8e9ddfa4954ebb0e40f4e80ded4b
+Base: 414596442874677f43a0e1cfe05408cc22b7208e
+Head: 659f2bb4ddb99181e17f36840f495f48570e8418
 
 ## Changed files
 - M README.md
-- M src/ai_trading/deployment_probe.py
-- M tests/test_dashboard_health.py
+- M src/ai_trading/bootstrap_gate.py
+- M tests/test_bootstrap_gate.py
 
 ## Affected areas
 - (root)
@@ -14,7 +14,7 @@ Head: ac22f99aef5f8e9ddfa4954ebb0e40f4e80ded4b
 - tests
 
 ## Related test candidates
-- No direct filename-based test match detected.
+- tests/test_bootstrap_gate.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

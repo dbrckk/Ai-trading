@@ -93,17 +93,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-21T23:13:47Z
+Generated: 2026-10-22T00:47:12Z
 
 ### Git
 - Branch: `main`
-- Head: `ac22f99aef5f`
-- Commit date: 2026-10-21T19:13:36-04:00
-- Commit: fix(ops): retry transient hosted probe connections once (#193)
+- Head: `659f2bb4ddb9`
+- Commit date: 2026-10-21T20:47:02-04:00
+- Commit: fix(research): reject invalid bootstrap robustness evidence (#194)
 - Tracked files: 513
 
 ### Recently changed files
 - `README.md`
+- `src/ai_trading/bootstrap_gate.py`
+- `tests/test_bootstrap_gate.py`
 - `src/ai_trading/deployment_probe.py`
 - `tests/test_dashboard_health.py`
 - `src/ai_trading/sensitivity_gate.py`
@@ -112,8 +114,6 @@ Generated: 2026-10-21T23:13:47Z
 - `tests/test_benchmark_gate.py`
 - `src/ai_trading/cost_stress_gate.py`
 - `tests/test_cost_stress_gate.py`
-- `src/ai_trading/dashboard.py`
-- `tests/test_multi_market.py`
 
 ### Project signals
 - `pyproject.toml`

@@ -4,15 +4,15 @@
     "expand_to": 12,
     "max_files": 6,
     "requested_max_files": 12,
-    "score_margin": 0,
+    "score_margin": 6,
     "tier": "bounded",
-    "top_score": 17
+    "top_score": 23
   },
   "cache": {
-    "fingerprint": "4eb1789d5c5127bda18b0d6fa1c11475e1b7ffafda80701dcb40a6bcf1964010",
+    "fingerprint": "8fc5cf959a86229bd67bfdbb98cf69aa8d54ee46d5e73e807e6689987a4f78eb",
     "hit": false
   },
-  "candidate_count": 12,
+  "candidate_count": 17,
   "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
   "files": [
     {
@@ -22,9 +22,10 @@
       ],
       "path": "src/ai_trading/cli.py",
       "reasons": [
+        "impact",
         "search-index"
       ],
-      "score": 17,
+      "score": 23,
       "symbols": [
         "compare_models",
         "create_readiness_release_command",
@@ -128,38 +129,6 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "tests/test_dashboard_health.py",
-      "reasons": [
-        "impact",
-        "recently-changed"
-      ],
-      "score": 13,
-      "symbols": [
-        "FakeResponse",
-        "__enter__",
-        "__exit__",
-        "_free_port",
-        "_get",
-        "_start_dashboard",
-        "fail_request",
-        "fake_urlopen",
-        "read",
-        "test_api_status_reports_stale_worker_without_hiding_web_health",
-        "test_dashboard_marks_expired_worker_heartbeat_stale",
-        "test_external_probe_checks_live_ready_and_all_markets",
-        "test_external_probe_reports_connection_errors_without_exposing_details",
-        "test_external_scheduler_readiness_detects_missing_configuration",
-        "test_healthz_keeps_web_liveness_separate_from_engine_health",
-        "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
-        "test_probe_rejects_market_cards_with_broken_portfolio",
-        "test_render_blueprint_declares_external_runtime_and_secret_inputs"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "engine"
-      ],
       "path": "src/ai_trading/engine.py",
       "reasons": [],
       "score": 10,
@@ -169,6 +138,22 @@
         "__init__",
         "paper_run",
         "train"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "engine"
+      ],
+      "path": "src/ai_trading/stress_engine.py",
+      "reasons": [],
+      "score": 10,
+      "symbols": [
+        "StressPolicy",
+        "StressReport",
+        "StressScenario",
+        "_stressed_covariance",
+        "run_stress_test"
       ]
     }
   ],

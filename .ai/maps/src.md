@@ -611,6 +611,8 @@ reasons: tuple[str, ...]
 ⋮----
 policy = policy or BootstrapGatePolicy()
 reasons: list[str] = []
+⋮----
+metrics = (
 ```
 
 ## File: ai_trading/bootstrap_robustness.py
