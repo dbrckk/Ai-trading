@@ -29,7 +29,10 @@ class RiskConfig:
             raise ValueError("min_confidence must be in [0, 1]")
         if self.transaction_cost_bps < 0 or self.slippage_bps < 0:
             raise ValueError("transaction costs and slippage must be non-negative")
-        if not isfinite(self.min_rebalance_fraction) or not 0.0 <= self.min_rebalance_fraction <= 1.0:
+        if (
+            not isfinite(self.min_rebalance_fraction)
+            or not 0.0 <= self.min_rebalance_fraction <= 1.0
+        ):
             raise ValueError("min_rebalance_fraction must be finite and in [0, 1]")
 
 
