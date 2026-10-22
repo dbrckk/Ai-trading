@@ -99,17 +99,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-22T10:14:04Z
+Generated: 2026-10-22T10:24:20Z
 
 ### Git
 - Branch: `main`
-- Head: `2b33e938f896`
-- Commit date: 2026-10-22T06:13:53-04:00
-- Commit: fix(research): reject non-finite market regime returns
+- Head: `cfe170789409`
+- Commit date: 2026-10-22T06:24:08-04:00
+- Commit: feat(paper): add optional low-turnover rebalance buffer for net cost research
 - Tracked files: 513
 
 ### Recently changed files
 - `README.md`
+- `src/ai_trading/broker.py`
+- `src/ai_trading/config.py`
+- `src/ai_trading/execution_costs.py`
+- `tests/test_broker.py`
+- `tests/test_execution_costs.py`
 - `src/ai_trading/regime_gate.py`
 - `tests/test_regime_gate.py`
 - `src/ai_trading/bootstrap_gate.py`
@@ -118,8 +123,6 @@ Generated: 2026-10-22T10:14:04Z
 - `tests/test_dashboard_health.py`
 - `src/ai_trading/sensitivity_gate.py`
 - `tests/test_sensitivity_gate.py`
-- `src/ai_trading/benchmark_gate.py`
-- `tests/test_benchmark_gate.py`
 
 ### Project signals
 - `pyproject.toml`

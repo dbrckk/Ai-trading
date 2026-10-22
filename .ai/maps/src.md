@@ -694,6 +694,12 @@ def rebalance(self, side: int, target_notional: float, price: float) -> Rebalanc
 target_notional = float(target_notional)
 ⋮----
 signed_target_notional = 0.0 if side == 0 else side * target_notional
+# Ignore only small, same-direction adjustments when explicitly enabled.
+# Always execute initial entries, flips and full exits (including hard stops).
+current_notional = self.state.units * price
+minimum_turnover = self.state.equity * self.config.min_rebalance_fraction
+⋮----
+signed_target_notional = current_notional
 fill = calculate_rebalance_fill(
 ```
 
@@ -1347,6 +1353,8 @@ max_drawdown_fraction: float = 0.10
 min_confidence: float = 0.56
 transaction_cost_bps: float = 2.0
 slippage_bps: float = 1.0
+# Optional same-direction turnover filter; disabled until backtested.
+min_rebalance_fraction: float = 0.0
 ⋮----
 def __post_init__(self) -> None
 ⋮----
@@ -2544,7 +2552,7 @@ payload = json.loads(payload_text)
 ⋮----
 override = payload.get(symbol)
 ⋮----
-allowed = {"transaction_cost_bps", "slippage_bps"}
+allowed = {"transaction_cost_bps", "slippage_bps", "min_rebalance_fraction"}
 unknown = set(override).difference(allowed)
 ⋮----
 values: dict[str, float] = {}

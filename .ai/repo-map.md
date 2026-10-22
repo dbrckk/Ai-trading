@@ -1589,6 +1589,12 @@ def rebalance(self, side: int, target_notional: float, price: float) -> Rebalanc
 target_notional = float(target_notional)
 ⋮----
 signed_target_notional = 0.0 if side == 0 else side * target_notional
+# Ignore only small, same-direction adjustments when explicitly enabled.
+# Always execute initial entries, flips and full exits (including hard stops).
+current_notional = self.state.units * price
+minimum_turnover = self.state.equity * self.config.min_rebalance_fraction
+⋮----
+signed_target_notional = current_notional
 fill = calculate_rebalance_fill(
 ````
 
@@ -2242,6 +2248,8 @@ max_drawdown_fraction: float = 0.10
 min_confidence: float = 0.56
 transaction_cost_bps: float = 2.0
 slippage_bps: float = 1.0
+# Optional same-direction turnover filter; disabled until backtested.
+min_rebalance_fraction: float = 0.0
 ⋮----
 def __post_init__(self) -> None
 ⋮----
@@ -3439,7 +3447,7 @@ payload = json.loads(payload_text)
 ⋮----
 override = payload.get(symbol)
 ⋮----
-allowed = {"transaction_cost_bps", "slippage_bps"}
+allowed = {"transaction_cost_bps", "slippage_bps", "min_rebalance_fraction"}
 unknown = set(override).difference(allowed)
 ⋮----
 values: dict[str, float] = {}
@@ -9684,6 +9692,30 @@ def test_broker_rejects_invalid_sides(side: int) -> None
 ⋮----
 @pytest.mark.parametrize("notional", [-1.0, math.nan, math.inf])
 def test_broker_rejects_invalid_target_notional(notional: float) -> None
+⋮----
+def test_opt_in_deadband_avoids_costly_same_side_micro_rebalances() -> None
+⋮----
+broker = PaperBroker(RiskConfig(min_rebalance_fraction=0.005))
+opening = broker.rebalance(1, 10_000.0, 100.0)
+⋮----
+micro = broker.rebalance(1, 10_200.0, 100.0)
+⋮----
+meaningful = broker.rebalance(1, 11_000.0, 100.0)
+⋮----
+def test_deadband_never_blocks_stop_exit_or_position_flip() -> None
+⋮----
+broker = PaperBroker(RiskConfig(min_rebalance_fraction=1.0))
+⋮----
+flipped = broker.rebalance(-1, 1_000.0, 100.0)
+⋮----
+exited = broker.rebalance(0, 0.0, 100.0)
+⋮----
+def test_rebalance_deadband_is_disabled_by_default() -> None
+⋮----
+fill = broker.rebalance(1, 10_200.0, 100.0)
+⋮----
+@pytest.mark.parametrize("fraction", [-0.01, 1.01, math.nan, math.inf])
+def test_invalid_rebalance_deadband_rejected(fraction: float) -> None
 ````
 
 ## File: tests/test_burnin.py
@@ -14520,6 +14552,24 @@ Market-regime research rejects NaN and infinite regime returns before
 ranking worst regimes or checking return dispersion. Invalid results must
 not qualify a strategy. This is a research-only diagnostic; no broker,
 execution or risk-sizing configuration is changed.
+
+
+## Experimental turnover control (paper trading only)
+
+Excessive small same-direction rebalances can consume paper PnL through
+transaction costs and slippage. The broker and walk-forward backtester now
+share an optional `RiskConfig.min_rebalance_fraction` setting (default
+**0.0 / disabled**). When explicitly enabled, a proposed same-direction
+notional adjustment smaller than this fraction of current equity is skipped
+and incurs no simulated trading costs. Opening from flat, changing direction,
+and exiting to flat (including loss-limit forced exits) are never skipped.
+
+The per-market JSON override can set e.g.
+`AI_TRADING_EXECUTION_COSTS_JSON='{"GC=F":{"min_rebalance_fraction":0.005}}'`.
+This is **not enabled by default** and must first demonstrate improvement in
+walk-forward net-of-cost performance across representative market conditions.
+A deadband can reduce fees but may also delay beneficial risk adjustments;
+there is no assurance it will improve PnL.
 ````
 
 ## File: render.yaml

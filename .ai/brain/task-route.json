@@ -4,15 +4,15 @@
     "expand_to": 12,
     "max_files": 6,
     "requested_max_files": 12,
-    "score_margin": 6,
+    "score_margin": 0,
     "tier": "bounded",
     "top_score": 23
   },
   "cache": {
-    "fingerprint": "6925b19597f12f8edb617261c307e32a31a8de577bb503ba505d894d30484762",
+    "fingerprint": "b0f6d1691e7bea058c4b871da52deaee446b8a6f9a104acfe12ac69ddb78a880",
     "hit": false
   },
-  "candidate_count": 17,
+  "candidate_count": 40,
   "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
   "files": [
     {
@@ -54,6 +54,50 @@
       "matched_terms": [
         "engine"
       ],
+      "path": "src/ai_trading/runtime.py",
+      "reasons": [
+        "impact",
+        "search-index"
+      ],
+      "score": 23,
+      "symbols": [
+        "PaperAutonomousRuntime",
+        "PreparedRuntimeMarket",
+        "RuntimeStepResult",
+        "_broker_from_state",
+        "_eligible_execution_indices",
+        "_prepare_market_features",
+        "_state_from_broker",
+        "_step_prepared_locked",
+        "prepare_market",
+        "step",
+        "step_at",
+        "step_prepared"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "engine"
+      ],
+      "path": "tests/test_risk.py",
+      "reasons": [
+        "impact",
+        "search-index"
+      ],
+      "score": 23,
+      "symbols": [
+        "test_daily_loss_stop_marks_existing_position_for_exit",
+        "test_drawdown_limit_is_fail_closed",
+        "test_low_confidence_is_rejected",
+        "test_low_confidence_rejection_does_not_force_liquidation"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "engine"
+      ],
       "path": "src/ai_trading/dashboard.py",
       "reasons": [
         "search-index"
@@ -87,51 +131,11 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/runtime.py",
-      "reasons": [
-        "search-index"
-      ],
-      "score": 17,
-      "symbols": [
-        "PaperAutonomousRuntime",
-        "PreparedRuntimeMarket",
-        "RuntimeStepResult",
-        "_broker_from_state",
-        "_eligible_execution_indices",
-        "_prepare_market_features",
-        "_state_from_broker",
-        "_step_prepared_locked",
-        "prepare_market",
-        "step",
-        "step_at",
-        "step_prepared"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "engine"
-      ],
-      "path": "tests/test_risk.py",
-      "reasons": [
-        "search-index"
-      ],
-      "score": 17,
-      "symbols": [
-        "test_daily_loss_stop_marks_existing_position_for_exit",
-        "test_drawdown_limit_is_fail_closed",
-        "test_low_confidence_is_rejected",
-        "test_low_confidence_rejection_does_not_force_liquidation"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "engine"
-      ],
       "path": "src/ai_trading/engine.py",
-      "reasons": [],
-      "score": 10,
+      "reasons": [
+        "impact"
+      ],
+      "score": 16,
       "symbols": [
         "RunResult",
         "TradingEngine",
@@ -145,15 +149,16 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/stress_engine.py",
-      "reasons": [],
+      "path": "src/ai_trading/risk.py",
+      "reasons": [
+        "impact"
+      ],
       "score": 10,
       "symbols": [
-        "StressPolicy",
-        "StressReport",
-        "StressScenario",
-        "_stressed_covariance",
-        "run_stress_test"
+        "PortfolioSnapshot",
+        "RiskDecision",
+        "RiskEngine",
+        "evaluate"
       ]
     }
   ],

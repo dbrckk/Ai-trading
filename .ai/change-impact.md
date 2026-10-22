@@ -1,12 +1,15 @@
 # Change impact
 
-Base: 7dd08c47d739a69ed96822dd7840eecd660664a4
-Head: 2b33e938f89616db85a937fac2a734561f5a3d72
+Base: f53d2929aafc161f2ee00e7fd6ea59622fc32637
+Head: cfe170789409b0020ce21b9475054b58a9eda405
 
 ## Changed files
 - M README.md
-- M src/ai_trading/regime_gate.py
-- M tests/test_regime_gate.py
+- M src/ai_trading/broker.py
+- M src/ai_trading/config.py
+- M src/ai_trading/execution_costs.py
+- M tests/test_broker.py
+- M tests/test_execution_costs.py
 
 ## Affected areas
 - (root)
@@ -14,7 +17,8 @@ Head: 2b33e938f89616db85a937fac2a734561f5a3d72
 - tests
 
 ## Related test candidates
-- tests/test_regime_gate.py
+- tests/test_broker.py
+- tests/test_execution_costs.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

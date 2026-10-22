@@ -480,6 +480,30 @@ def test_broker_rejects_invalid_sides(side: int) -> None
 ⋮----
 @pytest.mark.parametrize("notional", [-1.0, math.nan, math.inf])
 def test_broker_rejects_invalid_target_notional(notional: float) -> None
+⋮----
+def test_opt_in_deadband_avoids_costly_same_side_micro_rebalances() -> None
+⋮----
+broker = PaperBroker(RiskConfig(min_rebalance_fraction=0.005))
+opening = broker.rebalance(1, 10_000.0, 100.0)
+⋮----
+micro = broker.rebalance(1, 10_200.0, 100.0)
+⋮----
+meaningful = broker.rebalance(1, 11_000.0, 100.0)
+⋮----
+def test_deadband_never_blocks_stop_exit_or_position_flip() -> None
+⋮----
+broker = PaperBroker(RiskConfig(min_rebalance_fraction=1.0))
+⋮----
+flipped = broker.rebalance(-1, 1_000.0, 100.0)
+⋮----
+exited = broker.rebalance(0, 0.0, 100.0)
+⋮----
+def test_rebalance_deadband_is_disabled_by_default() -> None
+⋮----
+fill = broker.rebalance(1, 10_200.0, 100.0)
+⋮----
+@pytest.mark.parametrize("fraction", [-0.01, 1.01, math.nan, math.inf])
+def test_invalid_rebalance_deadband_rejected(fraction: float) -> None
 ```
 
 ## File: test_burnin.py

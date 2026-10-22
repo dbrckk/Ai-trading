@@ -5,37 +5,62 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "RegimeGatePolicy": {
+    "BrokerState": {
       "source": {
-        "file": "src/ai_trading/regime_gate.py",
-        "start": 10,
-        "end": 13
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "RegimeGateResult": {
-      "source": {
-        "file": "src/ai_trading/regime_gate.py",
-        "start": 17,
-        "end": 23
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "evaluate_regime_gate": {
-      "source": {
-        "file": "src/ai_trading/regime_gate.py",
-        "start": 26,
-        "end": 64
+        "file": "src/ai_trading/broker.py",
+        "start": 11,
+        "end": 21
       },
       "symbol_dependencies": [
         {
-          "symbol": "BacktestReport",
+          "symbol": "equity",
           "definitions": [
             {
-              "file": "src/ai_trading/backtest.py",
-              "line": 52,
+              "file": "src/ai_trading/broker.py",
+              "line": 20,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "equity": {
+      "source": {
+        "file": "src/ai_trading/broker.py",
+        "start": 20,
+        "end": 21
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "PaperBroker": {
+      "source": {
+        "file": "src/ai_trading/broker.py",
+        "start": 24,
+        "end": 76
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BrokerState",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 11,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "RebalanceFill",
+          "definitions": [
+            {
+              "file": "src/ai_trading/paper_execution.py",
+              "line": 8,
               "kind": "class",
               "language": "python"
             }
@@ -43,11 +68,105 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "RegimeGatePolicy",
+          "symbol": "RiskConfig",
           "definitions": [
             {
-              "file": "src/ai_trading/regime_gate.py",
-              "line": 10,
+              "file": "src/ai_trading/config.py",
+              "line": 6,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "__init__",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "calculate_rebalance_fill",
+          "definitions": [
+            {
+              "file": "src/ai_trading/paper_execution.py",
+              "line": 18,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "equity",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 20,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "mark",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 33,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "rebalance",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 44,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "reset_day_start",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 41,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 9
+    },
+    "__init__": {
+      "source": {
+        "file": "src/ai_trading/broker.py",
+        "start": 25,
+        "end": 31
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BrokerState",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 11,
               "kind": "class",
               "language": "python"
             }
@@ -55,34 +174,201 @@
           "relation": "same_file"
         },
         {
-          "symbol": "RegimeGateResult",
+          "symbol": "RiskConfig",
           "definitions": [
             {
-              "file": "src/ai_trading/regime_gate.py",
-              "line": 17,
+              "file": "src/ai_trading/config.py",
+              "line": 6,
               "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "mark": {
+      "source": {
+        "file": "src/ai_trading/broker.py",
+        "start": 33,
+        "end": 39
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "equity",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 20,
+              "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
         }
       ],
-      "dependency_count": 3
+      "dependency_count": 1
     },
-    "test_regime_gate_accepts_balanced_regime_results": {
+    "reset_day_start": {
       "source": {
-        "file": "tests/test_regime_gate.py",
-        "start": 6,
-        "end": 19
+        "file": "src/ai_trading/broker.py",
+        "start": 41,
+        "end": 42
       },
       "symbol_dependencies": [
         {
-          "symbol": "evaluate_regime_gate",
+          "symbol": "equity",
           "definitions": [
             {
-              "file": "src/ai_trading/regime_gate.py",
-              "line": 26,
+              "file": "src/ai_trading/broker.py",
+              "line": 20,
               "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "rebalance": {
+      "source": {
+        "file": "src/ai_trading/broker.py",
+        "start": 44,
+        "end": 76
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "RebalanceFill",
+          "definitions": [
+            {
+              "file": "src/ai_trading/paper_execution.py",
+              "line": 8,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "calculate_rebalance_fill",
+          "definitions": [
+            {
+              "file": "src/ai_trading/paper_execution.py",
+              "line": 18,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "equity",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 20,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "mark",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 33,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "RiskConfig": {
+      "source": {
+        "file": "src/ai_trading/config.py",
+        "start": 6,
+        "end": 36
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "__post_init__",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 17,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 44,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "__post_init__": {
+      "source": {
+        "file": "src/ai_trading/config.py",
+        "start": 17,
+        "end": 36
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "ModelConfig": {
+      "source": {
+        "file": "src/ai_trading/config.py",
+        "start": 40,
+        "end": 48
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "__post_init__",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 17,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 44,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "risk_config_for_symbol": {
+      "source": {
+        "file": "src/ai_trading/execution_costs.py",
+        "start": 13,
+        "end": 64
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "RiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 6,
+              "kind": "class",
               "language": "python"
             }
           ],
@@ -91,19 +377,19 @@
       ],
       "dependency_count": 1
     },
-    "test_regime_gate_rejects_fragile_regime_profile": {
+    "test_broker_resets_daily_loss_baseline_to_current_equity": {
       "source": {
-        "file": "tests/test_regime_gate.py",
-        "start": 22,
-        "end": 41
+        "file": "tests/test_broker.py",
+        "start": 9,
+        "end": 18
       },
       "symbol_dependencies": [
         {
-          "symbol": "RegimeGatePolicy",
+          "symbol": "PaperBroker",
           "definitions": [
             {
-              "file": "src/ai_trading/regime_gate.py",
-              "line": 10,
+              "file": "src/ai_trading/broker.py",
+              "line": 24,
               "kind": "class",
               "language": "python"
             }
@@ -111,11 +397,379 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "evaluate_regime_gate",
+          "symbol": "RiskConfig",
           "definitions": [
             {
-              "file": "src/ai_trading/regime_gate.py",
-              "line": 26,
+              "file": "src/ai_trading/config.py",
+              "line": 6,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "equity",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 20,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "mark",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 33,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "reset_day_start",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 41,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "test_broker_rejects_invalid_mark_prices": {
+      "source": {
+        "file": "tests/test_broker.py",
+        "start": 22,
+        "end": 25
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PaperBroker",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 24,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 6,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "mark",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 33,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_broker_rejects_invalid_sides": {
+      "source": {
+        "file": "tests/test_broker.py",
+        "start": 29,
+        "end": 32
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PaperBroker",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 24,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 6,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "rebalance",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 44,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_broker_rejects_invalid_target_notional": {
+      "source": {
+        "file": "tests/test_broker.py",
+        "start": 36,
+        "end": 39
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PaperBroker",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 24,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 6,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "rebalance",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 44,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_opt_in_deadband_avoids_costly_same_side_micro_rebalances": {
+      "source": {
+        "file": "tests/test_broker.py",
+        "start": 42,
+        "end": 55
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PaperBroker",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 24,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 6,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "rebalance",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 44,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_deadband_never_blocks_stop_exit_or_position_flip": {
+      "source": {
+        "file": "tests/test_broker.py",
+        "start": 58,
+        "end": 68
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PaperBroker",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 24,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 6,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "rebalance",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 44,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_rebalance_deadband_is_disabled_by_default": {
+      "source": {
+        "file": "tests/test_broker.py",
+        "start": 71,
+        "end": 77
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PaperBroker",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 24,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 6,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "rebalance",
+          "definitions": [
+            {
+              "file": "src/ai_trading/broker.py",
+              "line": 44,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_invalid_rebalance_deadband_rejected": {
+      "source": {
+        "file": "tests/test_broker.py",
+        "start": 81,
+        "end": 83
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "RiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 6,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_execution_cost_override_is_symbol_specific": {
+      "source": {
+        "file": "tests/test_execution_costs.py",
+        "start": 8,
+        "end": 22
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "RiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 6,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "risk_config_for_symbol",
+          "definitions": [
+            {
+              "file": "src/ai_trading/execution_costs.py",
+              "line": 13,
               "kind": "function",
               "language": "python"
             }
@@ -125,19 +779,53 @@
       ],
       "dependency_count": 2
     },
-    "test_regime_gate_rejects_nan_return_instead_of_passing": {
+    "test_execution_cost_override_can_be_partial": {
       "source": {
-        "file": "tests/test_regime_gate.py",
-        "start": 44,
-        "end": 54
+        "file": "tests/test_execution_costs.py",
+        "start": 25,
+        "end": 35
       },
       "symbol_dependencies": [
         {
-          "symbol": "evaluate_regime_gate",
+          "symbol": "RiskConfig",
           "definitions": [
             {
-              "file": "src/ai_trading/regime_gate.py",
-              "line": 26,
+              "file": "src/ai_trading/config.py",
+              "line": 6,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "risk_config_for_symbol",
+          "definitions": [
+            {
+              "file": "src/ai_trading/execution_costs.py",
+              "line": 13,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_execution_cost_overrides_fail_closed_on_invalid_configuration": {
+      "source": {
+        "file": "tests/test_execution_costs.py",
+        "start": 51,
+        "end": 53
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "risk_config_for_symbol",
+          "definitions": [
+            {
+              "file": "src/ai_trading/execution_costs.py",
+              "line": 13,
               "kind": "function",
               "language": "python"
             }
@@ -147,20 +835,20 @@
       ],
       "dependency_count": 1
     },
-    "test_regime_gate_rejects_infinite_return_instead_of_passing": {
+    "test_default_runtime_uses_symbol_cost_override": {
       "source": {
-        "file": "tests/test_regime_gate.py",
-        "start": 57,
-        "end": 64
+        "file": "tests/test_execution_costs.py",
+        "start": 56,
+        "end": 69
       },
       "symbol_dependencies": [
         {
-          "symbol": "evaluate_regime_gate",
+          "symbol": "PaperAutonomousRuntime",
           "definitions": [
             {
-              "file": "src/ai_trading/regime_gate.py",
-              "line": 26,
-              "kind": "function",
+              "file": "src/ai_trading/runtime.py",
+              "line": 52,
+              "kind": "class",
               "language": "python"
             }
           ],
@@ -168,6 +856,40 @@
         }
       ],
       "dependency_count": 1
+    },
+    "test_explicit_runtime_risk_config_has_priority": {
+      "source": {
+        "file": "tests/test_execution_costs.py",
+        "start": 72,
+        "end": 86
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PaperAutonomousRuntime",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime.py",
+              "line": 52,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 6,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
     }
   }
 }

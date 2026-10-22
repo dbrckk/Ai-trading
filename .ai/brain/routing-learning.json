@@ -2,24 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "feat: wire atomic checkpoints into multiasset runtime",
-      "terms": [
-        "atomic",
-        "checkpoints",
-        "feat",
-        "into",
-        "multiasset",
-        "runtime",
-        "wire"
-      ],
-      "tests": [],
-      "useful": [
-        "src/ai_trading/multiasset_runtime.py",
-        "tests/test_multiasset_runtime.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "fix: make multiasset checkpoints immutable and bounded",
       "terms": [
         "bounded",
@@ -1254,6 +1236,30 @@
         "src/ai_trading/regime_gate.py",
         "tests/test_regime_gate.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "feat(paper): add optional low-turnover rebalance buffer for net cost research",
+      "terms": [
+        "add",
+        "buffer",
+        "cost",
+        "feat",
+        "low-turnover",
+        "net",
+        "optional",
+        "paper",
+        "rebalance",
+        "research"
+      ],
+      "tests": [],
+      "useful": [
+        "src/ai_trading/broker.py",
+        "src/ai_trading/config.py",
+        "src/ai_trading/execution_costs.py",
+        "tests/test_broker.py",
+        "tests/test_execution_costs.py"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1771,10 +1777,13 @@
     "add": {
       "infra/cloudflare-paper-scheduler/src/index.js": 4,
       "infra/cloudflare-paper-scheduler/test/index.test.js": 4,
+      "src/ai_trading/broker.py": 4,
       "src/ai_trading/command_app.py": 4,
+      "src/ai_trading/config.py": 4,
       "src/ai_trading/dashboard.py": 28,
       "src/ai_trading/data.py": 8,
       "src/ai_trading/ensemble.py": 4,
+      "src/ai_trading/execution_costs.py": 4,
       "src/ai_trading/features.py": 4,
       "src/ai_trading/file_persistence.py": 8,
       "src/ai_trading/hosted_runtime.py": 4,
@@ -1798,12 +1807,14 @@
       "src/ai_trading/shadow_challenger.py": 4,
       "src/ai_trading/shadow_promotion_gate.py": 4,
       "src/ai_trading/shadow_quality.py": 4,
+      "tests/test_broker.py": 4,
       "tests/test_cloudflare_scheduler_deploy_workflow.py": 4,
       "tests/test_dashboard.py": 4,
       "tests/test_dashboard_overview.py": 4,
       "tests/test_dashboard_persistence.py": 4,
       "tests/test_data.py": 8,
       "tests/test_ensemble.py": 4,
+      "tests/test_execution_costs.py": 4,
       "tests/test_features.py": 4,
       "tests/test_file_persistence.py": 8,
       "tests/test_hosted_runtime.py": 4,
@@ -2026,6 +2037,13 @@
     },
     "budget": {
       "tests/test_paper_cycle_workflow.py": 4
+    },
+    "buffer": {
+      "src/ai_trading/broker.py": 4,
+      "src/ai_trading/config.py": 4,
+      "src/ai_trading/execution_costs.py": 4,
+      "tests/test_broker.py": 4,
+      "tests/test_execution_costs.py": 4
     },
     "by": {
       "src/ai_trading/multiasset_runtime.py": 4,
@@ -2265,6 +2283,13 @@
     "corruption": {
       "src/ai_trading/multiasset_checkpoint.py": 4,
       "tests/test_multiasset_checkpoint.py": 4
+    },
+    "cost": {
+      "src/ai_trading/broker.py": 4,
+      "src/ai_trading/config.py": 4,
+      "src/ai_trading/execution_costs.py": 4,
+      "tests/test_broker.py": 4,
+      "tests/test_execution_costs.py": 4
     },
     "costs": {
       "src/ai_trading/execution_costs.py": 4,
@@ -2695,12 +2720,14 @@
       "infra/cloudflare-paper-scheduler/src/index.js": 4,
       "infra/cloudflare-paper-scheduler/test/index.test.js": 4,
       "src/ai_trading/backtest.py": 4,
+      "src/ai_trading/broker.py": 4,
       "src/ai_trading/command_app.py": 4,
+      "src/ai_trading/config.py": 4,
       "src/ai_trading/dashboard.py": 40,
       "src/ai_trading/data.py": 4,
       "src/ai_trading/data_quality.py": 4,
       "src/ai_trading/ensemble.py": 4,
-      "src/ai_trading/execution_costs.py": 4,
+      "src/ai_trading/execution_costs.py": 8,
       "src/ai_trading/features.py": 4,
       "src/ai_trading/file_persistence.py": 16,
       "src/ai_trading/hosted_runtime.py": 4,
@@ -2733,6 +2760,7 @@
       "src/ai_trading/shadow_challenger.py": 4,
       "src/ai_trading/shadow_promotion_gate.py": 4,
       "src/ai_trading/shadow_quality.py": 4,
+      "tests/test_broker.py": 4,
       "tests/test_cloudflare_scheduler_deploy_workflow.py": 4,
       "tests/test_dashboard.py": 8,
       "tests/test_dashboard_overview.py": 32,
@@ -2740,11 +2768,8 @@
       "tests/test_data.py": 4,
       "tests/test_data_quality.py": 4,
       "tests/test_ensemble.py": 4,
-      "tests/test_execution_costs.py": 4,
-      "tests/test_features.py": 4,
+      "tests/test_execution_costs.py": 8,
       "tests/test_file_persistence.py": 8,
-      "tests/test_hosted_runtime.py": 4,
-      "tests/test_market_freshness.py": 4,
       "tests/test_mtf_parameter_benchmark.py": 12,
       "tests/test_mtf_shadow_challenger.py": 8,
       "tests/test_mtf_shadow_config.py": 8,
@@ -3183,6 +3208,13 @@
       "src/ai_trading/multi_market.py": 4,
       "tests/test_multi_market.py": 4
     },
+    "low-turnover": {
+      "src/ai_trading/broker.py": 4,
+      "src/ai_trading/config.py": 4,
+      "src/ai_trading/execution_costs.py": 4,
+      "tests/test_broker.py": 4,
+      "tests/test_execution_costs.py": 4
+    },
     "make": {
       "src/ai_trading/multiasset_checkpoint.py": 4,
       "src/ai_trading/multiasset_runtime.py": 4,
@@ -3397,10 +3429,15 @@
     },
     "net": {
       "src/ai_trading/benchmark_gate.py": 4,
+      "src/ai_trading/broker.py": 4,
+      "src/ai_trading/config.py": 4,
       "src/ai_trading/cost_stress_gate.py": 4,
       "src/ai_trading/dashboard.py": 4,
+      "src/ai_trading/execution_costs.py": 4,
       "tests/test_benchmark_gate.py": 4,
+      "tests/test_broker.py": 4,
       "tests/test_cost_stress_gate.py": 4,
+      "tests/test_execution_costs.py": 4,
       "tests/test_multi_market.py": 4
     },
     "net-of-cost": {
@@ -3486,6 +3523,13 @@
       "tests/test_runtime_status.py": 4,
       "tests/test_shadow_challenger.py": 4
     },
+    "optional": {
+      "src/ai_trading/broker.py": 4,
+      "src/ai_trading/config.py": 4,
+      "src/ai_trading/execution_costs.py": 4,
+      "tests/test_broker.py": 4,
+      "tests/test_execution_costs.py": 4
+    },
     "orphan": {
       "src/ai_trading/multiasset_checkpoint.py": 4,
       "tests/test_multiasset_checkpoint.py": 4
@@ -3507,10 +3551,11 @@
     },
     "paper": {
       "src/ai_trading/backtest.py": 4,
-      "src/ai_trading/broker.py": 8,
+      "src/ai_trading/broker.py": 12,
+      "src/ai_trading/config.py": 4,
       "src/ai_trading/dashboard.py": 20,
       "src/ai_trading/deployment_probe.py": 8,
-      "src/ai_trading/execution_costs.py": 4,
+      "src/ai_trading/execution_costs.py": 8,
       "src/ai_trading/file_persistence.py": 4,
       "src/ai_trading/hosted_runtime.py": 4,
       "src/ai_trading/market_freshness.py": 4,
@@ -3533,12 +3578,13 @@
       "src/ai_trading/scheduler_fallback.py": 4,
       "src/ai_trading/trade_journal.py": 4,
       "tests/test_backtest.py": 4,
+      "tests/test_broker.py": 4,
       "tests/test_cumulative_performance_persistence.py": 4,
       "tests/test_dashboard.py": 4,
       "tests/test_dashboard_engine_status.py": 4,
       "tests/test_dashboard_health.py": 8,
       "tests/test_dashboard_overview.py": 4,
-      "tests/test_execution_costs.py": 4,
+      "tests/test_execution_costs.py": 8,
       "tests/test_hosted_runtime.py": 4,
       "tests/test_market_freshness.py": 4,
       "tests/test_model_codec.py": 4,
@@ -3901,6 +3947,13 @@
       "tests/test_postgres_persistence.py": 4,
       "tests/test_realized_pnl_accounting.py": 4
     },
+    "rebalance": {
+      "src/ai_trading/broker.py": 4,
+      "src/ai_trading/config.py": 4,
+      "src/ai_trading/execution_costs.py": 4,
+      "tests/test_broker.py": 4,
+      "tests/test_execution_costs.py": 4
+    },
     "recover": {
       "src/ai_trading/multiasset_checkpoint.py": 4,
       "tests/test_multiasset_checkpoint.py": 4
@@ -4009,8 +4062,11 @@
     "research": {
       "src/ai_trading/benchmark_gate.py": 4,
       "src/ai_trading/bootstrap_gate.py": 4,
+      "src/ai_trading/broker.py": 4,
+      "src/ai_trading/config.py": 4,
       "src/ai_trading/cost_stress_gate.py": 4,
       "src/ai_trading/dashboard.py": 4,
+      "src/ai_trading/execution_costs.py": 4,
       "src/ai_trading/file_persistence.py": 4,
       "src/ai_trading/kronos_research.py": 4,
       "src/ai_trading/model_codec.py": 4,
@@ -4028,8 +4084,10 @@
       "src/ai_trading/shadow_quality.py": 4,
       "tests/test_benchmark_gate.py": 4,
       "tests/test_bootstrap_gate.py": 4,
+      "tests/test_broker.py": 4,
       "tests/test_cost_stress_gate.py": 4,
       "tests/test_dashboard_overview.py": 16,
+      "tests/test_execution_costs.py": 4,
       "tests/test_model_codec.py": 4,
       "tests/test_mtf_shadow_quality.py": 4,
       "tests/test_multi_market.py": 4,

@@ -5,258 +5,3181 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "RegimeGatePolicy": {
+    "BrokerState": {
       "definition": {
-        "file": "src/ai_trading/regime_gate.py",
-        "line": 10,
+        "file": "src/ai_trading/broker.py",
+        "line": 11,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/regime_gate.py",
-          "line": 10,
-          "preview": "class RegimeGatePolicy:",
+          "file": "src/ai_trading/broker.py",
+          "line": 11,
+          "preview": "class BrokerState:",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/regime_gate.py",
-          "line": 28,
-          "preview": "policy: RegimeGatePolicy | None = None,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/regime_gate.py",
-          "line": 30,
-          "preview": "policy = policy or RegimeGatePolicy()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_regime_gate.py",
-          "line": 3,
-          "preview": "from ai_trading.regime_gate import RegimeGatePolicy, evaluate_regime_gate",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_regime_gate.py",
-          "line": 32,
-          "preview": "RegimeGatePolicy(",
+          "file": "src/ai_trading/broker.py",
+          "line": 27,
+          "preview": "self.state = BrokerState(",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 5
+      "occurrence_count": 2
     },
-    "RegimeGateResult": {
+    "equity": {
       "definition": {
-        "file": "src/ai_trading/regime_gate.py",
-        "line": 17,
-        "kind": "class",
+        "file": "src/ai_trading/broker.py",
+        "line": 20,
+        "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/quantitative_artifact.py",
-          "line": 14,
-          "preview": "from .regime_gate import RegimeGateResult",
+          "file": "src/ai_trading/allocator_tuning.py",
+          "line": 40,
+          "preview": "equity = (1.0 + returns).cumprod() * 100_000.0",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/quantitative_artifact.py",
-          "line": 31,
-          "preview": "regime: RegimeGateResult",
+          "file": "src/ai_trading/allocator_tuning.py",
+          "line": 41,
+          "preview": "metrics = compute_metrics(equity)",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/quantitative_artifact.py",
-          "line": 64,
-          "preview": "regime: RegimeGateResult,",
+          "file": "src/ai_trading/backtest.py",
+          "line": 139,
+          "preview": "equity_before_step = broker.state.equity",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/quantitative_qualification.py",
-          "line": 8,
-          "preview": "from .regime_gate import RegimeGateResult",
+          "file": "src/ai_trading/backtest.py",
+          "line": 147,
+          "preview": "equity=broker.state.equity,",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/quantitative_qualification.py",
-          "line": 24,
-          "preview": "regime: RegimeGateResult,",
+          "file": "src/ai_trading/backtest.py",
+          "line": 172,
+          "preview": "curve[execution_idx] = broker.state.equity",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/regime_gate.py",
-          "line": 17,
-          "preview": "class RegimeGateResult:",
+          "file": "src/ai_trading/backtest.py",
+          "line": 176,
+          "preview": "broker.state.equity / equity_before_step - 1.0",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/backtest.py",
+          "line": 184,
+          "preview": "equity = pd.Series(curve, dtype=float).sort_index()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/backtest.py",
+          "line": 187,
+          "preview": "benchmark_price_series.reindex(equity.index),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/backtest.py",
+          "line": 194,
+          "preview": "else infer_periods_per_year(equity.index)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/backtest.py",
+          "line": 196,
+          "preview": "metrics = compute_metrics(equity, periods_per_year)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/backtest.py",
+          "line": 213,
+          "preview": "equity_curve=equity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/bootstrap_robustness.py",
+          "line": 49,
+          "preview": "raise ValueError(\"equity curve must contain at least three valid observations\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/broker.py",
+          "line": 20,
+          "preview": "def equity(self) -> float:",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/regime_gate.py",
-          "line": 29,
-          "preview": ") -> RegimeGateResult:",
+          "file": "src/ai_trading/broker.py",
+          "line": 38,
+          "preview": "equity = self.state.equity",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/regime_gate.py",
+          "file": "src/ai_trading/broker.py",
           "line": 39,
-          "preview": "return RegimeGateResult(",
+          "preview": "self.state.peak_equity = max(self.state.peak_equity, equity)",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/regime_gate.py",
-          "line": 57,
-          "preview": "return RegimeGateResult(",
+          "file": "src/ai_trading/broker.py",
+          "line": 42,
+          "preview": "self.state.day_start_equity = self.state.equity",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_quantitative_artifact.py",
-          "line": 10,
-          "preview": "from ai_trading.regime_gate import RegimeGateResult",
+          "file": "src/ai_trading/broker.py",
+          "line": 55,
+          "preview": "minimum_turnover = self.state.equity * self.config.min_rebalance_fraction",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_quantitative_artifact.py",
+          "file": "src/ai_trading/burnin.py",
+          "line": 18,
+          "preview": "equity: float",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/burnin.py",
+          "line": 36,
+          "preview": "equity = pd.Series(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/burnin.py",
+          "line": 37,
+          "preview": "[snapshot.equity for snapshot in values],",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/burnin.py",
+          "line": 41,
+          "preview": "periods_per_year = infer_periods_per_year(equity.index)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/burnin.py",
+          "line": 42,
+          "preview": "return compute_metrics(equity, periods_per_year=periods_per_year)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/burnin.py",
+          "line": 52,
+          "preview": "equity: float,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/burnin.py",
+          "line": 58,
+          "preview": "if equity <= 0:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/burnin.py",
+          "line": 59,
+          "preview": "raise ValueError(\"equity must be positive\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/burnin.py",
+          "line": 62,
+          "preview": "equity=float(equity),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 168,
+          "preview": "table.add_row(\"Equity\", f\"{results[0].equity:,.2f}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 202,
+          "preview": "table.add_row(\"Starting equity\", f\"{result.starting_equity:,.2f}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 203,
+          "preview": "table.add_row(\"Final equity\", f\"{result.final_equity:,.2f}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 681,
+          "preview": "table.add_row(\"Equity\", f\"{result.equity:,.2f}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 718,
+          "preview": "table.add_row(\"Equity\", f\"{last.runtime.equity:,.2f}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 742,
+          "preview": "equity: float = typer.Option(100_000.0, min=1.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 759,
+          "preview": "notionals = target_notionals(equity, weights)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 762,
+          "preview": "equity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 839,
+          "preview": "table.add_row(\"Equity\", f\"{result.equity:,.2f}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 1552,
+          "preview": "table.add_row(\"Last equity\", f\"{last.equity:,.2f}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 1791,
+          "preview": "\"Final equity\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 1795,
+          "preview": "\"Minimum equity\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 127,
+          "preview": "values = [float(snapshot.equity) for snapshot in snapshots]",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 148,
+          "preview": "'<div class=\"equity-chart\">'",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 150,
+          "preview": "'aria-label=\"Burn-in equity curve\" preserveAspectRatio=\"none\">'",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 300,
+          "preview": "equity: float | None = None",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 333,
+          "preview": "equity = state.cash + state.units * state.last_price if state is not None else starting_cash",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 503,
+          "preview": "tuple(float(snapshot.equity) for snapshot in burnin_snapshots)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 661,
+          "preview": "sleeve_equity = item.get(\"equity\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 836,
+          "preview": "f'<div><small>Portfolio equity</small><strong>{_display_money(None if portfolio[\"equity\"] is None else float(portfolio[\"equity\"]))}</strong></div>'",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 962,
+          "preview": ".equity-chart{{margin-top:11px;background:linear-gradient(180deg,rgba(4,10,20,.9),rgba(7,15,28,.78));border:1px solid var(--border);border-radius:15px;padding:11px;overflow:hidden}",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 963,
+          "preview": ".equity-chart svg{{display:block;width:100%;height:240px;filter:drop-shadow(0 12px 24px rgba(0,0,0,.22))}}",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 982,
+          "preview": "@media (max-width:700px){{main{{padding:9px 8px 24px}}.top-nav{{top:5px;border-radius:13px;padding:8px 9px}}.brand span:last-child{{display:none}}.nav-links{{max-width:76vw}}.card{",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1015,
+          "preview": "<div class=\"hero-kpi\"><small>Equity</small><strong>{_display_money(equity)}</strong></div>",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1046,
+          "preview": "<div class=\"metric\"><small>Equity</small><strong>{_display_money(equity)}</strong></div>",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 1071,
+          "preview": "<div class=\"section-head\"><h2>Burn-in evidence</h2><small>durable equity history</small></div>",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/economic_meta.py",
           "line": 35,
-          "preview": "\"regime\": RegimeGateResult(True, 3, \"range\", -0.02, 0.10, ()),",
+          "preview": "equity: float,",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_reproducibility.py",
-          "line": 9,
-          "preview": "from ai_trading.regime_gate import RegimeGateResult",
+          "file": "src/ai_trading/economic_meta.py",
+          "line": 39,
+          "preview": "if equity <= 0:",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_reproducibility.py",
+          "file": "src/ai_trading/economic_meta.py",
+          "line": 40,
+          "preview": "raise ValueError(\"equity must be positive\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/economic_meta.py",
+          "line": 43,
+          "preview": "decayed_pnl = d * stats.decayed_pnl + float(pnl) / equity",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/economic_meta.py",
           "line": 44,
-          "preview": "regime=RegimeGateResult(True, 3, \"range\", -0.02, 0.10, ()),",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 13
-    },
-    "evaluate_regime_gate": {
-      "definition": {
-        "file": "src/ai_trading/regime_gate.py",
-        "line": 26,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 83,
-          "preview": "from .regime_gate import evaluate_regime_gate",
+          "preview": "decayed_turnover = d * stats.decayed_turnover + abs(float(turnover)) / equity",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/cli.py",
-          "line": 289,
-          "preview": "regime_gate = evaluate_regime_gate(report)",
+          "file": "src/ai_trading/economic_meta.py",
+          "line": 45,
+          "preview": "decayed_costs = d * stats.decayed_costs + abs(float(costs)) / equity",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/regime_gate.py",
-          "line": 26,
-          "preview": "def evaluate_regime_gate(",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_regime_gate.py",
-          "line": 3,
-          "preview": "from ai_trading.regime_gate import RegimeGatePolicy, evaluate_regime_gate",
+          "file": "src/ai_trading/economic_meta_store.py",
+          "line": 37,
+          "preview": "equity: float,",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_regime_gate.py",
-          "line": 15,
-          "preview": "result = evaluate_regime_gate(report)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_regime_gate.py",
-          "line": 30,
-          "preview": "result = evaluate_regime_gate(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_regime_gate.py",
+          "file": "src/ai_trading/economic_meta_store.py",
           "line": 48,
-          "preview": "result = evaluate_regime_gate(report)",
+          "preview": "equity=equity,",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_regime_gate.py",
-          "line": 61,
-          "preview": "result = evaluate_regime_gate(report)",
+          "file": "src/ai_trading/engine.py",
+          "line": 65,
+          "preview": "start = broker.state.equity",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/engine.py",
+          "line": 82,
+          "preview": "equity=broker.state.equity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/engine.py",
+          "line": 97,
+          "preview": "dd = 1.0 - broker.state.equity / broker.state.peak_equity",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/engine.py",
+          "line": 103,
+          "preview": "final = broker.state.equity",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/evolution_manager.py",
+          "line": 82,
+          "preview": "equity = (1.0 + returns).cumprod() * 100_000.0",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/evolution_manager.py",
+          "line": 83,
+          "preview": "return float(compute_metrics(equity).sharpe)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/expert_sandbox.py",
+          "line": 48,
+          "preview": "equity = [100_000.0]",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/expert_sandbox.py",
+          "line": 63,
+          "preview": "equity.append(equity[-1] * (1.0 + pred.side * ret))",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/expert_sandbox.py",
+          "line": 65,
+          "preview": "curve = pd.Series(equity, dtype=float)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 107,
+          "preview": "equity=state.cash + state.units * state.last_price,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 106,
+          "preview": "equity=runtime.risk_config.starting_cash,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/hosted_runtime.py",
+          "line": 128,
+          "preview": "equity=step.equity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 323,
+          "preview": "\"equity\": sleeve_equity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 353,
+          "preview": "\"equity\": None,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 393,
+          "preview": "\"equity\": reported_portfolio_equity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 109,
+          "preview": "equity = cash + sum(units[s] * last_prices[s] for s in aligned)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 131,
+          "preview": "current_equity=equity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 135,
+          "preview": "notionals = target_notionals(equity, intelligent)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 138,
+          "preview": "equity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 169,
+          "preview": "equity = cash + sum(units[s] * last_prices[s] for s in aligned)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 170,
+          "preview": "peak_equity = max(peak_equity, equity)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 171,
+          "preview": "curve[execution_idx] = equity",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_evolution.py",
+          "line": 93,
+          "preview": "equity = (1.0 + returns).cumprod() * 100_000.0",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_evolution.py",
+          "line": 94,
+          "preview": "return float(compute_metrics(equity).sharpe)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 78,
+          "preview": "equity: float",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 342,
+          "preview": "equity=state.equity(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 484,
+          "preview": "current_equity = state.equity()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 755,
+          "preview": "equity = state.equity()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 769,
+          "preview": "current_equity=equity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 820,
+          "preview": "else max(0.0, 1.0 - equity / state.peak_equity)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 835,
+          "preview": "provisional_notionals = target_notionals(equity, intelligent_weights)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 838,
+          "preview": "equity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 993,
+          "preview": "notionals = target_notionals(equity, intelligent_weights)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 996,
+          "preview": "equity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 1041,
+          "preview": "max(equity, 1e-12),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 1053,
+          "preview": "portfolio_equity=max(equity, 1e-12),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 1081,
+          "preview": "max(equity, 1e-12),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 1087,
+          "preview": "current_equity = state.equity()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 1132,
+          "preview": "equity=update_equity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 1160,
+          "preview": "\"equity\": current_equity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 1257,
+          "preview": "equity=current_equity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_state.py",
+          "line": 23,
+          "preview": "def equity(self) -> float:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/operational_overview.py",
+          "line": 322,
+          "preview": "tuple(float(snapshot.equity) for snapshot in snapshots)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 136,
+          "preview": "equity=(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 137,
+          "preview": "previous_status.equity",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 138,
+          "preview": "if previous_status is not None and previous_status.equity > 0",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 175,
+          "preview": "equity = state.cash + state.units * state.last_price",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 214,
+          "preview": "equity=equity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/performance.py",
+          "line": 54,
+          "preview": "def compute_metrics(equity: pd.Series, periods_per_year: float = 252.0) -> PerformanceMetrics:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/performance.py",
+          "line": 55,
+          "preview": "clean = equity.astype(float).dropna()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/performance.py",
+          "line": 57,
+          "preview": "raise ValueError(\"Need at least two equity observations\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/performance_metrics.py",
+          "line": 89,
+          "preview": "\"\"\"Match normalized paper sleeves to the weights used in portfolio equity.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio.py",
+          "line": 106,
+          "preview": "equity: float,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio.py",
+          "line": 109,
+          "preview": "if equity <= 0:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio.py",
+          "line": 110,
+          "preview": "raise ValueError(\"equity must be positive\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio.py",
+          "line": 111,
+          "preview": "return weights.astype(float) * float(equity)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio_risk.py",
+          "line": 38,
+          "preview": "equity: float,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio_risk.py",
+          "line": 43,
+          "preview": "if equity <= 0:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio_risk.py",
+          "line": 44,
+          "preview": "raise ValueError(\"equity must be positive\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio_risk.py",
+          "line": 46,
+          "preview": "exposures = notionals.astype(float) / equity",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 8
+      "occurrence_count": 120
     },
-    "test_regime_gate_accepts_balanced_regime_results": {
+    "PaperBroker": {
       "definition": {
-        "file": "tests/test_regime_gate.py",
-        "line": 6,
-        "kind": "function",
+        "file": "src/ai_trading/broker.py",
+        "line": 24,
+        "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_regime_gate.py",
-          "line": 6,
-          "preview": "def test_regime_gate_accepts_balanced_regime_results() -> None:",
+          "file": "src/ai_trading/backtest.py",
+          "line": 7,
+          "preview": "from .broker import PaperBroker",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/backtest.py",
+          "line": 93,
+          "preview": "broker = PaperBroker(self.risk_config)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/broker.py",
+          "line": 24,
+          "preview": "class PaperBroker:",
           "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/engine.py",
+          "line": 7,
+          "preview": "from .broker import PaperBroker",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/engine.py",
+          "line": 64,
+          "preview": "broker = PaperBroker(self.risk_config)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 10,
+          "preview": "from .broker import PaperBroker",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 107,
+          "preview": "def _broker_from_state(self, state: RuntimeState) -> PaperBroker:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 108,
+          "preview": "broker = PaperBroker(self.risk_config)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 119,
+          "preview": "broker: PaperBroker,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 10,
+          "preview": "from ai_trading.broker import PaperBroker",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 54,
+          "preview": "original = PaperBroker.reset_day_start",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 61,
+          "preview": "monkeypatch.setattr(PaperBroker, \"reset_day_start\", tracked_reset)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 117,
+          "preview": "original_rebalance = PaperBroker.rebalance",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 123,
+          "preview": "monkeypatch.setattr(PaperBroker, \"rebalance\", tracked_rebalance)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 5,
+          "preview": "from ai_trading.broker import PaperBroker",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 10,
+          "preview": "broker = PaperBroker(RiskConfig())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 23,
+          "preview": "broker = PaperBroker(RiskConfig())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 30,
+          "preview": "broker = PaperBroker(RiskConfig())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 37,
+          "preview": "broker = PaperBroker(RiskConfig())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 43,
+          "preview": "broker = PaperBroker(RiskConfig(min_rebalance_fraction=0.005))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 59,
+          "preview": "broker = PaperBroker(RiskConfig(min_rebalance_fraction=1.0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 72,
+          "preview": "broker = PaperBroker(RiskConfig())",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 22
     },
-    "test_regime_gate_rejects_fragile_regime_profile": {
+    "__init__": {
       "definition": {
-        "file": "tests/test_regime_gate.py",
-        "line": 22,
+        "file": "src/ai_trading/broker.py",
+        "line": 25,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_regime_gate.py",
+          "file": "src/ai_trading/allocation_state.py",
+          "line": 16,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/global_allocation.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/allocator_config_store.py",
+          "line": 11,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/global_allocator_config.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/audit.py",
+          "line": 32,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/audit.jsonl\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/backtest.py",
+          "line": 68,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/broker.py",
+          "line": 25,
+          "preview": "def __init__(self, config: RiskConfig) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/burnin.py",
+          "line": 46,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/burnin.jsonl\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/champion_probation.py",
+          "line": 40,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/champion_probation.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/champion_probation.py",
+          "line": 56,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/champions.py",
+          "line": 26,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/champions.jsonl\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/crisis_state_store.py",
+          "line": 11,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/crisis_state.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/drift_retrain_store.py",
+          "line": 16,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/economic_meta_store.py",
+          "line": 11,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/economic_meta.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/engine.py",
+          "line": 25,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/ensemble.py",
+          "line": 27,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/experiments.py",
+          "line": 13,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/experiments.jsonl\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/expert_pool.py",
+          "line": 29,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/expert_pool.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/file_persistence.py",
+          "line": 40,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/generations.py",
+          "line": 27,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/governor_state_store.py",
+          "line": 16,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/risk_governor_state.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/health_server.py",
+          "line": 56,
+          "preview": "def __init__(self, host: str = \"127.0.0.1\", port: int = 8765) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/kronos_research.py",
+          "line": 278,
+          "preview": "if not (source_dir / \"model\" / \"__init__.py\").is_file():",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/lifecycle_log.py",
+          "line": 26,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/model_lifecycle.jsonl\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/maintenance.py",
+          "line": 15,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/maintenance.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/meta_store.py",
+          "line": 11,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/meta_router.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/model.py",
+          "line": 26,
+          "preview": "def __init__(self, random_state: int = 42) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/model_quarantine.py",
+          "line": 26,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/model_quarantine.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 29,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_checkpoint.py",
+          "line": 21,
+          "preview": "def __init__(self, root: str | Path, *, retain_generations: int = 3) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 89,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_scheduler.py",
+          "line": 34,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_state.py",
+          "line": 28,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/multiasset_state.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/online.py",
+          "line": 27,
+          "preview": "def __init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/online.py",
+          "line": 68,
+          "preview": "def __init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/online.py",
+          "line": 69,
+          "preview": "super().__init__()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/orchestrator.py",
+          "line": 31,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle.py",
+          "line": 104,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 27,
+          "preview": "def __init__(self, *, code: str, error_type: str) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 28,
+          "preview": "super().__init__(code)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/persistence.py",
+          "line": 109,
+          "preview": "def __init__(self, root: str | Path = \"artifacts/models\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/postgres_persistence.py",
+          "line": 291,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/qualification_store.py",
+          "line": 36,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/quality_store.py",
+          "line": 16,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/model_quality.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness_release.py",
+          "line": 190,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness_revocation.py",
+          "line": 17,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/readiness_score.py",
+          "line": 130,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/resilience.py",
+          "line": 107,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/resilience_state.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/restart_log.py",
+          "line": 19,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/restarts.jsonl\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/risk.py",
+          "line": 29,
+          "preview": "def __init__(self, config: RiskConfig) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 59,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime_lock.py",
+          "line": 9,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/runtime.lock\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime_state.py",
           "line": 22,
-          "preview": "def test_regime_gate_rejects_fragile_regime_profile() -> None:",
-          "definition_candidate": true
+          "preview": "def __init__(self, path: str | Path = \"artifacts/runtime_state.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime_status.py",
+          "line": 92,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/runtime_status.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/scheduler.py",
+          "line": 25,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/specialist_experts.py",
+          "line": 23,
+          "preview": "def __init__(self, kind: str, random_state: int = 42) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/state_snapshot.py",
+          "line": 19,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/supervisor.py",
+          "line": 59,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/supervisor_lease.py",
+          "line": 18,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/supervisor_lease.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/supervisor_state.py",
+          "line": 19,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/supervisor_state.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/trade_journal.py",
+          "line": 29,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/trades.jsonl\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/watchdog.py",
+          "line": 23,
+          "preview": "def __init__(self, path: str | Path = \"artifacts/heartbeat.json\") -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cost_stress.py",
+          "line": 11,
+          "preview": "def __init__(self, *, risk_config, model_config=None, config=None) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 239,
+          "preview": "def __init__(self, payload):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_health.py",
+          "line": 295,
+          "preview": "def __init__(self, payload):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_overview.py",
+          "line": 27,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_dashboard_persistence.py",
+          "line": 24,
+          "preview": "def __init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_data.py",
+          "line": 105,
+          "preview": "def __init__(self, name: str, result) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_persistence.py",
+          "line": 15,
+          "preview": "def __init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_persistence.py",
+          "line": 40,
+          "preview": "def __init__(self, **kwargs) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_persistence.py",
+          "line": 71,
+          "preview": "def __init__(self, **kwargs) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_runtime.py",
+          "line": 69,
+          "preview": "def __init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_hosted_runtime.py",
+          "line": 81,
+          "preview": "def __init__(self, **kwargs) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_shadow_challenger.py",
+          "line": 67,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_shadow_challenger.py",
+          "line": 148,
+          "preview": "def __init__(self, **kwargs) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 1093,
+          "preview": "def __init__(self):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 20,
+          "preview": "def __init__(self, *, initial_status: HostedRuntimeStatus | None = None) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 49,
+          "preview": "def __init__(self, persistence: FakePersistence) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_workflow.py",
+          "line": 19,
+          "preview": "def __init__(self, payload: dict[str, object], *, status: int = 200) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 37,
+          "preview": "def __init__(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_scheduler.py",
+          "line": 8,
+          "preview": "def __init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_scheduler_iteration_callback.py",
+          "line": 21,
+          "preview": "def __init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_shadow_challenger.py",
+          "line": 42,
+          "preview": "def __init__(",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 81
     },
-    "test_regime_gate_rejects_nan_return_instead_of_passing": {
+    "mark": {
       "definition": {
-        "file": "tests/test_regime_gate.py",
+        "file": "src/ai_trading/broker.py",
+        "line": 33,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/backtest.py",
+          "line": 134,
+          "preview": "broker.mark(execution_price)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/backtest.py",
+          "line": 171,
+          "preview": "broker.mark(close_price)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/broker.py",
+          "line": 33,
+          "preview": "def mark(self, price: float) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/broker.py",
+          "line": 50,
+          "preview": "self.mark(price)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/broker.py",
+          "line": 75,
+          "preview": "self.mark(price)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 773,
+          "preview": "f'<div class=\"market-identity\"><span class=\"market-mark\">{market_mark}</span>'",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 871,
+          "preview": ".brand-mark{{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#78a9ff,#5ce1d8);color:#03101d;box-shadow:0 0 28px rgba(91,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 929,
+          "preview": ".market-mark{{width:37px;height:37px;flex:0 0 37px;border-radius:11px;display:grid;place-items:center;font-weight:900;font-size:.76rem;color:var(--accent);background:var(--accent-s",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/dashboard.py",
+          "line": 988,
+          "preview": "<div class=\"brand\"><span class=\"brand-mark\">AI</span><span>Trading Terminal</span></div>",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/drift_retrain_store.py",
+          "line": 43,
+          "preview": "def mark(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/engine.py",
+          "line": 74,
+          "preview": "broker.mark(price)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/engine.py",
+          "line": 101,
+          "preview": "broker.mark(float(df.at[test_idx[-1], \"Close\"]))",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 1096,
+          "preview": "self.drift_retrain_store.mark(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 297,
+          "preview": "broker.mark(execution_price)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 339,
+          "preview": "broker.mark(close_price)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_bootstrap_robustness.py",
+          "line": 50,
+          "preview": "@pytest.mark.parametrize(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 13,
+          "preview": "broker.mark(100.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 21,
+          "preview": "@pytest.mark.parametrize(\"price\", [0.0, -1.0, math.nan, math.inf, -math.inf])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 25,
+          "preview": "broker.mark(price)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 28,
+          "preview": "@pytest.mark.parametrize(\"side\", [-2, 2, 99])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 35,
+          "preview": "@pytest.mark.parametrize(\"notional\", [-1.0, math.nan, math.inf])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 80,
+          "preview": "@pytest.mark.parametrize(\"fraction\", [-0.01, 1.01, math.nan, math.inf])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_config_validation.py",
+          "line": 16,
+          "preview": "@pytest.mark.parametrize(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_config_validation.py",
+          "line": 43,
+          "preview": "@pytest.mark.parametrize(\"alpha\", [0.0, 1.0, -0.1, 1.1])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_data_quality.py",
+          "line": 81,
+          "preview": "@pytest.mark.parametrize(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_drift_retrain_store.py",
+          "line": 10,
+          "preview": "store.mark(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 38,
+          "preview": "@pytest.mark.parametrize(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 137,
+          "preview": "@pytest.mark.parametrize(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 152,
+          "preview": "@pytest.mark.parametrize(\"raw\", [\"\", \",\", \"GC=F,\", \",BTC-USD\", \"GC=F,,BTC-USD\"])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 479,
+          "preview": "@pytest.mark.parametrize(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_market.py",
+          "line": 644,
+          "preview": "@pytest.mark.parametrize(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_market_context.py",
+          "line": 75,
+          "preview": "@pytest.mark.parametrize(\"invalid_price\", [0.0, -1.0, np.nan, np.inf])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 44,
+          "preview": "@pytest.mark.skipif(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_service.py",
+          "line": 448,
+          "preview": "@pytest.mark.parametrize(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_workflow.py",
+          "line": 58,
+          "preview": "@pytest.mark.parametrize(\"age_seconds\", [8 * 60, 13 * 60, 30 * 60, 32 * 60])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_workflow.py",
+          "line": 80,
+          "preview": "@pytest.mark.parametrize(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_execution.py",
+          "line": 38,
+          "preview": "@pytest.mark.parametrize(\"price\", [0.0, -1.0])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_execution.py",
+          "line": 50,
+          "preview": "@pytest.mark.parametrize(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_portfolio_intelligence.py",
+          "line": 155,
+          "preview": "@pytest.mark.parametrize(\"equity,peak\", [(float(\"nan\"), 100_000.0), (100_000.0, 0.0)])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_research_config_validation.py",
+          "line": 8,
+          "preview": "@pytest.mark.parametrize(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 93,
+          "preview": "@pytest.mark.parametrize(\"entry_side\", [-1, 1])",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 41
+    },
+    "reset_day_start": {
+      "definition": {
+        "file": "src/ai_trading/broker.py",
+        "line": 41,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/backtest.py",
+          "line": 137,
+          "preview": "broker.reset_day_start()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/broker.py",
+          "line": 41,
+          "preview": "def reset_day_start(self) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/engine.py",
+          "line": 77,
+          "preview": "broker.reset_day_start()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 305,
+          "preview": "broker.reset_day_start()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 54,
+          "preview": "original = PaperBroker.reset_day_start",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 61,
+          "preview": "monkeypatch.setattr(PaperBroker, \"reset_day_start\", tracked_reset)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 15,
+          "preview": "broker.reset_day_start()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "rebalance": {
+      "definition": {
+        "file": "src/ai_trading/broker.py",
         "line": 44,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_regime_gate.py",
+          "file": "src/ai_trading/backtest.py",
+          "line": 162,
+          "preview": "broker.rebalance(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/broker.py",
           "line": 44,
-          "preview": "def test_regime_gate_rejects_nan_return_instead_of_passing() -> None:",
+          "preview": "def rebalance(self, side: int, target_notional: float, price: float) -> RebalanceFill:",
           "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/engine.py",
+          "line": 91,
+          "preview": "broker.rebalance(decision.side, decision.target_notional, price)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 319,
+          "preview": "fill = broker.rebalance(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 117,
+          "preview": "original_rebalance = PaperBroker.rebalance",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 123,
+          "preview": "monkeypatch.setattr(PaperBroker, \"rebalance\", tracked_rebalance)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 32,
+          "preview": "broker.rebalance(side, 1_000.0, 100.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 39,
+          "preview": "broker.rebalance(1, notional, 100.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 44,
+          "preview": "opening = broker.rebalance(1, 10_000.0, 100.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 47,
+          "preview": "micro = broker.rebalance(1, 10_200.0, 100.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 52,
+          "preview": "meaningful = broker.rebalance(1, 11_000.0, 100.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 60,
+          "preview": "broker.rebalance(1, 1_000.0, 100.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 62,
+          "preview": "flipped = broker.rebalance(-1, 1_000.0, 100.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 66,
+          "preview": "exited = broker.rebalance(0, 0.0, 100.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 73,
+          "preview": "broker.rebalance(1, 10_000.0, 100.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 75,
+          "preview": "fill = broker.rebalance(1, 10_200.0, 100.0)",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 16
     },
-    "test_regime_gate_rejects_infinite_return_instead_of_passing": {
+    "RiskConfig": {
       "definition": {
-        "file": "tests/test_regime_gate.py",
-        "line": 57,
+        "file": "src/ai_trading/config.py",
+        "line": 6,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/backtest.py",
+          "line": 8,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/backtest.py",
+          "line": 71,
+          "preview": "risk_config: RiskConfig,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/broker.py",
+          "line": 6,
+          "preview": "from .config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/broker.py",
+          "line": 25,
+          "preview": "def __init__(self, config: RiskConfig) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 27,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 225,
+          "preview": "risk_config = RiskConfig()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 442,
+          "preview": "risk_config = RiskConfig()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 516,
+          "preview": "risk_config=RiskConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 566,
+          "preview": "risk_config=RiskConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 627,
+          "preview": "risk_config=RiskConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 793,
+          "preview": "risk_config=RiskConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/config.py",
+          "line": 6,
+          "preview": "class RiskConfig:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/continuous.py",
+          "line": 9,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/continuous.py",
+          "line": 41,
+          "preview": "risk = RiskConfig(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cost_stress.py",
+          "line": 8,
+          "preview": "from .config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cost_stress.py",
+          "line": 69,
+          "preview": "config: RiskConfig,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cost_stress.py",
+          "line": 71,
+          "preview": ") -> RiskConfig:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/engine.py",
+          "line": 8,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/engine.py",
+          "line": 27,
+          "preview": "risk_config: RiskConfig | None = None,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/engine.py",
+          "line": 30,
+          "preview": "self.risk_config = risk_config or RiskConfig()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/execution_costs.py",
+          "line": 8,
+          "preview": "from .config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/execution_costs.py",
+          "line": 15,
+          "preview": "base: RiskConfig | None = None,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/execution_costs.py",
+          "line": 18,
+          "preview": ") -> RiskConfig:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/execution_costs.py",
+          "line": 19,
+          "preview": "config = base or RiskConfig()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 7,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 32,
+          "preview": "risk_config: RiskConfig | None = None,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 45,
+          "preview": "self.risk_config = risk_config or RiskConfig()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 20,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 92,
+          "preview": "risk_config: RiskConfig | None = None,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 127,
+          "preview": "self.risk_config = risk_config or RiskConfig()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/orchestrator.py",
+          "line": 9,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/orchestrator.py",
+          "line": 49,
+          "preview": "risk_config=RiskConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 8,
+          "preview": "from .config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/paper_cycle_service.py",
+          "line": 109,
+          "preview": "starting_cash = RiskConfig().starting_cash",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/risk.py",
+          "line": 5,
+          "preview": "from .config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/risk.py",
+          "line": 29,
+          "preview": "def __init__(self, config: RiskConfig) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 11,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 62,
+          "preview": "risk_config: RiskConfig | None = None,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 74,
+          "preview": "base_risk_config = risk_config or RiskConfig()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/tuning.py",
+          "line": 9,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/tuning.py",
+          "line": 56,
+          "preview": "risk = RiskConfig(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 11,
+          "preview": "from ai_trading.config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 35,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 64,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 84,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 125,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest_ensemble.py",
+          "line": 5,
+          "preview": "from ai_trading.config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest_ensemble.py",
+          "line": 27,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 6,
+          "preview": "from ai_trading.config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 10,
+          "preview": "broker = PaperBroker(RiskConfig())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 23,
+          "preview": "broker = PaperBroker(RiskConfig())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 30,
+          "preview": "broker = PaperBroker(RiskConfig())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 37,
+          "preview": "broker = PaperBroker(RiskConfig())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 43,
+          "preview": "broker = PaperBroker(RiskConfig(min_rebalance_fraction=0.005))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 59,
+          "preview": "broker = PaperBroker(RiskConfig(min_rebalance_fraction=1.0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 72,
+          "preview": "broker = PaperBroker(RiskConfig())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_broker.py",
+          "line": 83,
+          "preview": "RiskConfig(min_rebalance_fraction=fraction)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_config_validation.py",
+          "line": 5,
+          "preview": "from ai_trading.config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_config_validation.py",
+          "line": 19,
+          "preview": "lambda: RiskConfig(starting_cash=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_config_validation.py",
+          "line": 20,
+          "preview": "lambda: RiskConfig(min_confidence=1.1),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_config_validation.py",
+          "line": 21,
+          "preview": "lambda: RiskConfig(transaction_cost_bps=-1.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cost_stress.py",
+          "line": 5,
+          "preview": "from ai_trading.config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_cost_stress.py",
+          "line": 45,
+          "preview": "base = FakeBacktester(risk_config=RiskConfig())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 3,
+          "preview": "from ai_trading.config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 15,
+          "preview": "base = RiskConfig(transaction_cost_bps=2.0, slippage_bps=1.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 26,
+          "preview": "base = RiskConfig(transaction_cost_bps=2.0, slippage_bps=1.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 77,
+          "preview": "explicit = RiskConfig(transaction_cost_bps=9.0, slippage_bps=10.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_backtest.py",
+          "line": 6,
+          "preview": "from ai_trading.config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_backtest.py",
+          "line": 33,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_backtest.py",
+          "line": 58,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_backtest.py",
+          "line": 82,
+          "preview": "def capture(symbol: str, base: RiskConfig):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_backtest.py",
+          "line": 94,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 10,
+          "preview": "from ai_trading.config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 50,
+          "preview": "risk_config=RiskConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 92,
+          "preview": "risk_config=RiskConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 142,
+          "preview": "risk_config=RiskConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 176,
+          "preview": "risk_config=RiskConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 222,
+          "preview": "def fake_symbol_config(symbol: str, base: RiskConfig) -> RiskConfig:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 247,
+          "preview": "risk_config=RiskConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 281,
+          "preview": "risk_config=RiskConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 327,
+          "preview": "risk_config=RiskConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 468,
+          "preview": "risk_config=RiskConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 510,
+          "preview": "risk_config=RiskConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_orchestrator_trigger.py",
+          "line": 4,
+          "preview": "from ai_trading.config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_orchestrator_trigger.py",
+          "line": 12,
+          "preview": "risk_config=RiskConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 11,
+          "preview": "from ai_trading.config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 44,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_materialized_fresh.py",
+          "line": 6,
+          "preview": "from ai_trading.config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_materialized_fresh.py",
+          "line": 48,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 9,
+          "preview": "from ai_trading.config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 36,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_realized_pnl_accounting.py",
+          "line": 5,
+          "preview": "from ai_trading.config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_realized_pnl_accounting.py",
+          "line": 156,
+          "preview": "state = RuntimeStateStore(path).load(RiskConfig().starting_cash)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk.py",
+          "line": 1,
+          "preview": "from ai_trading.config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk.py",
+          "line": 7,
+          "preview": "engine = RiskEngine(RiskConfig(min_confidence=0.60))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk.py",
+          "line": 15,
+          "preview": "engine = RiskEngine(RiskConfig(max_drawdown_fraction=0.10))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk.py",
+          "line": 26,
+          "preview": "engine = RiskEngine(RiskConfig(max_daily_loss_fraction=0.02))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk.py",
+          "line": 46,
+          "preview": "engine = RiskEngine(RiskConfig(min_confidence=0.70))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime.py",
+          "line": 7,
+          "preview": "from ai_trading.config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime.py",
+          "line": 31,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 7,
+          "preview": "from ai_trading.config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 93,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 128,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 172,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 199,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 217,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 244,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 8,
+          "preview": "from ai_trading.config import RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 34,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 100,
+          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 110
+    },
+    "__post_init__": {
+      "definition": {
+        "file": "src/ai_trading/config.py",
+        "line": 17,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_regime_gate.py",
-          "line": 57,
-          "preview": "def test_regime_gate_rejects_infinite_return_instead_of_passing() -> None:",
+          "file": "src/ai_trading/alpha_allocation.py",
+          "line": 15,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/backtest.py",
+          "line": 37,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/config.py",
+          "line": 17,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/config.py",
+          "line": 44,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/global_allocator.py",
+          "line": 20,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/kronos_research.py",
+          "line": 31,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/mtf_parameter_benchmark.py",
+          "line": 34,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multi_market.py",
+          "line": 32,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio.py",
+          "line": 16,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio_intelligence.py",
+          "line": 22,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/portfolio_risk.py",
+          "line": 15,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/trade_journal.py",
+          "line": 21,
+          "preview": "def __post_init__(self) -> None:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 12
+    },
+    "ModelConfig": {
+      "definition": {
+        "file": "src/ai_trading/config.py",
+        "line": 40,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/backtest.py",
+          "line": 8,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/backtest.py",
+          "line": 72,
+          "preview": "model_config: ModelConfig,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 27,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 226,
+          "preview": "model_config = ModelConfig()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 443,
+          "preview": "model_config = ModelConfig()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 517,
+          "preview": "model_config=ModelConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 567,
+          "preview": "model_config=ModelConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 628,
+          "preview": "model_config=ModelConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/cli.py",
+          "line": 794,
+          "preview": "model_config=ModelConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/config.py",
+          "line": 40,
+          "preview": "class ModelConfig:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/continuous.py",
+          "line": 9,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/continuous.py",
+          "line": 47,
+          "preview": "model_config = ModelConfig(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/engine.py",
+          "line": 8,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/engine.py",
+          "line": 28,
+          "preview": "model_config: ModelConfig | None = None,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/engine.py",
+          "line": 31,
+          "preview": "self.model_config = model_config or ModelConfig()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 7,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 33,
+          "preview": "model_config: ModelConfig | None = None,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 46,
+          "preview": "self.model_config = model_config or ModelConfig()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_market_context.py",
+          "line": 8,
+          "preview": "from .config import ModelConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_market_context.py",
+          "line": 24,
+          "preview": "model_config: ModelConfig,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 20,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 93,
+          "preview": "model_config: ModelConfig | None = None,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 128,
+          "preview": "self.model_config = model_config or ModelConfig()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/orchestrator.py",
+          "line": 9,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/orchestrator.py",
+          "line": 50,
+          "preview": "model_config=ModelConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 11,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 63,
+          "preview": "model_config: ModelConfig | None = None,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 80,
+          "preview": "self.model_config = model_config or ModelConfig()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/tuning.py",
+          "line": 9,
+          "preview": "from .config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/tuning.py",
+          "line": 64,
+          "preview": "model = ModelConfig(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 11,
+          "preview": "from ai_trading.config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 36,
+          "preview": "model_config=ModelConfig(return_threshold=0.001),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 65,
+          "preview": "model_config=ModelConfig(return_threshold=0.001),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 85,
+          "preview": "model_config=ModelConfig(return_threshold=0.001),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 126,
+          "preview": "model_config=ModelConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest_ensemble.py",
+          "line": 5,
+          "preview": "from ai_trading.config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest_ensemble.py",
+          "line": 28,
+          "preview": "model_config=ModelConfig(return_threshold=0.001),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_config_validation.py",
+          "line": 5,
+          "preview": "from ai_trading.config import ModelConfig, RiskConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_config_validation.py",
+          "line": 22,
+          "preview": "lambda: ModelConfig(horizon_bars=0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_config_validation.py",
+          "line": 23,
+          "preview": "lambda: ModelConfig(return_threshold=-0.001),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_market_context.py",
+          "line": 5,
+          "preview": "from ai_trading.config import ModelConfig",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_market_context.py",
+          "line": 34,
+          "preview": "context = prepare_multiasset_market_context(markets, ModelConfig())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_market_context.py",
+          "line": 49,
+          "preview": "ModelConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_market_context.py",
+          "line": 55,
+          "preview": "prepare_multiasset_market_context({\"A\": market(1)}, ModelConfig())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_market_context.py",
+          "line": 62,
+          "preview": "ModelConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_market_context.py",
+          "line": 71,
+          "preview": "ModelConfig(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_market_context.py",
+          "line": 85,
+          "preview": "ModelConfig(),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 47
+    },
+    "risk_config_for_symbol": {
+      "definition": {
+        "file": "src/ai_trading/execution_costs.py",
+        "line": 13,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/execution_costs.py",
+          "line": 13,
+          "preview": "def risk_config_for_symbol(",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 9,
+          "preview": "from .execution_costs import risk_config_for_symbol",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 147,
+          "preview": "symbol_risk_config = risk_config_for_symbol(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 29,
+          "preview": "from .execution_costs import risk_config_for_symbol",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 1009,
+          "preview": "symbol_risk_config = risk_config_for_symbol(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 12,
+          "preview": "from .execution_costs import risk_config_for_symbol",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/runtime.py",
+          "line": 78,
+          "preview": "else risk_config_for_symbol(symbol, base_risk_config)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 4,
+          "preview": "from ai_trading.execution_costs import risk_config_for_symbol",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 17,
+          "preview": "gold = risk_config_for_symbol(\"GC=F\", base, raw=raw)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 18,
+          "preview": "dax = risk_config_for_symbol(\"^GDAXI\", base, raw=raw)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 27,
+          "preview": "updated = risk_config_for_symbol(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 53,
+          "preview": "risk_config_for_symbol(\"GC=F\", raw=raw)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_backtest.py",
+          "line": 80,
+          "preview": "real_config = backtest_module.risk_config_for_symbol",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_backtest.py",
+          "line": 92,
+          "preview": "monkeypatch.setattr(backtest_module, \"risk_config_for_symbol\", capture)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 238,
+          "preview": "\"ai_trading.multiasset_runtime.risk_config_for_symbol\",",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 15
+    },
+    "test_broker_resets_daily_loss_baseline_to_current_equity": {
+      "definition": {
+        "file": "tests/test_broker.py",
+        "line": 9,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_broker.py",
+          "line": 9,
+          "preview": "def test_broker_resets_daily_loss_baseline_to_current_equity() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_broker_rejects_invalid_mark_prices": {
+      "definition": {
+        "file": "tests/test_broker.py",
+        "line": 22,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_broker.py",
+          "line": 22,
+          "preview": "def test_broker_rejects_invalid_mark_prices(price: float) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_broker_rejects_invalid_sides": {
+      "definition": {
+        "file": "tests/test_broker.py",
+        "line": 29,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_broker.py",
+          "line": 29,
+          "preview": "def test_broker_rejects_invalid_sides(side: int) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_broker_rejects_invalid_target_notional": {
+      "definition": {
+        "file": "tests/test_broker.py",
+        "line": 36,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_broker.py",
+          "line": 36,
+          "preview": "def test_broker_rejects_invalid_target_notional(notional: float) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_opt_in_deadband_avoids_costly_same_side_micro_rebalances": {
+      "definition": {
+        "file": "tests/test_broker.py",
+        "line": 42,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_broker.py",
+          "line": 42,
+          "preview": "def test_opt_in_deadband_avoids_costly_same_side_micro_rebalances() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_deadband_never_blocks_stop_exit_or_position_flip": {
+      "definition": {
+        "file": "tests/test_broker.py",
+        "line": 58,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_broker.py",
+          "line": 58,
+          "preview": "def test_deadband_never_blocks_stop_exit_or_position_flip() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_rebalance_deadband_is_disabled_by_default": {
+      "definition": {
+        "file": "tests/test_broker.py",
+        "line": 71,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_broker.py",
+          "line": 71,
+          "preview": "def test_rebalance_deadband_is_disabled_by_default() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_invalid_rebalance_deadband_rejected": {
+      "definition": {
+        "file": "tests/test_broker.py",
+        "line": 81,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_broker.py",
+          "line": 81,
+          "preview": "def test_invalid_rebalance_deadband_rejected(fraction: float) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_execution_cost_override_is_symbol_specific": {
+      "definition": {
+        "file": "tests/test_execution_costs.py",
+        "line": 8,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 8,
+          "preview": "def test_execution_cost_override_is_symbol_specific() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_execution_cost_override_can_be_partial": {
+      "definition": {
+        "file": "tests/test_execution_costs.py",
+        "line": 25,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 25,
+          "preview": "def test_execution_cost_override_can_be_partial() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_execution_cost_overrides_fail_closed_on_invalid_configuration": {
+      "definition": {
+        "file": "tests/test_execution_costs.py",
+        "line": 51,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 51,
+          "preview": "def test_execution_cost_overrides_fail_closed_on_invalid_configuration(raw: str) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_default_runtime_uses_symbol_cost_override": {
+      "definition": {
+        "file": "tests/test_execution_costs.py",
+        "line": 56,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 56,
+          "preview": "def test_default_runtime_uses_symbol_cost_override(monkeypatch, tmp_path) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_explicit_runtime_risk_config_has_priority": {
+      "definition": {
+        "file": "tests/test_execution_costs.py",
+        "line": 72,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_execution_costs.py",
+          "line": 72,
+          "preview": "def test_explicit_runtime_risk_config_has_priority(monkeypatch, tmp_path) -> None:",
           "definition_candidate": true
         }
       ],
