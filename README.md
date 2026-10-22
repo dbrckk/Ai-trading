@@ -454,3 +454,9 @@ The predictive model cannot bypass the risk engine. A future live adapter must r
 - [ ] V4 — external live execution adapter (NautilusTrader or Lean)
 - [x] V5 — multi-asset portfolio allocation and portfolio-level risk
 - [x] V6 — guarded continuous learning, drift detection, rollback and resilience governance
+## Regime robustness validation
+
+Market-regime research rejects NaN and infinite regime returns before
+ranking worst regimes or checking return dispersion. Invalid results must
+not qualify a strategy. This is a research-only diagnostic; no broker,
+execution or risk-sizing configuration is changed.
