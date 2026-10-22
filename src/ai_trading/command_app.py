@@ -110,3 +110,7 @@ def turnover_study(
     console.print(f"Research report saved: {destination}")
     if failures:
         raise typer.Exit(code=1)
+
+
+if __name__ == "__main__":
+    app()
