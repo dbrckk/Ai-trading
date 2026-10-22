@@ -136,7 +136,7 @@ def _probe_endpoint(
                         if isinstance(overview, dict)
                         else None
                     )
-                    state = status if status in safe_states else "UNKNOWN"
+                    state = status if isinstance(status, str) and status in safe_states else "UNKNOWN"
                     errors = (
                         overview.get("consecutive_cycle_errors")
                         if isinstance(overview, dict)
