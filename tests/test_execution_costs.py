@@ -27,11 +27,12 @@ def test_execution_cost_override_can_be_partial() -> None:
     updated = risk_config_for_symbol(
         "GC=F",
         base,
-        raw='{"GC=F": {"slippage_bps": 3.25}}',
+        raw='{"GC=F": {"slippage_bps": 3.25, "min_rebalance_fraction": 0.005}}',
     )
 
     assert updated.transaction_cost_bps == 2.0
     assert updated.slippage_bps == 3.25
+    assert updated.min_rebalance_fraction == 0.005
 
 
 @pytest.mark.parametrize(
@@ -43,6 +44,8 @@ def test_execution_cost_override_can_be_partial() -> None:
         '{"GC=F": {"unknown": 1}}',
         '{"GC=F": {"slippage_bps": -1}}',
         '{"GC=F": {"transaction_cost_bps": "nan"}}',
+        '{"GC=F": {"min_rebalance_fraction": 1.5}}',
+        '{"GC=F": {"min_rebalance_fraction": "inf"}}',
     ],
 )
 def test_execution_cost_overrides_fail_closed_on_invalid_configuration(raw: str) -> None:
