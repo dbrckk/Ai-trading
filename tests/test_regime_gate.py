@@ -39,3 +39,26 @@ def test_regime_gate_rejects_fragile_regime_profile() -> None:
     assert not result.passed
     assert "worst regime return below threshold" in result.reasons
     assert "regime return dispersion above threshold" in result.reasons
+
+
+def test_regime_gate_rejects_nan_return_instead_of_passing() -> None:
+    report = SimpleNamespace(
+        regime_returns={"trend": 0.10, "range": float("nan")}
+    )
+    result = evaluate_regime_gate(report)
+
+    assert result.passed is False
+    assert result.observed_regimes == 2
+    assert result.worst_regime is None
+    assert result.worst_return is None
+    assert "non-finite regime return" in result.reasons
+
+
+def test_regime_gate_rejects_infinite_return_instead_of_passing() -> None:
+    report = SimpleNamespace(
+        regime_returns={"trend": 0.10, "range": float("inf")}
+    )
+    result = evaluate_regime_gate(report)
+
+    assert result.passed is False
+    assert "non-finite regime return" in result.reasons
