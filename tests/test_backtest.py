@@ -131,3 +131,99 @@ def test_walk_forward_exits_position_after_hard_risk_stop(monkeypatch) -> None:
     assert report.trades == 2
     assert report.rejected_decisions == decisions - 1
     assert rebalances == [(1, 10_000.0), (0, 0.0)]
+
+
+def test_turnover_study_selects_on_validation_without_holdout_cherry_picking(
+    monkeypatch,
+) -> None:
+    from types import SimpleNamespace
+
+    from ai_trading.turnover_study import compare_rebalance_thresholds
+
+    endpoints = {
+        0.0: (106.0, 108.0),
+        0.001: (109.0, 107.0),  # Best validation, bad later holdout
+        0.005: (108.0, 116.0),  # Worse validation, attractive holdout
+    }
+
+    def fake_backtest(self, market):
+        first_end, last_end = endpoints[self.risk_config.min_rebalance_fraction]
+        equity = pd.Series(
+            np.r_[
+                np.linspace(100.0, first_end, 300),
+                np.linspace(first_end, last_end, 200),
+            ],
+            index=market.index,
+        )
+        return SimpleNamespace(equity_curve=equity, trades=45, folds=5)
+
+    monkeypatch.setattr(WalkForwardBacktester, "run", fake_backtest)
+    result = compare_rebalance_thresholds(
+        "GC=F",
+        sample_market(500),
+        thresholds=(0.0, 0.001, 0.005),
+    )
+
+    assert result["sample_sufficient"] is True
+    assert result["validation_selected_threshold"] == 0.001
+    assert result["holdout_passed"] is False
+    assert result["review_only"] is True
+    assert result["auto_enable"] is False
+    assert result["trials"][0]["full_net_return"] == pytest.approx(0.08)
+
+
+def test_turnover_study_marks_profitable_untouched_holdout_for_review(
+    monkeypatch,
+) -> None:
+    from types import SimpleNamespace
+
+    from ai_trading.turnover_study import compare_rebalance_thresholds
+
+    def fake_backtest(self, market):
+        better = self.risk_config.min_rebalance_fraction > 0.0
+        first_end = 109.0 if better else 106.0
+        last_end = 118.0 if better else 108.0
+        equity = pd.Series(
+            np.r_[
+                np.linspace(100.0, first_end, 300),
+                np.linspace(first_end, last_end, 200),
+            ],
+            index=market.index,
+        )
+        return SimpleNamespace(equity_curve=equity, trades=45, folds=5)
+
+    monkeypatch.setattr(WalkForwardBacktester, "run", fake_backtest)
+    result = compare_rebalance_thresholds(
+        "BTC-USD",
+        sample_market(500),
+        thresholds=(0.0, 0.001),
+    )
+
+    assert result["validation_selected_threshold"] == 0.001
+    assert result["holdout_passed"] is True
+    assert result["auto_enable"] is False
+
+
+def test_turnover_study_rejects_small_out_of_sample_history(monkeypatch) -> None:
+    from types import SimpleNamespace
+
+    from ai_trading.turnover_study import compare_rebalance_thresholds
+
+    def fake_backtest(self, market):
+        better = self.risk_config.min_rebalance_fraction > 0.0
+        equity = pd.Series(
+            np.linspace(100.0, 120.0 if better else 110.0, len(market)),
+            index=market.index,
+        )
+        return SimpleNamespace(equity_curve=equity, trades=45, folds=5)
+
+    monkeypatch.setattr(WalkForwardBacktester, "run", fake_backtest)
+    result = compare_rebalance_thresholds(
+        "^GDAXI",
+        sample_market(120),
+        thresholds=(0.0, 0.001),
+    )
+
+    assert result["sample_sufficient"] is False
+    assert result["validation_selected_threshold"] is None
+    assert result["holdout_passed"] is False
