@@ -6,6 +6,9 @@ Status: active
 
 ## Working
 
+
+- **2026-10-22 confirmed research result:** GitHub run #39767234077 produced downloadable JSON artifact #12421490257 after correcting the command entrypoint. Each market: 1,800 5m candles; 1,516 OOS evaluations; 7 folds; costs 2bp plus 1bp slippage. Baseline net total return Gold -0.19833% (205 fills), DAX -0.24241% (238), BTC -0.36508% (273). Variants 0.1%/0.25%/0.5% of equity all remained net negative; selected validation threshold null for all three; holdout check false. Evidence covers short market windows and the offline proxy, not actual hosted River-v1 profitability. Keep the deadband OFF; do not infer profit improvement.
+
 - **2026-10-22 Gold/DAX/BTC turnover evaluation:** new read-only comparison of four optional paper rebalance thresholds (0, 0.1%, 0.25%, 0.5% of equity), with fees and slippage, market-history SHA, early purged walk-forward validation and later holdout. Research uses offline proxy, not hosted River-v1; no automatic activation. The initial GitHub action returned false success without running command due to missing module entrypoint; fixed `command_app.__main__` and made missing artifact/command fatal; recheck workflow. PR #196 merged, post-merge main CI and CodeQL green.
 
 
