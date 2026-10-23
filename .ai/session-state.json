@@ -4,7 +4,7 @@
   "base_branch": "main",
   "active_branch": "main",
   "pull_request": null,
-  "focus": "2026-10-23 GitHub Paper Cycle run 40007818418 at 18:59 UTC failed with authenticated POST HTTP 503 after ~3.5m, despite successful token preflight. Root cause unverified: possible partial-market failure, backend storage issue or Render proxy. PR #212 merged e4a7299: bounded allowlisted error classification + read-only hosted probe on fallback failure; full PR CI/CodeQL green. NO automatic POST retry, no paper/live broker or model/risk changes. Need fresh Hosted Dashboard Probe and next Paper Cycle with diagnostic log; exact Render SHA remains unverified. Prospective research data preregistration pending.",
+  "focus": "2026-10-23: Paper Cycle #40007818418 had HTTP503 after authenticated POST (~19:03 UTC). PR #212 merged e4a7299, safe failure classification plus read-only failed-cycle probe, PR CI/CodeQL green. Subsequent fresh public read-only Render endpoints (~19:28 UTC) show /livez and /readyz healthy, all three Gold/DAX/BTC RUNNING with 0 consecutive cycle errors, portfolio complete and aggregate paper equity ~99993.67/100000. Durable scheduler evidence: GitHub and Cloudflare HTTP503 at ~19:03, followed by Cloudflare 200 at 19:17:43. This confirms observed recovery only, not root cause or enduring stability. Render deployed SHA explicitly 0e2bc5d (behind main). River-v1 paper configs unchanged, live broker OFF. Prospective pre-registration still next research priority.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -272,6 +272,34 @@
       "remediation_commit": "e4a7299e9b084a1d3ec7d6e18e06e4c8d901dbca",
       "remediation_scope": "diagnostic-only; no automatic retry or server recovery assertion",
       "hosting_release_verified": false
+    },
+    "latest_hosted_health_after_incident": {
+      "checked_on": "2026-10-23",
+      "checked_utc_approx": "19:28",
+      "source": "public Render /livez /readyz /api/scheduler /api/markets read-only",
+      "render_deployed_commit": "0e2bc5dee856bed29b31505411b697cd9259029d",
+      "web_healthy": true,
+      "ready": true,
+      "storage_healthy": true,
+      "engines": {
+        "GC=F": "RUNNING",
+        "^GDAXI": "RUNNING",
+        "BTC-USD": "RUNNING"
+      },
+      "consecutive_cycle_errors": {
+        "GC=F": 0,
+        "^GDAXI": 0,
+        "BTC-USD": 0
+      },
+      "portfolio_equity_complete": true,
+      "portfolio_error_markets": 0,
+      "aggregate_paper_equity_approx": 99993.67,
+      "last_cloudflare_delivery_utc": "2026-10-23T19:17:43.641288+00:00",
+      "last_cloudflare_delivery_ok": true,
+      "incident_http_503_both_sources_around_utc": "2026-10-23T19:03:06+00:00",
+      "incident_root_cause_verified": false,
+      "long_term_stability_verified": false,
+      "notes": "Fallback diagnostics PR #212 merged to GitHub main, not verified Render-deployed; current host is older SHA; no state-mutating POST sent in recheck."
     }
   },
   "completed_changes": [
@@ -327,9 +355,9 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Check next Paper Cycle workflow run and read-only health probe for scheduler recovery or cause (storage unavailable vs partial market vs upstream 503); Render workspace/actual deployed SHA still unverified.",
-    "Investigate persistent Render/Neon/Cloudflare failure if the new logs show recurring HTTP 503. Preserve fail-closed behavior and avoid reissuing state-mutating cycle POST blindly.",
-    "After operational stability, pre-register future-only data cutoff and archive raw completed-bar hashes/config-commit provenance for a truly prospective OOS evaluation; no tested MTF is promotable.",
-    "Keep River-v1 paper authority, active risk/scheduler settings unchanged and live broker OFF."
+    "Confirm at least two future Cloudflare scheduler deliveries and next GitHub Paper Cycle if it fires; verify no new 503 or accumulating per-market errors, using read-only public /api/scheduler and /api/markets.",
+    "Confirm exact Render deployment SHA when new server code is expected; observed old Render SHA 0e2bc5d despite newer GitHub main, do not equate merge with deploy.",
+    "Pre-register future-only research cutoff, fixed strategy config and hashes; archive previously unseen completed-bar data and provenance, not optimize on evaluation data.",
+    "Keep River-v1 paper decision authority and risk/scheduler settings unchanged; live brokerage OFF and unprofitable MTF research candidates not promoted."
   ]
 }
