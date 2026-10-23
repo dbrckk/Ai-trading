@@ -19,6 +19,9 @@ _OHLCV = ("Open", "High", "Low", "Close", "Volume")
 _SYMBOL_FILES = {"GC=F": "gold", "^GDAXI": "dax", "BTC-USD": "btc"}
 _INTERVAL = timedelta(minutes=5)
 _CAPTURE_LAG = timedelta(minutes=15)
+# Pin the exact registration bytes before the future acquisition boundary.
+# The committed JSON cannot quietly drift while capturing new observations.
+_REGISTERED_SHA256 = "7b8870cce74d7941ed6e3f3c33e0829cd28b2d92f32d11ab5ca8309daf48b096"
 
 
 def _as_utc(value: datetime) -> datetime:
@@ -119,6 +122,8 @@ def collect_prospective_bars(
 ) -> dict[str, object]:
     """Archive future-only source bars and immutable per-run provenance."""
     registration_bytes = registration_file.read_bytes()
+    if sha256(registration_bytes).hexdigest() != _REGISTERED_SHA256:
+        raise ValueError("prospective registration hash mismatch")
     registration = json.loads(registration_bytes)
     if (
         registration.get("schema_version") != 1
