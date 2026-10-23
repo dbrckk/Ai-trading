@@ -584,6 +584,18 @@ def test_scheduler_delivery_overview_exposes_recent_failed_delivery() -> None:
 
 def test_scheduler_fallback_classifies_503_safely_without_repeating_post() -> None:
     """Expose only allowlisted failure kinds; never send a second paper cycle."""
+    def make_opener(payload, posts):
+        def fake_opener(request, *, timeout):
+            assert 0 < timeout <= 180
+            if request.get_method() == "POST":
+                posts.append(request.full_url)
+            raise HTTPError(
+                request.full_url, 503, "Service unavailable", {},
+                BytesIO(json.dumps(payload).encode()),
+            )
+
+        return fake_opener
+
     for payload, expected in (
         ({"ok": False, "error": "storage unavailable"}, "HTTP 503 (storage_unavailable)"),
         ({"ok": False, "error": "scheduler unavailable"}, "HTTP 503 (scheduler_unavailable)"),
@@ -595,19 +607,10 @@ def test_scheduler_fallback_classifies_503_safely_without_repeating_post() -> No
     ):
         posts = []
 
-        def fake_opener(request, *, timeout):
-            assert 0 < timeout <= 180
-            if request.get_method() == "POST":
-                posts.append(request.full_url)
-            raise HTTPError(
-                request.full_url, 503, "Service unavailable", {},
-                BytesIO(json.dumps(payload).encode()),
-            )
-
         with pytest.raises(FallbackFailure) as failure:
             run_fallback(
                 "https://test.example", "test-scheduler-secret",
-                opener=fake_opener,
+                opener=make_opener(payload, posts),
             )
         assert str(failure.value).endswith(expected)
         assert "password=" not in str(failure.value)
