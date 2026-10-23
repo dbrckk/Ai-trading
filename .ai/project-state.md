@@ -6,6 +6,9 @@ Status: active
 
 ## Working
 
+- **2026-10-23 model qualification integrity:** PR #202 merged (unknown Gold/DAX/BTC held-pair correlation now fails closed, with green PR CI and CodeQL). Current branch rejects NaN/Inf/invalid metrics in standalone and multi-period challenger promotion, requires positive modeled challenger return, and rejects inconsistent or non-finite soak results and invalid policy thresholds. Research validation only; no production model change or live brokerage.
+
+
 - **2026-10-23 global numerical risk evidence:** PR #200 merged after green CI and CodeQL, guarding paper RiskEngine and core configuration. An independent read-only turnover artifact (GitHub #12440979405) showed Gold baseline -0.253% after modeled fees vs +0.045% zero-cost, DAX -0.243% vs -0.063%, and BTC -0.687% vs -0.249% (offline proxy, not hosted River-v1; exact fee ledger not claimed). This branch rejects non-finite global governor telemetry and invalid portfolio exposure/capital/risk limits, with existing test coverage. Keep production market settings, River-v1 and live-broker OFF unchanged.
 
 
