@@ -5,6 +5,7 @@ from types import SimpleNamespace
 
 import numpy as np
 import pandas as pd
+import pytest
 
 import ai_trading.mtf_parameter_benchmark as benchmark_module
 from ai_trading.mtf_parameter_benchmark import (
@@ -101,6 +102,11 @@ def test_parameter_benchmark_ranks_configs_across_markets() -> None:
     assert all(len(result.markets) == 2 for result in results)
     assert all(result.total_observations == 40 for result in results)
 
+    # Explicitly empty search grids must fail rather than expand silently to
+    # the expensive default 36-configuration sweep.
+    with pytest.raises(ValueError, match="configs must not be empty"):
+        run_parameter_benchmark(markets, configs=())
+
 
 def test_benchmark_payload_is_reproducible_and_explicit() -> None:
     markets = {"A": sample_market()}
@@ -142,6 +148,12 @@ def test_btc_focused_grid_is_bounded_and_longer_horizon() -> None:
     assert {config.max_train_rows for config in grid} == {1000}
     assert {config.atr_multiplier for config in grid} == {0.15, 0.25}
     assert {config.min_confidence for config in grid} == {0.56, 0.60}
+
+    for invalid in (np.nan, np.inf, -np.inf):
+        with pytest.raises(ValueError, match="minimum_threshold"):
+            MTFBenchmarkConfig(3, invalid, 0.25, 700, 0.56)
+        with pytest.raises(ValueError, match="atr_multiplier"):
+            MTFBenchmarkConfig(3, 0.001, invalid, 700, 0.56)
 
 
 def test_market_selections_choose_gate_passing_config_per_symbol() -> None:
