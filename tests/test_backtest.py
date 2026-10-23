@@ -42,6 +42,9 @@ def test_walk_forward_produces_out_of_sample_report() -> None:
     ).run(sample_market())
 
     assert report.folds >= 2
+    assert len(report.fold_start_timestamps) == report.folds
+    assert len(report.trade_timestamps) == report.trades
+    assert all(timestamp in report.equity_curve.index for timestamp in report.trade_timestamps)
     assert report.decisions > 0
     assert len(report.equity_curve) == report.decisions
     assert report.equity_curve.index.is_monotonic_increasing
@@ -159,7 +162,13 @@ def test_turnover_study_selects_on_validation_without_holdout_cherry_picking(
             ],
             index=market.index,
         )
-        return SimpleNamespace(equity_curve=equity, trades=45, folds=5)
+        return SimpleNamespace(
+            equity_curve=equity,
+            trades=45,
+            folds=5,
+            trade_timestamps=tuple(equity.index[:45]),
+            fold_start_timestamps=tuple(equity.index[:5]),
+        )
 
     monkeypatch.setattr(WalkForwardBacktester, "run", fake_backtest)
     result = compare_rebalance_thresholds(
@@ -174,6 +183,24 @@ def test_turnover_study_selects_on_validation_without_holdout_cherry_picking(
     assert result["review_only"] is True
     assert result["auto_enable"] is False
     assert result["trials"][0]["full_net_return"] == pytest.approx(0.08)
+    assert result["trials"][0]["validation_trades"] == 45
+    assert result["trials"][0]["validation_folds"] == 5
+
+    # Even when a future holdout brings the overall trade total to 45,
+    # no validation activity means that challenger cannot be selected.
+    def holdout_only_candidate(self, market):
+        report = fake_backtest(self, market)
+        if self.risk_config.min_rebalance_fraction == 0.001:
+            report.trade_timestamps = tuple(report.equity_curve.index[-45:])
+        return report
+
+    monkeypatch.setattr(WalkForwardBacktester, "run", holdout_only_candidate)
+    guarded = compare_rebalance_thresholds(
+        "GC=F", sample_market(500), thresholds=(0.0, 0.001, 0.005)
+    )
+    assert guarded["trials"][1]["trades"] == 45
+    assert guarded["trials"][1]["validation_trades"] == 0
+    assert guarded["validation_selected_threshold"] == 0.005
 
 
 def test_turnover_study_marks_profitable_untouched_holdout_for_review(
@@ -194,7 +221,13 @@ def test_turnover_study_marks_profitable_untouched_holdout_for_review(
             ],
             index=market.index,
         )
-        return SimpleNamespace(equity_curve=equity, trades=45, folds=5)
+        return SimpleNamespace(
+            equity_curve=equity,
+            trades=45,
+            folds=5,
+            trade_timestamps=tuple(equity.index[:45]),
+            fold_start_timestamps=tuple(equity.index[:5]),
+        )
 
     monkeypatch.setattr(WalkForwardBacktester, "run", fake_backtest)
     result = compare_rebalance_thresholds(
@@ -219,7 +252,13 @@ def test_turnover_study_rejects_small_out_of_sample_history(monkeypatch) -> None
             np.linspace(100.0, 120.0 if better else 110.0, len(market)),
             index=market.index,
         )
-        return SimpleNamespace(equity_curve=equity, trades=45, folds=5)
+        return SimpleNamespace(
+            equity_curve=equity,
+            trades=45,
+            folds=5,
+            trade_timestamps=tuple(equity.index[:45]),
+            fold_start_timestamps=tuple(equity.index[:5]),
+        )
 
     monkeypatch.setattr(WalkForwardBacktester, "run", fake_backtest)
     result = compare_rebalance_thresholds(
@@ -258,7 +297,13 @@ def test_turnover_study_reports_zero_cost_counterfactual_without_promoting(
             np.linspace(100.0, endpoint, len(market)),
             index=market.index,
         )
-        return SimpleNamespace(equity_curve=equity, trades=45, folds=5)
+        return SimpleNamespace(
+            equity_curve=equity,
+            trades=45,
+            folds=5,
+            trade_timestamps=tuple(equity.index[:45]),
+            fold_start_timestamps=tuple(equity.index[:5]),
+        )
 
     monkeypatch.setattr(WalkForwardBacktester, "run", fake_backtest)
     study = compare_rebalance_thresholds(
@@ -291,7 +336,13 @@ def test_turnover_study_does_not_repeat_frictionless_backtest(monkeypatch) -> No
             np.linspace(100.0, 99.0, len(market)),
             index=market.index,
         )
-        return SimpleNamespace(equity_curve=equity, trades=45, folds=5)
+        return SimpleNamespace(
+            equity_curve=equity,
+            trades=45,
+            folds=5,
+            trade_timestamps=tuple(equity.index[:45]),
+            fold_start_timestamps=tuple(equity.index[:5]),
+        )
 
     monkeypatch.setattr(WalkForwardBacktester, "run", fake_backtest)
     study = compare_rebalance_thresholds(
