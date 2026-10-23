@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import isfinite
 
 
 @dataclass(frozen=True)
@@ -48,6 +49,36 @@ def evaluate_governor(
     policy: GovernorPolicy | None = None,
 ) -> GovernorDecision:
     policy = policy or GovernorPolicy()
+
+    # NaN comparisons are false, which would otherwise let corrupt risk
+    # telemetry fall through to TRADE or REDUCE. Stop issuing paper orders.
+    if (
+        any(
+            not isfinite(value)
+            for value in (
+                signals.data_quality,
+                signals.model_confidence,
+                signals.stressed_cvar,
+                signals.drawdown,
+                signals.recovery_recent_failures,
+                signals.recovery_fallback_depth,
+            )
+        )
+        or not 0.0 <= signals.data_quality <= 1.0
+        or not 0.0 <= signals.model_confidence <= 1.0
+        or signals.stressed_cvar < 0.0
+        or signals.drawdown < 0.0
+        or signals.recovery_recent_failures < 0
+        or signals.recovery_fallback_depth < 0
+    ):
+        return GovernorDecision(
+            verdict="HALT",
+            exposure_scale=0.0,
+            allow_rebalance=False,
+            flatten=False,
+            halt=True,
+            reason="invalid risk governor signal",
+        )
 
     if (
         not signals.system_healthy
