@@ -126,7 +126,35 @@ def collect_prospective_bars(
         or registration.get("observation_start_utc")
         != "2026-10-26T00:00:00+00:00"
         or registration.get("bar_interval") != "5m"
+        or registration.get("data_provider") != "yahoo_yfinance_auto_adjusted"
+        or registration.get("minimum_completion_lag_minutes") != 15
+        or registration.get("acquisition_window") != "5d"
         or registration.get("symbols") != list(_SYMBOL_FILES)
+        or registration.get("frozen_research_comparators") != [
+            {
+                "horizon_bars": 9,
+                "minimum_threshold": 0.0005,
+                "atr_multiplier": 0.25,
+                "max_train_rows": 1000,
+                "min_confidence": 0.56,
+            },
+            {
+                "horizon_bars": 9,
+                "minimum_threshold": 0.0005,
+                "atr_multiplier": 0.25,
+                "max_train_rows": 1000,
+                "min_confidence": 0.60,
+            },
+            {
+                "horizon_bars": 18,
+                "minimum_threshold": 0.0003,
+                "atr_multiplier": 0.15,
+                "max_train_rows": 1000,
+                "min_confidence": 0.60,
+            },
+        ]
+        or registration.get("hypothetical_costs_bps_per_side")
+        != {"transaction": 2.0, "slippage": 1.0}
         or registration.get("live_broker_enabled") is not False
         or registration.get("permitted_actions")
         != ["archive_provider_ohlcv", "fingerprint_completed_bars", "report_missing_data"]
