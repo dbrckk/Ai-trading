@@ -4,6 +4,7 @@ import argparse
 import json
 from collections.abc import Iterable
 from dataclasses import asdict, dataclass
+from math import isfinite, prod
 from pathlib import Path
 from statistics import fmean, pstdev
 
@@ -21,6 +22,9 @@ from .regime import detect_regime
 
 _MIN_ACTIVE_PREDICTIONS = 20
 _MIN_ACTIVE_PRECISION = 0.50
+_MIN_ECONOMIC_TRADES = 20
+_DEFAULT_TRANSACTION_COST_BPS = 2.0
+_DEFAULT_SLIPPAGE_BPS = 1.0
 
 
 @dataclass(frozen=True)
@@ -79,6 +83,14 @@ class MarketBenchmarkResult:
     quality_score: float
     selection_score: float
     directional_gate_passed: bool
+    # Independent, non-overlapping next-open to horizon-close paper trades.
+    # These are not portfolio returns and do not change the hosted runtime.
+    economic_trades: int = 0
+    economic_mean_net_return: float = 0.0
+    economic_compounded_net_return: float = 0.0
+    economic_gate_passed: bool = False
+    transaction_cost_bps: float = _DEFAULT_TRANSACTION_COST_BPS
+    slippage_bps: float = _DEFAULT_SLIPPAGE_BPS
 
 
 @dataclass(frozen=True)
@@ -151,7 +163,11 @@ def market_selections(
         candidates: list[tuple[MarketBenchmarkResult, MTFBenchmarkConfig]] = []
         for aggregate in results:
             for row in aggregate.markets:
-                if row.symbol == symbol and row.directional_gate_passed:
+                if (
+                    row.symbol == symbol
+                    and row.directional_gate_passed
+                    and row.economic_gate_passed
+                ):
                     candidates.append((row, aggregate.config))
         if not candidates:
             selections[symbol] = None
@@ -171,6 +187,8 @@ def market_selections(
             "selection_score": row.selection_score,
             "active_precision": row.active_precision,
             "active_predictions": row.active_predictions,
+            "economic_trades": row.economic_trades,
+            "economic_compounded_net_return": row.economic_compounded_net_return,
             "directional_accuracy": row.directional_accuracy,
             "macro_recall": row.macro_recall,
             "brier": row.brier,
@@ -244,7 +262,14 @@ def evaluate_market_config(
     test_window_bars: int = 48,
     min_train_rows: int = 500,
     random_state: int = 42,
+    transaction_cost_bps: float = _DEFAULT_TRANSACTION_COST_BPS,
+    slippage_bps: float = _DEFAULT_SLIPPAGE_BPS,
 ) -> MarketBenchmarkResult:
+    if any(
+        not isfinite(cost) or cost < 0.0
+        for cost in (transaction_cost_bps, slippage_bps)
+    ):
+        raise ValueError("execution costs must be finite and non-negative")
     if config.max_train_rows < min_train_rows:
         raise ValueError("max_train_rows must be >= min_train_rows")
 
@@ -267,6 +292,9 @@ def evaluate_market_config(
     predicted_sides: list[int] = []
     confidences: list[float] = []
     realized_labels: list[int] = []
+    economic_returns: list[float] = []
+    last_economic_exit_pos = -1
+    round_trip_cost = 2.0 * (transaction_cost_bps + slippage_bps) / 10_000.0
 
     completed_folds = 0
     for fold, test_idx in enumerate(windows):
@@ -307,6 +335,29 @@ def evaluate_market_config(
             confidences.append(float(prediction.confidence))
             realized_labels.append(int(label))
 
+            # Economic audit uses non-overlapping executions. Counting all
+            # overlapping horizon predictions as separate trades would
+            # exaggerate turnover, statistical evidence and possible profit.
+            signal_pos = market_positions[signal_idx]
+            if effective_side and signal_pos > last_economic_exit_pos:
+                entry_open = float(market["Open"].iloc[signal_pos + 1])
+                exit_close = float(
+                    market["Close"].iloc[signal_pos + config.horizon_bars]
+                )
+                if (
+                    not isfinite(entry_open) or entry_open <= 0.0
+                    or not isfinite(exit_close) or exit_close <= 0.0
+                ):
+                    raise ValueError("invalid prices for next-open economic audit")
+                net_return = (
+                    effective_side * (exit_close / entry_open - 1.0)
+                    - round_trip_cost
+                )
+                if not isfinite(net_return):
+                    raise ValueError("invalid net return for economic audit")
+                economic_returns.append(net_return)
+                last_economic_exit_pos = signal_pos + config.horizon_bars
+
     if completed_folds == 0 or len(realized_labels) < 5:
         raise ValueError("benchmark produced insufficient out-of-sample evidence")
 
@@ -342,6 +393,17 @@ def evaluate_market_config(
         active_predictions >= _MIN_ACTIVE_PREDICTIONS
         and active_precision > _MIN_ACTIVE_PRECISION
     )
+    economic_mean = fmean(economic_returns) if economic_returns else 0.0
+    # A loss exceeding available capital is conservatively treated as ruin.
+    economic_growth = prod(max(0.0, 1.0 + ret) for ret in economic_returns)
+    if not isfinite(economic_growth):
+        raise ValueError("non-finite compounded economic return")
+    economic_net = float(economic_growth - 1.0)
+    economic_gate_passed = (
+        len(economic_returns) >= _MIN_ECONOMIC_TRADES
+        and economic_mean > 0.0
+        and economic_net > 0.0
+    )
 
     return MarketBenchmarkResult(
         symbol=symbol,
@@ -362,6 +424,12 @@ def evaluate_market_config(
         quality_score=float(quality.score),
         selection_score=float(selection_score),
         directional_gate_passed=directional_gate_passed,
+        economic_trades=len(economic_returns),
+        economic_mean_net_return=float(economic_mean),
+        economic_compounded_net_return=economic_net,
+        economic_gate_passed=economic_gate_passed,
+        transaction_cost_bps=transaction_cost_bps,
+        slippage_bps=slippage_bps,
     )
 
 
@@ -373,6 +441,8 @@ def run_parameter_benchmark(
     test_window_bars: int = 48,
     min_train_rows: int = 500,
     random_state: int = 42,
+    transaction_cost_bps: float = _DEFAULT_TRANSACTION_COST_BPS,
+    slippage_bps: float = _DEFAULT_SLIPPAGE_BPS,
 ) -> tuple[AggregateBenchmarkResult, ...]:
     grid = tuple(configs or default_benchmark_grid())
     if not markets:
@@ -391,6 +461,8 @@ def run_parameter_benchmark(
                 test_window_bars=test_window_bars,
                 min_train_rows=min_train_rows,
                 random_state=random_state,
+                transaction_cost_bps=transaction_cost_bps,
+                slippage_bps=slippage_bps,
             )
             for symbol, market in markets.items()
         )
@@ -428,6 +500,7 @@ def run_parameter_benchmark(
 
 
 def benchmark_payload(results: tuple[AggregateBenchmarkResult, ...]) -> dict[str, object]:
+    cost_reference = results[0].markets[0] if results and results[0].markets else None
     return {
         "method": {
             "execution_timeframe": "5m",
@@ -438,6 +511,20 @@ def benchmark_payload(results: tuple[AggregateBenchmarkResult, ...]) -> dict[str
             "directional_gate": {
                 "min_active_predictions": _MIN_ACTIVE_PREDICTIONS,
                 "min_active_precision": _MIN_ACTIVE_PRECISION,
+            },
+            "economic_gate": {
+                "min_non_overlapping_trades": _MIN_ECONOMIC_TRADES,
+                "requires_positive_mean_net_return": True,
+                "requires_positive_compounded_net_return": True,
+                "entry": "next_bar_open",
+                "exit": "horizon_bar_close",
+                "round_trip_cost_sides": 2,
+                "transaction_cost_bps": (
+                    cost_reference.transaction_cost_bps if cost_reference else None
+                ),
+                "slippage_bps": cost_reference.slippage_bps if cost_reference else None,
+                "not_portfolio_pnl": True,
+                "no_auto_promotion": True,
             },
             "selection_score": (
                 "35% positive active-direction edge + 25% macro recall + "
@@ -486,7 +573,9 @@ def write_benchmark_report(
     lines = [
         "# MTF parameter benchmark",
         "",
-        "Leakage-safe purged walk-forward comparison across markets.",
+        "Purged walk-forward directional and cost-aware research; not live PnL.",
+        "Economic audit uses independent next-open entries, horizon-close exits,",
+        "two-sided modeled fees and slippage, and does not simulate a portfolio.",
         "",
         "## Best validated configuration per market",
         "",
@@ -494,13 +583,17 @@ def write_benchmark_report(
     for symbol, selection in selections.items():
         if selection is None:
             lines.append(
-                f"- **{symbol}**: no configuration passed the directional gate."
+                f"- **{symbol}**: no configuration passed both the directional "
+                "and positive-net-cost gates."
             )
         else:
             lines.append(
                 f"- **{symbol}**: `{selection['config_name']}` "
                 f"(active precision {float(selection['active_precision']):.1%}, "
-                f"n={int(selection['active_predictions'])})."
+                f"n={int(selection['active_predictions'])}; "
+                f"independent net return "
+                f"{float(selection['economic_compounded_net_return']):+.2%}, "
+                f"n={int(selection['economic_trades'])})."
             )
     lines.extend(
         [
@@ -522,14 +615,19 @@ def write_benchmark_report(
         lines.append("")
         lines.append(
             "| Market | Sel. score | Macro recall | Directional accuracy | "
-            "Active precision | Active n | Brier | L/F/S |"
+            "Active precision | Active n | Net return | Net n | Cost gate | Brier | L/F/S |"
         )
-        lines.append("| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |")
+        lines.append(
+            "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: |"
+        )
         for row in result.markets:
             lines.append(
                 f"| {row.symbol} | {row.selection_score:.4f} | "
                 f"{row.macro_recall:.3f} | {row.directional_accuracy:.3f} | "
                 f"{row.active_precision:.3f} | {row.active_predictions} | "
+                f"{row.economic_compounded_net_return:+.2%} | "
+                f"{row.economic_trades} | "
+                f"{'PASS' if row.economic_gate_passed else 'FAIL'} | "
                 f"{row.brier:.3f} | "
                 f"{row.long_labels}/{row.flat_labels}/{row.short_labels} |"
             )
@@ -549,6 +647,12 @@ def main() -> None:
         default="global",
     )
     parser.add_argument("--test-window-bars", type=int, default=48)
+    parser.add_argument(
+        "--transaction-cost-bps", type=float, default=_DEFAULT_TRANSACTION_COST_BPS
+    )
+    parser.add_argument(
+        "--slippage-bps", type=float, default=_DEFAULT_SLIPPAGE_BPS
+    )
     parser.add_argument(
         "--json-output",
         default="artifacts/mtf_benchmark/results.json",
@@ -577,6 +681,8 @@ def main() -> None:
         configs=configs,
         folds=args.folds,
         test_window_bars=args.test_window_bars,
+        transaction_cost_bps=args.transaction_cost_bps,
+        slippage_bps=args.slippage_bps,
     )
     write_benchmark_report(
         results,
