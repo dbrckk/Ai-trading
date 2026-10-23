@@ -1,3 +1,5 @@
+import math
+
 import pandas as pd
 import pytest
 
@@ -17,10 +19,18 @@ from ai_trading.portfolio_risk import PortfolioRiskConfig
     "factory",
     [
         lambda: RiskConfig(starting_cash=0.0),
+        lambda: RiskConfig(starting_cash=math.nan),
+        lambda: RiskConfig(starting_cash=math.inf),
+        lambda: RiskConfig(transaction_cost_bps=math.nan),
+        lambda: RiskConfig(transaction_cost_bps=math.inf),
+        lambda: RiskConfig(slippage_bps=math.nan),
+        lambda: RiskConfig(slippage_bps=math.inf),
         lambda: RiskConfig(min_confidence=1.1),
         lambda: RiskConfig(transaction_cost_bps=-1.0),
         lambda: ModelConfig(horizon_bars=0),
         lambda: ModelConfig(return_threshold=-0.001),
+        lambda: ModelConfig(return_threshold=math.nan),
+        lambda: ModelConfig(return_threshold=math.inf),
         lambda: AllocationConfig(max_asset_weight=0.0),
         lambda: AllocationConfig(min_asset_weight=0.5, max_asset_weight=0.4),
         lambda: PortfolioRiskConfig(max_net_exposure=1.1, max_gross_exposure=1.0),
