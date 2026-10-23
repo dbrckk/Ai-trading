@@ -1,3 +1,8 @@
+import math
+from dataclasses import replace
+
+import pytest
+
 from ai_trading.soak import SoakResult
 from ai_trading.soak_gate import (
     SoakQualificationPolicy,
@@ -37,9 +42,6 @@ def test_soak_gate_rejects_halted_run() -> None:
 
 
 def test_soak_gate_rejects_invalid_numerical_evidence() -> None:
-    from dataclasses import replace
-    import math
-
     valid = SoakResult(
         cycles=100,
         successes=100,
@@ -81,9 +83,6 @@ def test_soak_gate_rejects_inconsistent_cycle_counts() -> None:
 
 
 def test_soak_policy_rejects_nonfinite_thresholds() -> None:
-    import math
-    import pytest
-
     with pytest.raises(ValueError, match="min_success_ratio"):
         SoakQualificationPolicy(min_success_ratio=math.nan)
     with pytest.raises(ValueError, match="max_drawdown"):
