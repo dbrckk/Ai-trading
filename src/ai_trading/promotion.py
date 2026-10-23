@@ -78,6 +78,15 @@ def evaluate_multi_period_challenger(
     if len(champion_periods) != len(challenger_periods) or not champion_periods:
         return PromotionDecision(False, "invalid or mismatched evaluation periods")
 
+    # Reject the whole multi-period comparison if any segment contains
+    # undefined evidence. Counting it as one loss can still exceed win-rate.
+    if any(
+        not all(isfinite(value) for value in metrics.as_dict().values())
+        or not 0.0 <= metrics.max_drawdown <= 1.0
+        for metrics in (*champion_periods, *challenger_periods)
+    ):
+        return PromotionDecision(False, "invalid multi-period promotion metrics")
+
     wins = 0
     for champion, challenger in zip(champion_periods, challenger_periods, strict=True):
         decision = evaluate_challenger(champion, challenger, policy)
