@@ -78,6 +78,12 @@ def test_market_benchmark_is_purged_and_reports_directional_evidence() -> None:
     assert 0.0 <= result.active_precision <= 1.0
     assert 0 <= result.economic_trades <= result.active_predictions
     assert np.isfinite(result.economic_compounded_net_return)
+    assert np.isfinite(result.sized_equity_final)
+    assert result.sized_equity_final > 0.0
+    assert result.sized_net_return == pytest.approx(
+        result.sized_equity_final / 100_000.0 - 1.0
+    )
+    assert 0.0 <= result.sized_max_drawdown < 1.0
 
 
 def test_parameter_benchmark_ranks_configs_across_markets() -> None:
@@ -135,6 +141,11 @@ def test_benchmark_payload_is_reproducible_and_explicit() -> None:
     assert payload["method"]["economic_gate"]["transaction_cost_bps"] == 2.0
     assert payload["method"]["economic_gate"]["slippage_bps"] == 1.0
     assert payload["method"]["economic_gate"]["no_auto_promotion"] is True
+    sized = payload["method"]["economic_gate"]["sized_research_account"]
+    assert sized["starting_cash"] == 100_000.0
+    assert sized["position_fraction"] == 0.10
+    assert sized["multi_market_aggregation"] is False
+    assert sized["funding_borrow_margin_modeled"] is False
     assert payload["ranking"][0]["rank"] == 1
     assert payload["ranking"][0]["config"]["horizon_bars"] == 3
     assert payload["ranking"][0]["config"]["min_confidence"] == 0.56
@@ -305,10 +316,16 @@ def test_cost_aware_mtf_gate_rejects_directional_wins_erased_by_fees(monkeypatch
     assert without_costs.economic_trades >= 20
     assert without_costs.economic_trades < without_costs.active_predictions
     assert without_costs.economic_compounded_net_return > 0.0
+    assert without_costs.sized_net_return > 0.0
+    assert without_costs.sized_equity_final > 100_000.0
+    assert without_costs.sized_max_drawdown >= 0.0
     assert without_costs.economic_gate_passed is True
     assert with_costs.directional_gate_passed is True
     assert with_costs.economic_mean_net_return < 0.0
     assert with_costs.economic_compounded_net_return < 0.0
+    assert with_costs.sized_net_return < 0.0
+    assert with_costs.sized_equity_final < 100_000.0
+    assert with_costs.sized_max_drawdown > 0.0
     assert with_costs.economic_gate_passed is False
 
     result = AggregateBenchmarkResult(
@@ -342,6 +359,7 @@ def test_cost_aware_mtf_gate_rejects_directional_wins_erased_by_fees(monkeypatch
     assert study["validation"]["market_selections"]["TEST"]["config_name"] == config.name
     assert study["holdout"]["TEST"]["status"] == "passed_for_manual_review"
     assert study["holdout"]["TEST"]["result"]["economic_trades"] >= 20
+    assert study["holdout"]["TEST"]["result"]["sized_net_return"] > 0.0
     assert study["method"]["previously_unseen_across_research_runs"] is False
     assert study["method"]["auto_promote"] is False
 
