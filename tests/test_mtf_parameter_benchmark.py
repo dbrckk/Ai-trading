@@ -12,6 +12,7 @@ from ai_trading.mtf_parameter_benchmark import (
     AggregateBenchmarkResult,
     MarketBenchmarkResult,
     MTFBenchmarkConfig,
+    MTFResearchTrade,
     benchmark_payload,
     btc_focused_benchmark_grid,
     evaluate_market_config,
@@ -19,6 +20,7 @@ from ai_trading.mtf_parameter_benchmark import (
     run_chronological_holdout,
     run_parameter_benchmark,
 )
+from ai_trading.mtf_shared_portfolio import simulate_shared_mtf_portfolio
 
 
 def sample_market(n: int = 3200, phase: float = 0.0) -> pd.DataFrame:
@@ -77,6 +79,7 @@ def test_market_benchmark_is_purged_and_reports_directional_evidence() -> None:
     assert 0 <= result.active_predictions <= result.observations
     assert 0.0 <= result.active_precision <= 1.0
     assert 0 <= result.economic_trades <= result.active_predictions
+    assert len(result.paper_trades) == result.economic_trades
     assert np.isfinite(result.economic_compounded_net_return)
     assert np.isfinite(result.sized_equity_final)
     assert result.sized_equity_final > 0.0
@@ -379,3 +382,70 @@ def test_cost_aware_mtf_gate_rejects_directional_wins_erased_by_fees(monkeypatch
         "not_evaluated_no_validation_candidate"
     )
     assert blocked["holdout"]["TEST"]["result"] is None
+
+
+def test_shared_mtf_account_reconciles_overlapping_markets_and_costs() -> None:
+    """Replay a long and short concurrently on one constrained cash account."""
+    times = pd.date_range("2026-10-01", periods=5, freq="5min")
+    market_a = pd.DataFrame(
+        {"Open": [100.0] * 5, "Close": [100., 101., 102., 103., 104.]},
+        index=times,
+    )
+    market_b = pd.DataFrame(
+        {"Open": [50.0] * 5, "Close": [50., 49., 48., 47., 46.]},
+        index=times,
+    )
+    # Use a benchmark-produced result so all other metadata is real, then
+    # replace only the controlled execution evidence for a deterministic
+    # shared-capital accounting check.
+    base = evaluate_market_config(
+        "A", sample_market(),
+        MTFBenchmarkConfig(3, 0.0005, 0.25, 700, 0.50),
+        folds=1, test_window_bars=24, min_train_rows=500,
+    )
+    a = replace(
+        base, symbol="A", economic_trades=1,
+        paper_trades=(MTFResearchTrade(
+            times[1].isoformat(), times[3].isoformat(), 100.0, 103.0, 1
+        ),),
+    )
+    b = replace(
+        base, symbol="B", economic_trades=1,
+        paper_trades=(MTFResearchTrade(
+            times[1].isoformat(), times[3].isoformat(), 50.0, 47.0, -1
+        ),),
+    )
+    account = simulate_shared_mtf_portfolio(
+        {"A": market_a, "B": market_b}, (a, b),
+        starting_cash=100_000.0, per_market_fraction=0.1, max_gross_fraction=0.15,
+    )
+    assert account.accepted_trades == 2
+    assert account.rejected_entries == 0
+    assert account.max_concurrent_positions == 2
+    assert account.final_equity > 100_000
+    assert account.total_costs > 0
+    assert account.final_equity - 100_000 == pytest.approx(account.realized_net_pnl)
+    assert account.net_return == pytest.approx(account.final_equity / 100_000 - 1)
+    assert account.max_drawdown >= 0
+    assert len(account.equity_by_timestamp) == 5
+    assert sum(
+        abs(fill["units"] * fill["price"])
+        for fill in account.fills if fill["action"] == "entry"
+    ) <= 15_000
+    assert [fill["action"] for fill in account.fills] == [
+        "entry", "entry", "exit", "exit"
+    ]
+
+    high_cost = simulate_shared_mtf_portfolio(
+        {"A": market_a, "B": market_b},
+        (replace(a, transaction_cost_bps=500.0, slippage_bps=0),
+         replace(b, transaction_cost_bps=500.0, slippage_bps=0)),
+        max_gross_fraction=0.15,
+    )
+    assert high_cost.final_equity < 100_000
+    assert high_cost.max_drawdown > 0
+    assert high_cost.total_costs > account.total_costs
+    with pytest.raises(ValueError, match="incomplete"):
+        simulate_shared_mtf_portfolio(
+            {"A": market_a, "B": market_b}, (replace(a, paper_trades=()), b)
+        )
