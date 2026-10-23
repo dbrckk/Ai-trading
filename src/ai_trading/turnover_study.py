@@ -33,6 +33,32 @@ def _segment_performance(equity: pd.Series) -> tuple[float, float]:
     return net_return, drawdown
 
 
+def _validation_activity(report: object, equity: pd.Series, cutoff: pd.Timestamp) -> tuple[int, int]:
+    """Count activity observable at the selection cutoff, never on the holdout."""
+    trade_times = getattr(report, "trade_timestamps", None)
+    fold_times = getattr(report, "fold_start_timestamps", None)
+    if (
+        not isinstance(trade_times, tuple)
+        or not isinstance(fold_times, tuple)
+        or len(trade_times) != report.trades
+        or len(fold_times) != report.folds
+    ):
+        raise ValueError("backtest must provide time-aligned trade and fold evidence")
+    if any(
+        not isinstance(timestamp, pd.Timestamp) or timestamp not in equity.index
+        for timestamp in (*trade_times, *fold_times)
+    ):
+        raise ValueError("backtest activity timestamps must match OOS equity")
+    if not pd.Index(trade_times).is_monotonic_increasing or not pd.Index(
+        fold_times
+    ).is_monotonic_increasing:
+        raise ValueError("backtest activity timestamps must be chronological")
+    return (
+        sum(timestamp <= cutoff for timestamp in trade_times),
+        sum(timestamp <= cutoff for timestamp in fold_times),
+    )
+
+
 def compare_rebalance_thresholds(
     symbol: str,
     market: pd.DataFrame,
@@ -88,6 +114,9 @@ def compare_rebalance_thresholds(
         elif not reference_index.equals(equity.index):
             raise ValueError("threshold backtests produced misaligned OOS timestamps")
 
+        validation_trades, validation_folds = _validation_activity(
+            report, equity, reference_index[split]
+        )
         validation_return, validation_dd = _segment_performance(
             equity.iloc[: split + 1]
         )
@@ -104,6 +133,8 @@ def compare_rebalance_thresholds(
                 "full_max_drawdown": full_dd,
                 "trades": int(report.trades),
                 "folds": int(report.folds),
+                "validation_trades": validation_trades,
+                "validation_folds": validation_folds,
             }
         )
 
@@ -144,10 +175,12 @@ def compare_rebalance_thresholds(
         cost_diagnostic = "positive_zero_cost_counterfactual_only"
     else:
         cost_diagnostic = "nonpositive_even_without_modeled_costs"
+    # Candidate eligibility must not depend on future holdout trade counts
+    # or fold counts, even indirectly via a minimum-sample gate.
     enough_samples = (
-        len(reference_index) >= MIN_OOS_BARS
-        and baseline["trades"] >= MIN_OOS_TRADES
-        and baseline["folds"] >= MIN_FOLDS
+        split + 1 >= MIN_OOS_BARS
+        and baseline["validation_trades"] >= MIN_OOS_TRADES
+        and baseline["validation_folds"] >= MIN_FOLDS
     )
     # Candidate choice uses ONLY validation returns, not holdout performance.
     candidates = [
@@ -155,8 +188,8 @@ def compare_rebalance_thresholds(
         for row in rows[1:]
         if (
             enough_samples
-            and row["trades"] >= MIN_OOS_TRADES
-            and row["folds"] >= MIN_FOLDS
+            and row["validation_trades"] >= MIN_OOS_TRADES
+            and row["validation_folds"] >= MIN_FOLDS
             and row["validation_net_return"] > 0.0
             and row["validation_net_return"]
             >= baseline["validation_net_return"] + MIN_RETURN_ADVANTAGE
@@ -185,6 +218,8 @@ def compare_rebalance_thresholds(
         "interval_end": str(market.index[-1]),
         "market_bars": len(market),
         "oos_bars": len(reference_index),
+        "validation_oos_bars": split + 1,
+        "holdout_oos_bars": len(reference_index) - split,
         "validation_end": str(reference_index[split]),
         "holdout_start": str(reference_index[split]),
         "holdout_end": str(reference_index[-1]),
@@ -220,7 +255,8 @@ def compare_rebalance_thresholds(
         "note": (
             "Candidate chosen using earlier OOS returns only; holdout evaluated "
             "once afterwards. Offline model differs from hosted River-v1. "
-            "Trade-count sufficiency is across all OOS periods, not holdout alone. "
+            "Trade and fold eligibility uses validation-only observations; "
+            "holdout activity never affects candidate selection. "
             "Zero-cost counterfactual isolates sensitivity to modeled execution "
             "friction, not exact fee expense (position paths can diverge). "
             "No production parameter is changed."
