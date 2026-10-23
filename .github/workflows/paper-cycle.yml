@@ -36,6 +36,15 @@ jobs:
             exit 1
           fi
       - name: Run authenticated three-market fallback
+        id: fallback
         run: |
           python -m ai_trading.scheduler_fallback \
             --base-url "${DASHBOARD_URL}" --timeout 180
+      - name: Diagnose failed cycle with read-only hosted checks
+        if: ${{ failure() && steps.fallback.outcome == 'failure' }}
+        continue-on-error: true
+        run: |
+          # These endpoints never trigger a new cycle or trade. Keep the
+          # authenticated POST failed; do not blindly retry a partial cycle.
+          python -m ai_trading.deployment_probe \
+            --base-url "${DASHBOARD_URL}" --timeout 20 --require-running-markets
