@@ -4,7 +4,7 @@
   "base_branch": "main",
   "active_branch": "main",
   "pull_request": null,
-  "focus": "PR #206 merged 2026-10-23: validation-only trades/folds determine turnover candidate eligibility, verified via CI Ruff/Pytest/Worker, CodeQL, and real-data Turnover Research. Net baseline offline proxy at 2026-10-23 research: Gold -0.32%, DAX -0.23%, BTC -0.51%; no eligible threshold. Production paper unchanged; Render deployed SHA unverified.",
+  "focus": "PR #207 merged on 2026-10-23 after successful CI/CodeQL: MTF 5m/15m/1h/4h benchmark now requires positive net modeled returns on >=20 non-overlapping hypothetical next-open to horizon-close trades, in addition to directional quality, before recommending candidate parameters. Only controlled existing tests have validated gate; full real-data MTF benchmark is not yet run on new code, and no independent final economic holdout exists. Hosted live broker remains OFF; production River-v1/paper configs unchanged.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -166,7 +166,8 @@
     "PR #185 merged 2026-10-21 876a5f1: research-only cost-stress gate requires positive absolute modeled net return, finite metrics and at least one execution; green CI/CodeQL.",
     "PR #186 merged 2026-10-21 5931a3a: dashboard portfolio and Gold/DAX/BTC cards show allocation-adjusted net realized paper PnL, known fill coverage and PRELIMINARY/DATA MINIMUM sample labels; PR CI/CodeQL green.",
     "2026-10-22: PR #196 merged disabled-by-default rebalance deadband; post-merge CI and CodeQL green. New turnover study compares four thresholds on purged chronological walk-forward validation and later OOS holdout per Gold/DAX/BTC with recorded data SHA and net costs, research only.",
-    "PR #206 merged 2026-10-23 c2cb397: time-stamped backtest trades/folds and validation-only turnover eligibility; full PR checks and market research succeeded."
+    "PR #206 merged 2026-10-23 c2cb397: time-stamped backtest trades/folds and validation-only turnover eligibility; full PR checks and market research succeeded.",
+    "PR #207 merged 2026-10-23 d0f1886: cost-aware independent MTF trade audit and strict research-only net profitability gate; PR CI/CodeQL passed."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -175,8 +176,9 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Verify post-merge main CI/CodeQL and exact Render deployed SHA separately; hosted strict market probe does not yet verify the current release.",
-    "Advance net-of-cost out-of-sample research with market-session-aware evidence and untouched holdout, not auto-enable any negative baseline thresholds.",
-    "Keep River-v1 paper decision authority, shadow challenges research-only and live broker OFF."
+    "Verify post-merge main CI and CodeQL for latest documentation commit, and independently probe exact Render deployed SHA.",
+    "Run the full real Gold/DAX/BTC MTF benchmark on the integrated net-of-cost gate (separate real-data evidence); do not change paper parameters based on synthetic tests.",
+    "Develop a strict untouched chronological holdout and genuine net portfolio simulation for River/Kronos/MTF challengers before enabling new paper strategies.",
+    "Maintain River-v1 paper decision authority, shadow challengers non-authoritative, and live brokerage disabled."
   ]
 }
