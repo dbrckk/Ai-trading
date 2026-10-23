@@ -52,11 +52,17 @@ def _annualized_return(start: float, end: float, years: float) -> float:
 
 
 def compute_metrics(equity: pd.Series, periods_per_year: float = 252.0) -> PerformanceMetrics:
-    clean = equity.astype(float).dropna()
+    clean = equity.astype(float)
     if len(clean) < 2:
         raise ValueError("Need at least two equity observations")
+    # Dropping a missing or invalid point can hide losses, change the sample
+    # and produce a false-positive backtest. Reject incomplete equity curves.
+    if not np.isfinite(clean.to_numpy()).all() or (clean <= 0).any():
+        raise ValueError("Equity observations must be finite and positive")
 
     returns = clean.pct_change().dropna()
+    if not np.isfinite(returns.to_numpy()).all():
+        raise ValueError("Equity returns must be finite")
     total_return = float(clean.iloc[-1] / clean.iloc[0] - 1.0)
 
     if periods_per_year <= 0 or not np.isfinite(periods_per_year):
@@ -85,7 +91,7 @@ def compute_metrics(equity: pd.Series, periods_per_year: float = 252.0) -> Perfo
     max_drawdown = float(drawdowns.max())
     calmar = _safe_ratio(annualized_return, max_drawdown)
 
-    return PerformanceMetrics(
+    metrics = PerformanceMetrics(
         total_return=total_return,
         annualized_return=annualized_return,
         annualized_volatility=volatility,
@@ -94,13 +100,21 @@ def compute_metrics(equity: pd.Series, periods_per_year: float = 252.0) -> Perfo
         max_drawdown=max_drawdown,
         calmar=calmar,
     )
+    if not all(np.isfinite(value) for value in metrics.as_dict().values()):
+        raise ValueError("Non-finite performance metrics")
+    return metrics
 
 
 def buy_and_hold_equity(
     prices: pd.Series,
     starting_equity: float,
 ) -> pd.Series:
-    clean = prices.astype(float).dropna()
-    if clean.empty or clean.iloc[0] <= 0:
-        raise ValueError("Need positive benchmark prices")
-    return starting_equity * clean / clean.iloc[0]
+    clean = prices.astype(float)
+    if clean.empty or not np.isfinite(clean.to_numpy()).all() or (clean <= 0).any():
+        raise ValueError("Need finite positive benchmark prices")
+    if not np.isfinite(starting_equity) or starting_equity <= 0:
+        raise ValueError("Benchmark starting equity must be finite and positive")
+    benchmark = starting_equity * clean / clean.iloc[0]
+    if not np.isfinite(benchmark.to_numpy()).all() or (benchmark <= 0).any():
+        raise ValueError("Benchmark equity must remain finite and positive")
+    return benchmark

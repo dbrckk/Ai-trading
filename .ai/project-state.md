@@ -6,6 +6,9 @@ Status: active
 
 ## Working
 
+- **2026-10-23 performance evidence integrity:** PR #202 and #203 merged with successful PR CI/CodeQL. This follow-up refuses incomplete/nonfinite/nonpositive walk-forward equity and benchmark inputs rather than silently removing missing rows and generating deceptive positive metrics. Performance scoring remains read-only research; live broker OFF, River-v1 paper authority, no automatic promotion.
+
+
 - **2026-10-23 model qualification integrity:** PR #202 merged (unknown Gold/DAX/BTC held-pair correlation now fails closed, with green PR CI and CodeQL). Current branch rejects NaN/Inf/invalid metrics in standalone and multi-period challenger promotion, requires positive modeled challenger return, and rejects inconsistent or non-finite soak results and invalid policy thresholds. Research validation only; no production model change or live brokerage.
 
 
