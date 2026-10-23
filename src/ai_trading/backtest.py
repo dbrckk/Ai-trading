@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from math import isfinite
 
 import pandas as pd
 
@@ -41,8 +42,10 @@ class WalkForwardConfig:
             raise ValueError("test_window_bars must be at least 1")
         if self.max_train_bars is not None and self.max_train_bars < self.min_train_bars:
             raise ValueError("max_train_bars must be >= min_train_bars")
-        if self.periods_per_year is not None and self.periods_per_year <= 0:
-            raise ValueError("periods_per_year must be positive when provided")
+        if self.periods_per_year is not None and (
+            not isfinite(self.periods_per_year) or self.periods_per_year <= 0
+        ):
+            raise ValueError("periods_per_year must be positive and finite when provided")
 
     def as_dict(self) -> dict[str, int | float | bool | None]:
         return asdict(self)
