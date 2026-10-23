@@ -4,7 +4,7 @@
   "base_branch": "main",
   "active_branch": "main",
   "pull_request": null,
-  "focus": "PR #208 merged 2026-10-23 (23f8f36): finite MTF numeric parameters and explicit empty-grid rejection, CI/CodeQL green; real bounded Gold/DAX/BTC 5m cost-aware audit run 39949889320 with 3 pre-investigated 45/90m variants was negative in all nine market/config cases; all selections null. No paper/live parameter changes. Main post-merge checks and exact Render release SHA must be separately verified.",
+  "focus": "PR #209 merged 2026-10-23 at 3a9d320: MTF settings are frozen on pre-holdout validation and only prior-eligible candidates may be evaluated on a timestamp-anchored final 480-bar slice. Green PR CI/CodeQL and real Gold/DAX/BTC research run 39959553721: no validation-eligible candidate for any market, so all final holdouts were skipped as designed. Earlier benchmark retrospective metrics were negative across nine scenarios. These historical final windows are not previously-unseen across past studies; no portfolio PnL or actual brokerage performance. River-v1 paper authority unchanged and live trading OFF. Post-merge main CI and deployed Render SHA not yet verified.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -158,6 +158,27 @@
       "limitations": "no independent final holdout, not capital-sized portfolio PnL, not real broker fills, not hosted River-v1",
       "changed_production_parameters": false,
       "live_broker_enabled": false
+    },
+    "latest_mtf_chronological_holdout": {
+      "checked_on": "2026-10-23",
+      "workflow_run_id": 39959553721,
+      "artifact_id": 12504052287,
+      "mode": "real_market_read_only_5m_chronological_validation_then_conditional_holdout",
+      "holdout_bars_per_market": 480,
+      "validation_candidates": {
+        "GC=F": null,
+        "^GDAXI": null,
+        "BTC-USD": null
+      },
+      "holdout_evaluations": {
+        "GC=F": "skipped_no_validation_candidate",
+        "^GDAXI": "skipped_no_validation_candidate",
+        "BTC-USD": "skipped_no_validation_candidate"
+      },
+      "comparator": "full_retrospective_nine_scenarios_all_negative_net",
+      "limitations": "holdout excluded from selection in this run, but same era has been examined in previous research; not globally unseen, no portfolio simulation, no actual broker fills",
+      "production_parameters_changed": false,
+      "live_broker_enabled": false
     }
   },
   "completed_changes": [
@@ -200,7 +221,8 @@
     "2026-10-22: PR #196 merged disabled-by-default rebalance deadband; post-merge CI and CodeQL green. New turnover study compares four thresholds on purged chronological walk-forward validation and later OOS holdout per Gold/DAX/BTC with recorded data SHA and net costs, research only.",
     "PR #206 merged 2026-10-23 c2cb397: time-stamped backtest trades/folds and validation-only turnover eligibility; full PR checks and market research succeeded.",
     "PR #207 merged 2026-10-23 d0f1886: cost-aware independent MTF trade audit and strict research-only net profitability gate; PR CI/CodeQL passed.",
-    "PR #208 merged on 2026-10-23 (23f8f36): MTF finite param guard/empty-grid guard; green PR checks and real-market MTF net-of-cost diagnostic, no candidates."
+    "PR #208 merged on 2026-10-23 (23f8f36): MTF finite param guard/empty-grid guard; green PR checks and real-market MTF net-of-cost diagnostic, no candidates.",
+    "PR #209 merged 2026-10-23 3a9d320: frozen pre-holdout MTF selection and time-anchored, conditional chronological final evaluation; CI/CodeQL/real-market workflow successful."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -209,9 +231,9 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Verify the latest main GitHub CI and CodeQL, and separately verify exact Render deployed SHA rather than infer deploy from main merge.",
-    "Research a fully untouched chronological holdout and portfolio-equity net of slippage/costs for MTF/River/Kronos; all nine investigated MTF candidates are negative and must not be promoted.",
-    "Identify whether market-session/cadence filtering and revised target labeling can improve true out-of-sample net results on Gold/DAX/BTC without leakage.",
-    "Keep River-v1 paper authority, shadow challengers research-only, and live brokerage OFF."
+    "Verify latest main CI/CodeQL after session/project checkpoint commits and strict hosted market probe; independently verify exact Render deployed SHA before making any release claim.",
+    "Develop a genuinely forward-only unseen prospective validation period and reproducible net-of-cost position-sized equity accounting; do not interpret historical retrospective slices as fresh holdout.",
+    "Focus on eliminating cost-negative signals and reducing unnecessary turnover before risking capital; no tested Gold/DAX/BTC MTF candidate is currently promotable.",
+    "Preserve River-v1 paper decision authority, keep shadow challengers research-only, and leave live broker OFF."
   ]
 }
