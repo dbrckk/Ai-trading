@@ -27,10 +27,17 @@ def _safe_ratio(numerator: float, denominator: float) -> float:
 
 
 def infer_periods_per_year(index: pd.Index) -> float:
+    # Numeric positions are interpreted as Unix nanoseconds by pandas, which
+    # can produce nonsensical annualization instead of rejecting bad market data.
+    if pd.api.types.is_numeric_dtype(index.dtype):
+        raise ValueError("Timestamps must be datetime-like, not numeric positions")
     timestamps = pd.to_datetime(index, utc=True, errors="coerce")
-    timestamps = timestamps[~timestamps.isna()]
     if len(timestamps) < 2:
         raise ValueError("Need at least two valid timestamps")
+    if timestamps.isna().any():
+        raise ValueError("Timestamps must not contain missing or invalid values")
+    if not timestamps.is_monotonic_increasing or timestamps.has_duplicates:
+        raise ValueError("Timestamps must be strictly increasing")
     elapsed_seconds = float((timestamps[-1] - timestamps[0]).total_seconds())
     if elapsed_seconds <= 0:
         raise ValueError("Timestamps must span positive time")

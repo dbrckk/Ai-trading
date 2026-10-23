@@ -2,6 +2,8 @@
 
 Status: active
 
+- **2026-10-23 backtest timeline integrity:** PR #205 is open (CI/CodeQL pending verification). Reject invalid/missing, duplicated or out-of-order timestamps and numeric indexes during period inference; also reject NaN/Inf walk-forward annualization overrides. This protects research metric credibility; it does not change production paper decisions, Kronos authority or enable real brokerage. Net-of-fees profitability remains unproven.
+
 - **2026-10-21 cost-stress follow-up**: PR #183 was merged and current `main` CI/CodeQL are green after an initial PR test failure from stale exact-payload assertions. This branch strengthens the backtest cost-stress gate: highest combined transaction-cost/slippage scenario must have positive net return, even if most cheap scenarios pass. This is a conservative research gate, not a guarantee of profit or a live broker change.
 
 ## Working

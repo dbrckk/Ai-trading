@@ -98,6 +98,10 @@ def test_walk_forward_annualizes_from_actual_oos_timestamps_by_default() -> None
         expected.annualized_volatility
     )
 
+    for invalid_periods in (np.nan, np.inf, -np.inf, 0.0):
+        with pytest.raises(ValueError, match="periods_per_year"):
+            WalkForwardConfig(periods_per_year=invalid_periods)
+
 
 def test_walk_forward_exits_position_after_hard_risk_stop(monkeypatch) -> None:
     """Backtest must account for a stop exit and its turnover/costs."""

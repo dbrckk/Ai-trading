@@ -26,6 +26,18 @@ def test_infer_periods_per_year_from_elapsed_timestamps() -> None:
     periods = infer_periods_per_year(index)
     assert periods == pytest.approx(12.175, rel=0.02)
 
+    # Incomplete or reordered histories must not silently inflate Sharpe
+    # ratios or transform numeric bar positions into artificial timestamps.
+    invalid_timelines = (
+        pd.Index([0, 1, 2]),
+        pd.Index(["2026-01-01", "invalid", "2026-01-03"]),
+        pd.DatetimeIndex(["2026-01-01", "2026-01-01"]),
+        pd.DatetimeIndex(["2026-01-02", "2026-01-01"]),
+    )
+    for invalid_index in invalid_timelines:
+        with pytest.raises(ValueError, match="[Tt]imestamps"):
+            infer_periods_per_year(invalid_index)
+
 
 def test_extreme_short_window_annualization_stays_finite() -> None:
     equity = pd.Series([1.0, 1e100])
