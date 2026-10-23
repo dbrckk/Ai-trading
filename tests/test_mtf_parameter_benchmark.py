@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+from dataclasses import replace
+from types import SimpleNamespace
+
 import numpy as np
 import pandas as pd
 
 import ai_trading.mtf_parameter_benchmark as benchmark_module
 from ai_trading.mtf_parameter_benchmark import (
+    AggregateBenchmarkResult,
     MarketBenchmarkResult,
     MTFBenchmarkConfig,
     benchmark_payload,
@@ -70,6 +74,8 @@ def test_market_benchmark_is_purged_and_reports_directional_evidence() -> None:
     assert 0.0 <= result.selection_score <= 1.0
     assert 0 <= result.active_predictions <= result.observations
     assert 0.0 <= result.active_precision <= 1.0
+    assert 0 <= result.economic_trades <= result.active_predictions
+    assert np.isfinite(result.economic_compounded_net_return)
 
 
 def test_parameter_benchmark_ranks_configs_across_markets() -> None:
@@ -118,6 +124,10 @@ def test_benchmark_payload_is_reproducible_and_explicit() -> None:
         "min_active_predictions": 20,
         "min_active_precision": 0.5,
     }
+    assert payload["method"]["economic_gate"]["min_non_overlapping_trades"] == 20
+    assert payload["method"]["economic_gate"]["transaction_cost_bps"] == 2.0
+    assert payload["method"]["economic_gate"]["slippage_bps"] == 1.0
+    assert payload["method"]["economic_gate"]["no_auto_promotion"] is True
     assert payload["ranking"][0]["rank"] == 1
     assert payload["ranking"][0]["config"]["horizon_bars"] == 3
     assert payload["ranking"][0]["config"]["min_confidence"] == 0.56
@@ -191,8 +201,12 @@ def test_parameter_grid_uses_same_random_seed_for_every_config(monkeypatch) -> N
         test_window_bars,
         min_train_rows,
         random_state,
+        transaction_cost_bps,
+        slippage_bps,
     ):
         del market, folds, test_window_bars, min_train_rows
+        assert transaction_cost_bps == 2.0
+        assert slippage_bps == 1.0
         seen_random_states.append(random_state)
         return MarketBenchmarkResult(
             symbol=symbol,
@@ -235,3 +249,63 @@ def test_parameter_grid_uses_same_random_seed_for_every_config(monkeypatch) -> N
     )
 
     assert seen_random_states == [73, 73, 73, 73]
+
+
+def test_cost_aware_mtf_gate_rejects_directional_wins_erased_by_fees(monkeypatch) -> None:
+    """Only disjoint completed trades count toward economic eligibility."""
+
+    class AlwaysLongModel:
+        def __init__(self, **kwargs):
+            del kwargs
+
+        def fit(self, rows, labels):
+            assert len(rows) == len(labels)
+            return self
+
+        def predict_one(self, row, regime):
+            del row, regime
+            return SimpleNamespace(side=1, confidence=0.99)
+
+    monkeypatch.setattr(benchmark_module, "EnsembleDirectionModel", AlwaysLongModel)
+
+    # Direction is known in this controlled benchmark, but the next-open
+    # realized edge is small enough for realistic costs to erase it.
+    market = sample_market()
+    trend = 100.0 + np.arange(len(market), dtype=float) * 0.05
+    market["Open"] = trend
+    market["Close"] = trend
+    market["High"] = trend * 1.0002
+    market["Low"] = trend * 0.9998
+    config = MTFBenchmarkConfig(3, 0.0005, 0.25, 700, 0.50)
+
+    without_costs = evaluate_market_config(
+        "TEST", market, config,
+        folds=2, test_window_bars=96, min_train_rows=500,
+        transaction_cost_bps=0.0, slippage_bps=0.0,
+    )
+    with_costs = evaluate_market_config(
+        "TEST", market, config,
+        folds=2, test_window_bars=96, min_train_rows=500,
+        transaction_cost_bps=100.0, slippage_bps=50.0,
+    )
+
+    assert without_costs.economic_trades >= 20
+    assert without_costs.economic_trades < without_costs.active_predictions
+    assert without_costs.economic_compounded_net_return > 0.0
+    assert without_costs.economic_gate_passed is True
+    assert with_costs.directional_gate_passed is True
+    assert with_costs.economic_mean_net_return < 0.0
+    assert with_costs.economic_compounded_net_return < 0.0
+    assert with_costs.economic_gate_passed is False
+
+    result = AggregateBenchmarkResult(
+        config=config, markets=(without_costs,),
+        mean_selection_score=without_costs.selection_score,
+        stability_penalty=0.0,
+        aggregate_score=without_costs.selection_score,
+        total_observations=without_costs.observations,
+        total_directional_observations=without_costs.directional_observations,
+        markets_passing_directional_gate=1,
+    )
+    assert market_selections((result,))["TEST"] is not None
+    assert market_selections((replace(result, markets=(with_costs,)),))["TEST"] is None
