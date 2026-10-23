@@ -2,9 +2,9 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "fix/global-risk-finite-evidence",
+  "active_branch": "fix/promotion-soak-invalid-evidence",
   "pull_request": null,
-  "focus": "PR #200 merged after successful CI and CodeQL; core paper RiskEngine and config reject invalid numerical inputs. Research GitHub Actions artifact #12440979405 confirms fee-inclusive baseline losses Gold -0.253%, DAX -0.243%, BTC -0.687%; frictionless Gold +0.045%, DAX -0.063%, BTC -0.249%. This branch closes NaN/Infinity fail-open holes in research portfolio exposure gate and global risk governor. Hosted strict probe rerun 39902075368 (attempt 2) three RUNNING; deployed SHA still unverified.",
+  "focus": "Merged PR #202 portfolio correlation evidence fail-closed (CI/CodeQL green). This branch validates finite coherent soak evidence and champion/challenger promotion metrics, rejecting unprofitable challengers even when they outperform losing champions. Paper River-v1 retained, live orders OFF, no settings increased.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -158,8 +158,8 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Confirm global finite-evidence PR CI and CodeQL; merge only after both pass.",
-    "Keep default turnover filter disabled; gain after modeled costs not demonstrated.",
-    "Collect live hosted paper performance per market before tuning; River-v1 remains authoritative, real broker OFF."
+    "Verify CI and CodeQL for promotion/soak invalid evidence PR; squash merge only if green.",
+    "Monitor scheduled Gold/DAX/BTC hosted strict probe and paper cycle; compare net paper PnL with sufficient independent observations.",
+    "Keep shadow promotions and optional rebalance deadband disabled pending robust net-of-cost OOS evidence."
   ]
 }
