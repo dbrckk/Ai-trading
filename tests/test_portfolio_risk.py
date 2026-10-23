@@ -71,3 +71,27 @@ def test_portfolio_risk_rejects_nonfinite_asset_exposure(notional: float) -> Non
 def test_portfolio_risk_rejects_nonfinite_limits(field: str) -> None:
     with pytest.raises(ValueError):
         PortfolioRiskConfig(**{field: math.nan})
+
+
+def test_portfolio_risk_rejects_undefined_correlation_between_active_assets() -> None:
+    notionals = pd.Series({"A": 20_000.0, "B": 20_000.0})
+    returns = pd.DataFrame({"A": [0.01, -0.01, 0.02], "B": [0.0, 0.0, 0.0]})
+    report = evaluate_portfolio_risk(notionals, 100_000.0, returns)
+    assert not report.approved
+    assert "insufficient pair correlation evidence" in report.reasons
+
+
+def test_portfolio_risk_rejects_missing_active_asset_history() -> None:
+    notionals = pd.Series({"A": 20_000.0, "B": 20_000.0})
+    returns = pd.DataFrame({"A": [0.01, -0.01, 0.02]})
+    report = evaluate_portfolio_risk(notionals, 100_000.0, returns)
+    assert not report.approved
+    assert "insufficient pair correlation evidence" in report.reasons
+
+
+def test_portfolio_risk_ignores_missing_history_for_flat_asset() -> None:
+    notionals = pd.Series({"A": 20_000.0, "B": 0.0})
+    returns = pd.DataFrame({"A": [0.01, -0.01, 0.02]})
+    report = evaluate_portfolio_risk(notionals, 100_000.0, returns)
+    assert report.approved
+    assert report.max_pair_correlation == 0.0
