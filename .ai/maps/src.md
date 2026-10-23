@@ -5909,7 +5909,9 @@ reasons: tuple[str, ...]
 ⋮----
 config = config or PortfolioRiskConfig()
 ⋮----
-exposures = notionals.astype(float) / equity
+notionals_numeric = notionals.astype(float)
+⋮----
+exposures = notionals_numeric / equity
 gross = float(exposures.abs().sum())
 net = float(abs(exposures.sum()))
 max_asset = float(exposures.abs().max()) if len(exposures) else 0.0
@@ -7142,6 +7144,9 @@ halt: bool
 reason: str
 ⋮----
 policy = policy or GovernorPolicy()
+⋮----
+# NaN comparisons are false, which would otherwise let corrupt risk
+# telemetry fall through to TRADE or REDUCE. Stop issuing paper orders.
 ```
 
 ## File: ai_trading/risk.py

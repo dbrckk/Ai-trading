@@ -1,14 +1,14 @@
 # Change impact
 
-Base: 1b4ebee50e2e48a151f0dae26c51f0820ac25d13
-Head: 97d977dd71bee0a6e20e47bba828f230b86112c1
+Base: 1a49fe10e0abf08edb3372914745cebf38c11b78
+Head: 7a3ea4948365dd376487c84fe65a82c16e36488c
 
 ## Changed files
 - M README.md
-- M src/ai_trading/config.py
-- M src/ai_trading/risk.py
-- M tests/test_config_validation.py
-- M tests/test_risk.py
+- M src/ai_trading/portfolio_risk.py
+- M src/ai_trading/risk_governor.py
+- M tests/test_portfolio_risk.py
+- M tests/test_risk_governor.py
 
 ## Affected areas
 - (root)
@@ -16,7 +16,8 @@ Head: 97d977dd71bee0a6e20e47bba828f230b86112c1
 - tests
 
 ## Related test candidates
-- tests/test_risk.py
+- tests/test_portfolio_risk.py
+- tests/test_risk_governor.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

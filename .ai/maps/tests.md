@@ -3242,6 +3242,14 @@ def test_portfolio_risk_detects_high_pair_correlation() -> None
 x = np.linspace(-0.02, 0.02, 200)
 returns = pd.DataFrame({"A": x, "B": x * 1.01})
 notionals = pd.Series({"A": 20_000.0, "B": 20_000.0})
+⋮----
+@pytest.mark.parametrize("equity", [math.nan, math.inf, -math.inf, 0.0])
+def test_portfolio_risk_rejects_invalid_equity(equity: float) -> None
+⋮----
+@pytest.mark.parametrize("notional", [math.nan, math.inf, -math.inf])
+def test_portfolio_risk_rejects_nonfinite_asset_exposure(notional: float) -> None
+⋮----
+def test_portfolio_risk_rejects_nonfinite_limits(field: str) -> None
 ```
 
 ## File: test_portfolio_selection.py
@@ -3925,6 +3933,8 @@ def test_governor_returns_to_trade_after_recovery_health_normalizes() -> None
 ⋮----
 degraded = evaluate_governor(base_signals(recovery_degraded=True))
 healthy = evaluate_governor(base_signals(recovery_degraded=False))
+⋮----
+decision = evaluate_governor(base_signals(**{field: value}))
 ```
 
 ## File: test_risk_parity.py

@@ -116,17 +116,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-23T06:56:50Z
+Generated: 2026-10-23T07:04:57Z
 
 ### Git
 - Branch: `main`
-- Head: `97d977dd71be`
-- Commit date: 2026-10-23T02:56:39-04:00
-- Commit: fix(risk): reject non-finite paper trading inputs before order approval
+- Head: `7a3ea4948365`
+- Commit date: 2026-10-23T03:04:48-04:00
+- Commit: fix(risk): halt on invalid global risk signals and portfolio exposures
 - Tracked files: 515
 
 ### Recently changed files
 - `README.md`
+- `src/ai_trading/portfolio_risk.py`
+- `src/ai_trading/risk_governor.py`
+- `tests/test_portfolio_risk.py`
+- `tests/test_risk_governor.py`
 - `src/ai_trading/config.py`
 - `src/ai_trading/risk.py`
 - `tests/test_config_validation.py`
@@ -137,10 +141,6 @@ Generated: 2026-10-23T06:56:50Z
 - `src/ai_trading/deployment_probe.py`
 - `tests/test_dashboard_health.py`
 - `src/ai_trading/command_app.py`
-- `src/ai_trading/broker.py`
-- `src/ai_trading/execution_costs.py`
-- `tests/test_broker.py`
-- `tests/test_execution_costs.py`
 
 ### Project signals
 - `pyproject.toml`

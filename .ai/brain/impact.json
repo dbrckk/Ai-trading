@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "fef80d5ea7f4ab1e3a4a8261ad6e4d44e96844a1",
-  "head": "97d977dd71bee0a6e20e47bba828f230b86112c1",
+  "base": "97d977dd71bee0a6e20e47bba828f230b86112c1",
+  "head": "7a3ea4948365dd376487c84fe65a82c16e36488c",
   "index_mode": "incremental",
   "changed_files": [
     {
@@ -10,156 +10,41 @@
       "status": "M"
     },
     {
-      "path": "src/ai_trading/config.py",
+      "path": "src/ai_trading/portfolio_risk.py",
       "status": "M"
     },
     {
-      "path": "src/ai_trading/risk.py",
+      "path": "src/ai_trading/risk_governor.py",
       "status": "M"
     },
     {
-      "path": "tests/test_config_validation.py",
+      "path": "tests/test_portfolio_risk.py",
       "status": "M"
     },
     {
-      "path": "tests/test_risk.py",
+      "path": "tests/test_risk_governor.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "src/ai_trading/config.py",
-    "src/ai_trading/risk.py",
-    "tests/test_config_validation.py",
-    "tests/test_risk.py"
+    "src/ai_trading/portfolio_risk.py",
+    "src/ai_trading/risk_governor.py",
+    "tests/test_portfolio_risk.py",
+    "tests/test_risk_governor.py"
   ],
   "impacted_files": [
-    "src/ai_trading/backtest.py",
-    "src/ai_trading/broker.py",
     "src/ai_trading/cli.py",
-    "src/ai_trading/config.py",
-    "src/ai_trading/continuous.py",
-    "src/ai_trading/cost_stress.py",
-    "src/ai_trading/engine.py",
-    "src/ai_trading/execution_costs.py",
     "src/ai_trading/multiasset_backtest.py",
-    "src/ai_trading/multiasset_market_context.py",
     "src/ai_trading/multiasset_runtime.py",
-    "src/ai_trading/orchestrator.py",
-    "src/ai_trading/paper_cycle_service.py",
-    "src/ai_trading/risk.py",
-    "src/ai_trading/runtime.py",
-    "src/ai_trading/tuning.py",
-    "src/ai_trading/turnover_study.py",
-    "tests/test_backtest.py",
-    "tests/test_backtest_ensemble.py",
-    "tests/test_broker.py",
+    "src/ai_trading/portfolio_risk.py",
+    "src/ai_trading/risk_governor.py",
     "tests/test_config_validation.py",
-    "tests/test_cost_stress.py",
-    "tests/test_execution_costs.py",
     "tests/test_multiasset_backtest.py",
-    "tests/test_multiasset_market_context.py",
     "tests/test_multiasset_runtime.py",
-    "tests/test_orchestrator_trigger.py",
-    "tests/test_paper_cycle.py",
-    "tests/test_paper_cycle_materialized_fresh.py",
-    "tests/test_paper_cycle_postgres.py",
-    "tests/test_realized_pnl_accounting.py",
-    "tests/test_risk.py",
-    "tests/test_runtime.py",
-    "tests/test_runtime_persistence.py",
-    "tests/test_runtime_targeted_step.py"
+    "tests/test_portfolio_risk.py",
+    "tests/test_risk_governor.py"
   ],
   "impacted_symbols": [
-    {
-      "name": "_compound_step_returns",
-      "kind": "function",
-      "file": "src/ai_trading/backtest.py",
-      "line": 22
-    },
-    {
-      "name": "WalkForwardConfig",
-      "kind": "class",
-      "file": "src/ai_trading/backtest.py",
-      "line": 30
-    },
-    {
-      "name": "__post_init__",
-      "kind": "function",
-      "file": "src/ai_trading/backtest.py",
-      "line": 37
-    },
-    {
-      "name": "as_dict",
-      "kind": "function",
-      "file": "src/ai_trading/backtest.py",
-      "line": 47
-    },
-    {
-      "name": "BacktestReport",
-      "kind": "class",
-      "file": "src/ai_trading/backtest.py",
-      "line": 52
-    },
-    {
-      "name": "WalkForwardBacktester",
-      "kind": "class",
-      "file": "src/ai_trading/backtest.py",
-      "line": 65
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "src/ai_trading/backtest.py",
-      "line": 68
-    },
-    {
-      "name": "run",
-      "kind": "function",
-      "file": "src/ai_trading/backtest.py",
-      "line": 80
-    },
-    {
-      "name": "BrokerState",
-      "kind": "class",
-      "file": "src/ai_trading/broker.py",
-      "line": 11
-    },
-    {
-      "name": "equity",
-      "kind": "function",
-      "file": "src/ai_trading/broker.py",
-      "line": 20
-    },
-    {
-      "name": "PaperBroker",
-      "kind": "class",
-      "file": "src/ai_trading/broker.py",
-      "line": 24
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "src/ai_trading/broker.py",
-      "line": 25
-    },
-    {
-      "name": "mark",
-      "kind": "function",
-      "file": "src/ai_trading/broker.py",
-      "line": 33
-    },
-    {
-      "name": "reset_day_start",
-      "kind": "function",
-      "file": "src/ai_trading/broker.py",
-      "line": 41
-    },
-    {
-      "name": "rebalance",
-      "kind": "function",
-      "file": "src/ai_trading/broker.py",
-      "line": 44
-    },
     {
       "name": "self_test",
       "kind": "function",
@@ -413,108 +298,6 @@
       "line": 1882
     },
     {
-      "name": "RiskConfig",
-      "kind": "class",
-      "file": "src/ai_trading/config.py",
-      "line": 6
-    },
-    {
-      "name": "__post_init__",
-      "kind": "function",
-      "file": "src/ai_trading/config.py",
-      "line": 17
-    },
-    {
-      "name": "ModelConfig",
-      "kind": "class",
-      "file": "src/ai_trading/config.py",
-      "line": 43
-    },
-    {
-      "name": "__post_init__",
-      "kind": "function",
-      "file": "src/ai_trading/config.py",
-      "line": 47
-    },
-    {
-      "name": "ContinuousCycleResult",
-      "kind": "class",
-      "file": "src/ai_trading/continuous.py",
-      "line": 21
-    },
-    {
-      "name": "run_learning_cycle",
-      "kind": "function",
-      "file": "src/ai_trading/continuous.py",
-      "line": 30
-    },
-    {
-      "name": "CostStressScenario",
-      "kind": "class",
-      "file": "src/ai_trading/cost_stress.py",
-      "line": 12
-    },
-    {
-      "name": "CostStressResult",
-      "kind": "class",
-      "file": "src/ai_trading/cost_stress.py",
-      "line": 19
-    },
-    {
-      "name": "run_cost_stress",
-      "kind": "function",
-      "file": "src/ai_trading/cost_stress.py",
-      "line": 35
-    },
-    {
-      "name": "_result",
-      "kind": "function",
-      "file": "src/ai_trading/cost_stress.py",
-      "line": 57
-    },
-    {
-      "name": "risk_config_for_scenario",
-      "kind": "function",
-      "file": "src/ai_trading/cost_stress.py",
-      "line": 68
-    },
-    {
-      "name": "RunResult",
-      "kind": "class",
-      "file": "src/ai_trading/engine.py",
-      "line": 15
-    },
-    {
-      "name": "TradingEngine",
-      "kind": "class",
-      "file": "src/ai_trading/engine.py",
-      "line": 24
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "src/ai_trading/engine.py",
-      "line": 25
-    },
-    {
-      "name": "train",
-      "kind": "function",
-      "file": "src/ai_trading/engine.py",
-      "line": 35
-    },
-    {
-      "name": "paper_run",
-      "kind": "function",
-      "file": "src/ai_trading/engine.py",
-      "line": 44
-    },
-    {
-      "name": "risk_config_for_symbol",
-      "kind": "function",
-      "file": "src/ai_trading/execution_costs.py",
-      "line": 13
-    },
-    {
       "name": "MultiAssetBacktestReport",
       "kind": "class",
       "file": "src/ai_trading/multiasset_backtest.py",
@@ -537,18 +320,6 @@
       "kind": "function",
       "file": "src/ai_trading/multiasset_backtest.py",
       "line": 53
-    },
-    {
-      "name": "MultiAssetMarketContext",
-      "kind": "class",
-      "file": "src/ai_trading/multiasset_market_context.py",
-      "line": 13
-    },
-    {
-      "name": "prepare_multiasset_market_context",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_market_context.py",
-      "line": 22
     },
     {
       "name": "MultiAssetStepResult",
@@ -653,406 +424,52 @@
       "line": 316
     },
     {
-      "name": "OrchestrationResult",
+      "name": "PortfolioRiskConfig",
       "kind": "class",
-      "file": "src/ai_trading/orchestrator.py",
-      "line": 21
+      "file": "src/ai_trading/portfolio_risk.py",
+      "line": 10
     },
     {
-      "name": "AutonomousPaperOrchestrator",
-      "kind": "class",
-      "file": "src/ai_trading/orchestrator.py",
-      "line": 30
-    },
-    {
-      "name": "__init__",
+      "name": "__post_init__",
       "kind": "function",
-      "file": "src/ai_trading/orchestrator.py",
-      "line": 31
-    },
-    {
-      "name": "_health_checks",
-      "kind": "function",
-      "file": "src/ai_trading/orchestrator.py",
-      "line": 44
-    },
-    {
-      "name": "step",
-      "kind": "function",
-      "file": "src/ai_trading/orchestrator.py",
-      "line": 71
-    },
-    {
-      "name": "ProductionPaperCycleSettings",
-      "kind": "class",
-      "file": "src/ai_trading/paper_cycle_service.py",
+      "file": "src/ai_trading/portfolio_risk.py",
       "line": 16
     },
     {
-      "name": "PaperCycleServiceError",
+      "name": "PortfolioRiskReport",
       "kind": "class",
-      "file": "src/ai_trading/paper_cycle_service.py",
-      "line": 26
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle_service.py",
-      "line": 27
-    },
-    {
-      "name": "_now_utc",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle_service.py",
-      "line": 33
-    },
-    {
-      "name": "_default_runner_factory",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle_service.py",
-      "line": 37
-    },
-    {
-      "name": "_safe_failure_detail",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle_service.py",
-      "line": 54
-    },
-    {
-      "name": "_can_reuse_last_paper_decision",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle_service.py",
-      "line": 67
-    },
-    {
-      "name": "run_production_paper_cycle",
-      "kind": "function",
-      "file": "src/ai_trading/paper_cycle_service.py",
-      "line": 98
-    },
-    {
-      "name": "PortfolioSnapshot",
-      "kind": "class",
-      "file": "src/ai_trading/risk.py",
-      "line": 11
-    },
-    {
-      "name": "RiskDecision",
-      "kind": "class",
-      "file": "src/ai_trading/risk.py",
-      "line": 19
-    },
-    {
-      "name": "RiskEngine",
-      "kind": "class",
-      "file": "src/ai_trading/risk.py",
-      "line": 29
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "src/ai_trading/risk.py",
-      "line": 30
-    },
-    {
-      "name": "evaluate",
-      "kind": "function",
-      "file": "src/ai_trading/risk.py",
-      "line": 33
-    },
-    {
-      "name": "RuntimeStepResult",
-      "kind": "class",
-      "file": "src/ai_trading/runtime.py",
-      "line": 30
-    },
-    {
-      "name": "PreparedRuntimeMarket",
-      "kind": "class",
-      "file": "src/ai_trading/runtime.py",
-      "line": 44
-    },
-    {
-      "name": "PaperAutonomousRuntime",
-      "kind": "class",
-      "file": "src/ai_trading/runtime.py",
-      "line": 52
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 59
-    },
-    {
-      "name": "_broker_from_state",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 107
-    },
-    {
-      "name": "_state_from_broker",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 118
-    },
-    {
-      "name": "_prepare_market_features",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 137
-    },
-    {
-      "name": "_eligible_execution_indices",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 158
-    },
-    {
-      "name": "prepare_market",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 162
-    },
-    {
-      "name": "step",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 177
-    },
-    {
-      "name": "step_at",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 183
-    },
-    {
-      "name": "step_prepared",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 201
-    },
-    {
-      "name": "_step_prepared_locked",
-      "kind": "function",
-      "file": "src/ai_trading/runtime.py",
-      "line": 222
-    },
-    {
-      "name": "OptimizationWeights",
-      "kind": "class",
-      "file": "src/ai_trading/tuning.py",
-      "line": 14
-    },
-    {
-      "name": "TuningResult",
-      "kind": "class",
-      "file": "src/ai_trading/tuning.py",
-      "line": 22
-    },
-    {
-      "name": "objective_score",
-      "kind": "function",
-      "file": "src/ai_trading/tuning.py",
-      "line": 28
-    },
-    {
-      "name": "tune_walk_forward",
-      "kind": "function",
-      "file": "src/ai_trading/tuning.py",
-      "line": 42
-    },
-    {
-      "name": "objective",
-      "kind": "function",
-      "file": "src/ai_trading/tuning.py",
-      "line": 55
-    },
-    {
-      "name": "_segment_performance",
-      "kind": "function",
-      "file": "src/ai_trading/turnover_study.py",
-      "line": 24
-    },
-    {
-      "name": "compare_rebalance_thresholds",
-      "kind": "function",
-      "file": "src/ai_trading/turnover_study.py",
+      "file": "src/ai_trading/portfolio_risk.py",
       "line": 36
     },
     {
-      "name": "sample_market",
+      "name": "evaluate_portfolio_risk",
       "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 16
+      "file": "src/ai_trading/portfolio_risk.py",
+      "line": 45
     },
     {
-      "name": "test_walk_forward_produces_out_of_sample_report",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 33
-    },
-    {
-      "name": "test_walk_forward_resets_daily_risk_baseline_between_dates",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 52
-    },
-    {
-      "name": "tracked_reset",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 56
-    },
-    {
-      "name": "test_regime_step_returns_are_compounded_without_intervening_equity",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 77
-    },
-    {
-      "name": "test_walk_forward_annualizes_from_actual_oos_timestamps_by_default",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 82
-    },
-    {
-      "name": "test_walk_forward_exits_position_after_hard_risk_stop",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 102
-    },
-    {
-      "name": "configured_risk",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 106
-    },
-    {
-      "name": "tracked_rebalance",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 119
-    },
-    {
-      "name": "test_turnover_study_selects_on_validation_without_holdout_cherry_picking",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 136
-    },
-    {
-      "name": "fake_backtest",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 149
-    },
-    {
-      "name": "test_turnover_study_marks_profitable_untouched_holdout_for_review",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 175
-    },
-    {
-      "name": "fake_backtest",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 182
-    },
-    {
-      "name": "test_turnover_study_rejects_small_out_of_sample_history",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 207
-    },
-    {
-      "name": "fake_backtest",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 212
-    },
-    {
-      "name": "test_turnover_study_reports_zero_cost_counterfactual_without_promoting",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 232
-    },
-    {
-      "name": "fake_backtest",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 241
-    },
-    {
-      "name": "test_turnover_study_does_not_repeat_frictionless_backtest",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 276
-    },
-    {
-      "name": "fake_backtest",
-      "kind": "function",
-      "file": "tests/test_backtest.py",
-      "line": 283
-    },
-    {
-      "name": "sample_market",
-      "kind": "function",
-      "file": "tests/test_backtest_ensemble.py",
+      "name": "GovernorPolicy",
+      "kind": "class",
+      "file": "src/ai_trading/risk_governor.py",
       "line": 8
     },
     {
-      "name": "test_walk_forward_ensemble_runs",
-      "kind": "function",
-      "file": "tests/test_backtest_ensemble.py",
-      "line": 25
-    },
-    {
-      "name": "test_broker_resets_daily_loss_baseline_to_current_equity",
-      "kind": "function",
-      "file": "tests/test_broker.py",
-      "line": 9
-    },
-    {
-      "name": "test_broker_rejects_invalid_mark_prices",
-      "kind": "function",
-      "file": "tests/test_broker.py",
+      "name": "GovernorSignals",
+      "kind": "class",
+      "file": "src/ai_trading/risk_governor.py",
       "line": 22
     },
     {
-      "name": "test_broker_rejects_invalid_sides",
-      "kind": "function",
-      "file": "tests/test_broker.py",
-      "line": 29
+      "name": "GovernorDecision",
+      "kind": "class",
+      "file": "src/ai_trading/risk_governor.py",
+      "line": 38
     },
     {
-      "name": "test_broker_rejects_invalid_target_notional",
+      "name": "evaluate_governor",
       "kind": "function",
-      "file": "tests/test_broker.py",
-      "line": 36
-    },
-    {
-      "name": "test_opt_in_deadband_avoids_costly_same_side_micro_rebalances",
-      "kind": "function",
-      "file": "tests/test_broker.py",
-      "line": 42
-    },
-    {
-      "name": "test_deadband_never_blocks_stop_exit_or_position_flip",
-      "kind": "function",
-      "file": "tests/test_broker.py",
-      "line": 58
-    },
-    {
-      "name": "test_rebalance_deadband_is_disabled_by_default",
-      "kind": "function",
-      "file": "tests/test_broker.py",
-      "line": 71
-    },
-    {
-      "name": "test_invalid_rebalance_deadband_rejected",
-      "kind": "function",
-      "file": "tests/test_broker.py",
-      "line": 81
+      "file": "src/ai_trading/risk_governor.py",
+      "line": 47
     },
     {
       "name": "test_invalid_strategy_configuration_fails_closed",
@@ -1071,60 +488,6 @@
       "kind": "function",
       "file": "tests/test_config_validation.py",
       "line": 59
-    },
-    {
-      "name": "FakeBacktester",
-      "kind": "class",
-      "file": "tests/test_cost_stress.py",
-      "line": 10
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "tests/test_cost_stress.py",
-      "line": 11
-    },
-    {
-      "name": "run",
-      "kind": "function",
-      "file": "tests/test_cost_stress.py",
-      "line": 16
-    },
-    {
-      "name": "test_cost_stress_applies_each_cost_scenario",
-      "kind": "function",
-      "file": "tests/test_cost_stress.py",
-      "line": 43
-    },
-    {
-      "name": "test_execution_cost_override_is_symbol_specific",
-      "kind": "function",
-      "file": "tests/test_execution_costs.py",
-      "line": 8
-    },
-    {
-      "name": "test_execution_cost_override_can_be_partial",
-      "kind": "function",
-      "file": "tests/test_execution_costs.py",
-      "line": 25
-    },
-    {
-      "name": "test_execution_cost_overrides_fail_closed_on_invalid_configuration",
-      "kind": "function",
-      "file": "tests/test_execution_costs.py",
-      "line": 51
-    },
-    {
-      "name": "test_default_runtime_uses_symbol_cost_override",
-      "kind": "function",
-      "file": "tests/test_execution_costs.py",
-      "line": 56
-    },
-    {
-      "name": "test_explicit_runtime_risk_config_has_priority",
-      "kind": "function",
-      "file": "tests/test_execution_costs.py",
-      "line": 72
     },
     {
       "name": "market",
@@ -1155,48 +518,6 @@
       "kind": "function",
       "file": "tests/test_multiasset_backtest.py",
       "line": 82
-    },
-    {
-      "name": "market",
-      "kind": "function",
-      "file": "tests/test_multiasset_market_context.py",
-      "line": 9
-    },
-    {
-      "name": "test_prepare_multiasset_market_context_builds_aligned_inputs",
-      "kind": "function",
-      "file": "tests/test_multiasset_market_context.py",
-      "line": 31
-    },
-    {
-      "name": "test_prepare_multiasset_market_context_rejects_unaligned_latest_bar",
-      "kind": "function",
-      "file": "tests/test_multiasset_market_context.py",
-      "line": 45
-    },
-    {
-      "name": "test_prepare_multiasset_market_context_rejects_insufficient_assets",
-      "kind": "function",
-      "file": "tests/test_multiasset_market_context.py",
-      "line": 53
-    },
-    {
-      "name": "test_prepare_multiasset_market_context_rejects_short_history",
-      "kind": "function",
-      "file": "tests/test_multiasset_market_context.py",
-      "line": 58
-    },
-    {
-      "name": "test_prepare_multiasset_market_context_rejects_missing_columns",
-      "kind": "function",
-      "file": "tests/test_multiasset_market_context.py",
-      "line": 66
-    },
-    {
-      "name": "test_prepare_multiasset_market_context_rejects_invalid_latest_prices",
-      "kind": "function",
-      "file": "tests/test_multiasset_market_context.py",
-      "line": 76
     },
     {
       "name": "market",
@@ -1325,576 +646,115 @@
       "line": 535
     },
     {
-      "name": "test_orchestrator_configuration_accepts_injected_runtime",
+      "name": "test_portfolio_risk_rejects_excess_single_asset_exposure",
       "kind": "function",
-      "file": "tests/test_orchestrator_trigger.py",
+      "file": "tests/test_portfolio_risk.py",
       "line": 10
     },
     {
-      "name": "sample_market",
+      "name": "test_portfolio_risk_detects_high_pair_correlation",
       "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 24
+      "file": "tests/test_portfolio_risk.py",
+      "line": 29
     },
     {
-      "name": "runtime_factory",
+      "name": "test_portfolio_risk_rejects_invalid_equity",
       "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 41
+      "file": "tests/test_portfolio_risk.py",
+      "line": 44
     },
     {
-      "name": "build",
+      "name": "test_portfolio_risk_rejects_nonfinite_asset_exposure",
       "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 42
+      "file": "tests/test_portfolio_risk.py",
+      "line": 54
     },
     {
-      "name": "build_runner",
+      "name": "test_portfolio_risk_rejects_nonfinite_limits",
       "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 52
+      "file": "tests/test_portfolio_risk.py",
+      "line": 71
     },
     {
-      "name": "build_runtime",
+      "name": "base_signals",
       "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 66
+      "file": "tests/test_risk_governor.py",
+      "line": 8
     },
     {
-      "name": "test_fresh_runtime_processes_only_latest_eligible_bar",
+      "name": "test_governor_trade_when_all_gates_pass",
       "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 79
+      "file": "tests/test_risk_governor.py",
+      "line": 27
     },
     {
-      "name": "test_existing_runtime_catches_up_oldest_first",
+      "name": "test_governor_reduces_on_elevated_risk",
       "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 105
+      "file": "tests/test_risk_governor.py",
+      "line": 32
     },
     {
-      "name": "test_catchup_cap_leaves_remaining_backlog",
+      "name": "test_governor_freezes_on_failed_risk_gate",
       "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 131
+      "file": "tests/test_risk_governor.py",
+      "line": 38
     },
     {
-      "name": "test_catchup_prepares_features_and_labels_once",
+      "name": "test_governor_flattens_on_extreme_drawdown",
       "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 151
+      "file": "tests/test_risk_governor.py",
+      "line": 44
     },
     {
-      "name": "counted_make_features",
+      "name": "test_governor_halts_on_critical_data_failure",
       "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 164
+      "file": "tests/test_risk_governor.py",
+      "line": 50
     },
     {
-      "name": "counted_make_labels",
+      "name": "test_failed_stress_test_reduces_instead_of_freezing",
       "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 168
-    },
-    {
-      "name": "test_missing_last_processed_in_history_fails_closed",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 192
-    },
-    {
-      "name": "test_no_new_bar_is_healthy_and_idempotent",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 220
-    },
-    {
-      "name": "test_max_catchup_bars_must_be_positive",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 241
-    },
-    {
-      "name": "test_revision_conflict_reloads_and_continues",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 254
-    },
-    {
-      "name": "ConflictOnceRuntime",
-      "kind": "class",
-      "file": "tests/test_paper_cycle.py",
-      "line": 272
-    },
-    {
-      "name": "prepare_market",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 275
-    },
-    {
-      "name": "step_prepared",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 278
-    },
-    {
-      "name": "test_shadow_challenger_is_recorded_without_controlling_execution",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 320
-    },
-    {
-      "name": "fake_shadow",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 332
-    },
-    {
-      "name": "test_mtf_shadow_is_audit_only_and_cannot_control_execution",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 422
-    },
-    {
-      "name": "test_mtf_history_load_is_isolated_from_primary_market",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 509
-    },
-    {
-      "name": "loader",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 519
-    },
-    {
-      "name": "fake_mtf",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 535
-    },
-    {
-      "name": "test_mtf_boundary_aligns_with_candidate_horizon",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 564
-    },
-    {
-      "name": "test_non_boundary_cycle_skips_long_mtf_history_load",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 599
-    },
-    {
-      "name": "loader",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 607
-    },
-    {
-      "name": "test_validated_gold_mtf_config_is_forwarded_to_shadow_evaluator",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 636
-    },
-    {
-      "name": "loader",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 645
-    },
-    {
-      "name": "fake_mtf",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 660
-    },
-    {
-      "name": "test_validated_btc_mtf_config_is_forwarded_to_shadow_evaluator",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 691
-    },
-    {
-      "name": "loader",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 701
-    },
-    {
-      "name": "fake_mtf",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 717
-    },
-    {
-      "name": "test_pending_targets_resume_when_last_processed_is_raw_market_bar",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 751
-    },
-    {
-      "name": "test_pending_targets_still_fail_when_persisted_bar_is_not_loaded",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 780
-    },
-    {
-      "name": "test_pending_targets_resume_when_provider_removed_persisted_bar",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 812
-    },
-    {
-      "name": "test_pending_targets_allow_bounded_gap_before_loaded_history",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 847
-    },
-    {
-      "name": "test_pending_targets_reject_gap_beyond_three_days",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 877
-    },
-    {
-      "name": "test_paper_cycle_blocks_repeated_market_data_gaps_before_state_mutation",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 910
-    },
-    {
-      "name": "test_paper_cycle_accepts_single_tolerated_market_gap",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 931
-    },
-    {
-      "name": "test_degraded_mtf_history_is_skipped_without_disrupting_primary_cycle",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 980
-    },
-    {
-      "name": "loader",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 992
-    },
-    {
-      "name": "fake_mtf",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 1008
-    },
-    {
-      "name": "test_kronos_research_compares_same_windows_with_river_and_momentum",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 1038
-    },
-    {
-      "name": "FakeKronos",
-      "kind": "class",
-      "file": "tests/test_paper_cycle.py",
-      "line": 1049
-    },
-    {
-      "name": "predict",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 1050
-    },
-    {
-      "name": "test_kronos_river_reference_never_trains_on_unmatured_labels",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 1087
-    },
-    {
-      "name": "RecordingRiver",
-      "kind": "class",
-      "file": "tests/test_paper_cycle.py",
-      "line": 1092
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 1093
-    },
-    {
-      "name": "learn_one",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 1098
-    },
-    {
-      "name": "predict_one",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 1103
-    },
-    {
-      "name": "FlatKronos",
-      "kind": "class",
-      "file": "tests/test_paper_cycle.py",
-      "line": 1115
-    },
-    {
-      "name": "predict",
-      "kind": "function",
-      "file": "tests/test_paper_cycle.py",
-      "line": 1116
-    },
-    {
-      "name": "sample_market",
-      "kind": "function",
-      "file": "tests/test_paper_cycle_materialized_fresh.py",
-      "line": 13
-    },
-    {
-      "name": "test_materialized_empty_runtime_is_treated_as_fresh",
-      "kind": "function",
-      "file": "tests/test_paper_cycle_materialized_fresh.py",
-      "line": 30
-    },
-    {
-      "name": "runtime_factory",
-      "kind": "function",
-      "file": "tests/test_paper_cycle_materialized_fresh.py",
-      "line": 46
-    },
-    {
-      "name": "sample_market",
-      "kind": "function",
-      "file": "tests/test_paper_cycle_postgres.py",
-      "line": 16
-    },
-    {
-      "name": "runtime_factory",
-      "kind": "function",
-      "file": "tests/test_paper_cycle_postgres.py",
-      "line": 33
-    },
-    {
-      "name": "build",
-      "kind": "function",
-      "file": "tests/test_paper_cycle_postgres.py",
-      "line": 34
-    },
-    {
-      "name": "test_paper_cycle_survives_postgres_object_reconstruction",
-      "kind": "function",
-      "file": "tests/test_paper_cycle_postgres.py",
-      "line": 48
-    },
-    {
-      "name": "trade",
-      "kind": "function",
-      "file": "tests/test_realized_pnl_accounting.py",
-      "line": 12
-    },
-    {
-      "name": "test_opening_position_sets_cost_basis_and_realizes_only_costs",
-      "kind": "function",
-      "file": "tests/test_realized_pnl_accounting.py",
-      "line": 25
-    },
-    {
-      "name": "test_adding_to_position_updates_weighted_average_entry",
-      "kind": "function",
-      "file": "tests/test_realized_pnl_accounting.py",
-      "line": 41
-    },
-    {
-      "name": "test_reducing_long_realizes_price_move_less_costs",
-      "kind": "function",
-      "file": "tests/test_realized_pnl_accounting.py",
+      "file": "tests/test_risk_governor.py",
       "line": 56
     },
     {
-      "name": "test_reducing_short_realizes_short_profit",
+      "name": "test_governor_reduces_when_recovery_health_is_degraded",
       "kind": "function",
-      "file": "tests/test_realized_pnl_accounting.py",
-      "line": 71
-    },
-    {
-      "name": "test_position_flip_realizes_old_side_and_resets_cost_basis",
-      "kind": "function",
-      "file": "tests/test_realized_pnl_accounting.py",
-      "line": 86
-    },
-    {
-      "name": "test_legacy_position_without_cost_basis_marks_realized_pnl_unknown",
-      "kind": "function",
-      "file": "tests/test_realized_pnl_accounting.py",
-      "line": 102
-    },
-    {
-      "name": "test_performance_excludes_unknown_legacy_pnl_but_counts_trade",
-      "kind": "function",
-      "file": "tests/test_realized_pnl_accounting.py",
-      "line": 117
-    },
-    {
-      "name": "test_trade_snapshot_defaults_legacy_zero_pnl_to_unknown",
-      "kind": "function",
-      "file": "tests/test_realized_pnl_accounting.py",
-      "line": 133
-    },
-    {
-      "name": "test_runtime_state_loads_legacy_json_without_cost_basis",
-      "kind": "function",
-      "file": "tests/test_realized_pnl_accounting.py",
-      "line": 138
-    },
-    {
-      "name": "test_low_confidence_is_rejected",
-      "kind": "function",
-      "file": "tests/test_risk.py",
-      "line": 10
-    },
-    {
-      "name": "test_drawdown_limit_is_fail_closed",
-      "kind": "function",
-      "file": "tests/test_risk.py",
-      "line": 18
-    },
-    {
-      "name": "test_daily_loss_stop_marks_existing_position_for_exit",
-      "kind": "function",
-      "file": "tests/test_risk.py",
-      "line": 29
-    },
-    {
-      "name": "test_low_confidence_rejection_does_not_force_liquidation",
-      "kind": "function",
-      "file": "tests/test_risk.py",
-      "line": 49
-    },
-    {
-      "name": "test_invalid_model_confidence_cannot_authorize_exposure",
-      "kind": "function",
-      "file": "tests/test_risk.py",
-      "line": 70
-    },
-    {
-      "name": "test_invalid_model_side_is_rejected_before_broker_execution",
-      "kind": "function",
-      "file": "tests/test_risk.py",
-      "line": 81
-    },
-    {
-      "name": "test_invalid_portfolio_state_blocks_new_and_forced_paper_orders",
-      "kind": "function",
-      "file": "tests/test_risk.py",
-      "line": 103
-    },
-    {
-      "name": "test_finite_non_positive_equity_keeps_hard_stop_exit",
-      "kind": "function",
-      "file": "tests/test_risk.py",
-      "line": 126
-    },
-    {
-      "name": "sample_market",
-      "kind": "function",
-      "file": "tests/test_runtime.py",
-      "line": 12
-    },
-    {
-      "name": "test_runtime_step_is_persistent_and_idempotent",
-      "kind": "function",
-      "file": "tests/test_runtime.py",
-      "line": 29
-    },
-    {
-      "name": "sample_market",
-      "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 19
-    },
-    {
-      "name": "RecordingPersistence",
-      "kind": "class",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 36
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 37
-    },
-    {
-      "name": "initialize_schema",
-      "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 48
-    },
-    {
-      "name": "load_runtime",
-      "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 51
-    },
-    {
-      "name": "commit_step",
-      "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 55
-    },
-    {
-      "name": "list_trades",
-      "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 59
-    },
-    {
-      "name": "save_runtime_status",
-      "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
+      "file": "tests/test_risk_governor.py",
       "line": 68
     },
     {
-      "name": "load_runtime_status",
+      "name": "test_governor_halts_after_repeated_recovery_failures",
       "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 71
+      "file": "tests/test_risk_governor.py",
+      "line": 81
     },
     {
-      "name": "_persisted_runtime",
+      "name": "test_governor_halts_on_excessive_recovery_fallback_depth",
       "kind": "function",
-      "file": "tests/test_runtime_persistence.py",
-      "line": 76
+      "file": "tests/test_risk_governor.py",
+      "line": 93
+    },
+    {
+      "name": "test_governor_returns_to_trade_after_recovery_health_normalizes",
+      "kind": "function",
+      "file": "tests/test_risk_governor.py",
+      "line": 105
+    },
+    {
+      "name": "test_governor_halts_on_invalid_numeric_risk_evidence",
+      "kind": "function",
+      "file": "tests/test_risk_governor.py",
+      "line": 128
     }
   ],
   "selected_tests": [
-    "tests/test_allocator_config_store.py",
-    "tests/test_backtest.py",
-    "tests/test_backtest_ensemble.py",
-    "tests/test_broker.py",
     "tests/test_config_validation.py",
-    "tests/test_cost_stress.py",
-    "tests/test_execution_costs.py",
-    "tests/test_mtf_shadow_config.py",
     "tests/test_multiasset_backtest.py",
-    "tests/test_multiasset_market_context.py",
     "tests/test_multiasset_runtime.py",
-    "tests/test_orchestrator_trigger.py",
-    "tests/test_paper_cycle.py",
-    "tests/test_paper_cycle_materialized_fresh.py",
-    "tests/test_paper_cycle_postgres.py",
+    "tests/test_portfolio.py",
     "tests/test_portfolio_risk.py",
-    "tests/test_realized_pnl_accounting.py",
-    "tests/test_research_config_validation.py",
     "tests/test_risk.py",
-    "tests/test_risk_governor.py",
-    "tests/test_risk_parity.py",
-    "tests/test_runtime.py",
-    "tests/test_runtime_persistence.py",
-    "tests/test_runtime_targeted_step.py"
+    "tests/test_risk_governor.py"
   ]
 }

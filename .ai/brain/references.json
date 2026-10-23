@@ -5,741 +5,213 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "RiskConfig": {
+    "PortfolioRiskConfig": {
       "definition": {
-        "file": "src/ai_trading/config.py",
-        "line": 6,
+        "file": "src/ai_trading/portfolio_risk.py",
+        "line": 10,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/backtest.py",
-          "line": 8,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 71,
-          "preview": "risk_config: RiskConfig,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/broker.py",
-          "line": 6,
-          "preview": "from .config import RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/broker.py",
-          "line": 25,
-          "preview": "def __init__(self, config: RiskConfig) -> None:",
+          "file": "src/ai_trading/cli.py",
+          "line": 64,
+          "preview": "from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/cli.py",
-          "line": 27,
-          "preview": "from .config import ModelConfig, RiskConfig",
+          "line": 764,
+          "preview": "PortfolioRiskConfig(),",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/cli.py",
-          "line": 225,
-          "preview": "risk_config = RiskConfig()",
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 15,
+          "preview": "from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/cli.py",
-          "line": 442,
-          "preview": "risk_config = RiskConfig()",
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 35,
+          "preview": "portfolio_risk_config: PortfolioRiskConfig | None = None,",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/cli.py",
-          "line": 516,
-          "preview": "risk_config=RiskConfig(),",
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 48,
+          "preview": "self.portfolio_risk_config = portfolio_risk_config or PortfolioRiskConfig()",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/cli.py",
-          "line": 566,
-          "preview": "risk_config=RiskConfig(),",
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 53,
+          "preview": "from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/cli.py",
-          "line": 627,
-          "preview": "risk_config=RiskConfig(),",
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 95,
+          "preview": "portfolio_risk_config: PortfolioRiskConfig | None = None,",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/cli.py",
-          "line": 793,
-          "preview": "risk_config=RiskConfig(),",
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 130,
+          "preview": "self.portfolio_risk_config = portfolio_risk_config or PortfolioRiskConfig()",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/config.py",
-          "line": 6,
-          "preview": "class RiskConfig:",
+          "file": "src/ai_trading/portfolio_risk.py",
+          "line": 10,
+          "preview": "class PortfolioRiskConfig:",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/continuous.py",
-          "line": 9,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/continuous.py",
-          "line": 41,
-          "preview": "risk = RiskConfig(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cost_stress.py",
-          "line": 8,
-          "preview": "from .config import RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cost_stress.py",
-          "line": 69,
-          "preview": "config: RiskConfig,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cost_stress.py",
-          "line": 71,
-          "preview": ") -> RiskConfig:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 8,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 27,
-          "preview": "risk_config: RiskConfig | None = None,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 30,
-          "preview": "self.risk_config = risk_config or RiskConfig()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/execution_costs.py",
-          "line": 8,
-          "preview": "from .config import RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/execution_costs.py",
-          "line": 15,
-          "preview": "base: RiskConfig | None = None,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/execution_costs.py",
-          "line": 18,
-          "preview": ") -> RiskConfig:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/execution_costs.py",
-          "line": 19,
-          "preview": "config = base or RiskConfig()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 7,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 32,
-          "preview": "risk_config: RiskConfig | None = None,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 45,
-          "preview": "self.risk_config = risk_config or RiskConfig()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 20,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 92,
-          "preview": "risk_config: RiskConfig | None = None,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 127,
-          "preview": "self.risk_config = risk_config or RiskConfig()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
-          "line": 9,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
+          "file": "src/ai_trading/portfolio_risk.py",
           "line": 49,
-          "preview": "risk_config=RiskConfig(),",
+          "preview": "config: PortfolioRiskConfig | None = None,",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 8,
-          "preview": "from .config import RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 109,
-          "preview": "starting_cash = RiskConfig().starting_cash",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 6,
-          "preview": "from .config import RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 30,
-          "preview": "def __init__(self, config: RiskConfig) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime.py",
-          "line": 11,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime.py",
-          "line": 62,
-          "preview": "risk_config: RiskConfig | None = None,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime.py",
-          "line": 74,
-          "preview": "base_risk_config = risk_config or RiskConfig()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/tuning.py",
-          "line": 9,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/tuning.py",
-          "line": 56,
-          "preview": "risk = RiskConfig(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/turnover_study.py",
-          "line": 14,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/turnover_study.py",
-          "line": 40,
-          "preview": "risk_config: RiskConfig | None = None,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/turnover_study.py",
-          "line": 65,
-          "preview": "risk = risk_config or RiskConfig()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 11,
-          "preview": "from ai_trading.config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 35,
-          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 64,
-          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 84,
-          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 125,
-          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 296,
-          "preview": "risk_config=RiskConfig(transaction_cost_bps=0.0, slippage_bps=0.0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest_ensemble.py",
-          "line": 5,
-          "preview": "from ai_trading.config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest_ensemble.py",
-          "line": 27,
-          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_broker.py",
-          "line": 6,
-          "preview": "from ai_trading.config import RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_broker.py",
-          "line": 10,
-          "preview": "broker = PaperBroker(RiskConfig())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_broker.py",
-          "line": 23,
-          "preview": "broker = PaperBroker(RiskConfig())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_broker.py",
-          "line": 30,
-          "preview": "broker = PaperBroker(RiskConfig())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_broker.py",
-          "line": 37,
-          "preview": "broker = PaperBroker(RiskConfig())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_broker.py",
-          "line": 43,
-          "preview": "broker = PaperBroker(RiskConfig(min_rebalance_fraction=0.005))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_broker.py",
-          "line": 59,
-          "preview": "broker = PaperBroker(RiskConfig(min_rebalance_fraction=1.0))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_broker.py",
-          "line": 72,
-          "preview": "broker = PaperBroker(RiskConfig())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_broker.py",
-          "line": 83,
-          "preview": "RiskConfig(min_rebalance_fraction=fraction)",
+          "file": "src/ai_trading/portfolio_risk.py",
+          "line": 51,
+          "preview": "config = config or PortfolioRiskConfig()",
           "definition_candidate": false
         },
         {
           "file": "tests/test_config_validation.py",
-          "line": 7,
-          "preview": "from ai_trading.config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_config_validation.py",
-          "line": 21,
-          "preview": "lambda: RiskConfig(starting_cash=0.0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_config_validation.py",
-          "line": 22,
-          "preview": "lambda: RiskConfig(starting_cash=math.nan),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_config_validation.py",
-          "line": 23,
-          "preview": "lambda: RiskConfig(starting_cash=math.inf),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_config_validation.py",
-          "line": 24,
-          "preview": "lambda: RiskConfig(transaction_cost_bps=math.nan),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_config_validation.py",
-          "line": 25,
-          "preview": "lambda: RiskConfig(transaction_cost_bps=math.inf),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_config_validation.py",
-          "line": 26,
-          "preview": "lambda: RiskConfig(slippage_bps=math.nan),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_config_validation.py",
-          "line": 27,
-          "preview": "lambda: RiskConfig(slippage_bps=math.inf),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_config_validation.py",
-          "line": 28,
-          "preview": "lambda: RiskConfig(min_confidence=1.1),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_config_validation.py",
-          "line": 29,
-          "preview": "lambda: RiskConfig(transaction_cost_bps=-1.0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_cost_stress.py",
-          "line": 5,
-          "preview": "from ai_trading.config import RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_cost_stress.py",
-          "line": 45,
-          "preview": "base = FakeBacktester(risk_config=RiskConfig())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_execution_costs.py",
-          "line": 3,
-          "preview": "from ai_trading.config import RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_execution_costs.py",
           "line": 15,
-          "preview": "base = RiskConfig(transaction_cost_bps=2.0, slippage_bps=1.0)",
+          "preview": "from ai_trading.portfolio_risk import PortfolioRiskConfig",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_execution_costs.py",
-          "line": 26,
-          "preview": "base = RiskConfig(transaction_cost_bps=2.0, slippage_bps=1.0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_execution_costs.py",
-          "line": 77,
-          "preview": "explicit = RiskConfig(transaction_cost_bps=9.0, slippage_bps=10.0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_backtest.py",
-          "line": 6,
-          "preview": "from ai_trading.config import RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_backtest.py",
-          "line": 33,
-          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_backtest.py",
-          "line": 58,
-          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_backtest.py",
-          "line": 82,
-          "preview": "def capture(symbol: str, base: RiskConfig):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_backtest.py",
-          "line": 94,
-          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_runtime.py",
-          "line": 10,
-          "preview": "from ai_trading.config import RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_runtime.py",
-          "line": 50,
-          "preview": "risk_config=RiskConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_runtime.py",
-          "line": 92,
-          "preview": "risk_config=RiskConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_runtime.py",
-          "line": 142,
-          "preview": "risk_config=RiskConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_runtime.py",
-          "line": 176,
-          "preview": "risk_config=RiskConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_runtime.py",
-          "line": 222,
-          "preview": "def fake_symbol_config(symbol: str, base: RiskConfig) -> RiskConfig:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_runtime.py",
-          "line": 247,
-          "preview": "risk_config=RiskConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_runtime.py",
-          "line": 281,
-          "preview": "risk_config=RiskConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_runtime.py",
-          "line": 327,
-          "preview": "risk_config=RiskConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_runtime.py",
-          "line": 468,
-          "preview": "risk_config=RiskConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_runtime.py",
-          "line": 510,
-          "preview": "risk_config=RiskConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_orchestrator_trigger.py",
-          "line": 4,
-          "preview": "from ai_trading.config import RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_orchestrator_trigger.py",
-          "line": 12,
-          "preview": "risk_config=RiskConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle.py",
-          "line": 11,
-          "preview": "from ai_trading.config import RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle.py",
-          "line": 44,
-          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_materialized_fresh.py",
-          "line": 6,
-          "preview": "from ai_trading.config import RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_materialized_fresh.py",
-          "line": 48,
-          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_postgres.py",
-          "line": 9,
-          "preview": "from ai_trading.config import RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_postgres.py",
+          "file": "tests/test_config_validation.py",
           "line": 36,
-          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "preview": "lambda: PortfolioRiskConfig(max_net_exposure=1.1, max_gross_exposure=1.0),",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_realized_pnl_accounting.py",
-          "line": 5,
-          "preview": "from ai_trading.config import RiskConfig",
+          "file": "tests/test_config_validation.py",
+          "line": 37,
+          "preview": "lambda: PortfolioRiskConfig(max_pair_correlation=1.1),",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_realized_pnl_accounting.py",
-          "line": 156,
-          "preview": "state = RuntimeStateStore(path).load(RiskConfig().starting_cash)",
+          "file": "tests/test_multiasset_backtest.py",
+          "line": 10,
+          "preview": "from ai_trading.portfolio_risk import PortfolioRiskConfig",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_risk.py",
-          "line": 5,
-          "preview": "from ai_trading.config import RiskConfig",
+          "file": "tests/test_multiasset_backtest.py",
+          "line": 35,
+          "preview": "portfolio_risk_config=PortfolioRiskConfig(",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_risk.py",
-          "line": 11,
-          "preview": "engine = RiskEngine(RiskConfig(min_confidence=0.60))",
+          "file": "tests/test_multiasset_backtest.py",
+          "line": 60,
+          "preview": "portfolio_risk_config=PortfolioRiskConfig(",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_risk.py",
-          "line": 19,
-          "preview": "engine = RiskEngine(RiskConfig(max_drawdown_fraction=0.10))",
+          "file": "tests/test_multiasset_backtest.py",
+          "line": 96,
+          "preview": "portfolio_risk_config=PortfolioRiskConfig(",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_risk.py",
-          "line": 30,
-          "preview": "engine = RiskEngine(RiskConfig(max_daily_loss_fraction=0.02))",
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 24,
+          "preview": "from ai_trading.portfolio_risk import PortfolioRiskConfig",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_risk.py",
-          "line": 50,
-          "preview": "engine = RiskEngine(RiskConfig(min_confidence=0.70))",
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 52,
+          "preview": "portfolio_risk_config=PortfolioRiskConfig(",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_risk.py",
-          "line": 71,
-          "preview": "engine = RiskEngine(RiskConfig(min_confidence=0.0))",
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 94,
+          "preview": "portfolio_risk_config=PortfolioRiskConfig(",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_risk.py",
-          "line": 82,
-          "preview": "engine = RiskEngine(RiskConfig())",
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 144,
+          "preview": "portfolio_risk_config=PortfolioRiskConfig(",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_risk.py",
-          "line": 106,
-          "preview": "engine = RiskEngine(RiskConfig())",
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 178,
+          "preview": "portfolio_risk_config=PortfolioRiskConfig(",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_risk.py",
-          "line": 129,
-          "preview": "decision = RiskEngine(RiskConfig()).evaluate(",
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 249,
+          "preview": "portfolio_risk_config=PortfolioRiskConfig(",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_runtime.py",
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 283,
+          "preview": "portfolio_risk_config=PortfolioRiskConfig(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 329,
+          "preview": "portfolio_risk_config=PortfolioRiskConfig(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 470,
+          "preview": "portfolio_risk_config=PortfolioRiskConfig(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multiasset_runtime.py",
+          "line": 512,
+          "preview": "portfolio_risk_config=PortfolioRiskConfig(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_portfolio_risk.py",
           "line": 7,
-          "preview": "from ai_trading.config import RiskConfig",
+          "preview": "from ai_trading.portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_runtime.py",
-          "line": 31,
-          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "file": "tests/test_portfolio_risk.py",
+          "line": 23,
+          "preview": "PortfolioRiskConfig(max_asset_exposure=0.35),",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_runtime_persistence.py",
-          "line": 7,
-          "preview": "from ai_trading.config import RiskConfig",
+          "file": "tests/test_portfolio_risk.py",
+          "line": 37,
+          "preview": "PortfolioRiskConfig(max_pair_correlation=0.80),",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_runtime_persistence.py",
-          "line": 93,
-          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_persistence.py",
-          "line": 128,
-          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_persistence.py",
-          "line": 172,
-          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_persistence.py",
-          "line": 199,
-          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_persistence.py",
-          "line": 217,
-          "preview": "risk_config=RiskConfig(min_confidence=0.0),",
+          "file": "tests/test_portfolio_risk.py",
+          "line": 73,
+          "preview": "PortfolioRiskConfig(**{field: math.nan})",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 120
+      "occurrence_count": 32
     },
     "__post_init__": {
       "definition": {
-        "file": "src/ai_trading/config.py",
-        "line": 17,
+        "file": "src/ai_trading/portfolio_risk.py",
+        "line": 16,
         "kind": "function",
         "language": "python"
       },
@@ -760,7 +232,7 @@
           "file": "src/ai_trading/config.py",
           "line": 17,
           "preview": "def __post_init__(self) -> None:",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "src/ai_trading/config.py",
@@ -806,9 +278,9 @@
         },
         {
           "file": "src/ai_trading/portfolio_risk.py",
-          "line": 15,
+          "line": 16,
           "preview": "def __post_init__(self) -> None:",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "src/ai_trading/trade_journal.py",
@@ -819,1454 +291,746 @@
       ],
       "occurrence_count": 12
     },
-    "ModelConfig": {
+    "PortfolioRiskReport": {
       "definition": {
-        "file": "src/ai_trading/config.py",
-        "line": 43,
+        "file": "src/ai_trading/portfolio_risk.py",
+        "line": 36,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/backtest.py",
-          "line": 8,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 72,
-          "preview": "model_config: ModelConfig,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 27,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 226,
-          "preview": "model_config = ModelConfig()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 443,
-          "preview": "model_config = ModelConfig()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 517,
-          "preview": "model_config=ModelConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 567,
-          "preview": "model_config=ModelConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 628,
-          "preview": "model_config=ModelConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/cli.py",
-          "line": 794,
-          "preview": "model_config=ModelConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/config.py",
-          "line": 43,
-          "preview": "class ModelConfig:",
+          "file": "src/ai_trading/portfolio_risk.py",
+          "line": 36,
+          "preview": "class PortfolioRiskReport:",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/continuous.py",
-          "line": 9,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/continuous.py",
-          "line": 47,
-          "preview": "model_config = ModelConfig(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 8,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 28,
-          "preview": "model_config: ModelConfig | None = None,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 31,
-          "preview": "self.model_config = model_config or ModelConfig()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 7,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 33,
-          "preview": "model_config: ModelConfig | None = None,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 46,
-          "preview": "self.model_config = model_config or ModelConfig()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_market_context.py",
-          "line": 8,
-          "preview": "from .config import ModelConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_market_context.py",
-          "line": 24,
-          "preview": "model_config: ModelConfig,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 20,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 93,
-          "preview": "model_config: ModelConfig | None = None,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 128,
-          "preview": "self.model_config = model_config or ModelConfig()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
-          "line": 9,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
+          "file": "src/ai_trading/portfolio_risk.py",
           "line": 50,
-          "preview": "model_config=ModelConfig(),",
+          "preview": ") -> PortfolioRiskReport:",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/runtime.py",
-          "line": 11,
-          "preview": "from .config import ModelConfig, RiskConfig",
+          "file": "src/ai_trading/portfolio_risk.py",
+          "line": 84,
+          "preview": "return PortfolioRiskReport(",
           "definition_candidate": false
-        },
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "evaluate_portfolio_risk": {
+      "definition": {
+        "file": "src/ai_trading/portfolio_risk.py",
+        "line": 45,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
         {
-          "file": "src/ai_trading/runtime.py",
-          "line": 63,
-          "preview": "model_config: ModelConfig | None = None,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime.py",
-          "line": 80,
-          "preview": "self.model_config = model_config or ModelConfig()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/tuning.py",
-          "line": 9,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/tuning.py",
+          "file": "src/ai_trading/cli.py",
           "line": 64,
-          "preview": "model = ModelConfig(",
+          "preview": "from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/turnover_study.py",
-          "line": 14,
-          "preview": "from .config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/turnover_study.py",
-          "line": 41,
-          "preview": "model_config: ModelConfig | None = None,",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/turnover_study.py",
-          "line": 66,
-          "preview": "model = model_config or ModelConfig()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 11,
-          "preview": "from ai_trading.config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 36,
-          "preview": "model_config=ModelConfig(return_threshold=0.001),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 65,
-          "preview": "model_config=ModelConfig(return_threshold=0.001),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 85,
-          "preview": "model_config=ModelConfig(return_threshold=0.001),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 126,
-          "preview": "model_config=ModelConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest_ensemble.py",
-          "line": 5,
-          "preview": "from ai_trading.config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest_ensemble.py",
-          "line": 28,
-          "preview": "model_config=ModelConfig(return_threshold=0.001),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_config_validation.py",
-          "line": 7,
-          "preview": "from ai_trading.config import ModelConfig, RiskConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_config_validation.py",
-          "line": 30,
-          "preview": "lambda: ModelConfig(horizon_bars=0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_config_validation.py",
-          "line": 31,
-          "preview": "lambda: ModelConfig(return_threshold=-0.001),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_config_validation.py",
-          "line": 32,
-          "preview": "lambda: ModelConfig(return_threshold=math.nan),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_config_validation.py",
-          "line": 33,
-          "preview": "lambda: ModelConfig(return_threshold=math.inf),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_market_context.py",
-          "line": 5,
-          "preview": "from ai_trading.config import ModelConfig",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_market_context.py",
-          "line": 34,
-          "preview": "context = prepare_multiasset_market_context(markets, ModelConfig())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_market_context.py",
-          "line": 49,
-          "preview": "ModelConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_market_context.py",
-          "line": 55,
-          "preview": "prepare_multiasset_market_context({\"A\": market(1)}, ModelConfig())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_market_context.py",
-          "line": 62,
-          "preview": "ModelConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_market_context.py",
-          "line": 71,
-          "preview": "ModelConfig(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_multiasset_market_context.py",
-          "line": 85,
-          "preview": "ModelConfig(),",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 52
-    },
-    "PortfolioSnapshot": {
-      "definition": {
-        "file": "src/ai_trading/risk.py",
-        "line": 11,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 19,
-          "preview": "from .risk import PortfolioSnapshot, RiskEngine",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 146,
-          "preview": "snapshot = PortfolioSnapshot(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 11,
-          "preview": "from .risk import PortfolioSnapshot, RiskEngine",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 81,
-          "preview": "snapshot = PortfolioSnapshot(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 11,
-          "preview": "class PortfolioSnapshot:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 33,
-          "preview": "def evaluate(self, prediction: Prediction, portfolio: PortfolioSnapshot) -> RiskDecision:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime.py",
-          "line": 21,
-          "preview": "from .risk import PortfolioSnapshot, RiskEngine",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime.py",
-          "line": 306,
-          "preview": "snapshot = PortfolioSnapshot(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 7,
-          "preview": "from ai_trading.risk import PortfolioSnapshot, RiskEngine",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 13,
-          "preview": "snap = PortfolioSnapshot(100_000, 100_000, 100_000)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 21,
-          "preview": "snap = PortfolioSnapshot(89_000, 100_000, 100_000)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 34,
-          "preview": "snap = PortfolioSnapshot(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 54,
-          "preview": "snap = PortfolioSnapshot(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 74,
-          "preview": "PortfolioSnapshot(100_000, 100_000, 100_000),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 85,
-          "preview": "PortfolioSnapshot(100_000, 100_000, 100_000),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 116,
-          "preview": "PortfolioSnapshot(**values),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 131,
-          "preview": "PortfolioSnapshot(0.0, baseline[0], baseline[1], 5_000.0),",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 17
-    },
-    "RiskDecision": {
-      "definition": {
-        "file": "src/ai_trading/risk.py",
-        "line": 19,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 19,
-          "preview": "class RiskDecision:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 33,
-          "preview": "def evaluate(self, prediction: Prediction, portfolio: PortfolioSnapshot) -> RiskDecision:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 45,
-          "preview": "return RiskDecision(False, 0, 0.0, \"invalid portfolio state\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 50,
-          "preview": "return RiskDecision(False, 0, 0.0, \"non-positive equity\", liquidate_existing=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 53,
-          "preview": "return RiskDecision(False, 0, 0.0, \"invalid portfolio state\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 57,
-          "preview": "return RiskDecision(False, 0, 0.0, \"max drawdown reached\", liquidate_existing=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 61,
-          "preview": "return RiskDecision(False, 0, 0.0, \"daily loss limit reached\", liquidate_existing=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 68,
-          "preview": "return RiskDecision(False, 0, 0.0, \"invalid model prediction\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 71,
-          "preview": "return RiskDecision(True, 0, 0.0, \"model is flat\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 74,
-          "preview": "return RiskDecision(False, 0, 0.0, \"confidence below threshold\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 82,
-          "preview": "return RiskDecision(True, prediction.side, target, \"approved\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 13,
-          "preview": "from ai_trading.risk import RiskDecision, RiskEngine",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 110,
-          "preview": "return RiskDecision(True, 1, 10_000.0, \"approved\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 111,
-          "preview": "return RiskDecision(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_targeted_step.py",
-          "line": 9,
-          "preview": "from ai_trading.risk import RiskDecision",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_targeted_step.py",
-          "line": 109,
-          "preview": "RiskDecision(True, entry_side, 10_000.0, \"approved\"),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_targeted_step.py",
-          "line": 110,
-          "preview": "RiskDecision(False, 0, 0.0, \"max drawdown reached\", liquidate_existing=True),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_targeted_step.py",
-          "line": 111,
-          "preview": "RiskDecision(False, 0, 0.0, \"max drawdown reached\", liquidate_existing=True),",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 18
-    },
-    "RiskEngine": {
-      "definition": {
-        "file": "src/ai_trading/risk.py",
-        "line": 29,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 19,
-          "preview": "from .risk import PortfolioSnapshot, RiskEngine",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 78,
-          "preview": "self.risk = RiskEngine(risk_config)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 11,
-          "preview": "from .risk import PortfolioSnapshot, RiskEngine",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 33,
-          "preview": "self.risk = RiskEngine(self.risk_config)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 29,
-          "preview": "class RiskEngine:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/runtime.py",
-          "line": 21,
-          "preview": "from .risk import PortfolioSnapshot, RiskEngine",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime.py",
-          "line": 87,
-          "preview": "self.risk = RiskEngine(self.risk_config)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 13,
-          "preview": "from ai_trading.risk import RiskDecision, RiskEngine",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_backtest.py",
-          "line": 115,
-          "preview": "monkeypatch.setattr(RiskEngine, \"evaluate\", configured_risk)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 7,
-          "preview": "from ai_trading.risk import PortfolioSnapshot, RiskEngine",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 11,
-          "preview": "engine = RiskEngine(RiskConfig(min_confidence=0.60))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 19,
-          "preview": "engine = RiskEngine(RiskConfig(max_drawdown_fraction=0.10))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 30,
-          "preview": "engine = RiskEngine(RiskConfig(max_daily_loss_fraction=0.02))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 50,
-          "preview": "engine = RiskEngine(RiskConfig(min_confidence=0.70))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 71,
-          "preview": "engine = RiskEngine(RiskConfig(min_confidence=0.0))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 82,
-          "preview": "engine = RiskEngine(RiskConfig())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 106,
-          "preview": "engine = RiskEngine(RiskConfig())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 129,
-          "preview": "decision = RiskEngine(RiskConfig()).evaluate(",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 18
-    },
-    "__init__": {
-      "definition": {
-        "file": "src/ai_trading/risk.py",
-        "line": 30,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/allocation_state.py",
-          "line": 16,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/global_allocation.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/allocator_config_store.py",
-          "line": 11,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/global_allocator_config.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/audit.py",
-          "line": 32,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/audit.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 68,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/broker.py",
-          "line": 25,
-          "preview": "def __init__(self, config: RiskConfig) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 46,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/burnin.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 40,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/champion_probation.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 56,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champions.py",
-          "line": 26,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/champions.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_state_store.py",
-          "line": 11,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/crisis_state.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/drift_retrain_store.py",
-          "line": 16,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/economic_meta_store.py",
-          "line": 11,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/economic_meta.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 25,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/ensemble.py",
-          "line": 27,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/experiments.py",
-          "line": 13,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/experiments.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_pool.py",
-          "line": 29,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/expert_pool.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 40,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/generations.py",
-          "line": 27,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/governor_state_store.py",
-          "line": 16,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/risk_governor_state.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/health_server.py",
-          "line": 56,
-          "preview": "def __init__(self, host: str = \"127.0.0.1\", port: int = 8765) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/kronos_research.py",
-          "line": 278,
-          "preview": "if not (source_dir / \"model\" / \"__init__.py\").is_file():",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/lifecycle_log.py",
-          "line": 26,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/model_lifecycle.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/maintenance.py",
-          "line": 15,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/maintenance.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/meta_store.py",
-          "line": 11,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/meta_router.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/model.py",
-          "line": 26,
-          "preview": "def __init__(self, random_state: int = 42) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/model_quarantine.py",
-          "line": 26,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/model_quarantine.json\") -> None:",
+          "file": "src/ai_trading/cli.py",
+          "line": 760,
+          "preview": "risk = evaluate_portfolio_risk(",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 29,
-          "preview": "def __init__(",
+          "line": 15,
+          "preview": "from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 21,
-          "preview": "def __init__(self, root: str | Path, *, retain_generations: int = 3) -> None:",
+          "file": "src/ai_trading/multiasset_backtest.py",
+          "line": 136,
+          "preview": "risk = evaluate_portfolio_risk(",
           "definition_candidate": false
         },
         {
           "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 89,
-          "preview": "def __init__(",
+          "line": 53,
+          "preview": "from .portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/multiasset_scheduler.py",
-          "line": 34,
-          "preview": "def __init__(",
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 836,
+          "preview": "provisional_risk = evaluate_portfolio_risk(",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/multiasset_state.py",
-          "line": 28,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/multiasset_state.json\") -> None:",
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 994,
+          "preview": "risk = evaluate_portfolio_risk(",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/online.py",
-          "line": 27,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/online.py",
-          "line": 68,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/online.py",
-          "line": 69,
-          "preview": "super().__init__()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
-          "line": 31,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle.py",
-          "line": 104,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 27,
-          "preview": "def __init__(self, *, code: str, error_type: str) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 28,
-          "preview": "super().__init__(code)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/persistence.py",
-          "line": 109,
-          "preview": "def __init__(self, root: str | Path = \"artifacts/models\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/postgres_persistence.py",
-          "line": 291,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/qualification_store.py",
-          "line": 36,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/quality_store.py",
-          "line": 16,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/model_quality.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 190,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_revocation.py",
-          "line": 17,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_score.py",
-          "line": 130,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/resilience.py",
-          "line": 107,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/resilience_state.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/restart_log.py",
-          "line": 19,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/restarts.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 30,
-          "preview": "def __init__(self, config: RiskConfig) -> None:",
+          "file": "src/ai_trading/portfolio_risk.py",
+          "line": 45,
+          "preview": "def evaluate_portfolio_risk(",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/runtime.py",
-          "line": 59,
-          "preview": "def __init__(",
+          "file": "tests/test_portfolio_risk.py",
+          "line": 7,
+          "preview": "from ai_trading.portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/runtime_lock.py",
-          "line": 9,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/runtime.lock\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_state.py",
-          "line": 22,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/runtime_state.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_status.py",
-          "line": 92,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/runtime_status.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler.py",
-          "line": 25,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/specialist_experts.py",
-          "line": 23,
-          "preview": "def __init__(self, kind: str, random_state: int = 42) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/state_snapshot.py",
+          "file": "tests/test_portfolio_risk.py",
           "line": 19,
-          "preview": "def __init__(",
+          "preview": "report = evaluate_portfolio_risk(",
           "definition_candidate": false
         },
         {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 59,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor_lease.py",
-          "line": 18,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/supervisor_lease.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor_state.py",
-          "line": 19,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/supervisor_state.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/trade_journal.py",
-          "line": 29,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/trades.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/watchdog.py",
-          "line": 23,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/heartbeat.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_cost_stress.py",
-          "line": 11,
-          "preview": "def __init__(self, *, risk_config, model_config=None, config=None) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 239,
-          "preview": "def __init__(self, payload):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 295,
-          "preview": "def __init__(self, payload):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 27,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 24,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_data.py",
-          "line": 105,
-          "preview": "def __init__(self, name: str, result) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_persistence.py",
-          "line": 15,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_persistence.py",
-          "line": 40,
-          "preview": "def __init__(self, **kwargs) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_persistence.py",
-          "line": 71,
-          "preview": "def __init__(self, **kwargs) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_runtime.py",
-          "line": 69,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_runtime.py",
-          "line": 81,
-          "preview": "def __init__(self, **kwargs) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_mtf_shadow_challenger.py",
-          "line": 67,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_mtf_shadow_challenger.py",
-          "line": 148,
-          "preview": "def __init__(self, **kwargs) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle.py",
-          "line": 1093,
-          "preview": "def __init__(self):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 20,
-          "preview": "def __init__(self, *, initial_status: HostedRuntimeStatus | None = None) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 49,
-          "preview": "def __init__(self, persistence: FakePersistence) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 19,
-          "preview": "def __init__(self, payload: dict[str, object], *, status: int = 200) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_persistence.py",
-          "line": 37,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler.py",
-          "line": 8,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_iteration_callback.py",
-          "line": 21,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_shadow_challenger.py",
-          "line": 42,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 81
-    },
-    "evaluate": {
-      "definition": {
-        "file": "src/ai_trading/risk.py",
-        "line": 33,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 152,
-          "preview": "decision = self.risk.evaluate(prediction, snapshot)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 87,
-          "preview": "decision = self.risk.evaluate(prediction, snapshot)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/risk.py",
+          "file": "tests/test_portfolio_risk.py",
           "line": 33,
-          "preview": "def evaluate(self, prediction: Prediction, portfolio: PortfolioSnapshot) -> RiskDecision:",
+          "preview": "report = evaluate_portfolio_risk(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_portfolio_risk.py",
+          "line": 46,
+          "preview": "evaluate_portfolio_risk(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_portfolio_risk.py",
+          "line": 56,
+          "preview": "evaluate_portfolio_risk(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 13
+    },
+    "GovernorPolicy": {
+      "definition": {
+        "file": "src/ai_trading/risk_governor.py",
+        "line": 8,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 68,
+          "preview": "from .risk_governor import GovernorPolicy, GovernorSignals, evaluate_governor",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 116,
+          "preview": "governor_policy: GovernorPolicy | None = None,",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 157,
+          "preview": "self.governor_policy = governor_policy or GovernorPolicy()",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/risk_governor.py",
+          "line": 8,
+          "preview": "class GovernorPolicy:",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/runtime.py",
-          "line": 312,
-          "preview": "decision = self.risk.evaluate(prediction, snapshot)",
+          "file": "src/ai_trading/risk_governor.py",
+          "line": 49,
+          "preview": "policy: GovernorPolicy | None = None,",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_backtest.py",
-          "line": 115,
-          "preview": "monkeypatch.setattr(RiskEngine, \"evaluate\", configured_risk)",
+          "file": "src/ai_trading/risk_governor.py",
+          "line": 51,
+          "preview": "policy = policy or GovernorPolicy()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "GovernorSignals": {
+      "definition": {
+        "file": "src/ai_trading/risk_governor.py",
+        "line": 22,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 68,
+          "preview": "from .risk_governor import GovernorPolicy, GovernorSignals, evaluate_governor",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_risk.py",
-          "line": 14,
-          "preview": "decision = engine.evaluate(pred, snap)",
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 858,
+          "preview": "GovernorSignals(",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_risk.py",
+          "file": "src/ai_trading/risk_governor.py",
           "line": 22,
-          "preview": "decision = engine.evaluate(pred, snap)",
-          "definition_candidate": false
+          "preview": "class GovernorSignals:",
+          "definition_candidate": true
         },
         {
-          "file": "tests/test_risk.py",
-          "line": 41,
-          "preview": "decision = engine.evaluate(pred, snap)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 61,
-          "preview": "decision = engine.evaluate(pred, snap)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 72,
-          "preview": "decision = engine.evaluate(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 83,
-          "preview": "decision = engine.evaluate(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 114,
-          "preview": "decision = engine.evaluate(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_risk.py",
-          "line": 129,
-          "preview": "decision = RiskEngine(RiskConfig()).evaluate(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_targeted_step.py",
-          "line": 113,
-          "preview": "monkeypatch.setattr(runtime.risk, \"evaluate\", lambda prediction, snapshot: next(decisions))",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 14
-    },
-    "test_invalid_strategy_configuration_fails_closed": {
-      "definition": {
-        "file": "tests/test_config_validation.py",
-        "line": 48,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_config_validation.py",
+          "file": "src/ai_trading/risk_governor.py",
           "line": 48,
-          "preview": "def test_invalid_strategy_configuration_fails_closed(factory) -> None:",
-          "definition_candidate": true
+          "preview": "signals: GovernorSignals,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 5,
+          "preview": "from ai_trading.risk_governor import GovernorSignals, evaluate_governor",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 24,
+          "preview": "return GovernorSignals(**values)",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 6
     },
-    "test_expected_shortfall_rejects_invalid_alpha": {
+    "GovernorDecision": {
       "definition": {
-        "file": "tests/test_config_validation.py",
-        "line": 54,
+        "file": "src/ai_trading/risk_governor.py",
+        "line": 38,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/risk_governor.py",
+          "line": 38,
+          "preview": "class GovernorDecision:",
+          "definition_candidate": true
+        },
+        {
+          "file": "src/ai_trading/risk_governor.py",
+          "line": 50,
+          "preview": ") -> GovernorDecision:",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/risk_governor.py",
+          "line": 74,
+          "preview": "return GovernorDecision(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/risk_governor.py",
+          "line": 89,
+          "preview": "return GovernorDecision(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/risk_governor.py",
+          "line": 102,
+          "preview": "return GovernorDecision(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/risk_governor.py",
+          "line": 115,
+          "preview": "return GovernorDecision(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/risk_governor.py",
+          "line": 125,
+          "preview": "return GovernorDecision(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/risk_governor.py",
+          "line": 142,
+          "preview": "return GovernorDecision(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/risk_governor.py",
+          "line": 151,
+          "preview": "return GovernorDecision(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 9
+    },
+    "evaluate_governor": {
+      "definition": {
+        "file": "src/ai_trading/risk_governor.py",
+        "line": 47,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_config_validation.py",
-          "line": 54,
-          "preview": "def test_expected_shortfall_rejects_invalid_alpha(alpha: float) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_global_allocator_rejects_negative_transaction_costs": {
-      "definition": {
-        "file": "tests/test_config_validation.py",
-        "line": 59,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 68,
+          "preview": "from .risk_governor import GovernorPolicy, GovernorSignals, evaluate_governor",
+          "definition_candidate": false
+        },
         {
-          "file": "tests/test_config_validation.py",
-          "line": 59,
-          "preview": "def test_global_allocator_rejects_negative_transaction_costs() -> None:",
+          "file": "src/ai_trading/multiasset_runtime.py",
+          "line": 857,
+          "preview": "governor = evaluate_governor(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/risk_governor.py",
+          "line": 47,
+          "preview": "def evaluate_governor(",
           "definition_candidate": true
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 5,
+          "preview": "from ai_trading.risk_governor import GovernorSignals, evaluate_governor",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 28,
+          "preview": "decision = evaluate_governor(base_signals())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 33,
+          "preview": "decision = evaluate_governor(base_signals(crisis_mode=\"cautious\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 39,
+          "preview": "decision = evaluate_governor(base_signals(portfolio_risk_approved=False))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 45,
+          "preview": "decision = evaluate_governor(base_signals(drawdown=0.20))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 51,
+          "preview": "decision = evaluate_governor(base_signals(data_quality=0.50))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 57,
+          "preview": "decision = evaluate_governor(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 69,
+          "preview": "decision = evaluate_governor(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 82,
+          "preview": "decision = evaluate_governor(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 94,
+          "preview": "decision = evaluate_governor(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 106,
+          "preview": "degraded = evaluate_governor(base_signals(recovery_degraded=True))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 107,
+          "preview": "healthy = evaluate_governor(base_signals(recovery_degraded=False))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 131,
+          "preview": "decision = evaluate_governor(base_signals(**{field: value}))",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 16
     },
-    "test_low_confidence_is_rejected": {
+    "test_portfolio_risk_rejects_excess_single_asset_exposure": {
       "definition": {
-        "file": "tests/test_risk.py",
+        "file": "tests/test_portfolio_risk.py",
         "line": 10,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_risk.py",
+          "file": "tests/test_portfolio_risk.py",
           "line": 10,
-          "preview": "def test_low_confidence_is_rejected() -> None:",
+          "preview": "def test_portfolio_risk_rejects_excess_single_asset_exposure() -> None:",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_drawdown_limit_is_fail_closed": {
+    "test_portfolio_risk_detects_high_pair_correlation": {
       "definition": {
-        "file": "tests/test_risk.py",
-        "line": 18,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_risk.py",
-          "line": 18,
-          "preview": "def test_drawdown_limit_is_fail_closed() -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_daily_loss_stop_marks_existing_position_for_exit": {
-      "definition": {
-        "file": "tests/test_risk.py",
+        "file": "tests/test_portfolio_risk.py",
         "line": 29,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_risk.py",
+          "file": "tests/test_portfolio_risk.py",
           "line": 29,
-          "preview": "def test_daily_loss_stop_marks_existing_position_for_exit() -> None:",
+          "preview": "def test_portfolio_risk_detects_high_pair_correlation() -> None:",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_low_confidence_rejection_does_not_force_liquidation": {
+    "test_portfolio_risk_rejects_invalid_equity": {
       "definition": {
-        "file": "tests/test_risk.py",
-        "line": 49,
+        "file": "tests/test_portfolio_risk.py",
+        "line": 44,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_risk.py",
-          "line": 49,
-          "preview": "def test_low_confidence_rejection_does_not_force_liquidation() -> None:",
+          "file": "tests/test_portfolio_risk.py",
+          "line": 44,
+          "preview": "def test_portfolio_risk_rejects_invalid_equity(equity: float) -> None:",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_invalid_model_confidence_cannot_authorize_exposure": {
+    "test_portfolio_risk_rejects_nonfinite_asset_exposure": {
       "definition": {
-        "file": "tests/test_risk.py",
-        "line": 70,
+        "file": "tests/test_portfolio_risk.py",
+        "line": 54,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_risk.py",
+          "file": "tests/test_portfolio_risk.py",
+          "line": 54,
+          "preview": "def test_portfolio_risk_rejects_nonfinite_asset_exposure(notional: float) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_portfolio_risk_rejects_nonfinite_limits": {
+      "definition": {
+        "file": "tests/test_portfolio_risk.py",
+        "line": 71,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_portfolio_risk.py",
+          "line": 71,
+          "preview": "def test_portfolio_risk_rejects_nonfinite_limits(field: str) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "base_signals": {
+      "definition": {
+        "file": "tests/test_risk_governor.py",
+        "line": 8,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 8,
+          "preview": "def base_signals(**overrides):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 28,
+          "preview": "decision = evaluate_governor(base_signals())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 33,
+          "preview": "decision = evaluate_governor(base_signals(crisis_mode=\"cautious\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 39,
+          "preview": "decision = evaluate_governor(base_signals(portfolio_risk_approved=False))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 45,
+          "preview": "decision = evaluate_governor(base_signals(drawdown=0.20))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 51,
+          "preview": "decision = evaluate_governor(base_signals(data_quality=0.50))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 58,
+          "preview": "base_signals(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
           "line": 70,
-          "preview": "def test_invalid_model_confidence_cannot_authorize_exposure(confidence: float) -> None:",
+          "preview": "base_signals(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 83,
+          "preview": "base_signals(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 95,
+          "preview": "base_signals(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 106,
+          "preview": "degraded = evaluate_governor(base_signals(recovery_degraded=True))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 107,
+          "preview": "healthy = evaluate_governor(base_signals(recovery_degraded=False))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 131,
+          "preview": "decision = evaluate_governor(base_signals(**{field: value}))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 13
+    },
+    "test_governor_trade_when_all_gates_pass": {
+      "definition": {
+        "file": "tests/test_risk_governor.py",
+        "line": 27,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 27,
+          "preview": "def test_governor_trade_when_all_gates_pass() -> None:",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_invalid_model_side_is_rejected_before_broker_execution": {
+    "test_governor_reduces_on_elevated_risk": {
       "definition": {
-        "file": "tests/test_risk.py",
+        "file": "tests/test_risk_governor.py",
+        "line": 32,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 32,
+          "preview": "def test_governor_reduces_on_elevated_risk() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_governor_freezes_on_failed_risk_gate": {
+      "definition": {
+        "file": "tests/test_risk_governor.py",
+        "line": 38,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 38,
+          "preview": "def test_governor_freezes_on_failed_risk_gate() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_governor_flattens_on_extreme_drawdown": {
+      "definition": {
+        "file": "tests/test_risk_governor.py",
+        "line": 44,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 44,
+          "preview": "def test_governor_flattens_on_extreme_drawdown() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_governor_halts_on_critical_data_failure": {
+      "definition": {
+        "file": "tests/test_risk_governor.py",
+        "line": 50,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 50,
+          "preview": "def test_governor_halts_on_critical_data_failure() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_failed_stress_test_reduces_instead_of_freezing": {
+      "definition": {
+        "file": "tests/test_risk_governor.py",
+        "line": 56,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 56,
+          "preview": "def test_failed_stress_test_reduces_instead_of_freezing() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_governor_reduces_when_recovery_health_is_degraded": {
+      "definition": {
+        "file": "tests/test_risk_governor.py",
+        "line": 68,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 68,
+          "preview": "def test_governor_reduces_when_recovery_health_is_degraded() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_governor_halts_after_repeated_recovery_failures": {
+      "definition": {
+        "file": "tests/test_risk_governor.py",
         "line": 81,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_risk.py",
+          "file": "tests/test_risk_governor.py",
           "line": 81,
-          "preview": "def test_invalid_model_side_is_rejected_before_broker_execution() -> None:",
+          "preview": "def test_governor_halts_after_repeated_recovery_failures() -> None:",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_invalid_portfolio_state_blocks_new_and_forced_paper_orders": {
+    "test_governor_halts_on_excessive_recovery_fallback_depth": {
       "definition": {
-        "file": "tests/test_risk.py",
-        "line": 103,
+        "file": "tests/test_risk_governor.py",
+        "line": 93,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_risk.py",
-          "line": 103,
-          "preview": "def test_invalid_portfolio_state_blocks_new_and_forced_paper_orders(",
+          "file": "tests/test_risk_governor.py",
+          "line": 93,
+          "preview": "def test_governor_halts_on_excessive_recovery_fallback_depth() -> None:",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_finite_non_positive_equity_keeps_hard_stop_exit": {
+    "test_governor_returns_to_trade_after_recovery_health_normalizes": {
       "definition": {
-        "file": "tests/test_risk.py",
-        "line": 126,
+        "file": "tests/test_risk_governor.py",
+        "line": 105,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_risk.py",
-          "line": 126,
-          "preview": "def test_finite_non_positive_equity_keeps_hard_stop_exit(",
+          "file": "tests/test_risk_governor.py",
+          "line": 105,
+          "preview": "def test_governor_returns_to_trade_after_recovery_health_normalizes() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_governor_halts_on_invalid_numeric_risk_evidence": {
+      "definition": {
+        "file": "tests/test_risk_governor.py",
+        "line": 128,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_risk_governor.py",
+          "line": 128,
+          "preview": "def test_governor_halts_on_invalid_numeric_risk_evidence(",
           "definition_candidate": true
         }
       ],

@@ -5,25 +5,19 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "RiskConfig": {
+    "PortfolioRiskConfig": {
       "source": {
-        "file": "src/ai_trading/config.py",
-        "start": 6,
-        "end": 39
+        "file": "src/ai_trading/portfolio_risk.py",
+        "start": 10,
+        "end": 32
       },
       "symbol_dependencies": [
         {
           "symbol": "__post_init__",
           "definitions": [
             {
-              "file": "src/ai_trading/config.py",
-              "line": 17,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "src/ai_trading/config.py",
-              "line": 47,
+              "file": "src/ai_trading/portfolio_risk.py",
+              "line": 16,
               "kind": "function",
               "language": "python"
             }
@@ -35,164 +29,96 @@
     },
     "__post_init__": {
       "source": {
-        "file": "src/ai_trading/config.py",
-        "start": 17,
-        "end": 39
+        "file": "src/ai_trading/portfolio_risk.py",
+        "start": 16,
+        "end": 32
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "ModelConfig": {
+    "PortfolioRiskReport": {
       "source": {
-        "file": "src/ai_trading/config.py",
-        "start": 43,
-        "end": 51
+        "file": "src/ai_trading/portfolio_risk.py",
+        "start": 36,
+        "end": 42
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "evaluate_portfolio_risk": {
+      "source": {
+        "file": "src/ai_trading/portfolio_risk.py",
+        "start": 45,
+        "end": 91
       },
       "symbol_dependencies": [
         {
-          "symbol": "__post_init__",
+          "symbol": "PortfolioRiskConfig",
           "definitions": [
             {
-              "file": "src/ai_trading/config.py",
-              "line": 17,
-              "kind": "function",
+              "file": "src/ai_trading/portfolio_risk.py",
+              "line": 10,
+              "kind": "class",
               "language": "python"
-            },
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "PortfolioRiskReport",
+          "definitions": [
             {
-              "file": "src/ai_trading/config.py",
-              "line": 47,
-              "kind": "function",
+              "file": "src/ai_trading/portfolio_risk.py",
+              "line": 36,
+              "kind": "class",
               "language": "python"
             }
           ],
           "relation": "same_file"
         }
       ],
-      "dependency_count": 1
+      "dependency_count": 2
     },
-    "PortfolioSnapshot": {
+    "GovernorPolicy": {
       "source": {
-        "file": "src/ai_trading/risk.py",
-        "start": 11,
-        "end": 15
+        "file": "src/ai_trading/risk_governor.py",
+        "start": 8,
+        "end": 18
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "RiskDecision": {
+    "GovernorSignals": {
       "source": {
-        "file": "src/ai_trading/risk.py",
-        "start": 19,
-        "end": 26
+        "file": "src/ai_trading/risk_governor.py",
+        "start": 22,
+        "end": 34
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "RiskEngine": {
+    "GovernorDecision": {
       "source": {
-        "file": "src/ai_trading/risk.py",
-        "start": 29,
-        "end": 82
+        "file": "src/ai_trading/risk_governor.py",
+        "start": 38,
+        "end": 44
       },
-      "symbol_dependencies": [
-        {
-          "symbol": "PortfolioSnapshot",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 11,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "Prediction",
-          "definitions": [
-            {
-              "file": "src/ai_trading/model.py",
-              "line": 15,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/config.py",
-              "line": 6,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskDecision",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 19,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "evaluate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 33,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 5
+      "symbol_dependencies": [],
+      "dependency_count": 0
     },
-    "__init__": {
+    "evaluate_governor": {
       "source": {
-        "file": "src/ai_trading/risk.py",
-        "start": 30,
-        "end": 31
+        "file": "src/ai_trading/risk_governor.py",
+        "start": 47,
+        "end": 158
       },
       "symbol_dependencies": [
         {
-          "symbol": "RiskConfig",
+          "symbol": "GovernorDecision",
           "definitions": [
             {
-              "file": "src/ai_trading/config.py",
-              "line": 6,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "evaluate": {
-      "source": {
-        "file": "src/ai_trading/risk.py",
-        "start": 33,
-        "end": 82
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "PortfolioSnapshot",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 11,
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 38,
               "kind": "class",
               "language": "python"
             }
@@ -200,23 +126,23 @@
           "relation": "same_file"
         },
         {
-          "symbol": "Prediction",
+          "symbol": "GovernorPolicy",
           "definitions": [
             {
-              "file": "src/ai_trading/model.py",
-              "line": 15,
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 8,
               "kind": "class",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
         },
         {
-          "symbol": "RiskDecision",
+          "symbol": "GovernorSignals",
           "definitions": [
             {
-              "file": "src/ai_trading/risk.py",
-              "line": 19,
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 22,
               "kind": "class",
               "language": "python"
             }
@@ -226,142 +152,19 @@
       ],
       "dependency_count": 3
     },
-    "test_invalid_strategy_configuration_fails_closed": {
+    "test_portfolio_risk_rejects_excess_single_asset_exposure": {
       "source": {
-        "file": "tests/test_config_validation.py",
-        "start": 48,
-        "end": 50
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "test_expected_shortfall_rejects_invalid_alpha": {
-      "source": {
-        "file": "tests/test_config_validation.py",
-        "start": 54,
-        "end": 56
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "expected_shortfall",
-          "definitions": [
-            {
-              "file": "src/ai_trading/global_allocator.py",
-              "line": 48,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_global_allocator_rejects_negative_transaction_costs": {
-      "source": {
-        "file": "tests/test_config_validation.py",
-        "start": 59,
-        "end": 67
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "allocate_global_capital",
-          "definitions": [
-            {
-              "file": "src/ai_trading/global_allocator.py",
-              "line": 99,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_low_confidence_is_rejected": {
-      "source": {
-        "file": "tests/test_risk.py",
+        "file": "tests/test_portfolio_risk.py",
         "start": 10,
-        "end": 15
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "PortfolioSnapshot",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 11,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Prediction",
-          "definitions": [
-            {
-              "file": "src/ai_trading/model.py",
-              "line": 15,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/config.py",
-              "line": 6,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskEngine",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 29,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 33,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 5
-    },
-    "test_drawdown_limit_is_fail_closed": {
-      "source": {
-        "file": "tests/test_risk.py",
-        "start": 18,
         "end": 26
       },
       "symbol_dependencies": [
         {
-          "symbol": "PortfolioSnapshot",
+          "symbol": "PortfolioRiskConfig",
           "definitions": [
             {
-              "file": "src/ai_trading/risk.py",
-              "line": 11,
+              "file": "src/ai_trading/portfolio_risk.py",
+              "line": 10,
               "kind": "class",
               "language": "python"
             }
@@ -369,47 +172,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "Prediction",
+          "symbol": "evaluate_portfolio_risk",
           "definitions": [
             {
-              "file": "src/ai_trading/model.py",
-              "line": 15,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/config.py",
-              "line": 6,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskEngine",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 29,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 33,
+              "file": "src/ai_trading/portfolio_risk.py",
+              "line": 45,
               "kind": "function",
               "language": "python"
             }
@@ -417,21 +184,21 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 5
+      "dependency_count": 2
     },
-    "test_daily_loss_stop_marks_existing_position_for_exit": {
+    "test_portfolio_risk_detects_high_pair_correlation": {
       "source": {
-        "file": "tests/test_risk.py",
+        "file": "tests/test_portfolio_risk.py",
         "start": 29,
-        "end": 46
+        "end": 40
       },
       "symbol_dependencies": [
         {
-          "symbol": "PortfolioSnapshot",
+          "symbol": "PortfolioRiskConfig",
           "definitions": [
             {
-              "file": "src/ai_trading/risk.py",
-              "line": 11,
+              "file": "src/ai_trading/portfolio_risk.py",
+              "line": 10,
               "kind": "class",
               "language": "python"
             }
@@ -439,47 +206,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "Prediction",
+          "symbol": "evaluate_portfolio_risk",
           "definitions": [
             {
-              "file": "src/ai_trading/model.py",
-              "line": 15,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/config.py",
-              "line": 6,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskEngine",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 29,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 33,
+              "file": "src/ai_trading/portfolio_risk.py",
+              "line": 45,
               "kind": "function",
               "language": "python"
             }
@@ -487,69 +218,291 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 5
+      "dependency_count": 2
     },
-    "test_low_confidence_rejection_does_not_force_liquidation": {
+    "test_portfolio_risk_rejects_invalid_equity": {
       "source": {
-        "file": "tests/test_risk.py",
-        "start": 49,
+        "file": "tests/test_portfolio_risk.py",
+        "start": 44,
+        "end": 50
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "evaluate_portfolio_risk",
+          "definitions": [
+            {
+              "file": "src/ai_trading/portfolio_risk.py",
+              "line": 45,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_portfolio_risk_rejects_nonfinite_asset_exposure": {
+      "source": {
+        "file": "tests/test_portfolio_risk.py",
+        "start": 54,
+        "end": 60
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "evaluate_portfolio_risk",
+          "definitions": [
+            {
+              "file": "src/ai_trading/portfolio_risk.py",
+              "line": 45,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_portfolio_risk_rejects_nonfinite_limits": {
+      "source": {
+        "file": "tests/test_portfolio_risk.py",
+        "start": 71,
+        "end": 73
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PortfolioRiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/portfolio_risk.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "base_signals": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 8,
+        "end": 24
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "GovernorSignals",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 22,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_governor_trade_when_all_gates_pass": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 27,
+        "end": 29
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "base_signals",
+          "definitions": [
+            {
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_governor",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 47,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_governor_reduces_on_elevated_risk": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 32,
+        "end": 35
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "base_signals",
+          "definitions": [
+            {
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_governor",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 47,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_governor_freezes_on_failed_risk_gate": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 38,
+        "end": 41
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "base_signals",
+          "definitions": [
+            {
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_governor",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 47,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_governor_flattens_on_extreme_drawdown": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 44,
+        "end": 47
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "base_signals",
+          "definitions": [
+            {
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_governor",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 47,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_governor_halts_on_critical_data_failure": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 50,
+        "end": 53
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "base_signals",
+          "definitions": [
+            {
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_governor",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 47,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_failed_stress_test_reduces_instead_of_freezing": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 56,
         "end": 64
       },
       "symbol_dependencies": [
         {
-          "symbol": "PortfolioSnapshot",
+          "symbol": "base_signals",
           "definitions": [
             {
-              "file": "src/ai_trading/risk.py",
-              "line": 11,
-              "kind": "class",
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
         },
         {
-          "symbol": "Prediction",
+          "symbol": "evaluate_governor",
           "definitions": [
             {
-              "file": "src/ai_trading/model.py",
-              "line": 15,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/config.py",
-              "line": 6,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskEngine",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 29,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 33,
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 47,
               "kind": "function",
               "language": "python"
             }
@@ -557,69 +510,33 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 5
+      "dependency_count": 2
     },
-    "test_invalid_model_confidence_cannot_authorize_exposure": {
+    "test_governor_reduces_when_recovery_health_is_degraded": {
       "source": {
-        "file": "tests/test_risk.py",
-        "start": 70,
+        "file": "tests/test_risk_governor.py",
+        "start": 68,
         "end": 78
       },
       "symbol_dependencies": [
         {
-          "symbol": "PortfolioSnapshot",
+          "symbol": "base_signals",
           "definitions": [
             {
-              "file": "src/ai_trading/risk.py",
-              "line": 11,
-              "kind": "class",
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
         },
         {
-          "symbol": "Prediction",
+          "symbol": "evaluate_governor",
           "definitions": [
             {
-              "file": "src/ai_trading/model.py",
-              "line": 15,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/config.py",
-              "line": 6,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskEngine",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 29,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 33,
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 47,
               "kind": "function",
               "language": "python"
             }
@@ -627,69 +544,33 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 5
+      "dependency_count": 2
     },
-    "test_invalid_model_side_is_rejected_before_broker_execution": {
+    "test_governor_halts_after_repeated_recovery_failures": {
       "source": {
-        "file": "tests/test_risk.py",
+        "file": "tests/test_risk_governor.py",
         "start": 81,
-        "end": 89
+        "end": 90
       },
       "symbol_dependencies": [
         {
-          "symbol": "PortfolioSnapshot",
+          "symbol": "base_signals",
           "definitions": [
             {
-              "file": "src/ai_trading/risk.py",
-              "line": 11,
-              "kind": "class",
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
         },
         {
-          "symbol": "Prediction",
+          "symbol": "evaluate_governor",
           "definitions": [
             {
-              "file": "src/ai_trading/model.py",
-              "line": 15,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/config.py",
-              "line": 6,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskEngine",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 29,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 33,
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 47,
               "kind": "function",
               "language": "python"
             }
@@ -697,69 +578,33 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 5
+      "dependency_count": 2
     },
-    "test_invalid_portfolio_state_blocks_new_and_forced_paper_orders": {
+    "test_governor_halts_on_excessive_recovery_fallback_depth": {
       "source": {
-        "file": "tests/test_risk.py",
-        "start": 103,
-        "end": 120
+        "file": "tests/test_risk_governor.py",
+        "start": 93,
+        "end": 102
       },
       "symbol_dependencies": [
         {
-          "symbol": "PortfolioSnapshot",
+          "symbol": "base_signals",
           "definitions": [
             {
-              "file": "src/ai_trading/risk.py",
-              "line": 11,
-              "kind": "class",
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
         },
         {
-          "symbol": "Prediction",
+          "symbol": "evaluate_governor",
           "definitions": [
             {
-              "file": "src/ai_trading/model.py",
-              "line": 15,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/config.py",
-              "line": 6,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskEngine",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 29,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 33,
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 47,
               "kind": "function",
               "language": "python"
             }
@@ -767,69 +612,33 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 5
+      "dependency_count": 2
     },
-    "test_finite_non_positive_equity_keeps_hard_stop_exit": {
+    "test_governor_returns_to_trade_after_recovery_health_normalizes": {
       "source": {
-        "file": "tests/test_risk.py",
-        "start": 126,
-        "end": 135
+        "file": "tests/test_risk_governor.py",
+        "start": 105,
+        "end": 110
       },
       "symbol_dependencies": [
         {
-          "symbol": "PortfolioSnapshot",
+          "symbol": "base_signals",
           "definitions": [
             {
-              "file": "src/ai_trading/risk.py",
-              "line": 11,
-              "kind": "class",
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
         },
         {
-          "symbol": "Prediction",
+          "symbol": "evaluate_governor",
           "definitions": [
             {
-              "file": "src/ai_trading/model.py",
-              "line": 15,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/config.py",
-              "line": 6,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskEngine",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 29,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 33,
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 47,
               "kind": "function",
               "language": "python"
             }
@@ -837,7 +646,41 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 5
+      "dependency_count": 2
+    },
+    "test_governor_halts_on_invalid_numeric_risk_evidence": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 128,
+        "end": 137
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "base_signals",
+          "definitions": [
+            {
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_governor",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 47,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
     }
   }
 }

@@ -6849,7 +6849,9 @@ reasons: tuple[str, ...]
 ⋮----
 config = config or PortfolioRiskConfig()
 ⋮----
-exposures = notionals.astype(float) / equity
+notionals_numeric = notionals.astype(float)
+⋮----
+exposures = notionals_numeric / equity
 gross = float(exposures.abs().sum())
 net = float(abs(exposures.sum()))
 max_asset = float(exposures.abs().max()) if len(exposures) else 0.0
@@ -8082,6 +8084,9 @@ halt: bool
 reason: str
 ⋮----
 policy = policy or GovernorPolicy()
+⋮----
+# NaN comparisons are false, which would otherwise let corrupt risk
+# telemetry fall through to TRADE or REDUCE. Stop issuing paper orders.
 ````
 
 ## File: src/ai_trading/risk.py
@@ -12604,6 +12609,14 @@ def test_portfolio_risk_detects_high_pair_correlation() -> None
 x = np.linspace(-0.02, 0.02, 200)
 returns = pd.DataFrame({"A": x, "B": x * 1.01})
 notionals = pd.Series({"A": 20_000.0, "B": 20_000.0})
+⋮----
+@pytest.mark.parametrize("equity", [math.nan, math.inf, -math.inf, 0.0])
+def test_portfolio_risk_rejects_invalid_equity(equity: float) -> None
+⋮----
+@pytest.mark.parametrize("notional", [math.nan, math.inf, -math.inf])
+def test_portfolio_risk_rejects_nonfinite_asset_exposure(notional: float) -> None
+⋮----
+def test_portfolio_risk_rejects_nonfinite_limits(field: str) -> None
 ````
 
 ## File: tests/test_portfolio_selection.py
@@ -13287,6 +13300,8 @@ def test_governor_returns_to_trade_after_recovery_health_normalizes() -> None
 ⋮----
 degraded = evaluate_governor(base_signals(recovery_degraded=True))
 healthy = evaluate_governor(base_signals(recovery_degraded=False))
+⋮----
+decision = evaluate_governor(base_signals(**{field: value}))
 ````
 
 ## File: tests/test_risk_parity.py
@@ -14370,6 +14385,10 @@ threshold configuration. Before any paper risk approval, portfolio equity,
 risk baselines, held notional, model direction and confidence must be valid.
 Corrupt runtime inputs block new exposure without issuing an untrusted forced
 exit. Valid hard loss stops continue to liquidate existing paper exposure.
+The global risk governor also halts on non-finite model-confidence, data-quality,
+stress-loss or drawdown evidence. Portfolio exposure analysis rejects invalid
+capital, notionals and non-finite configured risk limits instead of reporting
+approval based on NaN comparisons.
 These protections do not activate a live broker or improve proven profitability.
 
 ## Validation path

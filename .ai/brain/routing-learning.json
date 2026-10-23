@@ -2,22 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "fix: harden checkpoint pointers and model paths",
-      "terms": [
-        "checkpoint",
-        "harden",
-        "model",
-        "paths",
-        "pointers"
-      ],
-      "tests": [],
-      "useful": [
-        "src/ai_trading/multiasset_checkpoint.py",
-        "tests/test_multiasset_checkpoint.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "fix: constrain checkpoint manifest artifact paths",
       "terms": [
         "artifact",
@@ -1279,6 +1263,26 @@
         "src/ai_trading/risk.py",
         "tests/test_config_validation.py",
         "tests/test_risk.py"
+      ]
+    },
+    {
+      "rejected": [],
+      "task": "fix(risk): halt on invalid global risk signals and portfolio exposures",
+      "terms": [
+        "exposures",
+        "global",
+        "halt",
+        "invalid",
+        "portfolio",
+        "risk",
+        "signals"
+      ],
+      "tests": [],
+      "useful": [
+        "src/ai_trading/portfolio_risk.py",
+        "src/ai_trading/risk_governor.py",
+        "tests/test_portfolio_risk.py",
+        "tests/test_risk_governor.py"
       ]
     }
   ],
@@ -2708,6 +2712,12 @@
       "tests/test_risk.py": 4,
       "tests/test_runtime_targeted_step.py": 4
     },
+    "exposures": {
+      "src/ai_trading/portfolio_risk.py": 4,
+      "src/ai_trading/risk_governor.py": 4,
+      "tests/test_portfolio_risk.py": 4,
+      "tests/test_risk_governor.py": 4
+    },
     "externally": {
       "src/ai_trading/dashboard.py": 4,
       "src/ai_trading/deployment_probe.py": 4,
@@ -2939,6 +2949,12 @@
       "src/ai_trading/scheduler_fallback.py": 4,
       "tests/test_paper_cycle_workflow.py": 12
     },
+    "global": {
+      "src/ai_trading/portfolio_risk.py": 4,
+      "src/ai_trading/risk_governor.py": 4,
+      "tests/test_portfolio_risk.py": 4,
+      "tests/test_risk_governor.py": 4
+    },
     "gold": {
       "src/ai_trading/command_app.py": 4,
       "src/ai_trading/dashboard.py": 4,
@@ -2961,6 +2977,12 @@
       "tests/test_paper_cycle.py": 4,
       "tests/test_paper_cycle_workflow.py": 4,
       "tests/test_runtime_lock.py": 4
+    },
+    "halt": {
+      "src/ai_trading/portfolio_risk.py": 4,
+      "src/ai_trading/risk_governor.py": 4,
+      "tests/test_portfolio_risk.py": 4,
+      "tests/test_risk_governor.py": 4
     },
     "hard": {
       "src/ai_trading/backtest.py": 4,
@@ -3111,10 +3133,13 @@
       "src/ai_trading/global_allocator.py": 4,
       "src/ai_trading/portfolio.py": 4,
       "src/ai_trading/portfolio_intelligence.py": 8,
-      "src/ai_trading/portfolio_risk.py": 4,
+      "src/ai_trading/portfolio_risk.py": 8,
+      "src/ai_trading/risk_governor.py": 4,
       "tests/test_bootstrap_gate.py": 4,
       "tests/test_config_validation.py": 4,
-      "tests/test_portfolio_intelligence.py": 4
+      "tests/test_portfolio_intelligence.py": 4,
+      "tests/test_portfolio_risk.py": 4,
+      "tests/test_risk_governor.py": 4
     },
     "is": {
       "src/ai_trading/dashboard.py": 4,
@@ -3827,9 +3852,13 @@
       "src/ai_trading/multi_market.py": 4,
       "src/ai_trading/multiasset_runtime.py": 4,
       "src/ai_trading/portfolio_intelligence.py": 8,
+      "src/ai_trading/portfolio_risk.py": 4,
+      "src/ai_trading/risk_governor.py": 4,
       "tests/test_multi_market.py": 4,
       "tests/test_multiasset_runtime.py": 4,
-      "tests/test_portfolio_intelligence.py": 8
+      "tests/test_portfolio_intelligence.py": 8,
+      "tests/test_portfolio_risk.py": 4,
+      "tests/test_risk_governor.py": 4
     },
     "position": {
       "src/ai_trading/dashboard.py": 4,
@@ -4275,12 +4304,16 @@
       "src/ai_trading/backtest.py": 4,
       "src/ai_trading/config.py": 4,
       "src/ai_trading/cost_stress_gate.py": 4,
+      "src/ai_trading/portfolio_risk.py": 4,
       "src/ai_trading/risk.py": 8,
+      "src/ai_trading/risk_governor.py": 4,
       "src/ai_trading/runtime.py": 4,
       "tests/test_backtest.py": 4,
       "tests/test_config_validation.py": 4,
       "tests/test_cost_stress_gate.py": 4,
+      "tests/test_portfolio_risk.py": 4,
       "tests/test_risk.py": 8,
+      "tests/test_risk_governor.py": 4,
       "tests/test_runtime_targeted_step.py": 4
     },
     "river": {
@@ -4541,13 +4574,17 @@
       "src/ai_trading/multi_market.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
       "src/ai_trading/paper_cycle_service.py": 4,
+      "src/ai_trading/portfolio_risk.py": 4,
+      "src/ai_trading/risk_governor.py": 4,
       "src/ai_trading/runtime_status.py": 4,
       "tests/test_dashboard.py": 4,
       "tests/test_dashboard_engine_status.py": 4,
       "tests/test_market_freshness.py": 4,
       "tests/test_multi_market.py": 4,
       "tests/test_paper_cycle.py": 4,
-      "tests/test_paper_cycle_service.py": 4
+      "tests/test_paper_cycle_service.py": 4,
+      "tests/test_portfolio_risk.py": 4,
+      "tests/test_risk_governor.py": 4
     },
     "staging": {
       "src/ai_trading/multiasset_checkpoint.py": 4,
