@@ -1,0 +1,81 @@
+name: MTF Net Cost Evidence
+
+on:
+  push:
+    branches: ["fix/mtf-bounded-real-cost-evidence"]
+    paths:
+      - "src/ai_trading/mtf_parameter_benchmark.py"
+      - "tests/test_mtf_parameter_benchmark.py"
+      - ".github/workflows/mtf-net-cost-evidence.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mtf-net-cost-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bounded-market-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install research dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Evaluate real completed Gold DAX BTC bars with bounded MTF grid
+        run: |
+          python - <<'PY'
+          import json
+          from ai_trading.data import load_history
+          from ai_trading.mtf_parameter_benchmark import (
+              MTFBenchmarkConfig, benchmark_payload, run_parameter_benchmark,
+              write_benchmark_report,
+          )
+
+          # Previously investigated 45/90-minute shadow variants, not a
+          # newly optimized grid. These are research-only comparators.
+          grid = (
+              MTFBenchmarkConfig(9, 0.0005, 0.25, 1000, 0.56),
+              MTFBenchmarkConfig(9, 0.0005, 0.25, 1000, 0.60),
+              MTFBenchmarkConfig(18, 0.0003, 0.15, 1000, 0.60),
+          )
+          markets = {
+              symbol: load_history(symbol, period="1mo", interval="5m")
+              for symbol in ("GC=F", "^GDAXI", "BTC-USD")
+          }
+          results = run_parameter_benchmark(
+              markets, configs=grid, folds=2, test_window_bars=240,
+              min_train_rows=500, random_state=42,
+              transaction_cost_bps=2.0, slippage_bps=1.0,
+          )
+          write_benchmark_report(
+              results, json_path="artifacts/mtf-net-cost/results.json",
+              markdown_path="artifacts/mtf-net-cost/report.md",
+          )
+          payload = benchmark_payload(results)
+          for symbol, selection in payload["market_selections"].items():
+              print(f"MTF selection {symbol}: {json.dumps(selection, sort_keys=True)}")
+          for aggregate in results:
+              for item in aggregate.markets:
+                  print(
+                      f"MTF net {item.symbol} {item.config_name}: "
+                      f"trades={item.economic_trades}, "
+                      f"compounded={item.economic_compounded_net_return:+.4%}, "
+                      f"directional_pass={item.directional_gate_passed}, "
+                      f"economic_pass={item.economic_gate_passed}"
+                  )
+          print("Paper research only; no untouched holdout or portfolio PnL.")
+          PY
+      - name: Preserve immutable reproducible research report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: mtf-net-cost-real-markets
+          path: artifacts/mtf-net-cost
+          if-no-files-found: error
