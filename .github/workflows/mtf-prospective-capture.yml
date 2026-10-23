@@ -1,0 +1,46 @@
+name: Prospective MTF Bar Capture
+
+on:
+  # Run daily; never backfill data before the frozen 2026-10-26 cutoff.
+  schedule:
+    - cron: "31 2 * * *"
+  workflow_dispatch:
+  push:
+    branches: ["feat/prospective-mtf-capture-v1"]
+    paths:
+      - "research/mtf-prospective-2026-10-26-v1.json"
+      - "src/ai_trading/prospective_capture.py"
+      - ".github/workflows/mtf-prospective-capture.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: prospective-mtf-capture-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  archive-future-ohlcv:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install offline-safe research dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Archive only completed future Gold DAX BTC candles
+        run: >-
+          python -m ai_trading.prospective_capture
+          --registration research/mtf-prospective-2026-10-26-v1.json
+          --output-dir artifacts/mtf-prospective
+      - name: Save immutable per-run dataset and registration fingerprints
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: prospective-mtf-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/mtf-prospective/
+          retention-days: 90
+          if-no-files-found: error
