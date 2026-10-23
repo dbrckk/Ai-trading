@@ -124,19 +124,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-23T10:43:38Z
+Generated: 2026-10-23T11:15:49Z
 
 ### Git
 - Branch: `main`
-- Head: `af83456a8ced`
-- Commit date: 2026-10-23T06:43:27-04:00
-- Commit: fix(backtest): reject invalid timestamps and annualization settings (#205)
+- Head: `c2cb397223ac`
+- Commit date: 2026-10-23T07:15:39-04:00
+- Commit: fix(research): keep holdout activity out of turnover selection (#206)
 - Tracked files: 515
 
 ### Recently changed files
 - `src/ai_trading/backtest.py`
-- `src/ai_trading/performance.py`
+- `src/ai_trading/turnover_study.py`
 - `tests/test_backtest.py`
+- `src/ai_trading/performance.py`
 - `tests/test_performance.py`
 - `README.md`
 - `src/ai_trading/promotion.py`
@@ -146,8 +147,6 @@ Generated: 2026-10-23T10:43:38Z
 - `tests/test_soak_gate.py`
 - `src/ai_trading/portfolio_risk.py`
 - `tests/test_portfolio_risk.py`
-- `src/ai_trading/risk_governor.py`
-- `tests/test_risk_governor.py`
 
 ### Project signals
 - `pyproject.toml`

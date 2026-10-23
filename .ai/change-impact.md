@@ -1,13 +1,12 @@
 # Change impact
 
-Base: 9201b7869dc91ad10c62e58c102497308756d699
-Head: af83456a8ced785b6d8ce89fef5d8d60cf582d3e
+Base: 6e7b73210c7b275c85206cee8da6a829aec7e1ef
+Head: c2cb397223ac3b0f36dc11187eb3ab12b01aa09b
 
 ## Changed files
 - M src/ai_trading/backtest.py
-- M src/ai_trading/performance.py
+- M src/ai_trading/turnover_study.py
 - M tests/test_backtest.py
-- M tests/test_performance.py
 
 ## Affected areas
 - src
@@ -15,7 +14,6 @@ Head: af83456a8ced785b6d8ce89fef5d8d60cf582d3e
 
 ## Related test candidates
 - tests/test_backtest.py
-- tests/test_performance.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

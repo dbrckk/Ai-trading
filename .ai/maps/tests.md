@@ -403,6 +403,14 @@ equity = pd.Series(
 ⋮----
 result = compare_rebalance_thresholds(
 ⋮----
+# Even when a future holdout brings the overall trade total to 45,
+# no validation activity means that challenger cannot be selected.
+def holdout_only_candidate(self, market)
+⋮----
+report = fake_backtest(self, market)
+⋮----
+guarded = compare_rebalance_thresholds(
+⋮----
 better = self.risk_config.min_rebalance_fraction > 0.0
 first_end = 109.0 if better else 106.0
 last_end = 118.0 if better else 108.0

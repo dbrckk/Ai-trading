@@ -1431,6 +1431,10 @@ folds: int
 equity_curve: pd.Series
 benchmark_curve: pd.Series
 regime_returns: dict[str, float]
+# Execution timestamps permit research gates to evaluate validation-only
+# activity without inspecting untouched future holdout trades/folds.
+trade_timestamps: tuple[pd.Timestamp, ...] = ()
+fold_start_timestamps: tuple[pd.Timestamp, ...] = ()
 ⋮----
 class WalkForwardBacktester
 ⋮----
@@ -1449,6 +1453,8 @@ curve: dict[pd.Timestamp, float] = {}
 benchmark_prices: dict[pd.Timestamp, float] = {}
 regime_step_returns: dict[str, list[float]] = {}
 trades = 0
+trade_timestamps: list[pd.Timestamp] = []
+fold_start_timestamps: list[pd.Timestamp] = []
 decisions = 0
 rejected = 0
 folds = 0
@@ -1470,6 +1476,8 @@ test_idx = usable[start:test_end]
 model = EnsembleDirectionModel(random_state=42 + folds)
 ⋮----
 model = OnlineDirectionModel(random_state=42 + folds)
+⋮----
+first_signal_pos = int(df.index.get_loc(test_idx[0]))
 ⋮----
 signal_pos = int(df.index.get_loc(signal_idx))
 ⋮----
@@ -9495,6 +9503,12 @@ values = equity.astype(float)
 net_return = float(values.iloc[-1] / values.iloc[0] - 1.0)
 drawdown = float((1.0 - values / values.cummax()).max())
 ⋮----
+def _validation_activity(report: object, equity: pd.Series, cutoff: pd.Timestamp) -> tuple[int, int]
+⋮----
+"""Count activity observable at the selection cutoff, never on the holdout."""
+trade_times = getattr(report, "trade_timestamps", None)
+fold_times = getattr(report, "fold_start_timestamps", None)
+⋮----
 """Choose on early OOS validation, inspect untouched later OOS holdout.
 
     All strategies see the same chronological bars and cost model. The
@@ -9536,6 +9550,8 @@ cost_diagnostic = "profitable_after_modeled_costs"
 cost_diagnostic = "positive_zero_cost_counterfactual_only"
 ⋮----
 cost_diagnostic = "nonpositive_even_without_modeled_costs"
+# Candidate eligibility must not depend on future holdout trade counts
+# or fold counts, even indirectly via a minimum-sample gate.
 enough_samples = (
 # Candidate choice uses ONLY validation returns, not holdout performance.
 candidates = [
@@ -9798,6 +9814,14 @@ def fake_backtest(self, market)
 equity = pd.Series(
 ⋮----
 result = compare_rebalance_thresholds(
+⋮----
+# Even when a future holdout brings the overall trade total to 45,
+# no validation activity means that challenger cannot be selected.
+def holdout_only_candidate(self, market)
+⋮----
+report = fake_backtest(self, market)
+⋮----
+guarded = compare_rebalance_thresholds(
 ⋮----
 better = self.risk_config.min_rebalance_fraction > 0.0
 first_end = 109.0 if better else 106.0
