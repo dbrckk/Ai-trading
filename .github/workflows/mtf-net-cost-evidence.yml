@@ -2,7 +2,7 @@ name: MTF Net Cost Evidence
 
 on:
   push:
-    branches: ["fix/mtf-bounded-real-cost-evidence", "fix/mtf-chronological-holdout"]
+    branches: ["fix/mtf-bounded-real-cost-evidence", "fix/mtf-chronological-holdout", "fix/mtf-position-sized-ledger"]
     paths:
       - "src/ai_trading/mtf_parameter_benchmark.py"
       - "tests/test_mtf_parameter_benchmark.py"
@@ -86,6 +86,9 @@ jobs:
                       f"MTF net {item.symbol} {item.config_name}: "
                       f"trades={item.economic_trades}, "
                       f"compounded={item.economic_compounded_net_return:+.4%}, "
+                      f"sized_equity={item.sized_equity_final:.2f}, "
+                      f"sized_return={item.sized_net_return:+.4%}, "
+                      f"sized_drawdown={item.sized_max_drawdown:.4%}, "
                       f"directional_pass={item.directional_gate_passed}, "
                       f"economic_pass={item.economic_gate_passed}"
                   )

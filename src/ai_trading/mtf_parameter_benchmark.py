@@ -25,6 +25,8 @@ _MIN_ACTIVE_PRECISION = 0.50
 _MIN_ECONOMIC_TRADES = 20
 _DEFAULT_TRANSACTION_COST_BPS = 2.0
 _DEFAULT_SLIPPAGE_BPS = 1.0
+_SIZED_STARTING_CASH = 100_000.0
+_SIZED_POSITION_FRACTION = 0.10
 
 
 @dataclass(frozen=True)
@@ -91,6 +93,11 @@ class MarketBenchmarkResult:
     economic_gate_passed: bool = False
     transaction_cost_bps: float = _DEFAULT_TRANSACTION_COST_BPS
     slippage_bps: float = _DEFAULT_SLIPPAGE_BPS
+    # Single-market, trade-close/held-bar mark-to-market research account.
+    # No concurrent multi-asset portfolio, leverage or live execution.
+    sized_equity_final: float = _SIZED_STARTING_CASH
+    sized_net_return: float = 0.0
+    sized_max_drawdown: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -189,6 +196,8 @@ def market_selections(
             "active_predictions": row.active_predictions,
             "economic_trades": row.economic_trades,
             "economic_compounded_net_return": row.economic_compounded_net_return,
+            "sized_net_return": row.sized_net_return,
+            "sized_max_drawdown": row.sized_max_drawdown,
             "directional_accuracy": row.directional_accuracy,
             "macro_recall": row.macro_recall,
             "brier": row.brier,
@@ -253,6 +262,52 @@ def _fold_test_windows(
     )
 
 
+def _mark_sized_paper_trade(
+    market: pd.DataFrame,
+    *,
+    signal_pos: int,
+    horizon_bars: int,
+    side: int,
+    equity: float,
+    peak: float,
+    max_drawdown: float,
+    one_way_cost_bps: float,
+) -> tuple[float, float, float]:
+    """Mark a fixed-10%-notional, one-at-a-time research position on each close.
+
+    Entry and exit are the *same* bars used by the independent-trade audit.
+    Cash not allocated to the trade stays idle. This is not a multi-asset
+    portfolio, funding/carry model or real fill simulation.
+    """
+    if side not in (-1, 1) or equity <= 0.0:
+        raise ValueError("invalid signed position or research account equity")
+    entry_pos = signal_pos + 1
+    exit_pos = signal_pos + horizon_bars
+    if exit_pos >= len(market):
+        raise ValueError("trade exit extends past available completed bars")
+    entry = float(market["Open"].iloc[entry_pos])
+    if not isfinite(entry) or entry <= 0.0:
+        raise ValueError("invalid next-open price for sized research account")
+    cost_rate = one_way_cost_bps / 10_000.0
+    units = equity * _SIZED_POSITION_FRACTION / entry
+    entry_fee = units * entry * cost_rate
+    marked = equity - entry_fee
+    peak = max(peak, marked)
+    max_drawdown = max(max_drawdown, 1.0 - marked / peak)
+    for bar_pos in range(entry_pos, exit_pos + 1):
+        close = float(market["Close"].iloc[bar_pos])
+        if not isfinite(close) or close <= 0.0:
+            raise ValueError("invalid close price for sized research account")
+        marked = equity - entry_fee + side * units * (close - entry)
+        if bar_pos == exit_pos:
+            marked -= units * close * cost_rate
+        if not isfinite(marked) or marked <= 0.0:
+            raise ValueError("research equity exhausted; margin not modeled")
+        peak = max(peak, marked)
+        max_drawdown = max(max_drawdown, 1.0 - marked / peak)
+    return marked, peak, max_drawdown
+
+
 def evaluate_market_config(
     symbol: str,
     market: pd.DataFrame,
@@ -306,6 +361,9 @@ def evaluate_market_config(
     realized_labels: list[int] = []
     economic_returns: list[float] = []
     last_economic_exit_pos = -1
+    sized_equity = _SIZED_STARTING_CASH
+    sized_peak = _SIZED_STARTING_CASH
+    sized_max_drawdown = 0.0
     round_trip_cost = 2.0 * (transaction_cost_bps + slippage_bps) / 10_000.0
 
     completed_folds = 0
@@ -368,6 +426,16 @@ def evaluate_market_config(
                 if not isfinite(net_return):
                     raise ValueError("invalid net return for economic audit")
                 economic_returns.append(net_return)
+                sized_equity, sized_peak, sized_max_drawdown = _mark_sized_paper_trade(
+                    market,
+                    signal_pos=signal_pos,
+                    horizon_bars=config.horizon_bars,
+                    side=effective_side,
+                    equity=sized_equity,
+                    peak=sized_peak,
+                    max_drawdown=sized_max_drawdown,
+                    one_way_cost_bps=transaction_cost_bps + slippage_bps,
+                )
                 last_economic_exit_pos = signal_pos + config.horizon_bars
 
     if completed_folds == 0 or len(realized_labels) < 5:
@@ -411,10 +479,12 @@ def evaluate_market_config(
     if not isfinite(economic_growth):
         raise ValueError("non-finite compounded economic return")
     economic_net = float(economic_growth - 1.0)
+    sized_net = sized_equity / _SIZED_STARTING_CASH - 1.0
     economic_gate_passed = (
         len(economic_returns) >= _MIN_ECONOMIC_TRADES
         and economic_mean > 0.0
         and economic_net > 0.0
+        and sized_net > 0.0
     )
 
     return MarketBenchmarkResult(
@@ -442,6 +512,9 @@ def evaluate_market_config(
         economic_gate_passed=economic_gate_passed,
         transaction_cost_bps=transaction_cost_bps,
         slippage_bps=slippage_bps,
+        sized_equity_final=sized_equity,
+        sized_net_return=float(sized_net),
+        sized_max_drawdown=float(sized_max_drawdown),
     )
 
 
@@ -645,6 +718,15 @@ def benchmark_payload(results: tuple[AggregateBenchmarkResult, ...]) -> dict[str
                 ),
                 "slippage_bps": cost_reference.slippage_bps if cost_reference else None,
                 "not_portfolio_pnl": True,
+                "sized_research_account": {
+                    "starting_cash": _SIZED_STARTING_CASH,
+                    "position_fraction": _SIZED_POSITION_FRACTION,
+                    "marking": "each_completed_held_bar_close_and_exit_fees",
+                    "accounting": "one_market_at_a_time_no_overlapping_positions",
+                    "multi_market_aggregation": False,
+                    "funding_borrow_margin_modeled": False,
+                    "auto_promotion": False,
+                },
                 "no_auto_promotion": True,
             },
             "selection_score": (
@@ -696,7 +778,9 @@ def write_benchmark_report(
         "",
         "Purged walk-forward directional and cost-aware research; not live PnL.",
         "Economic audit uses independent next-open entries, horizon-close exits,",
-        "two-sided modeled fees and slippage, and does not simulate a portfolio.",
+        "two-sided modeled fees and slippage; a separate fixed-10%-notional",
+        "single-market paper account marks each held close and reports drawdown.",
+        "This is NOT multi-asset portfolio PnL, funding or broker execution.",
         "",
         "## Best validated configuration per market",
         "",
@@ -736,10 +820,11 @@ def write_benchmark_report(
         lines.append("")
         lines.append(
             "| Market | Sel. score | Macro recall | Directional accuracy | "
-            "Active precision | Active n | Net return | Net n | Cost gate | Brier | L/F/S |"
+            "Active precision | Active n | Net return | Net n | "
+            "Sized return | Sized DD | Cost gate | Brier | L/F/S |"
         )
         lines.append(
-            "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: |"
+            "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: |"
         )
         for row in result.markets:
             lines.append(
@@ -748,6 +833,8 @@ def write_benchmark_report(
                 f"{row.active_precision:.3f} | {row.active_predictions} | "
                 f"{row.economic_compounded_net_return:+.2%} | "
                 f"{row.economic_trades} | "
+                f"{row.sized_net_return:+.2%} | "
+                f"{row.sized_max_drawdown:.2%} | "
                 f"{'PASS' if row.economic_gate_passed else 'FAIL'} | "
                 f"{row.brier:.3f} | "
                 f"{row.long_labels}/{row.flat_labels}/{row.short_labels} |"
