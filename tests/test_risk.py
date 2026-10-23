@@ -120,10 +120,15 @@ def test_invalid_portfolio_state_blocks_new_and_forced_paper_orders(
     assert decision.reason == "invalid portfolio state"
 
 
-def test_finite_non_positive_equity_keeps_hard_stop_exit() -> None:
+@pytest.mark.parametrize(
+    "baseline", [(100_000.0, 100_000.0), (0.0, 0.0)]
+)
+def test_finite_non_positive_equity_keeps_hard_stop_exit(
+    baseline: tuple[float, float]
+) -> None:
     decision = RiskEngine(RiskConfig()).evaluate(
         Prediction(side=1, confidence=math.nan, probabilities={}),
-        PortfolioSnapshot(0.0, 100_000.0, 100_000.0, 5_000.0),
+        PortfolioSnapshot(0.0, baseline[0], baseline[1], 5_000.0),
     )
     assert decision.approved is False
     assert decision.liquidate_existing is True
