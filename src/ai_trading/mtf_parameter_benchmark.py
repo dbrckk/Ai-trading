@@ -264,6 +264,7 @@ def evaluate_market_config(
     random_state: int = 42,
     transaction_cost_bps: float = _DEFAULT_TRANSACTION_COST_BPS,
     slippage_bps: float = _DEFAULT_SLIPPAGE_BPS,
+    test_start: pd.Timestamp | None = None,
 ) -> MarketBenchmarkResult:
     if any(
         not isfinite(cost) or cost < 0.0
@@ -281,12 +282,23 @@ def evaluate_market_config(
         atr_multiplier=config.atr_multiplier,
     )
     usable = features.dropna().index.intersection(labels.dropna().index)
-    windows = _fold_test_windows(
-        usable,
-        folds=folds,
-        test_window_bars=test_window_bars,
-        min_train_rows=min_train_rows,
-    )
+    if test_start is None:
+        windows = _fold_test_windows(
+            usable,
+            folds=folds,
+            test_window_bars=test_window_bars,
+            min_train_rows=min_train_rows,
+        )
+    else:
+        # In a final holdout, every evaluated signal must occur at or after
+        # the frozen split. Do not take the "last N" observations: gaps and
+        # differing label horizons would silently shift the split per config.
+        if folds != 1 or not isinstance(test_start, pd.Timestamp):
+            raise ValueError("anchored holdout requires one fold and a timestamp")
+        holdout_index = usable[usable >= test_start]
+        if len(holdout_index) < 5:
+            raise ValueError("holdout has insufficient matured evaluation bars")
+        windows = (holdout_index,)
 
     market_positions = {timestamp: pos for pos, timestamp in enumerate(market.index)}
     predicted_sides: list[int] = []
@@ -499,6 +511,113 @@ def run_parameter_benchmark(
             reverse=True,
         )
     )
+
+
+def run_chronological_holdout(
+    markets: dict[str, pd.DataFrame],
+    configs: Iterable[MTFBenchmarkConfig],
+    *,
+    holdout_bars: int = 480,
+    validation_folds: int = 2,
+    validation_test_window_bars: int = 240,
+    min_train_rows: int = 500,
+    random_state: int = 42,
+    transaction_cost_bps: float = _DEFAULT_TRANSACTION_COST_BPS,
+    slippage_bps: float = _DEFAULT_SLIPPAGE_BPS,
+) -> dict[str, object]:
+    """Freeze config selection before reading the final chronological slice.
+
+    The final slice is held out from *this run's* parameter selection. It is
+    not necessarily previously unseen across earlier research campaigns.
+    A model is fitted on matured pre-holdout labels when evaluating the
+    selected hyperparameters; no holdout outcomes inform the selection.
+    """
+    if not isinstance(holdout_bars, int) or holdout_bars < 5:
+        raise ValueError("holdout_bars must be an integer >= 5")
+    if not markets:
+        raise ValueError("markets must not be empty")
+    grid = tuple(configs)
+    if not grid:
+        raise ValueError("configs must not be empty")
+
+    validation_markets: dict[str, pd.DataFrame] = {}
+    cutoffs: dict[str, dict[str, str]] = {}
+    for symbol, market in markets.items():
+        if (
+            not isinstance(market.index, pd.DatetimeIndex)
+            or market.index.hasnans
+            or market.index.has_duplicates
+            or not market.index.is_monotonic_increasing
+        ):
+            raise ValueError(f"{symbol}: market timestamps must be valid and ordered")
+        if len(market) <= holdout_bars:
+            raise ValueError(f"{symbol}: not enough bars before holdout")
+        validation_markets[symbol] = market.iloc[:-holdout_bars].copy()
+        cutoffs[symbol] = {
+            "validation_end": market.index[-holdout_bars - 1].isoformat(),
+            "holdout_start": market.index[-holdout_bars].isoformat(),
+            "holdout_end": market.index[-1].isoformat(),
+        }
+
+    validation_results = run_parameter_benchmark(
+        validation_markets,
+        configs=grid,
+        folds=validation_folds,
+        test_window_bars=validation_test_window_bars,
+        min_train_rows=min_train_rows,
+        random_state=random_state,
+        transaction_cost_bps=transaction_cost_bps,
+        slippage_bps=slippage_bps,
+    )
+    candidates = market_selections(validation_results)
+    holdout: dict[str, dict[str, object]] = {}
+    for symbol, selection in candidates.items():
+        if selection is None:
+            # Deliberately do not inspect later prices/returns after a
+            # validation rejection; even a favorable holdout cannot rescue it.
+            holdout[symbol] = {
+                "status": "not_evaluated_no_validation_candidate",
+                "passed": False,
+                "result": None,
+            }
+            continue
+        chosen = MTFBenchmarkConfig(**selection["config"])
+        tested = evaluate_market_config(
+            symbol,
+            markets[symbol],
+            chosen,
+            folds=1,
+            min_train_rows=min_train_rows,
+            random_state=random_state,
+            transaction_cost_bps=transaction_cost_bps,
+            slippage_bps=slippage_bps,
+            test_start=markets[symbol].index[-holdout_bars],
+        )
+        passed = bool(tested.directional_gate_passed and tested.economic_gate_passed)
+        holdout[symbol] = {
+            "status": "passed_for_manual_review" if passed else "failed",
+            "passed": passed,
+            "result": asdict(tested),
+        }
+
+    return {
+        "method": {
+            "selection": "validation_only",
+            "holdout": "final_chronological_bars_excluded_from_selection",
+            "holdout_bars_per_market": holdout_bars,
+            "validation_folds": validation_folds,
+            "validation_test_window_bars": validation_test_window_bars,
+            "transaction_cost_bps_per_side": transaction_cost_bps,
+            "slippage_bps_per_side": slippage_bps,
+            "previously_unseen_across_research_runs": False,
+            "full_portfolio_simulation": False,
+            "paper_only": True,
+            "auto_promote": False,
+        },
+        "cutoffs": cutoffs,
+        "validation": benchmark_payload(validation_results),
+        "holdout": holdout,
+    }
 
 
 def benchmark_payload(results: tuple[AggregateBenchmarkResult, ...]) -> dict[str, object]:
