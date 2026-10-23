@@ -2,9 +2,9 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "fix/probe-market-engine-diagnostics",
+  "active_branch": "feat/turnover-execution-cost-attribution",
   "pull_request": null,
-  "focus": "PR #197 merged: offline Gold/DAX/BTC turnover study found no profitable threshold, keep disabled. Hosted probe run 39789764311 at 13:47Z passed /livez and /readyz but failed strict engine check. Rerun requested to determine whether transient; add sanitized per-symbol diagnostic to strict probe so future incidents identify impacted engines without exposing arbitrary API fields.",
+  "focus": "PR #198 merged with green CI and CodeQL: safe per-market diagnostics for hosted probe failure. A strict hosted probe that initially failed its 3-market health gate (39789764311) passed upon rerun (attempt 2) at 2026-10-22T14:51Z; still monitor intermittent engine health. PR #197 turnover study found all three markets net-negative and no justified deadband. This branch adds zero-cost vs fee-inclusive chronological proxy counterfactual to distinguish friction sensitivity from weak pre-cost performance, research only.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -158,8 +158,9 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Review rerun of hosted probe 39789764311; if still failing, investigate paper scheduler, runtime heartbeat and per-market errors before tuning.",
-    "Validate diagnostic PR CI/CodeQL and merge only on green.",
-    "Do not enable turnover deadband, River-v2 or live broker without demonstrated evidence."
+    "Validate cost-attribution PR CI/CodeQL before merge.",
+    "Re-run offline turnover study when data and compute budget allow; inspect cost scenario rather than assume profitability.",
+    "Monitor strict hosted dashboard probe for recurring market engine status problems; confirm deployed SHA separately.",
+    "Keep River-v1 paper authority, River-v2 research disabled, live broker OFF."
   ]
 }

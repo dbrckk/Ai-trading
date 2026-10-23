@@ -109,6 +109,41 @@ def compare_rebalance_thresholds(
 
     assert reference_index is not None
     baseline = rows[0]
+    # Counterfactual: refit the same chronological proxy with execution costs
+    # disabled. This is a *sensitivity test*, not a ledger of paid fees:
+    # different equity paths can produce different future position sizing.
+    if risk.transaction_cost_bps == 0.0 and risk.slippage_bps == 0.0:
+        zero_cost_validation_return = baseline["validation_net_return"]
+        zero_cost_holdout_return = baseline["holdout_net_return"]
+        zero_cost_full_return = baseline["full_net_return"]
+    else:
+        zero_cost_report = WalkForwardBacktester(
+            risk_config=replace(
+                risk,
+                min_rebalance_fraction=0.0,
+                transaction_cost_bps=0.0,
+                slippage_bps=0.0,
+            ),
+            model_config=model,
+            config=config,
+        ).run(market)
+        if not reference_index.equals(zero_cost_report.equity_curve.index):
+            raise ValueError("cost counterfactual produced misaligned OOS timestamps")
+        zero_cost_equity = zero_cost_report.equity_curve
+        zero_cost_validation_return, _ = _segment_performance(
+            zero_cost_equity.iloc[: split + 1]
+        )
+        zero_cost_holdout_return, _ = _segment_performance(
+            zero_cost_equity.iloc[split:]
+        )
+        zero_cost_full_return, _ = _segment_performance(zero_cost_equity)
+
+    if baseline["full_net_return"] > 0.0:
+        cost_diagnostic = "profitable_after_modeled_costs"
+    elif zero_cost_full_return > 0.0:
+        cost_diagnostic = "positive_zero_cost_counterfactual_only"
+    else:
+        cost_diagnostic = "nonpositive_even_without_modeled_costs"
     enough_samples = (
         len(reference_index) >= MIN_OOS_BARS
         and baseline["trades"] >= MIN_OOS_TRADES
@@ -155,6 +190,22 @@ def compare_rebalance_thresholds(
         "holdout_end": str(reference_index[-1]),
         "transaction_cost_bps": risk.transaction_cost_bps,
         "slippage_bps": risk.slippage_bps,
+        "baseline_cost_sensitivity": {
+            "zero_cost_validation_return": zero_cost_validation_return,
+            "zero_cost_holdout_return": zero_cost_holdout_return,
+            "zero_cost_full_return": zero_cost_full_return,
+            "modeled_validation_return_gap": (
+                zero_cost_validation_return - baseline["validation_net_return"]
+            ),
+            "modeled_holdout_return_gap": (
+                zero_cost_holdout_return - baseline["holdout_net_return"]
+            ),
+            "modeled_full_return_gap": (
+                zero_cost_full_return - baseline["full_net_return"]
+            ),
+            "classification": cost_diagnostic,
+            "exact_paid_fees": False,
+        },
         "minimum_oos_bars": MIN_OOS_BARS,
         "minimum_oos_trades": MIN_OOS_TRADES,
         "minimum_folds": MIN_FOLDS,
@@ -170,6 +221,8 @@ def compare_rebalance_thresholds(
             "Candidate chosen using earlier OOS returns only; holdout evaluated "
             "once afterwards. Offline model differs from hosted River-v1. "
             "Trade-count sufficiency is across all OOS periods, not holdout alone. "
+            "Zero-cost counterfactual isolates sensitivity to modeled execution "
+            "friction, not exact fee expense (position paths can diverge). "
             "No production parameter is changed."
         ),
     }
