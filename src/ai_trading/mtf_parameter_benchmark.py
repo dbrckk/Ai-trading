@@ -38,10 +38,10 @@ class MTFBenchmarkConfig:
     def __post_init__(self) -> None:
         if self.horizon_bars < 1:
             raise ValueError("horizon_bars must be at least 1")
-        if self.minimum_threshold < 0:
-            raise ValueError("minimum_threshold must be non-negative")
-        if self.atr_multiplier < 0:
-            raise ValueError("atr_multiplier must be non-negative")
+        if not isfinite(self.minimum_threshold) or self.minimum_threshold < 0:
+            raise ValueError("minimum_threshold must be finite and non-negative")
+        if not isfinite(self.atr_multiplier) or self.atr_multiplier < 0:
+            raise ValueError("atr_multiplier must be finite and non-negative")
         if self.max_train_rows < 1:
             raise ValueError("max_train_rows must be at least 1")
         if not 0.0 <= self.min_confidence <= 1.0:
@@ -444,7 +444,9 @@ def run_parameter_benchmark(
     transaction_cost_bps: float = _DEFAULT_TRANSACTION_COST_BPS,
     slippage_bps: float = _DEFAULT_SLIPPAGE_BPS,
 ) -> tuple[AggregateBenchmarkResult, ...]:
-    grid = tuple(configs or default_benchmark_grid())
+    # An explicitly empty search is an error, never a request to execute the
+    # potentially expensive default grid.
+    grid = tuple(default_benchmark_grid() if configs is None else configs)
     if not markets:
         raise ValueError("markets must not be empty")
     if not grid:
