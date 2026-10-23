@@ -1,3 +1,7 @@
+import math
+
+import pytest
+
 from ai_trading.config import RiskConfig
 from ai_trading.model import Prediction
 from ai_trading.risk import PortfolioSnapshot, RiskEngine
@@ -58,3 +62,69 @@ def test_low_confidence_rejection_does_not_force_liquidation() -> None:
 
     assert decision.approved is False
     assert decision.liquidate_existing is False
+
+
+@pytest.mark.parametrize(
+    "confidence", [math.nan, math.inf, -math.inf, -0.1, 1.1]
+)
+def test_invalid_model_confidence_cannot_authorize_exposure(confidence: float) -> None:
+    engine = RiskEngine(RiskConfig(min_confidence=0.0))
+    decision = engine.evaluate(
+        Prediction(side=1, confidence=confidence, probabilities={}),
+        PortfolioSnapshot(100_000, 100_000, 100_000),
+    )
+    assert decision.approved is False
+    assert decision.target_notional == 0.0
+    assert decision.reason == "invalid model prediction"
+
+
+def test_invalid_model_side_is_rejected_before_broker_execution() -> None:
+    engine = RiskEngine(RiskConfig())
+    decision = engine.evaluate(
+        Prediction(side=2, confidence=0.99, probabilities={}),
+        PortfolioSnapshot(100_000, 100_000, 100_000),
+    )
+    assert decision.approved is False
+    assert decision.side == 0
+    assert decision.reason == "invalid model prediction"
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("equity", math.nan),
+        ("peak_equity", math.inf),
+        ("day_start_equity", math.nan),
+        ("current_position_value", math.inf),
+        ("peak_equity", 0.0),
+        ("day_start_equity", 0.0),
+    ],
+)
+def test_invalid_portfolio_state_blocks_new_and_forced_paper_orders(
+    field: str, value: float
+) -> None:
+    engine = RiskEngine(RiskConfig())
+    values = dict(
+        equity=100_000.0,
+        peak_equity=100_000.0,
+        day_start_equity=100_000.0,
+        current_position_value=10_000.0,
+    )
+    values[field] = value
+    decision = engine.evaluate(
+        Prediction(side=1, confidence=0.99, probabilities={}),
+        PortfolioSnapshot(**values),
+    )
+    assert decision.approved is False
+    assert decision.liquidate_existing is False
+    assert decision.reason == "invalid portfolio state"
+
+
+def test_finite_non_positive_equity_keeps_hard_stop_exit() -> None:
+    decision = RiskEngine(RiskConfig()).evaluate(
+        Prediction(side=1, confidence=math.nan, probabilities={}),
+        PortfolioSnapshot(0.0, 100_000.0, 100_000.0, 5_000.0),
+    )
+    assert decision.approved is False
+    assert decision.liquidate_existing is True
+    assert decision.reason == "non-positive equity"
