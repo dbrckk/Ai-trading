@@ -2,24 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "fix: align multiasset runtime execution costs by symbol",
-      "terms": [
-        "align",
-        "by",
-        "costs",
-        "execution",
-        "multiasset",
-        "runtime",
-        "symbol"
-      ],
-      "tests": [],
-      "useful": [
-        "src/ai_trading/multiasset_runtime.py",
-        "tests/test_multiasset_runtime.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "fix: harden checkpoint pointers and model paths",
       "terms": [
         "checkpoint",
@@ -1276,6 +1258,28 @@
         "src/ai_trading/turnover_study.py",
         "tests/test_backtest.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "fix(risk): reject non-finite paper trading inputs before order approval",
+      "terms": [
+        "approval",
+        "before",
+        "inputs",
+        "non-finite",
+        "order",
+        "paper",
+        "reject",
+        "risk",
+        "trading"
+      ],
+      "tests": [],
+      "useful": [
+        "src/ai_trading/config.py",
+        "src/ai_trading/risk.py",
+        "tests/test_config_validation.py",
+        "tests/test_risk.py"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1891,6 +1895,12 @@
       "src/ai_trading/scheduler_fallback.py": 4,
       "tests/test_paper_cycle_workflow.py": 4
     },
+    "approval": {
+      "src/ai_trading/config.py": 4,
+      "src/ai_trading/risk.py": 4,
+      "tests/test_config_validation.py": 4,
+      "tests/test_risk.py": 4
+    },
     "artifact": {
       "src/ai_trading/multiasset_checkpoint.py": 4,
       "src/ai_trading/multiasset_runtime.py": 4,
@@ -1953,17 +1963,21 @@
       "tests/test_multiasset_backtest.py": 4
     },
     "before": {
+      "src/ai_trading/config.py": 4,
       "src/ai_trading/dashboard.py": 4,
       "src/ai_trading/mtf_shadow_quality.py": 4,
       "src/ai_trading/multi_market.py": 4,
       "src/ai_trading/multiasset_checkpoint.py": 4,
       "src/ai_trading/operational_overview.py": 4,
+      "src/ai_trading/risk.py": 4,
       "src/ai_trading/shadow_promotion_gate.py": 4,
       "src/ai_trading/shadow_quality.py": 4,
+      "tests/test_config_validation.py": 4,
       "tests/test_dashboard_overview.py": 4,
       "tests/test_mtf_shadow_quality.py": 4,
       "tests/test_multi_market.py": 8,
       "tests/test_multiasset_checkpoint.py": 4,
+      "tests/test_risk.py": 4,
       "tests/test_shadow_promotion_gate.py": 4,
       "tests/test_shadow_quality.py": 4
     },
@@ -3059,8 +3073,12 @@
       "tests/test_paper_cycle_workflow.py": 4
     },
     "inputs": {
+      "src/ai_trading/config.py": 4,
       "src/ai_trading/portfolio_intelligence.py": 4,
-      "tests/test_portfolio_intelligence.py": 4
+      "src/ai_trading/risk.py": 4,
+      "tests/test_config_validation.py": 4,
+      "tests/test_portfolio_intelligence.py": 4,
+      "tests/test_risk.py": 4
     },
     "integrity": {
       "src/ai_trading/dashboard.py": 4,
@@ -3503,8 +3521,12 @@
       "tests/test_cost_stress_gate.py": 4
     },
     "non-finite": {
+      "src/ai_trading/config.py": 4,
       "src/ai_trading/regime_gate.py": 4,
-      "tests/test_regime_gate.py": 4
+      "src/ai_trading/risk.py": 4,
+      "tests/test_config_validation.py": 4,
+      "tests/test_regime_gate.py": 4,
+      "tests/test_risk.py": 4
     },
     "non-profitable": {
       "src/ai_trading/cost_stress_gate.py": 4,
@@ -3593,6 +3615,12 @@
       "tests/test_broker.py": 4,
       "tests/test_execution_costs.py": 4
     },
+    "order": {
+      "src/ai_trading/config.py": 4,
+      "src/ai_trading/risk.py": 4,
+      "tests/test_config_validation.py": 4,
+      "tests/test_risk.py": 4
+    },
     "orphan": {
       "src/ai_trading/multiasset_checkpoint.py": 4,
       "tests/test_multiasset_checkpoint.py": 4
@@ -3619,7 +3647,7 @@
     "paper": {
       "src/ai_trading/backtest.py": 4,
       "src/ai_trading/broker.py": 12,
-      "src/ai_trading/config.py": 4,
+      "src/ai_trading/config.py": 8,
       "src/ai_trading/dashboard.py": 20,
       "src/ai_trading/deployment_probe.py": 8,
       "src/ai_trading/execution_costs.py": 8,
@@ -3637,7 +3665,7 @@
       "src/ai_trading/persistence.py": 4,
       "src/ai_trading/postgres_persistence.py": 12,
       "src/ai_trading/research_model_codec.py": 4,
-      "src/ai_trading/risk.py": 4,
+      "src/ai_trading/risk.py": 8,
       "src/ai_trading/runtime.py": 16,
       "src/ai_trading/runtime_state.py": 4,
       "src/ai_trading/runtime_status.py": 8,
@@ -3646,6 +3674,7 @@
       "src/ai_trading/trade_journal.py": 4,
       "tests/test_backtest.py": 4,
       "tests/test_broker.py": 4,
+      "tests/test_config_validation.py": 4,
       "tests/test_cumulative_performance_persistence.py": 4,
       "tests/test_dashboard.py": 4,
       "tests/test_dashboard_engine_status.py": 4,
@@ -3664,7 +3693,7 @@
       "tests/test_performance_metrics.py": 8,
       "tests/test_postgres_persistence.py": 8,
       "tests/test_realized_pnl_accounting.py": 4,
-      "tests/test_risk.py": 4,
+      "tests/test_risk.py": 8,
       "tests/test_runtime_lock.py": 4,
       "tests/test_runtime_status.py": 4,
       "tests/test_runtime_targeted_step.py": 4,
@@ -4066,12 +4095,16 @@
     },
     "reject": {
       "src/ai_trading/bootstrap_gate.py": 4,
+      "src/ai_trading/config.py": 4,
       "src/ai_trading/cost_stress_gate.py": 4,
       "src/ai_trading/regime_gate.py": 4,
+      "src/ai_trading/risk.py": 4,
       "src/ai_trading/sensitivity_gate.py": 4,
       "tests/test_bootstrap_gate.py": 4,
+      "tests/test_config_validation.py": 4,
       "tests/test_cost_stress_gate.py": 4,
       "tests/test_regime_gate.py": 4,
+      "tests/test_risk.py": 4,
       "tests/test_sensitivity_gate.py": 4
     },
     "render": {
@@ -4240,12 +4273,14 @@
     },
     "risk": {
       "src/ai_trading/backtest.py": 4,
+      "src/ai_trading/config.py": 4,
       "src/ai_trading/cost_stress_gate.py": 4,
-      "src/ai_trading/risk.py": 4,
+      "src/ai_trading/risk.py": 8,
       "src/ai_trading/runtime.py": 4,
       "tests/test_backtest.py": 4,
+      "tests/test_config_validation.py": 4,
       "tests/test_cost_stress_gate.py": 4,
-      "tests/test_risk.py": 4,
+      "tests/test_risk.py": 8,
       "tests/test_runtime_targeted_step.py": 4
     },
     "river": {
@@ -4662,7 +4697,7 @@
     },
     "trading": {
       "src/ai_trading/alpha_allocation.py": 4,
-      "src/ai_trading/config.py": 4,
+      "src/ai_trading/config.py": 8,
       "src/ai_trading/file_persistence.py": 4,
       "src/ai_trading/global_allocator.py": 4,
       "src/ai_trading/operational_overview.py": 4,
@@ -4671,13 +4706,15 @@
       "src/ai_trading/portfolio_intelligence.py": 4,
       "src/ai_trading/portfolio_risk.py": 4,
       "src/ai_trading/postgres_persistence.py": 4,
+      "src/ai_trading/risk.py": 4,
       "src/ai_trading/river_v2_shadow.py": 4,
       "src/ai_trading/runtime.py": 4,
       "src/ai_trading/turnover_study.py": 4,
       "tests/test_backtest.py": 4,
-      "tests/test_config_validation.py": 4,
+      "tests/test_config_validation.py": 8,
       "tests/test_dashboard_overview.py": 4,
       "tests/test_paper_cycle.py": 4,
+      "tests/test_risk.py": 4,
       "tests/test_shadow_challenger.py": 4,
       "tests/test_shadow_quality.py": 4
     },

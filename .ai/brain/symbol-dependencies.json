@@ -5,331 +5,114 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "_segment_performance": {
+    "RiskConfig": {
       "source": {
-        "file": "src/ai_trading/turnover_study.py",
-        "start": 24,
-        "end": 33
+        "file": "src/ai_trading/config.py",
+        "start": 6,
+        "end": 39
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "__post_init__",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 17,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 47,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "__post_init__": {
+      "source": {
+        "file": "src/ai_trading/config.py",
+        "start": 17,
+        "end": 39
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "compare_rebalance_thresholds": {
+    "ModelConfig": {
       "source": {
-        "file": "src/ai_trading/turnover_study.py",
-        "start": 36,
-        "end": 228
+        "file": "src/ai_trading/config.py",
+        "start": 43,
+        "end": 51
       },
       "symbol_dependencies": [
         {
-          "symbol": "ModelConfig",
+          "symbol": "__post_init__",
           "definitions": [
             {
               "file": "src/ai_trading/config.py",
-              "line": 40,
-              "kind": "class",
+              "line": 17,
+              "kind": "function",
               "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskConfig",
-          "definitions": [
+            },
             {
               "file": "src/ai_trading/config.py",
-              "line": 6,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "WalkForwardBacktester",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 65,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "WalkForwardConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 30,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "_segment_performance",
-          "definitions": [
-            {
-              "file": "src/ai_trading/turnover_study.py",
-              "line": 24,
+              "line": 47,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
-        },
-        {
-          "symbol": "run",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 80,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
         }
       ],
-      "dependency_count": 6
+      "dependency_count": 1
     },
-    "sample_market": {
+    "PortfolioSnapshot": {
       "source": {
-        "file": "tests/test_backtest.py",
-        "start": 16,
-        "end": 30
+        "file": "src/ai_trading/risk.py",
+        "start": 11,
+        "end": 15
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "test_walk_forward_produces_out_of_sample_report": {
+    "RiskDecision": {
       "source": {
-        "file": "tests/test_backtest.py",
-        "start": 33,
-        "end": 49
+        "file": "src/ai_trading/risk.py",
+        "start": 19,
+        "end": 26
       },
-      "symbol_dependencies": [
-        {
-          "symbol": "ModelConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/config.py",
-              "line": 40,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/config.py",
-              "line": 6,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "WalkForwardBacktester",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 65,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "WalkForwardConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 30,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 80,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 6
+      "symbol_dependencies": [],
+      "dependency_count": 0
     },
-    "test_walk_forward_resets_daily_risk_baseline_between_dates": {
+    "RiskEngine": {
       "source": {
-        "file": "tests/test_backtest.py",
-        "start": 52,
-        "end": 74
+        "file": "src/ai_trading/risk.py",
+        "start": 29,
+        "end": 82
       },
       "symbol_dependencies": [
         {
-          "symbol": "ModelConfig",
+          "symbol": "PortfolioSnapshot",
           "definitions": [
             {
-              "file": "src/ai_trading/config.py",
-              "line": 40,
+              "file": "src/ai_trading/risk.py",
+              "line": 11,
               "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "PaperBroker",
-          "definitions": [
-            {
-              "file": "src/ai_trading/broker.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/config.py",
-              "line": 6,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "WalkForwardBacktester",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 65,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "WalkForwardConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 30,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "reset_day_start",
-          "definitions": [
-            {
-              "file": "src/ai_trading/broker.py",
-              "line": 41,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 80,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 16,
-              "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
         },
         {
-          "symbol": "tracked_reset",
+          "symbol": "Prediction",
           "definitions": [
             {
-              "file": "tests/test_backtest.py",
-              "line": 56,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 9
-    },
-    "tracked_reset": {
-      "source": {
-        "file": "tests/test_backtest.py",
-        "start": 56,
-        "end": 176
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "ModelConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/config.py",
-              "line": 40,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "PaperBroker",
-          "definitions": [
-            {
-              "file": "src/ai_trading/broker.py",
-              "line": 24,
+              "file": "src/ai_trading/model.py",
+              "line": 15,
               "kind": "class",
               "language": "python"
             }
@@ -353,283 +136,19 @@
           "definitions": [
             {
               "file": "src/ai_trading/risk.py",
-              "line": 18,
+              "line": 19,
               "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskEngine",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 28,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "WalkForwardBacktester",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 65,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "WalkForwardConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 30,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "_compound_step_returns",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 22,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "compare_rebalance_thresholds",
-          "definitions": [
-            {
-              "file": "src/ai_trading/turnover_study.py",
-              "line": 36,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "compute_metrics",
-          "definitions": [
-            {
-              "file": "src/ai_trading/performance.py",
-              "line": 54,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "configured_risk",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 106,
-              "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
-        },
-        {
-          "symbol": "equity",
-          "definitions": [
-            {
-              "file": "src/ai_trading/broker.py",
-              "line": 20,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
         },
         {
           "symbol": "evaluate",
           "definitions": [
             {
               "file": "src/ai_trading/risk.py",
-              "line": 32,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fake_backtest",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 149,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 182,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 212,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 241,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 283,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "infer_periods_per_year",
-          "definitions": [
-            {
-              "file": "src/ai_trading/performance.py",
-              "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "rebalance",
-          "definitions": [
-            {
-              "file": "src/ai_trading/broker.py",
-              "line": 44,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "reset_day_start",
-          "definitions": [
-            {
-              "file": "src/ai_trading/broker.py",
-              "line": 41,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 80,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_regime_step_returns_are_compounded_without_intervening_equity",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 77,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_turnover_study_marks_profitable_untouched_holdout_for_review",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 175,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_turnover_study_selects_on_validation_without_holdout_cherry_picking",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 136,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_walk_forward_annualizes_from_actual_oos_timestamps_by_default",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 82,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_walk_forward_exits_position_after_hard_risk_stop",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 102,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "tracked_rebalance",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 119,
+              "line": 33,
               "kind": "function",
               "language": "python"
             }
@@ -637,21 +156,98 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 25
+      "dependency_count": 5
     },
-    "test_regime_step_returns_are_compounded_without_intervening_equity": {
+    "__init__": {
       "source": {
-        "file": "tests/test_backtest.py",
-        "start": 77,
-        "end": 79
+        "file": "src/ai_trading/risk.py",
+        "start": 30,
+        "end": 31
       },
       "symbol_dependencies": [
         {
-          "symbol": "_compound_step_returns",
+          "symbol": "RiskConfig",
           "definitions": [
             {
-              "file": "src/ai_trading/backtest.py",
-              "line": 22,
+              "file": "src/ai_trading/config.py",
+              "line": 6,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "evaluate": {
+      "source": {
+        "file": "src/ai_trading/risk.py",
+        "start": 33,
+        "end": 82
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PortfolioSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk.py",
+              "line": 11,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "Prediction",
+          "definitions": [
+            {
+              "file": "src/ai_trading/model.py",
+              "line": 15,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiskDecision",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk.py",
+              "line": 19,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_invalid_strategy_configuration_fails_closed": {
+      "source": {
+        "file": "tests/test_config_validation.py",
+        "start": 48,
+        "end": 50
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "test_expected_shortfall_rejects_invalid_alpha": {
+      "source": {
+        "file": "tests/test_config_validation.py",
+        "start": 54,
+        "end": 56
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "expected_shortfall",
+          "definitions": [
+            {
+              "file": "src/ai_trading/global_allocator.py",
+              "line": 48,
               "kind": "function",
               "language": "python"
             }
@@ -661,19 +257,53 @@
       ],
       "dependency_count": 1
     },
-    "test_walk_forward_annualizes_from_actual_oos_timestamps_by_default": {
+    "test_global_allocator_rejects_negative_transaction_costs": {
       "source": {
-        "file": "tests/test_backtest.py",
-        "start": 82,
-        "end": 99
+        "file": "tests/test_config_validation.py",
+        "start": 59,
+        "end": 67
       },
       "symbol_dependencies": [
         {
-          "symbol": "ModelConfig",
+          "symbol": "allocate_global_capital",
           "definitions": [
             {
-              "file": "src/ai_trading/config.py",
-              "line": 40,
+              "file": "src/ai_trading/global_allocator.py",
+              "line": 99,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_low_confidence_is_rejected": {
+      "source": {
+        "file": "tests/test_risk.py",
+        "start": 10,
+        "end": 15
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PortfolioSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk.py",
+              "line": 11,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Prediction",
+          "definitions": [
+            {
+              "file": "src/ai_trading/model.py",
+              "line": 15,
               "kind": "class",
               "language": "python"
             }
@@ -693,93 +323,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "WalkForwardBacktester",
+          "symbol": "RiskEngine",
           "definitions": [
             {
-              "file": "src/ai_trading/backtest.py",
-              "line": 65,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "WalkForwardConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 30,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "compute_metrics",
-          "definitions": [
-            {
-              "file": "src/ai_trading/performance.py",
-              "line": 54,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "infer_periods_per_year",
-          "definitions": [
-            {
-              "file": "src/ai_trading/performance.py",
+              "file": "src/ai_trading/risk.py",
               "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 80,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 8
-    },
-    "test_walk_forward_exits_position_after_hard_risk_stop": {
-      "source": {
-        "file": "tests/test_backtest.py",
-        "start": 102,
-        "end": 133
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "ModelConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/config.py",
-              "line": 40,
               "kind": "class",
               "language": "python"
             }
@@ -787,11 +335,45 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "PaperBroker",
+          "symbol": "evaluate",
           "definitions": [
             {
-              "file": "src/ai_trading/broker.py",
-              "line": 24,
+              "file": "src/ai_trading/risk.py",
+              "line": 33,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "test_drawdown_limit_is_fail_closed": {
+      "source": {
+        "file": "tests/test_risk.py",
+        "start": 18,
+        "end": 26
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PortfolioSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk.py",
+              "line": 11,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Prediction",
+          "definitions": [
+            {
+              "file": "src/ai_trading/model.py",
+              "line": 15,
               "kind": "class",
               "language": "python"
             }
@@ -804,18 +386,6 @@
             {
               "file": "src/ai_trading/config.py",
               "line": 6,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskDecision",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 18,
               "kind": "class",
               "language": "python"
             }
@@ -827,125 +397,41 @@
           "definitions": [
             {
               "file": "src/ai_trading/risk.py",
-              "line": 28,
+              "line": 29,
               "kind": "class",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        },
-        {
-          "symbol": "WalkForwardBacktester",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 65,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "WalkForwardConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 30,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "configured_risk",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 106,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
         },
         {
           "symbol": "evaluate",
           "definitions": [
             {
               "file": "src/ai_trading/risk.py",
-              "line": 32,
+              "line": 33,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        },
-        {
-          "symbol": "rebalance",
-          "definitions": [
-            {
-              "file": "src/ai_trading/broker.py",
-              "line": 44,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 80,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "tracked_rebalance",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 119,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
         }
       ],
-      "dependency_count": 13
+      "dependency_count": 5
     },
-    "configured_risk": {
+    "test_daily_loss_stop_marks_existing_position_for_exit": {
       "source": {
-        "file": "tests/test_backtest.py",
-        "start": 106,
-        "end": 226
+        "file": "tests/test_risk.py",
+        "start": 29,
+        "end": 46
       },
       "symbol_dependencies": [
         {
-          "symbol": "ModelConfig",
+          "symbol": "PortfolioSnapshot",
           "definitions": [
             {
-              "file": "src/ai_trading/config.py",
-              "line": 40,
+              "file": "src/ai_trading/risk.py",
+              "line": 11,
               "kind": "class",
               "language": "python"
             }
@@ -953,11 +439,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "PaperBroker",
+          "symbol": "Prediction",
           "definitions": [
             {
-              "file": "src/ai_trading/broker.py",
-              "line": 24,
+              "file": "src/ai_trading/model.py",
+              "line": 15,
               "kind": "class",
               "language": "python"
             }
@@ -970,18 +456,6 @@
             {
               "file": "src/ai_trading/config.py",
               "line": 6,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "RiskDecision",
-          "definitions": [
-            {
-              "file": "src/ai_trading/risk.py",
-              "line": 18,
               "kind": "class",
               "language": "python"
             }
@@ -993,56 +467,8 @@
           "definitions": [
             {
               "file": "src/ai_trading/risk.py",
-              "line": 28,
+              "line": 29,
               "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "WalkForwardBacktester",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 65,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "WalkForwardConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 30,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "compare_rebalance_thresholds",
-          "definitions": [
-            {
-              "file": "src/ai_trading/turnover_study.py",
-              "line": 36,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "equity",
-          "definitions": [
-            {
-              "file": "src/ai_trading/broker.py",
-              "line": 20,
-              "kind": "function",
               "language": "python"
             }
           ],
@@ -1053,149 +479,29 @@
           "definitions": [
             {
               "file": "src/ai_trading/risk.py",
-              "line": 32,
+              "line": 33,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        },
-        {
-          "symbol": "fake_backtest",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 149,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 182,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 212,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 241,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 283,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "rebalance",
-          "definitions": [
-            {
-              "file": "src/ai_trading/broker.py",
-              "line": 44,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 80,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_turnover_study_marks_profitable_untouched_holdout_for_review",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 175,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_turnover_study_rejects_small_out_of_sample_history",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 207,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_turnover_study_selects_on_validation_without_holdout_cherry_picking",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 136,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "tracked_rebalance",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 119,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
         }
       ],
-      "dependency_count": 18
+      "dependency_count": 5
     },
-    "tracked_rebalance": {
+    "test_low_confidence_rejection_does_not_force_liquidation": {
       "source": {
-        "file": "tests/test_backtest.py",
-        "start": 119,
-        "end": 239
+        "file": "tests/test_risk.py",
+        "start": 49,
+        "end": 64
       },
       "symbol_dependencies": [
         {
-          "symbol": "ModelConfig",
+          "symbol": "PortfolioSnapshot",
           "definitions": [
             {
-              "file": "src/ai_trading/config.py",
-              "line": 40,
+              "file": "src/ai_trading/risk.py",
+              "line": 11,
               "kind": "class",
               "language": "python"
             }
@@ -1203,11 +509,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "PaperBroker",
+          "symbol": "Prediction",
           "definitions": [
             {
-              "file": "src/ai_trading/broker.py",
-              "line": 24,
+              "file": "src/ai_trading/model.py",
+              "line": 15,
               "kind": "class",
               "language": "python"
             }
@@ -1227,11 +533,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "WalkForwardBacktester",
+          "symbol": "RiskEngine",
           "definitions": [
             {
-              "file": "src/ai_trading/backtest.py",
-              "line": 65,
+              "file": "src/ai_trading/risk.py",
+              "line": 29,
               "kind": "class",
               "language": "python"
             }
@@ -1239,177 +545,33 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "WalkForwardConfig",
+          "symbol": "evaluate",
           "definitions": [
             {
-              "file": "src/ai_trading/backtest.py",
-              "line": 30,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "compare_rebalance_thresholds",
-          "definitions": [
-            {
-              "file": "src/ai_trading/turnover_study.py",
-              "line": 36,
+              "file": "src/ai_trading/risk.py",
+              "line": 33,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        },
-        {
-          "symbol": "equity",
-          "definitions": [
-            {
-              "file": "src/ai_trading/broker.py",
-              "line": 20,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fake_backtest",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 149,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 182,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 212,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 241,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 283,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "rebalance",
-          "definitions": [
-            {
-              "file": "src/ai_trading/broker.py",
-              "line": 44,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 80,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_turnover_study_marks_profitable_untouched_holdout_for_review",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 175,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_turnover_study_rejects_small_out_of_sample_history",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 207,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_turnover_study_reports_zero_cost_counterfactual_without_promoting",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 232,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_turnover_study_selects_on_validation_without_holdout_cherry_picking",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 136,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
         }
       ],
-      "dependency_count": 15
+      "dependency_count": 5
     },
-    "test_turnover_study_selects_on_validation_without_holdout_cherry_picking": {
+    "test_invalid_model_confidence_cannot_authorize_exposure": {
       "source": {
-        "file": "tests/test_backtest.py",
-        "start": 136,
-        "end": 172
+        "file": "tests/test_risk.py",
+        "start": 70,
+        "end": 78
       },
       "symbol_dependencies": [
         {
-          "symbol": "WalkForwardBacktester",
+          "symbol": "PortfolioSnapshot",
           "definitions": [
             {
-              "file": "src/ai_trading/backtest.py",
-              "line": 65,
+              "file": "src/ai_trading/risk.py",
+              "line": 11,
               "kind": "class",
               "language": "python"
             }
@@ -1417,523 +579,17 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "compare_rebalance_thresholds",
+          "symbol": "Prediction",
           "definitions": [
             {
-              "file": "src/ai_trading/turnover_study.py",
-              "line": 36,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "equity",
-          "definitions": [
-            {
-              "file": "src/ai_trading/broker.py",
-              "line": 20,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fake_backtest",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 149,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 182,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 212,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 241,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 283,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 80,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 6
-    },
-    "fake_backtest": {
-      "source": {
-        "file": "tests/test_backtest.py",
-        "start": 149,
-        "end": 269
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "WalkForwardBacktester",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 65,
+              "file": "src/ai_trading/model.py",
+              "line": 15,
               "kind": "class",
               "language": "python"
             }
           ],
           "relation": "imported_module"
         },
-        {
-          "symbol": "compare_rebalance_thresholds",
-          "definitions": [
-            {
-              "file": "src/ai_trading/turnover_study.py",
-              "line": 36,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "equity",
-          "definitions": [
-            {
-              "file": "src/ai_trading/broker.py",
-              "line": 20,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 80,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_turnover_study_marks_profitable_untouched_holdout_for_review",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 175,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_turnover_study_rejects_small_out_of_sample_history",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 207,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_turnover_study_reports_zero_cost_counterfactual_without_promoting",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 232,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 8
-    },
-    "test_turnover_study_marks_profitable_untouched_holdout_for_review": {
-      "source": {
-        "file": "tests/test_backtest.py",
-        "start": 175,
-        "end": 204
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "WalkForwardBacktester",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 65,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "compare_rebalance_thresholds",
-          "definitions": [
-            {
-              "file": "src/ai_trading/turnover_study.py",
-              "line": 36,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "equity",
-          "definitions": [
-            {
-              "file": "src/ai_trading/broker.py",
-              "line": 20,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fake_backtest",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 149,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 182,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 212,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 241,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 283,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 80,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 6
-    },
-    "test_turnover_study_rejects_small_out_of_sample_history": {
-      "source": {
-        "file": "tests/test_backtest.py",
-        "start": 207,
-        "end": 229
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "WalkForwardBacktester",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 65,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "compare_rebalance_thresholds",
-          "definitions": [
-            {
-              "file": "src/ai_trading/turnover_study.py",
-              "line": 36,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "equity",
-          "definitions": [
-            {
-              "file": "src/ai_trading/broker.py",
-              "line": 20,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fake_backtest",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 149,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 182,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 212,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 241,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 283,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 80,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 6
-    },
-    "test_turnover_study_reports_zero_cost_counterfactual_without_promoting": {
-      "source": {
-        "file": "tests/test_backtest.py",
-        "start": 232,
-        "end": 273
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "WalkForwardBacktester",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 65,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "compare_rebalance_thresholds",
-          "definitions": [
-            {
-              "file": "src/ai_trading/turnover_study.py",
-              "line": 36,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "equity",
-          "definitions": [
-            {
-              "file": "src/ai_trading/broker.py",
-              "line": 20,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fake_backtest",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 149,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 182,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 212,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 241,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 283,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 80,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 6
-    },
-    "test_turnover_study_does_not_repeat_frictionless_backtest": {
-      "source": {
-        "file": "tests/test_backtest.py",
-        "start": 276,
-        "end": 304
-      },
-      "symbol_dependencies": [
         {
           "symbol": "RiskConfig",
           "definitions": [
@@ -1947,11 +603,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "WalkForwardBacktester",
+          "symbol": "RiskEngine",
           "definitions": [
             {
-              "file": "src/ai_trading/backtest.py",
-              "line": 65,
+              "file": "src/ai_trading/risk.py",
+              "line": 29,
               "kind": "class",
               "language": "python"
             }
@@ -1959,91 +615,229 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "compare_rebalance_thresholds",
+          "symbol": "evaluate",
           "definitions": [
             {
-              "file": "src/ai_trading/turnover_study.py",
-              "line": 36,
+              "file": "src/ai_trading/risk.py",
+              "line": 33,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        },
-        {
-          "symbol": "equity",
-          "definitions": [
-            {
-              "file": "src/ai_trading/broker.py",
-              "line": 20,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fake_backtest",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 149,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 182,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 212,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 241,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_backtest.py",
-              "line": 283,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run",
-          "definitions": [
-            {
-              "file": "src/ai_trading/backtest.py",
-              "line": 80,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_backtest.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
         }
       ],
-      "dependency_count": 7
+      "dependency_count": 5
+    },
+    "test_invalid_model_side_is_rejected_before_broker_execution": {
+      "source": {
+        "file": "tests/test_risk.py",
+        "start": 81,
+        "end": 89
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PortfolioSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk.py",
+              "line": 11,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Prediction",
+          "definitions": [
+            {
+              "file": "src/ai_trading/model.py",
+              "line": 15,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 6,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiskEngine",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk.py",
+              "line": 29,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk.py",
+              "line": 33,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "test_invalid_portfolio_state_blocks_new_and_forced_paper_orders": {
+      "source": {
+        "file": "tests/test_risk.py",
+        "start": 103,
+        "end": 120
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PortfolioSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk.py",
+              "line": 11,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Prediction",
+          "definitions": [
+            {
+              "file": "src/ai_trading/model.py",
+              "line": 15,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 6,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiskEngine",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk.py",
+              "line": 29,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk.py",
+              "line": 33,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "test_finite_non_positive_equity_keeps_hard_stop_exit": {
+      "source": {
+        "file": "tests/test_risk.py",
+        "start": 126,
+        "end": 135
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PortfolioSnapshot",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk.py",
+              "line": 11,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Prediction",
+          "definitions": [
+            {
+              "file": "src/ai_trading/model.py",
+              "line": 15,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiskConfig",
+          "definitions": [
+            {
+              "file": "src/ai_trading/config.py",
+              "line": 6,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RiskEngine",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk.py",
+              "line": 29,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk.py",
+              "line": 33,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 5
     }
   }
 }

@@ -1,18 +1,18 @@
 # CI status
 
-Summary: 5 success / 1 failure / 2 active
+Summary: 2 success / 2 failure / 2 active
 
-- CodeQL: in_progress / pending (fef80d5e)
-- CI: in_progress / pending (fef80d5e)
-- Hosted Dashboard Probe: completed / failure (8a3b1470)
-- Paper Cycle: completed / success (8a3b1470)
-- Hosted Dashboard Probe: completed / success (8a3b1470)
-- Paper Cycle: completed / success (8a3b1470)
-- Paper Cycle: completed / success (8a3b1470)
-- Hosted Dashboard Probe: completed / success (8a3b1470)
+- CodeQL: queued / pending (97d977dd)
+- CI: in_progress / pending (97d977dd)
+- CI: completed / success (bb6b6897)
+- CodeQL: completed / success (bb6b6897)
+- CodeQL: completed / cancelled (070e36cd)
+- CI: completed / failure (070e36cd)
+- CodeQL: completed / cancelled (d6603fe4)
+- CI: completed / failure (d6603fe4)
 
 ## Latest failed run structure
-- Job: probe
-  - Failed step: Verify liveness, durable readiness and market cards
+- Job: test
+  - Failed step: Ruff
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

@@ -4,15 +4,15 @@
     "expand_to": 12,
     "max_files": 6,
     "requested_max_files": 12,
-    "score_margin": 0,
+    "score_margin": 3,
     "tier": "bounded",
-    "top_score": 17
+    "top_score": 26
   },
   "cache": {
-    "fingerprint": "509f3dfee9f9faffc626eaa60dd3fa3515d3ff5fba186f1862fb7f26364d6b06",
+    "fingerprint": "81f6f3c4ccd3eda8a264979287a891f5c8fffd75a4131203ceffb756cbaf6e22",
     "hit": false
   },
-  "candidate_count": 16,
+  "candidate_count": 42,
   "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
   "files": [
     {
@@ -20,11 +20,35 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/cli.py",
+      "path": "tests/test_risk.py",
       "reasons": [
+        "impact",
+        "recently-changed",
         "search-index"
       ],
-      "score": 17,
+      "score": 26,
+      "symbols": [
+        "test_daily_loss_stop_marks_existing_position_for_exit",
+        "test_drawdown_limit_is_fail_closed",
+        "test_finite_non_positive_equity_keeps_hard_stop_exit",
+        "test_invalid_model_confidence_cannot_authorize_exposure",
+        "test_invalid_model_side_is_rejected_before_broker_execution",
+        "test_invalid_portfolio_state_blocks_new_and_forced_paper_orders",
+        "test_low_confidence_is_rejected",
+        "test_low_confidence_rejection_does_not_force_liquidation"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "engine"
+      ],
+      "path": "src/ai_trading/cli.py",
+      "reasons": [
+        "impact",
+        "search-index"
+      ],
+      "score": 23,
       "symbols": [
         "compare_models",
         "create_readiness_release_command",
@@ -46,6 +70,32 @@
         "metrics",
         "multiasset_backtest",
         "multiasset_evolve"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "engine"
+      ],
+      "path": "src/ai_trading/runtime.py",
+      "reasons": [
+        "impact",
+        "search-index"
+      ],
+      "score": 23,
+      "symbols": [
+        "PaperAutonomousRuntime",
+        "PreparedRuntimeMarket",
+        "RuntimeStepResult",
+        "_broker_from_state",
+        "_eligible_execution_indices",
+        "_prepare_market_features",
+        "_state_from_broker",
+        "_step_prepared_locked",
+        "prepare_market",
+        "step",
+        "step_at",
+        "step_prepared"
       ]
     },
     {
@@ -104,51 +154,11 @@
       "matched_terms": [
         "engine"
       ],
-      "path": "src/ai_trading/runtime.py",
-      "reasons": [
-        "search-index"
-      ],
-      "score": 17,
-      "symbols": [
-        "PaperAutonomousRuntime",
-        "PreparedRuntimeMarket",
-        "RuntimeStepResult",
-        "_broker_from_state",
-        "_eligible_execution_indices",
-        "_prepare_market_features",
-        "_state_from_broker",
-        "_step_prepared_locked",
-        "prepare_market",
-        "step",
-        "step_at",
-        "step_prepared"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "engine"
-      ],
-      "path": "tests/test_risk.py",
-      "reasons": [
-        "search-index"
-      ],
-      "score": 17,
-      "symbols": [
-        "test_daily_loss_stop_marks_existing_position_for_exit",
-        "test_drawdown_limit_is_fail_closed",
-        "test_low_confidence_is_rejected",
-        "test_low_confidence_rejection_does_not_force_liquidation"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "engine"
-      ],
       "path": "src/ai_trading/engine.py",
-      "reasons": [],
-      "score": 10,
+      "reasons": [
+        "impact"
+      ],
+      "score": 16,
       "symbols": [
         "RunResult",
         "TradingEngine",

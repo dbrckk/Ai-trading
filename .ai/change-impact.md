@@ -1,22 +1,22 @@
 # Change impact
 
-Base: 8a3b1470e40e3612d42d032acd60e3c1d36c1475
-Head: fef80d5ea7f4ab1e3a4a8261ad6e4d44e96844a1
+Base: 1b4ebee50e2e48a151f0dae26c51f0820ac25d13
+Head: 97d977dd71bee0a6e20e47bba828f230b86112c1
 
 ## Changed files
-- M .github/workflows/turnover-research.yml
 - M README.md
-- M src/ai_trading/turnover_study.py
-- M tests/test_backtest.py
+- M src/ai_trading/config.py
+- M src/ai_trading/risk.py
+- M tests/test_config_validation.py
+- M tests/test_risk.py
 
 ## Affected areas
-- .github
 - (root)
 - src
 - tests
 
 ## Related test candidates
-- No direct filename-based test match detected.
+- tests/test_risk.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

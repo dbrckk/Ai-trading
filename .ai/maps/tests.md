@@ -3961,6 +3961,19 @@ snap = PortfolioSnapshot(
 def test_low_confidence_rejection_does_not_force_liquidation() -> None
 ⋮----
 engine = RiskEngine(RiskConfig(min_confidence=0.70))
+⋮----
+def test_invalid_model_confidence_cannot_authorize_exposure(confidence: float) -> None
+⋮----
+engine = RiskEngine(RiskConfig(min_confidence=0.0))
+decision = engine.evaluate(
+⋮----
+def test_invalid_model_side_is_rejected_before_broker_execution() -> None
+⋮----
+engine = RiskEngine(RiskConfig())
+⋮----
+values = {
+⋮----
+decision = RiskEngine(RiskConfig()).evaluate(
 ```
 
 ## File: test_robustness.py

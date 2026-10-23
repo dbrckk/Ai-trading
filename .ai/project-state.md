@@ -113,30 +113,31 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-23T06:24:29Z
+Generated: 2026-10-23T06:56:50Z
 
 ### Git
 - Branch: `main`
-- Head: `fef80d5ea7f4`
-- Commit date: 2026-10-23T02:24:17-04:00
-- Commit: feat(research): distinguish modeled cost drag from weak trading edge
+- Head: `97d977dd71be`
+- Commit date: 2026-10-23T02:56:39-04:00
+- Commit: fix(risk): reject non-finite paper trading inputs before order approval
 - Tracked files: 515
 
 ### Recently changed files
-- `.github/workflows/turnover-research.yml`
 - `README.md`
+- `src/ai_trading/config.py`
+- `src/ai_trading/risk.py`
+- `tests/test_config_validation.py`
+- `tests/test_risk.py`
+- `.github/workflows/turnover-research.yml`
 - `src/ai_trading/turnover_study.py`
 - `tests/test_backtest.py`
 - `src/ai_trading/deployment_probe.py`
 - `tests/test_dashboard_health.py`
 - `src/ai_trading/command_app.py`
 - `src/ai_trading/broker.py`
-- `src/ai_trading/config.py`
 - `src/ai_trading/execution_costs.py`
 - `tests/test_broker.py`
 - `tests/test_execution_costs.py`
-- `src/ai_trading/regime_gate.py`
-- `tests/test_regime_gate.py`
 
 ### Project signals
 - `pyproject.toml`

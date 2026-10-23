@@ -7171,6 +7171,12 @@ def __init__(self, config: RiskConfig) -> None
 ⋮----
 def evaluate(self, prediction: Prediction, portfolio: PortfolioSnapshot) -> RiskDecision
 ⋮----
+# Invalid portfolio evidence must never authorize new exposure or a
+# forced exit at an untrustworthy price/state.
+⋮----
+# Finite equity exhaustion is a hard exit even when a risk baseline
+# is zero; do not leave exposure open just because a day starts at 0.
+⋮----
 drawdown = 1.0 - portfolio.equity / max(portfolio.peak_equity, portfolio.equity)
 ⋮----
 daily_loss = 1.0 - portfolio.equity / max(portfolio.day_start_equity, portfolio.equity)

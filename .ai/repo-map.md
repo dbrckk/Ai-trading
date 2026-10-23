@@ -8111,6 +8111,12 @@ def __init__(self, config: RiskConfig) -> None
 ⋮----
 def evaluate(self, prediction: Prediction, portfolio: PortfolioSnapshot) -> RiskDecision
 ⋮----
+# Invalid portfolio evidence must never authorize new exposure or a
+# forced exit at an untrustworthy price/state.
+⋮----
+# Finite equity exhaustion is a hard exit even when a risk baseline
+# is zero; do not leave exposure open just because a day starts at 0.
+⋮----
 drawdown = 1.0 - portfolio.equity / max(portfolio.peak_equity, portfolio.equity)
 ⋮----
 daily_loss = 1.0 - portfolio.equity / max(portfolio.day_start_equity, portfolio.equity)
@@ -13317,6 +13323,19 @@ snap = PortfolioSnapshot(
 def test_low_confidence_rejection_does_not_force_liquidation() -> None
 ⋮----
 engine = RiskEngine(RiskConfig(min_confidence=0.70))
+⋮----
+def test_invalid_model_confidence_cannot_authorize_exposure(confidence: float) -> None
+⋮----
+engine = RiskEngine(RiskConfig(min_confidence=0.0))
+decision = engine.evaluate(
+⋮----
+def test_invalid_model_side_is_rejected_before_broker_execution() -> None
+⋮----
+engine = RiskEngine(RiskConfig())
+⋮----
+values = {
+⋮----
+decision = RiskEngine(RiskConfig()).evaluate(
 ````
 
 ## File: tests/test_robustness.py
@@ -14343,6 +14362,15 @@ Windows PowerShell:
 ```powershell
 .venv\Scripts\Activate.ps1
 ```
+
+## Numeric fail-closed controls
+
+Paper trading and research reject non-finite capital, cost/slippage and label
+threshold configuration. Before any paper risk approval, portfolio equity,
+risk baselines, held notional, model direction and confidence must be valid.
+Corrupt runtime inputs block new exposure without issuing an untrusted forced
+exit. Valid hard loss stops continue to liquidate existing paper exposure.
+These protections do not activate a live broker or improve proven profitability.
 
 ## Validation path
 
