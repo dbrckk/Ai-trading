@@ -6,6 +6,9 @@ Status: active
 
 ## Working
 
+- **2026-10-23 core risk input safety:** Hosted Dashboard Probe run 39902075368 failed with all Gold/DAX/BTC in STARTING on first attempt; rerun passed web, readiness and three RUNNING motors at 06:24:56 UTC (exact Render deploy SHA not checked). PR #199 merged with successful CI/CodeQL; read-only fee/no-fee sensitivity is research only. New branch rejects non-finite RiskConfig cash/costs, ModelConfig return threshold and invalid paper portfolio/model forecasts before authorizing exposure; finite hard-loss stops still flatten. No change to default allocation or live-trading posture.
+
+
 - **2026-10-22 fee attribution research:** strict hosted probe attempt 1 failed market engine health while web/storage were ready; attempt 2 at 14:51Z passed. PR #198 merged with CI/CodeQL green and safe per-market engine failure labels. Existing Gold/DAX/BTC 5m turnover study found net-negative proxy baseline across all markets and no robust positive holdout. New branch adds an offline zero-cost counterfactual baseline to distinguish cost sensitivity from weak zero-cost strategy returns; it does not change any paper trading behavior or auto-enable thresholds.
 
 - **2026-10-22 hosted incident:** probe #39789764311 passed /livez and /readyz but failed strict Gold/DAX/BTC engine health; requested one diagnostic rerun to distinguish transient from persistent issue. This branch adds sanitized per-symbol status to future strict probe failure logs; it does not weaken health checks, touch scheduler/order execution, or change paper risk. The turnover study #197 found no profitable alternative and the default remains unchanged.

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import isfinite
 
 from .config import RiskConfig
 from .model import Prediction
@@ -30,8 +31,26 @@ class RiskEngine:
         self.config = config
 
     def evaluate(self, prediction: Prediction, portfolio: PortfolioSnapshot) -> RiskDecision:
+        # Invalid portfolio evidence must never authorize new exposure or a
+        # forced exit at an untrustworthy price/state.
+        if not all(
+            isfinite(value)
+            for value in (
+                portfolio.equity,
+                portfolio.peak_equity,
+                portfolio.day_start_equity,
+                portfolio.current_position_value,
+            )
+        ):
+            return RiskDecision(False, 0, 0.0, "invalid portfolio state")
+
+        # Finite equity exhaustion is a hard exit even when a risk baseline
+        # is zero; do not leave exposure open just because a day starts at 0.
         if portfolio.equity <= 0:
             return RiskDecision(False, 0, 0.0, "non-positive equity", liquidate_existing=True)
+
+        if portfolio.peak_equity <= 0 or portfolio.day_start_equity <= 0:
+            return RiskDecision(False, 0, 0.0, "invalid portfolio state")
 
         drawdown = 1.0 - portfolio.equity / max(portfolio.peak_equity, portfolio.equity)
         if drawdown >= self.config.max_drawdown_fraction:
@@ -40,6 +59,13 @@ class RiskEngine:
         daily_loss = 1.0 - portfolio.equity / max(portfolio.day_start_equity, portfolio.equity)
         if daily_loss >= self.config.max_daily_loss_fraction:
             return RiskDecision(False, 0, 0.0, "daily loss limit reached", liquidate_existing=True)
+
+        if (
+            prediction.side not in (-1, 0, 1)
+            or not isfinite(prediction.confidence)
+            or not 0.0 <= prediction.confidence <= 1.0
+        ):
+            return RiskDecision(False, 0, 0.0, "invalid model prediction")
 
         if prediction.side == 0:
             return RiskDecision(True, 0, 0.0, "model is flat")

@@ -2,9 +2,9 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "feat/turnover-execution-cost-attribution",
+  "active_branch": "fix/core-risk-finite-inputs",
   "pull_request": null,
-  "focus": "PR #198 merged with green CI and CodeQL: safe per-market diagnostics for hosted probe failure. A strict hosted probe that initially failed its 3-market health gate (39789764311) passed upon rerun (attempt 2) at 2026-10-22T14:51Z; still monitor intermittent engine health. PR #197 turnover study found all three markets net-negative and no justified deadband. This branch adds zero-cost vs fee-inclusive chronological proxy counterfactual to distinguish friction sensitivity from weak pre-cost performance, research only.",
+  "focus": "After PR #199 merged, hosted strict probe rerun 39902075368 attempt 2 passed /livez, /readyz and all three Gold/DAX/BTC RUNNING; probe did not verify deployed SHA. This branch hardens RiskConfig/ModelConfig and paper RiskEngine against NaN/Infinity/invalid portfolio inputs or predictions while retaining valid hard-stop exits. No live trading or risk parameter changes.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -158,9 +158,8 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Validate cost-attribution PR CI/CodeQL before merge.",
-    "Re-run offline turnover study when data and compute budget allow; inspect cost scenario rather than assume profitability.",
-    "Monitor strict hosted dashboard probe for recurring market engine status problems; confirm deployed SHA separately.",
-    "Keep River-v1 paper authority, River-v2 research disabled, live broker OFF."
+    "Get core finite-input safeguard PR green CI and CodeQL and merge.",
+    "Compare Gold/DAX/BTC fee-inclusive and zero-cost counterfactual evidence from latest turnover workflow; keep all trading settings unchanged unless robust positive OOS edge.",
+    "Continue reviewing hosted availability and cumulative paper PnL; avoid enabling live trading."
   ]
 }

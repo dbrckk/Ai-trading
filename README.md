@@ -79,6 +79,15 @@ Windows PowerShell:
 .venv\Scripts\Activate.ps1
 ```
 
+## Numeric fail-closed controls
+
+Paper trading and research reject non-finite capital, cost/slippage and label
+threshold configuration. Before any paper risk approval, portfolio equity,
+risk baselines, held notional, model direction and confidence must be valid.
+Corrupt runtime inputs block new exposure without issuing an untrusted forced
+exit. Valid hard loss stops continue to liquidate existing paper exposure.
+These protections do not activate a live broker or improve proven profitability.
+
 ## Validation path
 
 Run the local validation stack before using real market data:
