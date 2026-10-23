@@ -4,8 +4,8 @@ import argparse
 import json
 from collections.abc import Iterable
 from dataclasses import asdict, dataclass
-from pathlib import Path
 from math import isfinite, prod
+from pathlib import Path
 from statistics import fmean, pstdev
 
 import pandas as pd
