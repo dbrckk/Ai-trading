@@ -17,6 +17,7 @@ from ai_trading.mtf_parameter_benchmark import (
     evaluate_market_config,
     market_selections,
     run_parameter_benchmark,
+    run_chronological_holdout,
 )
 
 
@@ -321,3 +322,42 @@ def test_cost_aware_mtf_gate_rejects_directional_wins_erased_by_fees(monkeypatch
     )
     assert market_selections((result,))["TEST"] is not None
     assert market_selections((replace(result, markets=(with_costs,)),))["TEST"] is None
+
+    # Same frozen settings, but selection only sees the pre-holdout prefix.
+    # The final chronological slice is evaluated *after* validation picks
+    # a candidate, and its results cannot change the chosen hyperparameters.
+    study = run_chronological_holdout(
+        {"TEST": market},
+        (config,),
+        holdout_bars=160,
+        validation_folds=2,
+        validation_test_window_bars=96,
+        min_train_rows=500,
+        transaction_cost_bps=0.0,
+        slippage_bps=0.0,
+    )
+    cutoff = market.index[-160]
+    assert study["cutoffs"]["TEST"]["holdout_start"] == cutoff.isoformat()
+    assert study["cutoffs"]["TEST"]["validation_end"] == market.index[-161].isoformat()
+    assert study["validation"]["market_selections"]["TEST"]["config_name"] == config.name
+    assert study["holdout"]["TEST"]["status"] == "passed_for_manual_review"
+    assert study["holdout"]["TEST"]["result"]["economic_trades"] >= 20
+    assert study["method"]["previously_unseen_across_research_runs"] is False
+    assert study["method"]["auto_promote"] is False
+
+    # A losing validation cannot be revived by peeking at holdout outcomes.
+    blocked = run_chronological_holdout(
+        {"TEST": market},
+        (config,),
+        holdout_bars=160,
+        validation_folds=2,
+        validation_test_window_bars=96,
+        min_train_rows=500,
+        transaction_cost_bps=100.0,
+        slippage_bps=50.0,
+    )
+    assert blocked["validation"]["market_selections"]["TEST"] is None
+    assert blocked["holdout"]["TEST"]["status"] == (
+        "not_evaluated_no_validation_candidate"
+    )
+    assert blocked["holdout"]["TEST"]["result"] is None
