@@ -48,7 +48,7 @@ def prospective_snapshot(
     if symbol not in _SYMBOL_FILES:
         raise ValueError("unsupported prospective market")
     if not isinstance(frame.index, pd.DatetimeIndex):
-        raise ValueError("prospective bars require a datetime index")
+        raise TypeError("prospective bars require a datetime index")
     if frame.index.hasnans or frame.index.has_duplicates or not frame.index.is_monotonic_increasing:
         raise ValueError("prospective bar timestamps must be valid and ordered")
     if frame.index.tz is None:
