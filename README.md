@@ -533,3 +533,16 @@ never silently replaced by fabricated numbers. A manual GitHub Action
 **Turnover Research** can run this comparison and retain a JSON
 diagnostic artifact. No runtime, Cloudflare scheduler, live broker or
 model-promotion setting is changed.
+
+## Promotion and soak evidence validity
+
+Research model promotion now rejects non-finite champion/challenger metrics,
+invalid drawdowns, and challenger strategies without a positive **absolute**
+modeled return (relative improvement over a losing model is insufficient).
+Multi-period promotion fails closed if *any* period contains invalid metrics,
+rather than hiding them inside a winning-period ratio. Soak qualification
+similarly requires coherent success/failure counts, finite and valid drawdown,
+duration and recorded equity; invalid numerical evidence cannot qualify a
+strategy. These checks assess research evidence only: they do not promote
+models automatically or enable live order routing. Positive modeled return
+alone is not proof of a transferable trading edge.
