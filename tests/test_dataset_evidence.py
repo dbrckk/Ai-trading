@@ -161,3 +161,27 @@ def test_pre_registered_capture_skips_provider_until_future_start(
     }
     assert (tmp_path / "manifest.json").exists()
     assert list(tmp_path.glob("gold.json")) == []
+
+
+def test_prospective_registration_changes_are_rejected_before_download(
+    tmp_path, monkeypatch
+) -> None:
+    original = Path("research/mtf-prospective-2026-10-26-v1.json")
+    altered = tmp_path / "altered-registration.json"
+    altered.write_text(
+        original.read_text().replace(
+            '"min_confidence": 0.56', '"min_confidence": 0.55'
+        )
+    )
+
+    def forbid_network(*args, **kwargs):
+        raise AssertionError("not allowed to query provider on manifest drift")
+
+    monkeypatch.setattr(
+        "ai_trading.prospective_capture.load_history", forbid_network
+    )
+    with pytest.raises(ValueError, match="registration hash mismatch"):
+        collect_prospective_bars(
+            altered, tmp_path / "captures",
+            acquired_at_utc=datetime(2026, 10, 25, tzinfo=UTC),
+        )
