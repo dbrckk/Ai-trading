@@ -2,7 +2,7 @@ name: MTF Net Cost Evidence
 
 on:
   push:
-    branches: ["fix/mtf-bounded-real-cost-evidence"]
+    branches: ["fix/mtf-bounded-real-cost-evidence", "fix/mtf-chronological-holdout"]
     paths:
       - "src/ai_trading/mtf_parameter_benchmark.py"
       - "tests/test_mtf_parameter_benchmark.py"
@@ -34,8 +34,8 @@ jobs:
           import json
           from ai_trading.data import load_history
           from ai_trading.mtf_parameter_benchmark import (
-              MTFBenchmarkConfig, benchmark_payload, run_parameter_benchmark,
-              write_benchmark_report,
+              MTFBenchmarkConfig, benchmark_payload, run_chronological_holdout,
+              run_parameter_benchmark, write_benchmark_report,
           )
 
           # Previously investigated 45/90-minute shadow variants, not a
@@ -49,6 +49,25 @@ jobs:
               symbol: load_history(symbol, period="1mo", interval="5m")
               for symbol in ("GC=F", "^GDAXI", "BTC-USD")
           }
+          # Freeze choices on earlier bars, then inspect the final 480
+          # chronological bars only for configurations that qualified.
+          # This is independent within this run, but historical periods
+          # may have appeared in prior research; it is NOT a never-seen holdout.
+          study = run_chronological_holdout(
+              markets, grid, holdout_bars=480, validation_folds=2,
+              validation_test_window_bars=240, min_train_rows=500,
+              random_state=42, transaction_cost_bps=2.0, slippage_bps=1.0,
+          )
+          from pathlib import Path
+          target = Path("artifacts/mtf-net-cost/chronological-holdout.json")
+          target.parent.mkdir(parents=True, exist_ok=True)
+          target.write_text(json.dumps(study, indent=2, sort_keys=True) + "\n")
+          for symbol, outcome in study["holdout"].items():
+              print(
+                  f"MTF holdout {symbol}: {outcome['status']}; "
+                  f"validation_selected="
+                  f"{study['validation']['market_selections'][symbol]}"
+              )
           results = run_parameter_benchmark(
               markets, configs=grid, folds=2, test_window_bars=240,
               min_train_rows=500, random_state=42,
@@ -70,7 +89,10 @@ jobs:
                       f"directional_pass={item.directional_gate_passed}, "
                       f"economic_pass={item.economic_gate_passed}"
                   )
-          print("Paper research only; no untouched holdout or portfolio PnL.")
+          print(
+              "Paper research only; held out within this run, NOT new "
+              "across earlier research, and NOT portfolio PnL."
+          )
           PY
       - name: Preserve immutable reproducible research report
         if: always()
