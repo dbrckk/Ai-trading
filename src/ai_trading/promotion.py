@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import isfinite
 
 from .performance import PerformanceMetrics
 
@@ -11,6 +12,22 @@ class PromotionPolicy:
     min_return_improvement: float = 0.00
     max_drawdown_increase: float = 0.02
     min_period_win_rate: float = 0.60
+
+    def __post_init__(self) -> None:
+        if not all(
+            isfinite(value)
+            for value in (
+                self.min_sharpe_improvement,
+                self.min_return_improvement,
+                self.max_drawdown_increase,
+                self.min_period_win_rate,
+            )
+        ):
+            raise ValueError("promotion policy thresholds must be finite")
+        if self.max_drawdown_increase < 0:
+            raise ValueError("max_drawdown_increase must be non-negative")
+        if not 0.0 < self.min_period_win_rate <= 1.0:
+            raise ValueError("min_period_win_rate must be in (0, 1]")
 
 
 @dataclass(frozen=True)
@@ -25,6 +42,18 @@ def evaluate_challenger(
     policy: PromotionPolicy | None = None,
 ) -> PromotionDecision:
     policy = policy or PromotionPolicy()
+
+    # A NaN comparison evaluates to False and previously allowed promotion.
+    # Require complete finite evidence from both backtests, not only valid deltas.
+    for metrics in (champion, challenger):
+        if not all(isfinite(value) for value in metrics.as_dict().values()):
+            return PromotionDecision(False, "non-finite promotion metrics")
+        if not 0.0 <= metrics.max_drawdown <= 1.0:
+            return PromotionDecision(False, "invalid promotion drawdown")
+
+    # Relative improvement versus a losing incumbent is not a profitable edge.
+    if challenger.total_return <= 0.0:
+        return PromotionDecision(False, "challenger lacks positive net return")
 
     sharpe_gain = challenger.sharpe - champion.sharpe
     return_gain = challenger.total_return - champion.total_return
