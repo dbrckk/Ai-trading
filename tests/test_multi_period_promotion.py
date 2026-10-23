@@ -1,3 +1,6 @@
+import math
+from dataclasses import replace
+
 from ai_trading.performance import PerformanceMetrics
 from ai_trading.promotion import PromotionPolicy, evaluate_multi_period_challenger
 
@@ -29,3 +32,11 @@ def test_multi_period_promotion_requires_consistency() -> None:
         PromotionPolicy(min_period_win_rate=0.60),
     )
     assert decision.promote
+
+
+def test_multi_period_promotion_rejects_invalid_strong_period_evidence() -> None:
+    champion = [metric(0.10, 0.8, 0.08) for _ in range(5)]
+    challenger = [metric(0.15, 1.1, 0.08) for _ in range(5)]
+    challenger[0] = replace(challenger[0], sharpe=math.nan)
+    decision = evaluate_multi_period_challenger(champion, challenger)
+    assert not decision.promote
