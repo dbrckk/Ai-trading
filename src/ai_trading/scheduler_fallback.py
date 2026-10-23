@@ -20,6 +20,42 @@ class FallbackFailure(RuntimeError):
 _CLOUDFLARE_HEALTHY_WINDOW_SECONDS = 32 * 60
 
 
+def _safe_cycle_http_failure(exc: HTTPError) -> str:
+    """Classify known scheduler responses without echoing untrusted provider text.
+
+    A 503 can indicate partial execution: retrying the POST automatically
+    could race an existing paper-cycle writer. Report the cause, then fail.
+    """
+    detail = ""
+    try:
+        raw = exc.read(4097)
+        if len(raw) <= 4096:
+            body = json.loads(raw)
+            if isinstance(body, dict):
+                error = body.get("error")
+                if error == "storage unavailable":
+                    detail = "storage_unavailable"
+                elif error == "scheduler unavailable":
+                    detail = "scheduler_unavailable"
+                elif error == "worker failure":
+                    detail = "worker_failure"
+                elif body.get("partial_failure") is True:
+                    failed = body.get("failed_markets")
+                    if (
+                        isinstance(failed, int)
+                        and not isinstance(failed, bool)
+                        and 1 <= failed <= 3
+                    ):
+                        detail = f"partial_failure_{failed}_market(s)"
+                    else:
+                        detail = "partial_failure"
+    except (ValueError, UnicodeError, OSError):
+        pass
+
+    message = f"paper cycle endpoint returned HTTP {exc.code}"
+    return f"{message} ({detail})" if detail else message
+
+
 def _recent_cloudflare(payload: object) -> bool:
     if not isinstance(payload, dict):
         return False
@@ -86,7 +122,7 @@ def run_fallback(
                 raise FallbackFailure(f"paper cycle endpoint returned HTTP {response.status}")
             body = response.read(16_385)
     except HTTPError as exc:
-        raise FallbackFailure(f"paper cycle endpoint returned HTTP {exc.code}") from None
+        raise FallbackFailure(_safe_cycle_http_failure(exc)) from None
     except (URLError, OSError, TimeoutError):
         raise FallbackFailure("paper cycle endpoint unavailable") from None
 
