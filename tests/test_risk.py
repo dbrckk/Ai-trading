@@ -104,12 +104,12 @@ def test_invalid_portfolio_state_blocks_new_and_forced_paper_orders(
     field: str, value: float
 ) -> None:
     engine = RiskEngine(RiskConfig())
-    values = dict(
-        equity=100_000.0,
-        peak_equity=100_000.0,
-        day_start_equity=100_000.0,
-        current_position_value=10_000.0,
-    )
+    values = {
+        "equity": 100_000.0,
+        "peak_equity": 100_000.0,
+        "day_start_equity": 100_000.0,
+        "current_position_value": 10_000.0,
+    }
     values[field] = value
     decision = engine.evaluate(
         Prediction(side=1, confidence=0.99, probabilities={}),
