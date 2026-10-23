@@ -3150,6 +3150,10 @@ def test_infer_periods_per_year_from_elapsed_timestamps() -> None
 index = pd.date_range("2026-01-01", periods=13, freq="30D", tz="UTC")
 periods = infer_periods_per_year(index)
 ⋮----
+# Incomplete or reordered histories must not silently inflate Sharpe
+# ratios or transform numeric bar positions into artificial timestamps.
+invalid_timelines = (
+⋮----
 def test_extreme_short_window_annualization_stays_finite() -> None
 ⋮----
 equity = pd.Series([1.0, 1e100])

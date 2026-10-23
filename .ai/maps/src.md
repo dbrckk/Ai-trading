@@ -5628,8 +5628,10 @@ def _safe_ratio(numerator: float, denominator: float) -> float
 ⋮----
 def infer_periods_per_year(index: pd.Index) -> float
 ⋮----
+# Numeric positions are interpreted as Unix nanoseconds by pandas, which
+# can produce nonsensical annualization instead of rejecting bad market data.
+⋮----
 timestamps = pd.to_datetime(index, utc=True, errors="coerce")
-timestamps = timestamps[~timestamps.isna()]
 ⋮----
 elapsed_seconds = float((timestamps[-1] - timestamps[0]).total_seconds())
 ⋮----

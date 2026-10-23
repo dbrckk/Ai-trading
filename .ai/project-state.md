@@ -124,19 +124,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-23T10:23:55Z
+Generated: 2026-10-23T10:43:38Z
 
 ### Git
 - Branch: `main`
-- Head: `89ffef0ec03e`
-- Commit date: 2026-10-23T06:23:44-04:00
-- Commit: fix(research): reject incomplete or invalid backtest performance data
+- Head: `af83456a8ced`
+- Commit date: 2026-10-23T06:43:27-04:00
+- Commit: fix(backtest): reject invalid timestamps and annualization settings (#205)
 - Tracked files: 515
 
 ### Recently changed files
-- `README.md`
+- `src/ai_trading/backtest.py`
 - `src/ai_trading/performance.py`
+- `tests/test_backtest.py`
 - `tests/test_performance.py`
+- `README.md`
 - `src/ai_trading/promotion.py`
 - `src/ai_trading/soak_gate.py`
 - `tests/test_multi_period_promotion.py`
@@ -146,10 +148,6 @@ Generated: 2026-10-23T10:23:55Z
 - `tests/test_portfolio_risk.py`
 - `src/ai_trading/risk_governor.py`
 - `tests/test_risk_governor.py`
-- `src/ai_trading/config.py`
-- `src/ai_trading/risk.py`
-- `tests/test_config_validation.py`
-- `tests/test_risk.py`
 
 ### Project signals
 - `pyproject.toml`

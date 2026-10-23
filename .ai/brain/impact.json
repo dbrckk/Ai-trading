@@ -1,16 +1,20 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "ef5877563aa739ba1b7af8fc7830d64c551e1f8e",
-  "head": "89ffef0ec03e5935b0e04b52e1f6a31b29676077",
+  "base": "89ffef0ec03e5935b0e04b52e1f6a31b29676077",
+  "head": "af83456a8ced785b6d8ce89fef5d8d60cf582d3e",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "README.md",
+      "path": "src/ai_trading/backtest.py",
       "status": "M"
     },
     {
       "path": "src/ai_trading/performance.py",
+      "status": "M"
+    },
+    {
+      "path": "tests/test_backtest.py",
       "status": "M"
     },
     {
@@ -19,15 +23,19 @@
     }
   ],
   "changed_source_files": [
+    "src/ai_trading/backtest.py",
     "src/ai_trading/performance.py",
+    "tests/test_backtest.py",
     "tests/test_performance.py"
   ],
   "impacted_files": [
     "src/ai_trading/allocator_tuning.py",
     "src/ai_trading/backtest.py",
+    "src/ai_trading/benchmark_gate.py",
     "src/ai_trading/burnin.py",
     "src/ai_trading/cli.py",
     "src/ai_trading/continuous.py",
+    "src/ai_trading/cost_stress.py",
     "src/ai_trading/evolution_manager.py",
     "src/ai_trading/expert_sandbox.py",
     "src/ai_trading/guardrails.py",
@@ -35,13 +43,17 @@
     "src/ai_trading/multiasset_backtest.py",
     "src/ai_trading/multiasset_evolution.py",
     "src/ai_trading/orchestrator.py",
+    "src/ai_trading/parameter_sensitivity.py",
     "src/ai_trading/performance.py",
     "src/ai_trading/promotion.py",
     "src/ai_trading/readiness.py",
     "src/ai_trading/readiness_evidence.py",
+    "src/ai_trading/regime_gate.py",
     "src/ai_trading/temporal_cv.py",
     "src/ai_trading/tuning.py",
+    "src/ai_trading/turnover_study.py",
     "tests/test_backtest.py",
+    "tests/test_backtest_ensemble.py",
     "tests/test_benchmark_gate.py",
     "tests/test_cost_stress.py",
     "tests/test_guardrails.py",
@@ -51,6 +63,7 @@
     "tests/test_promotion.py",
     "tests/test_readiness.py",
     "tests/test_readiness_evidence.py",
+    "tests/test_research_config_validation.py",
     "tests/test_rollback_model.py",
     "tests/test_tuning.py"
   ],
@@ -83,49 +96,67 @@
       "name": "_compound_step_returns",
       "kind": "function",
       "file": "src/ai_trading/backtest.py",
-      "line": 22
+      "line": 23
     },
     {
       "name": "WalkForwardConfig",
       "kind": "class",
       "file": "src/ai_trading/backtest.py",
-      "line": 30
+      "line": 31
     },
     {
       "name": "__post_init__",
       "kind": "function",
       "file": "src/ai_trading/backtest.py",
-      "line": 37
+      "line": 38
     },
     {
       "name": "as_dict",
       "kind": "function",
       "file": "src/ai_trading/backtest.py",
-      "line": 47
+      "line": 50
     },
     {
       "name": "BacktestReport",
       "kind": "class",
       "file": "src/ai_trading/backtest.py",
-      "line": 52
+      "line": 55
     },
     {
       "name": "WalkForwardBacktester",
       "kind": "class",
       "file": "src/ai_trading/backtest.py",
-      "line": 65
+      "line": 68
     },
     {
       "name": "__init__",
       "kind": "function",
       "file": "src/ai_trading/backtest.py",
-      "line": 68
+      "line": 71
     },
     {
       "name": "run",
       "kind": "function",
       "file": "src/ai_trading/backtest.py",
-      "line": 80
+      "line": 83
+    },
+    {
+      "name": "BenchmarkGatePolicy",
+      "kind": "class",
+      "file": "src/ai_trading/benchmark_gate.py",
+      "line": 10
+    },
+    {
+      "name": "BenchmarkGateResult",
+      "kind": "class",
+      "file": "src/ai_trading/benchmark_gate.py",
+      "line": 23
+    },
+    {
+      "name": "evaluate_benchmark_gate",
+      "kind": "function",
+      "file": "src/ai_trading/benchmark_gate.py",
+      "line": 28
     },
     {
       "name": "BurnInSnapshot",
@@ -440,6 +471,36 @@
       "line": 30
     },
     {
+      "name": "CostStressScenario",
+      "kind": "class",
+      "file": "src/ai_trading/cost_stress.py",
+      "line": 12
+    },
+    {
+      "name": "CostStressResult",
+      "kind": "class",
+      "file": "src/ai_trading/cost_stress.py",
+      "line": 19
+    },
+    {
+      "name": "run_cost_stress",
+      "kind": "function",
+      "file": "src/ai_trading/cost_stress.py",
+      "line": 35
+    },
+    {
+      "name": "_result",
+      "kind": "function",
+      "file": "src/ai_trading/cost_stress.py",
+      "line": 57
+    },
+    {
+      "name": "risk_config_for_scenario",
+      "kind": "function",
+      "file": "src/ai_trading/cost_stress.py",
+      "line": 68
+    },
+    {
       "name": "EvolutionCycleResult",
       "kind": "class",
       "file": "src/ai_trading/evolution_manager.py",
@@ -608,6 +669,36 @@
       "line": 71
     },
     {
+      "name": "SensitivityScenario",
+      "kind": "class",
+      "file": "src/ai_trading/parameter_sensitivity.py",
+      "line": 11
+    },
+    {
+      "name": "SensitivityResult",
+      "kind": "class",
+      "file": "src/ai_trading/parameter_sensitivity.py",
+      "line": 19
+    },
+    {
+      "name": "run_parameter_sensitivity",
+      "kind": "function",
+      "file": "src/ai_trading/parameter_sensitivity.py",
+      "line": 38
+    },
+    {
+      "name": "_bounded",
+      "kind": "function",
+      "file": "src/ai_trading/parameter_sensitivity.py",
+      "line": 80
+    },
+    {
+      "name": "_result",
+      "kind": "function",
+      "file": "src/ai_trading/parameter_sensitivity.py",
+      "line": 84
+    },
+    {
       "name": "PerformanceMetrics",
       "kind": "class",
       "file": "src/ai_trading/performance.py",
@@ -635,19 +726,19 @@
       "name": "_annualized_return",
       "kind": "function",
       "file": "src/ai_trading/performance.py",
-      "line": 41
+      "line": 48
     },
     {
       "name": "compute_metrics",
       "kind": "function",
       "file": "src/ai_trading/performance.py",
-      "line": 54
+      "line": 61
     },
     {
       "name": "buy_and_hold_equity",
       "kind": "function",
       "file": "src/ai_trading/performance.py",
-      "line": 108
+      "line": 115
     },
     {
       "name": "PromotionPolicy",
@@ -764,6 +855,24 @@
       "line": 85
     },
     {
+      "name": "RegimeGatePolicy",
+      "kind": "class",
+      "file": "src/ai_trading/regime_gate.py",
+      "line": 10
+    },
+    {
+      "name": "RegimeGateResult",
+      "kind": "class",
+      "file": "src/ai_trading/regime_gate.py",
+      "line": 17
+    },
+    {
+      "name": "evaluate_regime_gate",
+      "kind": "function",
+      "file": "src/ai_trading/regime_gate.py",
+      "line": 26
+    },
+    {
       "name": "FoldResult",
       "kind": "class",
       "file": "src/ai_trading/temporal_cv.py",
@@ -812,6 +921,18 @@
       "line": 55
     },
     {
+      "name": "_segment_performance",
+      "kind": "function",
+      "file": "src/ai_trading/turnover_study.py",
+      "line": 24
+    },
+    {
+      "name": "compare_rebalance_thresholds",
+      "kind": "function",
+      "file": "src/ai_trading/turnover_study.py",
+      "line": 36
+    },
+    {
       "name": "sample_market",
       "kind": "function",
       "file": "tests/test_backtest.py",
@@ -851,79 +972,91 @@
       "name": "test_walk_forward_exits_position_after_hard_risk_stop",
       "kind": "function",
       "file": "tests/test_backtest.py",
-      "line": 102
+      "line": 106
     },
     {
       "name": "configured_risk",
       "kind": "function",
       "file": "tests/test_backtest.py",
-      "line": 106
+      "line": 110
     },
     {
       "name": "tracked_rebalance",
       "kind": "function",
       "file": "tests/test_backtest.py",
-      "line": 119
+      "line": 123
     },
     {
       "name": "test_turnover_study_selects_on_validation_without_holdout_cherry_picking",
       "kind": "function",
       "file": "tests/test_backtest.py",
-      "line": 136
+      "line": 140
     },
     {
       "name": "fake_backtest",
       "kind": "function",
       "file": "tests/test_backtest.py",
-      "line": 149
+      "line": 153
     },
     {
       "name": "test_turnover_study_marks_profitable_untouched_holdout_for_review",
       "kind": "function",
       "file": "tests/test_backtest.py",
-      "line": 175
+      "line": 179
     },
     {
       "name": "fake_backtest",
       "kind": "function",
       "file": "tests/test_backtest.py",
-      "line": 182
+      "line": 186
     },
     {
       "name": "test_turnover_study_rejects_small_out_of_sample_history",
       "kind": "function",
       "file": "tests/test_backtest.py",
-      "line": 207
+      "line": 211
     },
     {
       "name": "fake_backtest",
       "kind": "function",
       "file": "tests/test_backtest.py",
-      "line": 212
+      "line": 216
     },
     {
       "name": "test_turnover_study_reports_zero_cost_counterfactual_without_promoting",
       "kind": "function",
       "file": "tests/test_backtest.py",
-      "line": 232
+      "line": 236
     },
     {
       "name": "fake_backtest",
       "kind": "function",
       "file": "tests/test_backtest.py",
-      "line": 241
+      "line": 245
     },
     {
       "name": "test_turnover_study_does_not_repeat_frictionless_backtest",
       "kind": "function",
       "file": "tests/test_backtest.py",
-      "line": 276
+      "line": 280
     },
     {
       "name": "fake_backtest",
       "kind": "function",
       "file": "tests/test_backtest.py",
-      "line": 283
+      "line": 287
+    },
+    {
+      "name": "sample_market",
+      "kind": "function",
+      "file": "tests/test_backtest_ensemble.py",
+      "line": 8
+    },
+    {
+      "name": "test_walk_forward_ensemble_runs",
+      "kind": "function",
+      "file": "tests/test_backtest_ensemble.py",
+      "line": 25
     },
     {
       "name": "_report",
@@ -1079,31 +1212,31 @@
       "name": "test_extreme_short_window_annualization_stays_finite",
       "kind": "function",
       "file": "tests/test_performance.py",
-      "line": 30
+      "line": 42
     },
     {
       "name": "test_performance_refuses_incomplete_or_invalid_equity_curves",
       "kind": "function",
       "file": "tests/test_performance.py",
-      "line": 46
+      "line": 58
     },
     {
       "name": "test_performance_rejects_nonfinite_returns_from_finite_equity",
       "kind": "function",
       "file": "tests/test_performance.py",
-      "line": 51
+      "line": 63
     },
     {
       "name": "test_benchmark_refuses_invalid_price_history",
       "kind": "function",
       "file": "tests/test_performance.py",
-      "line": 65
+      "line": 77
     },
     {
       "name": "test_benchmark_refuses_invalid_starting_equity",
       "kind": "function",
       "file": "tests/test_performance.py",
-      "line": 71
+      "line": 83
     },
     {
       "name": "metrics",
@@ -1190,6 +1323,18 @@
       "line": 110
     },
     {
+      "name": "test_invalid_research_configuration_fails_closed",
+      "kind": "function",
+      "file": "tests/test_research_config_validation.py",
+      "line": 54
+    },
+    {
+      "name": "test_valid_research_configurations_remain_supported",
+      "kind": "function",
+      "file": "tests/test_research_config_validation.py",
+      "line": 59
+    },
+    {
       "name": "metrics",
       "kind": "function",
       "file": "tests/test_rollback_model.py",
@@ -1216,6 +1361,7 @@
   ],
   "selected_tests": [
     "tests/test_backtest.py",
+    "tests/test_backtest_ensemble.py",
     "tests/test_benchmark_gate.py",
     "tests/test_cost_stress.py",
     "tests/test_cumulative_performance_persistence.py",
@@ -1227,6 +1373,7 @@
     "tests/test_promotion.py",
     "tests/test_readiness.py",
     "tests/test_readiness_evidence.py",
+    "tests/test_research_config_validation.py",
     "tests/test_rollback_model.py",
     "tests/test_tuning.py"
   ]

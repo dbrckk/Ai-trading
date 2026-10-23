@@ -6568,8 +6568,10 @@ def _safe_ratio(numerator: float, denominator: float) -> float
 ⋮----
 def infer_periods_per_year(index: pd.Index) -> float
 ⋮----
+# Numeric positions are interpreted as Unix nanoseconds by pandas, which
+# can produce nonsensical annualization instead of rejecting bad market data.
+⋮----
 timestamps = pd.to_datetime(index, utc=True, errors="coerce")
-timestamps = timestamps[~timestamps.isna()]
 ⋮----
 elapsed_seconds = float((timestamps[-1] - timestamps[0]).total_seconds())
 ⋮----
@@ -12543,6 +12545,10 @@ def test_infer_periods_per_year_from_elapsed_timestamps() -> None
 ⋮----
 index = pd.date_range("2026-01-01", periods=13, freq="30D", tz="UTC")
 periods = infer_periods_per_year(index)
+⋮----
+# Incomplete or reordered histories must not silently inflate Sharpe
+# ratios or transform numeric bar positions into artificial timestamps.
+invalid_timelines = (
 ⋮----
 def test_extreme_short_window_annualization_stays_finite() -> None
 ⋮----

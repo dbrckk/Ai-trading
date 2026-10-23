@@ -1,19 +1,20 @@
 # Change impact
 
-Base: 10e9925158afca6d3289e33b94e6133364aec2c8
-Head: 89ffef0ec03e5935b0e04b52e1f6a31b29676077
+Base: 9201b7869dc91ad10c62e58c102497308756d699
+Head: af83456a8ced785b6d8ce89fef5d8d60cf582d3e
 
 ## Changed files
-- M README.md
+- M src/ai_trading/backtest.py
 - M src/ai_trading/performance.py
+- M tests/test_backtest.py
 - M tests/test_performance.py
 
 ## Affected areas
-- (root)
 - src
 - tests
 
 ## Related test candidates
+- tests/test_backtest.py
 - tests/test_performance.py
 
 ## Agent guidance
