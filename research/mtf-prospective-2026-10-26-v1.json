@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "study_id": "mtf-prospective-2026-10-26-v1",
+  "registered_on_utc_date": "2026-10-23",
+  "observation_start_utc": "2026-10-26T00:00:00+00:00",
+  "data_provider": "yahoo_yfinance_auto_adjusted",
+  "bar_interval": "5m",
+  "bar_timestamp_semantics": "opening_timestamp_utc",
+  "minimum_completion_lag_minutes": 15,
+  "acquisition_window": "5d",
+  "symbols": [
+    "GC=F",
+    "^GDAXI",
+    "BTC-USD"
+  ],
+  "frozen_research_comparators": [
+    {
+      "horizon_bars": 9,
+      "minimum_threshold": 0.0005,
+      "atr_multiplier": 0.25,
+      "max_train_rows": 1000,
+      "min_confidence": 0.56
+    },
+    {
+      "horizon_bars": 9,
+      "minimum_threshold": 0.0005,
+      "atr_multiplier": 0.25,
+      "max_train_rows": 1000,
+      "min_confidence": 0.6
+    },
+    {
+      "horizon_bars": 18,
+      "minimum_threshold": 0.0003,
+      "atr_multiplier": 0.15,
+      "max_train_rows": 1000,
+      "min_confidence": 0.6
+    }
+  ],
+  "hypothetical_costs_bps_per_side": {
+    "transaction": 2,
+    "slippage": 1
+  },
+  "permitted_actions": [
+    "archive_provider_ohlcv",
+    "fingerprint_completed_bars",
+    "report_missing_data"
+  ],
+  "prohibited_actions": [
+    "fit_or_tune_on_prospective_bars",
+    "promote_model",
+    "place_trade",
+    "write_production_persistence"
+  ],
+  "decisions": "no_historical_candidate_qualified; prospective capture is observation-only",
+  "prior_research_overlap": "none_of_the_new_bars_exist_before_cutoff_if_recorded_honestly",
+  "risks": [
+    "provider_may_revise_historical_bars",
+    "artifact_retention_not_permanent",
+    "asset_currency_and_contract_multipliers_not_modeled"
+  ],
+  "live_broker_enabled": false
+}
