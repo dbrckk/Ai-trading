@@ -1,3 +1,8 @@
+import math
+from dataclasses import replace
+
+import pytest
+
 from ai_trading.performance import PerformanceMetrics
 from ai_trading.promotion import PromotionPolicy, evaluate_challenger
 
@@ -30,9 +35,6 @@ def test_rejects_excess_drawdown() -> None:
 
 
 def test_promotion_rejects_nonfinite_metrics_even_if_relative_checks_would_pass() -> None:
-    import math
-    from dataclasses import replace
-
     champion = metrics(0.10, 0.8, 0.08)
     better = metrics(0.14, 1.05, 0.09)
     for field, value in (
@@ -56,10 +58,6 @@ def test_promotion_rejects_losing_challenger_outperforming_losing_champion() -> 
 
 
 def test_promotion_rejects_invalid_drawdown_or_policy() -> None:
-    from dataclasses import replace
-    import math
-    import pytest
-
     champion = metrics(0.10, 0.8, 0.08)
     better = metrics(0.14, 1.05, 0.09)
     result = evaluate_challenger(champion, replace(better, max_drawdown=-0.1))
