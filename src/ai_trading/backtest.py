@@ -63,6 +63,10 @@ class BacktestReport:
     equity_curve: pd.Series
     benchmark_curve: pd.Series
     regime_returns: dict[str, float]
+    # Execution timestamps permit research gates to evaluate validation-only
+    # activity without inspecting untouched future holdout trades/folds.
+    trade_timestamps: tuple[pd.Timestamp, ...] = ()
+    fold_start_timestamps: tuple[pd.Timestamp, ...] = ()
 
 
 class WalkForwardBacktester:
@@ -98,6 +102,8 @@ class WalkForwardBacktester:
         benchmark_prices: dict[pd.Timestamp, float] = {}
         regime_step_returns: dict[str, list[float]] = {}
         trades = 0
+        trade_timestamps: list[pd.Timestamp] = []
+        fold_start_timestamps: list[pd.Timestamp] = []
         decisions = 0
         rejected = 0
         folds = 0
@@ -124,6 +130,8 @@ class WalkForwardBacktester:
                 model = OnlineDirectionModel(random_state=42 + folds)
             model.fit(features.loc[train_idx], labels.loc[train_idx])
             folds += 1
+            first_signal_pos = int(df.index.get_loc(test_idx[0]))
+            fold_start_timestamps.append(pd.Timestamp(df.index[first_signal_pos + 1]))
 
             for signal_idx in test_idx:
                 signal_pos = int(df.index.get_loc(signal_idx))
@@ -169,6 +177,7 @@ class WalkForwardBacktester:
                     )
                     if broker.state.units != previous_units:
                         trades += 1
+                        trade_timestamps.append(pd.Timestamp(execution_idx))
                         previous_units = broker.state.units
 
                 broker.mark(close_price)
@@ -216,4 +225,6 @@ class WalkForwardBacktester:
             equity_curve=equity,
             benchmark_curve=benchmark,
             regime_returns=regime_returns,
+            trade_timestamps=tuple(trade_timestamps),
+            fold_start_timestamps=tuple(fold_start_timestamps),
         )
