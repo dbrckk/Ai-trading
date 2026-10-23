@@ -1,211 +1,179 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "2cf14ca3910982b7ca3367f843798879ea4ec82f",
-  "head": "88e8cf64d7145809dedaba63087fc896c3c95d52",
+  "base": "88e8cf64d7145809dedaba63087fc896c3c95d52",
+  "head": "fef80d5ea7f4ab1e3a4a8261ad6e4d44e96844a1",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "src/ai_trading/deployment_probe.py",
+      "path": ".github/workflows/turnover-research.yml",
       "status": "M"
     },
     {
-      "path": "tests/test_dashboard_health.py",
+      "path": "README.md",
+      "status": "M"
+    },
+    {
+      "path": "src/ai_trading/turnover_study.py",
+      "status": "M"
+    },
+    {
+      "path": "tests/test_backtest.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "src/ai_trading/deployment_probe.py",
-    "tests/test_dashboard_health.py"
+    "src/ai_trading/turnover_study.py",
+    "tests/test_backtest.py"
   ],
   "impacted_files": [
-    "src/ai_trading/deployment_probe.py",
-    "tests/test_dashboard_health.py"
+    "src/ai_trading/command_app.py",
+    "src/ai_trading/turnover_study.py",
+    "tests/test_backtest.py"
   ],
   "impacted_symbols": [
     {
-      "name": "ProbeCheck",
-      "kind": "class",
-      "file": "src/ai_trading/deployment_probe.py",
-      "line": 14
+      "name": "paper_cycle",
+      "kind": "function",
+      "file": "src/ai_trading/command_app.py",
+      "line": 17
     },
     {
-      "name": "_fetch_json",
+      "name": "turnover_study",
       "kind": "function",
-      "file": "src/ai_trading/deployment_probe.py",
-      "line": 20
+      "file": "src/ai_trading/command_app.py",
+      "line": 47
     },
     {
-      "name": "_probe_endpoint",
+      "name": "_segment_performance",
       "kind": "function",
-      "file": "src/ai_trading/deployment_probe.py",
-      "line": 57
+      "file": "src/ai_trading/turnover_study.py",
+      "line": 24
     },
     {
-      "name": "probe_dashboard",
+      "name": "compare_rebalance_thresholds",
       "kind": "function",
-      "file": "src/ai_trading/deployment_probe.py",
-      "line": 157
+      "file": "src/ai_trading/turnover_study.py",
+      "line": 36
     },
     {
-      "name": "main",
+      "name": "sample_market",
       "kind": "function",
-      "file": "src/ai_trading/deployment_probe.py",
-      "line": 194
+      "file": "tests/test_backtest.py",
+      "line": 16
     },
     {
-      "name": "_free_port",
+      "name": "test_walk_forward_produces_out_of_sample_report",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 19
+      "file": "tests/test_backtest.py",
+      "line": 33
     },
     {
-      "name": "_get",
+      "name": "test_walk_forward_resets_daily_risk_baseline_between_dates",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 25
+      "file": "tests/test_backtest.py",
+      "line": 52
     },
     {
-      "name": "_start_dashboard",
+      "name": "tracked_reset",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 37
+      "file": "tests/test_backtest.py",
+      "line": 56
     },
     {
-      "name": "test_dashboard_marks_expired_worker_heartbeat_stale",
+      "name": "test_regime_step_returns_are_compounded_without_intervening_equity",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 65
+      "file": "tests/test_backtest.py",
+      "line": 77
     },
     {
-      "name": "test_api_status_reports_stale_worker_without_hiding_web_health",
+      "name": "test_walk_forward_annualizes_from_actual_oos_timestamps_by_default",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 91
+      "file": "tests/test_backtest.py",
+      "line": 82
     },
     {
-      "name": "test_healthz_keeps_web_liveness_separate_from_engine_health",
+      "name": "test_walk_forward_exits_position_after_hard_risk_stop",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 113
+      "file": "tests/test_backtest.py",
+      "line": 102
     },
     {
-      "name": "test_external_probe_checks_live_ready_and_all_markets",
+      "name": "configured_risk",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 137
+      "file": "tests/test_backtest.py",
+      "line": 106
     },
     {
-      "name": "test_external_scheduler_readiness_detects_missing_configuration",
+      "name": "tracked_rebalance",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 164
+      "file": "tests/test_backtest.py",
+      "line": 119
     },
     {
-      "name": "test_render_blueprint_declares_external_runtime_and_secret_inputs",
+      "name": "test_turnover_study_selects_on_validation_without_holdout_cherry_picking",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 195
+      "file": "tests/test_backtest.py",
+      "line": 136
     },
     {
-      "name": "test_external_probe_reports_connection_errors_without_exposing_details",
+      "name": "fake_backtest",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
+      "file": "tests/test_backtest.py",
+      "line": 149
+    },
+    {
+      "name": "test_turnover_study_marks_profitable_untouched_holdout_for_review",
+      "kind": "function",
+      "file": "tests/test_backtest.py",
+      "line": 175
+    },
+    {
+      "name": "fake_backtest",
+      "kind": "function",
+      "file": "tests/test_backtest.py",
+      "line": 182
+    },
+    {
+      "name": "test_turnover_study_rejects_small_out_of_sample_history",
+      "kind": "function",
+      "file": "tests/test_backtest.py",
       "line": 207
     },
     {
-      "name": "fail_request",
+      "name": "fake_backtest",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 216
+      "file": "tests/test_backtest.py",
+      "line": 212
     },
     {
-      "name": "test_probe_rejects_market_cards_with_broken_portfolio",
+      "name": "test_turnover_study_reports_zero_cost_counterfactual_without_promoting",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 231
+      "file": "tests/test_backtest.py",
+      "line": 232
     },
     {
-      "name": "FakeResponse",
-      "kind": "class",
-      "file": "tests/test_dashboard_health.py",
-      "line": 236
-    },
-    {
-      "name": "__init__",
+      "name": "fake_backtest",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 239
+      "file": "tests/test_backtest.py",
+      "line": 241
     },
     {
-      "name": "__enter__",
+      "name": "test_turnover_study_does_not_repeat_frictionless_backtest",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 242
+      "file": "tests/test_backtest.py",
+      "line": 276
     },
     {
-      "name": "__exit__",
+      "name": "fake_backtest",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 245
-    },
-    {
-      "name": "read",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 248
-    },
-    {
-      "name": "fake_urlopen",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 253
-    },
-    {
-      "name": "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 281
-    },
-    {
-      "name": "FakeResponse",
-      "kind": "class",
-      "file": "tests/test_dashboard_health.py",
-      "line": 292
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 295
-    },
-    {
-      "name": "__enter__",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 298
-    },
-    {
-      "name": "__exit__",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 301
-    },
-    {
-      "name": "read",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 304
-    },
-    {
-      "name": "fake_urlopen",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 307
+      "file": "tests/test_backtest.py",
+      "line": 283
     }
   ],
   "selected_tests": [
-    "tests/test_dashboard.py",
-    "tests/test_dashboard_health.py"
+    "tests/test_backtest.py",
+    "tests/test_backtest_ensemble.py",
+    "tests/test_multiasset_backtest.py"
   ]
 }

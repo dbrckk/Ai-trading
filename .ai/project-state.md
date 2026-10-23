@@ -110,23 +110,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-22T16:26:53Z
+Generated: 2026-10-23T06:24:29Z
 
 ### Git
 - Branch: `main`
-- Head: `88e8cf64d714`
-- Commit date: 2026-10-22T12:26:41-04:00
-- Commit: fix(probe): identify unhealthy market engines in safe hosted probe output
+- Head: `fef80d5ea7f4`
+- Commit date: 2026-10-23T02:24:17-04:00
+- Commit: feat(research): distinguish modeled cost drag from weak trading edge
 - Tracked files: 515
 
 ### Recently changed files
-- `src/ai_trading/deployment_probe.py`
-- `tests/test_dashboard_health.py`
 - `.github/workflows/turnover-research.yml`
 - `README.md`
-- `src/ai_trading/command_app.py`
 - `src/ai_trading/turnover_study.py`
 - `tests/test_backtest.py`
+- `src/ai_trading/deployment_probe.py`
+- `tests/test_dashboard_health.py`
+- `src/ai_trading/command_app.py`
 - `src/ai_trading/broker.py`
 - `src/ai_trading/config.py`
 - `src/ai_trading/execution_costs.py`
@@ -134,8 +134,6 @@ Generated: 2026-10-22T16:26:53Z
 - `tests/test_execution_costs.py`
 - `src/ai_trading/regime_gate.py`
 - `tests/test_regime_gate.py`
-- `src/ai_trading/bootstrap_gate.py`
-- `tests/test_bootstrap_gate.py`
 
 ### Project signals
 - `pyproject.toml`

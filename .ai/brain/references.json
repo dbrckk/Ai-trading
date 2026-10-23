@@ -5,1567 +5,956 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "ProbeCheck": {
+    "_segment_performance": {
       "definition": {
-        "file": "src/ai_trading/deployment_probe.py",
-        "line": 14,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 14,
-          "preview": "class ProbeCheck:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 64,
-          "preview": ") -> ProbeCheck:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 67,
-          "preview": "return ProbeCheck(endpoint, False, fetch_state)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 154,
-          "preview": "return ProbeCheck(endpoint, valid, detail)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 163,
-          "preview": ") -> tuple[ProbeCheck, ...]:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 5
-    },
-    "_fetch_json": {
-      "definition": {
-        "file": "src/ai_trading/deployment_probe.py",
-        "line": 20,
+        "file": "src/ai_trading/turnover_study.py",
+        "line": 24,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 20,
-          "preview": "def _fetch_json(base_url: str, endpoint: str, timeout: float) -> tuple[dict, str]:",
+          "file": "src/ai_trading/turnover_study.py",
+          "line": 24,
+          "preview": "def _segment_performance(equity: pd.Series) -> tuple[float, float]:",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 65,
-          "preview": "payload, fetch_state = _fetch_json(base_url, endpoint, timeout)",
+          "file": "src/ai_trading/turnover_study.py",
+          "line": 91,
+          "preview": "validation_return, validation_dd = _segment_performance(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/turnover_study.py",
+          "line": 94,
+          "preview": "holdout_return, holdout_dd = _segment_performance(equity.iloc[split:])",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/turnover_study.py",
+          "line": 95,
+          "preview": "full_return, full_dd = _segment_performance(equity)",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/turnover_study.py",
+          "line": 133,
+          "preview": "zero_cost_validation_return, _ = _segment_performance(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/turnover_study.py",
+          "line": 136,
+          "preview": "zero_cost_holdout_return, _ = _segment_performance(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/turnover_study.py",
+          "line": 139,
+          "preview": "zero_cost_full_return, _ = _segment_performance(zero_cost_equity)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "compare_rebalance_thresholds": {
+      "definition": {
+        "file": "src/ai_trading/turnover_study.py",
+        "line": 36,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "src/ai_trading/command_app.py",
+          "line": 62,
+          "preview": "from .turnover_study import compare_rebalance_thresholds",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/command_app.py",
+          "line": 75,
+          "preview": "result = compare_rebalance_thresholds(",
+          "definition_candidate": false
+        },
+        {
+          "file": "src/ai_trading/turnover_study.py",
+          "line": 36,
+          "preview": "def compare_rebalance_thresholds(",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 141,
+          "preview": "from ai_trading.turnover_study import compare_rebalance_thresholds",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 161,
+          "preview": "result = compare_rebalance_thresholds(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 180,
+          "preview": "from ai_trading.turnover_study import compare_rebalance_thresholds",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 196,
+          "preview": "result = compare_rebalance_thresholds(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 210,
+          "preview": "from ai_trading.turnover_study import compare_rebalance_thresholds",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 221,
+          "preview": "result = compare_rebalance_thresholds(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 237,
+          "preview": "from ai_trading.turnover_study import compare_rebalance_thresholds",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 260,
+          "preview": "study = compare_rebalance_thresholds(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 279,
+          "preview": "from ai_trading.turnover_study import compare_rebalance_thresholds",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 293,
+          "preview": "study = compare_rebalance_thresholds(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 13
+    },
+    "sample_market": {
+      "definition": {
+        "file": "tests/test_backtest.py",
+        "line": 16,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_backtest.py",
+          "line": 16,
+          "preview": "def sample_market(n: int = 360) -> pd.DataFrame:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 42,
+          "preview": ").run(sample_market())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 71,
+          "preview": ").run(sample_market())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 91,
+          "preview": ").run(sample_market())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 128,
+          "preview": ").run(sample_market())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 163,
+          "preview": "sample_market(500),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 198,
+          "preview": "sample_market(500),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 223,
+          "preview": "sample_market(120),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 262,
+          "preview": "sample_market(500),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 295,
+          "preview": "sample_market(500),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest_ensemble.py",
+          "line": 8,
+          "preview": "def sample_market(n: int = 420) -> pd.DataFrame:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest_ensemble.py",
+          "line": 35,
+          "preview": ").run(sample_market())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_parameter_benchmark.py",
+          "line": 18,
+          "preview": "def sample_market(n: int = 3200, phase: float = 0.0) -> pd.DataFrame:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_parameter_benchmark.py",
+          "line": 51,
+          "preview": "sample_market(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_parameter_benchmark.py",
+          "line": 77,
+          "preview": "\"A\": sample_market(phase=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_parameter_benchmark.py",
+          "line": 78,
+          "preview": "\"B\": sample_market(phase=0.7),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_parameter_benchmark.py",
+          "line": 100,
+          "preview": "markets = {\"A\": sample_market()}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_parameter_benchmark.py",
+          "line": 139,
+          "preview": "\"A\": sample_market(phase=0.0),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_parameter_benchmark.py",
+          "line": 140,
+          "preview": "\"B\": sample_market(phase=0.9),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_parameter_benchmark.py",
+          "line": 165,
+          "preview": "markets = {\"A\": sample_market()}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_parameter_benchmark.py",
+          "line": 229,
+          "preview": "{\"A\": sample_market(), \"B\": sample_market(phase=0.3)},",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_shadow_challenger.py",
+          "line": 17,
+          "preview": "def sample_market(n: int = 2600) -> pd.DataFrame:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_shadow_challenger.py",
+          "line": 35,
+          "preview": "market = sample_market(200)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_shadow_challenger.py",
+          "line": 50,
+          "preview": "market = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_shadow_challenger.py",
+          "line": 127,
+          "preview": "market = sample_market(800)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_shadow_challenger.py",
+          "line": 143,
+          "preview": "market = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_mtf_shadow_challenger.py",
+          "line": 189,
+          "preview": "market = sample_market(800)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_timeframe_features.py",
+          "line": 14,
+          "preview": "def sample_market(n: int = 2600) -> pd.DataFrame:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_timeframe_features.py",
+          "line": 32,
+          "preview": "features = make_multi_timeframe_challenger_features(sample_market())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_timeframe_features.py",
+          "line": 44,
+          "preview": "market = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_multi_timeframe_features.py",
+          "line": 58,
+          "preview": "market = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 24,
+          "preview": "def sample_market(n: int = 110) -> pd.DataFrame:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 81,
+          "preview": "df = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 107,
+          "preview": "df = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 133,
+          "preview": "df = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 156,
+          "preview": "df = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 206,
+          "preview": "runner = build_runner(tmp_path, backend, sample_market())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 222,
+          "preview": "df = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 243,
+          "preview": "runner = build_runner(tmp_path, backend, sample_market())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 256,
+          "preview": "df = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 325,
+          "preview": "df = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 427,
+          "preview": "df = sample_market(109)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 514,
+          "preview": "primary = sample_market(217)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 515,
+          "preview": "long_history = sample_market(900)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 604,
+          "preview": "primary = sample_market(110)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 641,
+          "preview": "primary = sample_market(217)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 642,
+          "preview": "long_history = sample_market(1400)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 696,
+          "preview": "primary = sample_market(217)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 697,
+          "preview": "long_history = sample_market(1600)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 752,
+          "preview": "market = sample_market(120)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 781,
+          "preview": "market = sample_market(120)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 813,
+          "preview": "market = sample_market(120)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 848,
+          "preview": "market = sample_market(120)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 878,
+          "preview": "market = sample_market(120)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 914,
+          "preview": "df = sample_market(120)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 935,
+          "preview": "df = sample_market(220)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 985,
+          "preview": "primary = sample_market(217)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 986,
+          "preview": "long_history = sample_market(900)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 1039,
+          "preview": "market = sample_market(330)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle.py",
+          "line": 1113,
+          "preview": "market = sample_market(290)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_materialized_fresh.py",
+          "line": 13,
+          "preview": "def sample_market(n: int = 110) -> pd.DataFrame:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_materialized_fresh.py",
+          "line": 44,
+          "preview": "market = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 16,
+          "preview": "def sample_market(n: int) -> pd.DataFrame:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 53,
+          "preview": "first_market = sample_market(105)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_paper_cycle_postgres.py",
+          "line": 54,
+          "preview": "second_market = sample_market(110)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime.py",
+          "line": 12,
+          "preview": "def sample_market(n: int = 100) -> pd.DataFrame:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime.py",
+          "line": 38,
+          "preview": "df = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime.py",
+          "line": 48,
+          "preview": "next_df = sample_market(101)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 19,
+          "preview": "def sample_market(n: int = 100) -> pd.DataFrame:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 99,
+          "preview": "result = runtime.step(sample_market())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 134,
+          "preview": "result = runtime.step(sample_market())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 150,
+          "preview": "runtime.step(sample_market())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_persistence.py",
+          "line": 215,
+          "preview": "market = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 15,
+          "preview": "def sample_market(n: int = 105) -> pd.DataFrame:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 44,
+          "preview": "df = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 55,
+          "preview": "df = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 68,
+          "preview": "df = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 76,
+          "preview": "df = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_runtime_targeted_step.py",
+          "line": 114,
+          "preview": "df = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_shadow_challenger.py",
+          "line": 17,
+          "preview": "def sample_market(n: int = 220) -> pd.DataFrame:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_shadow_challenger.py",
+          "line": 35,
+          "preview": "market = sample_market()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_shadow_challenger.py",
+          "line": 135,
+          "preview": "market = sample_market(90)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 82
+    },
+    "test_walk_forward_produces_out_of_sample_report": {
+      "definition": {
+        "file": "tests/test_backtest.py",
+        "line": 33,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_backtest.py",
+          "line": 33,
+          "preview": "def test_walk_forward_produces_out_of_sample_report() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_walk_forward_resets_daily_risk_baseline_between_dates": {
+      "definition": {
+        "file": "tests/test_backtest.py",
+        "line": 52,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_backtest.py",
+          "line": 52,
+          "preview": "def test_walk_forward_resets_daily_risk_baseline_between_dates(monkeypatch) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "tracked_reset": {
+      "definition": {
+        "file": "tests/test_backtest.py",
+        "line": 56,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_backtest.py",
+          "line": 56,
+          "preview": "def tracked_reset(self) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 61,
+          "preview": "monkeypatch.setattr(PaperBroker, \"reset_day_start\", tracked_reset)",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 2
     },
-    "_probe_endpoint": {
+    "test_regime_step_returns_are_compounded_without_intervening_equity": {
       "definition": {
-        "file": "src/ai_trading/deployment_probe.py",
-        "line": 57,
+        "file": "tests/test_backtest.py",
+        "line": 77,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 57,
-          "preview": "def _probe_endpoint(",
+          "file": "tests/test_backtest.py",
+          "line": 77,
+          "preview": "def test_regime_step_returns_are_compounded_without_intervening_equity() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_walk_forward_annualizes_from_actual_oos_timestamps_by_default": {
+      "definition": {
+        "file": "tests/test_backtest.py",
+        "line": 82,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_backtest.py",
+          "line": 82,
+          "preview": "def test_walk_forward_annualizes_from_actual_oos_timestamps_by_default() -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_walk_forward_exits_position_after_hard_risk_stop": {
+      "definition": {
+        "file": "tests/test_backtest.py",
+        "line": 102,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_backtest.py",
+          "line": 102,
+          "preview": "def test_walk_forward_exits_position_after_hard_risk_stop(monkeypatch) -> None:",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "configured_risk": {
+      "definition": {
+        "file": "tests/test_backtest.py",
+        "line": 106,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_backtest.py",
+          "line": 106,
+          "preview": "def configured_risk(self, prediction, portfolio):",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 171,
-          "preview": "_probe_endpoint(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 185,
-          "preview": "checks[index] = _probe_endpoint(",
+          "file": "tests/test_backtest.py",
+          "line": 115,
+          "preview": "monkeypatch.setattr(RiskEngine, \"evaluate\", configured_risk)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 3
+      "occurrence_count": 2
     },
-    "probe_dashboard": {
+    "tracked_rebalance": {
       "definition": {
-        "file": "src/ai_trading/deployment_probe.py",
-        "line": 157,
+        "file": "tests/test_backtest.py",
+        "line": 119,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 157,
-          "preview": "def probe_dashboard(",
+          "file": "tests/test_backtest.py",
+          "line": 119,
+          "preview": "def tracked_rebalance(self, side, target_notional, price):",
           "definition_candidate": true
         },
         {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 207,
-          "preview": "checks = probe_dashboard(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 12,
-          "preview": "from ai_trading.deployment_probe import probe_dashboard",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 149,
-          "preview": "results = probe_dashboard(base_url, timeout=3, expected_sha=deployed_sha)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 158,
-          "preview": "mismatched = probe_dashboard(base_url, timeout=3, expected_sha=\"b\" * 40)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 190,
-          "preview": "readiness = probe_dashboard(f\"http://127.0.0.1:{port}\", timeout=3)[1]",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 221,
-          "preview": "results = probe_dashboard(\"https://example.invalid\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 273,
-          "preview": "results = probe_dashboard(\"https://example.invalid\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 333,
-          "preview": "cards_only = probe_dashboard(base)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 336,
-          "preview": "starting = probe_dashboard(base, require_running_markets=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 342,
-          "preview": "healthy = probe_dashboard(base, require_running_markets=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 347,
-          "preview": "degraded = probe_dashboard(base, require_running_markets=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 353,
-          "preview": "stale = probe_dashboard(base, require_running_markets=True)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 13
-    },
-    "main": {
-      "definition": {
-        "file": "src/ai_trading/deployment_probe.py",
-        "line": 194,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 863,
-          "preview": "main{{max-width:1580px;margin:auto;padding:18px 20px 48px;position:relative}}",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 982,
-          "preview": "@media (max-width:700px){{main{{padding:9px 8px 24px}}.top-nav{{top:5px;border-radius:13px;padding:8px 9px}}.brand span:last-child{{display:none}}.nav-links{{max-width:76vw}}.card{",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 985,
-          "preview": "</style></head><body><main>",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 1226,
-          "preview": "</div></main></body></html>\"\"\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 194,
-          "preview": "def main() -> int:",
-          "definition_candidate": true
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 222,
-          "preview": "raise SystemExit(main())",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/kronos_research.py",
-          "line": 296,
-          "preview": "def main() -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/kronos_research.py",
-          "line": 351,
-          "preview": "main()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/mtf_parameter_benchmark.py",
-          "line": 540,
-          "preview": "def main() -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/mtf_parameter_benchmark.py",
-          "line": 591,
-          "preview": "main()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 104,
-          "preview": "def main() -> int:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 121,
-          "preview": "raise SystemExit(main())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_cloudflare_scheduler_deploy_workflow.py",
-          "line": 11,
-          "preview": "'branches: [\"main\"]',",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 13
-    },
-    "_free_port": {
-      "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 19,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 19,
-          "preview": "def _free_port() -> int:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 40,
-          "preview": "port = _free_port()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 219,
-          "preview": "def _free_port() -> int:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 226,
-          "preview": "port = _free_port()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 142,
-          "preview": "def _free_port() -> int:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 162,
-          "preview": "port = _free_port()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_endpoint.py",
-          "line": 39,
-          "preview": "def _free_port() -> int:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_endpoint.py",
-          "line": 66,
-          "preview": "port = _free_port()",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 8
-    },
-    "_get": {
-      "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 25,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 25,
-          "preview": "def _get(url: str) -> tuple[int, str, str]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 57,
-          "preview": "status, _, _ = _get(f\"http://127.0.0.1:{port}/\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 103,
-          "preview": "status, content_type, body = _get(f\"http://127.0.0.1:{port}/api/status\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 125,
-          "preview": "status, content_type, body = _get(f\"http://127.0.0.1:{port}/healthz\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 142,
-          "preview": "status, _, body = _get(base_url + \"/livez\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 179,
-          "preview": "status, _, body = _get(f\"http://127.0.0.1:{port}/livez\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 183,
-          "preview": "status, _, body = _get(f\"http://127.0.0.1:{port}/readyz\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 148,
-          "preview": "def _get(url: str) -> tuple[int, str]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 181,
-          "preview": "status, _ = _get(f\"http://127.0.0.1:{port}/healthz\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 236,
-          "preview": "status_code, body = _get(f\"http://127.0.0.1:{port}/livez\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 245,
-          "preview": "status_code, body = _get(f\"http://127.0.0.1:{port}/readyz\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 260,
-          "preview": "status_code, status_body = _get(f\"http://127.0.0.1:{port}/api/status\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 261,
-          "preview": "health_code, health_body = _get(f\"http://127.0.0.1:{port}/healthz\")",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 13
-    },
-    "_start_dashboard": {
-      "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 37,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 37,
-          "preview": "def _start_dashboard(",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 101,
-          "preview": "port = _start_dashboard(tmp_path)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
+          "file": "tests/test_backtest.py",
           "line": 123,
-          "preview": "port = _start_dashboard(tmp_path)",
+          "preview": "monkeypatch.setattr(PaperBroker, \"rebalance\", tracked_rebalance)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "test_turnover_study_selects_on_validation_without_holdout_cherry_picking": {
+      "definition": {
+        "file": "tests/test_backtest.py",
+        "line": 136,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_backtest.py",
+          "line": 136,
+          "preview": "def test_turnover_study_selects_on_validation_without_holdout_cherry_picking(",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "fake_backtest": {
+      "definition": {
+        "file": "tests/test_backtest.py",
+        "line": 149,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_backtest.py",
+          "line": 149,
+          "preview": "def fake_backtest(self, market):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 160,
+          "preview": "monkeypatch.setattr(WalkForwardBacktester, \"run\", fake_backtest)",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_dashboard_health.py",
-          "line": 140,
-          "preview": "port = _start_dashboard(tmp_path)",
+          "file": "tests/test_backtest.py",
+          "line": 182,
+          "preview": "def fake_backtest(self, market):",
           "definition_candidate": false
         },
         {
-          "file": "tests/test_dashboard_health.py",
-          "line": 169,
-          "preview": "port = _start_dashboard(",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 5
-    },
-    "test_dashboard_marks_expired_worker_heartbeat_stale": {
-      "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 65,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 65,
-          "preview": "def test_dashboard_marks_expired_worker_heartbeat_stale(tmp_path) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_api_status_reports_stale_worker_without_hiding_web_health": {
-      "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 91,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 91,
-          "preview": "def test_api_status_reports_stale_worker_without_hiding_web_health(tmp_path) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_healthz_keeps_web_liveness_separate_from_engine_health": {
-      "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 113,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 113,
-          "preview": "def test_healthz_keeps_web_liveness_separate_from_engine_health(tmp_path) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_external_probe_checks_live_ready_and_all_markets": {
-      "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 137,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 137,
-          "preview": "def test_external_probe_checks_live_ready_and_all_markets(tmp_path, monkeypatch) -> None:",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_external_scheduler_readiness_detects_missing_configuration": {
-      "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 164,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 164,
-          "preview": "def test_external_scheduler_readiness_detects_missing_configuration(",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_render_blueprint_declares_external_runtime_and_secret_inputs": {
-      "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 195,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_health.py",
+          "file": "tests/test_backtest.py",
           "line": 195,
-          "preview": "def test_render_blueprint_declares_external_runtime_and_secret_inputs() -> None:",
+          "preview": "monkeypatch.setattr(WalkForwardBacktester, \"run\", fake_backtest)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 212,
+          "preview": "def fake_backtest(self, market):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 220,
+          "preview": "monkeypatch.setattr(WalkForwardBacktester, \"run\", fake_backtest)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 241,
+          "preview": "def fake_backtest(self, market):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 259,
+          "preview": "monkeypatch.setattr(WalkForwardBacktester, \"run\", fake_backtest)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 283,
+          "preview": "def fake_backtest(self, market):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tests/test_backtest.py",
+          "line": 292,
+          "preview": "monkeypatch.setattr(WalkForwardBacktester, \"run\", fake_backtest)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 10
+    },
+    "test_turnover_study_marks_profitable_untouched_holdout_for_review": {
+      "definition": {
+        "file": "tests/test_backtest.py",
+        "line": 175,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tests/test_backtest.py",
+          "line": 175,
+          "preview": "def test_turnover_study_marks_profitable_untouched_holdout_for_review(",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_external_probe_reports_connection_errors_without_exposing_details": {
+    "test_turnover_study_rejects_small_out_of_sample_history": {
       "definition": {
-        "file": "tests/test_dashboard_health.py",
+        "file": "tests/test_backtest.py",
         "line": 207,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_dashboard_health.py",
+          "file": "tests/test_backtest.py",
           "line": 207,
-          "preview": "def test_external_probe_reports_connection_errors_without_exposing_details(",
+          "preview": "def test_turnover_study_rejects_small_out_of_sample_history(monkeypatch) -> None:",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "fail_request": {
+    "test_turnover_study_reports_zero_cost_counterfactual_without_promoting": {
       "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 216,
+        "file": "tests/test_backtest.py",
+        "line": 232,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tests/test_dashboard_health.py",
-          "line": 216,
-          "preview": "def fail_request(request, timeout):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 220,
-          "preview": "monkeypatch.setattr(deployment_probe, \"urlopen\", fail_request)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "test_probe_rejects_market_cards_with_broken_portfolio": {
-      "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 231,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 231,
-          "preview": "def test_probe_rejects_market_cards_with_broken_portfolio(monkeypatch) -> None:",
+          "file": "tests/test_backtest.py",
+          "line": 232,
+          "preview": "def test_turnover_study_reports_zero_cost_counterfactual_without_promoting(",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "FakeResponse": {
+    "test_turnover_study_does_not_repeat_frictionless_backtest": {
       "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 236,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 236,
-          "preview": "class FakeResponse:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 260,
-          "preview": "return FakeResponse({\"web_healthy\": True})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 262,
-          "preview": "return FakeResponse({\"ready\": True, \"storage_healthy\": True})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 263,
-          "preview": "return FakeResponse({",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 292,
-          "preview": "class FakeResponse:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 310,
-          "preview": "return FakeResponse({\"web_healthy\": True})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 312,
-          "preview": "return FakeResponse({\"ready\": True, \"storage_healthy\": True})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 313,
-          "preview": "return FakeResponse({",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 16,
-          "preview": "class FakeResponse:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 66,
-          "preview": "return FakeResponse(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 100,
-          "preview": "return FakeResponse(status_payload)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 101,
-          "preview": "return FakeResponse({\"ok\": True, \"processed\": 3})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 121,
-          "preview": "return FakeResponse({\"ok\": True})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 141,
-          "preview": "return FakeResponse({})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 156,
-          "preview": "return FakeResponse({})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 157,
-          "preview": "return FakeResponse({\"ok\": False, \"partial_failure\": True})",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 16
-    },
-    "__init__": {
-      "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 239,
+        "file": "tests/test_backtest.py",
+        "line": 276,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "src/ai_trading/allocation_state.py",
-          "line": 16,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/global_allocation.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/allocator_config_store.py",
-          "line": 11,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/global_allocator_config.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/audit.py",
-          "line": 32,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/audit.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/backtest.py",
-          "line": 68,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/broker.py",
-          "line": 25,
-          "preview": "def __init__(self, config: RiskConfig) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 46,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/burnin.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 40,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/champion_probation.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champion_probation.py",
-          "line": 56,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/champions.py",
-          "line": 26,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/champions.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/crisis_state_store.py",
-          "line": 11,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/crisis_state.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/drift_retrain_store.py",
-          "line": 16,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/economic_meta_store.py",
-          "line": 11,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/economic_meta.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/engine.py",
-          "line": 25,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/ensemble.py",
-          "line": 27,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/experiments.py",
-          "line": 13,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/experiments.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/expert_pool.py",
-          "line": 29,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/expert_pool.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 40,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/generations.py",
-          "line": 27,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/governor_state_store.py",
-          "line": 16,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/risk_governor_state.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/health_server.py",
-          "line": 56,
-          "preview": "def __init__(self, host: str = \"127.0.0.1\", port: int = 8765) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/kronos_research.py",
-          "line": 278,
-          "preview": "if not (source_dir / \"model\" / \"__init__.py\").is_file():",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/lifecycle_log.py",
-          "line": 26,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/model_lifecycle.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/maintenance.py",
-          "line": 15,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/maintenance.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/meta_store.py",
-          "line": 11,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/meta_router.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/model.py",
-          "line": 26,
-          "preview": "def __init__(self, random_state: int = 42) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/model_quarantine.py",
-          "line": 26,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/model_quarantine.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_backtest.py",
-          "line": 29,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 21,
-          "preview": "def __init__(self, root: str | Path, *, retain_generations: int = 3) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_runtime.py",
-          "line": 89,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_scheduler.py",
-          "line": 34,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_state.py",
-          "line": 28,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/multiasset_state.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/online.py",
-          "line": 27,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/online.py",
-          "line": 68,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/online.py",
-          "line": 69,
-          "preview": "super().__init__()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/orchestrator.py",
-          "line": 31,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle.py",
-          "line": 104,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 27,
-          "preview": "def __init__(self, *, code: str, error_type: str) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/paper_cycle_service.py",
-          "line": 28,
-          "preview": "super().__init__(code)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/persistence.py",
-          "line": 109,
-          "preview": "def __init__(self, root: str | Path = \"artifacts/models\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/postgres_persistence.py",
-          "line": 291,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/qualification_store.py",
-          "line": 36,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/quality_store.py",
-          "line": 16,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/model_quality.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_release.py",
-          "line": 190,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_revocation.py",
-          "line": 17,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/readiness_score.py",
-          "line": 130,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/resilience.py",
-          "line": 107,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/resilience_state.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/restart_log.py",
-          "line": 19,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/restarts.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/risk.py",
-          "line": 29,
-          "preview": "def __init__(self, config: RiskConfig) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime.py",
-          "line": 59,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_lock.py",
-          "line": 9,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/runtime.lock\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_state.py",
-          "line": 22,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/runtime_state.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/runtime_status.py",
-          "line": 92,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/runtime_status.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler.py",
-          "line": 25,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/specialist_experts.py",
-          "line": 23,
-          "preview": "def __init__(self, kind: str, random_state: int = 42) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/state_snapshot.py",
-          "line": 19,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor.py",
-          "line": 59,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor_lease.py",
-          "line": 18,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/supervisor_lease.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/supervisor_state.py",
-          "line": 19,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/supervisor_state.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/trade_journal.py",
-          "line": 29,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/trades.jsonl\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/watchdog.py",
-          "line": 23,
-          "preview": "def __init__(self, path: str | Path = \"artifacts/heartbeat.json\") -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_cost_stress.py",
-          "line": 11,
-          "preview": "def __init__(self, *, risk_config, model_config=None, config=None) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 239,
-          "preview": "def __init__(self, payload):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 295,
-          "preview": "def __init__(self, payload):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 27,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 24,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_data.py",
-          "line": 105,
-          "preview": "def __init__(self, name: str, result) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_persistence.py",
-          "line": 15,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_persistence.py",
-          "line": 40,
-          "preview": "def __init__(self, **kwargs) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_persistence.py",
-          "line": 71,
-          "preview": "def __init__(self, **kwargs) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_runtime.py",
-          "line": 69,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_hosted_runtime.py",
-          "line": 81,
-          "preview": "def __init__(self, **kwargs) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_mtf_shadow_challenger.py",
-          "line": 67,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_mtf_shadow_challenger.py",
-          "line": 148,
-          "preview": "def __init__(self, **kwargs) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle.py",
-          "line": 1093,
-          "preview": "def __init__(self):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 20,
-          "preview": "def __init__(self, *, initial_status: HostedRuntimeStatus | None = None) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_service.py",
-          "line": 49,
-          "preview": "def __init__(self, persistence: FakePersistence) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 19,
-          "preview": "def __init__(self, payload: dict[str, object], *, status: int = 200) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_runtime_persistence.py",
-          "line": 37,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler.py",
-          "line": 8,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_iteration_callback.py",
-          "line": 21,
-          "preview": "def __init__(self) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_shadow_challenger.py",
-          "line": 42,
-          "preview": "def __init__(",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 81
-    },
-    "__enter__": {
-      "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 242,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/runtime_lock.py",
-          "line": 13,
-          "preview": "def __enter__(self) -> Self:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 242,
-          "preview": "def __enter__(self):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 298,
-          "preview": "def __enter__(self):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 23,
-          "preview": "def __enter__(self):",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "__exit__": {
-      "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 245,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/runtime_lock.py",
-          "line": 22,
-          "preview": "def __exit__(self, exc_type, exc, tb) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 245,
-          "preview": "def __exit__(self, *args):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 301,
-          "preview": "def __exit__(self, *args):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 26,
-          "preview": "def __exit__(self, *_args):",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "read": {
-      "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 248,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 73,
-          "preview": "def read(self) -> list[BurnInSnapshot]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 85,
-          "preview": "return calculate_burnin_metrics(self.read())",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/burnin.py",
-          "line": 88,
-          "preview": "snapshots = self.read()",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 1005,
-          "preview": "<small class=\"header-subtitle\">Premium read-only control center \u00b7 live refresh without page jumps \u00b7 durable hosted runtime</small>",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/dashboard.py",
-          "line": 1107,
-          "preview": "<div class=\"footer-note\">AI Trading \u00b7 paper runtime \u00b7 read-only observability</div>",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 28,
-          "preview": "body = response.read(128_001)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 34,
-          "preview": "explanation = json.loads(exc.read(4096))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/deployment_probe.py",
-          "line": 195,
-          "preview": "parser = argparse.ArgumentParser(description=\"Probe read-only Trading AI endpoints\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/file_persistence.py",
-          "line": 144,
-          "preview": "return tuple(self.burnin_tracker.read())",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/lifecycle_log.py",
-          "line": 79,
-          "preview": "for chunk in iter(lambda: handle.read(1024 * 1024), b\"\"):",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multi_market.py",
-          "line": 247,
-          "preview": "# Independent, read-only model diagnostics can run concurrently.",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/multiasset_checkpoint.py",
-          "line": 46,
-          "preview": "for chunk in iter(lambda: handle.read(1024 * 1024), b\"\"):",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/operational_overview.py",
-          "line": 419,
-          "preview": "except Exception:  # noqa: BLE001 - read-only research cannot break the dashboard",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/postgres_persistence.py",
-          "line": 899,
-          "preview": "\"\"\"Bounded, read-only audit replay for one-bar v1/v2 forward comparison.\"\"\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/research_model_codec.py",
-          "line": 3,
-          "preview": "This module is opt-in for offline and read-only shadow studies only.",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 64,
-          "preview": "json.loads(response.read(16_385))",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/scheduler_fallback.py",
-          "line": 87,
-          "preview": "body = response.read(16_385)",
-          "definition_candidate": false
-        },
-        {
-          "file": "src/ai_trading/state_snapshot.py",
-          "line": 29,
-          "preview": "for chunk in iter(lambda: handle.read(65536), b\"\"):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_burnin.py",
-          "line": 24,
-          "preview": "snapshots = tracker.read()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 31,
-          "preview": "response.read().decode(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 34,
-          "preview": "return exc.code, exc.headers.get(\"Content-Type\", \"\"), exc.read().decode()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 248,
-          "preview": "def read(self, count):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 249,
-          "preview": "return self.body.read(count)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 304,
-          "preview": "def read(self, count):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 305,
-          "preview": "return self.body.read(count)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 515,
-          "preview": "payload = json.loads(response.read().decode())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_overview.py",
-          "line": 634,
-          "preview": "payload = json.loads(response.read().decode())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 151,
-          "preview": "return response.status, response.read().decode()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 153,
-          "preview": "return exc.code, exc.read().decode()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_persistence.py",
-          "line": 158,
-          "preview": "return response.status, response.headers, response.read().decode()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_health_server.py",
-          "line": 16,
-          "preview": "body = response.read().decode(\"utf-8\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 29,
-          "preview": "def read(self, size: int) -> bytes:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_paper_cycle_workflow.py",
-          "line": 30,
-          "preview": "return self.content.read(size)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_endpoint.py",
-          "line": 55,
-          "preview": "return response.status, response.read().decode()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_scheduler_endpoint.py",
-          "line": 57,
-          "preview": "return exc.code, exc.read().decode()",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 35
-    },
-    "fake_urlopen": {
-      "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 253,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 253,
-          "preview": "def fake_urlopen(request, timeout):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 272,
-          "preview": "monkeypatch.setattr(deployment_probe, \"urlopen\", fake_urlopen)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 307,
-          "preview": "def fake_urlopen(request, timeout):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 331,
-          "preview": "monkeypatch.setattr(deployment_probe, \"urlopen\", fake_urlopen)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "test_hosted_probe_requires_running_engines_not_only_complete_portfolio": {
-      "definition": {
-        "file": "tests/test_dashboard_health.py",
-        "line": 281,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tests/test_dashboard_health.py",
-          "line": 281,
-          "preview": "def test_hosted_probe_requires_running_engines_not_only_complete_portfolio(",
+          "file": "tests/test_backtest.py",
+          "line": 276,
+          "preview": "def test_turnover_study_does_not_repeat_frictionless_backtest(monkeypatch) -> None:",
           "definition_candidate": true
         }
       ],

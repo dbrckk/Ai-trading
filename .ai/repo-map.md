@@ -1013,11 +1013,12 @@ name: Turnover Research
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - feat/turnover-validation-study
+  pull_request:
     paths:
       - .github/workflows/turnover-research.yml
+      - src/ai_trading/turnover_study.py
+      - src/ai_trading/backtest.py
+      - src/ai_trading/broker.py
 
 permissions:
   contents: read
@@ -9478,6 +9479,23 @@ reference_index = equity.index
 split = int((len(equity) - 1) * (1.0 - holdout_fraction))
 ⋮----
 baseline = rows[0]
+# Counterfactual: refit the same chronological proxy with execution costs
+# disabled. This is a *sensitivity test*, not a ledger of paid fees:
+# different equity paths can produce different future position sizing.
+⋮----
+zero_cost_validation_return = baseline["validation_net_return"]
+zero_cost_holdout_return = baseline["holdout_net_return"]
+zero_cost_full_return = baseline["full_net_return"]
+⋮----
+zero_cost_report = WalkForwardBacktester(
+⋮----
+zero_cost_equity = zero_cost_report.equity_curve
+⋮----
+cost_diagnostic = "profitable_after_modeled_costs"
+⋮----
+cost_diagnostic = "positive_zero_cost_counterfactual_only"
+⋮----
+cost_diagnostic = "nonpositive_even_without_modeled_costs"
 enough_samples = (
 # Candidate choice uses ONLY validation returns, not holdout performance.
 candidates = [
@@ -9746,6 +9764,18 @@ first_end = 109.0 if better else 106.0
 last_end = 118.0 if better else 108.0
 ⋮----
 def test_turnover_study_rejects_small_out_of_sample_history(monkeypatch) -> None
+⋮----
+calls: list[tuple[float, float, float]] = []
+⋮----
+config = self.risk_config
+⋮----
+endpoint = (
+⋮----
+study = compare_rebalance_thresholds(
+⋮----
+diagnostic = study["baseline_cost_sensitivity"]
+⋮----
+def test_turnover_study_does_not_repeat_frictionless_backtest(monkeypatch) -> None
 ````
 
 ## File: tests/test_benchmark_gate.py
@@ -14696,6 +14726,21 @@ ranking worst regimes or checking return dispersion. Invalid results must
 not qualify a strategy. This is a research-only diagnostic; no broker,
 execution or risk-sizing configuration is changed.
 
+
+## Execution-cost attribution research
+
+The read-only `turnover-study` comparison additionally reruns the **baseline
+(0% turnover deadband)** with the same chronological walk-forward configuration
+but zero modeled transaction costs and slippage. Its JSON
+`baseline_cost_sensitivity` section reports zero-cost validation/holdout/full
+returns, the corresponding differences versus the fee-inclusive baseline,
+and whether the strategy was positive only in this hypothetical zero-cost
+setting. The difference is **not** an exact fee ledger: altered portfolio
+equity can affect subsequent position sizing and risk decisions.
+
+This diagnostic distinguishes an execution-friction sensitivity problem from
+an already-unprofitable zero-cost proxy. It does not validate the hosted
+River-v1 model, authorize parameter changes, or guarantee profits.
 
 ## Experimental turnover control (paper trading only)
 

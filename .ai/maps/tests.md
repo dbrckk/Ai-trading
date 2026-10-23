@@ -408,6 +408,18 @@ first_end = 109.0 if better else 106.0
 last_end = 118.0 if better else 108.0
 ⋮----
 def test_turnover_study_rejects_small_out_of_sample_history(monkeypatch) -> None
+⋮----
+calls: list[tuple[float, float, float]] = []
+⋮----
+config = self.risk_config
+⋮----
+endpoint = (
+⋮----
+study = compare_rebalance_thresholds(
+⋮----
+diagnostic = study["baseline_cost_sensitivity"]
+⋮----
+def test_turnover_study_does_not_repeat_frictionless_backtest(monkeypatch) -> None
 ```
 
 ## File: test_benchmark_gate.py

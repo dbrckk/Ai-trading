@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 5 success / 0 failure / 3 active
+Summary: 5 success / 1 failure / 2 active
 
-- Hosted Dashboard Probe: in_progress / pending (88e8cf64)
-- CodeQL: in_progress / pending (88e8cf64)
-- CI: in_progress / pending (88e8cf64)
-- Paper Cycle: completed / success (e0e2f579)
-- CI: completed / success (4cee1254)
-- CodeQL: completed / success (4cee1254)
-- Hosted Dashboard Probe: completed / success (e0e2f579)
-- CodeQL: completed / success (2cf14ca3)
+- CodeQL: in_progress / pending (fef80d5e)
+- CI: in_progress / pending (fef80d5e)
+- Hosted Dashboard Probe: completed / failure (8a3b1470)
+- Paper Cycle: completed / success (8a3b1470)
+- Hosted Dashboard Probe: completed / success (8a3b1470)
+- Paper Cycle: completed / success (8a3b1470)
+- Paper Cycle: completed / success (8a3b1470)
+- Hosted Dashboard Probe: completed / success (8a3b1470)
+
+## Latest failed run structure
+- Job: probe
+  - Failed step: Verify liveness, durable readiness and market cards
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

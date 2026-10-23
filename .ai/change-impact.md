@@ -1,13 +1,17 @@
 # Change impact
 
-Base: e0e2f57961963ee4b1fdbfea25ddea0e414812dd
-Head: 88e8cf64d7145809dedaba63087fc896c3c95d52
+Base: 8a3b1470e40e3612d42d032acd60e3c1d36c1475
+Head: fef80d5ea7f4ab1e3a4a8261ad6e4d44e96844a1
 
 ## Changed files
-- M src/ai_trading/deployment_probe.py
-- M tests/test_dashboard_health.py
+- M .github/workflows/turnover-research.yml
+- M README.md
+- M src/ai_trading/turnover_study.py
+- M tests/test_backtest.py
 
 ## Affected areas
+- .github
+- (root)
 - src
 - tests
 

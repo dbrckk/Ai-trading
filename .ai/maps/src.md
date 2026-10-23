@@ -8539,6 +8539,23 @@ reference_index = equity.index
 split = int((len(equity) - 1) * (1.0 - holdout_fraction))
 ⋮----
 baseline = rows[0]
+# Counterfactual: refit the same chronological proxy with execution costs
+# disabled. This is a *sensitivity test*, not a ledger of paid fees:
+# different equity paths can produce different future position sizing.
+⋮----
+zero_cost_validation_return = baseline["validation_net_return"]
+zero_cost_holdout_return = baseline["holdout_net_return"]
+zero_cost_full_return = baseline["full_net_return"]
+⋮----
+zero_cost_report = WalkForwardBacktester(
+⋮----
+zero_cost_equity = zero_cost_report.equity_curve
+⋮----
+cost_diagnostic = "profitable_after_modeled_costs"
+⋮----
+cost_diagnostic = "positive_zero_cost_counterfactual_only"
+⋮----
+cost_diagnostic = "nonpositive_even_without_modeled_costs"
 enough_samples = (
 # Candidate choice uses ONLY validation returns, not holdout performance.
 candidates = [
