@@ -2,9 +2,10 @@ name: MTF Net Cost Evidence
 
 on:
   push:
-    branches: ["fix/mtf-bounded-real-cost-evidence", "fix/mtf-chronological-holdout", "fix/mtf-position-sized-ledger"]
+    branches: ["fix/mtf-bounded-real-cost-evidence", "fix/mtf-chronological-holdout", "fix/mtf-position-sized-ledger", "fix/mtf-shared-capital-ledger"]
     paths:
       - "src/ai_trading/mtf_parameter_benchmark.py"
+      - "src/ai_trading/mtf_shared_portfolio.py"
       - "tests/test_mtf_parameter_benchmark.py"
       - ".github/workflows/mtf-net-cost-evidence.yml"
   workflow_dispatch:
@@ -32,11 +33,14 @@ jobs:
         run: |
           python - <<'PY'
           import json
+          from dataclasses import asdict
+          from pathlib import Path
           from ai_trading.data import load_history
           from ai_trading.mtf_parameter_benchmark import (
               MTFBenchmarkConfig, benchmark_payload, run_chronological_holdout,
               run_parameter_benchmark, write_benchmark_report,
           )
+          from ai_trading.mtf_shared_portfolio import simulate_shared_mtf_portfolio
 
           # Previously investigated 45/90-minute shadow variants, not a
           # newly optimized grid. These are research-only comparators.
@@ -58,7 +62,6 @@ jobs:
               validation_test_window_bars=240, min_train_rows=500,
               random_state=42, transaction_cost_bps=2.0, slippage_bps=1.0,
           )
-          from pathlib import Path
           target = Path("artifacts/mtf-net-cost/chronological-holdout.json")
           target.parent.mkdir(parents=True, exist_ok=True)
           target.write_text(json.dumps(study, indent=2, sort_keys=True) + "\n")
@@ -80,6 +83,42 @@ jobs:
           payload = benchmark_payload(results)
           for symbol, selection in payload["market_selections"].items():
               print(f"MTF selection {symbol}: {json.dumps(selection, sort_keys=True)}")
+          # Retrospective diagnostics only, NEVER used to choose hyperparameters
+          # or promote a model. Replay simultaneous signals with common cash
+          # and a 30% gross entry cap; every configuration stands alone.
+          shared = {}
+          for aggregate in results:
+              portfolio = simulate_shared_mtf_portfolio(
+                  markets, aggregate.markets,
+                  starting_cash=100_000.0, per_market_fraction=0.10,
+                  max_gross_fraction=0.30,
+              )
+              shared[aggregate.config.name] = asdict(portfolio)
+              print(
+                  f"MTF shared-capital {aggregate.config.name}: "
+                  f"trades={portfolio.accepted_trades}, "
+                  f"rejected={portfolio.rejected_entries}, "
+                  f"net={portfolio.net_return:+.4%}, "
+                  f"max_drawdown={portfolio.max_drawdown:.4%}, "
+                  f"peak_gross={portfolio.peak_gross_exposure_fraction:.4%}"
+              )
+          Path("artifacts/mtf-net-cost/shared-capital.json").write_text(
+              json.dumps({
+                  "method": {
+                      "scope": "retrospective_research_only_no_model_promotion",
+                      "shared_cash": True,
+                      "three_markets_simultaneously": True,
+                      "starting_cash": 100_000.0,
+                      "entry_notional_fraction": 0.10,
+                      "entry_gross_exposure_limit": 0.30,
+                      "stale_prices": "last_observed_completed_close",
+                      "currency_conversion": "not_modeled",
+                      "funding_margin_and_real_fills": "not_modeled",
+                      "prospective_holdout": False,
+                  },
+                  "configurations": shared,
+              }, indent=2, sort_keys=True) + "\n"
+          )
           for aggregate in results:
               for item in aggregate.markets:
                   print(

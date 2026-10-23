@@ -66,6 +66,17 @@ class MTFBenchmarkConfig:
 
 
 @dataclass(frozen=True)
+class MTFResearchTrade:
+    """Chronologically realized, non-overlapping research signal execution."""
+
+    entry_time: str
+    exit_time: str
+    entry_price: float
+    exit_price: float
+    side: int
+
+
+@dataclass(frozen=True)
 class MarketBenchmarkResult:
     symbol: str
     config_name: str
@@ -98,6 +109,7 @@ class MarketBenchmarkResult:
     sized_equity_final: float = _SIZED_STARTING_CASH
     sized_net_return: float = 0.0
     sized_max_drawdown: float = 0.0
+    paper_trades: tuple[MTFResearchTrade, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -360,6 +372,7 @@ def evaluate_market_config(
     confidences: list[float] = []
     realized_labels: list[int] = []
     economic_returns: list[float] = []
+    paper_trades: list[MTFResearchTrade] = []
     last_economic_exit_pos = -1
     sized_equity = _SIZED_STARTING_CASH
     sized_peak = _SIZED_STARTING_CASH
@@ -426,6 +439,15 @@ def evaluate_market_config(
                 if not isfinite(net_return):
                     raise ValueError("invalid net return for economic audit")
                 economic_returns.append(net_return)
+                paper_trades.append(
+                    MTFResearchTrade(
+                        entry_time=market.index[signal_pos + 1].isoformat(),
+                        exit_time=market.index[signal_pos + config.horizon_bars].isoformat(),
+                        entry_price=entry_open,
+                        exit_price=exit_close,
+                        side=effective_side,
+                    )
+                )
                 sized_equity, sized_peak, sized_max_drawdown = _mark_sized_paper_trade(
                     market,
                     signal_pos=signal_pos,
@@ -515,6 +537,7 @@ def evaluate_market_config(
         sized_equity_final=sized_equity,
         sized_net_return=float(sized_net),
         sized_max_drawdown=float(sized_max_drawdown),
+        paper_trades=tuple(paper_trades),
     )
 
 
