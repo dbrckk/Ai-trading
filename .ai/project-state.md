@@ -6,6 +6,9 @@ Status: active
 
 ## Working
 
+- **2026-10-23 global numerical risk evidence:** PR #200 merged after green CI and CodeQL, guarding paper RiskEngine and core configuration. An independent read-only turnover artifact (GitHub #12440979405) showed Gold baseline -0.253% after modeled fees vs +0.045% zero-cost, DAX -0.243% vs -0.063%, and BTC -0.687% vs -0.249% (offline proxy, not hosted River-v1; exact fee ledger not claimed). This branch rejects non-finite global governor telemetry and invalid portfolio exposure/capital/risk limits, with existing test coverage. Keep production market settings, River-v1 and live-broker OFF unchanged.
+
+
 - **2026-10-23 core risk input safety:** Hosted Dashboard Probe run 39902075368 failed with all Gold/DAX/BTC in STARTING on first attempt; rerun passed web, readiness and three RUNNING motors at 06:24:56 UTC (exact Render deploy SHA not checked). PR #199 merged with successful CI/CodeQL; read-only fee/no-fee sensitivity is research only. New branch rejects non-finite RiskConfig cash/costs, ModelConfig return threshold and invalid paper portfolio/model forecasts before authorizing exposure; finite hard-loss stops still flatten. No change to default allocation or live-trading posture.
 
 
