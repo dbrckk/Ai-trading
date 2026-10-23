@@ -4,7 +4,7 @@
   "base_branch": "main",
   "active_branch": "main",
   "pull_request": null,
-  "focus": "PR #211 merged 2026-10-23 (1dc13bc): common 100,000-unit Gold/DAX/BTC MTF research cash, <=30% entry gross cap, 10% target per market, per-completed-bar mark, concurrent positions, fees, journal reconciliation and portfolio drawdown. PR CI/CodeQL/real research run 39992283255 passed. Retrospective combined portfolio results: 45m/conf56 -0.7000% / max DD 0.9420%; 45m/conf60 -0.4707% / DD 0.6899%; 90m/conf60 -0.0553% / DD 0.2985%. Validation selected no candidate in any market. No model promotion or hosted River-v1 settings changed, live broker OFF. Main post-merge checks and exact Render release unverified at checkpoint.",
+  "focus": "2026-10-23 GitHub Paper Cycle run 40007818418 at 18:59 UTC failed with authenticated POST HTTP 503 after ~3.5m, despite successful token preflight. Root cause unverified: possible partial-market failure, backend storage issue or Render proxy. PR #212 merged e4a7299: bounded allowlisted error classification + read-only hosted probe on fallback failure; full PR CI/CodeQL green. NO automatic POST retry, no paper/live broker or model/risk changes. Need fresh Hosted Dashboard Probe and next Paper Cycle with diagnostic log; exact Render SHA remains unverified. Prospective research data preregistration pending.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -259,6 +259,19 @@
       "production_parameters_changed": false,
       "live_broker_enabled": false,
       "limitations": "retrospective portfolio proxies, no FX conversion, gold/DAX contract multipliers, borrowing/margin/funding, exact fills or globally new prospective holdout; gross cap is entry-time only"
+    },
+    "latest_paper_cycle_incident": {
+      "observed_on": "2026-10-23",
+      "utc_start_approx": "18:59",
+      "run_id": 40007818418,
+      "status": "failed_http_503",
+      "token_preflight": "passed",
+      "operation": "authenticated POST /internal/paper-cycle",
+      "outcome": "unhealthy_or_partial_failure_unclassified_in_historical_log",
+      "root_cause_confirmed": false,
+      "remediation_commit": "e4a7299e9b084a1d3ec7d6e18e06e4c8d901dbca",
+      "remediation_scope": "diagnostic-only; no automatic retry or server recovery assertion",
+      "hosting_release_verified": false
     }
   },
   "completed_changes": [
@@ -304,7 +317,8 @@
     "PR #208 merged on 2026-10-23 (23f8f36): MTF finite param guard/empty-grid guard; green PR checks and real-market MTF net-of-cost diagnostic, no candidates.",
     "PR #209 merged 2026-10-23 3a9d320: frozen pre-holdout MTF selection and time-anchored, conditional chronological final evaluation; CI/CodeQL/real-market workflow successful.",
     "PR #210 merged 2026-10-23 d2d4ec3: one-market paper equity and drawdown on 10% entry notional, with positive sized-return gate; PR CI/CodeQL and real MTF evidence passed.",
-    "PR #211 merged 2026-10-23 1dc13bc: common-capital MTF Gold/DAX/BTC model with overlapping positions, marked portfolio equity/drawdown, entry gross cap, and reconciled cash/fills; full PR CI/CodeQL and live-data benchmark green."
+    "PR #211 merged 2026-10-23 1dc13bc: common-capital MTF Gold/DAX/BTC model with overlapping positions, marked portfolio equity/drawdown, entry gross cap, and reconciled cash/fills; full PR CI/CodeQL and live-data benchmark green.",
+    "PR #212 merged 2026-10-23 e4a7299: sanitized paper fallback HTTP error categories and on-failure read-only hosted readiness/markets probe; PR CI/CodeQL passed. Host-side cause not yet fixed or verified."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -313,9 +327,9 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Verify post-merge main GitHub CI/CodeQL and strict hosted probe; independently identify exact Render deployed SHA rather than equate main commit with deploy.",
-    "Pre-register a future-only cutover timestamp and archive raw completed bars, data hashes and config/commit provenance for prospective unseen holdout evaluation.",
-    "For any later promising research model, improve shared-portfolio accounting for contract multipliers, FX conversion, funding/margin and market-specific costs, then quantify robust net OOS expectancy and drawdown.",
-    "Keep all currently negative MTF configurations research-only, maintain River-v1 paper authority and real broker OFF."
+    "Check next Paper Cycle workflow run and read-only health probe for scheduler recovery or cause (storage unavailable vs partial market vs upstream 503); Render workspace/actual deployed SHA still unverified.",
+    "Investigate persistent Render/Neon/Cloudflare failure if the new logs show recurring HTTP 503. Preserve fail-closed behavior and avoid reissuing state-mutating cycle POST blindly.",
+    "After operational stability, pre-register future-only data cutoff and archive raw completed-bar hashes/config-commit provenance for a truly prospective OOS evaluation; no tested MTF is promotable.",
+    "Keep River-v1 paper authority, active risk/scheduler settings unchanged and live broker OFF."
   ]
 }
