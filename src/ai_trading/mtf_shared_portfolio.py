@@ -88,6 +88,8 @@ def simulate_shared_mtf_portfolio(
         frame.index = pd.to_datetime(frame.index, utc=True)
         bars[symbol] = frame
 
+        if len(rows[symbol].paper_trades) != rows[symbol].economic_trades:
+            raise ValueError(f"{symbol}: incomplete time-aligned research fills")
         last_exit: pd.Timestamp | None = None
         for trade in sorted(
             rows[symbol].paper_trades,
