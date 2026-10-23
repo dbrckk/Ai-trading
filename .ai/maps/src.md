@@ -5916,12 +5916,19 @@ gross = float(exposures.abs().sum())
 net = float(abs(exposures.sum()))
 max_asset = float(exposures.abs().max()) if len(exposures) else 0.0
 ⋮----
-corr = returns.astype(float).corr().abs()
+# Missing/constant return series cannot prove that two held positions
+# are decorrelated. Do not silently treat undefined correlation as zero.
+active_assets = notionals_numeric.index[notionals_numeric.ne(0.0)]
+missing_evidence = len(active_assets) > 1 and (
 max_corr = 0.0
 ⋮----
-value = corr.at[a, b]
+corr = returns.loc[:, active_assets].astype(float).corr().abs()
 ⋮----
-max_corr = max(max_corr, float(value))
+value = float(corr.at[asset, other])
+⋮----
+missing_evidence = True
+⋮----
+max_corr = max(max_corr, value)
 ⋮----
 reasons: list[str] = []
 ```

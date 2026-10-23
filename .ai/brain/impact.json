@@ -1,48 +1,32 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "97d977dd71bee0a6e20e47bba828f230b86112c1",
-  "head": "7a3ea4948365dd376487c84fe65a82c16e36488c",
+  "base": "7a3ea4948365dd376487c84fe65a82c16e36488c",
+  "head": "a03e8c25e2f796f38fa80b624a96aeeccd54e00b",
   "index_mode": "incremental",
   "changed_files": [
-    {
-      "path": "README.md",
-      "status": "M"
-    },
     {
       "path": "src/ai_trading/portfolio_risk.py",
       "status": "M"
     },
     {
-      "path": "src/ai_trading/risk_governor.py",
-      "status": "M"
-    },
-    {
       "path": "tests/test_portfolio_risk.py",
-      "status": "M"
-    },
-    {
-      "path": "tests/test_risk_governor.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
     "src/ai_trading/portfolio_risk.py",
-    "src/ai_trading/risk_governor.py",
-    "tests/test_portfolio_risk.py",
-    "tests/test_risk_governor.py"
+    "tests/test_portfolio_risk.py"
   ],
   "impacted_files": [
     "src/ai_trading/cli.py",
     "src/ai_trading/multiasset_backtest.py",
     "src/ai_trading/multiasset_runtime.py",
     "src/ai_trading/portfolio_risk.py",
-    "src/ai_trading/risk_governor.py",
     "tests/test_config_validation.py",
     "tests/test_multiasset_backtest.py",
     "tests/test_multiasset_runtime.py",
-    "tests/test_portfolio_risk.py",
-    "tests/test_risk_governor.py"
+    "tests/test_portfolio_risk.py"
   ],
   "impacted_symbols": [
     {
@@ -448,30 +432,6 @@
       "line": 45
     },
     {
-      "name": "GovernorPolicy",
-      "kind": "class",
-      "file": "src/ai_trading/risk_governor.py",
-      "line": 8
-    },
-    {
-      "name": "GovernorSignals",
-      "kind": "class",
-      "file": "src/ai_trading/risk_governor.py",
-      "line": 22
-    },
-    {
-      "name": "GovernorDecision",
-      "kind": "class",
-      "file": "src/ai_trading/risk_governor.py",
-      "line": 38
-    },
-    {
-      "name": "evaluate_governor",
-      "kind": "function",
-      "file": "src/ai_trading/risk_governor.py",
-      "line": 47
-    },
-    {
       "name": "test_invalid_strategy_configuration_fails_closed",
       "kind": "function",
       "file": "tests/test_config_validation.py",
@@ -676,76 +636,22 @@
       "line": 71
     },
     {
-      "name": "base_signals",
+      "name": "test_portfolio_risk_rejects_undefined_correlation_between_active_assets",
       "kind": "function",
-      "file": "tests/test_risk_governor.py",
-      "line": 8
+      "file": "tests/test_portfolio_risk.py",
+      "line": 76
     },
     {
-      "name": "test_governor_trade_when_all_gates_pass",
+      "name": "test_portfolio_risk_rejects_missing_active_asset_history",
       "kind": "function",
-      "file": "tests/test_risk_governor.py",
-      "line": 27
+      "file": "tests/test_portfolio_risk.py",
+      "line": 84
     },
     {
-      "name": "test_governor_reduces_on_elevated_risk",
+      "name": "test_portfolio_risk_ignores_missing_history_for_flat_asset",
       "kind": "function",
-      "file": "tests/test_risk_governor.py",
-      "line": 32
-    },
-    {
-      "name": "test_governor_freezes_on_failed_risk_gate",
-      "kind": "function",
-      "file": "tests/test_risk_governor.py",
-      "line": 38
-    },
-    {
-      "name": "test_governor_flattens_on_extreme_drawdown",
-      "kind": "function",
-      "file": "tests/test_risk_governor.py",
-      "line": 44
-    },
-    {
-      "name": "test_governor_halts_on_critical_data_failure",
-      "kind": "function",
-      "file": "tests/test_risk_governor.py",
-      "line": 50
-    },
-    {
-      "name": "test_failed_stress_test_reduces_instead_of_freezing",
-      "kind": "function",
-      "file": "tests/test_risk_governor.py",
-      "line": 56
-    },
-    {
-      "name": "test_governor_reduces_when_recovery_health_is_degraded",
-      "kind": "function",
-      "file": "tests/test_risk_governor.py",
-      "line": 68
-    },
-    {
-      "name": "test_governor_halts_after_repeated_recovery_failures",
-      "kind": "function",
-      "file": "tests/test_risk_governor.py",
-      "line": 81
-    },
-    {
-      "name": "test_governor_halts_on_excessive_recovery_fallback_depth",
-      "kind": "function",
-      "file": "tests/test_risk_governor.py",
-      "line": 93
-    },
-    {
-      "name": "test_governor_returns_to_trade_after_recovery_health_normalizes",
-      "kind": "function",
-      "file": "tests/test_risk_governor.py",
-      "line": 105
-    },
-    {
-      "name": "test_governor_halts_on_invalid_numeric_risk_evidence",
-      "kind": "function",
-      "file": "tests/test_risk_governor.py",
-      "line": 128
+      "file": "tests/test_portfolio_risk.py",
+      "line": 92
     }
   ],
   "selected_tests": [
@@ -754,7 +660,6 @@
     "tests/test_multiasset_runtime.py",
     "tests/test_portfolio.py",
     "tests/test_portfolio_risk.py",
-    "tests/test_risk.py",
-    "tests/test_risk_governor.py"
+    "tests/test_risk.py"
   ]
 }

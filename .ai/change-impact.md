@@ -1,23 +1,18 @@
 # Change impact
 
-Base: 1a49fe10e0abf08edb3372914745cebf38c11b78
-Head: 7a3ea4948365dd376487c84fe65a82c16e36488c
+Base: fb887aff9727dc036a2504ff110284f3c4fc0844
+Head: a03e8c25e2f796f38fa80b624a96aeeccd54e00b
 
 ## Changed files
-- M README.md
 - M src/ai_trading/portfolio_risk.py
-- M src/ai_trading/risk_governor.py
 - M tests/test_portfolio_risk.py
-- M tests/test_risk_governor.py
 
 ## Affected areas
-- (root)
 - src
 - tests
 
 ## Related test candidates
 - tests/test_portfolio_risk.py
-- tests/test_risk_governor.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

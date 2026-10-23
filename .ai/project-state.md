@@ -116,20 +116,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-23T07:04:57Z
+Generated: 2026-10-23T10:08:00Z
 
 ### Git
 - Branch: `main`
-- Head: `7a3ea4948365`
-- Commit date: 2026-10-23T03:04:48-04:00
-- Commit: fix(risk): halt on invalid global risk signals and portfolio exposures
+- Head: `a03e8c25e2f7`
+- Commit date: 2026-10-23T06:07:48-04:00
+- Commit: fix(risk): reject undefined correlation between active markets
 - Tracked files: 515
 
 ### Recently changed files
-- `README.md`
 - `src/ai_trading/portfolio_risk.py`
-- `src/ai_trading/risk_governor.py`
 - `tests/test_portfolio_risk.py`
+- `README.md`
+- `src/ai_trading/risk_governor.py`
 - `tests/test_risk_governor.py`
 - `src/ai_trading/config.py`
 - `src/ai_trading/risk.py`
@@ -140,7 +140,6 @@ Generated: 2026-10-23T07:04:57Z
 - `tests/test_backtest.py`
 - `src/ai_trading/deployment_probe.py`
 - `tests/test_dashboard_health.py`
-- `src/ai_trading/command_app.py`
 
 ### Project signals
 - `pyproject.toml`

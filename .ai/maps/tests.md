@@ -3250,6 +3250,19 @@ def test_portfolio_risk_rejects_invalid_equity(equity: float) -> None
 def test_portfolio_risk_rejects_nonfinite_asset_exposure(notional: float) -> None
 ⋮----
 def test_portfolio_risk_rejects_nonfinite_limits(field: str) -> None
+⋮----
+def test_portfolio_risk_rejects_undefined_correlation_between_active_assets() -> None
+⋮----
+returns = pd.DataFrame({"A": [0.01, -0.01, 0.02], "B": [0.0, 0.0, 0.0]})
+report = evaluate_portfolio_risk(notionals, 100_000.0, returns)
+⋮----
+def test_portfolio_risk_rejects_missing_active_asset_history() -> None
+⋮----
+returns = pd.DataFrame({"A": [0.01, -0.01, 0.02]})
+⋮----
+def test_portfolio_risk_ignores_missing_history_for_flat_asset() -> None
+⋮----
+notionals = pd.Series({"A": 20_000.0, "B": 0.0})
 ```
 
 ## File: test_portfolio_selection.py
