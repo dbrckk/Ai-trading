@@ -546,3 +546,14 @@ duration and recorded equity; invalid numerical evidence cannot qualify a
 strategy. These checks assess research evidence only: they do not promote
 models automatically or enable live order routing. Positive modeled return
 alone is not proof of a transferable trading edge.
+
+## Performance-metric input integrity
+
+Walk-forward and benchmark evaluation now **rejects** non-finite, missing or
+non-positive equity observations instead of silently deleting data points.
+Benchmark prices and starting capital must also be finite and positive.
+Out-of-range or numerically overflowing return/metric calculations fail
+closed. This protects model and strategy comparisons against misleading
+backtest results from incomplete/invalid inputs. It does not imply positive
+real-world net returns or change paper orders, portfolio allocations, or
+model promotion defaults.
