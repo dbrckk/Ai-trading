@@ -3154,6 +3154,15 @@ def test_extreme_short_window_annualization_stays_finite() -> None
 ⋮----
 equity = pd.Series([1.0, 1e100])
 metrics = compute_metrics(equity, periods_per_year=525_600.0)
+⋮----
+def test_performance_refuses_incomplete_or_invalid_equity_curves(equity) -> None
+⋮----
+def test_performance_rejects_nonfinite_returns_from_finite_equity() -> None
+⋮----
+def test_benchmark_refuses_invalid_price_history(prices) -> None
+⋮----
+@pytest.mark.parametrize("capital", [np.nan, np.inf, 0.0, -1.0])
+def test_benchmark_refuses_invalid_starting_equity(capital) -> None
 ```
 
 ## File: test_persistence_contract.py

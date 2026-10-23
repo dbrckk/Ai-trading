@@ -122,17 +122,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-23T10:17:15Z
+Generated: 2026-10-23T10:23:55Z
 
 ### Git
 - Branch: `main`
-- Head: `ef5877563aa7`
-- Commit date: 2026-10-23T06:17:03-04:00
-- Commit: fix(research): reject invalid promotion and soak qualification evidence
+- Head: `89ffef0ec03e`
+- Commit date: 2026-10-23T06:23:44-04:00
+- Commit: fix(research): reject incomplete or invalid backtest performance data
 - Tracked files: 515
 
 ### Recently changed files
 - `README.md`
+- `src/ai_trading/performance.py`
+- `tests/test_performance.py`
 - `src/ai_trading/promotion.py`
 - `src/ai_trading/soak_gate.py`
 - `tests/test_multi_period_promotion.py`
@@ -146,9 +148,6 @@ Generated: 2026-10-23T10:17:15Z
 - `src/ai_trading/risk.py`
 - `tests/test_config_validation.py`
 - `tests/test_risk.py`
-- `.github/workflows/turnover-research.yml`
-- `src/ai_trading/turnover_study.py`
-- `tests/test_backtest.py`
 
 ### Project signals
 - `pyproject.toml`

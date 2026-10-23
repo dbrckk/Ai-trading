@@ -2,25 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "fix: defer multiasset learning side effects until checkpoint commit",
-      "terms": [
-        "checkpoint",
-        "commit",
-        "defer",
-        "effects",
-        "learning",
-        "multiasset",
-        "side",
-        "until"
-      ],
-      "tests": [],
-      "useful": [
-        "src/ai_trading/multiasset_runtime.py",
-        "tests/test_multiasset_runtime.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "fix: prevent multiasset model path collisions",
       "terms": [
         "collisions",
@@ -1289,6 +1270,24 @@
         "tests/test_promotion.py",
         "tests/test_soak_gate.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "fix(research): reject incomplete or invalid backtest performance data",
+      "terms": [
+        "backtest",
+        "data",
+        "incomplete",
+        "invalid",
+        "performance",
+        "reject",
+        "research"
+      ],
+      "tests": [],
+      "useful": [
+        "src/ai_trading/performance.py",
+        "tests/test_performance.py"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1973,7 +1972,9 @@
     },
     "backtest": {
       "src/ai_trading/multiasset_backtest.py": 4,
-      "tests/test_multiasset_backtest.py": 4
+      "src/ai_trading/performance.py": 4,
+      "tests/test_multiasset_backtest.py": 4,
+      "tests/test_performance.py": 4
     },
     "before": {
       "src/ai_trading/config.py": 4,
@@ -2444,7 +2445,7 @@
       "src/ai_trading/operational_overview.py": 4,
       "src/ai_trading/paper_cycle.py": 4,
       "src/ai_trading/paper_cycle_service.py": 4,
-      "src/ai_trading/performance.py": 4,
+      "src/ai_trading/performance.py": 8,
       "src/ai_trading/performance_metrics.py": 4,
       "src/ai_trading/persistence.py": 4,
       "src/ai_trading/postgres_persistence.py": 4,
@@ -2456,7 +2457,7 @@
       "tests/test_multi_market.py": 4,
       "tests/test_paper_cycle.py": 4,
       "tests/test_paper_cycle_service.py": 4,
-      "tests/test_performance.py": 4,
+      "tests/test_performance.py": 8,
       "tests/test_performance_metrics.py": 4,
       "tests/test_postgres_persistence.py": 4,
       "tests/test_scheduler_endpoint.py": 4
@@ -3107,7 +3108,9 @@
     },
     "incomplete": {
       "src/ai_trading/paper_cycle.py": 4,
-      "tests/test_paper_cycle.py": 4
+      "src/ai_trading/performance.py": 4,
+      "tests/test_paper_cycle.py": 4,
+      "tests/test_performance.py": 4
     },
     "independently": {
       "src/ai_trading/mtf_parameter_benchmark.py": 4,
@@ -3151,6 +3154,7 @@
       "src/ai_trading/bootstrap_gate.py": 4,
       "src/ai_trading/config.py": 4,
       "src/ai_trading/global_allocator.py": 4,
+      "src/ai_trading/performance.py": 4,
       "src/ai_trading/portfolio.py": 4,
       "src/ai_trading/portfolio_intelligence.py": 8,
       "src/ai_trading/portfolio_risk.py": 8,
@@ -3160,6 +3164,7 @@
       "tests/test_bootstrap_gate.py": 4,
       "tests/test_config_validation.py": 4,
       "tests/test_multi_period_promotion.py": 4,
+      "tests/test_performance.py": 4,
       "tests/test_portfolio_intelligence.py": 4,
       "tests/test_portfolio_risk.py": 4,
       "tests/test_promotion.py": 4,
@@ -3812,11 +3817,13 @@
       "src/ai_trading/dashboard.py": 4,
       "src/ai_trading/file_persistence.py": 4,
       "src/ai_trading/multi_market.py": 4,
+      "src/ai_trading/performance.py": 4,
       "src/ai_trading/performance_metrics.py": 4,
       "src/ai_trading/persistence.py": 4,
       "src/ai_trading/postgres_persistence.py": 4,
       "tests/test_cumulative_performance_persistence.py": 4,
-      "tests/test_multi_market.py": 4
+      "tests/test_multi_market.py": 4,
+      "tests/test_performance.py": 4
     },
     "persist": {
       "src/ai_trading/broker.py": 4,
@@ -4169,6 +4176,7 @@
       "src/ai_trading/bootstrap_gate.py": 4,
       "src/ai_trading/config.py": 4,
       "src/ai_trading/cost_stress_gate.py": 4,
+      "src/ai_trading/performance.py": 4,
       "src/ai_trading/portfolio_risk.py": 4,
       "src/ai_trading/promotion.py": 4,
       "src/ai_trading/regime_gate.py": 4,
@@ -4179,6 +4187,7 @@
       "tests/test_config_validation.py": 4,
       "tests/test_cost_stress_gate.py": 4,
       "tests/test_multi_period_promotion.py": 4,
+      "tests/test_performance.py": 4,
       "tests/test_portfolio_risk.py": 4,
       "tests/test_promotion.py": 4,
       "tests/test_regime_gate.py": 4,
@@ -4254,6 +4263,7 @@
       "src/ai_trading/online.py": 4,
       "src/ai_trading/operational_overview.py": 16,
       "src/ai_trading/paper_cycle.py": 12,
+      "src/ai_trading/performance.py": 4,
       "src/ai_trading/postgres_persistence.py": 4,
       "src/ai_trading/promotion.py": 4,
       "src/ai_trading/regime_gate.py": 4,
@@ -4278,6 +4288,7 @@
       "tests/test_multi_period_promotion.py": 4,
       "tests/test_online.py": 8,
       "tests/test_paper_cycle.py": 16,
+      "tests/test_performance.py": 4,
       "tests/test_promotion.py": 4,
       "tests/test_regime_gate.py": 4,
       "tests/test_sensitivity_gate.py": 4,

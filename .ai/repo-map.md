@@ -6583,9 +6583,13 @@ min_log = float(np.log(np.finfo(float).tiny))
 ⋮----
 def compute_metrics(equity: pd.Series, periods_per_year: float = 252.0) -> PerformanceMetrics
 ⋮----
-clean = equity.astype(float).dropna()
+clean = equity.astype(float)
+⋮----
+# Dropping a missing or invalid point can hide losses, change the sample
+# and produce a false-positive backtest. Reject incomplete equity curves.
 ⋮----
 returns = clean.pct_change().dropna()
+⋮----
 total_return = float(clean.iloc[-1] / clean.iloc[0] - 1.0)
 ⋮----
 years = max((len(returns) / periods_per_year), 1.0 / periods_per_year)
@@ -6604,7 +6608,11 @@ drawdowns = 1.0 - clean / running_max
 max_drawdown = float(drawdowns.max())
 calmar = _safe_ratio(annualized_return, max_drawdown)
 ⋮----
-clean = prices.astype(float).dropna()
+metrics = PerformanceMetrics(
+⋮----
+clean = prices.astype(float)
+⋮----
+benchmark = starting_equity * clean / clean.iloc[0]
 ````
 
 ## File: src/ai_trading/persistence_factory.py
@@ -12540,6 +12548,15 @@ def test_extreme_short_window_annualization_stays_finite() -> None
 ⋮----
 equity = pd.Series([1.0, 1e100])
 metrics = compute_metrics(equity, periods_per_year=525_600.0)
+⋮----
+def test_performance_refuses_incomplete_or_invalid_equity_curves(equity) -> None
+⋮----
+def test_performance_rejects_nonfinite_returns_from_finite_equity() -> None
+⋮----
+def test_benchmark_refuses_invalid_price_history(prices) -> None
+⋮----
+@pytest.mark.parametrize("capital", [np.nan, np.inf, 0.0, -1.0])
+def test_benchmark_refuses_invalid_starting_equity(capital) -> None
 ````
 
 ## File: tests/test_persistence_contract.py
@@ -14911,6 +14928,17 @@ duration and recorded equity; invalid numerical evidence cannot qualify a
 strategy. These checks assess research evidence only: they do not promote
 models automatically or enable live order routing. Positive modeled return
 alone is not proof of a transferable trading edge.
+
+## Performance-metric input integrity
+
+Walk-forward and benchmark evaluation now **rejects** non-finite, missing or
+non-positive equity observations instead of silently deleting data points.
+Benchmark prices and starting capital must also be finite and positive.
+Out-of-range or numerically overflowing return/metric calculations fail
+closed. This protects model and strategy comparisons against misleading
+backtest results from incomplete/invalid inputs. It does not imply positive
+real-world net returns or change paper orders, portfolio allocations, or
+model promotion defaults.
 ````
 
 ## File: render.yaml

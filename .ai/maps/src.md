@@ -5643,9 +5643,13 @@ min_log = float(np.log(np.finfo(float).tiny))
 ⋮----
 def compute_metrics(equity: pd.Series, periods_per_year: float = 252.0) -> PerformanceMetrics
 ⋮----
-clean = equity.astype(float).dropna()
+clean = equity.astype(float)
+⋮----
+# Dropping a missing or invalid point can hide losses, change the sample
+# and produce a false-positive backtest. Reject incomplete equity curves.
 ⋮----
 returns = clean.pct_change().dropna()
+⋮----
 total_return = float(clean.iloc[-1] / clean.iloc[0] - 1.0)
 ⋮----
 years = max((len(returns) / periods_per_year), 1.0 / periods_per_year)
@@ -5664,7 +5668,11 @@ drawdowns = 1.0 - clean / running_max
 max_drawdown = float(drawdowns.max())
 calmar = _safe_ratio(annualized_return, max_drawdown)
 ⋮----
-clean = prices.astype(float).dropna()
+metrics = PerformanceMetrics(
+⋮----
+clean = prices.astype(float)
+⋮----
+benchmark = starting_equity * clean / clean.iloc[0]
 ```
 
 ## File: ai_trading/persistence_factory.py

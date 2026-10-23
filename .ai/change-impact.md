@@ -1,15 +1,12 @@
 # Change impact
 
-Base: 175215917752f495ff6f686e85aafe5e5d119e06
-Head: ef5877563aa739ba1b7af8fc7830d64c551e1f8e
+Base: 10e9925158afca6d3289e33b94e6133364aec2c8
+Head: 89ffef0ec03e5935b0e04b52e1f6a31b29676077
 
 ## Changed files
 - M README.md
-- M src/ai_trading/promotion.py
-- M src/ai_trading/soak_gate.py
-- M tests/test_multi_period_promotion.py
-- M tests/test_promotion.py
-- M tests/test_soak_gate.py
+- M src/ai_trading/performance.py
+- M tests/test_performance.py
 
 ## Affected areas
 - (root)
@@ -17,8 +14,7 @@ Head: ef5877563aa739ba1b7af8fc7830d64c551e1f8e
 - tests
 
 ## Related test candidates
-- tests/test_promotion.py
-- tests/test_soak_gate.py
+- tests/test_performance.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.
