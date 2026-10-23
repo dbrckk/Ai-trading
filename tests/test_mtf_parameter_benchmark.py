@@ -16,8 +16,8 @@ from ai_trading.mtf_parameter_benchmark import (
     btc_focused_benchmark_grid,
     evaluate_market_config,
     market_selections,
-    run_parameter_benchmark,
     run_chronological_holdout,
+    run_parameter_benchmark,
 )
 
 
