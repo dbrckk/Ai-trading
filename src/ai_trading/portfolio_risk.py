@@ -62,16 +62,28 @@ def evaluate_portfolio_risk(
     if not all(isfinite(value) for value in (gross, net, max_asset)):
         raise ValueError("portfolio exposures must be finite")
 
-    corr = returns.astype(float).corr().abs()
+    # Missing/constant return series cannot prove that two held positions
+    # are decorrelated. Do not silently treat undefined correlation as zero.
+    active_assets = notionals_numeric.index[notionals_numeric.ne(0.0)]
+    missing_evidence = len(active_assets) > 1 and (
+        not active_assets.is_unique
+        or not set(active_assets).issubset(returns.columns)
+        or not returns.columns.is_unique
+    )
     max_corr = 0.0
-    if corr.shape[0] > 1:
-        for i, a in enumerate(corr.index):
-            for b in corr.columns[i + 1 :]:
-                value = corr.at[a, b]
-                if pd.notna(value):
-                    max_corr = max(max_corr, float(value))
+    if len(active_assets) > 1 and not missing_evidence:
+        corr = returns.loc[:, active_assets].astype(float).corr().abs()
+        for i, asset in enumerate(active_assets):
+            for other in active_assets[i + 1 :]:
+                value = float(corr.at[asset, other])
+                if not isfinite(value):
+                    missing_evidence = True
+                else:
+                    max_corr = max(max_corr, value)
 
     reasons: list[str] = []
+    if missing_evidence:
+        reasons.append("insufficient pair correlation evidence")
     if gross > config.max_gross_exposure + 1e-12:
         reasons.append("gross exposure limit exceeded")
     if net > config.max_net_exposure + 1e-12:
