@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import isfinite
 
 import pandas as pd
 
@@ -13,13 +14,21 @@ class PortfolioRiskConfig:
     max_pair_correlation: float = 0.90
 
     def __post_init__(self) -> None:
-        if self.max_gross_exposure <= 0:
-            raise ValueError("max_gross_exposure must be positive")
-        if self.max_net_exposure <= 0 or self.max_net_exposure > self.max_gross_exposure:
+        if not isfinite(self.max_gross_exposure) or self.max_gross_exposure <= 0:
+            raise ValueError("max_gross_exposure must be positive and finite")
+        if (
+            not isfinite(self.max_net_exposure)
+            or self.max_net_exposure <= 0
+            or self.max_net_exposure > self.max_gross_exposure
+        ):
             raise ValueError("max_net_exposure must be in (0, max_gross_exposure]")
-        if self.max_asset_exposure <= 0 or self.max_asset_exposure > self.max_gross_exposure:
+        if (
+            not isfinite(self.max_asset_exposure)
+            or self.max_asset_exposure <= 0
+            or self.max_asset_exposure > self.max_gross_exposure
+        ):
             raise ValueError("max_asset_exposure must be in (0, max_gross_exposure]")
-        if not 0.0 <= self.max_pair_correlation <= 1.0:
+        if not isfinite(self.max_pair_correlation) or not 0.0 <= self.max_pair_correlation <= 1.0:
             raise ValueError("max_pair_correlation must be in [0, 1]")
 
 
@@ -40,13 +49,18 @@ def evaluate_portfolio_risk(
     config: PortfolioRiskConfig | None = None,
 ) -> PortfolioRiskReport:
     config = config or PortfolioRiskConfig()
-    if equity <= 0:
-        raise ValueError("equity must be positive")
+    if not isfinite(equity) or equity <= 0:
+        raise ValueError("equity must be positive and finite")
 
-    exposures = notionals.astype(float) / equity
+    notionals_numeric = notionals.astype(float)
+    if not all(isfinite(value) for value in notionals_numeric):
+        raise ValueError("notionals must be finite")
+    exposures = notionals_numeric / equity
     gross = float(exposures.abs().sum())
     net = float(abs(exposures.sum()))
     max_asset = float(exposures.abs().max()) if len(exposures) else 0.0
+    if not all(isfinite(value) for value in (gross, net, max_asset)):
+        raise ValueError("portfolio exposures must be finite")
 
     corr = returns.astype(float).corr().abs()
     max_corr = 0.0

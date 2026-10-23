@@ -86,6 +86,10 @@ threshold configuration. Before any paper risk approval, portfolio equity,
 risk baselines, held notional, model direction and confidence must be valid.
 Corrupt runtime inputs block new exposure without issuing an untrusted forced
 exit. Valid hard loss stops continue to liquidate existing paper exposure.
+The global risk governor also halts on non-finite model-confidence, data-quality,
+stress-loss or drawdown evidence. Portfolio exposure analysis rejects invalid
+capital, notionals and non-finite configured risk limits instead of reporting
+approval based on NaN comparisons.
 These protections do not activate a live broker or improve proven profitability.
 
 ## Validation path

@@ -2,9 +2,9 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "fix/core-risk-finite-inputs",
+  "active_branch": "fix/global-risk-finite-evidence",
   "pull_request": null,
-  "focus": "After PR #199 merged, hosted strict probe rerun 39902075368 attempt 2 passed /livez, /readyz and all three Gold/DAX/BTC RUNNING; probe did not verify deployed SHA. This branch hardens RiskConfig/ModelConfig and paper RiskEngine against NaN/Infinity/invalid portfolio inputs or predictions while retaining valid hard-stop exits. No live trading or risk parameter changes.",
+  "focus": "PR #200 merged after successful CI and CodeQL; core paper RiskEngine and config reject invalid numerical inputs. Research GitHub Actions artifact #12440979405 confirms fee-inclusive baseline losses Gold -0.253%, DAX -0.243%, BTC -0.687%; frictionless Gold +0.045%, DAX -0.063%, BTC -0.249%. This branch closes NaN/Infinity fail-open holes in research portfolio exposure gate and global risk governor. Hosted strict probe rerun 39902075368 (attempt 2) three RUNNING; deployed SHA still unverified.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -158,8 +158,8 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Get core finite-input safeguard PR green CI and CodeQL and merge.",
-    "Compare Gold/DAX/BTC fee-inclusive and zero-cost counterfactual evidence from latest turnover workflow; keep all trading settings unchanged unless robust positive OOS edge.",
-    "Continue reviewing hosted availability and cumulative paper PnL; avoid enabling live trading."
+    "Confirm global finite-evidence PR CI and CodeQL; merge only after both pass.",
+    "Keep default turnover filter disabled; gain after modeled costs not demonstrated.",
+    "Collect live hosted paper performance per market before tuning; River-v1 remains authoritative, real broker OFF."
   ]
 }

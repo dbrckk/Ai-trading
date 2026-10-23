@@ -1,5 +1,8 @@
+import math
+
 import numpy as np
 import pandas as pd
+import pytest
 
 from ai_trading.portfolio_risk import PortfolioRiskConfig, evaluate_portfolio_risk
 
@@ -35,3 +38,36 @@ def test_portfolio_risk_detects_high_pair_correlation() -> None:
     )
     assert not report.approved
     assert "pair correlation limit exceeded" in report.reasons
+
+
+@pytest.mark.parametrize("equity", [math.nan, math.inf, -math.inf, 0.0])
+def test_portfolio_risk_rejects_invalid_equity(equity: float) -> None:
+    with pytest.raises(ValueError, match="equity"):
+        evaluate_portfolio_risk(
+            pd.Series({"A": 10_000.0}),
+            equity,
+            pd.DataFrame({"A": [0.01, -0.01]}),
+        )
+
+
+@pytest.mark.parametrize("notional", [math.nan, math.inf, -math.inf])
+def test_portfolio_risk_rejects_nonfinite_asset_exposure(notional: float) -> None:
+    with pytest.raises(ValueError, match="notionals"):
+        evaluate_portfolio_risk(
+            pd.Series({"A": notional}),
+            100_000.0,
+            pd.DataFrame({"A": [0.01, -0.01]}),
+        )
+
+
+@pytest.mark.parametrize(
+    "field", [
+        "max_gross_exposure",
+        "max_net_exposure",
+        "max_asset_exposure",
+        "max_pair_correlation",
+    ]
+)
+def test_portfolio_risk_rejects_nonfinite_limits(field: str) -> None:
+    with pytest.raises(ValueError):
+        PortfolioRiskConfig(**{field: math.nan})
