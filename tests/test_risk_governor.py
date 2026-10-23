@@ -1,3 +1,7 @@
+import math
+
+import pytest
+
 from ai_trading.risk_governor import GovernorSignals, evaluate_governor
 
 
@@ -104,3 +108,30 @@ def test_governor_returns_to_trade_after_recovery_health_normalizes() -> None:
 
     assert degraded.verdict == "REDUCE"
     assert healthy.verdict == "TRADE"
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("data_quality", math.nan),
+        ("data_quality", math.inf),
+        ("model_confidence", math.nan),
+        ("model_confidence", 1.5),
+        ("stressed_cvar", math.nan),
+        ("stressed_cvar", -0.1),
+        ("drawdown", math.nan),
+        ("drawdown", -0.1),
+        ("recovery_recent_failures", math.nan),
+        ("recovery_fallback_depth", math.inf),
+    ],
+)
+def test_governor_halts_on_invalid_numeric_risk_evidence(
+    field: str, value: float
+) -> None:
+    decision = evaluate_governor(base_signals(**{field: value}))
+
+    assert decision.verdict == "HALT"
+    assert decision.halt is True
+    assert decision.allow_rebalance is False
+    assert decision.exposure_scale == 0.0
+    assert decision.reason == "invalid risk governor signal"
