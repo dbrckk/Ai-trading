@@ -4,6 +4,7 @@ import json
 import socket
 import time
 from datetime import UTC, datetime, timedelta
+from io import BytesIO
 from threading import Thread
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -20,6 +21,7 @@ from ai_trading.scheduler_endpoint import (
     scheduler_delivery_overview,
     scheduler_telemetry_payload,
 )
+from ai_trading.scheduler_fallback import FallbackFailure, run_fallback
 
 
 def successful_result(
@@ -578,3 +580,36 @@ def test_scheduler_delivery_overview_exposes_recent_failed_delivery() -> None:
     assert overview["cloudflare_delivery_verified"] is False
     assert overview["last_delivery_age_seconds"] == 30.0
     assert overview["last_ok"] is False
+
+
+def test_scheduler_fallback_classifies_503_safely_without_repeating_post() -> None:
+    """Expose only allowlisted failure kinds; never send a second paper cycle."""
+    for payload, expected in (
+        ({"ok": False, "error": "storage unavailable"}, "HTTP 503 (storage_unavailable)"),
+        ({"ok": False, "error": "scheduler unavailable"}, "HTTP 503 (scheduler_unavailable)"),
+        ({"ok": False, "partial_failure": True, "failed_markets": 1},
+         "HTTP 503 (partial_failure_1_market(s))"),
+        ({"ok": False, "partial_failure": True, "failed_markets": True},
+         "HTTP 503 (partial_failure)"),
+        ({"ok": False, "error": "password=must_not_be_logged"}, "HTTP 503"),
+    ):
+        posts = []
+
+        def fake_opener(request, *, timeout):
+            assert 0 < timeout <= 180
+            if request.get_method() == "POST":
+                posts.append(request.full_url)
+            raise HTTPError(
+                request.full_url, 503, "Service unavailable", {},
+                BytesIO(json.dumps(payload).encode()),
+            )
+
+        with pytest.raises(FallbackFailure) as failure:
+            run_fallback(
+                "https://test.example", "test-scheduler-secret",
+                opener=fake_opener,
+            )
+        assert str(failure.value).endswith(expected)
+        assert "password=" not in str(failure.value)
+        assert "test-scheduler-secret" not in str(failure.value)
+        assert posts == ["https://test.example/internal/paper-cycle"]
