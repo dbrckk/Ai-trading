@@ -41,11 +41,16 @@ class RiskEngine:
                 portfolio.day_start_equity,
                 portfolio.current_position_value,
             )
-        ) or portfolio.peak_equity <= 0 or portfolio.day_start_equity <= 0:
+        ):
             return RiskDecision(False, 0, 0.0, "invalid portfolio state")
 
+        # Finite equity exhaustion is a hard exit even when a risk baseline
+        # is zero; do not leave exposure open just because a day starts at 0.
         if portfolio.equity <= 0:
             return RiskDecision(False, 0, 0.0, "non-positive equity", liquidate_existing=True)
+
+        if portfolio.peak_equity <= 0 or portfolio.day_start_equity <= 0:
+            return RiskDecision(False, 0, 0.0, "invalid portfolio state")
 
         drawdown = 1.0 - portfolio.equity / max(portfolio.peak_equity, portfolio.equity)
         if drawdown >= self.config.max_drawdown_fraction:
