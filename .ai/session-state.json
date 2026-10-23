@@ -2,9 +2,9 @@
   "schema_version": 1,
   "project": "dbrckk/Ai-trading",
   "base_branch": "main",
-  "active_branch": "fix/promotion-soak-invalid-evidence",
+  "active_branch": "fix/performance-invalid-equity-curves",
   "pull_request": null,
-  "focus": "Merged PR #202 portfolio correlation evidence fail-closed (CI/CodeQL green). This branch validates finite coherent soak evidence and champion/challenger promotion metrics, rejecting unprofitable challengers even when they outperform losing champions. Paper River-v1 retained, live orders OFF, no settings increased.",
+  "focus": "PR #202 merged unknown held-market correlations fail closed; PR #203 merged finite/positive model promotion and soak qualification evidence after green PR CI/CodeQL. This branch prevents metric calculations from silently discarding invalid equity/benchmark samples or emitting non-finite scores. No paper/live trading changes; offline Gold/DAX/BTC PnL proxy remains net-negative.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -158,8 +158,8 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Verify CI and CodeQL for promotion/soak invalid evidence PR; squash merge only if green.",
-    "Monitor scheduled Gold/DAX/BTC hosted strict probe and paper cycle; compare net paper PnL with sufficient independent observations.",
-    "Keep shadow promotions and optional rebalance deadband disabled pending robust net-of-cost OOS evidence."
+    "Validate invalid equity/benchmark metrics PR via Ruff, Pytest and CodeQL; merge only if green.",
+    "Observe strict hosted health and GitHub/Cloudflare scheduler status; distinguish healthy fallback skip from actual cycle execution.",
+    "Improve actual River-v1 net paper evidence and multi-market walk-forward returns before enabling any optional turnover buffer or challenger promotion."
   ]
 }
