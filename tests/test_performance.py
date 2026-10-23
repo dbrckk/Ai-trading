@@ -31,3 +31,43 @@ def test_extreme_short_window_annualization_stays_finite() -> None:
     equity = pd.Series([1.0, 1e100])
     metrics = compute_metrics(equity, periods_per_year=525_600.0)
     assert np.isfinite(metrics.annualized_return)
+
+
+@pytest.mark.parametrize(
+    "equity",
+    [
+        [100.0, np.nan, 110.0],
+        [100.0, np.inf, 110.0],
+        [100.0, -np.inf, 110.0],
+        [100.0, 0.0, 110.0],
+        [100.0, -10.0, 110.0],
+    ],
+)
+def test_performance_refuses_incomplete_or_invalid_equity_curves(equity) -> None:
+    with pytest.raises(ValueError, match="Equity observations"):
+        compute_metrics(pd.Series(equity))
+
+
+def test_performance_rejects_nonfinite_returns_from_finite_equity() -> None:
+    with pytest.raises(ValueError, match="Equity returns"):
+        compute_metrics(pd.Series([1e-300, 1e300]))
+
+
+@pytest.mark.parametrize(
+    "prices",
+    [
+        [100.0, np.nan, 110.0],
+        [100.0, np.inf, 110.0],
+        [100.0, 0.0, 110.0],
+        [100.0, -20.0, 110.0],
+    ],
+)
+def test_benchmark_refuses_invalid_price_history(prices) -> None:
+    with pytest.raises(ValueError, match="finite positive benchmark prices"):
+        buy_and_hold_equity(pd.Series(prices), 100_000.0)
+
+
+@pytest.mark.parametrize("capital", [np.nan, np.inf, 0.0, -1.0])
+def test_benchmark_refuses_invalid_starting_equity(capital) -> None:
+    with pytest.raises(ValueError, match="Benchmark starting equity"):
+        buy_and_hold_equity(pd.Series([100.0, 110.0]), capital)
