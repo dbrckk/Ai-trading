@@ -5,18 +5,18 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "PortfolioRiskConfig": {
+    "PromotionPolicy": {
       "source": {
-        "file": "src/ai_trading/portfolio_risk.py",
+        "file": "src/ai_trading/promotion.py",
         "start": 10,
-        "end": 32
+        "end": 30
       },
       "symbol_dependencies": [
         {
           "symbol": "__post_init__",
           "definitions": [
             {
-              "file": "src/ai_trading/portfolio_risk.py",
+              "file": "src/ai_trading/promotion.py",
               "line": 16,
               "kind": "function",
               "language": "python"
@@ -29,34 +29,58 @@
     },
     "__post_init__": {
       "source": {
-        "file": "src/ai_trading/portfolio_risk.py",
+        "file": "src/ai_trading/promotion.py",
         "start": 16,
-        "end": 32
+        "end": 30
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "PortfolioRiskReport": {
+    "PromotionDecision": {
       "source": {
-        "file": "src/ai_trading/portfolio_risk.py",
-        "start": 36,
-        "end": 42
+        "file": "src/ai_trading/promotion.py",
+        "start": 34,
+        "end": 36
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "evaluate_portfolio_risk": {
+    "evaluate_challenger": {
       "source": {
-        "file": "src/ai_trading/portfolio_risk.py",
-        "start": 45,
-        "end": 103
+        "file": "src/ai_trading/promotion.py",
+        "start": 39,
+        "end": 69
       },
       "symbol_dependencies": [
         {
-          "symbol": "PortfolioRiskConfig",
+          "symbol": "PerformanceMetrics",
           "definitions": [
             {
-              "file": "src/ai_trading/portfolio_risk.py",
+              "file": "src/ai_trading/performance.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "PromotionDecision",
+          "definitions": [
+            {
+              "file": "src/ai_trading/promotion.py",
+              "line": 34,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "PromotionPolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/promotion.py",
               "line": 10,
               "kind": "class",
               "language": "python"
@@ -65,32 +89,201 @@
           "relation": "same_file"
         },
         {
-          "symbol": "PortfolioRiskReport",
+          "symbol": "as_dict",
           "definitions": [
             {
-              "file": "src/ai_trading/portfolio_risk.py",
-              "line": 36,
+              "file": "src/ai_trading/performance.py",
+              "line": 19,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "evaluate_multi_period_challenger": {
+      "source": {
+        "file": "src/ai_trading/promotion.py",
+        "start": 72,
+        "end": 105
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PerformanceMetrics",
+          "definitions": [
+            {
+              "file": "src/ai_trading/performance.py",
+              "line": 10,
               "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "PromotionDecision",
+          "definitions": [
+            {
+              "file": "src/ai_trading/promotion.py",
+              "line": 34,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "PromotionPolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/promotion.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "as_dict",
+          "definitions": [
+            {
+              "file": "src/ai_trading/performance.py",
+              "line": 19,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate_challenger",
+          "definitions": [
+            {
+              "file": "src/ai_trading/promotion.py",
+              "line": 39,
+              "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
         }
       ],
-      "dependency_count": 2
+      "dependency_count": 5
     },
-    "test_portfolio_risk_rejects_excess_single_asset_exposure": {
+    "SoakQualificationPolicy": {
       "source": {
-        "file": "tests/test_portfolio_risk.py",
+        "file": "src/ai_trading/soak_gate.py",
         "start": 10,
         "end": 26
       },
       "symbol_dependencies": [
         {
-          "symbol": "PortfolioRiskConfig",
+          "symbol": "__post_init__",
           "definitions": [
             {
-              "file": "src/ai_trading/portfolio_risk.py",
+              "file": "src/ai_trading/soak_gate.py",
+              "line": 18,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "SoakQualification": {
+      "source": {
+        "file": "src/ai_trading/soak_gate.py",
+        "start": 30,
+        "end": 33
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "evaluate_soak_qualification": {
+      "source": {
+        "file": "src/ai_trading/soak_gate.py",
+        "start": 36,
+        "end": 86
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "SoakQualification",
+          "definitions": [
+            {
+              "file": "src/ai_trading/soak_gate.py",
+              "line": 30,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "SoakQualificationPolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/soak_gate.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "SoakResult",
+          "definitions": [
+            {
+              "file": "src/ai_trading/soak.py",
+              "line": 13,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "metric": {
+      "source": {
+        "file": "tests/test_multi_period_promotion.py",
+        "start": 8,
+        "end": 17
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PerformanceMetrics",
+          "definitions": [
+            {
+              "file": "src/ai_trading/performance.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_multi_period_promotion_requires_consistency": {
+      "source": {
+        "file": "tests/test_multi_period_promotion.py",
+        "start": 20,
+        "end": 34
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PromotionPolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/promotion.py",
               "line": 10,
               "kind": "class",
               "language": "python"
@@ -99,32 +292,134 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "evaluate_portfolio_risk",
+          "symbol": "evaluate_multi_period_challenger",
           "definitions": [
             {
-              "file": "src/ai_trading/portfolio_risk.py",
-              "line": 45,
+              "file": "src/ai_trading/promotion.py",
+              "line": 72,
               "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "metric",
+          "definitions": [
+            {
+              "file": "tests/test_multi_period_promotion.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_multi_period_promotion_rejects_invalid_strong_period_evidence": {
+      "source": {
+        "file": "tests/test_multi_period_promotion.py",
+        "start": 37,
+        "end": 42
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "evaluate_multi_period_challenger",
+          "definitions": [
+            {
+              "file": "src/ai_trading/promotion.py",
+              "line": 72,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "metric",
+          "definitions": [
+            {
+              "file": "tests/test_multi_period_promotion.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "metrics": {
+      "source": {
+        "file": "tests/test_promotion.py",
+        "start": 10,
+        "end": 19
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PerformanceMetrics",
+          "definitions": [
+            {
+              "file": "src/ai_trading/performance.py",
+              "line": 10,
+              "kind": "class",
               "language": "python"
             }
           ],
           "relation": "imported_module"
         }
       ],
+      "dependency_count": 1
+    },
+    "test_promotes_materially_better_challenger": {
+      "source": {
+        "file": "tests/test_promotion.py",
+        "start": 22,
+        "end": 26
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "evaluate_challenger",
+          "definitions": [
+            {
+              "file": "src/ai_trading/promotion.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "metrics",
+          "definitions": [
+            {
+              "file": "tests/test_promotion.py",
+              "line": 10,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
       "dependency_count": 2
     },
-    "test_portfolio_risk_detects_high_pair_correlation": {
+    "test_rejects_excess_drawdown": {
       "source": {
-        "file": "tests/test_portfolio_risk.py",
+        "file": "tests/test_promotion.py",
         "start": 29,
-        "end": 40
+        "end": 34
       },
       "symbol_dependencies": [
         {
-          "symbol": "PortfolioRiskConfig",
+          "symbol": "PromotionPolicy",
           "definitions": [
             {
-              "file": "src/ai_trading/portfolio_risk.py",
+              "file": "src/ai_trading/promotion.py",
               "line": 10,
               "kind": "class",
               "language": "python"
@@ -133,11 +428,171 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "evaluate_portfolio_risk",
+          "symbol": "evaluate_challenger",
           "definitions": [
             {
-              "file": "src/ai_trading/portfolio_risk.py",
-              "line": 45,
+              "file": "src/ai_trading/promotion.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "metrics",
+          "definitions": [
+            {
+              "file": "tests/test_promotion.py",
+              "line": 10,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_promotion_rejects_nonfinite_metrics_even_if_relative_checks_would_pass": {
+      "source": {
+        "file": "tests/test_promotion.py",
+        "start": 37,
+        "end": 49
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "evaluate_challenger",
+          "definitions": [
+            {
+              "file": "src/ai_trading/promotion.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "metrics",
+          "definitions": [
+            {
+              "file": "tests/test_promotion.py",
+              "line": 10,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_promotion_rejects_losing_challenger_outperforming_losing_champion": {
+      "source": {
+        "file": "tests/test_promotion.py",
+        "start": 52,
+        "end": 57
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "evaluate_challenger",
+          "definitions": [
+            {
+              "file": "src/ai_trading/promotion.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "metrics",
+          "definitions": [
+            {
+              "file": "tests/test_promotion.py",
+              "line": 10,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_promotion_rejects_invalid_drawdown_or_policy": {
+      "source": {
+        "file": "tests/test_promotion.py",
+        "start": 60,
+        "end": 67
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PromotionPolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/promotion.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate_challenger",
+          "definitions": [
+            {
+              "file": "src/ai_trading/promotion.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "metrics",
+          "definitions": [
+            {
+              "file": "tests/test_promotion.py",
+              "line": 10,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_soak_gate_passes_stable_run": {
+      "source": {
+        "file": "tests/test_soak_gate.py",
+        "start": 13,
+        "end": 24
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "SoakResult",
+          "definitions": [
+            {
+              "file": "src/ai_trading/soak.py",
+              "line": 13,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate_soak_qualification",
+          "definitions": [
+            {
+              "file": "src/ai_trading/soak_gate.py",
+              "line": 36,
               "kind": "function",
               "language": "python"
             }
@@ -147,85 +602,43 @@
       ],
       "dependency_count": 2
     },
-    "test_portfolio_risk_rejects_invalid_equity": {
+    "test_soak_gate_rejects_halted_run": {
       "source": {
-        "file": "tests/test_portfolio_risk.py",
-        "start": 44,
-        "end": 50
+        "file": "tests/test_soak_gate.py",
+        "start": 27,
+        "end": 41
       },
       "symbol_dependencies": [
         {
-          "symbol": "evaluate_portfolio_risk",
+          "symbol": "SoakQualificationPolicy",
           "definitions": [
             {
-              "file": "src/ai_trading/portfolio_risk.py",
-              "line": 45,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_portfolio_risk_rejects_nonfinite_asset_exposure": {
-      "source": {
-        "file": "tests/test_portfolio_risk.py",
-        "start": 54,
-        "end": 60
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "evaluate_portfolio_risk",
-          "definitions": [
-            {
-              "file": "src/ai_trading/portfolio_risk.py",
-              "line": 45,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_portfolio_risk_rejects_nonfinite_limits": {
-      "source": {
-        "file": "tests/test_portfolio_risk.py",
-        "start": 71,
-        "end": 73
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "PortfolioRiskConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/portfolio_risk.py",
+              "file": "src/ai_trading/soak_gate.py",
               "line": 10,
               "kind": "class",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_portfolio_risk_rejects_undefined_correlation_between_active_assets": {
-      "source": {
-        "file": "tests/test_portfolio_risk.py",
-        "start": 76,
-        "end": 81
-      },
-      "symbol_dependencies": [
+        },
         {
-          "symbol": "evaluate_portfolio_risk",
+          "symbol": "SoakResult",
           "definitions": [
             {
-              "file": "src/ai_trading/portfolio_risk.py",
-              "line": 45,
+              "file": "src/ai_trading/soak.py",
+              "line": 13,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate_soak_qualification",
+          "definitions": [
+            {
+              "file": "src/ai_trading/soak_gate.py",
+              "line": 36,
               "kind": "function",
               "language": "python"
             }
@@ -233,44 +646,90 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 1
+      "dependency_count": 3
     },
-    "test_portfolio_risk_rejects_missing_active_asset_history": {
+    "test_soak_gate_rejects_invalid_numerical_evidence": {
       "source": {
-        "file": "tests/test_portfolio_risk.py",
-        "start": 84,
+        "file": "tests/test_soak_gate.py",
+        "start": 44,
+        "end": 67
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "SoakResult",
+          "definitions": [
+            {
+              "file": "src/ai_trading/soak.py",
+              "line": 13,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate_soak_qualification",
+          "definitions": [
+            {
+              "file": "src/ai_trading/soak_gate.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_soak_gate_rejects_inconsistent_cycle_counts": {
+      "source": {
+        "file": "tests/test_soak_gate.py",
+        "start": 70,
+        "end": 82
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "SoakResult",
+          "definitions": [
+            {
+              "file": "src/ai_trading/soak.py",
+              "line": 13,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "evaluate_soak_qualification",
+          "definitions": [
+            {
+              "file": "src/ai_trading/soak_gate.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_soak_policy_rejects_nonfinite_thresholds": {
+      "source": {
+        "file": "tests/test_soak_gate.py",
+        "start": 85,
         "end": 89
       },
       "symbol_dependencies": [
         {
-          "symbol": "evaluate_portfolio_risk",
+          "symbol": "SoakQualificationPolicy",
           "definitions": [
             {
-              "file": "src/ai_trading/portfolio_risk.py",
-              "line": 45,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_portfolio_risk_ignores_missing_history_for_flat_asset": {
-      "source": {
-        "file": "tests/test_portfolio_risk.py",
-        "start": 92,
-        "end": 97
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "evaluate_portfolio_risk",
-          "definitions": [
-            {
-              "file": "src/ai_trading/portfolio_risk.py",
-              "line": 45,
-              "kind": "function",
+              "file": "src/ai_trading/soak_gate.py",
+              "line": 10,
+              "kind": "class",
               "language": "python"
             }
           ],

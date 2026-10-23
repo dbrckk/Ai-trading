@@ -2,24 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "fix: defer multiasset control state until checkpoint commit",
-      "terms": [
-        "checkpoint",
-        "commit",
-        "control",
-        "defer",
-        "multiasset",
-        "state",
-        "until"
-      ],
-      "tests": [],
-      "useful": [
-        "src/ai_trading/multiasset_runtime.py",
-        "tests/test_multiasset_runtime.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "fix: defer multiasset learning side effects until checkpoint commit",
       "terms": [
         "checkpoint",
@@ -1285,6 +1267,27 @@
       "useful": [
         "src/ai_trading/portfolio_risk.py",
         "tests/test_portfolio_risk.py"
+      ]
+    },
+    {
+      "rejected": [],
+      "task": "fix(research): reject invalid promotion and soak qualification evidence",
+      "terms": [
+        "evidence",
+        "invalid",
+        "promotion",
+        "qualification",
+        "reject",
+        "research",
+        "soak"
+      ],
+      "tests": [],
+      "useful": [
+        "src/ai_trading/promotion.py",
+        "src/ai_trading/soak_gate.py",
+        "tests/test_multi_period_promotion.py",
+        "tests/test_promotion.py",
+        "tests/test_soak_gate.py"
       ]
     }
   ],
@@ -2663,16 +2666,21 @@
       "src/ai_trading/mtf_shadow_quality.py": 8,
       "src/ai_trading/operational_overview.py": 12,
       "src/ai_trading/paper_cycle.py": 4,
+      "src/ai_trading/promotion.py": 4,
       "src/ai_trading/river_v2_shadow.py": 4,
       "src/ai_trading/shadow_promotion_gate.py": 4,
       "src/ai_trading/shadow_quality.py": 4,
+      "src/ai_trading/soak_gate.py": 4,
       "tests/test_bootstrap_gate.py": 4,
       "tests/test_dashboard_overview.py": 12,
       "tests/test_mtf_shadow_quality.py": 8,
       "tests/test_multi_market.py": 12,
+      "tests/test_multi_period_promotion.py": 4,
       "tests/test_paper_cycle.py": 4,
+      "tests/test_promotion.py": 4,
       "tests/test_shadow_promotion_gate.py": 4,
-      "tests/test_shadow_quality.py": 8
+      "tests/test_shadow_quality.py": 8,
+      "tests/test_soak_gate.py": 4
     },
     "execution": {
       "src/ai_trading/broker.py": 4,
@@ -3146,12 +3154,17 @@
       "src/ai_trading/portfolio.py": 4,
       "src/ai_trading/portfolio_intelligence.py": 8,
       "src/ai_trading/portfolio_risk.py": 8,
+      "src/ai_trading/promotion.py": 4,
       "src/ai_trading/risk_governor.py": 4,
+      "src/ai_trading/soak_gate.py": 4,
       "tests/test_bootstrap_gate.py": 4,
       "tests/test_config_validation.py": 4,
+      "tests/test_multi_period_promotion.py": 4,
       "tests/test_portfolio_intelligence.py": 4,
       "tests/test_portfolio_risk.py": 4,
-      "tests/test_risk_governor.py": 4
+      "tests/test_promotion.py": 4,
+      "tests/test_risk_governor.py": 4,
+      "tests/test_soak_gate.py": 4
     },
     "is": {
       "src/ai_trading/dashboard.py": 4,
@@ -3982,6 +3995,13 @@
       "src/ai_trading/scheduler_endpoint.py": 4,
       "tests/test_scheduler_endpoint.py": 4
     },
+    "promotion": {
+      "src/ai_trading/promotion.py": 4,
+      "src/ai_trading/soak_gate.py": 4,
+      "tests/test_multi_period_promotion.py": 4,
+      "tests/test_promotion.py": 4,
+      "tests/test_soak_gate.py": 4
+    },
     "promptly": {
       "src/ai_trading/runtime_status.py": 4,
       "tests/test_runtime_status.py": 4
@@ -4014,6 +4034,13 @@
     "purged": {
       "src/ai_trading/mtf_parameter_benchmark.py": 4,
       "tests/test_mtf_parameter_benchmark.py": 4
+    },
+    "qualification": {
+      "src/ai_trading/promotion.py": 4,
+      "src/ai_trading/soak_gate.py": 4,
+      "tests/test_multi_period_promotion.py": 4,
+      "tests/test_promotion.py": 4,
+      "tests/test_soak_gate.py": 4
     },
     "quality": {
       "src/ai_trading/dashboard.py": 4,
@@ -4143,16 +4170,21 @@
       "src/ai_trading/config.py": 4,
       "src/ai_trading/cost_stress_gate.py": 4,
       "src/ai_trading/portfolio_risk.py": 4,
+      "src/ai_trading/promotion.py": 4,
       "src/ai_trading/regime_gate.py": 4,
       "src/ai_trading/risk.py": 4,
       "src/ai_trading/sensitivity_gate.py": 4,
+      "src/ai_trading/soak_gate.py": 4,
       "tests/test_bootstrap_gate.py": 4,
       "tests/test_config_validation.py": 4,
       "tests/test_cost_stress_gate.py": 4,
+      "tests/test_multi_period_promotion.py": 4,
       "tests/test_portfolio_risk.py": 4,
+      "tests/test_promotion.py": 4,
       "tests/test_regime_gate.py": 4,
       "tests/test_risk.py": 4,
-      "tests/test_sensitivity_gate.py": 4
+      "tests/test_sensitivity_gate.py": 4,
+      "tests/test_soak_gate.py": 4
     },
     "render": {
       "src/ai_trading/dashboard.py": 8,
@@ -4223,6 +4255,7 @@
       "src/ai_trading/operational_overview.py": 16,
       "src/ai_trading/paper_cycle.py": 12,
       "src/ai_trading/postgres_persistence.py": 4,
+      "src/ai_trading/promotion.py": 4,
       "src/ai_trading/regime_gate.py": 4,
       "src/ai_trading/research_model_codec.py": 4,
       "src/ai_trading/river_v2_shadow.py": 12,
@@ -4230,6 +4263,7 @@
       "src/ai_trading/sensitivity_gate.py": 4,
       "src/ai_trading/shadow_promotion_gate.py": 4,
       "src/ai_trading/shadow_quality.py": 4,
+      "src/ai_trading/soak_gate.py": 4,
       "src/ai_trading/turnover_study.py": 8,
       "tests/test_backtest.py": 8,
       "tests/test_benchmark_gate.py": 4,
@@ -4241,13 +4275,16 @@
       "tests/test_model_codec.py": 4,
       "tests/test_mtf_shadow_quality.py": 4,
       "tests/test_multi_market.py": 4,
+      "tests/test_multi_period_promotion.py": 4,
       "tests/test_online.py": 8,
       "tests/test_paper_cycle.py": 16,
+      "tests/test_promotion.py": 4,
       "tests/test_regime_gate.py": 4,
       "tests/test_sensitivity_gate.py": 4,
       "tests/test_shadow_challenger.py": 8,
       "tests/test_shadow_promotion_gate.py": 4,
-      "tests/test_shadow_quality.py": 12
+      "tests/test_shadow_quality.py": 12,
+      "tests/test_soak_gate.py": 4
     },
     "respect": {
       "src/ai_trading/scheduler_endpoint.py": 4,
@@ -4603,6 +4640,13 @@
       "tests/test_paper_cycle_service.py": 4,
       "tests/test_portfolio_risk.py": 4,
       "tests/test_risk_governor.py": 4
+    },
+    "soak": {
+      "src/ai_trading/promotion.py": 4,
+      "src/ai_trading/soak_gate.py": 4,
+      "tests/test_multi_period_promotion.py": 4,
+      "tests/test_promotion.py": 4,
+      "tests/test_soak_gate.py": 4
     },
     "staging": {
       "src/ai_trading/multiasset_checkpoint.py": 4,

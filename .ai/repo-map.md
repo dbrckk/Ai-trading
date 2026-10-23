@@ -7104,6 +7104,8 @@ min_return_improvement: float = 0.00
 max_drawdown_increase: float = 0.02
 min_period_win_rate: float = 0.60
 ⋮----
+def __post_init__(self) -> None
+⋮----
 @dataclass(frozen=True)
 class PromotionDecision
 ⋮----
@@ -7112,9 +7114,17 @@ reason: str
 ⋮----
 policy = policy or PromotionPolicy()
 ⋮----
+# A NaN comparison evaluates to False and previously allowed promotion.
+# Require complete finite evidence from both backtests, not only valid deltas.
+⋮----
+# Relative improvement versus a losing incumbent is not a profitable edge.
+⋮----
 sharpe_gain = challenger.sharpe - champion.sharpe
 return_gain = challenger.total_return - champion.total_return
 drawdown_increase = challenger.max_drawdown - champion.max_drawdown
+⋮----
+# Reject the whole multi-period comparison if any segment contains
+# undefined evidence. Counting it as one loss can still exceed win-rate.
 ⋮----
 wins = 0
 ⋮----
@@ -8896,6 +8906,8 @@ max_failures: int = 2
 max_drawdown: float = 0.10
 min_duration_seconds: float = 0.0
 disallowed_governor_verdicts: tuple[str, ...] = ("HALT",)
+⋮----
+def __post_init__(self) -> None
 ⋮----
 @dataclass(frozen=True)
 class SoakQualification
@@ -11639,6 +11651,12 @@ def test_multi_period_promotion_requires_consistency() -> None
 champion = [metric(0.10, 0.8, 0.08) for _ in range(5)]
 challenger = [
 decision = evaluate_multi_period_challenger(
+⋮----
+def test_multi_period_promotion_rejects_invalid_strong_period_evidence() -> None
+⋮----
+challenger = [metric(0.15, 1.1, 0.08) for _ in range(5)]
+⋮----
+decision = evaluate_multi_period_challenger(champion, challenger)
 ````
 
 ## File: tests/test_multi_timeframe_features.py
@@ -12804,6 +12822,22 @@ def test_rejects_excess_drawdown() -> None
 challenger = metrics(0.20, 1.2, 0.15)
 policy = PromotionPolicy(max_drawdown_increase=0.02)
 decision = evaluate_challenger(champion, challenger, policy)
+⋮----
+def test_promotion_rejects_nonfinite_metrics_even_if_relative_checks_would_pass() -> None
+⋮----
+better = metrics(0.14, 1.05, 0.09)
+⋮----
+invalid = replace(better, **{field: value})
+decision = evaluate_challenger(champion, invalid)
+⋮----
+def test_promotion_rejects_losing_challenger_outperforming_losing_champion() -> None
+⋮----
+champion = metrics(-0.20, -2.0, 0.25)
+challenger = metrics(-0.05, -0.5, 0.20)
+⋮----
+def test_promotion_rejects_invalid_drawdown_or_policy() -> None
+⋮----
+result = evaluate_challenger(champion, replace(better, max_drawdown=-0.1))
 ````
 
 ## File: tests/test_purged_cv.py
@@ -13930,6 +13964,18 @@ qualification = evaluate_soak_qualification(result)
 def test_soak_gate_rejects_halted_run() -> None
 ⋮----
 qualification = evaluate_soak_qualification(
+⋮----
+def test_soak_gate_rejects_invalid_numerical_evidence() -> None
+⋮----
+valid = SoakResult(
+⋮----
+report = evaluate_soak_qualification(replace(valid, **{field: invalid}))
+⋮----
+def test_soak_gate_rejects_inconsistent_cycle_counts() -> None
+⋮----
+report = evaluate_soak_qualification(result)
+⋮----
+def test_soak_policy_rejects_nonfinite_thresholds() -> None
 ````
 
 ## File: tests/test_specialist_experts.py
@@ -14852,6 +14898,19 @@ never silently replaced by fabricated numbers. A manual GitHub Action
 **Turnover Research** can run this comparison and retain a JSON
 diagnostic artifact. No runtime, Cloudflare scheduler, live broker or
 model-promotion setting is changed.
+
+## Promotion and soak evidence validity
+
+Research model promotion now rejects non-finite champion/challenger metrics,
+invalid drawdowns, and challenger strategies without a positive **absolute**
+modeled return (relative improvement over a losing model is insufficient).
+Multi-period promotion fails closed if *any* period contains invalid metrics,
+rather than hiding them inside a winning-period ratio. Soak qualification
+similarly requires coherent success/failure counts, finite and valid drawdown,
+duration and recorded equity; invalid numerical evidence cannot qualify a
+strategy. These checks assess research evidence only: they do not promote
+models automatically or enable live order routing. Positive modeled return
+alone is not proof of a transferable trading edge.
 ````
 
 ## File: render.yaml

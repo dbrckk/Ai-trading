@@ -6164,6 +6164,8 @@ min_return_improvement: float = 0.00
 max_drawdown_increase: float = 0.02
 min_period_win_rate: float = 0.60
 ⋮----
+def __post_init__(self) -> None
+⋮----
 @dataclass(frozen=True)
 class PromotionDecision
 ⋮----
@@ -6172,9 +6174,17 @@ reason: str
 ⋮----
 policy = policy or PromotionPolicy()
 ⋮----
+# A NaN comparison evaluates to False and previously allowed promotion.
+# Require complete finite evidence from both backtests, not only valid deltas.
+⋮----
+# Relative improvement versus a losing incumbent is not a profitable edge.
+⋮----
 sharpe_gain = challenger.sharpe - champion.sharpe
 return_gain = challenger.total_return - champion.total_return
 drawdown_increase = challenger.max_drawdown - champion.max_drawdown
+⋮----
+# Reject the whole multi-period comparison if any segment contains
+# undefined evidence. Counting it as one loss can still exceed win-rate.
 ⋮----
 wins = 0
 ⋮----
@@ -7956,6 +7966,8 @@ max_failures: int = 2
 max_drawdown: float = 0.10
 min_duration_seconds: float = 0.0
 disallowed_governor_verdicts: tuple[str, ...] = ("HALT",)
+⋮----
+def __post_init__(self) -> None
 ⋮----
 @dataclass(frozen=True)
 class SoakQualification

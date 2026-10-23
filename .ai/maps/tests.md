@@ -2265,6 +2265,12 @@ def test_multi_period_promotion_requires_consistency() -> None
 champion = [metric(0.10, 0.8, 0.08) for _ in range(5)]
 challenger = [
 decision = evaluate_multi_period_challenger(
+⋮----
+def test_multi_period_promotion_rejects_invalid_strong_period_evidence() -> None
+⋮----
+challenger = [metric(0.15, 1.1, 0.08) for _ in range(5)]
+⋮----
+decision = evaluate_multi_period_challenger(champion, challenger)
 ```
 
 ## File: test_multi_timeframe_features.py
@@ -3430,6 +3436,22 @@ def test_rejects_excess_drawdown() -> None
 challenger = metrics(0.20, 1.2, 0.15)
 policy = PromotionPolicy(max_drawdown_increase=0.02)
 decision = evaluate_challenger(champion, challenger, policy)
+⋮----
+def test_promotion_rejects_nonfinite_metrics_even_if_relative_checks_would_pass() -> None
+⋮----
+better = metrics(0.14, 1.05, 0.09)
+⋮----
+invalid = replace(better, **{field: value})
+decision = evaluate_challenger(champion, invalid)
+⋮----
+def test_promotion_rejects_losing_challenger_outperforming_losing_champion() -> None
+⋮----
+champion = metrics(-0.20, -2.0, 0.25)
+challenger = metrics(-0.05, -0.5, 0.20)
+⋮----
+def test_promotion_rejects_invalid_drawdown_or_policy() -> None
+⋮----
+result = evaluate_challenger(champion, replace(better, max_drawdown=-0.1))
 ```
 
 ## File: test_purged_cv.py
@@ -4556,6 +4578,18 @@ qualification = evaluate_soak_qualification(result)
 def test_soak_gate_rejects_halted_run() -> None
 ⋮----
 qualification = evaluate_soak_qualification(
+⋮----
+def test_soak_gate_rejects_invalid_numerical_evidence() -> None
+⋮----
+valid = SoakResult(
+⋮----
+report = evaluate_soak_qualification(replace(valid, **{field: invalid}))
+⋮----
+def test_soak_gate_rejects_inconsistent_cycle_counts() -> None
+⋮----
+report = evaluate_soak_qualification(result)
+⋮----
+def test_soak_policy_rejects_nonfinite_thresholds() -> None
 ```
 
 ## File: test_specialist_experts.py

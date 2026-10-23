@@ -1,32 +1,55 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "7a3ea4948365dd376487c84fe65a82c16e36488c",
-  "head": "a03e8c25e2f796f38fa80b624a96aeeccd54e00b",
+  "base": "a03e8c25e2f796f38fa80b624a96aeeccd54e00b",
+  "head": "ef5877563aa739ba1b7af8fc7830d64c551e1f8e",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "src/ai_trading/portfolio_risk.py",
+      "path": "README.md",
       "status": "M"
     },
     {
-      "path": "tests/test_portfolio_risk.py",
+      "path": "src/ai_trading/promotion.py",
+      "status": "M"
+    },
+    {
+      "path": "src/ai_trading/soak_gate.py",
+      "status": "M"
+    },
+    {
+      "path": "tests/test_multi_period_promotion.py",
+      "status": "M"
+    },
+    {
+      "path": "tests/test_promotion.py",
+      "status": "M"
+    },
+    {
+      "path": "tests/test_soak_gate.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "src/ai_trading/portfolio_risk.py",
-    "tests/test_portfolio_risk.py"
+    "src/ai_trading/promotion.py",
+    "src/ai_trading/soak_gate.py",
+    "tests/test_multi_period_promotion.py",
+    "tests/test_promotion.py",
+    "tests/test_soak_gate.py"
   ],
   "impacted_files": [
     "src/ai_trading/cli.py",
-    "src/ai_trading/multiasset_backtest.py",
-    "src/ai_trading/multiasset_runtime.py",
-    "src/ai_trading/portfolio_risk.py",
-    "tests/test_config_validation.py",
-    "tests/test_multiasset_backtest.py",
-    "tests/test_multiasset_runtime.py",
-    "tests/test_portfolio_risk.py"
+    "src/ai_trading/continuous.py",
+    "src/ai_trading/promotion.py",
+    "src/ai_trading/qualification_store.py",
+    "src/ai_trading/qualification_suite.py",
+    "src/ai_trading/quantitative_qualification.py",
+    "src/ai_trading/soak_gate.py",
+    "tests/test_multi_period_promotion.py",
+    "tests/test_promotion.py",
+    "tests/test_qualification_store.py",
+    "tests/test_soak_gate.py",
+    "tests/test_soak_gate_drawdown.py"
   ],
   "impacted_symbols": [
     {
@@ -282,384 +305,247 @@
       "line": 1882
     },
     {
-      "name": "MultiAssetBacktestReport",
+      "name": "ContinuousCycleResult",
       "kind": "class",
-      "file": "src/ai_trading/multiasset_backtest.py",
-      "line": 20
+      "file": "src/ai_trading/continuous.py",
+      "line": 21
     },
     {
-      "name": "MultiAssetWalkForwardBacktester",
+      "name": "run_learning_cycle",
+      "kind": "function",
+      "file": "src/ai_trading/continuous.py",
+      "line": 30
+    },
+    {
+      "name": "PromotionPolicy",
       "kind": "class",
-      "file": "src/ai_trading/multiasset_backtest.py",
-      "line": 28
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_backtest.py",
-      "line": 29
-    },
-    {
-      "name": "run",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_backtest.py",
-      "line": 53
-    },
-    {
-      "name": "MultiAssetStepResult",
-      "kind": "class",
-      "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 75
-    },
-    {
-      "name": "MultiAssetPaperRuntime",
-      "kind": "class",
-      "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 88
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 89
-    },
-    {
-      "name": "_symbol_key",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 171
-    },
-    {
-      "name": "_legacy_symbol_key",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 175
-    },
-    {
-      "name": "_require_model_type",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 180
-    },
-    {
-      "name": "_specialist_path",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 190
-    },
-    {
-      "name": "_legacy_specialist_path",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 195
-    },
-    {
-      "name": "_load_or_train_specialist",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 200
-    },
-    {
-      "name": "_batch_model_path",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 238
-    },
-    {
-      "name": "_legacy_batch_model_path",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 241
-    },
-    {
-      "name": "_load_or_train_batch_model",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 244
-    },
-    {
-      "name": "_model_path",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 284
-    },
-    {
-      "name": "_legacy_model_path",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 287
-    },
-    {
-      "name": "_load_model",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 290
-    },
-    {
-      "name": "_save_model",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 309
-    },
-    {
-      "name": "step",
-      "kind": "function",
-      "file": "src/ai_trading/multiasset_runtime.py",
-      "line": 316
-    },
-    {
-      "name": "PortfolioRiskConfig",
-      "kind": "class",
-      "file": "src/ai_trading/portfolio_risk.py",
+      "file": "src/ai_trading/promotion.py",
       "line": 10
     },
     {
       "name": "__post_init__",
       "kind": "function",
-      "file": "src/ai_trading/portfolio_risk.py",
+      "file": "src/ai_trading/promotion.py",
       "line": 16
     },
     {
-      "name": "PortfolioRiskReport",
+      "name": "PromotionDecision",
       "kind": "class",
-      "file": "src/ai_trading/portfolio_risk.py",
+      "file": "src/ai_trading/promotion.py",
+      "line": 34
+    },
+    {
+      "name": "evaluate_challenger",
+      "kind": "function",
+      "file": "src/ai_trading/promotion.py",
+      "line": 39
+    },
+    {
+      "name": "evaluate_multi_period_challenger",
+      "kind": "function",
+      "file": "src/ai_trading/promotion.py",
+      "line": 72
+    },
+    {
+      "name": "QualificationRecord",
+      "kind": "class",
+      "file": "src/ai_trading/qualification_store.py",
+      "line": 14
+    },
+    {
+      "name": "QualificationStore",
+      "kind": "class",
+      "file": "src/ai_trading/qualification_store.py",
+      "line": 35
+    },
+    {
+      "name": "__init__",
+      "kind": "function",
+      "file": "src/ai_trading/qualification_store.py",
       "line": 36
     },
     {
-      "name": "evaluate_portfolio_risk",
+      "name": "load",
       "kind": "function",
-      "file": "src/ai_trading/portfolio_risk.py",
-      "line": 45
+      "file": "src/ai_trading/qualification_store.py",
+      "line": 42
     },
     {
-      "name": "test_invalid_strategy_configuration_fails_closed",
+      "name": "save",
       "kind": "function",
-      "file": "tests/test_config_validation.py",
-      "line": 48
+      "file": "src/ai_trading/qualification_store.py",
+      "line": 50
     },
     {
-      "name": "test_expected_shortfall_rejects_invalid_alpha",
-      "kind": "function",
-      "file": "tests/test_config_validation.py",
-      "line": 54
+      "name": "QualificationCaseResult",
+      "kind": "class",
+      "file": "src/ai_trading/qualification_suite.py",
+      "line": 15
     },
     {
-      "name": "test_global_allocator_rejects_negative_transaction_costs",
-      "kind": "function",
-      "file": "tests/test_config_validation.py",
-      "line": 59
+      "name": "QualificationSuiteResult",
+      "kind": "class",
+      "file": "src/ai_trading/qualification_suite.py",
+      "line": 23
     },
     {
-      "name": "market",
+      "name": "_chaos_cases",
       "kind": "function",
-      "file": "tests/test_multiasset_backtest.py",
-      "line": 13
-    },
-    {
-      "name": "test_multiasset_walk_forward_produces_portfolio_curve",
-      "kind": "function",
-      "file": "tests/test_multiasset_backtest.py",
-      "line": 31
-    },
-    {
-      "name": "test_multiasset_backtest_annualizes_from_actual_timestamps",
-      "kind": "function",
-      "file": "tests/test_multiasset_backtest.py",
-      "line": 56
-    },
-    {
-      "name": "test_multiasset_backtest_uses_symbol_specific_execution_costs",
-      "kind": "function",
-      "file": "tests/test_multiasset_backtest.py",
-      "line": 78
-    },
-    {
-      "name": "capture",
-      "kind": "function",
-      "file": "tests/test_multiasset_backtest.py",
-      "line": 82
-    },
-    {
-      "name": "market",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 30
-    },
-    {
-      "name": "test_multiasset_runtime_is_persistent_and_idempotent",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 48
-    },
-    {
-      "name": "test_failed_drift_retrain_does_not_start_cooldown",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 86
-    },
-    {
-      "name": "fail_batch_retrain",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 121
-    },
-    {
-      "name": "test_multiasset_runtime_does_not_persist_online_models_before_state_commit",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 136
-    },
-    {
-      "name": "fail_state_save",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 158
-    },
-    {
-      "name": "test_multiasset_runtime_prefers_checkpoint_over_stale_legacy_state",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 171
-    },
-    {
-      "name": "test_multiasset_runtime_applies_symbol_specific_execution_costs",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 211
-    },
-    {
-      "name": "fake_symbol_config",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 222
-    },
-    {
-      "name": "capture_fill",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 228
-    },
-    {
-      "name": "test_multiasset_runtime_defers_control_state_until_checkpoint_commit",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 271
-    },
-    {
-      "name": "fail_checkpoint",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 301
-    },
-    {
-      "name": "test_multiasset_runtime_defers_learning_side_effects_until_checkpoint_commit",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 316
-    },
-    {
-      "name": "fail_checkpoint",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 348
-    },
-    {
-      "name": "test_multiasset_model_paths_are_collision_resistant",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 364
-    },
-    {
-      "name": "test_multiasset_online_model_legacy_path_is_migrated",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 383
-    },
-    {
-      "name": "test_multiasset_batch_and_specialist_legacy_paths_are_migrated",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 405
-    },
-    {
-      "name": "test_multiasset_runtime_does_not_mix_checkpoint_with_legacy_model",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 453
-    },
-    {
-      "name": "fail_legacy_load",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 485
-    },
-    {
-      "name": "test_multiasset_runtime_rejects_invalid_checkpoint_online_model_type",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 496
-    },
-    {
-      "name": "test_multiasset_rejects_invalid_model_artifact_types",
-      "kind": "function",
-      "file": "tests/test_multiasset_runtime.py",
-      "line": 535
-    },
-    {
-      "name": "test_portfolio_risk_rejects_excess_single_asset_exposure",
-      "kind": "function",
-      "file": "tests/test_portfolio_risk.py",
-      "line": 10
-    },
-    {
-      "name": "test_portfolio_risk_detects_high_pair_correlation",
-      "kind": "function",
-      "file": "tests/test_portfolio_risk.py",
+      "file": "src/ai_trading/qualification_suite.py",
       "line": 29
     },
     {
-      "name": "test_portfolio_risk_rejects_invalid_equity",
+      "name": "run_qualification_suite",
       "kind": "function",
-      "file": "tests/test_portfolio_risk.py",
+      "file": "src/ai_trading/qualification_suite.py",
+      "line": 39
+    },
+    {
+      "name": "QuantitativeQualification",
+      "kind": "class",
+      "file": "src/ai_trading/quantitative_qualification.py",
+      "line": 14
+    },
+    {
+      "name": "evaluate_quantitative_qualification",
+      "kind": "function",
+      "file": "src/ai_trading/quantitative_qualification.py",
+      "line": 21
+    },
+    {
+      "name": "SoakQualificationPolicy",
+      "kind": "class",
+      "file": "src/ai_trading/soak_gate.py",
+      "line": 10
+    },
+    {
+      "name": "__post_init__",
+      "kind": "function",
+      "file": "src/ai_trading/soak_gate.py",
+      "line": 18
+    },
+    {
+      "name": "SoakQualification",
+      "kind": "class",
+      "file": "src/ai_trading/soak_gate.py",
+      "line": 30
+    },
+    {
+      "name": "evaluate_soak_qualification",
+      "kind": "function",
+      "file": "src/ai_trading/soak_gate.py",
+      "line": 36
+    },
+    {
+      "name": "metric",
+      "kind": "function",
+      "file": "tests/test_multi_period_promotion.py",
+      "line": 8
+    },
+    {
+      "name": "test_multi_period_promotion_requires_consistency",
+      "kind": "function",
+      "file": "tests/test_multi_period_promotion.py",
+      "line": 20
+    },
+    {
+      "name": "test_multi_period_promotion_rejects_invalid_strong_period_evidence",
+      "kind": "function",
+      "file": "tests/test_multi_period_promotion.py",
+      "line": 37
+    },
+    {
+      "name": "metrics",
+      "kind": "function",
+      "file": "tests/test_promotion.py",
+      "line": 10
+    },
+    {
+      "name": "test_promotes_materially_better_challenger",
+      "kind": "function",
+      "file": "tests/test_promotion.py",
+      "line": 22
+    },
+    {
+      "name": "test_rejects_excess_drawdown",
+      "kind": "function",
+      "file": "tests/test_promotion.py",
+      "line": 29
+    },
+    {
+      "name": "test_promotion_rejects_nonfinite_metrics_even_if_relative_checks_would_pass",
+      "kind": "function",
+      "file": "tests/test_promotion.py",
+      "line": 37
+    },
+    {
+      "name": "test_promotion_rejects_losing_challenger_outperforming_losing_champion",
+      "kind": "function",
+      "file": "tests/test_promotion.py",
+      "line": 52
+    },
+    {
+      "name": "test_promotion_rejects_invalid_drawdown_or_policy",
+      "kind": "function",
+      "file": "tests/test_promotion.py",
+      "line": 60
+    },
+    {
+      "name": "test_qualification_store_round_trip",
+      "kind": "function",
+      "file": "tests/test_qualification_store.py",
+      "line": 9
+    },
+    {
+      "name": "test_qualification_store_persists_reliability_sla",
+      "kind": "function",
+      "file": "tests/test_qualification_store.py",
+      "line": 32
+    },
+    {
+      "name": "test_soak_gate_passes_stable_run",
+      "kind": "function",
+      "file": "tests/test_soak_gate.py",
+      "line": 13
+    },
+    {
+      "name": "test_soak_gate_rejects_halted_run",
+      "kind": "function",
+      "file": "tests/test_soak_gate.py",
+      "line": 27
+    },
+    {
+      "name": "test_soak_gate_rejects_invalid_numerical_evidence",
+      "kind": "function",
+      "file": "tests/test_soak_gate.py",
       "line": 44
     },
     {
-      "name": "test_portfolio_risk_rejects_nonfinite_asset_exposure",
+      "name": "test_soak_gate_rejects_inconsistent_cycle_counts",
       "kind": "function",
-      "file": "tests/test_portfolio_risk.py",
-      "line": 54
+      "file": "tests/test_soak_gate.py",
+      "line": 70
     },
     {
-      "name": "test_portfolio_risk_rejects_nonfinite_limits",
+      "name": "test_soak_policy_rejects_nonfinite_thresholds",
       "kind": "function",
-      "file": "tests/test_portfolio_risk.py",
-      "line": 71
+      "file": "tests/test_soak_gate.py",
+      "line": 85
     },
     {
-      "name": "test_portfolio_risk_rejects_undefined_correlation_between_active_assets",
+      "name": "test_soak_gate_rejects_excessive_drawdown",
       "kind": "function",
-      "file": "tests/test_portfolio_risk.py",
-      "line": 76
-    },
-    {
-      "name": "test_portfolio_risk_rejects_missing_active_asset_history",
-      "kind": "function",
-      "file": "tests/test_portfolio_risk.py",
-      "line": 84
-    },
-    {
-      "name": "test_portfolio_risk_ignores_missing_history_for_flat_asset",
-      "kind": "function",
-      "file": "tests/test_portfolio_risk.py",
-      "line": 92
+      "file": "tests/test_soak_gate_drawdown.py",
+      "line": 5
     }
   ],
   "selected_tests": [
-    "tests/test_config_validation.py",
-    "tests/test_multiasset_backtest.py",
-    "tests/test_multiasset_runtime.py",
-    "tests/test_portfolio.py",
-    "tests/test_portfolio_risk.py",
-    "tests/test_risk.py"
+    "tests/test_multi_period_promotion.py",
+    "tests/test_promotion.py",
+    "tests/test_promotion_guard.py",
+    "tests/test_qualification_store.py",
+    "tests/test_shadow_promotion_gate.py",
+    "tests/test_soak_gate.py",
+    "tests/test_soak_gate_drawdown.py"
   ]
 }

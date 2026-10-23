@@ -1,18 +1,24 @@
 # Change impact
 
-Base: fb887aff9727dc036a2504ff110284f3c4fc0844
-Head: a03e8c25e2f796f38fa80b624a96aeeccd54e00b
+Base: 175215917752f495ff6f686e85aafe5e5d119e06
+Head: ef5877563aa739ba1b7af8fc7830d64c551e1f8e
 
 ## Changed files
-- M src/ai_trading/portfolio_risk.py
-- M tests/test_portfolio_risk.py
+- M README.md
+- M src/ai_trading/promotion.py
+- M src/ai_trading/soak_gate.py
+- M tests/test_multi_period_promotion.py
+- M tests/test_promotion.py
+- M tests/test_soak_gate.py
 
 ## Affected areas
+- (root)
 - src
 - tests
 
 ## Related test candidates
-- tests/test_portfolio_risk.py
+- tests/test_promotion.py
+- tests/test_soak_gate.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

@@ -119,19 +119,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-23T10:08:00Z
+Generated: 2026-10-23T10:17:15Z
 
 ### Git
 - Branch: `main`
-- Head: `a03e8c25e2f7`
-- Commit date: 2026-10-23T06:07:48-04:00
-- Commit: fix(risk): reject undefined correlation between active markets
+- Head: `ef5877563aa7`
+- Commit date: 2026-10-23T06:17:03-04:00
+- Commit: fix(research): reject invalid promotion and soak qualification evidence
 - Tracked files: 515
 
 ### Recently changed files
+- `README.md`
+- `src/ai_trading/promotion.py`
+- `src/ai_trading/soak_gate.py`
+- `tests/test_multi_period_promotion.py`
+- `tests/test_promotion.py`
+- `tests/test_soak_gate.py`
 - `src/ai_trading/portfolio_risk.py`
 - `tests/test_portfolio_risk.py`
-- `README.md`
 - `src/ai_trading/risk_governor.py`
 - `tests/test_risk_governor.py`
 - `src/ai_trading/config.py`
@@ -141,8 +146,6 @@ Generated: 2026-10-23T10:08:00Z
 - `.github/workflows/turnover-research.yml`
 - `src/ai_trading/turnover_study.py`
 - `tests/test_backtest.py`
-- `src/ai_trading/deployment_probe.py`
-- `tests/test_dashboard_health.py`
 
 ### Project signals
 - `pyproject.toml`
