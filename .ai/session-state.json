@@ -4,7 +4,7 @@
   "base_branch": "main",
   "active_branch": "main",
   "pull_request": null,
-  "focus": "PR #209 merged 2026-10-23 at 3a9d320: MTF settings are frozen on pre-holdout validation and only prior-eligible candidates may be evaluated on a timestamp-anchored final 480-bar slice. Green PR CI/CodeQL and real Gold/DAX/BTC research run 39959553721: no validation-eligible candidate for any market, so all final holdouts were skipped as designed. Earlier benchmark retrospective metrics were negative across nine scenarios. These historical final windows are not previously-unseen across past studies; no portfolio PnL or actual brokerage performance. River-v1 paper authority unchanged and live trading OFF. Post-merge main CI and deployed Render SHA not yet verified.",
+  "focus": "PR #210 merged 2026-10-23 (d2d4ec3) after successful CI/CodeQL + read-only real Gold/DAX/BTC MTF benchmark run 39989853394. New independent single-market 100,000-unit, 10%-notional account measures marked paper equity, two-sided costs and max drawdown. Gold 90m/conf60 validation selection passed but its final chronological holdout failed; DAX/BTC had no validation-eligible candidate. No parameter promotion. Live brokerage OFF, River-v1 paper unchanged. Need post-merge main CI, exact Render release verification, and genuinely prospective unseen holdout/shared cross-market equity risk.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -179,6 +179,44 @@
       "limitations": "holdout excluded from selection in this run, but same era has been examined in previous research; not globally unseen, no portfolio simulation, no actual broker fills",
       "production_parameters_changed": false,
       "live_broker_enabled": false
+    },
+    "latest_mtf_sized_account": {
+      "checked_on": "2026-10-23",
+      "run_id": 39989853394,
+      "artifact_id": 12517801534,
+      "starting_cash": 100000,
+      "position_fraction_at_entry": 0.1,
+      "cost_per_side": "2bp fee + 1bp slippage",
+      "type": "independent single-market research accounts, not combined portfolio nor broker fills",
+      "retrospective_90m_conf60": {
+        "GC=F": {
+          "trades": 19,
+          "sized_net_return_percent": 0.0042,
+          "marked_max_drawdown_percent": 0.166
+        },
+        "^GDAXI": {
+          "trades": 18,
+          "sized_net_return_percent": 0.0771,
+          "marked_max_drawdown_percent": 0.1316
+        },
+        "BTC-USD": {
+          "trades": 19,
+          "sized_net_return_percent": -0.2207,
+          "marked_max_drawdown_percent": 0.3225
+        }
+      },
+      "validation_selection": {
+        "GC=F": "h90m-min3bp-atr0.15-train1000-conf60",
+        "^GDAXI": null,
+        "BTC-USD": null
+      },
+      "holdout_outcome": {
+        "GC=F": "failed",
+        "^GDAXI": "not_evaluated_no_validation_candidate",
+        "BTC-USD": "not_evaluated_no_validation_candidate"
+      },
+      "promoted_to_production": false,
+      "limits": "retrospective and historically overlapped data, no genuinely new prospective holdout, no margin/funding/cross-asset pooled equity"
     }
   },
   "completed_changes": [
@@ -222,7 +260,8 @@
     "PR #206 merged 2026-10-23 c2cb397: time-stamped backtest trades/folds and validation-only turnover eligibility; full PR checks and market research succeeded.",
     "PR #207 merged 2026-10-23 d0f1886: cost-aware independent MTF trade audit and strict research-only net profitability gate; PR CI/CodeQL passed.",
     "PR #208 merged on 2026-10-23 (23f8f36): MTF finite param guard/empty-grid guard; green PR checks and real-market MTF net-of-cost diagnostic, no candidates.",
-    "PR #209 merged 2026-10-23 3a9d320: frozen pre-holdout MTF selection and time-anchored, conditional chronological final evaluation; CI/CodeQL/real-market workflow successful."
+    "PR #209 merged 2026-10-23 3a9d320: frozen pre-holdout MTF selection and time-anchored, conditional chronological final evaluation; CI/CodeQL/real-market workflow successful.",
+    "PR #210 merged 2026-10-23 d2d4ec3: one-market paper equity and drawdown on 10% entry notional, with positive sized-return gate; PR CI/CodeQL and real MTF evidence passed."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -231,9 +270,9 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Verify latest main CI/CodeQL after session/project checkpoint commits and strict hosted market probe; independently verify exact Render deployed SHA before making any release claim.",
-    "Develop a genuinely forward-only unseen prospective validation period and reproducible net-of-cost position-sized equity accounting; do not interpret historical retrospective slices as fresh holdout.",
-    "Focus on eliminating cost-negative signals and reducing unnecessary turnover before risking capital; no tested Gold/DAX/BTC MTF candidate is currently promotable.",
-    "Preserve River-v1 paper decision authority, keep shadow challengers research-only, and leave live broker OFF."
+    "Verify post-merge main CI/CodeQL on latest state commit and independently verify exact deployed Render SHA.",
+    "Build a common-capital portfolio execution ledger across simultaneously active Gold/DAX/BTC paper candidates with cross-market overlap and actual cost/exposure constraints; keep it research-only.",
+    "Pre-register a prospective data cutoff and collect truly new future completed bars before reporting untouched holdout performance.",
+    "Keep River-v1 decision authority and risk parameters unchanged; no MTF promotion because Gold final holdout failed and DAX/BTC no candidate, live broker OFF."
   ]
 }
