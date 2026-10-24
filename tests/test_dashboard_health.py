@@ -356,7 +356,7 @@ def test_hosted_probe_requires_running_engines_not_only_complete_portfolio(
 
 
 
-def test_hosted_probe_rechecks_only_all_starting_transiently(monkeypatch) -> None:
+def test_hosted_probe_rechecks_transient_all_or_some_starting(monkeypatch) -> None:
     from ai_trading import deployment_probe
     from ai_trading.deployment_probe import ProbeCheck
 
@@ -375,8 +375,12 @@ def test_hosted_probe_rechecks_only_all_starting_transiently(monkeypatch) -> Non
         probes.append(endpoint)
         if endpoint == "/api/markets":
             market_reads = probes.count("/api/markets")
-            if market_reads <= 2:
+            if market_reads == 1:
                 return ProbeCheck(endpoint, False, starting)
+            if market_reads == 2:
+                return ProbeCheck(
+                    endpoint, False, "market_engines_not_running:BTC-USD:STARTING"
+                )
             return ProbeCheck(endpoint, True, "three_markets_running")
         return ProbeCheck(endpoint, True, "healthy")
 
