@@ -142,29 +142,27 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-23T11:15:49Z
+Generated: 2026-10-24T09:26:31Z
 
 ### Git
 - Branch: `main`
-- Head: `c2cb397223ac`
-- Commit date: 2026-10-23T07:15:39-04:00
-- Commit: fix(research): keep holdout activity out of turnover selection (#206)
-- Tracked files: 515
+- Head: `13174c5a627b`
+- Commit date: 2026-10-24T05:26:23-04:00
+- Commit: fix(research): reject invalid or empty prospective OHLCV evidence (#214)
+- Tracked files: 520
 
 ### Recently changed files
-- `src/ai_trading/backtest.py`
-- `src/ai_trading/turnover_study.py`
-- `tests/test_backtest.py`
-- `src/ai_trading/performance.py`
-- `tests/test_performance.py`
-- `README.md`
-- `src/ai_trading/promotion.py`
-- `src/ai_trading/soak_gate.py`
-- `tests/test_multi_period_promotion.py`
-- `tests/test_promotion.py`
-- `tests/test_soak_gate.py`
-- `src/ai_trading/portfolio_risk.py`
-- `tests/test_portfolio_risk.py`
+- `.github/workflows/mtf-prospective-capture.yml`
+- `src/ai_trading/prospective_capture.py`
+- `tests/test_dataset_evidence.py`
+- `research/mtf-prospective-2026-10-26-v1.json`
+- `.github/workflows/paper-cycle.yml`
+- `src/ai_trading/scheduler_fallback.py`
+- `tests/test_scheduler_endpoint.py`
+- `.github/workflows/mtf-net-cost-evidence.yml`
+- `src/ai_trading/mtf_parameter_benchmark.py`
+- `src/ai_trading/mtf_shared_portfolio.py`
+- `tests/test_mtf_parameter_benchmark.py`
 
 ### Project signals
 - `pyproject.toml`

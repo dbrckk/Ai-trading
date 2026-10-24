@@ -818,9 +818,10 @@
         "src/ai_trading/kronos_research.py",
         "src/ai_trading/mtf_parameter_benchmark.py",
         "src/ai_trading/paper_cycle.py",
+        "src/ai_trading/prospective_capture.py",
         "tests/test_data.py"
       ],
-      "in_degree": 7,
+      "in_degree": 8,
       "out_degree": 0
     },
     "src/ai_trading/data_quality.py": {
@@ -839,13 +840,14 @@
       "dependencies": [],
       "dependents": [
         "src/ai_trading/cli.py",
+        "src/ai_trading/prospective_capture.py",
         "src/ai_trading/quantitative_artifact.py",
         "src/ai_trading/reproducibility.py",
         "tests/test_dataset_evidence.py",
         "tests/test_quantitative_artifact.py",
         "tests/test_reproducibility.py"
       ],
-      "in_degree": 6,
+      "in_degree": 7,
       "out_degree": 0
     },
     "src/ai_trading/deployment_probe.py": {
@@ -959,11 +961,12 @@
         "src/ai_trading/shadow_challenger.py",
         "src/ai_trading/specialist_experts.py",
         "tests/test_ensemble.py",
+        "tests/test_mtf_parameter_benchmark.py",
         "tests/test_mtf_shadow_challenger.py",
         "tests/test_multiasset_runtime.py",
         "tests/test_shadow_challenger.py"
       ],
-      "in_degree": 12,
+      "in_degree": 13,
       "out_degree": 3
     },
     "src/ai_trading/evolution.py": {
@@ -1604,10 +1607,11 @@
         "src/ai_trading/regime.py"
       ],
       "dependents": [
+        "src/ai_trading/mtf_shared_portfolio.py",
         "tests/test_mtf_parameter_benchmark.py",
         "tests/test_research_config_validation.py"
       ],
-      "in_degree": 2,
+      "in_degree": 3,
       "out_degree": 6
     },
     "src/ai_trading/mtf_shadow_challenger.py": {
@@ -1650,6 +1654,16 @@
       ],
       "in_degree": 4,
       "out_degree": 2
+    },
+    "src/ai_trading/mtf_shared_portfolio.py": {
+      "dependencies": [
+        "src/ai_trading/mtf_parameter_benchmark.py"
+      ],
+      "dependents": [
+        "tests/test_mtf_parameter_benchmark.py"
+      ],
+      "in_degree": 1,
+      "out_degree": 1
     },
     "src/ai_trading/multi_market.py": {
       "dependencies": [
@@ -2239,6 +2253,17 @@
       ],
       "in_degree": 2,
       "out_degree": 0
+    },
+    "src/ai_trading/prospective_capture.py": {
+      "dependencies": [
+        "src/ai_trading/data.py",
+        "src/ai_trading/dataset_evidence.py"
+      ],
+      "dependents": [
+        "tests/test_dataset_evidence.py"
+      ],
+      "in_degree": 1,
+      "out_degree": 2
     },
     "src/ai_trading/purged_cv.py": {
       "dependencies": [],
@@ -2856,9 +2881,10 @@
     "src/ai_trading/scheduler_fallback.py": {
       "dependencies": [],
       "dependents": [
-        "tests/test_paper_cycle_workflow.py"
+        "tests/test_paper_cycle_workflow.py",
+        "tests/test_scheduler_endpoint.py"
       ],
-      "in_degree": 1,
+      "in_degree": 2,
       "out_degree": 0
     },
     "src/ai_trading/sensitivity_gate.py": {
@@ -3647,11 +3673,12 @@
     "tests/test_dataset_evidence.py": {
       "dependencies": [
         "src/ai_trading/__init__.py",
-        "src/ai_trading/dataset_evidence.py"
+        "src/ai_trading/dataset_evidence.py",
+        "src/ai_trading/prospective_capture.py"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 2
+      "out_degree": 3
     },
     "tests/test_deployment_readiness.py": {
       "dependencies": [
@@ -4090,11 +4117,13 @@
     "tests/test_mtf_parameter_benchmark.py": {
       "dependencies": [
         "src/ai_trading/__init__.py",
-        "src/ai_trading/mtf_parameter_benchmark.py"
+        "src/ai_trading/ensemble.py",
+        "src/ai_trading/mtf_parameter_benchmark.py",
+        "src/ai_trading/mtf_shared_portfolio.py"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 2
+      "out_degree": 4
     },
     "tests/test_mtf_shadow_challenger.py": {
       "dependencies": [
@@ -4972,11 +5001,12 @@
         "src/ai_trading/paper_cycle.py",
         "src/ai_trading/paper_cycle_service.py",
         "src/ai_trading/persistence.py",
-        "src/ai_trading/scheduler_endpoint.py"
+        "src/ai_trading/scheduler_endpoint.py",
+        "src/ai_trading/scheduler_fallback.py"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 6
+      "out_degree": 7
     },
     "tests/test_scheduler_governor.py": {
       "dependencies": [

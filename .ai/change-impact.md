@@ -1,19 +1,20 @@
 # Change impact
 
-Base: 6e7b73210c7b275c85206cee8da6a829aec7e1ef
-Head: c2cb397223ac3b0f36dc11187eb3ab12b01aa09b
+Base: 80e32a4fabd32d9011e1b238f15b1eb66834e0ea
+Head: 13174c5a627b7ff1a20fceba14f136e0c2cdd386
 
 ## Changed files
-- M src/ai_trading/backtest.py
-- M src/ai_trading/turnover_study.py
-- M tests/test_backtest.py
+- M .github/workflows/mtf-prospective-capture.yml
+- M src/ai_trading/prospective_capture.py
+- M tests/test_dataset_evidence.py
 
 ## Affected areas
+- .github
 - src
 - tests
 
 ## Related test candidates
-- tests/test_backtest.py
+- No direct filename-based test match detected.
 
 ## Agent guidance
 - Read this file before broad repository exploration.

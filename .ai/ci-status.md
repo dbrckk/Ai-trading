@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 6 success / 0 failure / 2 active
+Summary: 5 success / 1 failure / 2 active
 
-- CodeQL: queued / pending (c2cb3972)
-- CI: in_progress / pending (c2cb3972)
-- CI: completed / success (017805c3)
-- Turnover Research: completed / success (017805c3)
-- CodeQL: completed / success (017805c3)
-- CodeQL: completed / success (6e7b7321)
-- CI: completed / success (6e7b7321)
-- CI: completed / success (6cfddd05)
+- CI: in_progress / pending (13174c5a)
+- CodeQL: queued / pending (13174c5a)
+- CodeQL: completed / success (3c8554be)
+- CI: completed / success (3c8554be)
+- Prospective MTF Bar Capture: completed / success (3c8554be)
+- Prospective MTF Bar Capture: completed / success (80e32a4f)
+- Hosted Dashboard Probe: completed / failure (80e32a4f)
+- Paper Cycle: completed / success (80e32a4f)
+
+## Latest failed run structure
+- Job: probe
+  - Failed step: Verify liveness, durable readiness and market cards
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

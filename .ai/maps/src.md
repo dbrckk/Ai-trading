@@ -124,6 +124,7 @@ ai_trading/
   mtf_shadow_challenger.py
   mtf_shadow_config.py
   mtf_shadow_quality.py
+  mtf_shared_portfolio.py
   multi_market.py
   multi_timeframe_features.py
   multiasset_backtest.py
@@ -154,6 +155,7 @@ ai_trading/
   process_watch.py
   promotion_guard.py
   promotion.py
+  prospective_capture.py
   purged_cv.py
   qualification_guard.py
   qualification_store.py
@@ -3850,6 +3852,11 @@ side = max(mapping, key=mapping.get)
 ```python
 _MIN_ACTIVE_PREDICTIONS = 20
 _MIN_ACTIVE_PRECISION = 0.50
+_MIN_ECONOMIC_TRADES = 20
+_DEFAULT_TRANSACTION_COST_BPS = 2.0
+_DEFAULT_SLIPPAGE_BPS = 1.0
+_SIZED_STARTING_CASH = 100_000.0
+_SIZED_POSITION_FRACTION = 0.10
 ⋮----
 @dataclass(frozen=True)
 class MTFBenchmarkConfig
@@ -3869,6 +3876,17 @@ def __post_init__(self) -> None
     def name(self) -> str
 ⋮----
 threshold_bps = round(self.minimum_threshold * 10_000)
+⋮----
+@dataclass(frozen=True)
+class MTFResearchTrade
+⋮----
+"""Chronologically realized, non-overlapping research signal execution."""
+⋮----
+entry_time: str
+exit_time: str
+entry_price: float
+exit_price: float
+side: int
 ⋮----
 @dataclass(frozen=True)
 class MarketBenchmarkResult
@@ -3891,6 +3909,20 @@ active_precision: float
 quality_score: float
 selection_score: float
 directional_gate_passed: bool
+# Independent, non-overlapping next-open to horizon-close paper trades.
+# These are not portfolio returns and do not change the hosted runtime.
+economic_trades: int = 0
+economic_mean_net_return: float = 0.0
+economic_compounded_net_return: float = 0.0
+economic_gate_passed: bool = False
+transaction_cost_bps: float = _DEFAULT_TRANSACTION_COST_BPS
+slippage_bps: float = _DEFAULT_SLIPPAGE_BPS
+# Single-market, trade-close/held-bar mark-to-market research account.
+# No concurrent multi-asset portfolio, leverage or live execution.
+sized_equity_final: float = _SIZED_STARTING_CASH
+sized_net_return: float = 0.0
+sized_max_drawdown: float = 0.0
+paper_trades: tuple[MTFResearchTrade, ...] = ()
 ⋮----
 @dataclass(frozen=True)
 class AggregateBenchmarkResult
@@ -3937,15 +3969,54 @@ required = min_train_rows + folds * test_window_bars
 ⋮----
 start = len(usable) - folds * test_window_bars
 ⋮----
+"""Mark a fixed-10%-notional, one-at-a-time research position on each close.
+
+    Entry and exit are the *same* bars used by the independent-trade audit.
+    Cash not allocated to the trade stays idle. This is not a multi-asset
+    portfolio, funding/carry model or real fill simulation.
+    """
+⋮----
+entry_pos = signal_pos + 1
+exit_pos = signal_pos + horizon_bars
+⋮----
+entry = float(market["Open"].iloc[entry_pos])
+⋮----
+cost_rate = one_way_cost_bps / 10_000.0
+units = equity * _SIZED_POSITION_FRACTION / entry
+entry_fee = units * entry * cost_rate
+marked = equity - entry_fee
+peak = max(peak, marked)
+max_drawdown = max(max_drawdown, 1.0 - marked / peak)
+⋮----
+close = float(market["Close"].iloc[bar_pos])
+⋮----
+marked = equity - entry_fee + side * units * (close - entry)
+⋮----
 features = make_multi_timeframe_challenger_features(market)
 labels = make_volatility_adaptive_labels(
 usable = features.dropna().index.intersection(labels.dropna().index)
+⋮----
 windows = _fold_test_windows(
+⋮----
+# In a final holdout, every evaluated signal must occur at or after
+# the frozen split. Do not take the "last N" observations: gaps and
+# differing label horizons would silently shift the split per config.
+⋮----
+holdout_index = usable[usable >= test_start]
+⋮----
+windows = (holdout_index,)
 ⋮----
 market_positions = {timestamp: pos for pos, timestamp in enumerate(market.index)}
 predicted_sides: list[int] = []
 confidences: list[float] = []
 realized_labels: list[int] = []
+economic_returns: list[float] = []
+paper_trades: list[MTFResearchTrade] = []
+last_economic_exit_pos = -1
+sized_equity = _SIZED_STARTING_CASH
+sized_peak = _SIZED_STARTING_CASH
+sized_max_drawdown = 0.0
+round_trip_cost = 2.0 * (transaction_cost_bps + slippage_bps) / 10_000.0
 ⋮----
 completed_folds = 0
 ⋮----
@@ -3964,6 +4035,18 @@ label = labels.loc[signal_idx]
 ⋮----
 effective_side = (
 ⋮----
+# Economic audit uses non-overlapping executions. Counting all
+# overlapping horizon predictions as separate trades would
+# exaggerate turnover, statistical evidence and possible profit.
+signal_pos = market_positions[signal_idx]
+⋮----
+entry_open = float(market["Open"].iloc[signal_pos + 1])
+exit_close = float(
+⋮----
+net_return = (
+⋮----
+last_economic_exit_pos = signal_pos + config.horizon_bars
+⋮----
 index = pd.RangeIndex(len(realized_labels))
 predicted = pd.Series(predicted_sides, index=index, dtype="int64")
 confidence = pd.Series(confidences, index=index, dtype="float64")
@@ -3979,8 +4062,17 @@ active_precision = (
 macro_recall = _macro_recall(predicted, realized)
 selection_score = _selection_score(
 directional_gate_passed = (
+economic_mean = fmean(economic_returns) if economic_returns else 0.0
+# A loss exceeding available capital is conservatively treated as ruin.
+economic_growth = prod(max(0.0, 1.0 + ret) for ret in economic_returns)
 ⋮----
-grid = tuple(configs or default_benchmark_grid())
+economic_net = float(economic_growth - 1.0)
+sized_net = sized_equity / _SIZED_STARTING_CASH - 1.0
+economic_gate_passed = (
+⋮----
+# An explicitly empty search is an error, never a request to execute the
+# potentially expensive default grid.
+grid = tuple(default_benchmark_grid() if configs is None else configs)
 ⋮----
 results: list[AggregateBenchmarkResult] = []
 ⋮----
@@ -3989,7 +4081,33 @@ scores = [row.selection_score for row in market_results]
 stability_penalty = pstdev(scores) if len(scores) > 1 else 0.0
 mean_score = fmean(scores)
 ⋮----
+"""Freeze config selection before reading the final chronological slice.
+
+    The final slice is held out from *this run's* parameter selection. It is
+    not necessarily previously unseen across earlier research campaigns.
+    A model is fitted on matured pre-holdout labels when evaluating the
+    selected hyperparameters; no holdout outcomes inform the selection.
+    """
+⋮----
+grid = tuple(configs)
+⋮----
+validation_markets: dict[str, pd.DataFrame] = {}
+cutoffs: dict[str, dict[str, str]] = {}
+⋮----
+validation_results = run_parameter_benchmark(
+candidates = market_selections(validation_results)
+holdout: dict[str, dict[str, object]] = {}
+⋮----
+# Deliberately do not inspect later prices/returns after a
+# validation rejection; even a favorable holdout cannot rescue it.
+⋮----
+chosen = MTFBenchmarkConfig(**selection["config"])
+tested = evaluate_market_config(
+passed = bool(tested.directional_gate_passed and tested.economic_gate_passed)
+⋮----
 def benchmark_payload(results: tuple[AggregateBenchmarkResult, ...]) -> dict[str, object]
+⋮----
+cost_reference = results[0].markets[0] if results and results[0].markets else None
 ⋮----
 payload = benchmark_payload(results)
 json_target = Path(json_path)
@@ -4179,6 +4297,126 @@ river = evaluate_model_quality(
 challenger = evaluate_model_quality(
 ⋮----
 # MTF evaluator has already applied its versioned confidence gate.
+```
+
+## File: ai_trading/mtf_shared_portfolio.py
+```python
+@dataclass
+class _Position
+⋮----
+units: float
+entry_price: float
+entry_cost: float
+⋮----
+@dataclass(frozen=True)
+class SharedMTFPortfolioReport
+⋮----
+starting_cash: float
+final_equity: float
+net_return: float
+max_drawdown: float
+max_concurrent_positions: int
+peak_gross_exposure_fraction: float
+entry_gross_limit: float
+per_market_target_fraction: float
+accepted_trades: int
+rejected_entries: int
+total_costs: float
+realized_net_pnl: float
+equity_by_timestamp: dict[str, float]
+fills: tuple[dict[str, object], ...]
+⋮----
+"""Replay already predicted OOS trades with one shared, unlevered risk budget.
+
+    Every trade is an output of the existing research benchmark, *not* a
+    broker fill. At a timestamp, positions enter at that bar's open using
+    only prices previously closed on other markets. Existing and new
+    holdings are marked at completed closes, then scheduled exits settle.
+    Exit proceeds cannot fund same-timestamp opening orders. Weekend and
+    session gaps carry the last observed close, not a future price.
+
+    Each market has at most one open position. Both long and short notional
+    consume the same gross exposure budget. Borrow, margin, asset currency
+    conversion and funding are NOT modeled; prices are normalized proxies.
+    """
+⋮----
+rows = {row.symbol: row for row in results}
+⋮----
+bars: dict[str, pd.DataFrame] = {}
+entries: dict[pd.Timestamp, list[tuple[str, MTFResearchTrade]]] = {}
+exits: dict[pd.Timestamp, list[tuple[str, MTFResearchTrade]]] = {}
+⋮----
+market = markets[symbol]
+⋮----
+frame = market.loc[:, ["Open", "Close"]].astype(float).copy()
+⋮----
+last_exit: pd.Timestamp | None = None
+⋮----
+start = pd.Timestamp(trade.entry_time)
+end = pd.Timestamp(trade.exit_time)
+start = start.tz_localize("UTC") if start.tzinfo is None else start.tz_convert("UTC")
+end = end.tz_localize("UTC") if end.tzinfo is None else end.tz_convert("UTC")
+⋮----
+last_exit = end
+⋮----
+entry_events = {
+exit_events = {
+union = sorted(set().union(*(frame.index for frame in bars.values())))
+cash = float(starting_cash)
+marked_prices: dict[str, float] = {}
+positions: dict[str, _Position] = {}
+equity_curve: dict[str, float] = {}
+fills: list[dict[str, object]] = []
+total_costs = 0.0
+realized_net_pnl = 0.0
+accepted = 0
+rejected = 0
+peak_equity = float(starting_cash)
+worst_drawdown = 0.0
+max_concurrent = 0
+peak_exposure = 0.0
+⋮----
+def mark() -> float
+⋮----
+def observe() -> None
+⋮----
+equity = mark()
+⋮----
+peak_equity = max(peak_equity, equity)
+worst_drawdown = max(worst_drawdown, 1 - equity / peak_equity)
+gross = sum(abs(pos.units * marked_prices[sym]) for sym, pos in positions.items())
+peak_exposure = max(peak_exposure, gross / equity)
+max_concurrent = max(max_concurrent, len(positions))
+⋮----
+# Open orders execute before any close or same-bar exit. All symbols
+# share one account. Stable sorted ordering is an explicit assumption.
+⋮----
+price = float(bars[symbol].at[timestamp, "Open"])
+equity_before = mark()
+current_gross = sum(
+rate = (rows[symbol].transaction_cost_bps + rows[symbol].slippage_bps) / 10_000.0
+capacity = max(0.0, max_gross_fraction * equity_before - current_gross)
+# The entry fee reduces equity and therefore shrinks the
+# post-fill gross budget. Do not spend that difference twice.
+allowable = capacity / (1.0 + max_gross_fraction * rate)
+notional = min(per_market_fraction * equity_before, allowable)
+⋮----
+units = trade.side * notional / price
+fee = notional * rate
+⋮----
+# Only completed close prices are made available, no forward-looking
+# marks for a market that has not printed a new bar.
+⋮----
+# A trade rejected at entry must not create a fictitious exit.
+⋮----
+position = positions.pop(symbol)
+price = float(bars[symbol].at[timestamp, "Close"])
+⋮----
+fee = abs(position.units) * price * rate
+⋮----
+pnl = position.units * (price - position.entry_price) - position.entry_cost - fee
+⋮----
+final_equity = mark()
 ```
 
 ## File: ai_trading/multi_market.py
@@ -6211,6 +6449,82 @@ decision = evaluate_challenger(champion, challenger, policy)
 win_rate = wins / len(champion_periods)
 ```
 
+## File: ai_trading/prospective_capture.py
+```python
+"""Prospective OHLCV acquisition only: no model training, signals or order placement."""
+⋮----
+_OHLCV = ("Open", "High", "Low", "Close", "Volume")
+_SYMBOL_FILES = {"GC=F": "gold", "^GDAXI": "dax", "BTC-USD": "btc"}
+_INTERVAL = timedelta(minutes=5)
+_CAPTURE_LAG = timedelta(minutes=15)
+# Pin the exact registration bytes before the future acquisition boundary.
+# The committed JSON cannot quietly drift while capturing new observations.
+_REGISTERED_SHA256 = "7b8870cce74d7941ed6e3f3c33e0829cd28b2d92f32d11ab5ca8309daf48b096"
+⋮----
+def _as_utc(value: datetime) -> datetime
+⋮----
+"""Record only 5m bars from the locked future boundary, once completed.
+
+    Candles are indexed by their opening time; their close plus a 15-minute
+    provider lag must be strictly before the acquisition timestamp. Never
+    retroactively include earlier historical bars or rows with invalid prices.
+    """
+cutoff = _as_utc(cutoff_utc)
+acquired = _as_utc(acquired_at_utc)
+⋮----
+normalized = frame.loc[:, list(_OHLCV)].copy()
+⋮----
+numeric = normalized.apply(pd.to_numeric, errors="raise")
+# Reject invalid, nonpositive OHLC and negative/NaN volume rather than
+# making a retroactive repair of potentially tradable research data.
+⋮----
+# All four prices must belong to the same physical candle range.
+# Check both boundaries explicitly; do not let an invalid high/low
+# silently pass into the immutable research evidence.
+⋮----
+# A provider can occasionally return a rounded or off-grid timestamp.
+# Such rows are not canonical opening times of registered 5m candles.
+⋮----
+latest_eligible_open = pd.Timestamp(acquired - _INTERVAL - _CAPTURE_LAG)
+selected = numeric.loc[
+rows = [
+evidence = (
+⋮----
+def _dump(path: Path, payload: dict[str, object]) -> None
+⋮----
+"""Archive future-only source bars and immutable per-run provenance."""
+registration_bytes = registration_file.read_bytes()
+⋮----
+registration = json.loads(registration_bytes)
+⋮----
+cutoff = datetime.fromisoformat(registration["observation_start_utc"])
+acquired = _as_utc(acquired_at_utc or datetime.now(UTC))
+manifest: dict[str, object] = {
+statuses: dict[str, object] = {}
+⋮----
+frame = load_history(
+result = prospective_snapshot(
+⋮----
+# Provider details can contain URLs or credentials; do not log.
+⋮----
+snapshot_path = output_dir / f"{file_name}.json"
+⋮----
+evidence = result["dataset_evidence"]
+bars = result["bars"]
+# A successful HTTP response may contain only earlier candles or
+# no completed future observations (e.g. on a closed market).
+# Keep an auditable empty snapshot, but never report acquisition as
+# successful without a nonempty, fingerprinted future-only dataset.
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser(description="Future-only MTF OHLCV archival")
+⋮----
+args = parser.parse_args()
+⋮----
+result = collect_prospective_bars(
+```
+
 ## File: ai_trading/purged_cv.py
 ```python
 @dataclass(frozen=True)
@@ -7715,6 +8029,35 @@ class FallbackFailure(RuntimeError)
 """Sanitized failure suitable for public CI logs."""
 ⋮----
 _CLOUDFLARE_HEALTHY_WINDOW_SECONDS = 32 * 60
+⋮----
+def _safe_cycle_http_failure(exc: HTTPError) -> str
+⋮----
+"""Classify known scheduler responses without echoing untrusted provider text.
+
+    A 503 can indicate partial execution: retrying the POST automatically
+    could race an existing paper-cycle writer. Report the cause, then fail.
+    """
+detail = ""
+⋮----
+raw = exc.read(4097)
+⋮----
+body = json.loads(raw)
+⋮----
+error = body.get("error")
+⋮----
+detail = "storage_unavailable"
+⋮----
+detail = "scheduler_unavailable"
+⋮----
+detail = "worker_failure"
+⋮----
+failed = body.get("failed_markets")
+⋮----
+detail = f"partial_failure_{failed}_market(s)"
+⋮----
+detail = "partial_failure"
+⋮----
+message = f"paper cycle endpoint returned HTTP {exc.code}"
 ⋮----
 def _recent_cloudflare(payload: object) -> bool
 ⋮----

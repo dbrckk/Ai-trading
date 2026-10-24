@@ -1267,6 +1267,45 @@ def test_provenance_changes_evidence_identity() -> None
 frame = market()
 first = build_dataset_evidence(
 second = build_dataset_evidence(
+⋮----
+def _prospective_sample() -> pd.DataFrame
+⋮----
+dates = pd.date_range(
+⋮----
+def test_future_only_capture_excludes_prior_and_unclosed_bars() -> None
+⋮----
+frame = _prospective_sample()
+cutoff = datetime(2026, 10, 26, tzinfo=UTC)
+acquired = datetime(2026, 10, 26, 0, 31, tzinfo=UTC)
+record = prospective_snapshot(
+# Provider lag: entry 00:10 has closed at 00:15, and aged >= 15m.
+⋮----
+changed = frame.copy()
+⋮----
+second = prospective_snapshot(
+⋮----
+def test_prospective_capture_rejects_invalid_clock_and_reordered_data() -> None
+⋮----
+def forbid_network(*args, **kwargs)
+⋮----
+manifest = collect_prospective_bars(
+⋮----
+original = Path("research/mtf-prospective-2026-10-26-v1.json")
+altered = tmp_path / "altered-registration.json"
+⋮----
+def test_prospective_capture_rejects_inconsistent_candles_and_off_grid_bars() -> None
+⋮----
+candle = _prospective_sample()
+invalid = candle.copy()
+⋮----
+off_grid = candle.copy()
+⋮----
+sample = _prospective_sample()
+requested = []
+⋮----
+def provider(symbol, *, period, interval, max_attempts)
+⋮----
+dest = tmp_path / "capture"
 ```
 
 ## File: test_deployment_readiness.py
@@ -2055,12 +2094,17 @@ configs = (
 ⋮----
 results = run_parameter_benchmark(
 ⋮----
+# Explicitly empty search grids must fail rather than expand silently to
+# the expensive default 36-configuration sweep.
+⋮----
 def test_benchmark_payload_is_reproducible_and_explicit() -> None
 ⋮----
 markets = {"A": sample_market()}
 configs = (MTFBenchmarkConfig(3, 0.001, 0.25, 600, 0.56),)
 ⋮----
 payload = benchmark_payload(results)
+⋮----
+sized = payload["method"]["economic_gate"]["sized_research_account"]
 ⋮----
 def test_btc_focused_grid_is_bounded_and_longer_horizon() -> None
 ⋮----
@@ -2077,6 +2121,55 @@ configs = (MTFBenchmarkConfig(3, 0.0005, 0.25, 700, 0.50),)
 def test_parameter_grid_uses_same_random_seed_for_every_config(monkeypatch) -> None
 ⋮----
 seen_random_states: list[int] = []
+⋮----
+def test_cost_aware_mtf_gate_rejects_directional_wins_erased_by_fees(monkeypatch) -> None
+⋮----
+"""Only disjoint completed trades count toward economic eligibility."""
+⋮----
+class AlwaysLongModel
+⋮----
+def __init__(self, **kwargs)
+⋮----
+def fit(self, rows, labels)
+⋮----
+def predict_one(self, row, regime)
+⋮----
+# Direction is known in this controlled benchmark, but the next-open
+# realized edge is small enough for realistic costs to erase it.
+market = sample_market()
+trend = 100.0 + np.arange(len(market), dtype=float) * 0.05
+⋮----
+config = MTFBenchmarkConfig(3, 0.0005, 0.25, 700, 0.50)
+⋮----
+without_costs = evaluate_market_config(
+with_costs = evaluate_market_config(
+⋮----
+result = AggregateBenchmarkResult(
+⋮----
+# Same frozen settings, but selection only sees the pre-holdout prefix.
+# The final chronological slice is evaluated *after* validation picks
+# a candidate, and its results cannot change the chosen hyperparameters.
+study = run_chronological_holdout(
+cutoff = market.index[-160]
+⋮----
+# A losing validation cannot be revived by peeking at holdout outcomes.
+blocked = run_chronological_holdout(
+⋮----
+def test_shared_mtf_account_reconciles_overlapping_markets_and_costs() -> None
+⋮----
+"""Replay a long and short concurrently on one constrained cash account."""
+times = pd.date_range("2026-10-01", periods=5, freq="5min")
+market_a = pd.DataFrame(
+market_b = pd.DataFrame(
+# Use a benchmark-produced result so all other metadata is real, then
+# replace only the controlled execution evidence for a deterministic
+# shared-capital accounting check.
+base = evaluate_market_config(
+a = replace(
+b = replace(
+account = simulate_shared_mtf_portfolio(
+⋮----
+high_cost = simulate_shared_mtf_portfolio(
 ```
 
 ## File: test_mtf_shadow_challenger.py
@@ -4347,6 +4440,15 @@ def test_scheduler_delivery_overview_exposes_recent_failed_delivery() -> None
 ⋮----
 now = datetime(2026, 9, 25, 15, 30, tzinfo=UTC)
 deliveries = (
+⋮----
+def test_scheduler_fallback_classifies_503_safely_without_repeating_post() -> None
+⋮----
+"""Expose only allowlisted failure kinds; never send a second paper cycle."""
+def make_opener(payload, posts)
+⋮----
+def fake_opener(request, *, timeout)
+⋮----
+posts = []
 ```
 
 ## File: test_scheduler_governor.py
