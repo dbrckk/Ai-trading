@@ -8,6 +8,7 @@ from ai_trading.dataset_evidence import build_dataset_evidence
 from ai_trading.prospective_capture import (
     collect_prospective_bars,
     prospective_snapshot,
+    verify_capture_archive,
 )
 
 
@@ -260,3 +261,20 @@ def test_prospective_capture_only_reports_success_with_three_hashed_future_marke
         assert item["status"] == "completed_bars_captured"
         assert item["rows"] == 3
         assert len(item["dataset_sha256"]) == 64
+
+
+def test_prospective_archive_verification_detects_tampering(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        "ai_trading.prospective_capture.load_history",
+        lambda symbol, **kwargs: _prospective_sample(),
+    )
+    collect_prospective_bars(
+        Path("research/mtf-prospective-2026-10-26-v1.json"),
+        tmp_path,
+        acquired_at_utc=datetime(2026, 10, 26, 0, 31, tzinfo=UTC),
+    )
+    verify_capture_archive(tmp_path)
+    path = tmp_path / "gold.json"
+    path.write_text(path.read_text() + " ", encoding="utf-8")
+    with pytest.raises(ValueError, match="file hash mismatch"):
+        verify_capture_archive(tmp_path)
