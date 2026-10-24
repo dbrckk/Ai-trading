@@ -4,7 +4,7 @@
   "base_branch": "main",
   "active_branch": "main",
   "pull_request": null,
-  "focus": "2026-10-23 PR #213 merged as 5bb55b6 after green CI/CodeQL and pre-cutoff prospective capture run 40013538979. Frozen MTF prospective Gold/DAX/BTC data-only registration SHA256 7b8870cce74d7941ed6e3f3c33e0829cd28b2d92f32d11ab5ca8309daf48b096; first eligible market opening 2026-10-26 00:00 UTC, bar close +15min lag; daily scheduled archive 02:31 UTC; artifacts 90d. Before cutoff smoke run captured ZERO future data (correct). No future out-of-sample outcomes exist. Earlier Render web and Neon were healthy with all 3 paper engines RUNNING at last read-only check, but Render deployed SHA 0e2bc5d behind main, host deploy not verified for latest code. Paper Cycle 503 original root cause still unknown; no model or live broker changes.",
+  "focus": "2026-10-24 PR #214 merged 13174c5: prospective Gold/DAX/BTC 5m OHLCV provider captures now reject impossible candles/off-grid timestamps and require nonempty fingerprinted post-cutoff market data; PR CI/CodeQL plus pre-cutoff smoke 40081693532 (artifact 12555332728) green and ZERO future observations acquired as expected. PR #215 merged 59207a7: hosted probe now tolerates only transient subset/all STARTING by three additional READ-ONLY market GETs separated by 15s; persistent STARTING, ERROR, STALE or storage failure still fail. Full PR CI/CodeQL plus actual Hosted Dashboard Probe 40082423335 green. Most recent main post-merge checks pending; exact Render deployed SHA not verified. Frozen prospective cutoff 2026-10-26 00:00 UTC unchanged; no future OOS profit evidence. River-v1 paper decisions/risk unchanged, live broker OFF.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -326,6 +326,39 @@
       "active_trading_changed": false,
       "live_broker_enabled": false,
       "scope_limits": "read-only acquisition only; artifacts expire, Yahoo may revise past data, coverage gaps possible and NO future PnL validated"
+    },
+    "latest_prospective_capture_validation": {
+      "checked_on": "2026-10-24",
+      "registration_sha256": "7b8870cce74d7941ed6e3f3c33e0829cd28b2d92f32d11ab5ca8309daf48b096",
+      "pr_number": 214,
+      "merge_sha": "13174c5a627b7ff1a20fceba14f136e0c2cdd386",
+      "smoke_run_id": 40081693532,
+      "smoke_artifact_id": 12555332728,
+      "pre_cutoff_future_bars": 0,
+      "future_cutoff_utc": "2026-10-26T00:00:00+00:00",
+      "scheduled_daily_capture_utc": "02:31",
+      "integrity_gates": [
+        "valid bounded OHLC",
+        "5m grid opening timestamp",
+        "positive nonempty future completed bars on all markets",
+        "per-market SHA256"
+      ],
+      "production_parameters_changed": false,
+      "live_broker_enabled": false
+    },
+    "latest_hosted_probe_starting_resilience": {
+      "checked_on": "2026-10-24",
+      "pr_number": 215,
+      "merge_sha": "59207a762dee351a9343656c3148d253a8e629dd",
+      "last_observed_transient_all_starting_run_id": 40073470042,
+      "last_observed_transient_btc_starting_run_id": 40082239699,
+      "successful_pr_probe_run_id": 40082423335,
+      "classification": "retry read-only GET markets only if all reported unhealthy expected engines are STARTING",
+      "max_additional_reads": 3,
+      "seconds_between_reads": 15,
+      "persistent_starting_fails": true,
+      "errors_or_stale_retry": false,
+      "production_broker_action": false
     }
   },
   "completed_changes": [
@@ -373,7 +406,9 @@
     "PR #210 merged 2026-10-23 d2d4ec3: one-market paper equity and drawdown on 10% entry notional, with positive sized-return gate; PR CI/CodeQL and real MTF evidence passed.",
     "PR #211 merged 2026-10-23 1dc13bc: common-capital MTF Gold/DAX/BTC model with overlapping positions, marked portfolio equity/drawdown, entry gross cap, and reconciled cash/fills; full PR CI/CodeQL and live-data benchmark green.",
     "PR #212 merged 2026-10-23 e4a7299: sanitized paper fallback HTTP error categories and on-failure read-only hosted readiness/markets probe; PR CI/CodeQL passed. Host-side cause not yet fixed or verified.",
-    "PR #213 merged 2026-10-23 5bb55b6: fixed future-only MTF OHLCV preregistration, timestamp cutoff 2026-10-26 00:00 UTC, immutable manifest hash, auto daily read-only capture with source fingerprints; complete CI/CodeQL and pre-cutoff smoke succeeded."
+    "PR #213 merged 2026-10-23 5bb55b6: fixed future-only MTF OHLCV preregistration, timestamp cutoff 2026-10-26 00:00 UTC, immutable manifest hash, auto daily read-only capture with source fingerprints; complete CI/CodeQL and pre-cutoff smoke succeeded.",
+    "PR #214 merged 2026-10-24 13174c5: strict nonempty post-cutoff 5m OHLCV with SHA-256, off-grid and candle validation; CI/CodeQL/pre-cutoff capture green.",
+    "PR #215 merged 2026-10-24 59207a7: bounded 45sec read-only recheck of transient Gold/DAX/BTC STARTING states, preserves errors/STALE fail-closed; CI/CodeQL/hosted probe green."
   ],
   "safety": {
     "live_broker_enabled": false,
@@ -382,9 +417,9 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Check latest main post-merge CI and CodeQL separately from the successful PR checks.",
-    "After 2026-10-26 UTC, verify successful 02:31 scheduled Prospective MTF Bar Capture; inspect market artifact timestamps, source hashes, data gaps and revisions; do not claim fresh results before any such snapshot exists.",
-    "Before using the prospective OHLCV, separately freeze signal-generation/selection-free analysis rules and evaluation horizon and ensure no leakage/promotion from those observations.",
-    "Keep read-only monitoring of hosted /api/scheduler and /api/markets after prior 503; Render last observed deployed 0e2bc5d, exact new release SHA not established. River-v1 paper authority unchanged, live broker OFF."
+    "Verify GitHub main post-merge CI/CodeQL and Hosted Dashboard Probe for final latest source/docs SHA; do not confuse passing PR checks with main deploy.",
+    "Check daily scheduled 02:31 UTC Prospective MTF Bar Capture after 2026-10-26: inspect archived future-only timestamps, hashed data, closed-market empty-data handling and provider revisions; do not claim prospective results before observation exists.",
+    "Before any evaluation, freeze analysis horizon, walk-forward refit rules and untouched prospective model comparison, and require net realized position-sized portfolio results and adequate sample size; no automatic promotion.",
+    "Continue monitoring Cloudflare and GitHub Paper Cycle reliability and check exact Render deployed commit separately; retain River-v1 paper authority and live broker OFF."
   ]
 }
