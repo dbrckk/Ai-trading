@@ -4,7 +4,7 @@
   "base_branch": "main",
   "active_branch": "main",
   "pull_request": null,
-  "focus": "2026-10-24 PR #214 merged 13174c5: prospective Gold/DAX/BTC 5m OHLCV provider captures now reject impossible candles/off-grid timestamps and require nonempty fingerprinted post-cutoff market data; PR CI/CodeQL plus pre-cutoff smoke 40081693532 (artifact 12555332728) green and ZERO future observations acquired as expected. PR #215 merged 59207a7: hosted probe now tolerates only transient subset/all STARTING by three additional READ-ONLY market GETs separated by 15s; persistent STARTING, ERROR, STALE or storage failure still fail. Full PR CI/CodeQL plus actual Hosted Dashboard Probe 40082423335 green. Most recent main post-merge checks pending; exact Render deployed SHA not verified. Frozen prospective cutoff 2026-10-26 00:00 UTC unchanged; no future OOS profit evidence. River-v1 paper decisions/risk unchanged, live broker OFF.",
+  "focus": "2026-10-24 PR #214 merged 13174c5: prospective Gold/DAX/BTC 5m OHLCV provider captures now reject impossible candles/off-grid timestamps and require nonempty fingerprinted post-cutoff market data; PR CI/CodeQL plus pre-cutoff smoke 40081693532 (artifact 12555332728) green and ZERO future observations acquired as expected. PR #215 merged 59207a7: hosted probe now tolerates only transient subset/all STARTING by three additional READ-ONLY market GETs separated by 15s; persistent STARTING, ERROR, STALE or storage failure still fail. Full PR CI/CodeQL plus actual Hosted Dashboard Probe 40082423335 green. Most recent main post-merge checks pending; exact Render deployed SHA not verified. Frozen prospective cutoff 2026-10-26 00:00 UTC unchanged; no future OOS profit evidence. River-v1 paper decisions/risk unchanged, live broker OFF. Read-only Render check 2026-10-24 ~09:35 UTC: /livez reports deployed SHA 13174c5 (PR #214 deployed, PR #215 later GitHub main not yet confirmed deployed), /readyz healthy, all 3 paper markets RUNNING/0 errors and portfolio complete. Cloudflare latest HTTP200 fresh, only one consecutive success; ongoing scheduler stability unproven.",
   "production_evidence": {
     "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
     "render_shadow_challenger_enabled": true,
@@ -359,6 +359,39 @@
       "persistent_starting_fails": true,
       "errors_or_stale_retry": false,
       "production_broker_action": false
+    },
+    "latest_render_deployed_read_only": {
+      "checked_on": "2026-10-24",
+      "checked_utc_approx": "09:35",
+      "deployed_commit": "13174c5a627b7ff1a20fceba14f136e0c2cdd386",
+      "web_healthy": true,
+      "storage_ready": true,
+      "storage_healthy": true,
+      "market_status": {
+        "GC=F": "RUNNING",
+        "^GDAXI": "RUNNING",
+        "BTC-USD": "RUNNING"
+      },
+      "market_consecutive_cycle_errors": {
+        "GC=F": 0,
+        "^GDAXI": 0,
+        "BTC-USD": 0
+      },
+      "market_sessions": {
+        "GC=F": "MARKET_CLOSED",
+        "^GDAXI": "MARKET_CLOSED",
+        "BTC-USD": "LIVE"
+      },
+      "portfolio_equity_complete": true,
+      "portfolio_error_markets": 0,
+      "last_cloudflare_delivery_timestamp_utc": "2026-10-24T09:31:25.409304+00:00",
+      "last_cloudflare_http_status": 200,
+      "last_cloudflare_fresh": true,
+      "cloudflare_consecutive_successes": 1,
+      "sustained_cloudflare_health_verified": false,
+      "deployed_sha_is_latest_main": false,
+      "latest_pr_215_deployed_verified": false,
+      "read_only": true
     }
   },
   "completed_changes": [
@@ -417,9 +450,9 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Verify GitHub main post-merge CI/CodeQL and Hosted Dashboard Probe for final latest source/docs SHA; do not confuse passing PR checks with main deploy.",
-    "Check daily scheduled 02:31 UTC Prospective MTF Bar Capture after 2026-10-26: inspect archived future-only timestamps, hashed data, closed-market empty-data handling and provider revisions; do not claim prospective results before observation exists.",
-    "Before any evaluation, freeze analysis horizon, walk-forward refit rules and untouched prospective model comparison, and require net realized position-sized portfolio results and adequate sample size; no automatic promotion.",
-    "Continue monitoring Cloudflare and GitHub Paper Cycle reliability and check exact Render deployed commit separately; retain River-v1 paper authority and live broker OFF."
+    "Verify current main CI/CodeQL and new hosted Render /livez deployed SHA after PR #215; PR merge alone is not proof of release.",
+    "Check whether latest Cloudflare scheduler deliveries reach >=3 consecutive valid successes and whether all paper markets remain RUNNING; last public check had one consecutive successful delivery.",
+    "After frozen UTC 2026-10-26 cutoff, validate scheduled 02:31 UTC Prospective MTF capture manifest against nonempty datasets, 5m grids, 15min close lag and source hashes; empty/market-closed runs should fail with diagnostic evidence.",
+    "Do not select/tune any strategy on the prospective observations; pre-register evaluation horizon and holdout comparison before assessing net profitability. Maintain River-v1 paper authority and live broker OFF."
   ]
 }
