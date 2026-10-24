@@ -10,7 +10,6 @@ from time import sleep
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
-
 _STARTING_RECHECKS = 3
 _STARTING_RECHECK_DELAY_SECONDS = 15.0
 _TRANSIENT_ALL_MARKETS_STARTING = {
