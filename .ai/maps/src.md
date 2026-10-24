@@ -2142,6 +2142,10 @@ def dataset_evidence_hash(evidence: DatasetEvidence) -> str
 ```python
 """Read-only probe of the deployed dashboard; no broker or scheduler requests."""
 ⋮----
+_STARTING_RECHECKS = 3
+_STARTING_RECHECK_DELAY_SECONDS = 15.0
+_TRANSIENT_STARTING_MARKETS = {
+⋮----
 @dataclass(frozen=True)
 class ProbeCheck
 ⋮----
@@ -2206,12 +2210,26 @@ errors = (
 ⋮----
 detail = "three_market_cards_available"
 ⋮----
+def _only_transient_market_starting(detail: str) -> bool
+⋮----
+"""Retry only known markets reported STARTING, never a mixed ERROR/STALE."""
+prefix = "market_engines_not_running:"
+⋮----
+failures = detail.removeprefix(prefix).split(",")
+⋮----
 """Check web, storage and markets; optionally require healthy live engines."""
 ⋮----
 checks = [
 # The free-tier host can briefly refuse the first connection while other
 # endpoints recover. Retry only transport failures, once, after the first
 # pass. HTTP errors, unhealthy payloads and SHA mismatches still fail.
+⋮----
+# A successful Cloudflare paper cycle can briefly mark one or more
+# workers STARTING while it persists fresh states. One read during that
+# in-flight operation is not evidence of a stuck engine. Read-only retries
+# suppress this specific false alarm, but persistent STARTING or any
+# actual ERROR/STALE/storage failure must still fail closed.
+market_index = 2
 ⋮----
 def main() -> int
 ⋮----

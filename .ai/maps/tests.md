@@ -924,6 +924,24 @@ healthy = probe_dashboard(base, require_running_markets=True)
 degraded = probe_dashboard(base, require_running_markets=True)
 ⋮----
 stale = probe_dashboard(base, require_running_markets=True)
+⋮----
+def test_hosted_probe_rechecks_transient_all_or_some_starting(monkeypatch) -> None
+⋮----
+starting = (
+probes = []
+sleeps = []
+⋮----
+def fake_probe(base_url, endpoint, timeout, *, expected_sha, require_running_markets)
+⋮----
+market_reads = probes.count("/api/markets")
+⋮----
+checks = probe_dashboard("https://example.invalid", require_running_markets=True)
+⋮----
+statuses = [starting, "market_engines_not_running:GC=F:ERROR"]
+⋮----
+stuck = probe_dashboard("https://example.invalid", require_running_markets=True)
+⋮----
+broken = probe_dashboard("https://example.invalid", require_running_markets=True)
 ```
 
 ## File: test_dashboard_overview.py

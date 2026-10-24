@@ -142,16 +142,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-24T09:26:31Z
+Generated: 2026-10-24T09:37:39Z
 
 ### Git
 - Branch: `main`
-- Head: `13174c5a627b`
-- Commit date: 2026-10-24T05:26:23-04:00
-- Commit: fix(research): reject invalid or empty prospective OHLCV evidence (#214)
-- Tracked files: 520
+- Head: `59207a762dee`
+- Commit date: 2026-10-24T05:37:29-04:00
+- Commit: fix(ops): recheck transient STARTING states in hosted probe (#215)
+- Tracked files: 522
 
 ### Recently changed files
+- `.github/workflows/hosted-dashboard-probe.yml`
+- `src/ai_trading/deployment_probe.py`
+- `tests/test_dashboard_health.py`
 - `.github/workflows/mtf-prospective-capture.yml`
 - `src/ai_trading/prospective_capture.py`
 - `tests/test_dataset_evidence.py`

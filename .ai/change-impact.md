@@ -1,12 +1,12 @@
 # Change impact
 
-Base: 80e32a4fabd32d9011e1b238f15b1eb66834e0ea
-Head: 13174c5a627b7ff1a20fceba14f136e0c2cdd386
+Base: f9652dc78b663bcfcf21632c81fdc9839cd57f2d
+Head: 59207a762dee351a9343656c3148d253a8e629dd
 
 ## Changed files
-- M .github/workflows/mtf-prospective-capture.yml
-- M src/ai_trading/prospective_capture.py
-- M tests/test_dataset_evidence.py
+- M .github/workflows/hosted-dashboard-probe.yml
+- M src/ai_trading/deployment_probe.py
+- M tests/test_dashboard_health.py
 
 ## Affected areas
 - .github

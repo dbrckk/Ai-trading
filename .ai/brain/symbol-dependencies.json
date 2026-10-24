@@ -5,136 +5,37 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "MTFBenchmarkConfig": {
+    "ProbeCheck": {
       "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 33,
-        "end": 65
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "__post_init__",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 40,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "horizon_minutes",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 53,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "__post_init__": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 40,
-        "end": 50
+        "file": "src/ai_trading/deployment_probe.py",
+        "start": 21,
+        "end": 24
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "horizon_minutes": {
+    "_fetch_json": {
       "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 53,
-        "end": 54
+        "file": "src/ai_trading/deployment_probe.py",
+        "start": 27,
+        "end": 61
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "name": {
+    "_probe_endpoint": {
       "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 57,
-        "end": 65
+        "file": "src/ai_trading/deployment_probe.py",
+        "start": 64,
+        "end": 161
       },
       "symbol_dependencies": [
         {
-          "symbol": "horizon_minutes",
+          "symbol": "ProbeCheck",
           "definitions": [
             {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 53,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "MTFResearchTrade": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 69,
-        "end": 76
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "MarketBenchmarkResult": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 80,
-        "end": 112
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFResearchTrade",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 69,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "AggregateBenchmarkResult": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 116,
-        "end": 124
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 21,
               "kind": "class",
               "language": "python"
             }
@@ -142,12 +43,12 @@
           "relation": "same_file"
         },
         {
-          "symbol": "MarketBenchmarkResult",
+          "symbol": "_fetch_json",
           "definitions": [
             {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 80,
-              "kind": "class",
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 27,
+              "kind": "function",
               "language": "python"
             }
           ],
@@ -156,157 +57,28 @@
       ],
       "dependency_count": 2
     },
-    "default_benchmark_grid": {
+    "_only_transient_market_starting": {
       "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 127,
-        "end": 147
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "btc_focused_benchmark_grid": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 150,
-        "end": 165
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "market_selections": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 168,
-        "end": 217
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 116,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "MarketBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 80,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "_macro_recall": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 220,
-        "end": 227
+        "file": "src/ai_trading/deployment_probe.py",
+        "start": 164,
+        "end": 172
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "_selection_score": {
+    "probe_dashboard": {
       "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 230,
-        "end": 246
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "_fold_test_windows": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 249,
-        "end": 274
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "_mark_sized_paper_trade": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 277,
-        "end": 320
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "evaluate_market_config": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 323,
-        "end": 541
+        "file": "src/ai_trading/deployment_probe.py",
+        "start": 175,
+        "end": 230
       },
       "symbol_dependencies": [
         {
-          "symbol": "EnsembleDirectionModel",
+          "symbol": "ProbeCheck",
           "definitions": [
             {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 21,
               "kind": "class",
               "language": "python"
             }
@@ -314,35 +86,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "MTFResearchTrade",
+          "symbol": "_only_transient_market_starting",
           "definitions": [
             {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 69,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "MarketBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 80,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_fold_test_windows",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 249,
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 164,
               "kind": "function",
               "language": "python"
             }
@@ -350,293 +98,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_macro_recall",
+          "symbol": "_probe_endpoint",
           "definitions": [
             {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 220,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_mark_sized_paper_trade",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 277,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_selection_score",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 230,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "detect_regime",
-          "definitions": [
-            {
-              "file": "src/ai_trading/regime.py",
-              "line": 18,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_model_quality",
-          "definitions": [
-            {
-              "file": "src/ai_trading/model_quality.py",
-              "line": 18,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fit",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 78,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "make_multi_timeframe_challenger_features",
-          "definitions": [
-            {
-              "file": "src/ai_trading/multi_timeframe_features.py",
-              "line": 100,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "make_volatility_adaptive_labels",
-          "definitions": [
-            {
-              "file": "src/ai_trading/multi_timeframe_features.py",
-              "line": 201,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "predict_one",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 106,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 15
-    },
-    "run_parameter_benchmark": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 544,
-        "end": 609
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 116,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "default_benchmark_grid",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 127,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 323,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "run_chronological_holdout": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 612,
-        "end": 716
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "benchmark_payload",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 719,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 323,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 168,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run_parameter_benchmark",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 544,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 5
-    },
-    "benchmark_payload": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 719,
-        "end": 779
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 116,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 168,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 64,
               "kind": "function",
               "language": "python"
             }
@@ -645,2630 +111,91 @@
         }
       ],
       "dependency_count": 3
-    },
-    "write_benchmark_report": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 782,
-        "end": 866
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 116,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "benchmark_payload",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 719,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 168,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 4
     },
     "main": {
       "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 869,
-        "end": 924
+        "file": "src/ai_trading/deployment_probe.py",
+        "start": 233,
+        "end": 257
       },
       "symbol_dependencies": [
         {
-          "symbol": "benchmark_payload",
+          "symbol": "probe_dashboard",
           "definitions": [
             {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 719,
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 175,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
-        },
-        {
-          "symbol": "btc_focused_benchmark_grid",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 150,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "default_benchmark_grid",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 127,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_history",
-          "definitions": [
-            {
-              "file": "src/ai_trading/data.py",
-              "line": 85,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_parameter_benchmark",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 544,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "write_benchmark_report",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 782,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 6
-    },
-    "_Position": {
-      "source": {
-        "file": "src/ai_trading/mtf_shared_portfolio.py",
-        "start": 12,
-        "end": 15
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "SharedMTFPortfolioReport": {
-      "source": {
-        "file": "src/ai_trading/mtf_shared_portfolio.py",
-        "start": 19,
-        "end": 33
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "simulate_shared_mtf_portfolio": {
-      "source": {
-        "file": "src/ai_trading/mtf_shared_portfolio.py",
-        "start": 36,
-        "end": 236
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFResearchTrade",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 69,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "MarketBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 80,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "SharedMTFPortfolioReport",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shared_portfolio.py",
-              "line": 19,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_Position",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shared_portfolio.py",
-              "line": 12,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "mark",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shared_portfolio.py",
-              "line": 143,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "observe",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shared_portfolio.py",
-              "line": 146,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 6
-    },
-    "mark": {
-      "source": {
-        "file": "src/ai_trading/mtf_shared_portfolio.py",
-        "start": 143,
-        "end": 263
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "SharedMTFPortfolioReport",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shared_portfolio.py",
-              "line": 19,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_Position",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shared_portfolio.py",
-              "line": 12,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "observe",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shared_portfolio.py",
-              "line": 146,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "observe": {
-      "source": {
-        "file": "src/ai_trading/mtf_shared_portfolio.py",
-        "start": 146,
-        "end": 266
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "SharedMTFPortfolioReport",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shared_portfolio.py",
-              "line": 19,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_Position",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shared_portfolio.py",
-              "line": 12,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "mark",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shared_portfolio.py",
-              "line": 143,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "_as_utc": {
-      "source": {
-        "file": "src/ai_trading/prospective_capture.py",
-        "start": 27,
-        "end": 30
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "prospective_snapshot": {
-      "source": {
-        "file": "src/ai_trading/prospective_capture.py",
-        "start": 33,
-        "end": 119
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_as_utc",
-          "definitions": [
-            {
-              "file": "src/ai_trading/prospective_capture.py",
-              "line": 27,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "build_dataset_evidence",
-          "definitions": [
-            {
-              "file": "src/ai_trading/dataset_evidence.py",
-              "line": 22,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "_dump": {
-      "source": {
-        "file": "src/ai_trading/prospective_capture.py",
-        "start": 122,
-        "end": 127
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "collect_prospective_bars": {
-      "source": {
-        "file": "src/ai_trading/prospective_capture.py",
-        "start": 130,
-        "end": 243
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_as_utc",
-          "definitions": [
-            {
-              "file": "src/ai_trading/prospective_capture.py",
-              "line": 27,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_dump",
-          "definitions": [
-            {
-              "file": "src/ai_trading/prospective_capture.py",
-              "line": 122,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_history",
-          "definitions": [
-            {
-              "file": "src/ai_trading/data.py",
-              "line": 85,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "prospective_snapshot",
-          "definitions": [
-            {
-              "file": "src/ai_trading/prospective_capture.py",
-              "line": 33,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "FallbackFailure": {
-      "source": {
-        "file": "src/ai_trading/scheduler_fallback.py",
-        "start": 16,
-        "end": 17
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "_safe_cycle_http_failure": {
-      "source": {
-        "file": "src/ai_trading/scheduler_fallback.py",
-        "start": 23,
-        "end": 56
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "_recent_cloudflare": {
-      "source": {
-        "file": "src/ai_trading/scheduler_fallback.py",
-        "start": 59,
-        "end": 71
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "run_fallback": {
-      "source": {
-        "file": "src/ai_trading/scheduler_fallback.py",
-        "start": 74,
-        "end": 137
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "FallbackFailure",
-          "definitions": [
-            {
-              "file": "src/ai_trading/scheduler_fallback.py",
-              "line": 16,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_recent_cloudflare",
-          "definitions": [
-            {
-              "file": "src/ai_trading/scheduler_fallback.py",
-              "line": 59,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_safe_cycle_http_failure",
-          "definitions": [
-            {
-              "file": "src/ai_trading/scheduler_fallback.py",
-              "line": 23,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "market": {
-      "source": {
-        "file": "tests/test_dataset_evidence.py",
-        "start": 14,
-        "end": 25
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "test_dataset_hash_is_deterministic": {
-      "source": {
-        "file": "tests/test_dataset_evidence.py",
-        "start": 28,
-        "end": 34
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "build_dataset_evidence",
-          "definitions": [
-            {
-              "file": "src/ai_trading/dataset_evidence.py",
-              "line": 22,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "market",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 14,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_single_ohlcv_change_changes_dataset_hash": {
-      "source": {
-        "file": "tests/test_dataset_evidence.py",
-        "start": 37,
-        "end": 45
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "build_dataset_evidence",
-          "definitions": [
-            {
-              "file": "src/ai_trading/dataset_evidence.py",
-              "line": 22,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "market",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 14,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_timestamp_change_changes_dataset_hash": {
-      "source": {
-        "file": "tests/test_dataset_evidence.py",
-        "start": 48,
-        "end": 56
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "build_dataset_evidence",
-          "definitions": [
-            {
-              "file": "src/ai_trading/dataset_evidence.py",
-              "line": 22,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "market",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 14,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_provenance_changes_evidence_identity": {
-      "source": {
-        "file": "tests/test_dataset_evidence.py",
-        "start": 59,
-        "end": 73
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "build_dataset_evidence",
-          "definitions": [
-            {
-              "file": "src/ai_trading/dataset_evidence.py",
-              "line": 22,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "market",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 14,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "provider",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 216,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 247,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "_prospective_sample": {
-      "source": {
-        "file": "tests/test_dataset_evidence.py",
-        "start": 76,
-        "end": 89
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "test_future_only_capture_excludes_prior_and_unclosed_bars": {
-      "source": {
-        "file": "tests/test_dataset_evidence.py",
-        "start": 92,
-        "end": 118
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_prospective_sample",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 76,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prospective_snapshot",
-          "definitions": [
-            {
-              "file": "src/ai_trading/prospective_capture.py",
-              "line": 33,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_prospective_capture_rejects_invalid_clock_and_reordered_data": {
-      "source": {
-        "file": "tests/test_dataset_evidence.py",
-        "start": 121,
-        "end": 139
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_prospective_sample",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 76,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prospective_snapshot",
-          "definitions": [
-            {
-              "file": "src/ai_trading/prospective_capture.py",
-              "line": 33,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_pre_registered_capture_skips_provider_until_future_start": {
-      "source": {
-        "file": "tests/test_dataset_evidence.py",
-        "start": 142,
-        "end": 163
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "collect_prospective_bars",
-          "definitions": [
-            {
-              "file": "src/ai_trading/prospective_capture.py",
-              "line": 130,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "forbid_network",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 145,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 177,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "market",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 14,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "forbid_network": {
-      "source": {
-        "file": "tests/test_dataset_evidence.py",
-        "start": 145,
-        "end": 265
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_prospective_sample",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 76,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "collect_prospective_bars",
-          "definitions": [
-            {
-              "file": "src/ai_trading/prospective_capture.py",
-              "line": 130,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "market",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 14,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prospective_snapshot",
-          "definitions": [
-            {
-              "file": "src/ai_trading/prospective_capture.py",
-              "line": 33,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "provider",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 216,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 247,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_prospective_capture_does_not_claim_empty_market_was_acquired",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 210,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_prospective_capture_only_reports_success_with_three_hashed_future_markets",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 244,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_prospective_capture_rejects_inconsistent_candles_and_off_grid_bars",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 191,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_prospective_registration_changes_are_rejected_before_download",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 166,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 9
-    },
-    "test_prospective_registration_changes_are_rejected_before_download": {
-      "source": {
-        "file": "tests/test_dataset_evidence.py",
-        "start": 166,
-        "end": 187
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "collect_prospective_bars",
-          "definitions": [
-            {
-              "file": "src/ai_trading/prospective_capture.py",
-              "line": 130,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "forbid_network",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 145,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 177,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "provider",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 216,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 247,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "test_prospective_capture_rejects_inconsistent_candles_and_off_grid_bars": {
-      "source": {
-        "file": "tests/test_dataset_evidence.py",
-        "start": 191,
-        "end": 207
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_prospective_sample",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 76,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prospective_snapshot",
-          "definitions": [
-            {
-              "file": "src/ai_trading/prospective_capture.py",
-              "line": 33,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_prospective_capture_does_not_claim_empty_market_was_acquired": {
-      "source": {
-        "file": "tests/test_dataset_evidence.py",
-        "start": 210,
-        "end": 241
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_prospective_sample",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 76,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "collect_prospective_bars",
-          "definitions": [
-            {
-              "file": "src/ai_trading/prospective_capture.py",
-              "line": 130,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "provider",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 216,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 247,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "provider": {
-      "source": {
-        "file": "tests/test_dataset_evidence.py",
-        "start": 216,
-        "end": 336
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_prospective_sample",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 76,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "collect_prospective_bars",
-          "definitions": [
-            {
-              "file": "src/ai_trading/prospective_capture.py",
-              "line": 130,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "test_prospective_capture_only_reports_success_with_three_hashed_future_markets",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 244,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "test_prospective_capture_only_reports_success_with_three_hashed_future_markets": {
-      "source": {
-        "file": "tests/test_dataset_evidence.py",
-        "start": 244,
-        "end": 262
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_prospective_sample",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 76,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "collect_prospective_bars",
-          "definitions": [
-            {
-              "file": "src/ai_trading/prospective_capture.py",
-              "line": 130,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "provider",
-          "definitions": [
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 216,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_dataset_evidence.py",
-              "line": 247,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "sample_market": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 26,
-        "end": 45
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "test_market_benchmark_is_purged_and_reports_directional_evidence": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 48,
-        "end": 89
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 323,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 26,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "test_parameter_benchmark_ranks_configs_across_markets": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 92,
-        "end": 118
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_parameter_benchmark",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 544,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 26,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "test_benchmark_payload_is_reproducible_and_explicit": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 121,
-        "end": 154
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "benchmark_payload",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 719,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_parameter_benchmark",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 544,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 26,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "test_btc_focused_grid_is_bounded_and_longer_horizon": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 158,
-        "end": 171
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "btc_focused_benchmark_grid",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 150,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "horizon_minutes",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 53,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "test_market_selections_choose_gate_passing_config_per_symbol": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 174,
-        "end": 198
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 168,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_parameter_benchmark",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 544,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 26,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "test_payload_exposes_per_market_selection": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 201,
-        "end": 215
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "benchmark_payload",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 719,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 168,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_parameter_benchmark",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 544,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 26,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 5
-    },
-    "test_parameter_grid_uses_same_random_seed_for_every_config": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 219,
-        "end": 278
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "MarketBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 80,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 323,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fake_evaluate_market_config",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 222,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_parameter_benchmark",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 544,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 26,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 7
-    },
-    "fake_evaluate_market_config": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 222,
-        "end": 342
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 116,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "AlwaysLongModel",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 284,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "EnsembleDirectionModel",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "MarketBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 80,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 323,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fit",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 288,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "predict_one",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 292,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run_parameter_benchmark",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 544,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 26,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_cost_aware_mtf_gate_rejects_directional_wins_erased_by_fees",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 281,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 12
-    },
-    "test_cost_aware_mtf_gate_rejects_directional_wins_erased_by_fees": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 281,
-        "end": 384
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 116,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "AlwaysLongModel",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 284,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "EnsembleDirectionModel",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 323,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fit",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 288,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 168,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "predict_one",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 292,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run_chronological_holdout",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 612,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 26,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 11
-    },
-    "AlwaysLongModel": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 284,
-        "end": 404
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 116,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "EnsembleDirectionModel",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 323,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fit",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 288,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 168,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "predict_one",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 292,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run_chronological_holdout",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 612,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 26,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_shared_mtf_account_reconciles_overlapping_markets_and_costs",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 387,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 11
-    },
-    "__init__": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 285,
-        "end": 405
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 116,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "AlwaysLongModel",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 284,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "EnsembleDirectionModel",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 323,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fit",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 288,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 168,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "predict_one",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 292,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run_chronological_holdout",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 612,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 26,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_shared_mtf_account_reconciles_overlapping_markets_and_costs",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 387,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 12
-    },
-    "fit": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 288,
-        "end": 408
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 116,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "AlwaysLongModel",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 284,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "EnsembleDirectionModel",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "MTFResearchTrade",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 69,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 323,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 168,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "predict_one",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 292,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run_chronological_holdout",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 612,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 26,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_shared_mtf_account_reconciles_overlapping_markets_and_costs",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 387,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 12
-    },
-    "predict_one": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 292,
-        "end": 412
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 116,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "AlwaysLongModel",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 284,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "EnsembleDirectionModel",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "MTFResearchTrade",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 69,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 323,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 168,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_chronological_holdout",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 612,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 26,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_shared_mtf_account_reconciles_overlapping_markets_and_costs",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 387,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 11
-    },
-    "test_shared_mtf_account_reconciles_overlapping_markets_and_costs": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 387,
-        "end": 451
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "MTFResearchTrade",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 69,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 323,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 26,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "simulate_shared_mtf_portfolio",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shared_portfolio.py",
-              "line": 36,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 5
-    },
-    "successful_result": {
-      "source": {
-        "file": "tests/test_scheduler_endpoint.py",
-        "start": 27,
-        "end": 38
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "PaperCycleResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
         }
       ],
       "dependency_count": 1
     },
     "_free_port": {
       "source": {
-        "file": "tests/test_scheduler_endpoint.py",
-        "start": 41,
-        "end": 44
+        "file": "tests/test_dashboard_health.py",
+        "start": 19,
+        "end": 22
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "_request": {
+    "_get": {
       "source": {
-        "file": "tests/test_scheduler_endpoint.py",
-        "start": 47,
-        "end": 59
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "_start_scheduler_dashboard": {
-      "source": {
-        "file": "tests/test_scheduler_endpoint.py",
-        "start": 62,
-        "end": 91
+        "file": "tests/test_dashboard_health.py",
+        "start": 25,
+        "end": 34
       },
       "symbol_dependencies": [
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "_start_dashboard": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 37,
+        "end": 62
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "HostedPaperSettings",
+          "definitions": [
+            {
+              "file": "src/ai_trading/hosted_runtime.py",
+              "line": 19,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
         {
           "symbol": "_free_port",
           "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 41,
+              "file": "tests/test_dashboard_health.py",
+              "line": 19,
               "kind": "function",
               "language": "python"
             }
@@ -3276,11 +203,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_request",
+          "symbol": "_get",
           "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 47,
+              "file": "tests/test_dashboard_health.py",
+              "line": 25,
               "kind": "function",
               "language": "python"
             }
@@ -3300,97 +227,33 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 3
-    },
-    "test_missing_server_token_fails_closed": {
-      "source": {
-        "file": "tests/test_scheduler_endpoint.py",
-        "start": 94,
-        "end": 110
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "PaperCycleResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "handle_scheduler_request",
-          "definitions": [
-            {
-              "file": "src/ai_trading/scheduler_endpoint.py",
-              "line": 161,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_cycle",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 97,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 149,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 194,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 215,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "successful_result",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 27,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
       "dependency_count": 4
     },
-    "run_cycle": {
+    "test_dashboard_marks_expired_worker_heartbeat_stale": {
       "source": {
-        "file": "tests/test_scheduler_endpoint.py",
-        "start": 97,
-        "end": 217
+        "file": "tests/test_dashboard_health.py",
+        "start": 65,
+        "end": 88
       },
       "symbol_dependencies": [
         {
-          "symbol": "PaperCycleResult",
+          "symbol": "Heartbeat",
           "definitions": [
             {
-              "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "file": "src/ai_trading/watchdog.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "HostedRuntimeStatus",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 10,
               "kind": "class",
               "language": "python"
             }
@@ -3398,10 +261,34 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "PaperCycleServiceError",
+          "symbol": "HostedRuntimeStatusStore",
           "definitions": [
             {
-              "file": "src/ai_trading/paper_cycle_service.py",
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 91,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RuntimeStateStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_state.py",
+              "line": 21,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "TradeJournal",
+          "definitions": [
+            {
+              "file": "src/ai_trading/trade_journal.py",
               "line": 26,
               "kind": "class",
               "language": "python"
@@ -3410,321 +297,127 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "handle_scheduler_request",
+          "symbol": "render_dashboard",
           "definitions": [
             {
-              "file": "src/ai_trading/scheduler_endpoint.py",
-              "line": 161,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "successful_result",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 27,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_concurrent_progress_is_successful_noop",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 172,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_execution_failure_is_sanitized",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 214,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_missing_authorization_is_unauthorized",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 113,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_storage_failure_is_sanitized",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
+              "file": "src/ai_trading/dashboard.py",
               "line": 193,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         },
         {
-          "symbol": "test_valid_token_runs_exactly_one_cycle",
+          "symbol": "save",
           "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 146,
+              "file": "src/ai_trading/runtime_state.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 100,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_wrong_bearer_token_is_unauthorized",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 135,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_wrong_scheme_is_unauthorized",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 124,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
+          "relation": "imported_module"
         }
       ],
-      "dependency_count": 11
+      "dependency_count": 7
     },
-    "test_missing_authorization_is_unauthorized": {
+    "test_api_status_reports_stale_worker_without_hiding_web_health": {
       "source": {
-        "file": "tests/test_scheduler_endpoint.py",
+        "file": "tests/test_dashboard_health.py",
+        "start": 91,
+        "end": 110
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "HostedRuntimeStatus",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 10,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "HostedRuntimeStatusStore",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 91,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_get",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_start_dashboard",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_state.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 100,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "test_healthz_keeps_web_liveness_separate_from_engine_health": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
         "start": 113,
-        "end": 121
+        "end": 134
       },
       "symbol_dependencies": [
         {
-          "symbol": "handle_scheduler_request",
+          "symbol": "HostedRuntimeStatus",
           "definitions": [
             {
-              "file": "src/ai_trading/scheduler_endpoint.py",
-              "line": 161,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_cycle",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 97,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 149,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 194,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 215,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "successful_result",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 27,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "test_wrong_scheme_is_unauthorized": {
-      "source": {
-        "file": "tests/test_scheduler_endpoint.py",
-        "start": 124,
-        "end": 132
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "handle_scheduler_request",
-          "definitions": [
-            {
-              "file": "src/ai_trading/scheduler_endpoint.py",
-              "line": 161,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_cycle",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 97,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 149,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 194,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 215,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "successful_result",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 27,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "test_wrong_bearer_token_is_unauthorized": {
-      "source": {
-        "file": "tests/test_scheduler_endpoint.py",
-        "start": 135,
-        "end": 143
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "handle_scheduler_request",
-          "definitions": [
-            {
-              "file": "src/ai_trading/scheduler_endpoint.py",
-              "line": 161,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_cycle",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 97,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 149,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 194,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 215,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "successful_result",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 27,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "test_valid_token_runs_exactly_one_cycle": {
-      "source": {
-        "file": "tests/test_scheduler_endpoint.py",
-        "start": 146,
-        "end": 169
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "PaperCycleResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 10,
               "kind": "class",
               "language": "python"
             }
@@ -3732,41 +425,23 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "handle_scheduler_request",
+          "symbol": "HostedRuntimeStatusStore",
           "definitions": [
             {
-              "file": "src/ai_trading/scheduler_endpoint.py",
-              "line": 161,
-              "kind": "function",
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 91,
+              "kind": "class",
               "language": "python"
             }
           ],
           "relation": "imported_module"
         },
         {
-          "symbol": "run_cycle",
+          "symbol": "_get",
           "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 97,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 149,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 194,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 215,
+              "file": "tests/test_dashboard_health.py",
+              "line": 25,
               "kind": "function",
               "language": "python"
             }
@@ -3774,33 +449,164 @@
           "relation": "same_file"
         },
         {
-          "symbol": "successful_result",
+          "symbol": "_start_dashboard",
           "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 27,
+              "file": "tests/test_dashboard_health.py",
+              "line": 37,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
+        },
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "src/ai_trading/runtime_state.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "src/ai_trading/runtime_status.py",
+              "line": 100,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "test_external_probe_checks_live_ready_and_all_markets": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 137,
+        "end": 161
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_get",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_start_dashboard",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 175,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_external_scheduler_readiness_detects_missing_configuration": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 164,
+        "end": 192
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "HostedPaperSettings",
+          "definitions": [
+            {
+              "file": "src/ai_trading/hosted_runtime.py",
+              "line": 19,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_get",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_start_dashboard",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 175,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
         }
       ],
       "dependency_count": 4
     },
-    "test_concurrent_progress_is_successful_noop": {
+    "test_render_blueprint_declares_external_runtime_and_secret_inputs": {
       "source": {
-        "file": "tests/test_scheduler_endpoint.py",
-        "start": 172,
-        "end": 190
+        "file": "tests/test_dashboard_health.py",
+        "start": 195,
+        "end": 204
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "test_external_probe_reports_connection_errors_without_exposing_details": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 207,
+        "end": 228
       },
       "symbol_dependencies": [
         {
-          "symbol": "handle_scheduler_request",
+          "symbol": "append",
           "definitions": [
             {
-              "file": "src/ai_trading/scheduler_endpoint.py",
-              "line": 161,
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 32,
               "kind": "function",
               "language": "python"
             }
@@ -3808,29 +614,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "run_cycle",
+          "symbol": "fail_request",
           "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 97,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 149,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 194,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 215,
+              "file": "tests/test_dashboard_health.py",
+              "line": 216,
               "kind": "function",
               "language": "python"
             }
@@ -3838,57 +626,117 @@
           "relation": "same_file"
         },
         {
-          "symbol": "successful_result",
+          "symbol": "probe_dashboard",
           "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 27,
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 175,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         }
       ],
       "dependency_count": 3
     },
-    "test_storage_failure_is_sanitized": {
+    "fail_request": {
       "source": {
-        "file": "tests/test_scheduler_endpoint.py",
-        "start": 193,
-        "end": 211
+        "file": "tests/test_dashboard_health.py",
+        "start": 216,
+        "end": 336
       },
       "symbol_dependencies": [
         {
-          "symbol": "PaperCycleResult",
+          "symbol": "FakeResponse",
           "definitions": [
             {
-              "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "file": "tests/test_dashboard_health.py",
+              "line": 236,
+              "kind": "class",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 292,
               "kind": "class",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
         },
         {
-          "symbol": "PaperCycleServiceError",
+          "symbol": "__enter__",
           "definitions": [
             {
-              "file": "src/ai_trading/paper_cycle_service.py",
-              "line": 26,
-              "kind": "class",
+              "file": "tests/test_dashboard_health.py",
+              "line": 242,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 298,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__exit__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 245,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 301,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "append",
+          "definitions": [
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 32,
+              "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
         },
         {
-          "symbol": "handle_scheduler_request",
+          "symbol": "fake_urlopen",
           "definitions": [
             {
-              "file": "src/ai_trading/scheduler_endpoint.py",
-              "line": 161,
+              "file": "tests/test_dashboard_health.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 307,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 175,
               "kind": "function",
               "language": "python"
             }
@@ -3896,29 +744,41 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "run_cycle",
+          "symbol": "read",
           "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 97,
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
               "kind": "function",
               "language": "python"
             },
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 149,
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
               "kind": "function",
               "language": "python"
-            },
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
+          "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 194,
+              "file": "tests/test_dashboard_health.py",
+              "line": 281,
               "kind": "function",
               "language": "python"
-            },
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_probe_rejects_market_cards_with_broken_portfolio",
+          "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 215,
+              "file": "tests/test_dashboard_health.py",
+              "line": 231,
               "kind": "function",
               "language": "python"
             }
@@ -3926,75 +786,111 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 4
+      "dependency_count": 9
     },
-    "test_execution_failure_is_sanitized": {
+    "test_probe_rejects_market_cards_with_broken_portfolio": {
       "source": {
-        "file": "tests/test_scheduler_endpoint.py",
-        "start": 214,
-        "end": 232
+        "file": "tests/test_dashboard_health.py",
+        "start": 231,
+        "end": 278
       },
       "symbol_dependencies": [
         {
-          "symbol": "PaperCycleResult",
+          "symbol": "FakeResponse",
           "definitions": [
             {
-              "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "file": "tests/test_dashboard_health.py",
+              "line": 236,
+              "kind": "class",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 292,
               "kind": "class",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
         },
         {
-          "symbol": "PaperCycleServiceError",
+          "symbol": "__enter__",
           "definitions": [
             {
-              "file": "src/ai_trading/paper_cycle_service.py",
-              "line": 26,
-              "kind": "class",
+              "file": "tests/test_dashboard_health.py",
+              "line": 242,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 298,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__exit__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 245,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 301,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fake_urlopen",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 307,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 175,
+              "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
         },
         {
-          "symbol": "handle_scheduler_request",
+          "symbol": "read",
           "definitions": [
             {
-              "file": "src/ai_trading/scheduler_endpoint.py",
-              "line": 161,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_cycle",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 97,
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
               "kind": "function",
               "language": "python"
             },
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 149,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 194,
-              "kind": "function",
-              "language": "python"
-            },
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 215,
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
               "kind": "function",
               "language": "python"
             }
@@ -4002,21 +898,27 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 4
+      "dependency_count": 6
     },
-    "test_http_scheduler_rejects_missing_and_wrong_authorization": {
+    "FakeResponse": {
       "source": {
-        "file": "tests/test_scheduler_endpoint.py",
-        "start": 235,
-        "end": 253
+        "file": "tests/test_dashboard_health.py",
+        "start": 236,
+        "end": 356
       },
       "symbol_dependencies": [
         {
-          "symbol": "_request",
+          "symbol": "__enter__",
           "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 47,
+              "file": "tests/test_dashboard_health.py",
+              "line": 242,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 298,
               "kind": "function",
               "language": "python"
             }
@@ -4024,11 +926,17 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_start_scheduler_dashboard",
+          "symbol": "__exit__",
           "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 62,
+              "file": "tests/test_dashboard_health.py",
+              "line": 245,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 301,
               "kind": "function",
               "language": "python"
             }
@@ -4036,11 +944,59 @@
           "relation": "same_file"
         },
         {
-          "symbol": "successful_result",
+          "symbol": "fake_urlopen",
           "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 27,
+              "file": "tests/test_dashboard_health.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 307,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 175,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 281,
               "kind": "function",
               "language": "python"
             }
@@ -4048,21 +1004,175 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 3
+      "dependency_count": 6
     },
-    "test_http_scheduler_valid_token_runs_one_cycle_and_ignores_body": {
+    "__init__": {
       "source": {
-        "file": "tests/test_scheduler_endpoint.py",
-        "start": 256,
-        "end": 288
+        "file": "tests/test_dashboard_health.py",
+        "start": 239,
+        "end": 359
       },
       "symbol_dependencies": [
         {
-          "symbol": "PaperCycleResult",
+          "symbol": "FakeResponse",
           "definitions": [
             {
-              "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "file": "tests/test_dashboard_health.py",
+              "line": 236,
+              "kind": "class",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 292,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__enter__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 242,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 298,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__exit__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 245,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 301,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fake_urlopen",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 307,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 175,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_hosted_probe_rechecks_transient_all_or_some_starting",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 359,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 281,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "__enter__": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 242,
+        "end": 362
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "FakeResponse",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 236,
+              "kind": "class",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 292,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "ProbeCheck",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 21,
               "kind": "class",
               "language": "python"
             }
@@ -4070,11 +1180,17 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "_request",
+          "symbol": "__exit__",
           "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 47,
+              "file": "tests/test_dashboard_health.py",
+              "line": 245,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 301,
               "kind": "function",
               "language": "python"
             }
@@ -4082,11 +1198,17 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_start_scheduler_dashboard",
+          "symbol": "fake_urlopen",
           "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 62,
+              "file": "tests/test_dashboard_health.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 307,
               "kind": "function",
               "language": "python"
             }
@@ -4094,11 +1216,29 @@
           "relation": "same_file"
         },
         {
-          "symbol": "fake_cycle",
+          "symbol": "probe_dashboard",
           "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 259,
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 175,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
               "kind": "function",
               "language": "python"
             }
@@ -4106,11 +1246,689 @@
           "relation": "same_file"
         },
         {
-          "symbol": "successful_result",
+          "symbol": "test_hosted_probe_rechecks_transient_all_or_some_starting",
           "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 27,
+              "file": "tests/test_dashboard_health.py",
+              "line": 359,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 281,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "__exit__": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 245,
+        "end": 365
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "FakeResponse",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 236,
+              "kind": "class",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 292,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "ProbeCheck",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 21,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "__enter__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 242,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 298,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fake_urlopen",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 307,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 175,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_hosted_probe_rechecks_transient_all_or_some_starting",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 359,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 281,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "read": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 248,
+        "end": 368
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "FakeResponse",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 236,
+              "kind": "class",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 292,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "ProbeCheck",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 21,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "__enter__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 242,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 298,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__exit__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 245,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 301,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fake_urlopen",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 307,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 175,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "test_hosted_probe_rechecks_transient_all_or_some_starting",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 359,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 281,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "fake_urlopen": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 253,
+        "end": 373
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "FakeResponse",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 236,
+              "kind": "class",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 292,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "ProbeCheck",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 21,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "__enter__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 242,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 298,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__exit__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 245,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 301,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fake_probe",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 370,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 412,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 175,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_hosted_probe_rechecks_transient_all_or_some_starting",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 359,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 281,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 9
+    },
+    "test_hosted_probe_requires_running_engines_not_only_complete_portfolio": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 281,
+        "end": 355
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "FakeResponse",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 236,
+              "kind": "class",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 292,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__enter__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 242,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 298,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "__exit__",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 245,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 301,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fake_urlopen",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 307,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 175,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "read",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 248,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 304,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "test_hosted_probe_rechecks_transient_all_or_some_starting": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 359,
+        "end": 395
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "ProbeCheck",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 21,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_probe_endpoint",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 64,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "append",
+          "definitions": [
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 32,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "fake_probe",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 370,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 412,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 175,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "fake_probe": {
+      "source": {
+        "file": "tests/test_dashboard_health.py",
+        "start": 370,
+        "end": 490
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "ProbeCheck",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 21,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "_probe_endpoint",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 64,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "append",
+          "definitions": [
+            {
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 32,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "probe_dashboard",
+          "definitions": [
+            {
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 175,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "test_hosted_probe_fails_after_bounded_starting_and_never_retries_error",
+          "definitions": [
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 398,
               "kind": "function",
               "language": "python"
             }
@@ -4120,19 +1938,19 @@
       ],
       "dependency_count": 5
     },
-    "fake_cycle": {
+    "test_hosted_probe_fails_after_bounded_starting_and_never_retries_error": {
       "source": {
-        "file": "tests/test_scheduler_endpoint.py",
-        "start": 259,
-        "end": 379
+        "file": "tests/test_dashboard_health.py",
+        "start": 398,
+        "end": 432
       },
       "symbol_dependencies": [
         {
-          "symbol": "PaperCycleResult",
+          "symbol": "ProbeCheck",
           "definitions": [
             {
-              "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 21,
               "kind": "class",
               "language": "python"
             }
@@ -4140,35 +1958,41 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "PaperCycleServiceError",
+          "symbol": "_probe_endpoint",
           "definitions": [
             {
-              "file": "src/ai_trading/paper_cycle_service.py",
-              "line": 26,
-              "kind": "class",
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 64,
+              "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
         },
         {
-          "symbol": "SchedulerHttpResponse",
+          "symbol": "append",
           "definitions": [
             {
-              "file": "src/ai_trading/scheduler_endpoint.py",
-              "line": 14,
-              "kind": "class",
+              "file": "src/ai_trading/trade_journal.py",
+              "line": 32,
+              "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
         },
         {
-          "symbol": "_request",
+          "symbol": "fake_probe",
           "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 47,
+              "file": "tests/test_dashboard_health.py",
+              "line": 370,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tests/test_dashboard_health.py",
+              "line": 412,
               "kind": "function",
               "language": "python"
             }
@@ -4176,137 +2000,19 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_start_scheduler_dashboard",
+          "symbol": "probe_dashboard",
           "definitions": [
             {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 62,
+              "file": "src/ai_trading/deployment_probe.py",
+              "line": 175,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "fail_cycle",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 343,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "successful_result",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 27,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_http_scheduler_failure_response_never_leaks_secrets",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 342,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_http_scheduler_other_post_routes_are_not_exposed",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 326,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_http_scheduler_partial_cycle_records_real_http_failure",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 292,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_scheduler_telemetry_is_sanitized_and_identifies_cloudflare",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 367,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
+          "relation": "imported_module"
         }
       ],
-      "dependency_count": 11
-    },
-    "test_http_scheduler_partial_cycle_records_real_http_failure": {
-      "source": {
-        "file": "tests/test_scheduler_endpoint.py",
-        "start": 292,
-        "end": 323
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "PaperCycleResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/paper_cycle.py",
-              "line": 86,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "_request",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 47,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_start_scheduler_dashboard",
-          "definitions": [
-            {
-              "file": "tests/test_scheduler_endpoint.py",
-              "line": 62,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
+      "dependency_count": 5
     }
   }
 }

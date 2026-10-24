@@ -654,12 +654,13 @@ on:
   schedule:
     - cron: "17 */2 * * *"
   push:
-    branches: ["main"]
+    branches: ["main", "fix/hosted-probe-transient-starting"]
     paths:
       - render.yaml
       - Dockerfile
       - src/ai_trading/dashboard.py
       - src/ai_trading/deployment_probe.py
+      - tests/test_dashboard_health.py
       - .github/workflows/hosted-dashboard-probe.yml
 
 permissions:
@@ -3360,6 +3361,10 @@ def dataset_evidence_hash(evidence: DatasetEvidence) -> str
 ````python
 """Read-only probe of the deployed dashboard; no broker or scheduler requests."""
 ⋮----
+_STARTING_RECHECKS = 3
+_STARTING_RECHECK_DELAY_SECONDS = 15.0
+_TRANSIENT_STARTING_MARKETS = {
+⋮----
 @dataclass(frozen=True)
 class ProbeCheck
 ⋮----
@@ -3424,12 +3429,26 @@ errors = (
 ⋮----
 detail = "three_market_cards_available"
 ⋮----
+def _only_transient_market_starting(detail: str) -> bool
+⋮----
+"""Retry only known markets reported STARTING, never a mixed ERROR/STALE."""
+prefix = "market_engines_not_running:"
+⋮----
+failures = detail.removeprefix(prefix).split(",")
+⋮----
 """Check web, storage and markets; optionally require healthy live engines."""
 ⋮----
 checks = [
 # The free-tier host can briefly refuse the first connection while other
 # endpoints recover. Retry only transport failures, once, after the first
 # pass. HTTP errors, unhealthy payloads and SHA mismatches still fail.
+⋮----
+# A successful Cloudflare paper cycle can briefly mark one or more
+# workers STARTING while it persists fresh states. One read during that
+# in-flight operation is not evidence of a stuck engine. Read-only retries
+# suppress this specific false alarm, but persistent STARTING or any
+# actual ERROR/STALE/storage failure must still fail closed.
+market_index = 2
 ⋮----
 def main() -> int
 ⋮----
@@ -10957,6 +10976,24 @@ healthy = probe_dashboard(base, require_running_markets=True)
 degraded = probe_dashboard(base, require_running_markets=True)
 ⋮----
 stale = probe_dashboard(base, require_running_markets=True)
+⋮----
+def test_hosted_probe_rechecks_transient_all_or_some_starting(monkeypatch) -> None
+⋮----
+starting = (
+probes = []
+sleeps = []
+⋮----
+def fake_probe(base_url, endpoint, timeout, *, expected_sha, require_running_markets)
+⋮----
+market_reads = probes.count("/api/markets")
+⋮----
+checks = probe_dashboard("https://example.invalid", require_running_markets=True)
+⋮----
+statuses = [starting, "market_engines_not_running:GC=F:ERROR"]
+⋮----
+stuck = probe_dashboard("https://example.invalid", require_running_markets=True)
+⋮----
+broken = probe_dashboard("https://example.invalid", require_running_markets=True)
 ````
 
 ## File: tests/test_dashboard_overview.py
