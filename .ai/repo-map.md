@@ -970,7 +970,7 @@ on:
     - cron: "31 2 * * *"
   workflow_dispatch:
   push:
-    branches: ["feat/prospective-mtf-capture-v1", "fix/prospective-capture-strict-evidence"]
+    branches: ["feat/prospective-mtf-capture-v1", "fix/prospective-capture-strict-evidence", "fix/prospective-artifact-integrity"]
     paths:
       - "research/mtf-prospective-2026-10-26-v1.json"
       - "src/ai_trading/prospective_capture.py"
@@ -1000,6 +1000,9 @@ jobs:
           python -m ai_trading.prospective_capture
           --registration research/mtf-prospective-2026-10-26-v1.json
           --output-dir artifacts/mtf-prospective
+      - name: Verify archive integrity
+        if: always()
+        run: python -m ai_trading.prospective_capture --verify-only --output-dir artifacts/mtf-prospective
       - name: Save immutable per-run dataset and registration fingerprints
         if: always()
         uses: actions/upload-artifact@v7
@@ -7753,6 +7756,24 @@ bars = result["bars"]
 # Keep an auditable empty snapshot, but never report acquisition as
 # successful without a nonempty, fingerprinted future-only dataset.
 ⋮----
+def verify_capture_archive(output_dir: Path) -> None
+⋮----
+"""Verify per-file archive bytes and reported market status after download."""
+manifest = json.loads((output_dir / "manifest.json").read_text(encoding="utf-8"))
+⋮----
+statuses = manifest.get("market_status")
+⋮----
+complete = 0
+⋮----
+status = statuses[symbol]
+⋮----
+path = output_dir / f"{prefix}.json"
+raw = path.read_bytes()
+⋮----
+payload = json.loads(raw)
+bars = payload.get("bars")
+evidence = payload.get("dataset_evidence")
+⋮----
 def main() -> int
 ⋮----
 parser = argparse.ArgumentParser(description="Future-only MTF OHLCV archival")
@@ -11376,6 +11397,12 @@ requested = []
 def provider(symbol, *, period, interval, max_attempts)
 ⋮----
 dest = tmp_path / "capture"
+⋮----
+dax = manifest["market_status"]["^GDAXI"]
+⋮----
+def test_prospective_archive_verification_detects_tampering(tmp_path, monkeypatch)
+⋮----
+path = tmp_path / "gold.json"
 ````
 
 ## File: tests/test_deployment_readiness.py

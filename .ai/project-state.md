@@ -148,30 +148,26 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-24T09:37:39Z
+Generated: 2026-10-24T16:39:40Z
 
 ### Git
 - Branch: `main`
-- Head: `59207a762dee`
-- Commit date: 2026-10-24T05:37:29-04:00
-- Commit: fix(ops): recheck transient STARTING states in hosted probe (#215)
+- Head: `90f0ea9cb7c2`
+- Commit date: 2026-10-24T12:39:31-04:00
+- Commit: fix(research): verify prospective archive integrity before upload (#216)
 - Tracked files: 522
 
 ### Recently changed files
-- `.github/workflows/hosted-dashboard-probe.yml`
-- `src/ai_trading/deployment_probe.py`
-- `tests/test_dashboard_health.py`
 - `.github/workflows/mtf-prospective-capture.yml`
 - `src/ai_trading/prospective_capture.py`
 - `tests/test_dataset_evidence.py`
+- `.github/workflows/hosted-dashboard-probe.yml`
+- `src/ai_trading/deployment_probe.py`
+- `tests/test_dashboard_health.py`
 - `research/mtf-prospective-2026-10-26-v1.json`
 - `.github/workflows/paper-cycle.yml`
 - `src/ai_trading/scheduler_fallback.py`
 - `tests/test_scheduler_endpoint.py`
-- `.github/workflows/mtf-net-cost-evidence.yml`
-- `src/ai_trading/mtf_parameter_benchmark.py`
-- `src/ai_trading/mtf_shared_portfolio.py`
-- `tests/test_mtf_parameter_benchmark.py`
 
 ### Project signals
 - `pyproject.toml`

@@ -6534,6 +6534,24 @@ bars = result["bars"]
 # Keep an auditable empty snapshot, but never report acquisition as
 # successful without a nonempty, fingerprinted future-only dataset.
 ⋮----
+def verify_capture_archive(output_dir: Path) -> None
+⋮----
+"""Verify per-file archive bytes and reported market status after download."""
+manifest = json.loads((output_dir / "manifest.json").read_text(encoding="utf-8"))
+⋮----
+statuses = manifest.get("market_status")
+⋮----
+complete = 0
+⋮----
+status = statuses[symbol]
+⋮----
+path = output_dir / f"{prefix}.json"
+raw = path.read_bytes()
+⋮----
+payload = json.loads(raw)
+bars = payload.get("bars")
+evidence = payload.get("dataset_evidence")
+⋮----
 def main() -> int
 ⋮----
 parser = argparse.ArgumentParser(description="Future-only MTF OHLCV archival")

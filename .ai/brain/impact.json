@@ -1,245 +1,179 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "13174c5a627b7ff1a20fceba14f136e0c2cdd386",
-  "head": "59207a762dee351a9343656c3148d253a8e629dd",
+  "base": "59207a762dee351a9343656c3148d253a8e629dd",
+  "head": "90f0ea9cb7c2f399a07aeccd6b8f1b4e999767bb",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/hosted-dashboard-probe.yml",
+      "path": ".github/workflows/mtf-prospective-capture.yml",
       "status": "M"
     },
     {
-      "path": "src/ai_trading/deployment_probe.py",
+      "path": "src/ai_trading/prospective_capture.py",
       "status": "M"
     },
     {
-      "path": "tests/test_dashboard_health.py",
+      "path": "tests/test_dataset_evidence.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "src/ai_trading/deployment_probe.py",
-    "tests/test_dashboard_health.py"
+    "src/ai_trading/prospective_capture.py",
+    "tests/test_dataset_evidence.py"
   ],
   "impacted_files": [
-    "src/ai_trading/deployment_probe.py",
-    "tests/test_dashboard_health.py"
+    "src/ai_trading/prospective_capture.py",
+    "tests/test_dataset_evidence.py"
   ],
   "impacted_symbols": [
     {
-      "name": "ProbeCheck",
-      "kind": "class",
-      "file": "src/ai_trading/deployment_probe.py",
-      "line": 21
-    },
-    {
-      "name": "_fetch_json",
+      "name": "_as_utc",
       "kind": "function",
-      "file": "src/ai_trading/deployment_probe.py",
+      "file": "src/ai_trading/prospective_capture.py",
       "line": 27
     },
     {
-      "name": "_probe_endpoint",
+      "name": "prospective_snapshot",
       "kind": "function",
-      "file": "src/ai_trading/deployment_probe.py",
-      "line": 64
+      "file": "src/ai_trading/prospective_capture.py",
+      "line": 33
     },
     {
-      "name": "_only_transient_market_starting",
+      "name": "_dump",
       "kind": "function",
-      "file": "src/ai_trading/deployment_probe.py",
-      "line": 164
+      "file": "src/ai_trading/prospective_capture.py",
+      "line": 122
     },
     {
-      "name": "probe_dashboard",
+      "name": "collect_prospective_bars",
       "kind": "function",
-      "file": "src/ai_trading/deployment_probe.py",
-      "line": 175
+      "file": "src/ai_trading/prospective_capture.py",
+      "line": 130
+    },
+    {
+      "name": "verify_capture_archive",
+      "kind": "function",
+      "file": "src/ai_trading/prospective_capture.py",
+      "line": 247
     },
     {
       "name": "main",
       "kind": "function",
-      "file": "src/ai_trading/deployment_probe.py",
-      "line": 233
+      "file": "src/ai_trading/prospective_capture.py",
+      "line": 288
     },
     {
-      "name": "_free_port",
+      "name": "market",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 19
+      "file": "tests/test_dataset_evidence.py",
+      "line": 15
     },
     {
-      "name": "_get",
+      "name": "test_dataset_hash_is_deterministic",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 25
+      "file": "tests/test_dataset_evidence.py",
+      "line": 29
     },
     {
-      "name": "_start_dashboard",
+      "name": "test_single_ohlcv_change_changes_dataset_hash",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 37
+      "file": "tests/test_dataset_evidence.py",
+      "line": 38
     },
     {
-      "name": "test_dashboard_marks_expired_worker_heartbeat_stale",
+      "name": "test_timestamp_change_changes_dataset_hash",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 65
+      "file": "tests/test_dataset_evidence.py",
+      "line": 49
     },
     {
-      "name": "test_api_status_reports_stale_worker_without_hiding_web_health",
+      "name": "test_provenance_changes_evidence_identity",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 91
+      "file": "tests/test_dataset_evidence.py",
+      "line": 60
     },
     {
-      "name": "test_healthz_keeps_web_liveness_separate_from_engine_health",
+      "name": "_prospective_sample",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 113
+      "file": "tests/test_dataset_evidence.py",
+      "line": 77
     },
     {
-      "name": "test_external_probe_checks_live_ready_and_all_markets",
+      "name": "test_future_only_capture_excludes_prior_and_unclosed_bars",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 137
+      "file": "tests/test_dataset_evidence.py",
+      "line": 93
     },
     {
-      "name": "test_external_scheduler_readiness_detects_missing_configuration",
+      "name": "test_prospective_capture_rejects_invalid_clock_and_reordered_data",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 164
+      "file": "tests/test_dataset_evidence.py",
+      "line": 122
     },
     {
-      "name": "test_render_blueprint_declares_external_runtime_and_secret_inputs",
+      "name": "test_pre_registered_capture_skips_provider_until_future_start",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 195
+      "file": "tests/test_dataset_evidence.py",
+      "line": 143
     },
     {
-      "name": "test_external_probe_reports_connection_errors_without_exposing_details",
+      "name": "forbid_network",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 207
+      "file": "tests/test_dataset_evidence.py",
+      "line": 146
     },
     {
-      "name": "fail_request",
+      "name": "test_prospective_registration_changes_are_rejected_before_download",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 216
+      "file": "tests/test_dataset_evidence.py",
+      "line": 167
     },
     {
-      "name": "test_probe_rejects_market_cards_with_broken_portfolio",
+      "name": "forbid_network",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 231
+      "file": "tests/test_dataset_evidence.py",
+      "line": 178
     },
     {
-      "name": "FakeResponse",
-      "kind": "class",
-      "file": "tests/test_dashboard_health.py",
-      "line": 236
-    },
-    {
-      "name": "__init__",
+      "name": "test_prospective_capture_rejects_inconsistent_candles_and_off_grid_bars",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 239
+      "file": "tests/test_dataset_evidence.py",
+      "line": 192
     },
     {
-      "name": "__enter__",
+      "name": "test_prospective_capture_does_not_claim_empty_market_was_acquired",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 242
+      "file": "tests/test_dataset_evidence.py",
+      "line": 211
     },
     {
-      "name": "__exit__",
+      "name": "provider",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
+      "file": "tests/test_dataset_evidence.py",
+      "line": 217
+    },
+    {
+      "name": "test_prospective_capture_only_reports_success_with_three_hashed_future_markets",
+      "kind": "function",
+      "file": "tests/test_dataset_evidence.py",
       "line": 245
     },
     {
-      "name": "read",
+      "name": "provider",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
+      "file": "tests/test_dataset_evidence.py",
       "line": 248
     },
     {
-      "name": "fake_urlopen",
+      "name": "test_prospective_archive_verification_detects_tampering",
       "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 253
-    },
-    {
-      "name": "test_hosted_probe_requires_running_engines_not_only_complete_portfolio",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 281
-    },
-    {
-      "name": "FakeResponse",
-      "kind": "class",
-      "file": "tests/test_dashboard_health.py",
-      "line": 292
-    },
-    {
-      "name": "__init__",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 295
-    },
-    {
-      "name": "__enter__",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 298
-    },
-    {
-      "name": "__exit__",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 301
-    },
-    {
-      "name": "read",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 304
-    },
-    {
-      "name": "fake_urlopen",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 307
-    },
-    {
-      "name": "test_hosted_probe_rechecks_transient_all_or_some_starting",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 359
-    },
-    {
-      "name": "fake_probe",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 370
-    },
-    {
-      "name": "test_hosted_probe_fails_after_bounded_starting_and_never_retries_error",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 398
-    },
-    {
-      "name": "fake_probe",
-      "kind": "function",
-      "file": "tests/test_dashboard_health.py",
-      "line": 412
+      "file": "tests/test_dataset_evidence.py",
+      "line": 266
     }
   ],
   "selected_tests": [
-    "tests/test_dashboard.py",
-    "tests/test_dashboard_health.py"
+    "tests/test_data.py",
+    "tests/test_dataset_evidence.py"
   ]
 }

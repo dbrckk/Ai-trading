@@ -1324,6 +1324,12 @@ requested = []
 def provider(symbol, *, period, interval, max_attempts)
 ⋮----
 dest = tmp_path / "capture"
+⋮----
+dax = manifest["market_status"]["^GDAXI"]
+⋮----
+def test_prospective_archive_verification_detects_tampering(tmp_path, monkeypatch)
+⋮----
+path = tmp_path / "gold.json"
 ```
 
 ## File: test_deployment_readiness.py
