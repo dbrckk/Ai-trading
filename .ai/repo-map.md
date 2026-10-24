@@ -965,12 +965,13 @@ jobs:
 name: Prospective MTF Bar Capture
 
 on:
-  # Run daily; never backfill data before the frozen 2026-10-26 cutoff.
+  # Capture after the European cash session on weekdays; the 5d provider
+  # window includes weekend BTC data on Monday. No pre-cutoff backfill.
   schedule:
-    - cron: "31 2 * * *"
+    - cron: "31 18 * * 1-5"
   workflow_dispatch:
   push:
-    branches: ["fix/prospective-archive-independent-verification"]
+    branches: ["main", "fix/prospective-capture-market-sessions"]
     paths:
       - "research/mtf-prospective-2026-10-26-v1.json"
       - "src/ai_trading/prospective_capture.py"

@@ -148,23 +148,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-24T16:47:42Z
+Generated: 2026-10-24T17:11:30Z
 
 ### Git
 - Branch: `main`
-- Head: `1c6ddff920aa`
-- Commit date: 2026-10-24T12:47:30-04:00
-- Commit: fix(research): independently validate prospective archive evidence (#217)
-- Tracked files: 522
+- Head: `22df5505b28c`
+- Commit date: 2026-10-24T13:11:21-04:00
+- Commit: fix(research): schedule prospective capture after DAX session (#218)
+- Tracked files: 523
 
 ### Recently changed files
 - `.github/workflows/mtf-prospective-capture.yml`
+- `research/mtf-prospective-capture-operations.md`
 - `src/ai_trading/prospective_capture.py`
 - `tests/test_dataset_evidence.py`
 - `.github/workflows/hosted-dashboard-probe.yml`
 - `src/ai_trading/deployment_probe.py`
 - `tests/test_dashboard_health.py`
-- `research/mtf-prospective-2026-10-26-v1.json`
 
 ### Project signals
 - `pyproject.toml`
