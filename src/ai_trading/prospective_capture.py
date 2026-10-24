@@ -245,10 +245,25 @@ def collect_prospective_bars(
 
 
 def verify_capture_archive(output_dir: Path) -> None:
-    """Verify per-file archive bytes and reported market status after download."""
+    """Independently recompute stored OHLCV evidence without provider access.
+
+    A matching manifest file hash alone is insufficient: verify the frozen
+    registration, temporal cutoff, candle validity and dataset hash against
+    the *actual archived rows*. This performs no network or strategy work.
+    """
     manifest = json.loads((output_dir / "manifest.json").read_text(encoding="utf-8"))
-    if manifest.get("study_id") != "mtf-prospective-2026-10-26-v1":
-        raise ValueError("unexpected prospective study")
+    if (
+        manifest.get("study_id") != "mtf-prospective-2026-10-26-v1"
+        or manifest.get("registration_sha256") != _REGISTERED_SHA256
+        or manifest.get("observation_start_utc") != "2026-10-26T00:00:00+00:00"
+    ):
+        raise ValueError("prospective registration or study identity mismatch")
+    cutoff = _as_utc(datetime.fromisoformat(manifest["observation_start_utc"]))
+    acquired = _as_utc(datetime.fromisoformat(manifest["captured_at_utc"]))
+    if manifest.get("promotions_or_trades_executed") is not False:
+        raise ValueError("prospective archive must be observation only")
+    if manifest.get("data_used_to_select_parameters") is not False:
+        raise ValueError("prospective data must not be used to select parameters")
     statuses = manifest.get("market_status")
     if not isinstance(statuses, dict) or set(statuses) != set(_SYMBOL_FILES):
         raise ValueError("incomplete prospective market manifest")
@@ -265,19 +280,48 @@ def verify_capture_archive(output_dir: Path) -> None:
             raise ValueError("prospective archive file hash mismatch")
         payload = json.loads(raw)
         bars = payload.get("bars")
-        evidence = payload.get("dataset_evidence")
-        if payload.get("symbol") != symbol or not isinstance(bars, list):
+        if (
+            payload.get("symbol") != symbol
+            or payload.get("acquired_at_utc") != acquired.isoformat()
+            or not isinstance(bars, list)
+        ):
             raise ValueError("invalid prospective archive payload")
+        if not all(
+            isinstance(bar, list)
+            and len(bar) == len(_OHLCV) + 1
+            and isinstance(bar[0], str)
+            for bar in bars
+        ):
+            raise ValueError("invalid prospective OHLCV row shape")
         if len(bars) != status.get("rows"):
             raise ValueError("prospective archive row count mismatch")
+
+        index = pd.DatetimeIndex([datetime.fromisoformat(bar[0]) for bar in bars])
+        if not bars:
+            index = pd.DatetimeIndex([], tz="UTC")
+        archived = pd.DataFrame(
+            [bar[1:] for bar in bars], columns=list(_OHLCV), index=index
+        )
+        expected = prospective_snapshot(
+            archived, symbol=symbol, cutoff_utc=cutoff, acquired_at_utc=acquired
+        )
+        # JSON round-trip handles the tuple/list difference in evidence columns.
+        if json.dumps(payload, sort_keys=True, allow_nan=False) != json.dumps(
+            expected, sort_keys=True, allow_nan=False
+        ):
+            raise ValueError("prospective independent OHLCV evidence mismatch")
         if bars:
-            if (status.get("status") != "completed_bars_captured"
-                or not isinstance(evidence, dict)
-                or evidence.get("data_hash") != status.get("dataset_sha256")):
+            if (
+                status.get("status") != "completed_bars_captured"
+                or expected["dataset_evidence"]["data_hash"]
+                != status.get("dataset_sha256")
+            ):
                 raise ValueError("prospective dataset evidence mismatch")
             complete += 1
-        elif (status.get("status") != "no_completed_bars"
-              or status.get("dataset_sha256") is not None):
+        elif (
+            status.get("status") != "no_completed_bars"
+            or status.get("dataset_sha256") is not None
+        ):
             raise ValueError("empty prospective archive status mismatch")
     if manifest.get("completed_market_count") != complete:
         raise ValueError("prospective completed market count mismatch")
