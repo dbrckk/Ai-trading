@@ -66,11 +66,24 @@ def prospective_snapshot(
         raise ValueError("prospective volume must be nonnegative")
     if not numeric.map(lambda value: pd.notna(value) and abs(value) != float("inf")).all().all():
         raise ValueError("prospective bars contain non-finite values")
+    # All four prices must belong to the same physical candle range.
+    # Check both boundaries explicitly; do not let an invalid high/low
+    # silently pass into the immutable research evidence.
     if (
-        (numeric["High"] < numeric[["Open", "Close", "Low"]].max(axis=1)).any()
-        or (numeric["Low"] > numeric[["Open", "Close", "High"]].min(axis=1)).any()
+        (numeric["High"] < numeric["Low"]).any()
+        or (numeric[["Open", "Close"]].gt(numeric["High"], axis=0)).any().any()
+        or (numeric[["Open", "Close"]].lt(numeric["Low"], axis=0)).any().any()
     ):
         raise ValueError("prospective OHLC candle is inconsistent")
+    # A provider can occasionally return a rounded or off-grid timestamp.
+    # Such rows are not canonical opening times of registered 5m candles.
+    if (
+        (numeric.index.minute % 5 != 0).any()
+        or (numeric.index.second != 0).any()
+        or (numeric.index.microsecond != 0).any()
+        or (numeric.index.nanosecond != 0).any()
+    ):
+        raise ValueError("prospective 5m opening timestamp is off-grid")
 
     latest_eligible_open = pd.Timestamp(acquired - _INTERVAL - _CAPTURE_LAG)
     selected = numeric.loc[
@@ -200,18 +213,31 @@ def collect_prospective_bars(
             continue
         snapshot_path = output_dir / f"{file_name}.json"
         _dump(snapshot_path, result)
+        evidence = result["dataset_evidence"]
+        bars = result["bars"]
+        # A successful HTTP response may contain only earlier candles or
+        # no completed future observations (e.g. on a closed market).
+        # Keep an auditable empty snapshot, but never report acquisition as
+        # successful without a nonempty, fingerprinted future-only dataset.
         statuses[symbol] = {
             "status": result["status"],
-            "rows": len(result["bars"]),
-            "dataset_sha256": (
-                result["dataset_evidence"]["data_hash"]
-                if result["dataset_evidence"] else None
-            ),
+            "rows": len(bars),
+            "dataset_sha256": evidence["data_hash"] if evidence else None,
             "file": snapshot_path.name,
         }
     manifest["market_status"] = statuses
-    manifest["all_markets_acquired"] = all(
-        isinstance(item, dict) for item in statuses.values()
+    manifest["completed_market_count"] = sum(
+        isinstance(item, dict)
+        and item.get("status") == "completed_bars_captured"
+        and isinstance(item.get("rows"), int)
+        and not isinstance(item.get("rows"), bool)
+        and item["rows"] > 0
+        and isinstance(item.get("dataset_sha256"), str)
+        and len(item["dataset_sha256"]) == 64
+        for item in statuses.values()
+    )
+    manifest["all_markets_acquired"] = (
+        manifest["completed_market_count"] == len(_SYMBOL_FILES)
     )
     _dump(output_dir / "manifest.json", manifest)
     return manifest
