@@ -185,3 +185,78 @@ def test_prospective_registration_changes_are_rejected_before_download(
             altered, tmp_path / "captures",
             acquired_at_utc=datetime(2026, 10, 25, tzinfo=UTC),
         )
+
+
+
+def test_prospective_capture_rejects_inconsistent_candles_and_off_grid_bars() -> None:
+    cutoff = datetime(2026, 10, 26, tzinfo=UTC)
+    acquired = datetime(2026, 10, 26, 0, 31, tzinfo=UTC)
+    candle = _prospective_sample()
+    invalid = candle.copy()
+    invalid.loc[invalid.index[2], "High"] = 99.5
+    with pytest.raises(ValueError, match="OHLC candle is inconsistent"):
+        prospective_snapshot(
+            invalid, symbol="GC=F", cutoff_utc=cutoff, acquired_at_utc=acquired
+        )
+
+    off_grid = candle.copy()
+    off_grid.index = off_grid.index + pd.Timedelta(minutes=1)
+    with pytest.raises(ValueError, match="off-grid"):
+        prospective_snapshot(
+            off_grid, symbol="GC=F", cutoff_utc=cutoff, acquired_at_utc=acquired
+        )
+
+
+def test_prospective_capture_does_not_claim_empty_market_was_acquired(
+    tmp_path, monkeypatch
+) -> None:
+    sample = _prospective_sample()
+    requested = []
+
+    def provider(symbol, *, period, interval, max_attempts):
+        assert (period, interval, max_attempts) == ("5d", "5m", 2)
+        requested.append(symbol)
+        return sample.iloc[:1].copy() if symbol == "^GDAXI" else sample.copy()
+
+    monkeypatch.setattr("ai_trading.prospective_capture.load_history", provider)
+    dest = tmp_path / "capture"
+    manifest = collect_prospective_bars(
+        Path("research/mtf-prospective-2026-10-26-v1.json"),
+        dest,
+        acquired_at_utc=datetime(2026, 10, 26, 0, 31, tzinfo=UTC),
+    )
+    assert requested == ["GC=F", "^GDAXI", "BTC-USD"]
+    assert manifest["all_markets_acquired"] is False
+    assert manifest["completed_market_count"] == 2
+    assert manifest["market_status"]["^GDAXI"] == {
+        "status": "no_completed_bars",
+        "rows": 0,
+        "dataset_sha256": None,
+        "file": "dax.json",
+    }
+    assert manifest["market_status"]["GC=F"]["rows"] == 3
+    assert len(manifest["market_status"]["BTC-USD"]["dataset_sha256"]) == 64
+    assert (dest / "dax.json").exists()
+    assert (dest / "manifest.json").exists()
+    assert (dest / "dax.json").read_text().find('"bars": []') != -1
+
+
+def test_prospective_capture_only_reports_success_with_three_hashed_future_markets(
+    tmp_path, monkeypatch
+) -> None:
+    def provider(symbol, *, period, interval, max_attempts):
+        assert symbol in {"GC=F", "^GDAXI", "BTC-USD"}
+        return _prospective_sample()
+
+    monkeypatch.setattr("ai_trading.prospective_capture.load_history", provider)
+    manifest = collect_prospective_bars(
+        Path("research/mtf-prospective-2026-10-26-v1.json"),
+        tmp_path,
+        acquired_at_utc=datetime(2026, 10, 26, 0, 31, tzinfo=UTC),
+    )
+    assert manifest["all_markets_acquired"] is True
+    assert manifest["completed_market_count"] == 3
+    for item in manifest["market_status"].values():
+        assert item["status"] == "completed_bars_captured"
+        assert item["rows"] == 3
+        assert len(item["dataset_sha256"]) == 64
