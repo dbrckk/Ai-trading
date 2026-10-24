@@ -229,12 +229,12 @@ def test_prospective_capture_does_not_claim_empty_market_was_acquired(
     assert requested == ["GC=F", "^GDAXI", "BTC-USD"]
     assert manifest["all_markets_acquired"] is False
     assert manifest["completed_market_count"] == 2
-    assert manifest["market_status"]["^GDAXI"] == {
-        "status": "no_completed_bars",
-        "rows": 0,
-        "dataset_sha256": None,
-        "file": "dax.json",
-    }
+    dax = manifest["market_status"]["^GDAXI"]
+    assert dax["status"] == "no_completed_bars"
+    assert dax["rows"] == 0
+    assert dax["dataset_sha256"] is None
+    assert dax["file"] == "dax.json"
+    assert len(dax["file_sha256"]) == 64
     assert manifest["market_status"]["GC=F"]["rows"] == 3
     assert len(manifest["market_status"]["BTC-USD"]["dataset_sha256"]) == 64
     assert (dest / "dax.json").exists()
