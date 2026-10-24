@@ -1,3 +1,4 @@
+import json
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -277,4 +278,83 @@ def test_prospective_archive_verification_detects_tampering(tmp_path, monkeypatc
     path = tmp_path / "gold.json"
     path.write_text(path.read_text() + " ", encoding="utf-8")
     with pytest.raises(ValueError, match="file hash mismatch"):
+        verify_capture_archive(tmp_path)
+
+
+
+def test_prospective_archive_recomputes_data_evidence_even_if_file_hash_rewritten(
+    tmp_path, monkeypatch
+) -> None:
+    from hashlib import sha256
+
+    monkeypatch.setattr(
+        "ai_trading.prospective_capture.load_history",
+        lambda symbol, **kwargs: _prospective_sample(),
+    )
+    collect_prospective_bars(
+        Path("research/mtf-prospective-2026-10-26-v1.json"),
+        tmp_path,
+        acquired_at_utc=datetime(2026, 10, 26, 0, 31, tzinfo=UTC),
+    )
+    verify_capture_archive(tmp_path)
+
+    path = tmp_path / "gold.json"
+    snapshot = json.loads(path.read_text(encoding="utf-8"))
+    snapshot["bars"][0][4] = 100.5  # plausible changed Close, old evidence
+    path.write_text(json.dumps(snapshot), encoding="utf-8")
+    manifest_path = tmp_path / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["market_status"]["GC=F"]["file_sha256"] = sha256(
+        path.read_bytes()
+    ).hexdigest()
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(ValueError, match="independent OHLCV evidence mismatch"):
+        verify_capture_archive(tmp_path)
+
+
+def test_prospective_archive_rejects_precutoff_bar_even_with_rehashed_file(
+    tmp_path, monkeypatch
+) -> None:
+    from hashlib import sha256
+
+    monkeypatch.setattr(
+        "ai_trading.prospective_capture.load_history",
+        lambda symbol, **kwargs: _prospective_sample(),
+    )
+    collect_prospective_bars(
+        Path("research/mtf-prospective-2026-10-26-v1.json"),
+        tmp_path,
+        acquired_at_utc=datetime(2026, 10, 26, 0, 31, tzinfo=UTC),
+    )
+    path = tmp_path / "btc.json"
+    snapshot = json.loads(path.read_text(encoding="utf-8"))
+    snapshot["bars"][0][0] = "2026-10-25T23:55:00+00:00"
+    path.write_text(json.dumps(snapshot), encoding="utf-8")
+    manifest_path = tmp_path / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["market_status"]["BTC-USD"]["file_sha256"] = sha256(
+        path.read_bytes()
+    ).hexdigest()
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(ValueError, match="independent OHLCV evidence mismatch"):
+        verify_capture_archive(tmp_path)
+
+
+def test_prospective_archive_requires_frozen_registration_hash(
+    tmp_path, monkeypatch
+) -> None:
+    monkeypatch.setattr(
+        "ai_trading.prospective_capture.load_history",
+        lambda symbol, **kwargs: _prospective_sample(),
+    )
+    collect_prospective_bars(
+        Path("research/mtf-prospective-2026-10-26-v1.json"),
+        tmp_path,
+        acquired_at_utc=datetime(2026, 10, 26, 0, 31, tzinfo=UTC),
+    )
+    manifest_path = tmp_path / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["registration_sha256"] = "0" * 64
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(ValueError, match="registration or study identity"):
         verify_capture_archive(tmp_path)
