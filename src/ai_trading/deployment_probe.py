@@ -12,7 +12,7 @@ from urllib.request import Request, urlopen
 
 _STARTING_RECHECKS = 3
 _STARTING_RECHECK_DELAY_SECONDS = 15.0
-_TRANSIENT_ALL_MARKETS_STARTING = {
+_TRANSIENT_STARTING_MARKETS = {
     "BTC-USD:STARTING", "GC=F:STARTING", "^GDAXI:STARTING",
 }
 
@@ -161,11 +161,14 @@ def _probe_endpoint(
     return ProbeCheck(endpoint, valid, detail)
 
 
-def _all_markets_temporarily_starting(detail: str) -> bool:
+def _only_transient_market_starting(detail: str) -> bool:
+    """Retry only known markets reported STARTING, never a mixed ERROR/STALE."""
     prefix = "market_engines_not_running:"
-    return (
-        detail.startswith(prefix)
-        and set(detail.removeprefix(prefix).split(",")) == _TRANSIENT_ALL_MARKETS_STARTING
+    if not detail.startswith(prefix):
+        return False
+    failures = detail.removeprefix(prefix).split(",")
+    return bool(failures) and all(
+        failure in _TRANSIENT_STARTING_MARKETS for failure in failures
     )
 
 
@@ -204,16 +207,16 @@ def probe_dashboard(
                 expected_sha=expected_sha,
                 require_running_markets=require_running_markets,
             )
-    # A successful Cloudflare paper cycle briefly marks all three workers
-    # STARTING while it persists fresh states. One read during that in-flight
-    # operation is not evidence of a stuck engine. Bounded read-only retries
+    # A successful Cloudflare paper cycle can briefly mark one or more
+    # workers STARTING while it persists fresh states. One read during that
+    # in-flight operation is not evidence of a stuck engine. Read-only retries
     # suppress this specific false alarm, but persistent STARTING or any
     # actual ERROR/STALE/storage failure must still fail closed.
     market_index = 2
     for _ in range(_STARTING_RECHECKS):
         if not (
             require_running_markets
-            and _all_markets_temporarily_starting(checks[market_index].detail)
+            and _only_transient_market_starting(checks[market_index].detail)
         ):
             break
         sleep(_STARTING_RECHECK_DELAY_SECONDS)
