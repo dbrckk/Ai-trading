@@ -6,8 +6,16 @@ import argparse
 import json
 from dataclasses import dataclass
 from re import fullmatch
+from time import sleep
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
+
+
+_STARTING_RECHECKS = 3
+_STARTING_RECHECK_DELAY_SECONDS = 15.0
+_TRANSIENT_ALL_MARKETS_STARTING = {
+    "BTC-USD:STARTING", "GC=F:STARTING", "^GDAXI:STARTING",
+}
 
 
 @dataclass(frozen=True)
@@ -154,6 +162,14 @@ def _probe_endpoint(
     return ProbeCheck(endpoint, valid, detail)
 
 
+def _all_markets_temporarily_starting(detail: str) -> bool:
+    prefix = "market_engines_not_running:"
+    return (
+        detail.startswith(prefix)
+        and set(detail.removeprefix(prefix).split(",")) == _TRANSIENT_ALL_MARKETS_STARTING
+    )
+
+
 def probe_dashboard(
     base_url: str,
     *,
@@ -189,7 +205,28 @@ def probe_dashboard(
                 expected_sha=expected_sha,
                 require_running_markets=require_running_markets,
             )
+    # A successful Cloudflare paper cycle briefly marks all three workers
+    # STARTING while it persists fresh states. One read during that in-flight
+    # operation is not evidence of a stuck engine. Bounded read-only retries
+    # suppress this specific false alarm, but persistent STARTING or any
+    # actual ERROR/STALE/storage failure must still fail closed.
+    market_index = 2
+    for _ in range(_STARTING_RECHECKS):
+        if not (
+            require_running_markets
+            and _all_markets_temporarily_starting(checks[market_index].detail)
+        ):
+            break
+        sleep(_STARTING_RECHECK_DELAY_SECONDS)
+        checks[market_index] = _probe_endpoint(
+            base_url,
+            "/api/markets",
+            min(timeout, 20.0),
+            expected_sha=expected_sha,
+            require_running_markets=True,
+        )
     return tuple(checks)
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Probe read-only Trading AI endpoints")
