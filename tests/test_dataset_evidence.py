@@ -8,6 +8,7 @@ from ai_trading.dataset_evidence import build_dataset_evidence
 from ai_trading.prospective_capture import (
     collect_prospective_bars,
     prospective_snapshot,
+    verify_capture_archive,
 )
 
 
@@ -228,12 +229,12 @@ def test_prospective_capture_does_not_claim_empty_market_was_acquired(
     assert requested == ["GC=F", "^GDAXI", "BTC-USD"]
     assert manifest["all_markets_acquired"] is False
     assert manifest["completed_market_count"] == 2
-    assert manifest["market_status"]["^GDAXI"] == {
-        "status": "no_completed_bars",
-        "rows": 0,
-        "dataset_sha256": None,
-        "file": "dax.json",
-    }
+    dax = manifest["market_status"]["^GDAXI"]
+    assert dax["status"] == "no_completed_bars"
+    assert dax["rows"] == 0
+    assert dax["dataset_sha256"] is None
+    assert dax["file"] == "dax.json"
+    assert len(dax["file_sha256"]) == 64
     assert manifest["market_status"]["GC=F"]["rows"] == 3
     assert len(manifest["market_status"]["BTC-USD"]["dataset_sha256"]) == 64
     assert (dest / "dax.json").exists()
@@ -260,3 +261,20 @@ def test_prospective_capture_only_reports_success_with_three_hashed_future_marke
         assert item["status"] == "completed_bars_captured"
         assert item["rows"] == 3
         assert len(item["dataset_sha256"]) == 64
+
+
+def test_prospective_archive_verification_detects_tampering(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        "ai_trading.prospective_capture.load_history",
+        lambda symbol, **kwargs: _prospective_sample(),
+    )
+    collect_prospective_bars(
+        Path("research/mtf-prospective-2026-10-26-v1.json"),
+        tmp_path,
+        acquired_at_utc=datetime(2026, 10, 26, 0, 31, tzinfo=UTC),
+    )
+    verify_capture_archive(tmp_path)
+    path = tmp_path / "gold.json"
+    path.write_text(path.read_text() + " ", encoding="utf-8")
+    with pytest.raises(ValueError, match="file hash mismatch"):
+        verify_capture_archive(tmp_path)
