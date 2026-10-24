@@ -224,6 +224,7 @@ def collect_prospective_bars(
             "rows": len(bars),
             "dataset_sha256": evidence["data_hash"] if evidence else None,
             "file": snapshot_path.name,
+            "file_sha256": sha256(snapshot_path.read_bytes()).hexdigest(),
         }
     manifest["market_status"] = statuses
     manifest["completed_market_count"] = sum(
@@ -243,6 +244,47 @@ def collect_prospective_bars(
     return manifest
 
 
+def verify_capture_archive(output_dir: Path) -> None:
+    """Verify per-file archive bytes and reported market status after download."""
+    manifest = json.loads((output_dir / "manifest.json").read_text(encoding="utf-8"))
+    if manifest.get("study_id") != "mtf-prospective-2026-10-26-v1":
+        raise ValueError("unexpected prospective study")
+    statuses = manifest.get("market_status")
+    if not isinstance(statuses, dict) or set(statuses) != set(_SYMBOL_FILES):
+        raise ValueError("incomplete prospective market manifest")
+    complete = 0
+    for symbol, prefix in _SYMBOL_FILES.items():
+        status = statuses[symbol]
+        if status in ("awaiting_future_completed_bars", "source_or_validation_failure"):
+            continue
+        if not isinstance(status, dict) or status.get("file") != f"{prefix}.json":
+            raise ValueError("invalid prospective market status")
+        path = output_dir / f"{prefix}.json"
+        raw = path.read_bytes()
+        if sha256(raw).hexdigest() != status.get("file_sha256"):
+            raise ValueError("prospective archive file hash mismatch")
+        payload = json.loads(raw)
+        bars = payload.get("bars")
+        evidence = payload.get("dataset_evidence")
+        if payload.get("symbol") != symbol or not isinstance(bars, list):
+            raise ValueError("invalid prospective archive payload")
+        if len(bars) != status.get("rows"):
+            raise ValueError("prospective archive row count mismatch")
+        if bars:
+            if (status.get("status") != "completed_bars_captured"
+                or not isinstance(evidence, dict)
+                or evidence.get("data_hash") != status.get("dataset_sha256")):
+                raise ValueError("prospective dataset evidence mismatch")
+            complete += 1
+        elif (status.get("status") != "no_completed_bars"
+              or status.get("dataset_sha256") is not None):
+            raise ValueError("empty prospective archive status mismatch")
+    if manifest.get("completed_market_count") != complete:
+        raise ValueError("prospective completed market count mismatch")
+    if manifest.get("all_markets_acquired") is not (complete == len(_SYMBOL_FILES)):
+        raise ValueError("prospective acquisition flag mismatch")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Future-only MTF OHLCV archival")
     parser.add_argument(
@@ -252,7 +294,16 @@ def main() -> int:
     parser.add_argument(
         "--output-dir", default="artifacts/mtf-prospective"
     )
+    parser.add_argument("--verify-only", action="store_true")
     args = parser.parse_args()
+    if args.verify_only:
+        try:
+            verify_capture_archive(Path(args.output_dir))
+        except (OSError, ValueError, TypeError, KeyError, json.JSONDecodeError):
+            print("prospective archive integrity verification failed", flush=True)
+            return 1
+        print("Prospective archive integrity verified", flush=True)
+        return 0
     try:
         result = collect_prospective_bars(
             Path(args.registration), Path(args.output_dir)
