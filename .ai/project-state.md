@@ -148,13 +148,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-24T16:39:40Z
+Generated: 2026-10-24T16:47:42Z
 
 ### Git
 - Branch: `main`
-- Head: `90f0ea9cb7c2`
-- Commit date: 2026-10-24T12:39:31-04:00
-- Commit: fix(research): verify prospective archive integrity before upload (#216)
+- Head: `1c6ddff920aa`
+- Commit date: 2026-10-24T12:47:30-04:00
+- Commit: fix(research): independently validate prospective archive evidence (#217)
 - Tracked files: 522
 
 ### Recently changed files
@@ -165,9 +165,6 @@ Generated: 2026-10-24T16:39:40Z
 - `src/ai_trading/deployment_probe.py`
 - `tests/test_dashboard_health.py`
 - `research/mtf-prospective-2026-10-26-v1.json`
-- `.github/workflows/paper-cycle.yml`
-- `src/ai_trading/scheduler_fallback.py`
-- `tests/test_scheduler_endpoint.py`
 
 ### Project signals
 - `pyproject.toml`

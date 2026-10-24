@@ -6536,8 +6536,16 @@ bars = result["bars"]
 ⋮----
 def verify_capture_archive(output_dir: Path) -> None
 ⋮----
-"""Verify per-file archive bytes and reported market status after download."""
+"""Independently recompute stored OHLCV evidence without provider access.
+
+    A matching manifest file hash alone is insufficient: verify the frozen
+    registration, temporal cutoff, candle validity and dataset hash against
+    the *actual archived rows*. This performs no network or strategy work.
+    """
 manifest = json.loads((output_dir / "manifest.json").read_text(encoding="utf-8"))
+⋮----
+cutoff = _as_utc(datetime.fromisoformat(manifest["observation_start_utc"]))
+acquired = _as_utc(datetime.fromisoformat(manifest["captured_at_utc"]))
 ⋮----
 statuses = manifest.get("market_status")
 ⋮----
@@ -6550,7 +6558,13 @@ raw = path.read_bytes()
 ⋮----
 payload = json.loads(raw)
 bars = payload.get("bars")
-evidence = payload.get("dataset_evidence")
+⋮----
+index = pd.DatetimeIndex([datetime.fromisoformat(bar[0]) for bar in bars])
+⋮----
+index = pd.DatetimeIndex([], tz="UTC")
+archived = pd.DataFrame(
+expected = prospective_snapshot(
+# JSON round-trip handles the tuple/list difference in evidence columns.
 ⋮----
 def main() -> int
 ⋮----

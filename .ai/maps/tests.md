@@ -1330,6 +1330,14 @@ dax = manifest["market_status"]["^GDAXI"]
 def test_prospective_archive_verification_detects_tampering(tmp_path, monkeypatch)
 ⋮----
 path = tmp_path / "gold.json"
+⋮----
+snapshot = json.loads(path.read_text(encoding="utf-8"))
+snapshot["bars"][0][4] = 100.5  # plausible changed Close, old evidence
+⋮----
+manifest_path = tmp_path / "manifest.json"
+manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+⋮----
+path = tmp_path / "btc.json"
 ```
 
 ## File: test_deployment_readiness.py

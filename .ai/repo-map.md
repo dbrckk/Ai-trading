@@ -970,7 +970,7 @@ on:
     - cron: "31 2 * * *"
   workflow_dispatch:
   push:
-    branches: ["feat/prospective-mtf-capture-v1", "fix/prospective-capture-strict-evidence", "fix/prospective-artifact-integrity"]
+    branches: ["fix/prospective-archive-independent-verification"]
     paths:
       - "research/mtf-prospective-2026-10-26-v1.json"
       - "src/ai_trading/prospective_capture.py"
@@ -7758,8 +7758,16 @@ bars = result["bars"]
 ⋮----
 def verify_capture_archive(output_dir: Path) -> None
 ⋮----
-"""Verify per-file archive bytes and reported market status after download."""
+"""Independently recompute stored OHLCV evidence without provider access.
+
+    A matching manifest file hash alone is insufficient: verify the frozen
+    registration, temporal cutoff, candle validity and dataset hash against
+    the *actual archived rows*. This performs no network or strategy work.
+    """
 manifest = json.loads((output_dir / "manifest.json").read_text(encoding="utf-8"))
+⋮----
+cutoff = _as_utc(datetime.fromisoformat(manifest["observation_start_utc"]))
+acquired = _as_utc(datetime.fromisoformat(manifest["captured_at_utc"]))
 ⋮----
 statuses = manifest.get("market_status")
 ⋮----
@@ -7772,7 +7780,13 @@ raw = path.read_bytes()
 ⋮----
 payload = json.loads(raw)
 bars = payload.get("bars")
-evidence = payload.get("dataset_evidence")
+⋮----
+index = pd.DatetimeIndex([datetime.fromisoformat(bar[0]) for bar in bars])
+⋮----
+index = pd.DatetimeIndex([], tz="UTC")
+archived = pd.DataFrame(
+expected = prospective_snapshot(
+# JSON round-trip handles the tuple/list difference in evidence columns.
 ⋮----
 def main() -> int
 ⋮----
@@ -11403,6 +11417,14 @@ dax = manifest["market_status"]["^GDAXI"]
 def test_prospective_archive_verification_detects_tampering(tmp_path, monkeypatch)
 ⋮----
 path = tmp_path / "gold.json"
+⋮----
+snapshot = json.loads(path.read_text(encoding="utf-8"))
+snapshot["bars"][0][4] = 100.5  # plausible changed Close, old evidence
+⋮----
+manifest_path = tmp_path / "manifest.json"
+manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+⋮----
+path = tmp_path / "btc.json"
 ````
 
 ## File: tests/test_deployment_readiness.py
