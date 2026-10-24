@@ -353,3 +353,76 @@ def test_hosted_probe_requires_running_engines_not_only_complete_portfolio(
     stale = probe_dashboard(base, require_running_markets=True)
     assert stale[2].ok is False
     assert stale[2].detail == "market_engines_not_running:GC=F:STALE"
+
+
+
+def test_hosted_probe_rechecks_only_all_starting_transiently(monkeypatch) -> None:
+    from ai_trading import deployment_probe
+    from ai_trading.deployment_probe import ProbeCheck
+
+    starting = (
+        "market_engines_not_running:"
+        "BTC-USD:STARTING,GC=F:STARTING,^GDAXI:STARTING"
+    )
+    probes = []
+    sleeps = []
+
+    def fake_probe(base_url, endpoint, timeout, *, expected_sha, require_running_markets):
+        assert base_url == "https://example.invalid"
+        assert expected_sha is None
+        assert timeout > 0
+        assert require_running_markets is True
+        probes.append(endpoint)
+        if endpoint == "/api/markets":
+            market_reads = probes.count("/api/markets")
+            if market_reads <= 2:
+                return ProbeCheck(endpoint, False, starting)
+            return ProbeCheck(endpoint, True, "three_markets_running")
+        return ProbeCheck(endpoint, True, "healthy")
+
+    monkeypatch.setattr(deployment_probe, "_probe_endpoint", fake_probe)
+    monkeypatch.setattr(deployment_probe, "sleep", lambda seconds: sleeps.append(seconds))
+    checks = probe_dashboard("https://example.invalid", require_running_markets=True)
+
+    assert all(item.ok for item in checks)
+    assert probes == [
+        "/livez", "/readyz", "/api/markets", "/api/markets", "/api/markets"
+    ]
+    assert sleeps == [15.0, 15.0]
+
+
+def test_hosted_probe_fails_after_bounded_starting_and_never_retries_error(
+    monkeypatch,
+) -> None:
+    from ai_trading import deployment_probe
+    from ai_trading.deployment_probe import ProbeCheck
+
+    starting = (
+        "market_engines_not_running:"
+        "BTC-USD:STARTING,GC=F:STARTING,^GDAXI:STARTING"
+    )
+    statuses = [starting, "market_engines_not_running:GC=F:ERROR"]
+    calls = []
+    sleeps = []
+
+    def fake_probe(base_url, endpoint, timeout, *, expected_sha, require_running_markets):
+        calls.append(endpoint)
+        if endpoint == "/api/markets":
+            return ProbeCheck(endpoint, False, statuses[0])
+        return ProbeCheck(endpoint, True, "healthy")
+
+    monkeypatch.setattr(deployment_probe, "_probe_endpoint", fake_probe)
+    monkeypatch.setattr(deployment_probe, "sleep", lambda seconds: sleeps.append(seconds))
+    stuck = probe_dashboard("https://example.invalid", require_running_markets=True)
+    assert stuck[-1].ok is False
+    assert stuck[-1].detail == starting
+    assert calls.count("/api/markets") == 4
+    assert sleeps == [15.0, 15.0, 15.0]
+
+    statuses[0] = statuses[1]
+    calls.clear()
+    sleeps.clear()
+    broken = probe_dashboard("https://example.invalid", require_running_markets=True)
+    assert broken[-1].detail.endswith("GC=F:ERROR")
+    assert calls.count("/api/markets") == 1
+    assert sleeps == []
