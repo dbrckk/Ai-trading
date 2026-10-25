@@ -1,0 +1,67 @@
+name: Forward Paper Signal Evidence
+
+on:
+  # Read-only observer runs hourly. GitHub scheduling is best-effort and can
+  # delay or skip runs; never reconstruct missed forecasts retrospectively.
+  schedule:
+    - cron: "7 * * * *"
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "src/ai_trading/forward_paper_signal.py"
+      - "tests/test_dashboard_health.py"
+      - ".github/workflows/forward-paper-signal-evidence.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forward-paper-signal-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  timestamped-observation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Check preregistered research window
+        id: window
+        run: |
+          end_epoch="$(date -u -d '2027-01-24T00:00:00Z' +%s)"
+          current_epoch="$(date -u +%s)"
+          if [ "$current_epoch" -lt "$end_epoch" ]; then
+            echo "active=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "active=false" >> "$GITHUB_OUTPUT"
+            echo "Prospective audit window ended; collection disabled."
+          fi
+      - uses: actions/checkout@v7
+        if: steps.window.outputs.active == 'true'
+      - uses: actions/setup-python@v7
+        if: steps.window.outputs.active == 'true'
+        with:
+          python-version: "3.11"
+      - name: Capture only public paper signals after frozen cutoff
+        if: steps.window.outputs.active == 'true'
+        env:
+          PYTHONPATH: src
+        run: >-
+          python -m ai_trading.forward_paper_signal
+          --output-dir artifacts/forward-paper-signals
+      - name: Independently validate the saved forward observation
+        if: always() && steps.window.outputs.active == 'true'
+        env:
+          PYTHONPATH: src
+        run: >-
+          python -m ai_trading.forward_paper_signal
+          --verify-only
+          --output-dir artifacts/forward-paper-signals
+      - name: Save original time-stamped GitHub run evidence
+        if: always() && steps.window.outputs.active == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: forward-paper-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/forward-paper-signals/
+          retention-days: 90
+          if-no-files-found: error
