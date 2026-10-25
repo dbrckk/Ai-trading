@@ -2,7 +2,7 @@
 
 Created **2026-10-25**, before the observation cutoff of **2026-10-26 00:00 UTC**.
 
-The `Forward Paper Signal Evidence` GitHub Action is a **read-only public dashboard observer**. Starting after the cutoff, it attempts one snapshot per hour at minute 07 UTC. GitHub scheduled events can be delayed, skipped or disabled; an absent snapshot is a **missing observation**, never a reason to fabricate one after the fact. The workflow records a GitHub run ID, capture Git SHA, deployed Render SHA, timestamps and SHA-256 of the raw public JSON responses. No secrets, trading orders, model training or production persistence write are required.
+The `Forward Paper Signal Evidence` GitHub Action is a **read-only public dashboard observer**. Starting after the cutoff, it attempts one snapshot per hour at minute 07 UTC, through the preregistered end boundary of **2027-01-24 00:00 UTC** (the workflow skips collection and upload thereafter). GitHub scheduled events can be delayed, skipped or disabled; an absent snapshot is a **missing observation**, never a reason to fabricate one after the fact. The workflow records a GitHub run ID, capture Git SHA, deployed Render SHA, timestamps and SHA-256 of the raw public JSON responses. No secrets, trading orders, model training or production persistence write are required.
 
 ## What is — and is not — recorded
 
