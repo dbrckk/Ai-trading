@@ -148,20 +148,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-25T09:36:52Z
+Generated: 2026-10-25T11:29:13Z
 
 ### Git
 - Branch: `main`
-- Head: `0f629a2992d0`
-- Commit date: 2026-10-25T05:36:42-04:00
-- Commit: feat(research): archive forward-only River-v1 paper decisions hourly (#221)
+- Head: `71ad578cd8f9`
+- Commit date: 2026-10-25T07:29:02-04:00
+- Commit: fix(research): reject approved FLAT signal from forward observer (#222)
 - Tracked files: 528
 
 ### Recently changed files
-- `.github/workflows/forward-paper-signal-evidence.yml`
-- `research/forward-paper-signal-operations.md`
 - `src/ai_trading/forward_paper_signal.py`
 - `tests/test_dashboard_health.py`
+- `.github/workflows/forward-paper-signal-evidence.yml`
+- `research/forward-paper-signal-operations.md`
 - `research/mtf-prospective-evaluation-2026-10-26-v1.json`
 - `research/mtf-prospective-evaluation-method.md`
 - `.github/workflows/mtf-prospective-capture.yml`
