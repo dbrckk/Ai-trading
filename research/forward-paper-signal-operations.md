@@ -18,6 +18,6 @@ These logs may enable a **separate prospective audit of exposed River-v1 paper s
 
 Each hourly GitHub Actions run uploads an independently validated JSON artifact with **90-day retention**. This is **not durable beyond 90 days**. A long-term authorized private evidence store and lifecycle audit are still needed before final-study claims. The workflow observes only the already-public dashboard without POST requests or scheduler triggering.
 
-On failure, the collector exits nonzero rather than inventing a historical signal; its error message contains no remote response body. Manual workflow dispatch is permitted for read-only diagnostics. Pre-cutoff executions skip all remote requests and emit an auditable `awaiting_cutoff` placeholder.
+On failure, the collector exits nonzero and emits an explicit `source_unavailable` diagnostic archive with zero forecasts, uploaded by the workflow even though the capture step failed; its error message contains no remote response body. An absence or failed diagnostic is **not** predictive evidence. Manual workflow dispatch is permitted for read-only diagnostics. Pre-cutoff executions skip all remote requests and emit an auditable `awaiting_cutoff` placeholder.
 
 The observer is deliberately separate from the production paper cycle and cannot place orders.
