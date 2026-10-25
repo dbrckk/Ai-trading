@@ -213,6 +213,10 @@ def verify_forward_paper_archive(target: Path) -> None:
         if payload.get("status") != "awaiting_cutoff" or payload.get("markets") != []:
             raise ValueError("invalid pre-cutoff forward archive")
         return
+    if payload.get("status") == "source_unavailable":
+        if payload.get("markets") != [] or payload.get("eligible_markets") != 0:
+            raise ValueError("invalid failed forward source evidence")
+        return
     for field, length in (("deployed_commit", 40),
                           ("market_response_sha256", 64),
                           ("liveness_response_sha256", 64)):
@@ -315,6 +319,24 @@ def main() -> int:
         _write_archive(path, record)
         verify_forward_paper_archive(path)
     except (OSError, ValueError, TypeError, KeyError, json.JSONDecodeError):
+        # Preserve an auditable failed attempt without any invented signal.
+        # The GitHub job still fails, while its always-upload step saves the
+        # diagnostic for completeness accounting.
+        _write_archive(path, {
+            "schema_version": 1,
+            "capture_type": "read_only_paper_river_v1_observation_not_frozen_mtf",
+            "status": "source_unavailable",
+            "linked_study_start_utc": _START_UTC.isoformat(),
+            "observed_at_utc": datetime.now(UTC).isoformat(),
+            "capture_commit": os.getenv("GITHUB_SHA", "local"),
+            "capture_run_id": os.getenv("GITHUB_RUN_ID", "local"),
+            "markets": [],
+            "eligible_markets": 0,
+            "training_or_strategy_selection_performed": False,
+            "orders_or_promotions_executed": False,
+            "frozen_mtf_comparators_evaluated": False,
+            "performance_claim_validated": False,
+        })
         print("forward paper source unavailable or invalid; no fabricated record", flush=True)
         return 1
     print(
