@@ -148,16 +148,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-25T07:09:51Z
+Generated: 2026-10-25T09:36:52Z
 
 ### Git
 - Branch: `main`
-- Head: `daedc1274ed2`
-- Commit date: 2026-10-25T03:09:41-04:00
-- Commit: research: freeze prospective MTF evaluation protocol before first bars (#220)
-- Tracked files: 525
+- Head: `0f629a2992d0`
+- Commit date: 2026-10-25T05:36:42-04:00
+- Commit: feat(research): archive forward-only River-v1 paper decisions hourly (#221)
+- Tracked files: 528
 
 ### Recently changed files
+- `.github/workflows/forward-paper-signal-evidence.yml`
+- `research/forward-paper-signal-operations.md`
+- `src/ai_trading/forward_paper_signal.py`
+- `tests/test_dashboard_health.py`
 - `research/mtf-prospective-evaluation-2026-10-26-v1.json`
 - `research/mtf-prospective-evaluation-method.md`
 - `.github/workflows/mtf-prospective-capture.yml`

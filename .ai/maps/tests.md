@@ -942,6 +942,22 @@ statuses = [starting, "market_engines_not_running:GC=F:ERROR"]
 stuck = probe_dashboard("https://example.invalid", require_running_markets=True)
 ⋮----
 broken = probe_dashboard("https://example.invalid", require_running_markets=True)
+⋮----
+def _forward_observed_market(symbol: str, time: str) -> dict
+⋮----
+def test_forward_paper_signal_timestamp_is_strictly_before_future_entry(tmp_path) -> None
+⋮----
+now = datetime(2026, 10, 26, 10, 8, tzinfo=UTC)
+data = {
+record = build_forward_paper_observation(
+⋮----
+path = tmp_path / "observation.json"
+⋮----
+rows = [
+⋮----
+def test_forward_paper_failed_source_is_auditable_without_fake_forecasts(tmp_path) -> None
+⋮----
+diagnostic = {
 ```
 
 ## File: test_dashboard_overview.py

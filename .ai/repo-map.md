@@ -44,6 +44,7 @@ The content is organized as follows:
     ci.yml
     cloudflare-paper-scheduler-deploy.yml
     codeql.yml
+    forward-paper-signal-evidence.yml
     hosted-dashboard-probe.yml
     kronos-model-smoke.yml
     mtf-net-cost-evidence.yml
@@ -128,6 +129,7 @@ src/
     expert_uncertainty.py
     features.py
     file_persistence.py
+    forward_paper_signal.py
     generation_progress.py
     generation_rollback.py
     generations.py
@@ -639,6 +641,77 @@ jobs:
 
       - name: Analyze
         uses: github/codeql-action/analyze@v4
+````
+
+## File: .github/workflows/forward-paper-signal-evidence.yml
+````yaml
+name: Forward Paper Signal Evidence
+
+on:
+  # Read-only observer runs hourly. GitHub scheduling is best-effort and can
+  # delay or skip runs; never reconstruct missed forecasts retrospectively.
+  schedule:
+    - cron: "7 * * * *"
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "src/ai_trading/forward_paper_signal.py"
+      - "tests/test_dashboard_health.py"
+      - ".github/workflows/forward-paper-signal-evidence.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forward-paper-signal-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  timestamped-observation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Check preregistered research window
+        id: window
+        run: |
+          end_epoch="$(date -u -d '2027-01-24T00:00:00Z' +%s)"
+          current_epoch="$(date -u +%s)"
+          if [ "$current_epoch" -lt "$end_epoch" ]; then
+            echo "active=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "active=false" >> "$GITHUB_OUTPUT"
+            echo "Prospective audit window ended; collection disabled."
+          fi
+      - uses: actions/checkout@v7
+        if: steps.window.outputs.active == 'true'
+      - uses: actions/setup-python@v7
+        if: steps.window.outputs.active == 'true'
+        with:
+          python-version: "3.11"
+      - name: Capture only public paper signals after frozen cutoff
+        if: steps.window.outputs.active == 'true'
+        env:
+          PYTHONPATH: src
+        run: >-
+          python -m ai_trading.forward_paper_signal
+          --output-dir artifacts/forward-paper-signals
+      - name: Independently validate the saved forward observation
+        if: always() && steps.window.outputs.active == 'true'
+        env:
+          PYTHONPATH: src
+        run: >-
+          python -m ai_trading.forward_paper_signal
+          --verify-only
+          --output-dir artifacts/forward-paper-signals
+      - name: Save original time-stamped GitHub run evidence
+        if: always() && steps.window.outputs.active == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: forward-paper-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/forward-paper-signals/
+          retention-days: 90
+          if-no-files-found: error
 ````
 
 ## File: .github/workflows/hosted-dashboard-probe.yml
@@ -4364,6 +4437,113 @@ def record_scheduler_delivery(self, delivery: SchedulerDelivery) -> None
 deliveries: list[SchedulerDelivery] = []
 ⋮----
 payload = json.loads(line)
+````
+
+## File: src/ai_trading/forward_paper_signal.py
+````python
+"""Timestamped read-only River-v1 paper signal observations, never order advice.
+
+This observer is intentionally separate from the frozen MTF OHLCV collector.
+It archives the signal exposed by the public paper dashboard only AFTER the
+HTTP response, and defines a strictly future hypothetical entry boundary.
+A River-v1 observation does not constitute a frozen MTF model prediction.
+"""
+⋮----
+_START_UTC = datetime(2026, 10, 26, tzinfo=UTC)
+_BASE_URL = "https://ai-trading-dashboard-qyr2.onrender.com"
+_MARKETS = ("GC=F", "^GDAXI", "BTC-USD")
+_SIDES = {"LONG": 1, "FLAT": 0, "SHORT": -1}
+_STATES = ("PAPER_APPROVED", "RISK_REJECTED", "NO_TRADE")
+_MAX_BODY_BYTES = 1_000_000
+_MAX_SIGNAL_AGE = timedelta(minutes=15)
+_BAR_SECONDS = 300
+⋮----
+def _utc(value: datetime) -> datetime
+⋮----
+def _next_future_open(after: datetime) -> datetime
+⋮----
+second = int(_utc(after).timestamp())
+⋮----
+def _read_dashboard_json(path: str) -> tuple[dict[str, object], str]
+⋮----
+"""Read bounded public JSON by GET only; never call scheduler endpoints."""
+⋮----
+request = Request(
+⋮----
+raw = response.read(_MAX_BODY_BYTES + 1)
+⋮----
+data = json.loads(raw)
+⋮----
+"""Read current paper decisions, not frozen MTF forecasts or fills.
+
+    Signals are only eligible as *future* observational baselines if a new
+    5-minute entry bar starts after the observation has been captured.
+    """
+observed = _utc(observed_at_utc)
+⋮----
+markets = dashboard.get("markets")
+⋮----
+by_symbol = {}
+⋮----
+symbol = item["symbol"]
+⋮----
+next_open = _next_future_open(observed)
+rows = []
+⋮----
+item = by_symbol[symbol]
+overview = item.get("overview")
+overview = overview if isinstance(overview, dict) else {}
+model = overview.get("model")
+model = model if isinstance(model, dict) else {}
+status = item.get("signal_state")
+side_label = item.get("signal")
+confidence = item.get("confidence")
+source_signal_time = item.get("signal_time")
+valid_source_time = False
+parsed_source_time: datetime | None = None
+⋮----
+parsed_source_time = _utc(datetime.fromisoformat(source_signal_time))
+valid_source_time = (
+⋮----
+score_valid = (
+model_checksum = model.get("checksum")
+model_valid = (
+eligible = (
+⋮----
+def _write_archive(target: Path, record: dict[str, object]) -> None
+⋮----
+def verify_forward_paper_archive(target: Path) -> None
+⋮----
+"""Offline structural/temporal validation; no model or API invocation."""
+payload = json.loads(target.read_text(encoding="utf-8"))
+⋮----
+timestamp = _utc(datetime.fromisoformat(payload["observed_at_utc"]))
+⋮----
+value = payload.get(field)
+⋮----
+markets = payload.get("markets")
+⋮----
+expected_entry = _next_future_open(timestamp).isoformat()
+eligible = 0
+⋮----
+state = item["source_signal_state"]
+⋮----
+signal_time = _utc(datetime.fromisoformat(item["source_signal_time_utc"]))
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser(description="Read-only future paper signal logger")
+⋮----
+args = parser.parse_args()
+path = Path(args.output_dir) / "observation.json"
+⋮----
+started = datetime.now(UTC)
+⋮----
+record = build_forward_paper_observation(
+⋮----
+# Preserve an auditable failed attempt without any invented signal.
+# The GitHub job still fails, while its always-upload step saves the
+# diagnostic for completeness accounting.
 ````
 
 ## File: src/ai_trading/generation_progress.py
@@ -11150,6 +11330,22 @@ statuses = [starting, "market_engines_not_running:GC=F:ERROR"]
 stuck = probe_dashboard("https://example.invalid", require_running_markets=True)
 ⋮----
 broken = probe_dashboard("https://example.invalid", require_running_markets=True)
+⋮----
+def _forward_observed_market(symbol: str, time: str) -> dict
+⋮----
+def test_forward_paper_signal_timestamp_is_strictly_before_future_entry(tmp_path) -> None
+⋮----
+now = datetime(2026, 10, 26, 10, 8, tzinfo=UTC)
+data = {
+record = build_forward_paper_observation(
+⋮----
+path = tmp_path / "observation.json"
+⋮----
+rows = [
+⋮----
+def test_forward_paper_failed_source_is_auditable_without_fake_forecasts(tmp_path) -> None
+⋮----
+diagnostic = {
 ````
 
 ## File: tests/test_dashboard_overview.py

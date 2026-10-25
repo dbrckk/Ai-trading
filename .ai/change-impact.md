@@ -1,14 +1,19 @@
 # Change impact
 
-Base: 6d257357200ff86034a9a57491c68eb89a98ce7c
-Head: daedc1274ed21b3ab1f9c2785760e9178bffe66c
+Base: b3f353eee75496875d0c76c25832b32e562f2b15
+Head: 0f629a2992d02226c340f8f86cb2314a1b5230fb
 
 ## Changed files
-- A research/mtf-prospective-evaluation-2026-10-26-v1.json
-- A research/mtf-prospective-evaluation-method.md
+- A .github/workflows/forward-paper-signal-evidence.yml
+- A research/forward-paper-signal-operations.md
+- A src/ai_trading/forward_paper_signal.py
+- M tests/test_dashboard_health.py
 
 ## Affected areas
+- .github
 - research
+- src
+- tests
 
 ## Related test candidates
 - No direct filename-based test match detected.
