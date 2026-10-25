@@ -3,14 +3,21 @@ from __future__ import annotations
 import json
 import socket
 import time
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from threading import Thread
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
+import pytest
+
 from ai_trading.dashboard import render_dashboard, serve_dashboard
 from ai_trading.deployment_probe import probe_dashboard
 from ai_trading.hosted_runtime import HostedPaperSettings
+from ai_trading.forward_paper_signal import (
+    build_forward_paper_observation,
+    verify_forward_paper_archive,
+)
 from ai_trading.runtime_state import RuntimeStateStore
 from ai_trading.runtime_status import HostedRuntimeStatus, HostedRuntimeStatusStore
 from ai_trading.trade_journal import TradeJournal
@@ -430,3 +437,90 @@ def test_hosted_probe_fails_after_bounded_starting_and_never_retries_error(
     assert broken[-1].detail.endswith("GC=F:ERROR")
     assert calls.count("/api/markets") == 1
     assert sleeps == []
+
+
+def _forward_observed_market(symbol: str, time: str) -> dict:
+    return {
+        "symbol": symbol,
+        "freshness": "LIVE",
+        "session_open": True,
+        "signal": "LONG",
+        "confidence": 0.72,
+        "signal_state": "PAPER_APPROVED",
+        "risk_approved": True,
+        "signal_time": time,
+        "overview": {
+            "engine_status": "RUNNING",
+            "model": {
+                "present": True,
+                "format": "joblib-river-v1",
+                "version": 1,
+                "checksum": "abcdef123456",
+            },
+        },
+    }
+
+
+def test_forward_paper_signal_timestamp_is_strictly_before_future_entry(tmp_path) -> None:
+    now = datetime(2026, 10, 26, 10, 8, tzinfo=UTC)
+    data = {
+        "markets": [
+            _forward_observed_market(symbol, (now - timedelta(minutes=10)).isoformat())
+            for symbol in ("GC=F", "^GDAXI", "BTC-USD")
+        ]
+    }
+    record = build_forward_paper_observation(
+        data,
+        deployed_commit="a" * 40,
+        observed_at_utc=now,
+        market_response_sha256="b" * 64,
+        liveness_response_sha256="c" * 64,
+    )
+    assert record["eligible_markets"] == 3
+    assert record["frozen_mtf_comparators_evaluated"] is False
+    assert record["orders_or_promotions_executed"] is False
+    assert {row["earliest_hypothetical_entry_open_utc"] for row in record["markets"]} == {
+        "2026-10-26T10:10:00+00:00"
+    }
+    path = tmp_path / "observation.json"
+    path.write_text(json.dumps(record), encoding="utf-8")
+    verify_forward_paper_archive(path)
+    record["markets"][0]["earliest_hypothetical_entry_open_utc"] = now.isoformat()
+    path.write_text(json.dumps(record), encoding="utf-8")
+    with pytest.raises(ValueError, match="strictly future"):
+        verify_forward_paper_archive(path)
+
+
+def test_forward_paper_observer_rejects_stale_paper_signals_and_missing_markets(
+    tmp_path,
+) -> None:
+    now = datetime(2026, 10, 26, 10, 8, tzinfo=UTC)
+    rows = [
+        _forward_observed_market(symbol, (now - timedelta(minutes=10)).isoformat())
+        for symbol in ("GC=F", "^GDAXI", "BTC-USD")
+    ]
+    rows[1]["signal_time"] = (now - timedelta(minutes=45)).isoformat()
+    rows[2]["freshness"] = "MARKET_CLOSED"
+    rows[2]["session_open"] = False
+    record = build_forward_paper_observation(
+        {"markets": rows},
+        deployed_commit="a" * 40,
+        observed_at_utc=now,
+        market_response_sha256="b" * 64,
+        liveness_response_sha256="c" * 64,
+    )
+    assert record["eligible_markets"] == 1
+    assert [row["signal"] for row in record["markets"]] == ["LONG", None, None]
+    path = tmp_path / "observation.json"
+    path.write_text(json.dumps(record), encoding="utf-8")
+    verify_forward_paper_archive(path)
+
+    rows.pop()
+    with pytest.raises(ValueError, match="exactly three"):
+        build_forward_paper_observation(
+            {"markets": rows},
+            deployed_commit="a" * 40,
+            observed_at_utc=now,
+            market_response_sha256="b" * 64,
+            liveness_response_sha256="c" * 64,
+        )
