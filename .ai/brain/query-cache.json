@@ -171,6 +171,92 @@
       },
       "task": "game engine"
     },
+    "0bc196f90a293de6d94114dd4edc23f2148958e43c8196d4f8abced4225f8400": {
+      "route": {
+        "budget": {
+          "confidence": "low",
+          "expand_to": 12,
+          "max_files": 6,
+          "requested_max_files": 12,
+          "score_margin": 0,
+          "tier": "broad",
+          "top_score": 9
+        },
+        "candidate_count": 3,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "src/ai_trading/forward_paper_signal.py",
+            "reasons": [
+              "impact",
+              "recently-changed"
+            ],
+            "score": 9,
+            "symbols": [
+              "_next_future_open",
+              "_read_dashboard_json",
+              "_utc",
+              "_write_archive",
+              "build_forward_paper_observation",
+              "main",
+              "verify_forward_paper_archive"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "tests/test_dashboard_health.py",
+            "reasons": [
+              "impact",
+              "recently-changed"
+            ],
+            "score": 9,
+            "symbols": [
+              "FakeResponse",
+              "__enter__",
+              "__exit__",
+              "_forward_observed_market",
+              "_free_port",
+              "_get",
+              "_start_dashboard",
+              "fail_request",
+              "fake_probe",
+              "fake_urlopen",
+              "read",
+              "test_api_status_reports_stale_worker_without_hiding_web_health",
+              "test_dashboard_marks_expired_worker_heartbeat_stale",
+              "test_external_probe_checks_live_ready_and_all_markets",
+              "test_external_probe_reports_connection_errors_without_exposing_details",
+              "test_external_scheduler_readiness_detects_missing_configuration",
+              "test_forward_observer_excludes_approved_flat_instead_of_archiving_invalid_signal",
+              "test_forward_paper_failed_source_is_auditable_without_fake_forecasts",
+              "test_forward_paper_observer_rejects_stale_paper_signals_and_missing_markets",
+              "test_forward_paper_signal_timestamp_is_strictly_before_future_entry"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "research/mtf-prospective-evaluation-method.md",
+            "reasons": [
+              "recently-changed"
+            ],
+            "score": 3,
+            "symbols": []
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "purchase billing",
+        "terms": [
+          "purchase",
+          "billing"
+        ]
+      },
+      "task": "purchase billing"
+    },
     "0ceb9f7c45e690875922e1322a7cc7893217018716d4b186eb85293d2aede265": {
       "route": {
         "budget": {
@@ -1958,175 +2044,6 @@
               "main",
               "predict",
               "validate_market"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "offline progress",
-        "terms": [
-          "offline",
-          "progress"
-        ]
-      },
-      "task": "offline progress"
-    },
-    "28c9c61a6ee385b5df431a97c371b1c26fb21e4a88d947cb87fed9e25fba9922": {
-      "route": {
-        "budget": {
-          "confidence": "medium",
-          "expand_to": 12,
-          "max_files": 6,
-          "requested_max_files": 12,
-          "score_margin": 2,
-          "tier": "bounded",
-          "top_score": 29
-        },
-        "candidate_count": 27,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "offline",
-              "progress"
-            ],
-            "path": "src/ai_trading/dashboard.py",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 29,
-            "symbols": [
-              "Handler",
-              "_display_money",
-              "_display_ratio",
-              "_display_trade_pnl",
-              "_display_units",
-              "_equity_chart_svg",
-              "_public_runtime_snapshot",
-              "_readiness_number",
-              "_readiness_panel",
-              "_scheduler_display_state",
-              "_send_json",
-              "_trade_pnl_known",
-              "_write_response_body",
-              "do_GET",
-              "do_POST",
-              "end_headers",
-              "execute_paper_cycle",
-              "load_status_snapshot",
-              "log_message",
-              "render_dashboard"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progress"
-            ],
-            "path": "tests/test_generation_progress.py",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "test_generation_progress_detects_improvement"
-            ]
-          },
-          {
-            "learning_score": 4,
-            "matched_terms": [
-              "progress"
-            ],
-            "path": "tests/test_scheduler_endpoint.py",
-            "reasons": [
-              "learning",
-              "search-index"
-            ],
-            "score": 25,
-            "symbols": [
-              "_free_port",
-              "_request",
-              "_start_scheduler_dashboard",
-              "fail_cycle",
-              "fake_cycle",
-              "run_cycle",
-              "successful_result",
-              "test_concurrent_progress_is_successful_noop",
-              "test_execution_failure_is_sanitized",
-              "test_http_scheduler_exposes_durable_cloudflare_delivery_evidence",
-              "test_http_scheduler_failure_response_never_leaks_secrets",
-              "test_http_scheduler_other_post_routes_are_not_exposed",
-              "test_http_scheduler_partial_cycle_records_real_http_failure",
-              "test_http_scheduler_rejects_missing_and_wrong_authorization",
-              "test_http_scheduler_valid_token_runs_one_cycle_and_ignores_body",
-              "test_missing_authorization_is_unauthorized",
-              "test_missing_server_token_fails_closed",
-              "test_scheduler_delivery_overview_exposes_recent_failed_delivery",
-              "test_scheduler_delivery_overview_rejects_invalid_freshness_window",
-              "test_scheduler_delivery_overview_verifies_three_consecutive_cloudflare_successes"
-            ]
-          },
-          {
-            "learning_score": 4,
-            "matched_terms": [
-              "offline"
-            ],
-            "path": "src/ai_trading/kronos_research.py",
-            "reasons": [
-              "learning",
-              "search-index"
-            ],
-            "score": 21,
-            "symbols": [
-              "ForecastPredictor",
-              "ResearchConfig",
-              "__post_init__",
-              "_bootstrap_lower",
-              "_net_return",
-              "_river_predictions",
-              "_side",
-              "evaluate_walk_forward",
-              "load_predictor",
-              "main",
-              "predict",
-              "validate_market"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progress"
-            ],
-            "path": "src/ai_trading/data.py",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 17,
-            "symbols": [
-              "MarketDataProvider",
-              "YahooFinanceProvider",
-              "_normalize_history_frame",
-              "download",
-              "load_history"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progress"
-            ],
-            "path": "src/ai_trading/evolution_manager.py",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 17,
-            "symbols": [
-              "EvolutionCycleResult",
-              "_active_pool_returns",
-              "_portfolio_score",
-              "_record_to_candidate",
-              "run_evolution_cycle"
             ]
           }
         ],
@@ -7789,142 +7706,6 @@
       },
       "task": "offline progress"
     },
-    "60ae4d5c14af46b6cfc0d8b9f0289a40aa688ffff892b77a4bdb6b0c6c8df2ef": {
-      "route": {
-        "budget": {
-          "confidence": "low",
-          "expand_to": 12,
-          "max_files": 6,
-          "requested_max_files": 12,
-          "score_margin": 0,
-          "tier": "broad",
-          "top_score": 9
-        },
-        "candidate_count": 8,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "src/ai_trading/cost_stress_gate.py",
-            "reasons": [
-              "impact",
-              "recently-changed"
-            ],
-            "score": 9,
-            "symbols": [
-              "CostStressGatePolicy",
-              "CostStressGateResult",
-              "evaluate_cost_stress_gate"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "tests/test_cost_stress_gate.py",
-            "reasons": [
-              "impact",
-              "recently-changed"
-            ],
-            "score": 9,
-            "symbols": [
-              "result",
-              "test_cost_stress_gate_accepts_resilient_strategy",
-              "test_cost_stress_gate_can_opt_out_of_worst_cost_requirement",
-              "test_cost_stress_gate_counts_only_profitable_cost_scenarios",
-              "test_cost_stress_gate_rejects_cost_fragility",
-              "test_cost_stress_gate_rejects_invalid_or_zero_trade_evidence",
-              "test_cost_stress_gate_rejects_loss_at_highest_cost_even_with_high_pass_ratio",
-              "test_cost_stress_gate_rejects_negative_net_returns_despite_positive_excess"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "src/ai_trading/cli.py",
-            "reasons": [
-              "impact"
-            ],
-            "score": 6,
-            "symbols": [
-              "compare_models",
-              "create_readiness_release_command",
-              "crisis_status",
-              "dashboard",
-              "deployment_readiness",
-              "expert_evolve",
-              "expert_factory_run",
-              "expert_pool_refresh",
-              "expert_sandbox",
-              "generation_rollback",
-              "global_allocation_check",
-              "global_allocation_tune",
-              "health_check",
-              "health_serve",
-              "learning_cycle",
-              "loader",
-              "maintenance",
-              "metrics",
-              "multiasset_backtest",
-              "multiasset_evolve"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "src/ai_trading/quantitative_artifact.py",
-            "reasons": [
-              "impact"
-            ],
-            "score": 6,
-            "symbols": [
-              "QuantitativeQualificationArtifact",
-              "_evidence_payload",
-              "build_quantitative_artifact",
-              "load_quantitative_artifact",
-              "quantitative_artifact_hash",
-              "save_quantitative_artifact"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "src/ai_trading/quantitative_qualification.py",
-            "reasons": [
-              "impact"
-            ],
-            "score": 6,
-            "symbols": [
-              "QuantitativeQualification",
-              "evaluate_quantitative_qualification"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "tests/test_quantitative_artifact.py",
-            "reasons": [
-              "impact"
-            ],
-            "score": 6,
-            "symbols": [
-              "_common",
-              "_dataset",
-              "test_artifact_identity_changes_with_config_hash",
-              "test_quantitative_artifact_hash_matches_content"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "privacy consent",
-        "terms": [
-          "privacy",
-          "consent"
-        ]
-      },
-      "task": "privacy consent"
-    },
     "616ea0665e0979dd09a40c470d42519571e9b6140f3cb05ee615c6f46ebc38e9": {
       "route": {
         "budget": {
@@ -9237,141 +9018,6 @@
       },
       "task": "purchase billing"
     },
-    "7757da5cfd4e923f3947c5484a80ecde86b1bfeffa638c2c20020ad37464c0d0": {
-      "route": {
-        "budget": {
-          "confidence": "low",
-          "expand_to": 12,
-          "max_files": 6,
-          "requested_max_files": 12,
-          "score_margin": 0,
-          "tier": "broad",
-          "top_score": 9
-        },
-        "candidate_count": 8,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "src/ai_trading/benchmark_gate.py",
-            "reasons": [
-              "impact",
-              "recently-changed"
-            ],
-            "score": 9,
-            "symbols": [
-              "BenchmarkGatePolicy",
-              "BenchmarkGateResult",
-              "evaluate_benchmark_gate"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "tests/test_benchmark_gate.py",
-            "reasons": [
-              "impact",
-              "recently-changed"
-            ],
-            "score": 9,
-            "symbols": [
-              "_report",
-              "test_benchmark_gate_accepts_qualified_report",
-              "test_benchmark_gate_rejects_break_even_return_by_default",
-              "test_benchmark_gate_rejects_infinite_annualized_volatility",
-              "test_benchmark_gate_rejects_net_loss_even_if_benchmark_loses_more",
-              "test_benchmark_gate_rejects_nonfinite_metrics_that_skip_thresholds",
-              "test_benchmark_gate_rejects_weak_out_of_sample_result"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "src/ai_trading/cli.py",
-            "reasons": [
-              "impact"
-            ],
-            "score": 6,
-            "symbols": [
-              "compare_models",
-              "create_readiness_release_command",
-              "crisis_status",
-              "dashboard",
-              "deployment_readiness",
-              "expert_evolve",
-              "expert_factory_run",
-              "expert_pool_refresh",
-              "expert_sandbox",
-              "generation_rollback",
-              "global_allocation_check",
-              "global_allocation_tune",
-              "health_check",
-              "health_serve",
-              "learning_cycle",
-              "loader",
-              "maintenance",
-              "metrics",
-              "multiasset_backtest",
-              "multiasset_evolve"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "src/ai_trading/quantitative_artifact.py",
-            "reasons": [
-              "impact"
-            ],
-            "score": 6,
-            "symbols": [
-              "QuantitativeQualificationArtifact",
-              "_evidence_payload",
-              "build_quantitative_artifact",
-              "load_quantitative_artifact",
-              "quantitative_artifact_hash",
-              "save_quantitative_artifact"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "src/ai_trading/quantitative_qualification.py",
-            "reasons": [
-              "impact"
-            ],
-            "score": 6,
-            "symbols": [
-              "QuantitativeQualification",
-              "evaluate_quantitative_qualification"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "tests/test_quantitative_artifact.py",
-            "reasons": [
-              "impact"
-            ],
-            "score": 6,
-            "symbols": [
-              "_common",
-              "_dataset",
-              "test_artifact_identity_changes_with_config_hash",
-              "test_quantitative_artifact_hash_matches_content"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "purchase billing",
-        "terms": [
-          "purchase",
-          "billing"
-        ]
-      },
-      "task": "purchase billing"
-    },
     "77a317ff4224dae4d2583a24ecb0997b49edc50a8b55e93fbdfcc1acd4536e7a": {
       "route": {
         "budget": {
@@ -10183,172 +9829,6 @@
               "test_forward_paper_failed_source_is_auditable_without_fake_forecasts",
               "test_forward_paper_observer_rejects_stale_paper_signals_and_missing_markets",
               "test_forward_paper_signal_timestamp_is_strictly_before_future_entry"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "game engine",
-        "terms": [
-          "game",
-          "engine"
-        ]
-      },
-      "task": "game engine"
-    },
-    "8a584d686eb315e7199525daa9807054d440a2c0b28b73189ad017e0bca3e2a6": {
-      "route": {
-        "budget": {
-          "confidence": "medium",
-          "expand_to": 12,
-          "max_files": 6,
-          "requested_max_files": 12,
-          "score_margin": 6,
-          "tier": "bounded",
-          "top_score": 23
-        },
-        "candidate_count": 17,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine"
-            ],
-            "path": "src/ai_trading/cli.py",
-            "reasons": [
-              "impact",
-              "search-index"
-            ],
-            "score": 23,
-            "symbols": [
-              "compare_models",
-              "create_readiness_release_command",
-              "crisis_status",
-              "dashboard",
-              "deployment_readiness",
-              "expert_evolve",
-              "expert_factory_run",
-              "expert_pool_refresh",
-              "expert_sandbox",
-              "generation_rollback",
-              "global_allocation_check",
-              "global_allocation_tune",
-              "health_check",
-              "health_serve",
-              "learning_cycle",
-              "loader",
-              "maintenance",
-              "metrics",
-              "multiasset_backtest",
-              "multiasset_evolve"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine"
-            ],
-            "path": "src/ai_trading/dashboard.py",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 17,
-            "symbols": [
-              "Handler",
-              "_display_money",
-              "_display_ratio",
-              "_display_trade_pnl",
-              "_display_units",
-              "_equity_chart_svg",
-              "_public_runtime_snapshot",
-              "_readiness_number",
-              "_readiness_panel",
-              "_scheduler_display_state",
-              "_send_json",
-              "_trade_pnl_known",
-              "_write_response_body",
-              "do_GET",
-              "do_POST",
-              "end_headers",
-              "execute_paper_cycle",
-              "load_status_snapshot",
-              "log_message",
-              "render_dashboard"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine"
-            ],
-            "path": "src/ai_trading/runtime.py",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 17,
-            "symbols": [
-              "PaperAutonomousRuntime",
-              "PreparedRuntimeMarket",
-              "RuntimeStepResult",
-              "_broker_from_state",
-              "_eligible_execution_indices",
-              "_prepare_market_features",
-              "_state_from_broker",
-              "_step_prepared_locked",
-              "prepare_market",
-              "step",
-              "step_at",
-              "step_prepared"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine"
-            ],
-            "path": "tests/test_risk.py",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 17,
-            "symbols": [
-              "test_daily_loss_stop_marks_existing_position_for_exit",
-              "test_drawdown_limit_is_fail_closed",
-              "test_low_confidence_is_rejected",
-              "test_low_confidence_rejection_does_not_force_liquidation"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine"
-            ],
-            "path": "src/ai_trading/engine.py",
-            "reasons": [],
-            "score": 10,
-            "symbols": [
-              "RunResult",
-              "TradingEngine",
-              "__init__",
-              "paper_run",
-              "train"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine"
-            ],
-            "path": "src/ai_trading/stress_engine.py",
-            "reasons": [],
-            "score": 10,
-            "symbols": [
-              "StressPolicy",
-              "StressReport",
-              "StressScenario",
-              "_stressed_covariance",
-              "run_stress_test"
             ]
           }
         ],
@@ -11823,6 +11303,92 @@
       },
       "task": "privacy consent"
     },
+    "9ec1d6b0463b697f783c90890f0c89a97a954b8d42f9e5c0da4641ec7da39fd7": {
+      "route": {
+        "budget": {
+          "confidence": "low",
+          "expand_to": 12,
+          "max_files": 6,
+          "requested_max_files": 12,
+          "score_margin": 0,
+          "tier": "broad",
+          "top_score": 9
+        },
+        "candidate_count": 3,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "src/ai_trading/forward_paper_signal.py",
+            "reasons": [
+              "impact",
+              "recently-changed"
+            ],
+            "score": 9,
+            "symbols": [
+              "_next_future_open",
+              "_read_dashboard_json",
+              "_utc",
+              "_write_archive",
+              "build_forward_paper_observation",
+              "main",
+              "verify_forward_paper_archive"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "tests/test_dashboard_health.py",
+            "reasons": [
+              "impact",
+              "recently-changed"
+            ],
+            "score": 9,
+            "symbols": [
+              "FakeResponse",
+              "__enter__",
+              "__exit__",
+              "_forward_observed_market",
+              "_free_port",
+              "_get",
+              "_start_dashboard",
+              "fail_request",
+              "fake_probe",
+              "fake_urlopen",
+              "read",
+              "test_api_status_reports_stale_worker_without_hiding_web_health",
+              "test_dashboard_marks_expired_worker_heartbeat_stale",
+              "test_external_probe_checks_live_ready_and_all_markets",
+              "test_external_probe_reports_connection_errors_without_exposing_details",
+              "test_external_scheduler_readiness_detects_missing_configuration",
+              "test_forward_observer_excludes_approved_flat_instead_of_archiving_invalid_signal",
+              "test_forward_paper_failed_source_is_auditable_without_fake_forecasts",
+              "test_forward_paper_observer_rejects_stale_paper_signals_and_missing_markets",
+              "test_forward_paper_signal_timestamp_is_strictly_before_future_entry"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "research/mtf-prospective-evaluation-method.md",
+            "reasons": [
+              "recently-changed"
+            ],
+            "score": 3,
+            "symbols": []
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "income progression",
+        "terms": [
+          "income",
+          "progression"
+        ]
+      },
+      "task": "income progression"
+    },
     "9f78ca2ef34c6628f6dbcb52054f02ac05c49531625e56ebd715990a19fec368": {
       "route": {
         "budget": {
@@ -11988,6 +11554,196 @@
         ]
       },
       "task": "offline progress"
+    },
+    "a3fa179e8e922e29830c817c3fd8eff0e96aa1e31eb6113ca1ba194ec5349ca0": {
+      "route": {
+        "budget": {
+          "confidence": "medium",
+          "expand_to": 12,
+          "max_files": 6,
+          "requested_max_files": 12,
+          "score_margin": 0,
+          "tier": "bounded",
+          "top_score": 17
+        },
+        "candidate_count": 13,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine"
+            ],
+            "path": "src/ai_trading/cli.py",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 17,
+            "symbols": [
+              "compare_models",
+              "create_readiness_release_command",
+              "crisis_status",
+              "dashboard",
+              "deployment_readiness",
+              "expert_evolve",
+              "expert_factory_run",
+              "expert_pool_refresh",
+              "expert_sandbox",
+              "generation_rollback",
+              "global_allocation_check",
+              "global_allocation_tune",
+              "health_check",
+              "health_serve",
+              "learning_cycle",
+              "loader",
+              "maintenance",
+              "metrics",
+              "multiasset_backtest",
+              "multiasset_evolve"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine"
+            ],
+            "path": "src/ai_trading/dashboard.py",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 17,
+            "symbols": [
+              "Handler",
+              "_display_money",
+              "_display_ratio",
+              "_display_trade_pnl",
+              "_display_units",
+              "_equity_chart_svg",
+              "_public_runtime_snapshot",
+              "_readiness_number",
+              "_readiness_panel",
+              "_scheduler_display_state",
+              "_send_json",
+              "_trade_pnl_known",
+              "_write_response_body",
+              "do_GET",
+              "do_POST",
+              "end_headers",
+              "execute_paper_cycle",
+              "load_status_snapshot",
+              "log_message",
+              "render_dashboard"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine"
+            ],
+            "path": "src/ai_trading/deployment_probe.py",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 17,
+            "symbols": [
+              "ProbeCheck",
+              "_fetch_json",
+              "_only_transient_market_starting",
+              "_probe_endpoint",
+              "main",
+              "probe_dashboard"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine"
+            ],
+            "path": "src/ai_trading/runtime.py",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 17,
+            "symbols": [
+              "PaperAutonomousRuntime",
+              "PreparedRuntimeMarket",
+              "RuntimeStepResult",
+              "_broker_from_state",
+              "_eligible_execution_indices",
+              "_prepare_market_features",
+              "_state_from_broker",
+              "_step_prepared_locked",
+              "prepare_market",
+              "step",
+              "step_at",
+              "step_prepared"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine"
+            ],
+            "path": "tests/test_risk.py",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 17,
+            "symbols": [
+              "test_daily_loss_stop_marks_existing_position_for_exit",
+              "test_drawdown_limit_is_fail_closed",
+              "test_finite_non_positive_equity_keeps_hard_stop_exit",
+              "test_invalid_model_confidence_cannot_authorize_exposure",
+              "test_invalid_model_side_is_rejected_before_broker_execution",
+              "test_invalid_portfolio_state_blocks_new_and_forced_paper_orders",
+              "test_low_confidence_is_rejected",
+              "test_low_confidence_rejection_does_not_force_liquidation"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine"
+            ],
+            "path": "tests/test_dashboard_health.py",
+            "reasons": [
+              "impact",
+              "recently-changed"
+            ],
+            "score": 13,
+            "symbols": [
+              "FakeResponse",
+              "__enter__",
+              "__exit__",
+              "_forward_observed_market",
+              "_free_port",
+              "_get",
+              "_start_dashboard",
+              "fail_request",
+              "fake_probe",
+              "fake_urlopen",
+              "read",
+              "test_api_status_reports_stale_worker_without_hiding_web_health",
+              "test_dashboard_marks_expired_worker_heartbeat_stale",
+              "test_external_probe_checks_live_ready_and_all_markets",
+              "test_external_probe_reports_connection_errors_without_exposing_details",
+              "test_external_scheduler_readiness_detects_missing_configuration",
+              "test_forward_observer_excludes_approved_flat_instead_of_archiving_invalid_signal",
+              "test_forward_paper_failed_source_is_auditable_without_fake_forecasts",
+              "test_forward_paper_observer_rejects_stale_paper_signals_and_missing_markets",
+              "test_forward_paper_signal_timestamp_is_strictly_before_future_entry"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "game engine",
+        "terms": [
+          "game",
+          "engine"
+        ]
+      },
+      "task": "game engine"
     },
     "a5c7e63ec1cb76a36c51a919f28bad527195c7ad119bfa72ecfb145af02fd5c3": {
       "route": {
@@ -13581,141 +13337,6 @@
         ]
       },
       "task": "game engine"
-    },
-    "c866289a9d7def9da4165f8c05da9f799efa6937a61703b90667ccecc1f6feba": {
-      "route": {
-        "budget": {
-          "confidence": "low",
-          "expand_to": 12,
-          "max_files": 6,
-          "requested_max_files": 12,
-          "score_margin": 0,
-          "tier": "broad",
-          "top_score": 9
-        },
-        "candidate_count": 8,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "src/ai_trading/benchmark_gate.py",
-            "reasons": [
-              "impact",
-              "recently-changed"
-            ],
-            "score": 9,
-            "symbols": [
-              "BenchmarkGatePolicy",
-              "BenchmarkGateResult",
-              "evaluate_benchmark_gate"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "tests/test_benchmark_gate.py",
-            "reasons": [
-              "impact",
-              "recently-changed"
-            ],
-            "score": 9,
-            "symbols": [
-              "_report",
-              "test_benchmark_gate_accepts_qualified_report",
-              "test_benchmark_gate_rejects_break_even_return_by_default",
-              "test_benchmark_gate_rejects_infinite_annualized_volatility",
-              "test_benchmark_gate_rejects_net_loss_even_if_benchmark_loses_more",
-              "test_benchmark_gate_rejects_nonfinite_metrics_that_skip_thresholds",
-              "test_benchmark_gate_rejects_weak_out_of_sample_result"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "src/ai_trading/cli.py",
-            "reasons": [
-              "impact"
-            ],
-            "score": 6,
-            "symbols": [
-              "compare_models",
-              "create_readiness_release_command",
-              "crisis_status",
-              "dashboard",
-              "deployment_readiness",
-              "expert_evolve",
-              "expert_factory_run",
-              "expert_pool_refresh",
-              "expert_sandbox",
-              "generation_rollback",
-              "global_allocation_check",
-              "global_allocation_tune",
-              "health_check",
-              "health_serve",
-              "learning_cycle",
-              "loader",
-              "maintenance",
-              "metrics",
-              "multiasset_backtest",
-              "multiasset_evolve"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "src/ai_trading/quantitative_artifact.py",
-            "reasons": [
-              "impact"
-            ],
-            "score": 6,
-            "symbols": [
-              "QuantitativeQualificationArtifact",
-              "_evidence_payload",
-              "build_quantitative_artifact",
-              "load_quantitative_artifact",
-              "quantitative_artifact_hash",
-              "save_quantitative_artifact"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "src/ai_trading/quantitative_qualification.py",
-            "reasons": [
-              "impact"
-            ],
-            "score": 6,
-            "symbols": [
-              "QuantitativeQualification",
-              "evaluate_quantitative_qualification"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [],
-            "path": "tests/test_quantitative_artifact.py",
-            "reasons": [
-              "impact"
-            ],
-            "score": 6,
-            "symbols": [
-              "_common",
-              "_dataset",
-              "test_artifact_identity_changes_with_config_hash",
-              "test_quantitative_artifact_hash_matches_content"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "income progression",
-        "terms": [
-          "income",
-          "progression"
-        ]
-      },
-      "task": "income progression"
     },
     "ca37a7b7c189390606a076f17d3bb0cb36de90613b1302e9b6e5adbd0b75f3a6": {
       "route": {
@@ -15933,6 +15554,176 @@
       },
       "task": "income progression"
     },
+    "e549f0eac59fda6f40584b2571714c56b61eaeb52e042d1e4e81677dc562cf01": {
+      "route": {
+        "budget": {
+          "confidence": "medium",
+          "expand_to": 12,
+          "max_files": 6,
+          "requested_max_files": 12,
+          "score_margin": 2,
+          "tier": "bounded",
+          "top_score": 29
+        },
+        "candidate_count": 24,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "offline",
+              "progress"
+            ],
+            "path": "src/ai_trading/dashboard.py",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 29,
+            "symbols": [
+              "Handler",
+              "_display_money",
+              "_display_ratio",
+              "_display_trade_pnl",
+              "_display_units",
+              "_equity_chart_svg",
+              "_public_runtime_snapshot",
+              "_readiness_number",
+              "_readiness_panel",
+              "_scheduler_display_state",
+              "_send_json",
+              "_trade_pnl_known",
+              "_write_response_body",
+              "do_GET",
+              "do_POST",
+              "end_headers",
+              "execute_paper_cycle",
+              "load_status_snapshot",
+              "log_message",
+              "render_dashboard"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "tests/test_generation_progress.py",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 27,
+            "symbols": [
+              "test_generation_progress_detects_improvement"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "offline"
+            ],
+            "path": "src/ai_trading/forward_paper_signal.py",
+            "reasons": [
+              "impact",
+              "recently-changed",
+              "search-index"
+            ],
+            "score": 26,
+            "symbols": [
+              "_next_future_open",
+              "_read_dashboard_json",
+              "_utc",
+              "_write_archive",
+              "build_forward_paper_observation",
+              "main",
+              "verify_forward_paper_archive"
+            ]
+          },
+          {
+            "learning_score": 4,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "tests/test_scheduler_endpoint.py",
+            "reasons": [
+              "learning",
+              "search-index"
+            ],
+            "score": 25,
+            "symbols": [
+              "_free_port",
+              "_request",
+              "_start_scheduler_dashboard",
+              "fail_cycle",
+              "fake_cycle",
+              "fake_opener",
+              "make_opener",
+              "run_cycle",
+              "successful_result",
+              "test_concurrent_progress_is_successful_noop",
+              "test_execution_failure_is_sanitized",
+              "test_http_scheduler_exposes_durable_cloudflare_delivery_evidence",
+              "test_http_scheduler_failure_response_never_leaks_secrets",
+              "test_http_scheduler_other_post_routes_are_not_exposed",
+              "test_http_scheduler_partial_cycle_records_real_http_failure",
+              "test_http_scheduler_rejects_missing_and_wrong_authorization",
+              "test_http_scheduler_valid_token_runs_one_cycle_and_ignores_body",
+              "test_missing_authorization_is_unauthorized",
+              "test_missing_server_token_fails_closed",
+              "test_scheduler_delivery_overview_exposes_recent_failed_delivery"
+            ]
+          },
+          {
+            "learning_score": 4,
+            "matched_terms": [
+              "offline"
+            ],
+            "path": "src/ai_trading/kronos_research.py",
+            "reasons": [
+              "learning",
+              "search-index"
+            ],
+            "score": 21,
+            "symbols": [
+              "ForecastPredictor",
+              "ResearchConfig",
+              "__post_init__",
+              "_bootstrap_lower",
+              "_net_return",
+              "_river_predictions",
+              "_side",
+              "evaluate_walk_forward",
+              "load_predictor",
+              "main",
+              "predict",
+              "validate_market"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "offline"
+            ],
+            "path": "src/ai_trading/command_app.py",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 17,
+            "symbols": [
+              "paper_cycle",
+              "turnover_study"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "offline progress",
+        "terms": [
+          "offline",
+          "progress"
+        ]
+      },
+      "task": "offline progress"
+    },
     "e5c6a41c258733364dabfbc7a794475d58903376e25084af2609e93fbac6ecb6": {
       "route": {
         "budget": {
@@ -16334,6 +16125,92 @@
             "learning_score": 0,
             "matched_terms": [],
             "path": ".github/workflows/hosted-dashboard-probe.yml",
+            "reasons": [
+              "recently-changed"
+            ],
+            "score": 3,
+            "symbols": []
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "privacy consent",
+        "terms": [
+          "privacy",
+          "consent"
+        ]
+      },
+      "task": "privacy consent"
+    },
+    "e8dc0ec4ae1a5fc46e1c570647741a8ef0a3318cc35db8e94cc31866cee11330": {
+      "route": {
+        "budget": {
+          "confidence": "low",
+          "expand_to": 12,
+          "max_files": 6,
+          "requested_max_files": 12,
+          "score_margin": 0,
+          "tier": "broad",
+          "top_score": 9
+        },
+        "candidate_count": 3,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "src/ai_trading/forward_paper_signal.py",
+            "reasons": [
+              "impact",
+              "recently-changed"
+            ],
+            "score": 9,
+            "symbols": [
+              "_next_future_open",
+              "_read_dashboard_json",
+              "_utc",
+              "_write_archive",
+              "build_forward_paper_observation",
+              "main",
+              "verify_forward_paper_archive"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "tests/test_dashboard_health.py",
+            "reasons": [
+              "impact",
+              "recently-changed"
+            ],
+            "score": 9,
+            "symbols": [
+              "FakeResponse",
+              "__enter__",
+              "__exit__",
+              "_forward_observed_market",
+              "_free_port",
+              "_get",
+              "_start_dashboard",
+              "fail_request",
+              "fake_probe",
+              "fake_urlopen",
+              "read",
+              "test_api_status_reports_stale_worker_without_hiding_web_health",
+              "test_dashboard_marks_expired_worker_heartbeat_stale",
+              "test_external_probe_checks_live_ready_and_all_markets",
+              "test_external_probe_reports_connection_errors_without_exposing_details",
+              "test_external_scheduler_readiness_detects_missing_configuration",
+              "test_forward_observer_excludes_approved_flat_instead_of_archiving_invalid_signal",
+              "test_forward_paper_failed_source_is_auditable_without_fake_forecasts",
+              "test_forward_paper_observer_rejects_stale_paper_signals_and_missing_markets",
+              "test_forward_paper_signal_timestamp_is_strictly_before_future_entry"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [],
+            "path": "research/mtf-prospective-evaluation-method.md",
             "reasons": [
               "recently-changed"
             ],
@@ -17310,11 +17187,6 @@
   },
   "generated_by": "dbrckk/repo-brain-query-cache-v2",
   "order": [
-    "60ae4d5c14af46b6cfc0d8b9f0289a40aa688ffff892b77a4bdb6b0c6c8df2ef",
-    "28c9c61a6ee385b5df431a97c371b1c26fb21e4a88d947cb87fed9e25fba9922",
-    "8a584d686eb315e7199525daa9807054d440a2c0b28b73189ad017e0bca3e2a6",
-    "7757da5cfd4e923f3947c5484a80ecde86b1bfeffa638c2c20020ad37464c0d0",
-    "c866289a9d7def9da4165f8c05da9f799efa6937a61703b90667ccecc1f6feba",
     "2cd1361acc215d188e2c8ee719f98f38716ddb0d5530cbc1a9f7c3f36b7aaaf1",
     "56ad770daa989db72a8b0a4de2a1fd32e58cd44c143e1ab73a179eeb5bb243d6",
     "c6d447fb64b222b38cb120fc696317bae2c21e45758a6a9598d00d3b1be45f9d",
@@ -17437,7 +17309,12 @@
     "7c3b0cf5d025d18c4551d8aacd13890606e15806e42ea01854bf88934a26609d",
     "38ad66b98b59564b84935e94ee4eda91559f0076c573a58e000a3c2203b07620",
     "839f66cf70c8a5245373c92c244c609311c25497579a8906cbf18e92f1a3996c",
-    "83f1d52f0fb019dc2efb17dd362bbce6abf3b688a03974d5c278b79ef6940fc3"
+    "83f1d52f0fb019dc2efb17dd362bbce6abf3b688a03974d5c278b79ef6940fc3",
+    "0bc196f90a293de6d94114dd4edc23f2148958e43c8196d4f8abced4225f8400",
+    "9ec1d6b0463b697f783c90890f0c89a97a954b8d42f9e5c0da4641ec7da39fd7",
+    "e8dc0ec4ae1a5fc46e1c570647741a8ef0a3318cc35db8e94cc31866cee11330",
+    "e549f0eac59fda6f40584b2571714c56b61eaeb52e042d1e4e81677dc562cf01",
+    "a3fa179e8e922e29830c817c3fd8eff0e96aa1e31eb6113ca1ba194ec5349ca0"
   ],
   "schema_version": 1
 }

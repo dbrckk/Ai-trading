@@ -4450,6 +4450,7 @@ A River-v1 observation does not constitute a frozen MTF model prediction.
 """
 ⋮----
 _START_UTC = datetime(2026, 10, 26, tzinfo=UTC)
+_END_UTC = datetime(2027, 1, 24, tzinfo=UTC)
 _BASE_URL = "https://ai-trading-dashboard-qyr2.onrender.com"
 _MARKETS = ("GC=F", "^GDAXI", "BTC-USD")
 _SIDES = {"LONG": 1, "FLAT": 0, "SHORT": -1}
@@ -4509,6 +4510,9 @@ score_valid = (
 model_checksum = model.get("checksum")
 model_valid = (
 eligible = (
+# Forecast eligibility does not mean that a paper order was approved.
+# Rejected and FLAT predictions must never inflate trade counts.
+paper_entry_eligible = bool(
 ⋮----
 def _write_archive(target: Path, record: dict[str, object]) -> None
 ⋮----
@@ -4525,10 +4529,13 @@ markets = payload.get("markets")
 ⋮----
 expected_entry = _next_future_open(timestamp).isoformat()
 eligible = 0
+paper_entries = 0
 ⋮----
 state = item["source_signal_state"]
 ⋮----
 signal_time = _utc(datetime.fromisoformat(item["source_signal_time_utc"]))
+⋮----
+paper_entry = (
 ⋮----
 def main() -> int
 ⋮----

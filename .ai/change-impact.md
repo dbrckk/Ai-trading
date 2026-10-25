@@ -1,13 +1,15 @@
 # Change impact
 
-Base: 9e335789831ac953c47eabe0e2a0bb04c2036094
-Head: 71ad578cd8f931fde89af3d96bc3d80b69a0b5b1
+Base: 0d0a923f278f036f892b304632940ff836e651c7
+Head: 175dde029cebcb98bb4d713a017a445ee2f38049
 
 ## Changed files
+- M research/mtf-prospective-evaluation-method.md
 - M src/ai_trading/forward_paper_signal.py
 - M tests/test_dashboard_health.py
 
 ## Affected areas
+- research
 - src
 - tests
 

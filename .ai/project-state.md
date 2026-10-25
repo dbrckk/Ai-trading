@@ -148,22 +148,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-25T11:29:13Z
+Generated: 2026-10-25T11:42:10Z
 
 ### Git
 - Branch: `main`
-- Head: `71ad578cd8f9`
-- Commit date: 2026-10-25T07:29:02-04:00
-- Commit: fix(research): reject approved FLAT signal from forward observer (#222)
+- Head: `175dde029ceb`
+- Commit date: 2026-10-25T07:42:00-04:00
+- Commit: fix(research): separate future forecasts from approved paper entries (#223)
 - Tracked files: 528
 
 ### Recently changed files
+- `research/mtf-prospective-evaluation-method.md`
 - `src/ai_trading/forward_paper_signal.py`
 - `tests/test_dashboard_health.py`
 - `.github/workflows/forward-paper-signal-evidence.yml`
 - `research/forward-paper-signal-operations.md`
 - `research/mtf-prospective-evaluation-2026-10-26-v1.json`
-- `research/mtf-prospective-evaluation-method.md`
 - `.github/workflows/mtf-prospective-capture.yml`
 - `research/mtf-prospective-capture-operations.md`
 - `src/ai_trading/prospective_capture.py`
