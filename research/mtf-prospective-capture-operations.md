@@ -19,7 +19,7 @@ This is a **pre-observation operations fix**, not a strategy-selection or perfor
 
 ## Expected audit behavior
 
-An exchange holiday can leave only earlier completed DAX candles within the retained 5-day retrieval window. The collector records those historical-within-study bars without claiming a same-day cash session; reviewers must inspect the per-market last timestamp and detect holidays and calendar gaps independently. Missing or invalid provider data, or a truly empty future-only dataset for any required market, must instead produce a diagnostic manifest and a failed all-market capture. No exchange-calendar freshness gate is implemented. A green archived snapshot confirms valid collected data under these checks, **not** economic value, real fill quality or live-trading readiness.
+An exchange holiday can leave only earlier completed DAX candles within the retained 5-day retrieval window. The collector records those historical-within-study bars without claiming a same-day cash session; reviewers must inspect the per-market last timestamp and detect holidays and calendar gaps independently. Missing or invalid provider data, or a truly empty future-only dataset for any required market, must instead produce a diagnostic manifest and a failed all-market capture. No exchange-calendar validator is implemented; the UTC same-day source-freshness guard is documented below. A green archived snapshot confirms valid collected data under these checks, **not** economic value, real fill quality or live-trading readiness.
 
 ## Same-day freshness guard (pre-cutoff)
 
