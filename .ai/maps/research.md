@@ -39,6 +39,7 @@ The content is organized as follows:
 # Directory Structure
 ```
 mtf-prospective-2026-10-26-v1.json
+mtf-prospective-evaluation-2026-10-26-v1.json
 ```
 
 # Files
@@ -106,5 +107,116 @@ mtf-prospective-2026-10-26-v1.json
     "asset_currency_and_contract_multipliers_not_modeled"
   ],
   "live_broker_enabled": false
+}
+```
+
+## File: mtf-prospective-evaluation-2026-10-26-v1.json
+```json
+{
+  "schema_version": 1,
+  "study_id": "mtf-prospective-evaluation-2026-10-26-v1",
+  "registered_utc_date": "2026-10-25",
+  "linked_capture_study_id": "mtf-prospective-2026-10-26-v1",
+  "linked_capture_registration_sha256": "7b8870cce74d7941ed6e3f3c33e0829cd28b2d92f32d11ab5ca8309daf48b096",
+  "observation_start_utc": "2026-10-26T00:00:00+00:00",
+  "evaluation_end_exclusive_utc": "2027-01-24T00:00:00+00:00",
+  "symbols": [
+    "GC=F",
+    "^GDAXI",
+    "BTC-USD"
+  ],
+  "fixed_comparators": [
+    {
+      "horizon_bars": 9,
+      "minimum_threshold": 0.0005,
+      "atr_multiplier": 0.25,
+      "max_train_rows": 1000,
+      "min_confidence": 0.56
+    },
+    {
+      "horizon_bars": 9,
+      "minimum_threshold": 0.0005,
+      "atr_multiplier": 0.25,
+      "max_train_rows": 1000,
+      "min_confidence": 0.6
+    },
+    {
+      "horizon_bars": 18,
+      "minimum_threshold": 0.0003,
+      "atr_multiplier": 0.15,
+      "max_train_rows": 1000,
+      "min_confidence": 0.6
+    }
+  ],
+  "study_objectives": [
+    "audit_capture_integrity_and_temporal_continuity",
+    "assess_frozen_comparators_only_if_genuine_pre_outcome_predictions_exist",
+    "avoid_retrospective_selection_or_promotion"
+  ],
+  "evaluation_data_requirements": {
+    "archive_provenance": "registration_hash_and_independent_ohlcv_rehash_verified",
+    "bars": "5m_adjusted_ohlcv_acquired_after_completion_lag",
+    "minimum_completed_bars_per_symbol": 2000,
+    "minimum_distinct_utc_capture_dates_per_symbol": 20,
+    "predictions": "durably_timestamped_before_next_bar_entry_and_before_horizon_outcome",
+    "minimum_matured_predictions_per_symbol": 500,
+    "minimum_nonoverlapping_hypothetical_trades_per_symbol": 30,
+    "complete_market_coverage_required": true,
+    "missing_or_revised_bars": "report_explicitly_no_silent_backfill_or_unlabeled_revisions",
+    "provider_session_gaps": "report_separately_from_bad_or_missing_market_data"
+  },
+  "primary_readouts": [
+    "net_return_per_market_after_frozen_assumed_costs",
+    "shared_capital_net_return_after_costs",
+    "shared_capital_max_drawdown",
+    "nonoverlapping_trade_count_and_market_coverage"
+  ],
+  "secondary_readouts": [
+    "directional_accuracy",
+    "active_signal_precision",
+    "brier_score",
+    "market_data_revision_and_gap_rate"
+  ],
+  "paper_execution_assumptions": {
+    "transaction_cost_bps_per_side": 2,
+    "slippage_bps_per_side": 1,
+    "entry_price": "next_5m_bar_open_only_after_pre_outcome_signal",
+    "exit_price": "horizon_bar_close",
+    "no_overlapping_positions_within_market": true,
+    "starting_paper_cash": 100000,
+    "per_market_target_notional_fraction": 0.1,
+    "shared_gross_exposure_limit_fraction": 0.3,
+    "position_size_definition": "normalized_price_proxy_not_broker_contract_notional",
+    "currency_conversion_funding_spread_market_impact_and_contract_multipliers": "not_modeled_not_live_eligible"
+  },
+  "review_gates": {
+    "requires_all_three_market_data_quality": true,
+    "requires_contemporaneous_prehorizon_prediction_evidence": true,
+    "requires_positive_after_costs_result_in_each_market": true,
+    "requires_positive_after_costs_shared_portfolio": true,
+    "requires_complete_90_calendar_day_window": true,
+    "allows_live_broker_activation": false,
+    "allows_automatic_model_promotion": false,
+    "consequence_if_gate_fails": "inconclusive_or_negative_no_promotion"
+  },
+  "invalid_evidence": [
+    "predictions_reconstructed_after_target_maturity",
+    "selection_on_prospective_observations",
+    "model_fitted_or_tuned_using_archived_prospective_bars",
+    "historical_walk_forward_replay_relabelled_as_forward_logged",
+    "ohlcv_only_claimed_as_predictive_model_performance",
+    "unverified_or_missing_archives",
+    "provider_revisions_silently_overwritten"
+  ],
+  "operational_constraints": {
+    "capture_registration_unchanged": true,
+    "capture_is_data_only": true,
+    "retention_days_for_github_actions_artifacts": 90,
+    "long_term_artifact_persistence": "not_established_must_verify_before_final_review",
+    "paper_only": true,
+    "live_broker_enabled": false
+  },
+  "decision_status": "no_comparator_promoted; no_prior_historical_candidate_qualified",
+  "protocol_changes": "versioned_new_study_only_never_rewrite_this_pre_observation_registration"
 }
 ```

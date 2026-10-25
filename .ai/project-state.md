@@ -148,23 +148,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-25T07:06:02Z
+Generated: 2026-10-25T07:09:51Z
 
 ### Git
 - Branch: `main`
-- Head: `d9d96b0265c0`
-- Commit date: 2026-10-25T03:05:51-04:00
-- Commit: fix(research): reject stale same-day prospective capture sources (#219)
-- Tracked files: 523
+- Head: `daedc1274ed2`
+- Commit date: 2026-10-25T03:09:41-04:00
+- Commit: research: freeze prospective MTF evaluation protocol before first bars (#220)
+- Tracked files: 525
 
 ### Recently changed files
+- `research/mtf-prospective-evaluation-2026-10-26-v1.json`
+- `research/mtf-prospective-evaluation-method.md`
 - `.github/workflows/mtf-prospective-capture.yml`
 - `research/mtf-prospective-capture-operations.md`
 - `src/ai_trading/prospective_capture.py`
 - `tests/test_dataset_evidence.py`
-- `.github/workflows/hosted-dashboard-probe.yml`
-- `src/ai_trading/deployment_probe.py`
-- `tests/test_dashboard_health.py`
 
 ### Project signals
 - `pyproject.toml`

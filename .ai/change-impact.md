@@ -1,19 +1,14 @@
 # Change impact
 
-Base: dd28a45af676cd6b692a6b098dd5de3b97ee3f30
-Head: d9d96b0265c09939db8720ad0a991490585b0505
+Base: 6d257357200ff86034a9a57491c68eb89a98ce7c
+Head: daedc1274ed21b3ab1f9c2785760e9178bffe66c
 
 ## Changed files
-- M .github/workflows/mtf-prospective-capture.yml
-- M research/mtf-prospective-capture-operations.md
-- M src/ai_trading/prospective_capture.py
-- M tests/test_dataset_evidence.py
+- A research/mtf-prospective-evaluation-2026-10-26-v1.json
+- A research/mtf-prospective-evaluation-method.md
 
 ## Affected areas
-- .github
 - research
-- src
-- tests
 
 ## Related test candidates
 - No direct filename-based test match detected.
