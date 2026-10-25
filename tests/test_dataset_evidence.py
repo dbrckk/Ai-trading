@@ -258,7 +258,10 @@ def test_prospective_capture_only_reports_success_with_three_hashed_future_marke
     )
     assert manifest["all_markets_acquired"] is True
     assert manifest["completed_market_count"] == 3
+    assert manifest["same_day_market_count"] == 3
     for item in manifest["market_status"].values():
+        assert item["has_same_day_bar"] is True
+        assert item["latest_bar_utc"] == "2026-10-26T00:10:00+00:00"
         assert item["status"] == "completed_bars_captured"
         assert item["rows"] == 3
         assert len(item["dataset_sha256"]) == 64
@@ -357,4 +360,33 @@ def test_prospective_archive_requires_frozen_registration_hash(
     manifest["registration_sha256"] = "0" * 64
     manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
     with pytest.raises(ValueError, match="registration or study identity"):
+        verify_capture_archive(tmp_path)
+
+
+def test_prospective_daily_capture_rejects_stale_but_valid_source(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        "ai_trading.prospective_capture.load_history",
+        lambda symbol, **kwargs: _prospective_sample(),
+    )
+    manifest = collect_prospective_bars(
+        Path("research/mtf-prospective-2026-10-26-v1.json"),
+        tmp_path,
+        acquired_at_utc=datetime(2026, 10, 27, 18, 31, tzinfo=UTC),
+    )
+    assert manifest["completed_market_count"] == 3
+    assert manifest["same_day_market_count"] == 0
+    assert manifest["all_markets_acquired"] is False
+    for status in manifest["market_status"].values():
+        assert status["rows"] > 0
+        assert len(status["dataset_sha256"]) == 64
+        assert status["has_same_day_bar"] is False
+        assert status["latest_bar_utc"].startswith("2026-10-26T")
+    # Stale observations remain independently verifiable rather than discarded.
+    verify_capture_archive(tmp_path)
+
+    manifest_path = tmp_path / "manifest.json"
+    tampered = json.loads(manifest_path.read_text(encoding="utf-8"))
+    tampered["market_status"]["GC=F"]["has_same_day_bar"] = True
+    manifest_path.write_text(json.dumps(tampered), encoding="utf-8")
+    with pytest.raises(ValueError, match="freshness evidence mismatch"):
         verify_capture_archive(tmp_path)

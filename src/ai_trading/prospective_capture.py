@@ -215,6 +215,12 @@ def collect_prospective_bars(
         _dump(snapshot_path, result)
         evidence = result["dataset_evidence"]
         bars = result["bars"]
+        latest_bar_utc = bars[-1][0] if bars else None
+        has_same_day_bar = bool(
+            latest_bar_utc is not None
+            and _as_utc(datetime.fromisoformat(latest_bar_utc)).date()
+            == acquired.date()
+        )
         # A successful HTTP response may contain only earlier candles or
         # no completed future observations (e.g. on a closed market).
         # Keep an auditable empty snapshot, but never report acquisition as
@@ -225,6 +231,8 @@ def collect_prospective_bars(
             "dataset_sha256": evidence["data_hash"] if evidence else None,
             "file": snapshot_path.name,
             "file_sha256": sha256(snapshot_path.read_bytes()).hexdigest(),
+            "latest_bar_utc": latest_bar_utc,
+            "has_same_day_bar": has_same_day_bar,
         }
     manifest["market_status"] = statuses
     manifest["completed_market_count"] = sum(
@@ -237,8 +245,17 @@ def collect_prospective_bars(
         and len(item["dataset_sha256"]) == 64
         for item in statuses.values()
     )
+    # The 5-day provider window can contain only old sessions, so a valid
+    # nonempty post-cutoff dataset does not prove a fresh daily acquisition.
+    # On exchange holidays or stale feeds, archive what exists but fail
+    # closed rather than reporting all markets newly collected.
+    manifest["same_day_market_count"] = sum(
+        isinstance(item, dict) and item.get("has_same_day_bar") is True
+        for item in statuses.values()
+    )
     manifest["all_markets_acquired"] = (
         manifest["completed_market_count"] == len(_SYMBOL_FILES)
+        and manifest["same_day_market_count"] == len(_SYMBOL_FILES)
     )
     _dump(output_dir / "manifest.json", manifest)
     return manifest
@@ -268,6 +285,7 @@ def verify_capture_archive(output_dir: Path) -> None:
     if not isinstance(statuses, dict) or set(statuses) != set(_SYMBOL_FILES):
         raise ValueError("incomplete prospective market manifest")
     complete = 0
+    same_day = 0
     for symbol, prefix in _SYMBOL_FILES.items():
         status = statuses[symbol]
         if status in ("awaiting_future_completed_bars", "source_or_validation_failure"):
@@ -295,6 +313,19 @@ def verify_capture_archive(output_dir: Path) -> None:
             raise ValueError("invalid prospective OHLCV row shape")
         if len(bars) != status.get("rows"):
             raise ValueError("prospective archive row count mismatch")
+        latest_bar_utc = bars[-1][0] if bars else None
+        has_same_day_bar = bool(
+            latest_bar_utc is not None
+            and _as_utc(datetime.fromisoformat(latest_bar_utc)).date()
+            == acquired.date()
+        )
+        if (
+            status.get("latest_bar_utc") != latest_bar_utc
+            or status.get("has_same_day_bar") is not has_same_day_bar
+        ):
+            raise ValueError("prospective market freshness evidence mismatch")
+        if has_same_day_bar:
+            same_day += 1
 
         index = pd.DatetimeIndex([datetime.fromisoformat(bar[0]) for bar in bars])
         if not bars:
@@ -325,7 +356,11 @@ def verify_capture_archive(output_dir: Path) -> None:
             raise ValueError("empty prospective archive status mismatch")
     if manifest.get("completed_market_count") != complete:
         raise ValueError("prospective completed market count mismatch")
-    if manifest.get("all_markets_acquired") is not (complete == len(_SYMBOL_FILES)):
+    if manifest.get("same_day_market_count") != same_day:
+        raise ValueError("prospective same-day market count mismatch")
+    if manifest.get("all_markets_acquired") is not (
+        complete == len(_SYMBOL_FILES) and same_day == len(_SYMBOL_FILES)
+    ):
         raise ValueError("prospective acquisition flag mismatch")
 
 
