@@ -25,18 +25,32 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 4
     steps:
+      - name: Check preregistered research window
+        id: window
+        run: |
+          end_epoch="$(date -u -d '2027-01-24T00:00:00Z' +%s)"
+          current_epoch="$(date -u +%s)"
+          if [ "$current_epoch" -lt "$end_epoch" ]; then
+            echo "active=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "active=false" >> "$GITHUB_OUTPUT"
+            echo "Prospective audit window ended; collection disabled."
+          fi
       - uses: actions/checkout@v7
+        if: steps.window.outputs.active == 'true'
       - uses: actions/setup-python@v7
+        if: steps.window.outputs.active == 'true'
         with:
           python-version: "3.11"
       - name: Capture only public paper signals after frozen cutoff
+        if: steps.window.outputs.active == 'true'
         env:
           PYTHONPATH: src
         run: >-
           python -m ai_trading.forward_paper_signal
           --output-dir artifacts/forward-paper-signals
       - name: Independently validate the saved forward observation
-        if: always()
+        if: always() && steps.window.outputs.active == 'true'
         env:
           PYTHONPATH: src
         run: >-
@@ -44,7 +58,7 @@ jobs:
           --verify-only
           --output-dir artifacts/forward-paper-signals
       - name: Save original time-stamped GitHub run evidence
-        if: always()
+        if: always() && steps.window.outputs.active == 'true'
         uses: actions/upload-artifact@v7
         with:
           name: forward-paper-${{ github.run_id }}-${{ github.run_attempt }}
