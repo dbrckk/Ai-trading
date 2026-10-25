@@ -143,7 +143,7 @@ def build_forward_paper_observation(
             and valid_source_time
             and isinstance(item.get("risk_approved"), bool)
             and (
-                (status == "PAPER_APPROVED" and item["risk_approved"])
+                (status == "PAPER_APPROVED" and item["risk_approved"] and side_label != "FLAT")
                 or (status == "RISK_REJECTED" and not item["risk_approved"])
                 or (status == "NO_TRADE" and side_label == "FLAT")
             )
