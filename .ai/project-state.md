@@ -148,26 +148,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-25T11:42:10Z
+Generated: 2026-10-25T11:48:23Z
 
 ### Git
 - Branch: `main`
-- Head: `175dde029ceb`
-- Commit date: 2026-10-25T07:42:00-04:00
-- Commit: fix(research): separate future forecasts from approved paper entries (#223)
+- Head: `bd7716b3d724`
+- Commit date: 2026-10-25T07:48:13-04:00
+- Commit: research: sample paper signals twice per hour before observation window (#224)
 - Tracked files: 528
 
 ### Recently changed files
+- `.github/workflows/forward-paper-signal-evidence.yml`
 - `research/mtf-prospective-evaluation-method.md`
 - `src/ai_trading/forward_paper_signal.py`
 - `tests/test_dashboard_health.py`
-- `.github/workflows/forward-paper-signal-evidence.yml`
 - `research/forward-paper-signal-operations.md`
 - `research/mtf-prospective-evaluation-2026-10-26-v1.json`
-- `.github/workflows/mtf-prospective-capture.yml`
-- `research/mtf-prospective-capture-operations.md`
-- `src/ai_trading/prospective_capture.py`
-- `tests/test_dataset_evidence.py`
 
 ### Project signals
 - `pyproject.toml`

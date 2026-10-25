@@ -648,10 +648,10 @@ jobs:
 name: Forward Paper Signal Evidence
 
 on:
-  # Read-only observer runs hourly. GitHub scheduling is best-effort and can
-  # delay or skip runs; never reconstruct missed forecasts retrospectively.
+  # Twice-hourly read-only sampling improves sparse cash-session coverage.
+  # Scheduled jobs are best-effort; never reconstruct missed forecasts.
   schedule:
-    - cron: "7 * * * *"
+    - cron: "7,37 * * * *"
   workflow_dispatch:
   push:
     branches: ["main"]
