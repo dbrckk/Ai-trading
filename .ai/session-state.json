@@ -4,9 +4,9 @@
   "base_branch": "main",
   "active_branch": "main",
   "pull_request": null,
-  "focus": "2026-10-24 PR #214 merged 13174c5: prospective Gold/DAX/BTC 5m OHLCV provider captures now reject impossible candles/off-grid timestamps and require nonempty fingerprinted post-cutoff market data; PR CI/CodeQL plus pre-cutoff smoke 40081693532 (artifact 12555332728) green and ZERO future observations acquired as expected. PR #215 merged 59207a7: hosted probe now tolerates only transient subset/all STARTING by three additional READ-ONLY market GETs separated by 15s; persistent STARTING, ERROR, STALE or storage failure still fail. Full PR CI/CodeQL plus actual Hosted Dashboard Probe 40082423335 green. Most recent main post-merge checks pending; exact Render deployed SHA not verified. Frozen prospective cutoff 2026-10-26 00:00 UTC unchanged; no future OOS profit evidence. River-v1 paper decisions/risk unchanged, live broker OFF. Read-only Render check 2026-10-24 ~09:35 UTC: /livez reports deployed SHA 13174c5 (PR #214 deployed, PR #215 later GitHub main not yet confirmed deployed), /readyz healthy, all 3 paper markets RUNNING/0 errors and portfolio complete. Cloudflare latest HTTP200 fresh, only one consecutive success; ongoing scheduler stability unproven.",
+  "focus": "2026-10-25 pre-cutoff: PR #219 (same-UTC-day source freshness), #220 (90-day frozen evaluation protocol), #221 (separate time-stamped River-v1 forward read-only observer), #222 (reject approved FLAT), #223 (separate time-valid forecasts from paper-approved hypothetical entries and enforce 2027-01-24 study end), and #224 (sampling every 30 minutes at UTC :07/:37) merged into main with green PR CI and CodeQL. Main forward observer pre-cutoff smoke 40190393699 passed artifact verification, but no future OHLCV or genuine prospective economic performance yet. Latest direct read-only Render probe saw deployed SHA bd7716b (PR #224 runtime deployed), three paper markets RUNNING/0 errors, storage ready, 20 confirmed Cloudflare delivery successes as of 2026-10-25T11:46:00Z. Frozen MTF OHLCV source registration SHA unchanged; forward River-v1 observation is NOT a frozen MTF prediction. Public GitHub Actions retention 90 days; Yahoo terms prohibit public data redistribution. Private durable preservation remains unresolved. Live broker OFF; no strategy promotion.",
   "production_evidence": {
-    "main_head": "a02c2a6c9c11044a33c1c7694891c29250c8d785",
+    "main_head": "5f5613aa221cecdf26ffc10389f11cd8592720ec",
     "render_shadow_challenger_enabled": true,
     "render_markets": "GC=F,^GDAXI,BTC-USD",
     "gold": {
@@ -51,8 +51,10 @@
       }
     },
     "latest_public_probe": {
-      "checked_on": "2026-10-21",
-      "deployed_commit": "unknown_in_latest_strict_probe",
+      "checked_on": "2026-10-25",
+      "verification_time_utc": "2026-10-25T11:46:00+00:00",
+      "deployed_commit": "bd7716b3d7242fcd160b590514b50f24374e9968",
+      "github_main_at_preflight": "5f5613aa221cecdf26ffc10389f11cd8592720ec",
       "web_healthy": true,
       "storage_ready": true,
       "market_statuses_at_probe": {
@@ -65,22 +67,13 @@
         "^GDAXI": 0,
         "BTC-USD": 0
       },
-      "processed_bars": {
-        "GC=F": 517,
-        "^GDAXI": 205,
-        "BTC-USD": 539
-      },
-      "river_v2_status": "disabled",
-      "river_v2_matured": 0,
-      "scheduler_last_confirmed_success_utc": "2026-10-21T16:31:24.159510+00:00",
+      "scheduler_last_confirmed_success_utc": "2026-10-25T11:46:00.998080+00:00",
       "scheduler_recent_successes": 20,
-      "portfolio_paper_trade_count": 8,
-      "portfolio_realized_pnl": -0.5748106341489922,
-      "note": "Strong current read-only external evidence three Gold/DAX/BTC motors RUNNING and zero consecutive errors as of 18:10:56Z, verified by strict post-merge workflow 39650367492. It did not request --expected-sha and therefore cannot verify the Render deployed commit. Earlier directly observed SHA 59e1610b belongs to prior probe, not this run. Keep v2 off by default; no profitability demonstrated.",
-      "verification_source": "GitHub Actions strict Hosted Dashboard Probe run 39650367492; proof in log (PASS /livez, PASS /readyz, PASS /api/markets: three_markets_running)",
-      "verification_time_utc": "2026-10-21T18:10:56Z",
+      "cloudflare_delivery_verified": true,
       "strict_three_market_running_verified": true,
-      "deployed_commit_verified": false
+      "deployed_commit_verified": true,
+      "deployed_commit_matches_latest_main": false,
+      "note": "Exact deployed PR #224 runtime SHA read from public /livez, all paper engines RUNNING/zero errors, 20 verified scheduler successes; later main includes context-only commits. This is not proof of profitability or frozen MTF prospective forecasts."
     },
     "latest_github_strict_probe": {
       "checked_on": "2026-10-21",
@@ -450,9 +443,9 @@
     "signal_is_live_order": false
   },
   "next_actions": [
-    "Verify current main CI/CodeQL and new hosted Render /livez deployed SHA after PR #215; PR merge alone is not proof of release.",
-    "Check whether latest Cloudflare scheduler deliveries reach >=3 consecutive valid successes and whether all paper markets remain RUNNING; last public check had one consecutive successful delivery.",
-    "After frozen UTC 2026-10-26 cutoff, validate scheduled 02:31 UTC Prospective MTF capture manifest against nonempty datasets, 5m grids, 15min close lag and source hashes; empty/market-closed runs should fail with diagnostic evidence.",
-    "Do not select/tune any strategy on the prospective observations; pre-register evaluation horizon and holdout comparison before assessing net profitability. Maintain River-v1 paper authority and live broker OFF."
+    "After 2026-10-26T00:00Z, verify the first 18:31 UTC Gold/DAX/BTC 5m prospective capture, its frozen registration SHA, completed +15m lag, per-market same-day/source hashes, and independent verifier; treat closed/empty source failures explicitly rather than marking full acquisition.",
+    "Verify scheduled UTC :07/:37 read-only River-v1 observer artifacts after cutoff. Distinguish time-valid predictions, approved hypothetical entries and actual broker fills (NONE). Do not present River-v1 predictions as predictions by the frozen MTF comparators.",
+    "Resolve legally permitted private long-term storage for original price archives before GitHub's 90-day expiry; never redistribute raw Yahoo OHLCV publicly. Without durable source artifacts and genuinely pre-outcome MTF forecasts, keep assessment inconclusive.",
+    "Read-only check latest GitHub CI/CodeQL, Render /livez exact deployed SHA, /readyz, three RUNNING market states and verified Cloudflare scheduler streak. Maintain River-v1 paper, unchanged risk parameters and live broker OFF; do not tune/promote on prospective observations."
   ]
 }
