@@ -205,6 +205,7 @@ def verify_forward_paper_archive(target: Path) -> None:
         or payload.get("orders_or_promotions_executed") is not False
         or payload.get("frozen_mtf_comparators_evaluated") is not False
         or payload.get("performance_claim_validated") is not False
+        or payload.get("linked_study_start_utc") != _START_UTC.isoformat()
     ):
         raise ValueError("invalid forward paper research scope")
     timestamp = _utc(datetime.fromisoformat(payload["observed_at_utc"]))
@@ -212,6 +213,12 @@ def verify_forward_paper_archive(target: Path) -> None:
         if payload.get("status") != "awaiting_cutoff" or payload.get("markets") != []:
             raise ValueError("invalid pre-cutoff forward archive")
         return
+    for field, length in (("deployed_commit", 40),
+                          ("market_response_sha256", 64),
+                          ("liveness_response_sha256", 64)):
+        value = payload.get(field)
+        if not isinstance(value, str) or len(value) != length:
+            raise ValueError("invalid forward paper source fingerprint")
     markets = payload.get("markets")
     if not isinstance(markets, list) or len(markets) != len(_MARKETS):
         raise ValueError("missing forward paper market observation")
@@ -228,6 +235,24 @@ def verify_forward_paper_archive(target: Path) -> None:
             raise ValueError("unexpected forward paper execution")
         if item.get("future_observation_eligible") is True:
             if (
+                item.get("source_freshness") != "LIVE"
+                or item.get("source_engine_status") != "RUNNING"
+                or item.get("source_signal_state") not in _STATES
+                or not isinstance(item.get("model_checksum_prefix"), str)
+                or len(item["model_checksum_prefix"]) < 10
+                or item.get("model_checksum_is_truncated") is not True
+                or not isinstance(item.get("risk_approved"), bool)
+            ):
+                raise ValueError("unverified forward paper source status")
+            state = item["source_signal_state"]
+            if not (
+                (state == "PAPER_APPROVED" and item["risk_approved"]
+                 and item.get("signal") != "FLAT")
+                or (state == "RISK_REJECTED" and not item["risk_approved"])
+                or (state == "NO_TRADE" and item.get("signal") == "FLAT")
+            ):
+                raise ValueError("forward paper risk state mismatch")
+            if (
                 item.get("signal") not in _SIDES
                 or not isinstance(item.get("confidence"), (int, float))
                 or isinstance(item.get("confidence"), bool)
@@ -239,6 +264,8 @@ def verify_forward_paper_archive(target: Path) -> None:
             if not timedelta(0) <= timestamp - signal_time <= _MAX_SIGNAL_AGE:
                 raise ValueError("paper observation signal is not fresh")
             eligible += 1
+        elif item.get("future_observation_eligible") is not False:
+            raise ValueError("invalid forward paper eligibility flag")
         elif item.get("signal") is not None or item.get("confidence") is not None:
             raise ValueError("ineligible market must not carry a tradable signal")
     if payload.get("eligible_markets") != eligible:
