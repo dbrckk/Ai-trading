@@ -57,7 +57,7 @@ def _read_dashboard_json(path: str) -> tuple[dict[str, object], str]:
         raise ValueError("dashboard observation exceeds permitted size")
     data = json.loads(raw)
     if not isinstance(data, dict):
-        raise ValueError("dashboard observation JSON must be an object")
+        raise TypeError("dashboard observation JSON must be an object")
     return data, sha256(raw).hexdigest()
 
 
