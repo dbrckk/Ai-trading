@@ -148,13 +148,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-24T17:11:30Z
+Generated: 2026-10-25T07:06:02Z
 
 ### Git
 - Branch: `main`
-- Head: `22df5505b28c`
-- Commit date: 2026-10-24T13:11:21-04:00
-- Commit: fix(research): schedule prospective capture after DAX session (#218)
+- Head: `d9d96b0265c0`
+- Commit date: 2026-10-25T03:05:51-04:00
+- Commit: fix(research): reject stale same-day prospective capture sources (#219)
 - Tracked files: 523
 
 ### Recently changed files

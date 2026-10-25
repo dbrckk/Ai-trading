@@ -6529,10 +6529,17 @@ snapshot_path = output_dir / f"{file_name}.json"
 ⋮----
 evidence = result["dataset_evidence"]
 bars = result["bars"]
+latest_bar_utc = bars[-1][0] if bars else None
+has_same_day_bar = bool(
 # A successful HTTP response may contain only earlier candles or
 # no completed future observations (e.g. on a closed market).
 # Keep an auditable empty snapshot, but never report acquisition as
 # successful without a nonempty, fingerprinted future-only dataset.
+⋮----
+# The 5-day provider window can contain only old sessions, so a valid
+# nonempty post-cutoff dataset does not prove a fresh daily acquisition.
+# On exchange holidays or stale feeds, archive what exists but fail
+# closed rather than reporting all markets newly collected.
 ⋮----
 def verify_capture_archive(output_dir: Path) -> None
 ⋮----
@@ -6550,6 +6557,7 @@ acquired = _as_utc(datetime.fromisoformat(manifest["captured_at_utc"]))
 statuses = manifest.get("market_status")
 ⋮----
 complete = 0
+same_day = 0
 ⋮----
 status = statuses[symbol]
 ⋮----

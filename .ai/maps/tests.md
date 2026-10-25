@@ -1338,6 +1338,12 @@ manifest_path = tmp_path / "manifest.json"
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 ⋮----
 path = tmp_path / "btc.json"
+⋮----
+def test_prospective_daily_capture_rejects_stale_but_valid_source(tmp_path, monkeypatch)
+⋮----
+# Stale observations remain independently verifiable rather than discarded.
+⋮----
+tampered = json.loads(manifest_path.read_text(encoding="utf-8"))
 ```
 
 ## File: test_deployment_readiness.py
