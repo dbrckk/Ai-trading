@@ -18,6 +18,7 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 
 _START_UTC = datetime(2026, 10, 26, tzinfo=UTC)
+_END_UTC = datetime(2027, 1, 24, tzinfo=UTC)
 _BASE_URL = "https://ai-trading-dashboard-qyr2.onrender.com"
 _MARKETS = ("GC=F", "^GDAXI", "BTC-USD")
 _SIDES = {"LONG": 1, "FLAT": 0, "SHORT": -1}
@@ -75,8 +76,8 @@ def build_forward_paper_observation(
     5-minute entry bar starts after the observation has been captured.
     """
     observed = _utc(observed_at_utc)
-    if observed < _START_UTC:
-        raise ValueError("forward observation cannot predate study start")
+    if not _START_UTC <= observed < _END_UTC:
+        raise ValueError("forward observation outside preregistered study window")
     markets = dashboard.get("markets")
     if not isinstance(markets, list) or len(markets) != len(_MARKETS):
         raise ValueError("observer requires exactly three market records")
@@ -148,6 +149,13 @@ def build_forward_paper_observation(
                 or (status == "NO_TRADE" and side_label == "FLAT")
             )
         )
+        # Forecast eligibility does not mean that a paper order was approved.
+        # Rejected and FLAT predictions must never inflate trade counts.
+        paper_entry_eligible = bool(
+            eligible and status == "PAPER_APPROVED"
+            and item["risk_approved"] is True
+            and side_label in ("LONG", "SHORT")
+        )
         rows.append({
             "symbol": symbol,
             "source_signal_time_utc": (
@@ -163,6 +171,7 @@ def build_forward_paper_observation(
             "confidence": float(confidence) if eligible else None,
             "risk_approved": item.get("risk_approved") if eligible else None,
             "future_observation_eligible": bool(eligible),
+            "paper_entry_eligible": paper_entry_eligible,
             "earliest_hypothetical_entry_open_utc": next_open.isoformat(),
             "execution_status": "no_order_placed",
         })
@@ -178,6 +187,7 @@ def build_forward_paper_observation(
         "capture_run_id": os.getenv("GITHUB_RUN_ID", "local"),
         "markets": rows,
         "eligible_markets": sum(row["future_observation_eligible"] for row in rows),
+        "paper_entry_eligible_markets": sum(row["paper_entry_eligible"] for row in rows),
         "training_or_strategy_selection_performed": False,
         "orders_or_promotions_executed": False,
         "frozen_mtf_comparators_evaluated": False,
@@ -209,6 +219,8 @@ def verify_forward_paper_archive(target: Path) -> None:
     ):
         raise ValueError("invalid forward paper research scope")
     timestamp = _utc(datetime.fromisoformat(payload["observed_at_utc"]))
+    if timestamp >= _END_UTC:
+        raise ValueError("forward observation after study window end")
     if timestamp < _START_UTC:
         if payload.get("status") != "awaiting_cutoff" or payload.get("markets") != []:
             raise ValueError("invalid pre-cutoff forward archive")
@@ -230,6 +242,7 @@ def verify_forward_paper_archive(target: Path) -> None:
         raise ValueError("forward paper markets are incomplete or misordered")
     expected_entry = _next_future_open(timestamp).isoformat()
     eligible = 0
+    paper_entries = 0
     for item in markets:
         if item.get("earliest_hypothetical_entry_open_utc") != expected_entry:
             raise ValueError("forward paper entry timestamp is not strictly future")
@@ -272,8 +285,19 @@ def verify_forward_paper_archive(target: Path) -> None:
             raise ValueError("invalid forward paper eligibility flag")
         elif item.get("signal") is not None or item.get("confidence") is not None:
             raise ValueError("ineligible market must not carry a tradable signal")
+        paper_entry = (
+            item.get("future_observation_eligible") is True
+            and item.get("source_signal_state") == "PAPER_APPROVED"
+            and item.get("risk_approved") is True
+            and item.get("signal") in ("LONG", "SHORT")
+        )
+        if item.get("paper_entry_eligible") is not paper_entry:
+            raise ValueError("forward paper entry eligibility mismatch")
+        paper_entries += paper_entry
     if payload.get("eligible_markets") != eligible:
         raise ValueError("forward paper eligible count mismatch")
+    if payload.get("paper_entry_eligible_markets") != paper_entries:
+        raise ValueError("forward paper approved entry count mismatch")
 
 
 def main() -> int:
@@ -291,6 +315,9 @@ def main() -> int:
         print("forward paper archive verified", flush=True)
         return 0
     started = datetime.now(UTC)
+    if started >= _END_UTC:
+        print("forward paper study window finished; observer disabled", flush=True)
+        return 0
     if started < _START_UTC:
         _write_archive(path, {
             "schema_version": 1,
@@ -342,6 +369,7 @@ def main() -> int:
     print(
         "Paper forward observer: "
         f"markets={len(record['markets'])} eligible={record['eligible_markets']} "
+        f"paper_entries={record['paper_entry_eligible_markets']} "
         "(River-v1 research only, never frozen MTF evidence)",
         flush=True,
     )
