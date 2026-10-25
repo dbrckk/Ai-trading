@@ -524,3 +524,26 @@ def test_forward_paper_observer_rejects_stale_paper_signals_and_missing_markets(
             market_response_sha256="b" * 64,
             liveness_response_sha256="c" * 64,
         )
+
+
+def test_forward_paper_failed_source_is_auditable_without_fake_forecasts(tmp_path) -> None:
+    diagnostic = {
+        "schema_version": 1,
+        "capture_type": "read_only_paper_river_v1_observation_not_frozen_mtf",
+        "status": "source_unavailable",
+        "linked_study_start_utc": "2026-10-26T00:00:00+00:00",
+        "observed_at_utc": "2026-10-26T10:08:00+00:00",
+        "markets": [],
+        "eligible_markets": 0,
+        "training_or_strategy_selection_performed": False,
+        "orders_or_promotions_executed": False,
+        "frozen_mtf_comparators_evaluated": False,
+        "performance_claim_validated": False,
+    }
+    path = tmp_path / "observation.json"
+    path.write_text(json.dumps(diagnostic), encoding="utf-8")
+    verify_forward_paper_archive(path)
+    diagnostic["eligible_markets"] = 1
+    path.write_text(json.dumps(diagnostic), encoding="utf-8")
+    with pytest.raises(ValueError, match="failed forward source evidence"):
+        verify_forward_paper_archive(path)
