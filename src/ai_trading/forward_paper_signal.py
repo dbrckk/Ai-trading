@@ -115,7 +115,8 @@ def build_forward_paper_observation(
             try:
                 parsed_source_time = _utc(datetime.fromisoformat(source_signal_time))
                 valid_source_time = (
-                    timedelta(0) <= observed - parsed_source_time <= _MAX_SIGNAL_AGE
+                    _START_UTC <= parsed_source_time <= observed
+                    and observed - parsed_source_time <= _MAX_SIGNAL_AGE
                 )
             except ValueError:
                 pass
@@ -278,7 +279,8 @@ def verify_forward_paper_archive(target: Path) -> None:
             ):
                 raise ValueError("invalid forward paper signal")
             signal_time = _utc(datetime.fromisoformat(item["source_signal_time_utc"]))
-            if not timedelta(0) <= timestamp - signal_time <= _MAX_SIGNAL_AGE:
+            if not (_START_UTC <= signal_time <= timestamp
+                    and timestamp - signal_time <= _MAX_SIGNAL_AGE):
                 raise ValueError("paper observation signal is not fresh")
             eligible += 1
         elif item.get("future_observation_eligible") is not False:
