@@ -580,6 +580,29 @@ def test_scheduler_delivery_overview_exposes_recent_failed_delivery() -> None:
     assert overview["cloudflare_delivery_verified"] is False
     assert overview["last_delivery_age_seconds"] == 30.0
     assert overview["last_ok"] is False
+    assert overview["last_delivery_outcome"] == "http_200_unsuccessful"
+
+    # HTTP 503 with a durable processed counter is specifically a partial
+    # multi-market cycle. No counter means the 503 cannot be classified.
+    for code, processed, expected in (
+        (503, 6, "partial_market_failure"),
+        (503, None, "http_503_unclassified"),
+        (409, None, "http_409_conflict"),
+        (401, None, "http_401_unauthorized"),
+    ):
+        result = scheduler_delivery_overview(
+            (SchedulerDelivery(
+                timestamp_utc=now.isoformat(),
+                source="cloudflare",
+                status_code=code,
+                ok=False,
+                processed=processed,
+            ),),
+            now=now,
+        )
+        assert result["last_delivery_outcome"] == expected
+        assert result["cloudflare_delivery_verified"] is False
+        assert result["consecutive_cloudflare_successes"] == 0
 
 
 def test_scheduler_fallback_classifies_503_safely_without_repeating_post() -> None:
