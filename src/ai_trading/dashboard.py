@@ -294,6 +294,9 @@ def render_dashboard(
         wins: int | None = None
         losses: int | None = None
         win_rate: float | None = None
+        break_even_hit_rate: float | None = None
+        recent_average_win: float | None = None
+        recent_average_loss: float | None = None
         active_symbols: int | None = None
         cash: float | None = None
         units: float | None = None
@@ -315,17 +318,30 @@ def render_dashboard(
         pnl_coverage_recent = performance_is_recent
         if pnl_observations == 0:
             realized_pnl = None
-        wins = sum(
-            1
-            for trade in recent
+        # The recent event hit rate is not a round-trip trade win rate:
+        # journals can contain partial closes and cost-bearing rebalances.
+        # Do not inflate it with zero or unknown PnL entries.
+        recent_positive = [
+            trade.pnl for trade in recent
             if _trade_pnl_known(trade) and trade.pnl > 0
-        )
-        losses = sum(
-            1
-            for trade in recent
+        ]
+        recent_negative = [
+            -trade.pnl for trade in recent
             if _trade_pnl_known(trade) and trade.pnl < 0
+        ]
+        wins = len(recent_positive)
+        losses = len(recent_negative)
+        win_rate = wins / (wins + losses) if wins + losses else None
+        recent_average_win = sum(recent_positive) / wins if wins else None
+        recent_average_loss = sum(recent_negative) / losses if losses else None
+        # A strategy with a 70% hit rate can still lose money if its average
+        # loss is large. Only define break-even when both payoffs exist.
+        break_even_hit_rate = (
+            recent_average_loss / (recent_average_win + recent_average_loss)
+            if recent_average_win is not None
+            and recent_average_loss is not None
+            else None
         )
-        win_rate = (wins / (wins + losses)) if wins + losses else 0.0
         active_symbols = len({trade.symbol for trade in recent})
         cash = state.cash if state is not None else starting_cash
         units = state.units if state is not None else 0.0
@@ -464,6 +480,15 @@ def render_dashboard(
             f"{pnl_observations} / {pnl_coverage_total}{recent_suffix}"
         )
     win_rate_display = "-" if win_rate is None else f"{win_rate:.1%}"
+    break_even_hit_rate_display = (
+        "-" if break_even_hit_rate is None else f"{break_even_hit_rate:.1%}"
+    )
+    recent_payoff_display = (
+        f"{_display_money(recent_average_win)} / "
+        f"{_display_money(recent_average_loss)}"
+        if recent_average_win is not None and recent_average_loss is not None
+        else "-"
+    )
     wins_losses_display = "-" if wins is None or losses is None else f"{wins} / {losses}"
     active_symbols_display = "-" if active_symbols is None else str(active_symbols)
     average_pnl_display = _display_money(
@@ -1053,7 +1078,7 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
 
 {market_panel}
 <section class="section" id="performance">
-<div class="section-head"><h2>Performance</h2><small>Performance window: {html.escape(performance_scope)}</small></div>
+<div class="section-head"><h2>Performance</h2><small>Performance window: {html.escape(performance_scope)}. Hit-rate metrics: last 200 nonzero PnL events, not independent trades.</small></div>
 <div class="metrics">
 <div class="metric primary"><small>Realized PnL</small><strong>{pnl_display}</strong></div>
 <div class="metric"><small>Trades</small><strong>{trade_count_display}</strong></div>
@@ -1061,8 +1086,10 @@ tbody tr{{transition:background .15s ease}}tbody tr:hover{{background:rgba(113,1
 <div class="metric"><small>Avg PnL / observed</small><strong>{average_pnl_display}</strong></div>
 <div class="metric"><small>Profit factor</small><strong>{profit_factor_display}</strong></div>
 <div class="metric"><small>Max realized DD</small><strong>{max_drawdown_display}</strong></div>
-<div class="metric"><small>Recent win rate</small><strong>{win_rate_display}</strong></div>
-<div class="metric"><small>Wins / losses</small><strong>{wins_losses_display}</strong></div>
+<div class="metric"><small>Recent PnL event hit rate</small><strong>{win_rate_display}</strong></div>
+<div class="metric"><small>Break-even hit rate · recent</small><strong>{break_even_hit_rate_display}</strong></div>
+<div class="metric"><small>Avg positive / negative event</small><strong>{recent_payoff_display}</strong></div>
+<div class="metric"><small>Recent + / − PnL events</small><strong>{wins_losses_display}</strong></div>
 <div class="metric"><small>Active symbols</small><strong>{active_symbols_display}</strong></div>
 </div>
 </section>

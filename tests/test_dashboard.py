@@ -80,6 +80,9 @@ def test_dashboard_renders_portfolio_summary(tmp_path) -> None:
     assert "<strong>12.00</strong>" in page
     assert "<strong>66.7%</strong>" in page
     assert "<strong>2 / 1</strong>" in page
+    assert '<small>Recent PnL event hit rate</small><strong>66.7%</strong>' in page
+    assert '<small>Break-even hit rate · recent</small><strong>33.3%</strong>' in page
+    assert '<small>Avg positive / negative event</small><strong>8.00 / 4.00</strong>' in page
 
 
 def test_dashboard_renders_recent_trade_performance_metrics(tmp_path) -> None:
@@ -104,6 +107,10 @@ def test_dashboard_renders_recent_trade_performance_metrics(tmp_path) -> None:
     assert '<small>Profit factor</small><strong>0.86</strong>' in page
     assert '<small>Max realized DD</small><strong>35.00</strong>' in page
     assert "Performance window: latest 200 trade events" in page
+    assert '<small>Recent PnL event hit rate</small><strong>50.0%</strong>' in page
+    assert '<small>Break-even hit rate · recent</small><strong>53.8%</strong>' in page
+    assert '<small>Avg positive / negative event</small><strong>15.00 / 17.50</strong>' in page
+    assert "not independent trades" in page
 
 
 
@@ -115,6 +122,8 @@ def test_dashboard_renders_premium_terminal_shell(tmp_path) -> None:
     assert "live-dot" in page
     assert '<div class="portfolio-ribbon">' not in page
     assert "prefers-reduced-motion" in page
+    assert '<small>Recent PnL event hit rate</small><strong>-</strong>' in page
+    assert '<small>Break-even hit rate · recent</small><strong>-</strong>' in page
 
 
 
