@@ -22,7 +22,7 @@ from ai_trading.mtf_parameter_benchmark import (
     run_parameter_benchmark,
     summarize_economic_trade_quality,
 )
-from ai_trading.mtf_shared_portfolio import simulate_shared_mtf_portfolio
+from ai_trading.mtf_shared_portfolio import (\n    shared_portfolio_cost_stress,\n    simulate_shared_mtf_portfolio,\n)
 from ai_trading.research_history import frozen_preprospective_history
 
 
@@ -512,6 +512,20 @@ def test_shared_mtf_account_reconciles_overlapping_markets_and_costs() -> None:
     assert [fill["action"] for fill in account.fills] == [
         "entry", "entry", "exit", "exit"
     ]
+
+    stress = shared_portfolio_cost_stress(
+        {"A": market_a, "B": market_b}, (a, b),
+        starting_cash=100_000.0, per_market_fraction=0.1,
+        max_gross_fraction=0.15,
+    )
+    assert stress["scope"] == "retrospective_fixed_signals_shared_capital_research_only"
+    assert stress["assumptions"]["strategy_selection_or_auto_promotion"] is False
+    assert stress["scenarios"]["1x"]["net_return"] == pytest.approx(account.net_return)
+    assert stress["scenarios"]["1x"]["max_drawdown"] == pytest.approx(account.max_drawdown)
+    assert stress["scenarios"]["1x"]["accepted_trades"] == account.accepted_trades
+    assert stress["scenarios"]["3x"]["net_return"] <= stress["scenarios"]["2x"]["net_return"]
+    assert stress["scenarios"]["2x"]["net_return"] <= stress["scenarios"]["1x"]["net_return"]
+    assert stress["scenarios"]["3x"]["total_costs"] > stress["scenarios"]["1x"]["total_costs"]
 
     high_cost = simulate_shared_mtf_portfolio(
         {"A": market_a, "B": market_b},
