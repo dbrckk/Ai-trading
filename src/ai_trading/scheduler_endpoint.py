@@ -87,6 +87,30 @@ def _delivery_age_seconds(
     return max(0.0, age)
 
 
+def _delivery_outcome(delivery: SchedulerDelivery) -> str:
+    """Classify only statuses supported by durable, non-secret evidence.
+
+    An HTTP 503 with a populated processed count is emitted by this server
+    only for a partly failed multi-market cycle. Other HTTP 503 responses
+    cannot be attributed safely to storage, the scheduler or an upstream proxy.
+    """
+    if delivery.status_code == 200 and delivery.ok:
+        return "success"
+    if delivery.status_code == 503:
+        return (
+            "partial_market_failure"
+            if type(delivery.processed) is int and delivery.processed >= 0
+            else "http_503_unclassified"
+        )
+    if delivery.status_code == 409:
+        return "http_409_conflict"
+    if delivery.status_code == 401:
+        return "http_401_unauthorized"
+    if delivery.status_code == 200:
+        return "http_200_unsuccessful"
+    return "http_failure"
+
+
 def scheduler_delivery_overview(
     deliveries: tuple[SchedulerDelivery, ...],
     *,
@@ -136,6 +160,7 @@ def scheduler_delivery_overview(
         "last_source": None if latest is None else latest.source,
         "last_status_code": None if latest is None else latest.status_code,
         "last_ok": None if latest is None else latest.ok,
+        "last_delivery_outcome": None if latest is None else _delivery_outcome(latest),
         "deliveries": [
             {
                 "timestamp_utc": delivery.timestamp_utc,
