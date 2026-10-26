@@ -260,6 +260,13 @@ def economic_cost_stress_report(result: MarketBenchmarkResult) -> dict[str, obje
         "scope": "retrospective_same_fills_hypothetical_no_promotion",
         "live_execution_validated": False,
         "stress_is_not_a_selection_gate": True,
+        "robustness_2x": (
+            "no_trades"
+            if not result.paper_trades
+            else "positive_at_2x"
+            if scenarios["2x"]["compounded_net_return"] > 0.0
+            else "fails_at_2x"
+        ),
         "scenarios": scenarios,
     }
 
@@ -1081,10 +1088,13 @@ def write_benchmark_report(
                 value = scenarios[key]["compounded_net_return"]
                 formatted.append(f"{value:+.2%}" if value is not None else "N/A")
             twice = scenarios["2x"]["compounded_net_return"]
+            twice_label = (
+                "N/A" if twice is None else "yes" if twice > 0.0 else "no"
+            )
             lines.append(
                 f"| {row.symbol} | {row.config_name} | {row.economic_trades} | "
                 f"{formatted[0]} | {formatted[1]} | {formatted[2]} | "
-                f"{'yes' if twice is not None and twice > 0.0 else 'no'} |"
+                f"{twice_label} |"
             )
     lines.append("")
     markdown_target.write_text("\n".join(lines) + "\n", encoding="utf-8")

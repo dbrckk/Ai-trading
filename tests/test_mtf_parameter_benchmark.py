@@ -203,6 +203,19 @@ def test_benchmark_payload_is_reproducible_and_explicit() -> None:
     assert stress["scope"] == "retrospective_same_fills_hypothetical_no_promotion"
     assert stress["stress_is_not_a_selection_gate"] is True
     assert tuple(stress["scenarios"]) == ("1x", "2x", "3x")
+    empty = economic_cost_stress_report(
+        MarketBenchmarkResult(
+            symbol="TEST", config_name="none", folds=1, observations=5,
+            directional_observations=0, long_labels=0, flat_labels=5,
+            short_labels=0, accuracy=0.0, macro_recall=0.0, brier=0.0,
+            directional_accuracy=0.0, directional_edge=0.0,
+            active_predictions=0, active_precision=0.0, quality_score=0.0,
+            selection_score=0.0, directional_gate_passed=False,
+        )
+    )
+    assert empty["robustness_2x"] == "no_trades"
+    assert empty["scenarios"]["2x"]["compounded_net_return"] is None
+
 
 
 
