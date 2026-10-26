@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from math import isclose, isfinite
 
 import pandas as pd
@@ -234,3 +234,60 @@ def simulate_shared_mtf_portfolio(
         equity_by_timestamp=equity_curve,
         fills=tuple(fills),
     )
+
+
+def shared_portfolio_cost_stress(
+    markets: dict[str, pd.DataFrame],
+    results: tuple[MarketBenchmarkResult, ...],
+    *,
+    starting_cash: float = 100_000.0,
+    per_market_fraction: float = 0.10,
+    max_gross_fraction: float = 0.30,
+) -> dict[str, object]:
+    """Reprice fixed research *signals* at 1x, 2x and 3x execution friction.
+
+    Replay each scenario through the same capital/exposure constraints. Trade
+    dates, forecast decisions and historical prices stay fixed; realized
+    position sizes can differ because fees affect equity and capacity.
+    These are retrospective, hypothetical results, not live broker returns.
+    """
+    if not results:
+        raise ValueError("shared cost stress requires original market results")
+    scenarios: dict[str, dict[str, object]] = {}
+    for multiplier in (1, 2, 3):
+        stressed = tuple(
+            replace(
+                row,
+                transaction_cost_bps=row.transaction_cost_bps * multiplier,
+                slippage_bps=row.slippage_bps * multiplier,
+            )
+            for row in results
+        )
+        report = simulate_shared_mtf_portfolio(
+            markets,
+            stressed,
+            starting_cash=starting_cash,
+            per_market_fraction=per_market_fraction,
+            max_gross_fraction=max_gross_fraction,
+        )
+        scenarios[f"{multiplier}x"] = {
+            "net_return": report.net_return,
+            "max_drawdown": report.max_drawdown,
+            "accepted_trades": report.accepted_trades,
+            "rejected_entries": report.rejected_entries,
+            "total_costs": report.total_costs,
+            "final_equity": report.final_equity,
+            "realized_net_pnl": report.realized_net_pnl,
+        }
+    return {
+        "scope": "retrospective_fixed_signals_shared_capital_research_only",
+        "cost_multipliers": [1, 2, 3],
+        "assumptions": {
+            "same_signal_entry_and_exit_times": True,
+            "positions_resized_per_cost_scenario": True,
+            "cross_currency_contract_multipliers_and_funding_modeled": False,
+            "real_broker_fills": False,
+            "strategy_selection_or_auto_promotion": False,
+        },
+        "scenarios": scenarios,
+    }
