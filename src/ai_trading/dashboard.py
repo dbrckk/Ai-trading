@@ -7,8 +7,8 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from threading import Lock
 from re import fullmatch
+from threading import Lock
 from urllib.parse import urlsplit
 
 from .burnin import BurnInSnapshot, calculate_burnin_metrics
