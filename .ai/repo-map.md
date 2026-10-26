@@ -3292,6 +3292,7 @@ scheduler_delivery_count = int(scheduler_overview["delivery_count"])
 scheduler_successes = int(
 scheduler_last_source = str(scheduler_overview["last_source"] or "-")
 scheduler_last_status = (
+scheduler_last_outcome = str(
 scheduler_last_delivery = str(
 ⋮----
 scheduler_panel = f"""
@@ -9730,6 +9731,15 @@ timestamp = timestamp.replace(tzinfo=UTC)
 timestamp = timestamp.astimezone(UTC)
 age = (now - timestamp).total_seconds()
 ⋮----
+def _delivery_outcome(delivery: SchedulerDelivery) -> str
+⋮----
+"""Classify only statuses supported by durable, non-secret evidence.
+
+    An HTTP 503 with a populated processed count is emitted by this server
+    only for a partly failed multi-market cycle. Other HTTP 503 responses
+    cannot be attributed safely to storage, the scheduler or an upstream proxy.
+    """
+⋮----
 consecutive_cloudflare_successes = 0
 ⋮----
 latest = deliveries[-1] if deliveries else None
@@ -15073,6 +15083,11 @@ def test_scheduler_delivery_overview_exposes_recent_failed_delivery() -> None
 ⋮----
 now = datetime(2026, 9, 25, 15, 30, tzinfo=UTC)
 deliveries = (
+⋮----
+# HTTP 503 with a durable processed counter is specifically a partial
+# multi-market cycle. No counter means the 503 cannot be classified.
+⋮----
+result = scheduler_delivery_overview(
 ⋮----
 def test_scheduler_fallback_classifies_503_safely_without_repeating_post() -> None
 ⋮----

@@ -156,16 +156,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-26T08:58:04Z
+Generated: 2026-10-26T09:06:26Z
 
 ### Git
 - Branch: `main`
-- Head: `cedbf7541464`
-- Commit date: 2026-10-26T04:57:55-04:00
-- Commit: fix(risk): fail closed on undefined portfolio leverage and correlation (#237)
+- Head: `2abf0d25f663`
+- Commit date: 2026-10-26T05:06:16-04:00
+- Commit: feat(ops): classify durable scheduler partial-market failures (#238)
 - Tracked files: 530
 
 ### Recently changed files
+- `src/ai_trading/dashboard.py`
+- `src/ai_trading/scheduler_endpoint.py`
+- `tests/test_scheduler_endpoint.py`
 - `src/ai_trading/portfolio_intelligence.py`
 - `tests/test_portfolio_intelligence.py`
 - `src/ai_trading/mtf_parameter_benchmark.py`

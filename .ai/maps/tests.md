@@ -4532,6 +4532,11 @@ def test_scheduler_delivery_overview_exposes_recent_failed_delivery() -> None
 now = datetime(2026, 9, 25, 15, 30, tzinfo=UTC)
 deliveries = (
 ⋮----
+# HTTP 503 with a durable processed counter is specifically a partial
+# multi-market cycle. No counter means the 503 cannot be classified.
+⋮----
+result = scheduler_delivery_overview(
+⋮----
 def test_scheduler_fallback_classifies_503_safely_without_repeating_post() -> None
 ⋮----
 """Expose only allowlisted failure kinds; never send a second paper cycle."""

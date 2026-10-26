@@ -1,18 +1,20 @@
 # Change impact
 
-Base: bb925125c4822d8772dae36ea7c886a249db08dd
-Head: cedbf754146403c17f1d501048211ab38a75db10
+Base: b9e9367468086134a8e733297145b863c33504a1
+Head: 2abf0d25f66306bcb68dafbb25703c08c5323e22
 
 ## Changed files
-- M src/ai_trading/portfolio_intelligence.py
-- M tests/test_portfolio_intelligence.py
+- M src/ai_trading/dashboard.py
+- M src/ai_trading/scheduler_endpoint.py
+- M tests/test_scheduler_endpoint.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_portfolio_intelligence.py
+- tests/test_dashboard.py
+- tests/test_scheduler_endpoint.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.
