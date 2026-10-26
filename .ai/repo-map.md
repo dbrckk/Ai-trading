@@ -5429,6 +5429,51 @@ exit_price: float
 side: int
 ⋮----
 @dataclass(frozen=True)
+class EconomicTradeQuality
+⋮----
+"""Descriptive after-cost outcomes. Not a promotion or execution gate.
+
+    Wilson limits assume independent decisive trades; serial dependence can
+    substantially widen actual uncertainty, even with disjoint executions.
+    """
+⋮----
+winning_trades: int
+losing_trades: int
+flat_trades: int
+win_rate_all_trades: float | None
+decisive_win_rate: float | None
+decisive_win_rate_lower95: float | None
+decisive_win_rate_upper95: float | None
+mean_win_net_return: float | None
+mean_loss_abs_net_return: float | None
+payoff_ratio: float | None
+break_even_decisive_win_rate: float | None
+net_profit_factor: float | None
+⋮----
+"""Describe net winning frequency AND gain/loss asymmetry, without tuning."""
+returns = tuple(float(value) for value in net_returns)
+⋮----
+wins = [value for value in returns if value > 0.0]
+losses = [-value for value in returns if value < 0.0]
+total = len(returns)
+decisive = len(wins) + len(losses)
+avg_win = fmean(wins) if wins else None
+avg_loss = fmean(losses) if losses else None
+lower: float | None = None
+upper: float | None = None
+decisive_rate: float | None = None
+⋮----
+decisive_rate = len(wins) / decisive
+# Descriptive Wilson 95% interval, NOT a valid test of dependent
+# market-trade edge or a license to change frozen parameters.
+z = 1.96
+denominator = 1.0 + z * z / decisive
+center = (decisive_rate + z * z / (2.0 * decisive)) / denominator
+half_width = (
+lower = max(0.0, center - half_width)
+upper = min(1.0, center + half_width)
+⋮----
+@dataclass(frozen=True)
 class MarketBenchmarkResult
 ⋮----
 symbol: str
@@ -5463,6 +5508,7 @@ sized_equity_final: float = _SIZED_STARTING_CASH
 sized_net_return: float = 0.0
 sized_max_drawdown: float = 0.0
 paper_trades: tuple[MTFResearchTrade, ...] = ()
+economic_trade_quality: EconomicTradeQuality | None = None
 ⋮----
 @dataclass(frozen=True)
 class AggregateBenchmarkResult
@@ -5603,6 +5649,7 @@ macro_recall = _macro_recall(predicted, realized)
 selection_score = _selection_score(
 directional_gate_passed = (
 economic_mean = fmean(economic_returns) if economic_returns else 0.0
+economic_trade_quality = summarize_economic_trade_quality(economic_returns)
 # A loss exceeding available capital is conservatively treated as ruin.
 economic_growth = prod(max(0.0, 1.0 + ret) for ret in economic_returns)
 ⋮----
@@ -5655,6 +5702,14 @@ markdown_target = Path(markdown_path)
 ⋮----
 selections = market_selections(results)
 lines = [
+⋮----
+quality = row.economic_trade_quality
+⋮----
+hit_rate = (
+interval = (
+break_even = (
+payoff = (
+profit_factor = (
 ⋮----
 def main() -> None
 ⋮----
@@ -12540,6 +12595,8 @@ config = MTFBenchmarkConfig(
 ⋮----
 result = evaluate_market_config(
 ⋮----
+quality = result.economic_trade_quality
+⋮----
 def test_parameter_benchmark_ranks_configs_across_markets() -> None
 ⋮----
 markets = {
@@ -12556,6 +12613,9 @@ markets = {"A": sample_market()}
 configs = (MTFBenchmarkConfig(3, 0.001, 0.25, 600, 0.56),)
 ⋮----
 payload = benchmark_payload(results)
+⋮----
+# A deceptively high hit rate is not enough when losing trades cost more.
+outcomes = summarize_economic_trade_quality([0.02, 0.01, -0.04, 0.0])
 ⋮----
 sized = payload["method"]["economic_gate"]["sized_research_account"]
 ⋮----

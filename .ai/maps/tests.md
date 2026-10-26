@@ -2145,6 +2145,8 @@ config = MTFBenchmarkConfig(
 ⋮----
 result = evaluate_market_config(
 ⋮----
+quality = result.economic_trade_quality
+⋮----
 def test_parameter_benchmark_ranks_configs_across_markets() -> None
 ⋮----
 markets = {
@@ -2161,6 +2163,9 @@ markets = {"A": sample_market()}
 configs = (MTFBenchmarkConfig(3, 0.001, 0.25, 600, 0.56),)
 ⋮----
 payload = benchmark_payload(results)
+⋮----
+# A deceptively high hit rate is not enough when losing trades cost more.
+outcomes = summarize_economic_trade_quality([0.02, 0.01, -0.04, 0.0])
 ⋮----
 sized = payload["method"]["economic_gate"]["sized_research_account"]
 ⋮----

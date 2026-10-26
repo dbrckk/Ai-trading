@@ -1,18 +1,18 @@
 # Change impact
 
-Base: dd2749b2a7cea00dcabb37d4dc43438e261693d7
-Head: 828ac0196173177a386a380eebfb0fcb69f99a8f
+Base: 3232c695ba15b7d86e3db9b51f8f1c5a71cd1855
+Head: 51cfd41b61c4d32dcb29136c9567d0d702b75623
 
 ## Changed files
-- M src/ai_trading/forward_paper_signal.py
-- M tests/test_dashboard_health.py
+- M src/ai_trading/mtf_parameter_benchmark.py
+- M tests/test_mtf_parameter_benchmark.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- No direct filename-based test match detected.
+- tests/test_mtf_parameter_benchmark.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

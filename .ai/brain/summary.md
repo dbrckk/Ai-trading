@@ -3,9 +3,9 @@
 - Index mode: incremental
 - Files indexed: 371
 - Files reparsed this run: 2
-- Symbols: 2009
+- Symbols: 2011
 - Internal import edges: 1262
-- Impacted files: 2
+- Impacted files: 4
 - Selected tests: 2
 
 ## Languages
@@ -22,12 +22,12 @@
 - tests/test_multi_market.py: 34 symbols
 - tests/test_dashboard_persistence.py: 31 symbols
 - src/ai_trading/persistence.py: 28 symbols
+- src/ai_trading/mtf_parameter_benchmark.py: 22 symbols
 - tests/test_dataset_evidence.py: 22 symbols
 - tests/test_hosted_persistence.py: 22 symbols
 - tests/test_postgres_persistence.py: 22 symbols
 - src/ai_trading/dashboard.py: 21 symbols
 - tests/test_multiasset_runtime.py: 21 symbols
-- src/ai_trading/mtf_parameter_benchmark.py: 20 symbols
 - src/ai_trading/postgres_persistence.py: 20 symbols
 - tests/test_backtest.py: 20 symbols
 - tests/test_multiasset_checkpoint.py: 20 symbols
@@ -45,8 +45,8 @@
 - AST index mode: incremental
 - AST files reparsed this run: 2
 - outline files retained: 371
-- top-level items retained: 3438
-- direct members retained: 1624
+- top-level items retained: 3440
+- direct members retained: 1637
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 

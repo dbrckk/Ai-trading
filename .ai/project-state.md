@@ -156,21 +156,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-26T00:01:38Z
+Generated: 2026-10-26T00:14:28Z
 
 ### Git
 - Branch: `main`
-- Head: `828ac0196173`
-- Commit date: 2026-10-25T20:01:29-04:00
-- Commit: fix(research): enforce prospective cutoff on original signal timestamps (#226)
+- Head: `51cfd41b61c4`
+- Commit date: 2026-10-25T20:14:19-04:00
+- Commit: research: quantify after-cost MTF win rate and break-even payoff (#227)
 - Tracked files: 528
 
 ### Recently changed files
+- `src/ai_trading/mtf_parameter_benchmark.py`
+- `tests/test_mtf_parameter_benchmark.py`
 - `src/ai_trading/forward_paper_signal.py`
 - `tests/test_dashboard_health.py`
 - `.github/workflows/forward-paper-signal-evidence.yml`
 - `research/mtf-prospective-evaluation-method.md`
-- `research/forward-paper-signal-operations.md`
 
 ### Project signals
 - `pyproject.toml`
