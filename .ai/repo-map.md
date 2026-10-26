@@ -3400,6 +3400,15 @@ def execute_paper_cycle() -> PaperCycleResult
 ⋮----
 effective_cycle_executor = execute_paper_cycle
 ⋮----
+# ThreadingHTTPServer accepts overlapping Cloudflare/GitHub POSTs.
+# Do not allow two handlers within this service process to mutate the
+# same paper runtimes at once. A second request fails closed (HTTP 409)
+# without invoking a runner or fabricating a successful cycle.
+# This is a per-process lock; multi-instance hosting needs a DB lease.
+cycle_execution_lock = Lock()
+⋮----
+def run_serialized_paper_cycle() -> PaperCycleResult
+⋮----
 def load_status_snapshot() -> dict[str, object]
 ⋮----
 class Handler(BaseHTTPRequestHandler)
@@ -14977,6 +14986,24 @@ def make_opener(payload, posts)
 def fake_opener(request, *, timeout)
 ⋮----
 posts = []
+⋮----
+def test_http_scheduler_never_executes_overlapping_authorized_cycles(tmp_path) -> None
+⋮----
+"""Real HTTP threads cannot concurrently advance the same paper account."""
+entered = Event()
+release = Event()
+⋮----
+def occupied_cycle() -> PaperCycleResult
+⋮----
+headers = {"Authorization": "Bearer server-secret"}
+first_response: list[tuple[int, str]] = []
+⋮----
+first = Thread(
+⋮----
+# Concurrent authorized request is rejected, not fabricated as a
+# successful cycle. Unauthorized probes retain their 401 response.
+⋮----
+# Once finished, a genuine later cycle can start normally.
 ````
 
 ## File: tests/test_scheduler_governor.py

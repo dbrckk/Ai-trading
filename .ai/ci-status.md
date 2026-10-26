@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 4 success / 0 failure / 4 active
+Summary: 3 success / 2 failure / 3 active
 
-- CI: in_progress / pending (22ab30b8)
-- Hosted Dashboard Probe: in_progress / pending (22ab30b8)
-- CodeQL: in_progress / pending (22ab30b8)
-- CodeQL: completed / success (51cfd41b)
-- CI: in_progress / pending (51cfd41b)
-- CodeQL: completed / success (c09edbe2)
-- CI: completed / success (c09edbe2)
-- Forward Paper Signal Evidence: completed / success (3232c695)
+- CI: in_progress / pending (b54d6423)
+- CodeQL: in_progress / pending (b54d6423)
+- Hosted Dashboard Probe: in_progress / pending (b54d6423)
+- CI: completed / success (97f02fea)
+- CodeQL: completed / success (97f02fea)
+- CodeQL: completed / success (68c1a71a)
+- CI: completed / failure (68c1a71a)
+- CI: completed / failure (d6cd646a)
+
+## Latest failed run structure
+- Job: test
+  - Failed step: Ruff
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

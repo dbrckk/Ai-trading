@@ -156,17 +156,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-26T00:17:32Z
+Generated: 2026-10-26T00:33:28Z
 
 ### Git
 - Branch: `main`
-- Head: `22ab30b863ea`
-- Commit date: 2026-10-25T20:17:23-04:00
-- Commit: feat(dashboard): show break-even hit rate versus recent positive PnL events (#228)
+- Head: `b54d6423f7bf`
+- Commit date: 2026-10-25T20:33:17-04:00
+- Commit: fix(scheduler): block overlapping paper cycle POSTs in server process (#229)
 - Tracked files: 528
 
 ### Recently changed files
 - `src/ai_trading/dashboard.py`
+- `src/ai_trading/scheduler_endpoint.py`
+- `tests/test_scheduler_endpoint.py`
 - `tests/test_dashboard.py`
 - `src/ai_trading/mtf_parameter_benchmark.py`
 - `tests/test_mtf_parameter_benchmark.py`

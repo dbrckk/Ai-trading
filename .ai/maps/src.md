@@ -1993,6 +1993,15 @@ def execute_paper_cycle() -> PaperCycleResult
 ⋮----
 effective_cycle_executor = execute_paper_cycle
 ⋮----
+# ThreadingHTTPServer accepts overlapping Cloudflare/GitHub POSTs.
+# Do not allow two handlers within this service process to mutate the
+# same paper runtimes at once. A second request fails closed (HTTP 409)
+# without invoking a runner or fabricating a successful cycle.
+# This is a per-process lock; multi-instance hosting needs a DB lease.
+cycle_execution_lock = Lock()
+⋮----
+def run_serialized_paper_cycle() -> PaperCycleResult
+⋮----
 def load_status_snapshot() -> dict[str, object]
 ⋮----
 class Handler(BaseHTTPRequestHandler)

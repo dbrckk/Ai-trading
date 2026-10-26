@@ -4512,6 +4512,24 @@ def make_opener(payload, posts)
 def fake_opener(request, *, timeout)
 ⋮----
 posts = []
+⋮----
+def test_http_scheduler_never_executes_overlapping_authorized_cycles(tmp_path) -> None
+⋮----
+"""Real HTTP threads cannot concurrently advance the same paper account."""
+entered = Event()
+release = Event()
+⋮----
+def occupied_cycle() -> PaperCycleResult
+⋮----
+headers = {"Authorization": "Bearer server-secret"}
+first_response: list[tuple[int, str]] = []
+⋮----
+first = Thread(
+⋮----
+# Concurrent authorized request is rejected, not fabricated as a
+# successful cycle. Unauthorized probes retain their 401 response.
+⋮----
+# Once finished, a genuine later cycle can start normally.
 ```
 
 ## File: test_scheduler_governor.py
