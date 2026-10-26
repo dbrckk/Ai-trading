@@ -16,6 +16,7 @@ from ai_trading.mtf_parameter_benchmark import (
     benchmark_payload,
     btc_focused_benchmark_grid,
     evaluate_market_config,
+    economic_cost_stress_report,
     market_selections,
     run_chronological_holdout,
     run_parameter_benchmark,
@@ -184,6 +185,11 @@ def test_benchmark_payload_is_reproducible_and_explicit() -> None:
     assert payload["ranking"][0]["rank"] == 1
     assert payload["ranking"][0]["config"]["horizon_bars"] == 3
     assert payload["ranking"][0]["config"]["min_confidence"] == 0.56
+    stress = payload["ranking"][0]["markets"][0]["economic_cost_stress"]
+    assert stress["scope"] == "retrospective_same_fills_hypothetical_no_promotion"
+    assert stress["stress_is_not_a_selection_gate"] is True
+    assert tuple(stress["scenarios"]) == ("1x", "2x", "3x")
+
 
 
 
@@ -362,6 +368,18 @@ def test_cost_aware_mtf_gate_rejects_directional_wins_erased_by_fees(monkeypatch
     assert with_costs.sized_equity_final < 100_000.0
     assert with_costs.sized_max_drawdown > 0.0
     assert with_costs.economic_gate_passed is False
+    stressed = economic_cost_stress_report(with_costs)["scenarios"]
+    assert stressed["1x"]["compounded_net_return"] == pytest.approx(
+        with_costs.economic_compounded_net_return
+    )
+    assert stressed["1x"]["trades"] == with_costs.economic_trades
+    assert stressed["1x"]["assumed_round_trip_cost_bps"] == pytest.approx(300.0)
+    assert (
+        stressed["3x"]["compounded_net_return"]
+        <= stressed["2x"]["compounded_net_return"]
+        <= stressed["1x"]["compounded_net_return"]
+    )
+
 
     result = AggregateBenchmarkResult(
         config=config, markets=(without_costs,),
