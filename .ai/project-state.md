@@ -156,16 +156,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-26T08:49:41Z
+Generated: 2026-10-26T08:58:04Z
 
 ### Git
 - Branch: `main`
-- Head: `4f8906f66bdd`
-- Commit date: 2026-10-26T04:49:31-04:00
-- Commit: fix(research): distinguish unobserved trade-cost robustness from negative outcomes (#235)
+- Head: `cedbf7541464`
+- Commit date: 2026-10-26T04:57:55-04:00
+- Commit: fix(risk): fail closed on undefined portfolio leverage and correlation (#237)
 - Tracked files: 530
 
 ### Recently changed files
+- `src/ai_trading/portfolio_intelligence.py`
+- `tests/test_portfolio_intelligence.py`
 - `src/ai_trading/mtf_parameter_benchmark.py`
 - `tests/test_mtf_parameter_benchmark.py`
 - `src/ai_trading/risk_governor.py`
@@ -174,9 +176,6 @@ Generated: 2026-10-26T08:49:41Z
 - `research/retrospective-precutoff-enforcement.md`
 - `src/ai_trading/command_app.py`
 - `src/ai_trading/research_history.py`
-- `src/ai_trading/dashboard.py`
-- `src/ai_trading/scheduler_endpoint.py`
-- `tests/test_scheduler_endpoint.py`
 
 ### Project signals
 - `pyproject.toml`

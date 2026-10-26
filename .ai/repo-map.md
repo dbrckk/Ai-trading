@@ -7723,6 +7723,11 @@ correlation_hard_limit: float = 0.90
 ⋮----
 def __post_init__(self) -> None
 ⋮----
+# NaN comparisons make the existing numeric bounds silently pass.
+# Reject undefined risk parameters before leverage/weights are built.
+⋮----
+value = getattr(self, name)
+⋮----
 @dataclass(frozen=True)
 class PortfolioIntelligenceReport
 ⋮----
@@ -7750,6 +7755,8 @@ corr = aligned.corr().abs()
 max_corr = 0.0
 ⋮----
 value = corr.at[asset, other]
+# A constant, corrupted or otherwise unidentifiable pair
+# cannot prove diversification. Conservatively cap leverage.
 ⋮----
 max_corr = max(max_corr, float(value))
 ⋮----
@@ -13933,6 +13940,8 @@ def test_volatility_targeting_scales_weights() -> None
 returns = sample_returns()
 base = pd.Series({"A": 0.4, "B": 0.3, "C": 0.3})
 ⋮----
+# Invalid risk settings must not silently produce NaN position sizing.
+⋮----
 def test_drawdown_reduces_leverage() -> None
 ⋮----
 base = pd.Series({"A": 0.5, "B": 0.5, "C": 0.0})
@@ -13950,6 +13959,10 @@ def test_portfolio_intelligence_fails_closed_on_insufficient_correlation_history
 ⋮----
 weights = pd.Series({"A": 0.5, "B": 0.5})
 returns = pd.DataFrame({"A": [0.01], "B": [0.01]})
+⋮----
+# Constant-price proxies have undefined Pearson correlation even with
+# many rows: never interpret NaN as evidence of diversification.
+constant_returns = pd.DataFrame({
 ⋮----
 def test_portfolio_intelligence_sanitizes_nonfinite_confidence() -> None
 ⋮----

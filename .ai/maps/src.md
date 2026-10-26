@@ -6310,6 +6310,11 @@ correlation_hard_limit: float = 0.90
 ⋮----
 def __post_init__(self) -> None
 ⋮----
+# NaN comparisons make the existing numeric bounds silently pass.
+# Reject undefined risk parameters before leverage/weights are built.
+⋮----
+value = getattr(self, name)
+⋮----
 @dataclass(frozen=True)
 class PortfolioIntelligenceReport
 ⋮----
@@ -6337,6 +6342,8 @@ corr = aligned.corr().abs()
 max_corr = 0.0
 ⋮----
 value = corr.at[asset, other]
+# A constant, corrupted or otherwise unidentifiable pair
+# cannot prove diversification. Conservatively cap leverage.
 ⋮----
 max_corr = max(max_corr, float(value))
 ⋮----

@@ -2,28 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "perf: pool bounded PostgreSQL connections for responsive hosted dashboard (#149)",
-      "terms": [
-        "149",
-        "bounded",
-        "connections",
-        "dashboard",
-        "hosted",
-        "perf",
-        "pool",
-        "postgresql",
-        "responsive"
-      ],
-      "tests": [],
-      "useful": [
-        "src/ai_trading/dashboard.py",
-        "src/ai_trading/persistence_factory.py",
-        "src/ai_trading/postgres_persistence.py",
-        "tests/test_postgres_persistence.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "perf: parallelize read-only Gold DAX BTC market overviews (#150)",
       "terms": [
         "150",
@@ -1324,6 +1302,25 @@
         "src/ai_trading/mtf_parameter_benchmark.py",
         "tests/test_mtf_parameter_benchmark.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "fix(risk): fail closed on undefined portfolio leverage and correlation (#237)",
+      "terms": [
+        "237",
+        "closed",
+        "correlation",
+        "fail",
+        "leverage",
+        "portfolio",
+        "risk",
+        "undefined"
+      ],
+      "tests": [],
+      "useful": [
+        "src/ai_trading/portfolio_intelligence.py",
+        "tests/test_portfolio_intelligence.py"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1632,6 +1629,10 @@
     "236": {
       "src/ai_trading/risk_governor.py": 4,
       "tests/test_risk_governor.py": 4
+    },
+    "237": {
+      "src/ai_trading/portfolio_intelligence.py": 4,
+      "tests/test_portfolio_intelligence.py": 4
     },
     "56": {
       "src/ai_trading/command_app.py": 4,
@@ -2385,9 +2386,10 @@
       "src/ai_trading/config.py": 4,
       "src/ai_trading/global_allocator.py": 4,
       "src/ai_trading/portfolio.py": 4,
-      "src/ai_trading/portfolio_intelligence.py": 4,
+      "src/ai_trading/portfolio_intelligence.py": 8,
       "src/ai_trading/portfolio_risk.py": 4,
-      "tests/test_config_validation.py": 4
+      "tests/test_config_validation.py": 4,
+      "tests/test_portfolio_intelligence.py": 4
     },
     "cloudflare": {
       "src/ai_trading/dashboard.py": 4,
@@ -2492,7 +2494,9 @@
       "tests/test_paper_cycle_service.py": 4
     },
     "correlation": {
+      "src/ai_trading/portfolio_intelligence.py": 4,
       "src/ai_trading/portfolio_risk.py": 4,
+      "tests/test_portfolio_intelligence.py": 4,
       "tests/test_portfolio_risk.py": 4
     },
     "correlation-aware": {
@@ -2954,10 +2958,11 @@
       "src/ai_trading/deployment_probe.py": 4,
       "src/ai_trading/global_allocator.py": 4,
       "src/ai_trading/portfolio.py": 4,
-      "src/ai_trading/portfolio_intelligence.py": 4,
+      "src/ai_trading/portfolio_intelligence.py": 8,
       "src/ai_trading/portfolio_risk.py": 4,
       "tests/test_config_validation.py": 4,
-      "tests/test_dashboard_health.py": 4
+      "tests/test_dashboard_health.py": 4,
+      "tests/test_portfolio_intelligence.py": 4
     },
     "fail-closed": {
       "src/ai_trading/dashboard.py": 4,
@@ -3542,6 +3547,10 @@
     "legacy": {
       "src/ai_trading/multiasset_runtime.py": 4,
       "tests/test_multiasset_runtime.py": 4
+    },
+    "leverage": {
+      "src/ai_trading/portfolio_intelligence.py": 4,
+      "tests/test_portfolio_intelligence.py": 4
     },
     "liquidate": {
       "src/ai_trading/backtest.py": 4,
@@ -4195,12 +4204,12 @@
       "src/ai_trading/dashboard.py": 4,
       "src/ai_trading/multi_market.py": 4,
       "src/ai_trading/multiasset_runtime.py": 4,
-      "src/ai_trading/portfolio_intelligence.py": 8,
+      "src/ai_trading/portfolio_intelligence.py": 12,
       "src/ai_trading/portfolio_risk.py": 4,
       "src/ai_trading/risk_governor.py": 4,
       "tests/test_multi_market.py": 4,
       "tests/test_multiasset_runtime.py": 4,
-      "tests/test_portfolio_intelligence.py": 8,
+      "tests/test_portfolio_intelligence.py": 12,
       "tests/test_portfolio_risk.py": 4,
       "tests/test_risk_governor.py": 4
     },
@@ -4747,6 +4756,7 @@
       "src/ai_trading/backtest.py": 4,
       "src/ai_trading/config.py": 4,
       "src/ai_trading/cost_stress_gate.py": 4,
+      "src/ai_trading/portfolio_intelligence.py": 4,
       "src/ai_trading/portfolio_risk.py": 8,
       "src/ai_trading/risk.py": 8,
       "src/ai_trading/risk_governor.py": 8,
@@ -4754,6 +4764,7 @@
       "tests/test_backtest.py": 4,
       "tests/test_config_validation.py": 4,
       "tests/test_cost_stress_gate.py": 4,
+      "tests/test_portfolio_intelligence.py": 4,
       "tests/test_portfolio_risk.py": 8,
       "tests/test_risk.py": 8,
       "tests/test_risk_governor.py": 8,
@@ -5295,7 +5306,9 @@
       "tests/test_bootstrap_robustness.py": 4
     },
     "undefined": {
+      "src/ai_trading/portfolio_intelligence.py": 4,
       "src/ai_trading/portfolio_risk.py": 4,
+      "tests/test_portfolio_intelligence.py": 4,
       "tests/test_portfolio_risk.py": 4
     },
     "unhealthy": {

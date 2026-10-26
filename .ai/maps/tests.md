@@ -3398,6 +3398,8 @@ def test_volatility_targeting_scales_weights() -> None
 returns = sample_returns()
 base = pd.Series({"A": 0.4, "B": 0.3, "C": 0.3})
 ⋮----
+# Invalid risk settings must not silently produce NaN position sizing.
+⋮----
 def test_drawdown_reduces_leverage() -> None
 ⋮----
 base = pd.Series({"A": 0.5, "B": 0.5, "C": 0.0})
@@ -3415,6 +3417,10 @@ def test_portfolio_intelligence_fails_closed_on_insufficient_correlation_history
 ⋮----
 weights = pd.Series({"A": 0.5, "B": 0.5})
 returns = pd.DataFrame({"A": [0.01], "B": [0.01]})
+⋮----
+# Constant-price proxies have undefined Pearson correlation even with
+# many rows: never interpret NaN as evidence of diversification.
+constant_returns = pd.DataFrame({
 ⋮----
 def test_portfolio_intelligence_sanitizes_nonfinite_confidence() -> None
 ⋮----

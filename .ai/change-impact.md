@@ -1,18 +1,18 @@
 # Change impact
 
-Base: 362297cd86a5c908ac1a79e088aa9357ff5beeaa
-Head: 4f8906f66bdd10114c757f46601039135d05f402
+Base: bb925125c4822d8772dae36ea7c886a249db08dd
+Head: cedbf754146403c17f1d501048211ab38a75db10
 
 ## Changed files
-- M src/ai_trading/mtf_parameter_benchmark.py
-- M tests/test_mtf_parameter_benchmark.py
+- M src/ai_trading/portfolio_intelligence.py
+- M tests/test_portfolio_intelligence.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_mtf_parameter_benchmark.py
+- tests/test_portfolio_intelligence.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.
