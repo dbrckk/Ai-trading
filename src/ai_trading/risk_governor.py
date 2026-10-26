@@ -17,6 +17,36 @@ class GovernorPolicy:
     halt_recovery_fallback_depth: int = 5
     degraded_recovery_exposure_scale: float = 0.35
 
+    def __post_init__(self) -> None:
+        """Reject unsafe/undefined gates before a risk policy can authorize trade."""
+        bounds = (
+            ("min_data_quality", self.min_data_quality),
+            ("halt_data_quality", self.halt_data_quality),
+            ("min_model_confidence", self.min_model_confidence),
+            ("flatten_drawdown", self.flatten_drawdown),
+            ("reduce_drawdown", self.reduce_drawdown),
+            ("max_stressed_cvar", self.max_stressed_cvar),
+            ("reduce_stressed_cvar", self.reduce_stressed_cvar),
+            ("degraded_recovery_exposure_scale", self.degraded_recovery_exposure_scale),
+        )
+        for name, value in bounds:
+            if not isinstance(value, (int, float)) or not isfinite(value) or not 0.0 <= value <= 1.0:
+                raise ValueError(f"{name} must be finite and in [0, 1]")
+        if not self.halt_data_quality <= self.min_data_quality:
+            raise ValueError("halt_data_quality must not exceed min_data_quality")
+        if not self.reduce_drawdown <= self.flatten_drawdown:
+            raise ValueError("reduce_drawdown must not exceed flatten_drawdown")
+        if not self.reduce_stressed_cvar <= self.max_stressed_cvar:
+            raise ValueError("reduce_stressed_cvar must not exceed max_stressed_cvar")
+        if not 0.0 < self.degraded_recovery_exposure_scale <= 1.0:
+            raise ValueError("degraded recovery exposure scale must be in (0, 1]")
+        for name, value in (
+            ("halt_recovery_failures", self.halt_recovery_failures),
+            ("halt_recovery_fallback_depth", self.halt_recovery_fallback_depth),
+        ):
+            if type(value) is not int or value <= 0:
+                raise ValueError(f"{name} must be a positive integer")
+
 
 @dataclass(frozen=True)
 class GovernorSignals:
