@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from ai_trading.risk_governor import GovernorSignals, evaluate_governor
+from ai_trading.risk_governor import GovernorPolicy, GovernorSignals, evaluate_governor
 
 
 def base_signals(**overrides):
@@ -135,3 +135,40 @@ def test_governor_halts_on_invalid_numeric_risk_evidence(
     assert decision.allow_rebalance is False
     assert decision.exposure_scale == 0.0
     assert decision.reason == "invalid risk governor signal"
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("min_data_quality", math.nan),
+        ("halt_data_quality", math.inf),
+        ("min_model_confidence", -0.1),
+        ("flatten_drawdown", 1.1),
+        ("reduce_stressed_cvar", math.nan),
+        ("degraded_recovery_exposure_scale", 0.0),
+        ("halt_recovery_failures", 0),
+        ("halt_recovery_fallback_depth", 2.5),
+        ("halt_recovery_failures", True),
+    ],
+)
+def test_governor_rejects_unsafe_policy_config(field, value) -> None:
+    with pytest.raises(ValueError):
+        GovernorPolicy(**{field: value})
+
+
+@pytest.mark.parametrize(
+    "overrides",
+    [
+        {"halt_data_quality": 0.96, "min_data_quality": 0.95},
+        {"reduce_drawdown": 0.20, "flatten_drawdown": 0.15},
+        {"reduce_stressed_cvar": 0.10, "max_stressed_cvar": 0.08},
+    ],
+)
+def test_governor_policy_rejects_reversed_risk_thresholds(overrides) -> None:
+    with pytest.raises(ValueError):
+        GovernorPolicy(**overrides)
+
+
+def test_valid_governor_policy_keeps_default_trade_behavior() -> None:
+    decision = evaluate_governor(base_signals(), GovernorPolicy())
+    assert decision.verdict == "TRADE"
