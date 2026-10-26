@@ -19,6 +19,7 @@ from .multi_timeframe_features import (
     make_volatility_adaptive_labels,
 )
 from .regime import detect_regime
+from .research_history import frozen_preprospective_history
 
 _MIN_ACTIVE_PREDICTIONS = 20
 _MIN_ACTIVE_PRECISION = 0.50
@@ -1121,8 +1122,12 @@ def main() -> None:
     if not symbols:
         raise SystemExit("provide at least one symbol")
 
+    # A rolling Yahoo "1mo" window includes new study bars after 2026-10-26.
+    # Never let them enter retrospective tuning, fold selection or labels.
     markets = {
-        symbol: load_history(symbol, args.period, args.interval)
+        symbol: frozen_preprospective_history(
+            load_history(symbol, args.period, args.interval), symbol=symbol
+        )
         for symbol in symbols
     }
     configs = (
