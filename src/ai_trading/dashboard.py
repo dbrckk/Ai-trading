@@ -6,6 +6,7 @@ import os
 from collections.abc import Callable
 from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from threading import Lock
 from pathlib import Path
 from re import fullmatch
 from urllib.parse import urlsplit
@@ -23,6 +24,7 @@ from .multi_market import (
 from .operational_overview import build_operational_overview, runtime_is_consistent
 from .paper_cycle import DEFAULT_MAX_CATCHUP_BARS, PaperCycleResult
 from .paper_cycle_service import (
+    PaperCycleServiceError,
     ProductionPaperCycleSettings,
     run_production_paper_cycle,
 )
@@ -1341,6 +1343,23 @@ def serve_dashboard(
 
         effective_cycle_executor = execute_paper_cycle
 
+    # ThreadingHTTPServer accepts overlapping Cloudflare/GitHub POSTs.
+    # Do not allow two handlers within this service process to mutate the
+    # same paper runtimes at once. A second request fails closed (HTTP 409)
+    # without invoking a runner or fabricating a successful cycle.
+    # This is a per-process lock; multi-instance hosting needs a DB lease.
+    cycle_execution_lock = Lock()
+
+    def run_serialized_paper_cycle() -> PaperCycleResult:
+        if not cycle_execution_lock.acquire(blocking=False):
+            raise PaperCycleServiceError(
+                code="cycle_in_progress", error_type="Concurrency"
+            )
+        try:
+            return effective_cycle_executor()
+        finally:
+            cycle_execution_lock.release()
+
     start_hosted_paper_runtime(
         settings=effective_settings,
         persistence=backend,
@@ -1507,7 +1526,7 @@ def serve_dashboard(
             response = handle_scheduler_request(
                 authorization=self.headers.get("Authorization"),
                 configured_token=effective_scheduler_token,
-                run_cycle=effective_cycle_executor,
+                run_cycle=run_serialized_paper_cycle,
             )
             telemetry = scheduler_telemetry_payload(
                 response,
