@@ -37,6 +37,19 @@ def test_volatility_targeting_scales_weights() -> None:
     assert 0.0 < sum(abs(v) for v in weights.values) <= 1.0 + 1e-9
     assert report.leverage <= 1.0
     assert estimate_portfolio_volatility(weights, returns) >= 0.0
+    # Invalid risk settings must not silently produce NaN position sizing.
+    for invalid in (
+        {"target_annual_volatility": float("nan")},
+        {"min_leverage": float("nan")},
+        {"max_leverage": float("inf")},
+        {"stress_vol_multiplier": float("nan")},
+        {"confidence_power": float("nan")},
+        {"confidence_floor": float("-inf")},
+        {"drawdown_hard_limit": float("nan")},
+        {"correlation_soft_limit": float("nan")},
+    ):
+        with pytest.raises(ValueError, match="finite"):
+            PortfolioIntelligenceConfig(**invalid)
 
 
 def test_drawdown_reduces_leverage() -> None:
@@ -134,6 +147,23 @@ def test_portfolio_intelligence_fails_closed_on_insufficient_correlation_history
     assert report.max_pair_correlation == 1.0
     assert report.correlation_scale == report.leverage
     assert float(intelligent.abs().sum()) <= 0.1000001
+
+    # Constant-price proxies have undefined Pearson correlation even with
+    # many rows: never interpret NaN as evidence of diversification.
+    constant_returns = pd.DataFrame({
+        "A": [0.01] * 12,
+        "B": [0.02] * 12,
+    })
+    conservative, undetermined = apply_portfolio_intelligence(
+        weights,
+        constant_returns,
+        {"A": 0.9, "B": 0.9},
+        current_equity=100_000.0,
+        peak_equity=100_000.0,
+    )
+    assert undetermined.max_pair_correlation == 1.0
+    assert undetermined.correlation_scale == 0.10
+    assert float(conservative.abs().sum()) <= 0.1000001
 
 
 def test_portfolio_intelligence_sanitizes_nonfinite_confidence() -> None:
