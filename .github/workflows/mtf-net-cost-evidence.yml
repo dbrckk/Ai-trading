@@ -41,6 +41,7 @@ jobs:
               run_parameter_benchmark, write_benchmark_report,
           )
           from ai_trading.mtf_shared_portfolio import simulate_shared_mtf_portfolio
+          from ai_trading.research_history import frozen_preprospective_history
 
           # Previously investigated 45/90-minute shadow variants, not a
           # newly optimized grid. These are research-only comparators.
@@ -49,8 +50,13 @@ jobs:
               MTFBenchmarkConfig(9, 0.0005, 0.25, 1000, 0.60),
               MTFBenchmarkConfig(18, 0.0003, 0.15, 1000, 0.60),
           )
+          # Do not let future study observations leak into retrospective
+          # model fits, hyperparameter selection or historical holdout labels.
           markets = {
-              symbol: load_history(symbol, period="1mo", interval="5m")
+              symbol: frozen_preprospective_history(
+                  load_history(symbol, period="1mo", interval="5m"),
+                  symbol=symbol,
+              )
               for symbol in ("GC=F", "^GDAXI", "BTC-USD")
           }
           # Freeze choices on earlier bars, then inspect the final 480

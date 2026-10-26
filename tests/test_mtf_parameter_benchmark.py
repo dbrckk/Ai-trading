@@ -23,6 +23,7 @@ from ai_trading.mtf_parameter_benchmark import (
     summarize_economic_trade_quality,
 )
 from ai_trading.mtf_shared_portfolio import simulate_shared_mtf_portfolio
+from ai_trading.research_history import frozen_preprospective_history
 
 
 def sample_market(n: int = 3200, phase: float = 0.0) -> pd.DataFrame:
@@ -185,6 +186,19 @@ def test_benchmark_payload_is_reproducible_and_explicit() -> None:
     assert payload["ranking"][0]["rank"] == 1
     assert payload["ranking"][0]["config"]["horizon_bars"] == 3
     assert payload["ranking"][0]["config"]["min_confidence"] == 0.56
+    # A rolling Yahoo period must not put any prospective bars into the
+    # historical parameter selection, even when downloaded successfully.
+    earlier = sample_market(n=5).tz_localize("UTC")
+    future = earlier.iloc[-1:].copy()
+    future.index = pd.DatetimeIndex(["2026-10-26T00:00:00Z"])
+    combined = pd.concat([earlier, future])
+    allowed = frozen_preprospective_history(combined, symbol="GC=F")
+    assert allowed.index.equals(earlier.index)
+    with pytest.raises(ValueError, match="timezone-aware"):
+        frozen_preprospective_history(combined.tz_localize(None), symbol="GC=F")
+    with pytest.raises(ValueError, match="no verifiable pre-prospective"):
+        frozen_preprospective_history(future, symbol="GC=F")
+
     stress = payload["ranking"][0]["markets"][0]["economic_cost_stress"]
     assert stress["scope"] == "retrospective_same_fills_hypothetical_no_promotion"
     assert stress["stress_is_not_a_selection_gate"] is True
