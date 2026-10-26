@@ -156,16 +156,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-26T00:14:28Z
+Generated: 2026-10-26T00:17:32Z
 
 ### Git
 - Branch: `main`
-- Head: `51cfd41b61c4`
-- Commit date: 2026-10-25T20:14:19-04:00
-- Commit: research: quantify after-cost MTF win rate and break-even payoff (#227)
+- Head: `22ab30b863ea`
+- Commit date: 2026-10-25T20:17:23-04:00
+- Commit: feat(dashboard): show break-even hit rate versus recent positive PnL events (#228)
 - Tracked files: 528
 
 ### Recently changed files
+- `src/ai_trading/dashboard.py`
+- `tests/test_dashboard.py`
 - `src/ai_trading/mtf_parameter_benchmark.py`
 - `tests/test_mtf_parameter_benchmark.py`
 - `src/ai_trading/forward_paper_signal.py`

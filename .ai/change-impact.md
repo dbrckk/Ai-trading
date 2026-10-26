@@ -1,18 +1,18 @@
 # Change impact
 
-Base: 3232c695ba15b7d86e3db9b51f8f1c5a71cd1855
-Head: 51cfd41b61c4d32dcb29136c9567d0d702b75623
+Base: a8d3bcd6697ea567ab2304a0d7bad21966decd82
+Head: 22ab30b863ea7ac1b16ea1e0da05e890fbad7ce7
 
 ## Changed files
-- M src/ai_trading/mtf_parameter_benchmark.py
-- M tests/test_mtf_parameter_benchmark.py
+- M src/ai_trading/dashboard.py
+- M tests/test_dashboard.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_mtf_parameter_benchmark.py
+- tests/test_dashboard.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

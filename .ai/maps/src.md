@@ -1737,6 +1737,9 @@ pnl_coverage_recent = False
 wins: int | None = None
 losses: int | None = None
 win_rate: float | None = None
+break_even_hit_rate: float | None = None
+recent_average_win: float | None = None
+recent_average_loss: float | None = None
 active_symbols: int | None = None
 cash: float | None = None
 units: float | None = None
@@ -1754,9 +1757,19 @@ pnl_coverage_total = len(recent) if performance_is_recent else trade_count
 pnl_coverage_recent = performance_is_recent
 ⋮----
 realized_pnl = None
-wins = sum(
-losses = sum(
-win_rate = (wins / (wins + losses)) if wins + losses else 0.0
+# The recent event hit rate is not a round-trip trade win rate:
+# journals can contain partial closes and cost-bearing rebalances.
+# Do not inflate it with zero or unknown PnL entries.
+recent_positive = [
+recent_negative = [
+wins = len(recent_positive)
+losses = len(recent_negative)
+win_rate = wins / (wins + losses) if wins + losses else None
+recent_average_win = sum(recent_positive) / wins if wins else None
+recent_average_loss = sum(recent_negative) / losses if losses else None
+# A strategy with a 70% hit rate can still lose money if its average
+# loss is large. Only define break-even when both payoffs exist.
+break_even_hit_rate = (
 active_symbols = len({trade.symbol for trade in recent})
 cash = state.cash if state is not None else starting_cash
 units = state.units if state is not None else 0.0
@@ -1821,6 +1834,8 @@ pnl_coverage_display = "-"
 recent_suffix = " recent" if pnl_coverage_recent else ""
 pnl_coverage_display = (
 win_rate_display = "-" if win_rate is None else f"{win_rate:.1%}"
+break_even_hit_rate_display = (
+recent_payoff_display = (
 wins_losses_display = "-" if wins is None or losses is None else f"{wins} / {losses}"
 active_symbols_display = "-" if active_symbols is None else str(active_symbols)
 average_pnl_display = _display_money(
