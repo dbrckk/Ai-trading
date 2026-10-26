@@ -82,18 +82,29 @@ def evaluate_governor(
 
     # NaN comparisons are false, which would otherwise let corrupt risk
     # telemetry fall through to TRADE or REDUCE. Stop issuing paper orders.
+    numeric_signals = (
+        signals.data_quality,
+        signals.model_confidence,
+        signals.stressed_cvar,
+        signals.drawdown,
+    )
+    recovery_counts = (
+        signals.recovery_recent_failures,
+        signals.recovery_fallback_depth,
+    )
+    operational_flags = (
+        signals.system_healthy,
+        signals.portfolio_risk_approved,
+        signals.stress_approved,
+        signals.liquidity_stressed,
+        signals.recovery_degraded,
+    )
     if (
-        any(
-            not isfinite(value)
-            for value in (
-                signals.data_quality,
-                signals.model_confidence,
-                signals.stressed_cvar,
-                signals.drawdown,
-                signals.recovery_recent_failures,
-                signals.recovery_fallback_depth,
-            )
-        )
+        any(type(value) not in (int, float) or not isfinite(value)
+            for value in numeric_signals)
+        or any(type(value) is not int for value in recovery_counts)
+        or any(type(value) is not bool for value in operational_flags)
+        or not isinstance(signals.crisis_mode, str)
         or not 0.0 <= signals.data_quality <= 1.0
         or not 0.0 <= signals.model_confidence <= 1.0
         or signals.stressed_cvar < 0.0
