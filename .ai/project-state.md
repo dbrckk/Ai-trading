@@ -156,29 +156,27 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-26T09:06:26Z
+Generated: 2026-10-26T09:27:46Z
 
 ### Git
 - Branch: `main`
-- Head: `2abf0d25f663`
-- Commit date: 2026-10-26T05:06:16-04:00
-- Commit: feat(ops): classify durable scheduler partial-market failures (#238)
+- Head: `581a1e43070d`
+- Commit date: 2026-10-26T05:27:36-04:00
+- Commit: research: shared Gold DAX BTC 1x-3x paper cost stress (#239)
 - Tracked files: 530
 
 ### Recently changed files
+- `.github/workflows/mtf-net-cost-evidence.yml`
+- `src/ai_trading/mtf_shared_portfolio.py`
+- `tests/test_mtf_parameter_benchmark.py`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/scheduler_endpoint.py`
 - `tests/test_scheduler_endpoint.py`
 - `src/ai_trading/portfolio_intelligence.py`
 - `tests/test_portfolio_intelligence.py`
 - `src/ai_trading/mtf_parameter_benchmark.py`
-- `tests/test_mtf_parameter_benchmark.py`
 - `src/ai_trading/risk_governor.py`
 - `tests/test_risk_governor.py`
-- `.github/workflows/mtf-net-cost-evidence.yml`
-- `research/retrospective-precutoff-enforcement.md`
-- `src/ai_trading/command_app.py`
-- `src/ai_trading/research_history.py`
 
 ### Project signals
 - `pyproject.toml`

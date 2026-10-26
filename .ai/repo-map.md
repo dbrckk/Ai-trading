@@ -862,7 +862,9 @@ jobs:
               MTFBenchmarkConfig, benchmark_payload, run_chronological_holdout,
               run_parameter_benchmark, write_benchmark_report,
           )
-          from ai_trading.mtf_shared_portfolio import simulate_shared_mtf_portfolio
+          from ai_trading.mtf_shared_portfolio import (
+              shared_portfolio_cost_stress, simulate_shared_mtf_portfolio,
+          )
           from ai_trading.research_history import frozen_preprospective_history
 
           # Previously investigated 45/90-minute shadow variants, not a
@@ -915,6 +917,7 @@ jobs:
           # or promote a model. Replay simultaneous signals with common cash
           # and a 30% gross entry cap; every configuration stands alone.
           shared = {}
+          stressed_costs = {}
           for aggregate in results:
               portfolio = simulate_shared_mtf_portfolio(
                   markets, aggregate.markets,
@@ -922,6 +925,21 @@ jobs:
                   max_gross_fraction=0.30,
               )
               shared[aggregate.config.name] = asdict(portfolio)
+              stressed_costs[aggregate.config.name] = shared_portfolio_cost_stress(
+                  markets, aggregate.markets,
+                  starting_cash=100_000.0, per_market_fraction=0.10,
+                  max_gross_fraction=0.30,
+              )
+              baseline = stressed_costs[aggregate.config.name]["scenarios"]["1x"]
+              if abs(baseline["net_return"] - portfolio.net_return) > 1e-10:
+                  raise ValueError("shared-capital 1x cost-stress baseline drift")
+              for multiplier, stress in stressed_costs[aggregate.config.name]["scenarios"].items():
+                  print(
+                      f"MTF shared-cost-stress {aggregate.config.name} "
+                      f"{multiplier}: net={stress['net_return']:+.4%} "
+                      f"drawdown={stress['max_drawdown']:.4%} "
+                      f"trades={stress['accepted_trades']}"
+                  )
               print(
                   f"MTF shared-capital {aggregate.config.name}: "
                   f"trades={portfolio.accepted_trades}, "
@@ -945,6 +963,7 @@ jobs:
                       "prospective_holdout": False,
                   },
                   "configurations": shared,
+                  "same_signal_cost_stress": stressed_costs,
               }, indent=2, sort_keys=True) + "\n"
           )
           for aggregate in results:
@@ -6075,6 +6094,19 @@ fee = abs(position.units) * price * rate
 pnl = position.units * (price - position.entry_price) - position.entry_cost - fee
 ⋮----
 final_equity = mark()
+⋮----
+"""Reprice fixed research *signals* at 1x, 2x and 3x execution friction.
+
+    Replay each scenario through the same capital/exposure constraints. Trade
+    dates, forecast decisions and historical prices stay fixed; realized
+    position sizes can differ because fees affect equity and capacity.
+    These are retrospective, hypothetical results, not live broker returns.
+    """
+⋮----
+scenarios: dict[str, dict[str, object]] = {}
+⋮----
+stressed = tuple(
+report = simulate_shared_mtf_portfolio(
 ````
 
 ## File: src/ai_trading/multi_market.py
@@ -12797,6 +12829,8 @@ base = evaluate_market_config(
 a = replace(
 b = replace(
 account = simulate_shared_mtf_portfolio(
+⋮----
+stress = shared_portfolio_cost_stress(
 ⋮----
 high_cost = simulate_shared_mtf_portfolio(
 ````

@@ -2246,6 +2246,8 @@ a = replace(
 b = replace(
 account = simulate_shared_mtf_portfolio(
 ⋮----
+stress = shared_portfolio_cost_stress(
+⋮----
 high_cost = simulate_shared_mtf_portfolio(
 ```
 

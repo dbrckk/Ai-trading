@@ -4662,6 +4662,19 @@ fee = abs(position.units) * price * rate
 pnl = position.units * (price - position.entry_price) - position.entry_cost - fee
 ⋮----
 final_equity = mark()
+⋮----
+"""Reprice fixed research *signals* at 1x, 2x and 3x execution friction.
+
+    Replay each scenario through the same capital/exposure constraints. Trade
+    dates, forecast decisions and historical prices stay fixed; realized
+    position sizes can differ because fees affect equity and capacity.
+    These are retrospective, hypothetical results, not live broker returns.
+    """
+⋮----
+scenarios: dict[str, dict[str, object]] = {}
+⋮----
+stressed = tuple(
+report = simulate_shared_mtf_portfolio(
 ```
 
 ## File: ai_trading/multi_market.py
