@@ -545,6 +545,41 @@ def test_forward_paper_observer_rejects_stale_paper_signals_and_missing_markets(
         )
 
 
+def test_forward_paper_excludes_precutoff_signal_even_if_recent(tmp_path) -> None:
+    now = datetime(2026, 10, 26, 0, 8, tzinfo=UTC)
+    rows = [
+        _forward_observed_market(symbol, (now - timedelta(minutes=1)).isoformat())
+        for symbol in ("GC=F", "^GDAXI", "BTC-USD")
+    ]
+    rows[0]["signal_time"] = "2026-10-25T23:59:00+00:00"
+    record = build_forward_paper_observation(
+        {"markets": rows},
+        deployed_commit="a" * 40,
+        observed_at_utc=now,
+        market_response_sha256="b" * 64,
+        liveness_response_sha256="c" * 64,
+    )
+    assert record["eligible_markets"] == 2
+    assert record["paper_entry_eligible_markets"] == 2
+    assert record["markets"][0]["future_observation_eligible"] is False
+    assert record["markets"][0]["paper_entry_eligible"] is False
+    assert record["markets"][0]["signal"] is None
+    path = tmp_path / "observation.json"
+    path.write_text(json.dumps(record), encoding="utf-8")
+    verify_forward_paper_archive(path)
+
+    record["markets"][0]["future_observation_eligible"] = True
+    record["markets"][0]["signal"] = "LONG"
+    record["markets"][0]["confidence"] = 0.72
+    record["markets"][0]["risk_approved"] = True
+    record["markets"][0]["paper_entry_eligible"] = True
+    record["eligible_markets"] = 3
+    record["paper_entry_eligible_markets"] = 3
+    path.write_text(json.dumps(record), encoding="utf-8")
+    with pytest.raises(ValueError, match="not fresh"):
+        verify_forward_paper_archive(path)
+
+
 def test_forward_paper_failed_source_is_auditable_without_fake_forecasts(tmp_path) -> None:
     diagnostic = {
         "schema_version": 1,
