@@ -20,6 +20,27 @@ class PortfolioIntelligenceConfig:
     correlation_hard_limit: float = 0.90
 
     def __post_init__(self) -> None:
+        # NaN comparisons make the existing numeric bounds silently pass.
+        # Reject undefined risk parameters before leverage/weights are built.
+        for name in (
+            "target_annual_volatility",
+            "min_leverage",
+            "max_leverage",
+            "drawdown_soft_limit",
+            "drawdown_hard_limit",
+            "stress_vol_multiplier",
+            "confidence_floor",
+            "confidence_power",
+            "correlation_soft_limit",
+            "correlation_hard_limit",
+        ):
+            value = getattr(self, name)
+            if (
+                not isinstance(value, (int, float))
+                or isinstance(value, bool)
+                or not np.isfinite(value)
+            ):
+                raise ValueError(f"{name} must be finite and numeric")
         if self.target_annual_volatility <= 0:
             raise ValueError("target_annual_volatility must be positive")
         if self.min_leverage <= 0 or self.max_leverage < self.min_leverage:
@@ -86,8 +107,11 @@ def _active_max_pair_correlation(
     for i, asset in enumerate(corr.index):
         for other in corr.columns[i + 1 :]:
             value = corr.at[asset, other]
-            if pd.notna(value):
-                max_corr = max(max_corr, float(value))
+            # A constant, corrupted or otherwise unidentifiable pair
+            # cannot prove diversification. Conservatively cap leverage.
+            if not np.isfinite(value):
+                return 1.0
+            max_corr = max(max_corr, float(value))
     return max_corr
 
 
