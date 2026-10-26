@@ -156,26 +156,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-26T00:33:28Z
+Generated: 2026-10-26T06:18:33Z
 
 ### Git
 - Branch: `main`
-- Head: `b54d6423f7bf`
-- Commit date: 2026-10-25T20:33:17-04:00
-- Commit: fix(scheduler): block overlapping paper cycle POSTs in server process (#229)
+- Head: `5f07ee862d03`
+- Commit date: 2026-10-26T02:18:23-04:00
+- Commit: research: add 1x/2x/3x after-cost MTF trade robustness (#233)
 - Tracked files: 528
 
 ### Recently changed files
+- `src/ai_trading/mtf_parameter_benchmark.py`
+- `tests/test_mtf_parameter_benchmark.py`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/scheduler_endpoint.py`
 - `tests/test_scheduler_endpoint.py`
 - `tests/test_dashboard.py`
-- `src/ai_trading/mtf_parameter_benchmark.py`
-- `tests/test_mtf_parameter_benchmark.py`
 - `src/ai_trading/forward_paper_signal.py`
 - `tests/test_dashboard_health.py`
-- `.github/workflows/forward-paper-signal-evidence.yml`
-- `research/mtf-prospective-evaluation-method.md`
 
 ### Project signals
 - `pyproject.toml`

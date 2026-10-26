@@ -5546,6 +5546,27 @@ total_observations: int
 total_directional_observations: int
 markets_passing_directional_gate: int
 ⋮----
+def economic_cost_stress_report(result: MarketBenchmarkResult) -> dict[str, object]
+⋮----
+"""Replay the SAME retrospective trades under higher *assumed* costs.
+
+    Cost sensitivity is diagnostic only; it must not select a configuration,
+    refit a model or alter the frozen prospective registration. Holding fills
+    and sides fixed also means this cannot model price impact or a broker.
+    """
+⋮----
+baseline_round_trip_bps = 2.0 * (
+scenarios: dict[str, object] = {}
+⋮----
+round_trip_fraction = baseline_round_trip_bps * multiplier / 10_000.0
+returns = tuple(
+⋮----
+compounded = prod(max(0.0, 1.0 + ret) for ret in returns) - 1.0
+⋮----
+diagnostics = summarize_economic_trade_quality(returns)
+⋮----
+# Guard against reporting a cost sensitivity series from unrelated fills.
+⋮----
 def default_benchmark_grid() -> tuple[MTFBenchmarkConfig, ...]
 ⋮----
 """Refined grid after the first coarse 10m/15m/30m benchmark.
@@ -5734,6 +5755,13 @@ interval = (
 break_even = (
 payoff = (
 profit_factor = (
+⋮----
+scenarios = economic_cost_stress_report(row)["scenarios"]
+formatted = []
+⋮----
+value = scenarios[key]["compounded_net_return"]
+⋮----
+twice = scenarios["2x"]["compounded_net_return"]
 ⋮----
 def main() -> None
 ⋮----
@@ -12643,6 +12671,8 @@ outcomes = summarize_economic_trade_quality([0.02, 0.01, -0.04, 0.0])
 ⋮----
 sized = payload["method"]["economic_gate"]["sized_research_account"]
 ⋮----
+stress = payload["ranking"][0]["markets"][0]["economic_cost_stress"]
+⋮----
 def test_btc_focused_grid_is_bounded_and_longer_horizon() -> None
 ⋮----
 grid = btc_focused_benchmark_grid()
@@ -12680,6 +12710,8 @@ config = MTFBenchmarkConfig(3, 0.0005, 0.25, 700, 0.50)
 ⋮----
 without_costs = evaluate_market_config(
 with_costs = evaluate_market_config(
+⋮----
+stressed = economic_cost_stress_report(with_costs)["scenarios"]
 ⋮----
 result = AggregateBenchmarkResult(
 ⋮----
