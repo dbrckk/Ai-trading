@@ -940,6 +940,57 @@ def write_benchmark_report(
                 f"{row.long_labels}/{row.flat_labels}/{row.short_labels} |"
             )
         lines.append("")
+    lines.extend([
+        "## After-cost win rate and break-even payoff diagnostics",
+        "",
+        "Observed win frequency is NOT net profitability. Net returns already",
+        "include transaction costs and slippage on both entry and exit.",
+        "Zero-net trades are not wins. Break-even hit rate and Wilson interval",
+        "use decisive trades only; the Wilson calculation assumes independent",
+        "trades, an approximation despite nonoverlapping research positions.",
+        "No result here is a new prospective holdout or an automatic trade gate.",
+        "",
+        "| Market | Frozen config | Win / loss / flat | Net win rate (all) | "
+        "Decisive 95% Wilson interval | Break-even decisive win rate | "
+        "Mean win / mean loss | Net profit factor |",
+        "| --- | --- | ---: | ---: | --- | ---: | --- | ---: |",
+    ])
+    for result in results:
+        for row in result.markets:
+            quality = row.economic_trade_quality
+            if quality is None:
+                lines.append(f"| {row.symbol} | {row.config_name} | N/A | N/A | N/A | N/A | N/A | N/A |")
+                continue
+            hit_rate = (
+                f"{quality.win_rate_all_trades:.1%}"
+                if quality.win_rate_all_trades is not None else "N/A"
+            )
+            interval = (
+                f"{quality.decisive_win_rate_lower95:.1%}–"
+                f"{quality.decisive_win_rate_upper95:.1%}"
+                if quality.decisive_win_rate_lower95 is not None
+                and quality.decisive_win_rate_upper95 is not None else "N/A"
+            )
+            break_even = (
+                f"{quality.break_even_decisive_win_rate:.1%}"
+                if quality.break_even_decisive_win_rate is not None else "N/A"
+            )
+            payoff = (
+                f"{quality.mean_win_net_return:+.3%} / "
+                f"{quality.mean_loss_abs_net_return:.3%}"
+                if quality.mean_win_net_return is not None
+                and quality.mean_loss_abs_net_return is not None else "N/A"
+            )
+            profit_factor = (
+                f"{quality.net_profit_factor:.2f}"
+                if quality.net_profit_factor is not None else "N/A"
+            )
+            lines.append(
+                f"| {row.symbol} | {row.config_name} | "
+                f"{quality.winning_trades}/{quality.losing_trades}/{quality.flat_trades} | "
+                f"{hit_rate} | {interval} | {break_even} | {payoff} | {profit_factor} |"
+            )
+    lines.append("")
     markdown_target.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
