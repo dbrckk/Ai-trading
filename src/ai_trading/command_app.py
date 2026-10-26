@@ -59,6 +59,7 @@ def turnover_study(
     from .data import load_history
     from .execution_costs import risk_config_for_symbol
     from .paper_cycle import _completed_market_bars
+    from .research_history import frozen_preprospective_history
     from .turnover_study import compare_rebalance_thresholds
 
     names = tuple(s.strip() for s in symbols.split(",") if s.strip())
@@ -68,9 +69,12 @@ def turnover_study(
     failures: list[dict[str, str]] = []
     for symbol in names:
         try:
-            market = _completed_market_bars(
-                load_history(symbol, period, interval),
-                interval=interval,
+            market = frozen_preprospective_history(
+                _completed_market_bars(
+                    load_history(symbol, period, interval),
+                    interval=interval,
+                ),
+                symbol=symbol,
             ).tail(max_bars)
             result = compare_rebalance_thresholds(
                 symbol,
@@ -96,6 +100,8 @@ def turnover_study(
         "period": period,
         "interval": interval,
         "max_bars_per_market": max_bars,
+        "historical_last_open_exclusive_utc": "2026-10-26T00:00:00+00:00",
+        "prospective_bars_used_for_selection": False,
         "results": results,
         "failures": failures,
         "changes_paper_settings": False,
