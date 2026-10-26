@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 5 success / 0 failure / 3 active
+Summary: 4 success / 0 failure / 4 active
 
-- Forward Paper Signal Evidence: in_progress / pending (bd7716b3)
-- CodeQL: queued / pending (bd7716b3)
-- CI: in_progress / pending (bd7716b3)
-- CI: completed / success (91a2b8b0)
-- CodeQL: completed / success (91a2b8b0)
-- Forward Paper Signal Evidence: completed / success (175dde02)
-- Hosted Dashboard Probe: completed / success (175dde02)
-- CI: completed / success (175dde02)
+- CI: in_progress / pending (828ac019)
+- Hosted Dashboard Probe: in_progress / pending (828ac019)
+- CodeQL: in_progress / pending (828ac019)
+- Forward Paper Signal Evidence: in_progress / pending (828ac019)
+- Paper Cycle: completed / success (dd2749b2)
+- CI: completed / success (958356e9)
+- CodeQL: completed / success (958356e9)
+- Forward Paper Signal Evidence: completed / success (dd2749b2)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

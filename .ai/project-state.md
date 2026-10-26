@@ -156,22 +156,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-25T11:48:23Z
+Generated: 2026-10-26T00:01:38Z
 
 ### Git
 - Branch: `main`
-- Head: `bd7716b3d724`
-- Commit date: 2026-10-25T07:48:13-04:00
-- Commit: research: sample paper signals twice per hour before observation window (#224)
+- Head: `828ac0196173`
+- Commit date: 2026-10-25T20:01:29-04:00
+- Commit: fix(research): enforce prospective cutoff on original signal timestamps (#226)
 - Tracked files: 528
 
 ### Recently changed files
-- `.github/workflows/forward-paper-signal-evidence.yml`
-- `research/mtf-prospective-evaluation-method.md`
 - `src/ai_trading/forward_paper_signal.py`
 - `tests/test_dashboard_health.py`
+- `.github/workflows/forward-paper-signal-evidence.yml`
+- `research/mtf-prospective-evaluation-method.md`
 - `research/forward-paper-signal-operations.md`
-- `research/mtf-prospective-evaluation-2026-10-26-v1.json`
 
 ### Project signals
 - `pyproject.toml`

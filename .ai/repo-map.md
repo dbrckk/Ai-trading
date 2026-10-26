@@ -11350,6 +11350,10 @@ path = tmp_path / "observation.json"
 ⋮----
 rows = [
 ⋮----
+def test_forward_paper_excludes_precutoff_signal_even_if_recent(tmp_path) -> None
+⋮----
+now = datetime(2026, 10, 26, 0, 8, tzinfo=UTC)
+⋮----
 def test_forward_paper_failed_source_is_auditable_without_fake_forecasts(tmp_path) -> None
 ⋮----
 diagnostic = {
