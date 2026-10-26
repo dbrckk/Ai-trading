@@ -19,6 +19,7 @@ from ai_trading.mtf_parameter_benchmark import (
     market_selections,
     run_chronological_holdout,
     run_parameter_benchmark,
+    summarize_economic_trade_quality,
 )
 from ai_trading.mtf_shared_portfolio import simulate_shared_mtf_portfolio
 
@@ -87,6 +88,15 @@ def test_market_benchmark_is_purged_and_reports_directional_evidence() -> None:
         result.sized_equity_final / 100_000.0 - 1.0
     )
     assert 0.0 <= result.sized_max_drawdown < 1.0
+    assert result.economic_trade_quality is not None
+    quality = result.economic_trade_quality
+    assert (
+        quality.winning_trades + quality.losing_trades + quality.flat_trades
+        == result.economic_trades
+    )
+    if quality.win_rate_all_trades is not None:
+        assert 0.0 <= quality.win_rate_all_trades <= 1.0
+    assert quality.net_profit_factor is None or quality.net_profit_factor >= 0.0
 
 
 def test_parameter_benchmark_ranks_configs_across_markets() -> None:
@@ -141,6 +151,28 @@ def test_benchmark_payload_is_reproducible_and_explicit() -> None:
         "min_active_precision": 0.5,
     }
     assert payload["method"]["economic_gate"]["min_non_overlapping_trades"] == 20
+    assert payload["method"]["economic_gate"]["win_rate_diagnostics"] == (
+        "descriptive_after_round_trip_costs_only"
+    )
+    # A deceptively high hit rate is not enough when losing trades cost more.
+    outcomes = summarize_economic_trade_quality([0.02, 0.01, -0.04, 0.0])
+    assert outcomes.winning_trades == 2
+    assert outcomes.losing_trades == 1
+    assert outcomes.flat_trades == 1
+    assert outcomes.win_rate_all_trades == pytest.approx(0.5)
+    assert outcomes.decisive_win_rate == pytest.approx(2 / 3)
+    assert outcomes.decisive_win_rate_lower95 < outcomes.break_even_decisive_win_rate
+    assert outcomes.decisive_win_rate_upper95 > outcomes.decisive_win_rate_lower95
+    assert outcomes.mean_win_net_return == pytest.approx(0.015)
+    assert outcomes.mean_loss_abs_net_return == pytest.approx(0.04)
+    assert outcomes.payoff_ratio == pytest.approx(0.375)
+    assert outcomes.break_even_decisive_win_rate == pytest.approx(0.04 / 0.055)
+    assert outcomes.net_profit_factor == pytest.approx(0.75)
+    assert summarize_economic_trade_quality([]).win_rate_all_trades is None
+    assert summarize_economic_trade_quality([0.0]).flat_trades == 1
+    assert summarize_economic_trade_quality([0.01]).net_profit_factor is None
+    with pytest.raises(ValueError, match="finite"):
+        summarize_economic_trade_quality([float("nan")])
     assert payload["method"]["economic_gate"]["transaction_cost_bps"] == 2.0
     assert payload["method"]["economic_gate"]["slippage_bps"] == 1.0
     assert payload["method"]["economic_gate"]["no_auto_promotion"] is True

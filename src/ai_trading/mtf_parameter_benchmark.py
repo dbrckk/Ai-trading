@@ -4,7 +4,7 @@ import argparse
 import json
 from collections.abc import Iterable
 from dataclasses import asdict, dataclass
-from math import isfinite, prod
+from math import isfinite, prod, sqrt
 from pathlib import Path
 from statistics import fmean, pstdev
 
@@ -77,6 +77,78 @@ class MTFResearchTrade:
 
 
 @dataclass(frozen=True)
+class EconomicTradeQuality:
+    """Descriptive after-cost outcomes. Not a promotion or execution gate.
+
+    Wilson limits assume independent decisive trades; serial dependence can
+    substantially widen actual uncertainty, even with disjoint executions.
+    """
+
+    winning_trades: int
+    losing_trades: int
+    flat_trades: int
+    win_rate_all_trades: float | None
+    decisive_win_rate: float | None
+    decisive_win_rate_lower95: float | None
+    decisive_win_rate_upper95: float | None
+    mean_win_net_return: float | None
+    mean_loss_abs_net_return: float | None
+    payoff_ratio: float | None
+    break_even_decisive_win_rate: float | None
+    net_profit_factor: float | None
+
+
+def summarize_economic_trade_quality(
+    net_returns: Iterable[float],
+) -> EconomicTradeQuality:
+    """Describe net winning frequency AND gain/loss asymmetry, without tuning."""
+    returns = tuple(float(value) for value in net_returns)
+    if any(not isfinite(value) for value in returns):
+        raise ValueError("economic trade returns must be finite")
+    wins = [value for value in returns if value > 0.0]
+    losses = [-value for value in returns if value < 0.0]
+    total = len(returns)
+    decisive = len(wins) + len(losses)
+    avg_win = fmean(wins) if wins else None
+    avg_loss = fmean(losses) if losses else None
+    lower: float | None = None
+    upper: float | None = None
+    decisive_rate: float | None = None
+    if decisive:
+        decisive_rate = len(wins) / decisive
+        # Descriptive Wilson 95% interval, NOT a valid test of dependent
+        # market-trade edge or a license to change frozen parameters.
+        z = 1.96
+        denominator = 1.0 + z * z / decisive
+        center = (decisive_rate + z * z / (2.0 * decisive)) / denominator
+        half_width = (
+            z * sqrt(
+                decisive_rate * (1.0 - decisive_rate) / decisive
+                + z * z / (4.0 * decisive * decisive)
+            ) / denominator
+        )
+        lower = max(0.0, center - half_width)
+        upper = min(1.0, center + half_width)
+    return EconomicTradeQuality(
+        winning_trades=len(wins),
+        losing_trades=len(losses),
+        flat_trades=total - decisive,
+        win_rate_all_trades=len(wins) / total if total else None,
+        decisive_win_rate=decisive_rate,
+        decisive_win_rate_lower95=lower,
+        decisive_win_rate_upper95=upper,
+        mean_win_net_return=avg_win,
+        mean_loss_abs_net_return=avg_loss,
+        payoff_ratio=avg_win / avg_loss if avg_win is not None and avg_loss is not None else None,
+        break_even_decisive_win_rate=(
+            avg_loss / (avg_win + avg_loss)
+            if avg_win is not None and avg_loss is not None else None
+        ),
+        net_profit_factor=sum(wins) / sum(losses) if losses else None,
+    )
+
+
+@dataclass(frozen=True)
 class MarketBenchmarkResult:
     symbol: str
     config_name: str
@@ -110,6 +182,7 @@ class MarketBenchmarkResult:
     sized_net_return: float = 0.0
     sized_max_drawdown: float = 0.0
     paper_trades: tuple[MTFResearchTrade, ...] = ()
+    economic_trade_quality: EconomicTradeQuality | None = None
 
 
 @dataclass(frozen=True)
@@ -496,6 +569,7 @@ def evaluate_market_config(
         and active_precision > _MIN_ACTIVE_PRECISION
     )
     economic_mean = fmean(economic_returns) if economic_returns else 0.0
+    economic_trade_quality = summarize_economic_trade_quality(economic_returns)
     # A loss exceeding available capital is conservatively treated as ruin.
     economic_growth = prod(max(0.0, 1.0 + ret) for ret in economic_returns)
     if not isfinite(economic_growth):
@@ -538,6 +612,7 @@ def evaluate_market_config(
         sized_net_return=float(sized_net),
         sized_max_drawdown=float(sized_max_drawdown),
         paper_trades=tuple(paper_trades),
+        economic_trade_quality=economic_trade_quality,
     )
 
 
@@ -731,6 +806,8 @@ def benchmark_payload(results: tuple[AggregateBenchmarkResult, ...]) -> dict[str
             },
             "economic_gate": {
                 "min_non_overlapping_trades": _MIN_ECONOMIC_TRADES,
+                "win_rate_diagnostics": "descriptive_after_round_trip_costs_only",
+                "wilson_interval": "95pct_decisive_trades_iid_assumption_not_a_live_gate",
                 "requires_positive_mean_net_return": True,
                 "requires_positive_compounded_net_return": True,
                 "entry": "next_bar_open",
@@ -863,6 +940,57 @@ def write_benchmark_report(
                 f"{row.long_labels}/{row.flat_labels}/{row.short_labels} |"
             )
         lines.append("")
+    lines.extend([
+        "## After-cost win rate and break-even payoff diagnostics",
+        "",
+        "Observed win frequency is NOT net profitability. Net returns already",
+        "include transaction costs and slippage on both entry and exit.",
+        "Zero-net trades are not wins. Break-even hit rate and Wilson interval",
+        "use decisive trades only; the Wilson calculation assumes independent",
+        "trades, an approximation despite nonoverlapping research positions.",
+        "No result here is a new prospective holdout or an automatic trade gate.",
+        "",
+        ("| Market | Frozen config | Win / loss / flat | Net win rate (all) | "
+         "Decisive 95% Wilson interval | Break-even decisive win rate | "
+         "Mean win / mean loss | Net profit factor |"),
+        "| --- | --- | ---: | ---: | --- | ---: | --- | ---: |",
+    ])
+    for result in results:
+        for row in result.markets:
+            quality = row.economic_trade_quality
+            if quality is None:
+                lines.append(f"| {row.symbol} | {row.config_name} | N/A | N/A | N/A | N/A | N/A | N/A |")
+                continue
+            hit_rate = (
+                f"{quality.win_rate_all_trades:.1%}"
+                if quality.win_rate_all_trades is not None else "N/A"
+            )
+            interval = (
+                f"{quality.decisive_win_rate_lower95:.1%}–"
+                f"{quality.decisive_win_rate_upper95:.1%}"
+                if quality.decisive_win_rate_lower95 is not None
+                and quality.decisive_win_rate_upper95 is not None else "N/A"
+            )
+            break_even = (
+                f"{quality.break_even_decisive_win_rate:.1%}"
+                if quality.break_even_decisive_win_rate is not None else "N/A"
+            )
+            payoff = (
+                f"{quality.mean_win_net_return:+.3%} / "
+                f"{quality.mean_loss_abs_net_return:.3%}"
+                if quality.mean_win_net_return is not None
+                and quality.mean_loss_abs_net_return is not None else "N/A"
+            )
+            profit_factor = (
+                f"{quality.net_profit_factor:.2f}"
+                if quality.net_profit_factor is not None else "N/A"
+            )
+            lines.append(
+                f"| {row.symbol} | {row.config_name} | "
+                f"{quality.winning_trades}/{quality.losing_trades}/{quality.flat_trades} | "
+                f"{hit_rate} | {interval} | {break_even} | {payoff} | {profit_factor} |"
+            )
+    lines.append("")
     markdown_target.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
