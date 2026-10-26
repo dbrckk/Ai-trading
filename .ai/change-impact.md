@@ -1,18 +1,18 @@
 # Change impact
 
-Base: 2aa95994900ce3b9637f54bb3a708d1adfcbb6e8
-Head: aea64247f6792e68869b157259f15648d96e5016
+Base: 362297cd86a5c908ac1a79e088aa9357ff5beeaa
+Head: 4f8906f66bdd10114c757f46601039135d05f402
 
 ## Changed files
-- M src/ai_trading/risk_governor.py
-- M tests/test_risk_governor.py
+- M src/ai_trading/mtf_parameter_benchmark.py
+- M tests/test_mtf_parameter_benchmark.py
 
 ## Affected areas
 - src
 - tests
 
 ## Related test candidates
-- tests/test_risk_governor.py
+- tests/test_mtf_parameter_benchmark.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

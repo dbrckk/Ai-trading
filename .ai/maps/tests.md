@@ -2179,6 +2179,8 @@ allowed = frozen_preprospective_history(combined, symbol="GC=F")
 ⋮----
 stress = payload["ranking"][0]["markets"][0]["economic_cost_stress"]
 ⋮----
+empty = economic_cost_stress_report(
+⋮----
 def test_btc_focused_grid_is_bounded_and_longer_horizon() -> None
 ⋮----
 grid = btc_focused_benchmark_grid()

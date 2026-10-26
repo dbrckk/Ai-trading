@@ -5,7 +5,7 @@
 - Files reparsed this run: 2
 - Symbols: 2020
 - Internal import edges: 1265
-- Impacted files: 3
+- Impacted files: 4
 - Selected tests: 2
 
 ## Languages

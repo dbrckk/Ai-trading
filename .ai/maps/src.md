@@ -4356,6 +4356,7 @@ formatted = []
 value = scenarios[key]["compounded_net_return"]
 ⋮----
 twice = scenarios["2x"]["compounded_net_return"]
+twice_label = (
 ⋮----
 def main() -> None
 ⋮----

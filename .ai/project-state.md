@@ -156,28 +156,27 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-26T08:38:33Z
+Generated: 2026-10-26T08:49:41Z
 
 ### Git
 - Branch: `main`
-- Head: `aea64247f679`
-- Commit date: 2026-10-26T04:38:23-04:00
-- Commit: fix(risk): validate governor policy fail-closed thresholds (#236)
+- Head: `4f8906f66bdd`
+- Commit date: 2026-10-26T04:49:31-04:00
+- Commit: fix(research): distinguish unobserved trade-cost robustness from negative outcomes (#235)
 - Tracked files: 530
 
 ### Recently changed files
+- `src/ai_trading/mtf_parameter_benchmark.py`
+- `tests/test_mtf_parameter_benchmark.py`
 - `src/ai_trading/risk_governor.py`
 - `tests/test_risk_governor.py`
 - `.github/workflows/mtf-net-cost-evidence.yml`
 - `research/retrospective-precutoff-enforcement.md`
 - `src/ai_trading/command_app.py`
-- `src/ai_trading/mtf_parameter_benchmark.py`
 - `src/ai_trading/research_history.py`
-- `tests/test_mtf_parameter_benchmark.py`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/scheduler_endpoint.py`
 - `tests/test_scheduler_endpoint.py`
-- `tests/test_dashboard.py`
 
 ### Project signals
 - `pyproject.toml`
