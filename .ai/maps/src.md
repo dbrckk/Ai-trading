@@ -179,6 +179,7 @@ ai_trading/
   reliability.py
   replay.py
   reproducibility.py
+  research_history.py
   research_model_codec.py
   resilience_stability.py
   resilience.py
@@ -1288,7 +1289,7 @@ names = tuple(s.strip() for s in symbols.split(",") if s.strip())
 results: list[dict[str, object]] = []
 failures: list[dict[str, str]] = []
 ⋮----
-market = _completed_market_bars(
+market = frozen_preprospective_history(
 result = compare_rebalance_thresholds(
 ⋮----
 except Exception as exc:  # noqa: BLE001 - report missing provider evidence
@@ -4364,6 +4365,8 @@ args = parser.parse_args()
 ⋮----
 symbols = tuple(part.strip() for part in args.symbols.split(",") if part.strip())
 ⋮----
+# A rolling Yahoo "1mo" window includes new study bars after 2026-10-26.
+# Never let them enter retrospective tuning, fold selection or labels.
 markets = {
 configs = (
 results = run_parameter_benchmark(
@@ -7569,6 +7572,24 @@ expected = artifact.dataset
 current = build_dataset_evidence(
 ⋮----
 """Convenience predicate for exact market-data identity."""
+```
+
+## File: ai_trading/research_history.py
+```python
+"""Research-only guard: never refit historical selectors on prospective bars.
+
+The registered 2026-10-26 study treats all later market observations as
+forward evidence. Historical selector workflows may still be rerun, but
+their *input* must be restricted to strictly earlier candle opening times.
+This helper does not change the live paper engine or capture workflow.
+"""
+⋮----
+FROZEN_PROSPECTIVE_START_UTC = pd.Timestamp("2026-10-26T00:00:00+00:00")
+⋮----
+"""Fail closed on ambiguous clocks and missing pre-study history."""
+⋮----
+opening_times = frame.index.tz_convert("UTC")
+history = frame.loc[opening_times < FROZEN_PROSPECTIVE_START_UTC].copy()
 ```
 
 ## File: ai_trading/research_model_codec.py

@@ -1,13 +1,19 @@
 # Change impact
 
-Base: 46559b82f32cf1a8961831a56d9ae74a3e4266d1
-Head: 5f07ee862d0319a7edbd82ad5787c35cd9461d71
+Base: 3f9802bb3720428aef981f54c7da000a83cb108b
+Head: d4c018cc03afa3cbd12b06676d404e848bcb61af
 
 ## Changed files
+- M .github/workflows/mtf-net-cost-evidence.yml
+- A research/retrospective-precutoff-enforcement.md
+- M src/ai_trading/command_app.py
 - M src/ai_trading/mtf_parameter_benchmark.py
+- A src/ai_trading/research_history.py
 - M tests/test_mtf_parameter_benchmark.py
 
 ## Affected areas
+- .github
+- research
 - src
 - tests
 

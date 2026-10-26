@@ -210,6 +210,7 @@ src/
     reliability.py
     replay.py
     reproducibility.py
+    research_history.py
     research_model_codec.py
     resilience_stability.py
     resilience.py
@@ -862,6 +863,7 @@ jobs:
               run_parameter_benchmark, write_benchmark_report,
           )
           from ai_trading.mtf_shared_portfolio import simulate_shared_mtf_portfolio
+          from ai_trading.research_history import frozen_preprospective_history
 
           # Previously investigated 45/90-minute shadow variants, not a
           # newly optimized grid. These are research-only comparators.
@@ -870,8 +872,13 @@ jobs:
               MTFBenchmarkConfig(9, 0.0005, 0.25, 1000, 0.60),
               MTFBenchmarkConfig(18, 0.0003, 0.15, 1000, 0.60),
           )
+          # Do not let future study observations leak into retrospective
+          # model fits, hyperparameter selection or historical holdout labels.
           markets = {
-              symbol: load_history(symbol, period="1mo", interval="5m")
+              symbol: frozen_preprospective_history(
+                  load_history(symbol, period="1mo", interval="5m"),
+                  symbol=symbol,
+              )
               for symbol in ("GC=F", "^GDAXI", "BTC-USD")
           }
           # Freeze choices on earlier bars, then inspect the final 480
@@ -2695,7 +2702,7 @@ names = tuple(s.strip() for s in symbols.split(",") if s.strip())
 results: list[dict[str, object]] = []
 failures: list[dict[str, str]] = []
 ⋮----
-market = _completed_market_bars(
+market = frozen_preprospective_history(
 result = compare_rebalance_thresholds(
 ⋮----
 except Exception as exc:  # noqa: BLE001 - report missing provider evidence
@@ -5771,6 +5778,8 @@ args = parser.parse_args()
 ⋮----
 symbols = tuple(part.strip() for part in args.symbols.split(",") if part.strip())
 ⋮----
+# A rolling Yahoo "1mo" window includes new study bars after 2026-10-26.
+# Never let them enter retrospective tuning, fold selection or labels.
 markets = {
 configs = (
 results = run_parameter_benchmark(
@@ -8976,6 +8985,24 @@ expected = artifact.dataset
 current = build_dataset_evidence(
 ⋮----
 """Convenience predicate for exact market-data identity."""
+````
+
+## File: src/ai_trading/research_history.py
+````python
+"""Research-only guard: never refit historical selectors on prospective bars.
+
+The registered 2026-10-26 study treats all later market observations as
+forward evidence. Historical selector workflows may still be rerun, but
+their *input* must be restricted to strictly earlier candle opening times.
+This helper does not change the live paper engine or capture workflow.
+"""
+⋮----
+FROZEN_PROSPECTIVE_START_UTC = pd.Timestamp("2026-10-26T00:00:00+00:00")
+⋮----
+"""Fail closed on ambiguous clocks and missing pre-study history."""
+⋮----
+opening_times = frame.index.tz_convert("UTC")
+history = frame.loc[opening_times < FROZEN_PROSPECTIVE_START_UTC].copy()
 ````
 
 ## File: src/ai_trading/research_model_codec.py
@@ -12670,6 +12697,14 @@ payload = benchmark_payload(results)
 outcomes = summarize_economic_trade_quality([0.02, 0.01, -0.04, 0.0])
 ⋮----
 sized = payload["method"]["economic_gate"]["sized_research_account"]
+⋮----
+# A rolling Yahoo period must not put any prospective bars into the
+# historical parameter selection, even when downloaded successfully.
+earlier = sample_market(n=5).tz_localize("UTC")
+future = earlier.iloc[-1:].copy()
+⋮----
+combined = pd.concat([earlier, future])
+allowed = frozen_preprospective_history(combined, symbol="GC=F")
 ⋮----
 stress = payload["ranking"][0]["markets"][0]["economic_cost_stress"]
 ⋮----

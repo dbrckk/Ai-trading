@@ -5,11 +5,151 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
+    "paper_cycle": {
+      "source": {
+        "file": "src/ai_trading/command_app.py",
+        "start": 17,
+        "end": 43
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PaperCycleServiceError",
+          "definitions": [
+            {
+              "file": "src/ai_trading/paper_cycle_service.py",
+              "line": 26,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "ProductionPaperCycleSettings",
+          "definitions": [
+            {
+              "file": "src/ai_trading/paper_cycle_service.py",
+              "line": 16,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "run_production_paper_cycle",
+          "definitions": [
+            {
+              "file": "src/ai_trading/paper_cycle_service.py",
+              "line": 98,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "turnover_study": {
+      "source": {
+        "file": "src/ai_trading/command_app.py",
+        "start": 47,
+        "end": 118
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_completed_market_bars",
+          "definitions": [
+            {
+              "file": "src/ai_trading/paper_cycle.py",
+              "line": 32,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "compare_rebalance_thresholds",
+          "definitions": [
+            {
+              "file": "src/ai_trading/turnover_study.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "frozen_preprospective_history",
+          "definitions": [
+            {
+              "file": "src/ai_trading/research_history.py",
+              "line": 16,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "load_history",
+          "definitions": [
+            {
+              "file": "src/ai_trading/data.py",
+              "line": 85,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "paper",
+          "definitions": [
+            {
+              "file": "src/ai_trading/cli.py",
+              "line": 191,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "paper_cycle",
+          "definitions": [
+            {
+              "file": "src/ai_trading/command_app.py",
+              "line": 17,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "risk_config_for_symbol",
+          "definitions": [
+            {
+              "file": "src/ai_trading/execution_costs.py",
+              "line": 13,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 7
+    },
     "MTFBenchmarkConfig": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 33,
-        "end": 65
+        "start": 34,
+        "end": 66
       },
       "symbol_dependencies": [
         {
@@ -17,7 +157,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 40,
+              "line": 41,
               "kind": "function",
               "language": "python"
             }
@@ -29,7 +169,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 53,
+              "line": 54,
               "kind": "function",
               "language": "python"
             }
@@ -41,7 +181,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
+              "line": 58,
               "kind": "function",
               "language": "python"
             }
@@ -54,8 +194,8 @@
     "__post_init__": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 40,
-        "end": 50
+        "start": 41,
+        "end": 51
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -63,8 +203,8 @@
     "horizon_minutes": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 53,
-        "end": 54
+        "start": 54,
+        "end": 55
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -72,8 +212,8 @@
     "name": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 57,
-        "end": 65
+        "start": 58,
+        "end": 66
       },
       "symbol_dependencies": [
         {
@@ -81,7 +221,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 53,
+              "line": 54,
               "kind": "function",
               "language": "python"
             }
@@ -94,8 +234,8 @@
     "MTFResearchTrade": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 69,
-        "end": 76
+        "start": 70,
+        "end": 77
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -103,8 +243,8 @@
     "EconomicTradeQuality": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 80,
-        "end": 98
+        "start": 81,
+        "end": 99
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -112,8 +252,8 @@
     "summarize_economic_trade_quality": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 101,
-        "end": 148
+        "start": 102,
+        "end": 149
       },
       "symbol_dependencies": [
         {
@@ -121,7 +261,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 80,
+              "line": 81,
               "kind": "class",
               "language": "python"
             }
@@ -134,8 +274,8 @@
     "MarketBenchmarkResult": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 152,
-        "end": 185
+        "start": 153,
+        "end": 186
       },
       "symbol_dependencies": [
         {
@@ -143,7 +283,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 80,
+              "line": 81,
               "kind": "class",
               "language": "python"
             }
@@ -155,7 +295,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 69,
+              "line": 70,
               "kind": "class",
               "language": "python"
             }
@@ -168,8 +308,8 @@
     "AggregateBenchmarkResult": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 189,
-        "end": 197
+        "start": 190,
+        "end": 198
       },
       "symbol_dependencies": [
         {
@@ -177,7 +317,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -189,7 +329,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 152,
+              "line": 153,
               "kind": "class",
               "language": "python"
             }
@@ -202,8 +342,8 @@
     "economic_cost_stress_report": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 201,
-        "end": 263
+        "start": 202,
+        "end": 264
       },
       "symbol_dependencies": [
         {
@@ -211,7 +351,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 152,
+              "line": 153,
               "kind": "class",
               "language": "python"
             }
@@ -223,7 +363,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 101,
+              "line": 102,
               "kind": "function",
               "language": "python"
             }
@@ -236,8 +376,8 @@
     "default_benchmark_grid": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 266,
-        "end": 286
+        "start": 267,
+        "end": 287
       },
       "symbol_dependencies": [
         {
@@ -245,7 +385,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -258,8 +398,8 @@
     "btc_focused_benchmark_grid": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 289,
-        "end": 304
+        "start": 290,
+        "end": 305
       },
       "symbol_dependencies": [
         {
@@ -267,7 +407,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -280,8 +420,8 @@
     "market_selections": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 307,
-        "end": 356
+        "start": 308,
+        "end": 357
       },
       "symbol_dependencies": [
         {
@@ -289,7 +429,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 189,
+              "line": 190,
               "kind": "class",
               "language": "python"
             }
@@ -301,7 +441,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -313,7 +453,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 152,
+              "line": 153,
               "kind": "class",
               "language": "python"
             }
@@ -326,8 +466,8 @@
     "_macro_recall": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 359,
-        "end": 366
+        "start": 360,
+        "end": 367
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -335,8 +475,8 @@
     "_selection_score": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 369,
-        "end": 385
+        "start": 370,
+        "end": 386
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -344,8 +484,8 @@
     "_fold_test_windows": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 388,
-        "end": 413
+        "start": 389,
+        "end": 414
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -353,8 +493,8 @@
     "_mark_sized_paper_trade": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 416,
-        "end": 459
+        "start": 417,
+        "end": 460
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -362,8 +502,8 @@
     "evaluate_market_config": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 462,
-        "end": 682
+        "start": 463,
+        "end": 683
       },
       "symbol_dependencies": [
         {
@@ -383,7 +523,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -395,7 +535,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 69,
+              "line": 70,
               "kind": "class",
               "language": "python"
             }
@@ -407,7 +547,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 152,
+              "line": 153,
               "kind": "class",
               "language": "python"
             }
@@ -419,7 +559,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 388,
+              "line": 389,
               "kind": "function",
               "language": "python"
             }
@@ -431,7 +571,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 359,
+              "line": 360,
               "kind": "function",
               "language": "python"
             }
@@ -443,7 +583,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 416,
+              "line": 417,
               "kind": "function",
               "language": "python"
             }
@@ -455,7 +595,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 369,
+              "line": 370,
               "kind": "function",
               "language": "python"
             }
@@ -527,7 +667,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
+              "line": 58,
               "kind": "function",
               "language": "python"
             }
@@ -551,7 +691,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 101,
+              "line": 102,
               "kind": "function",
               "language": "python"
             }
@@ -564,8 +704,8 @@
     "run_parameter_benchmark": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 685,
-        "end": 750
+        "start": 686,
+        "end": 751
       },
       "symbol_dependencies": [
         {
@@ -573,7 +713,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 189,
+              "line": 190,
               "kind": "class",
               "language": "python"
             }
@@ -585,7 +725,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -597,7 +737,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 266,
+              "line": 267,
               "kind": "function",
               "language": "python"
             }
@@ -609,7 +749,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 462,
+              "line": 463,
               "kind": "function",
               "language": "python"
             }
@@ -622,8 +762,8 @@
     "run_chronological_holdout": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 753,
-        "end": 857
+        "start": 754,
+        "end": 858
       },
       "symbol_dependencies": [
         {
@@ -631,7 +771,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -643,7 +783,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 860,
+              "line": 861,
               "kind": "function",
               "language": "python"
             }
@@ -655,7 +795,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 462,
+              "line": 463,
               "kind": "function",
               "language": "python"
             }
@@ -667,7 +807,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 307,
+              "line": 308,
               "kind": "function",
               "language": "python"
             }
@@ -679,7 +819,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 685,
+              "line": 686,
               "kind": "function",
               "language": "python"
             }
@@ -692,8 +832,8 @@
     "benchmark_payload": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 860,
-        "end": 925
+        "start": 861,
+        "end": 926
       },
       "symbol_dependencies": [
         {
@@ -701,7 +841,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 189,
+              "line": 190,
               "kind": "class",
               "language": "python"
             }
@@ -713,7 +853,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 201,
+              "line": 202,
               "kind": "function",
               "language": "python"
             }
@@ -725,7 +865,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 307,
+              "line": 308,
               "kind": "function",
               "language": "python"
             }
@@ -737,7 +877,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
+              "line": 58,
               "kind": "function",
               "language": "python"
             }
@@ -750,8 +890,8 @@
     "write_benchmark_report": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 928,
-        "end": 1089
+        "start": 929,
+        "end": 1090
       },
       "symbol_dependencies": [
         {
@@ -759,7 +899,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 189,
+              "line": 190,
               "kind": "class",
               "language": "python"
             }
@@ -771,7 +911,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 860,
+              "line": 861,
               "kind": "function",
               "language": "python"
             }
@@ -783,7 +923,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 201,
+              "line": 202,
               "kind": "function",
               "language": "python"
             }
@@ -795,7 +935,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 307,
+              "line": 308,
               "kind": "function",
               "language": "python"
             }
@@ -807,7 +947,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
+              "line": 58,
               "kind": "function",
               "language": "python"
             }
@@ -820,8 +960,8 @@
     "main": {
       "source": {
         "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 1092,
-        "end": 1147
+        "start": 1093,
+        "end": 1152
       },
       "symbol_dependencies": [
         {
@@ -829,7 +969,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 860,
+              "line": 861,
               "kind": "function",
               "language": "python"
             }
@@ -841,7 +981,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 289,
+              "line": 290,
               "kind": "function",
               "language": "python"
             }
@@ -853,12 +993,24 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 266,
+              "line": 267,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
+        },
+        {
+          "symbol": "frozen_preprospective_history",
+          "definitions": [
+            {
+              "file": "src/ai_trading/research_history.py",
+              "line": 16,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
         },
         {
           "symbol": "load_history",
@@ -877,7 +1029,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 685,
+              "line": 686,
               "kind": "function",
               "language": "python"
             }
@@ -889,7 +1041,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 928,
+              "line": 929,
               "kind": "function",
               "language": "python"
             }
@@ -897,13 +1049,22 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 6
+      "dependency_count": 7
+    },
+    "frozen_preprospective_history": {
+      "source": {
+        "file": "src/ai_trading/research_history.py",
+        "start": 16,
+        "end": 35
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
     },
     "sample_market": {
       "source": {
         "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 28,
-        "end": 47
+        "start": 29,
+        "end": 48
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -911,8 +1072,8 @@
     "test_market_benchmark_is_purged_and_reports_directional_evidence": {
       "source": {
         "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 50,
-        "end": 100
+        "start": 51,
+        "end": 101
       },
       "symbol_dependencies": [
         {
@@ -920,7 +1081,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -932,7 +1093,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 462,
+              "line": 463,
               "kind": "function",
               "language": "python"
             }
@@ -944,7 +1105,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
+              "line": 58,
               "kind": "function",
               "language": "python"
             }
@@ -956,7 +1117,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 28,
+              "line": 29,
               "kind": "function",
               "language": "python"
             }
@@ -969,8 +1130,8 @@
     "test_parameter_benchmark_ranks_configs_across_markets": {
       "source": {
         "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 103,
-        "end": 129
+        "start": 104,
+        "end": 130
       },
       "symbol_dependencies": [
         {
@@ -978,7 +1139,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -990,7 +1151,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 685,
+              "line": 686,
               "kind": "function",
               "language": "python"
             }
@@ -1002,7 +1163,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 28,
+              "line": 29,
               "kind": "function",
               "language": "python"
             }
@@ -1015,8 +1176,8 @@
     "test_benchmark_payload_is_reproducible_and_explicit": {
       "source": {
         "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 132,
-        "end": 191
+        "start": 133,
+        "end": 205
       },
       "symbol_dependencies": [
         {
@@ -1024,7 +1185,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -1036,7 +1197,19 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 860,
+              "line": 861,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "frozen_preprospective_history",
+          "definitions": [
+            {
+              "file": "src/ai_trading/research_history.py",
+              "line": 16,
               "kind": "function",
               "language": "python"
             }
@@ -1048,7 +1221,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 685,
+              "line": 686,
               "kind": "function",
               "language": "python"
             }
@@ -1060,7 +1233,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 28,
+              "line": 29,
               "kind": "function",
               "language": "python"
             }
@@ -1072,7 +1245,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 101,
+              "line": 102,
               "kind": "function",
               "language": "python"
             }
@@ -1080,13 +1253,13 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 5
+      "dependency_count": 6
     },
     "test_btc_focused_grid_is_bounded_and_longer_horizon": {
       "source": {
         "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 196,
-        "end": 209
+        "start": 210,
+        "end": 223
       },
       "symbol_dependencies": [
         {
@@ -1094,7 +1267,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -1106,7 +1279,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 289,
+              "line": 290,
               "kind": "function",
               "language": "python"
             }
@@ -1118,7 +1291,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 53,
+              "line": 54,
               "kind": "function",
               "language": "python"
             }
@@ -1131,8 +1304,8 @@
     "test_market_selections_choose_gate_passing_config_per_symbol": {
       "source": {
         "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 212,
-        "end": 236
+        "start": 226,
+        "end": 250
       },
       "symbol_dependencies": [
         {
@@ -1140,7 +1313,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -1152,7 +1325,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 307,
+              "line": 308,
               "kind": "function",
               "language": "python"
             }
@@ -1164,7 +1337,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 685,
+              "line": 686,
               "kind": "function",
               "language": "python"
             }
@@ -1176,7 +1349,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 28,
+              "line": 29,
               "kind": "function",
               "language": "python"
             }
@@ -1189,8 +1362,8 @@
     "test_payload_exposes_per_market_selection": {
       "source": {
         "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 239,
-        "end": 253
+        "start": 253,
+        "end": 267
       },
       "symbol_dependencies": [
         {
@@ -1198,7 +1371,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -1210,7 +1383,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 860,
+              "line": 861,
               "kind": "function",
               "language": "python"
             }
@@ -1222,7 +1395,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 307,
+              "line": 308,
               "kind": "function",
               "language": "python"
             }
@@ -1234,7 +1407,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 685,
+              "line": 686,
               "kind": "function",
               "language": "python"
             }
@@ -1246,7 +1419,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 28,
+              "line": 29,
               "kind": "function",
               "language": "python"
             }
@@ -1259,8 +1432,8 @@
     "test_parameter_grid_uses_same_random_seed_for_every_config": {
       "source": {
         "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 257,
-        "end": 316
+        "start": 271,
+        "end": 330
       },
       "symbol_dependencies": [
         {
@@ -1268,7 +1441,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -1280,7 +1453,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 152,
+              "line": 153,
               "kind": "class",
               "language": "python"
             }
@@ -1292,7 +1465,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 462,
+              "line": 463,
               "kind": "function",
               "language": "python"
             }
@@ -1304,7 +1477,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 260,
+              "line": 274,
               "kind": "function",
               "language": "python"
             }
@@ -1316,7 +1489,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
+              "line": 58,
               "kind": "function",
               "language": "python"
             }
@@ -1328,7 +1501,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 685,
+              "line": 686,
               "kind": "function",
               "language": "python"
             }
@@ -1340,7 +1513,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 28,
+              "line": 29,
               "kind": "function",
               "language": "python"
             }
@@ -1353,8 +1526,8 @@
     "fake_evaluate_market_config": {
       "source": {
         "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 260,
-        "end": 380
+        "start": 274,
+        "end": 394
       },
       "symbol_dependencies": [
         {
@@ -1362,7 +1535,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 322,
+              "line": 336,
               "kind": "class",
               "language": "python"
             }
@@ -1386,7 +1559,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -1398,7 +1571,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 152,
+              "line": 153,
               "kind": "class",
               "language": "python"
             }
@@ -1410,7 +1583,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 201,
+              "line": 202,
               "kind": "function",
               "language": "python"
             }
@@ -1422,7 +1595,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 462,
+              "line": 463,
               "kind": "function",
               "language": "python"
             }
@@ -1434,7 +1607,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 326,
+              "line": 340,
               "kind": "function",
               "language": "python"
             }
@@ -1446,7 +1619,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
+              "line": 58,
               "kind": "function",
               "language": "python"
             }
@@ -1458,7 +1631,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 330,
+              "line": 344,
               "kind": "function",
               "language": "python"
             }
@@ -1470,7 +1643,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 685,
+              "line": 686,
               "kind": "function",
               "language": "python"
             }
@@ -1482,7 +1655,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 28,
+              "line": 29,
               "kind": "function",
               "language": "python"
             }
@@ -1494,7 +1667,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 319,
+              "line": 333,
               "kind": "function",
               "language": "python"
             }
@@ -1507,8 +1680,8 @@
     "test_cost_aware_mtf_gate_rejects_directional_wins_erased_by_fees": {
       "source": {
         "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 319,
-        "end": 434
+        "start": 333,
+        "end": 448
       },
       "symbol_dependencies": [
         {
@@ -1516,7 +1689,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 189,
+              "line": 190,
               "kind": "class",
               "language": "python"
             }
@@ -1528,7 +1701,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 322,
+              "line": 336,
               "kind": "class",
               "language": "python"
             }
@@ -1552,7 +1725,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -1564,7 +1737,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 201,
+              "line": 202,
               "kind": "function",
               "language": "python"
             }
@@ -1576,7 +1749,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 462,
+              "line": 463,
               "kind": "function",
               "language": "python"
             }
@@ -1588,7 +1761,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 326,
+              "line": 340,
               "kind": "function",
               "language": "python"
             }
@@ -1600,7 +1773,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 307,
+              "line": 308,
               "kind": "function",
               "language": "python"
             }
@@ -1612,7 +1785,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
+              "line": 58,
               "kind": "function",
               "language": "python"
             }
@@ -1624,7 +1797,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 330,
+              "line": 344,
               "kind": "function",
               "language": "python"
             }
@@ -1636,7 +1809,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 753,
+              "line": 754,
               "kind": "function",
               "language": "python"
             }
@@ -1648,7 +1821,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 28,
+              "line": 29,
               "kind": "function",
               "language": "python"
             }
@@ -1661,8 +1834,8 @@
     "AlwaysLongModel": {
       "source": {
         "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 322,
-        "end": 442
+        "start": 336,
+        "end": 456
       },
       "symbol_dependencies": [
         {
@@ -1670,7 +1843,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 189,
+              "line": 190,
               "kind": "class",
               "language": "python"
             }
@@ -1694,7 +1867,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -1706,7 +1879,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 201,
+              "line": 202,
               "kind": "function",
               "language": "python"
             }
@@ -1718,7 +1891,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 462,
+              "line": 463,
               "kind": "function",
               "language": "python"
             }
@@ -1730,7 +1903,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 326,
+              "line": 340,
               "kind": "function",
               "language": "python"
             }
@@ -1742,7 +1915,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 307,
+              "line": 308,
               "kind": "function",
               "language": "python"
             }
@@ -1754,7 +1927,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
+              "line": 58,
               "kind": "function",
               "language": "python"
             }
@@ -1766,7 +1939,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 330,
+              "line": 344,
               "kind": "function",
               "language": "python"
             }
@@ -1778,7 +1951,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 753,
+              "line": 754,
               "kind": "function",
               "language": "python"
             }
@@ -1790,7 +1963,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 28,
+              "line": 29,
               "kind": "function",
               "language": "python"
             }
@@ -1802,7 +1975,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 437,
+              "line": 451,
               "kind": "function",
               "language": "python"
             }
@@ -1815,8 +1988,8 @@
     "__init__": {
       "source": {
         "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 323,
-        "end": 443
+        "start": 337,
+        "end": 457
       },
       "symbol_dependencies": [
         {
@@ -1824,7 +1997,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 189,
+              "line": 190,
               "kind": "class",
               "language": "python"
             }
@@ -1836,7 +2009,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 322,
+              "line": 336,
               "kind": "class",
               "language": "python"
             }
@@ -1860,7 +2033,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -1872,7 +2045,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 201,
+              "line": 202,
               "kind": "function",
               "language": "python"
             }
@@ -1884,7 +2057,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 462,
+              "line": 463,
               "kind": "function",
               "language": "python"
             }
@@ -1896,7 +2069,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 326,
+              "line": 340,
               "kind": "function",
               "language": "python"
             }
@@ -1908,7 +2081,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 307,
+              "line": 308,
               "kind": "function",
               "language": "python"
             }
@@ -1920,7 +2093,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
+              "line": 58,
               "kind": "function",
               "language": "python"
             }
@@ -1932,7 +2105,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 330,
+              "line": 344,
               "kind": "function",
               "language": "python"
             }
@@ -1944,7 +2117,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 753,
+              "line": 754,
               "kind": "function",
               "language": "python"
             }
@@ -1956,7 +2129,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 28,
+              "line": 29,
               "kind": "function",
               "language": "python"
             }
@@ -1968,7 +2141,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 437,
+              "line": 451,
               "kind": "function",
               "language": "python"
             }
@@ -1981,8 +2154,8 @@
     "fit": {
       "source": {
         "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 326,
-        "end": 446
+        "start": 340,
+        "end": 460
       },
       "symbol_dependencies": [
         {
@@ -1990,7 +2163,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 189,
+              "line": 190,
               "kind": "class",
               "language": "python"
             }
@@ -2002,7 +2175,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 322,
+              "line": 336,
               "kind": "class",
               "language": "python"
             }
@@ -2026,7 +2199,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -2038,7 +2211,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 201,
+              "line": 202,
               "kind": "function",
               "language": "python"
             }
@@ -2050,7 +2223,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 462,
+              "line": 463,
               "kind": "function",
               "language": "python"
             }
@@ -2062,7 +2235,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 307,
+              "line": 308,
               "kind": "function",
               "language": "python"
             }
@@ -2074,7 +2247,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
+              "line": 58,
               "kind": "function",
               "language": "python"
             }
@@ -2086,7 +2259,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 330,
+              "line": 344,
               "kind": "function",
               "language": "python"
             }
@@ -2098,7 +2271,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 753,
+              "line": 754,
               "kind": "function",
               "language": "python"
             }
@@ -2110,7 +2283,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 28,
+              "line": 29,
               "kind": "function",
               "language": "python"
             }
@@ -2122,7 +2295,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 437,
+              "line": 451,
               "kind": "function",
               "language": "python"
             }
@@ -2135,8 +2308,8 @@
     "predict_one": {
       "source": {
         "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 330,
-        "end": 450
+        "start": 344,
+        "end": 464
       },
       "symbol_dependencies": [
         {
@@ -2144,7 +2317,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 189,
+              "line": 190,
               "kind": "class",
               "language": "python"
             }
@@ -2156,7 +2329,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 322,
+              "line": 336,
               "kind": "class",
               "language": "python"
             }
@@ -2180,7 +2353,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -2192,7 +2365,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 201,
+              "line": 202,
               "kind": "function",
               "language": "python"
             }
@@ -2204,7 +2377,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 462,
+              "line": 463,
               "kind": "function",
               "language": "python"
             }
@@ -2216,7 +2389,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 307,
+              "line": 308,
               "kind": "function",
               "language": "python"
             }
@@ -2228,7 +2401,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 57,
+              "line": 58,
               "kind": "function",
               "language": "python"
             }
@@ -2240,7 +2413,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 753,
+              "line": 754,
               "kind": "function",
               "language": "python"
             }
@@ -2252,7 +2425,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 28,
+              "line": 29,
               "kind": "function",
               "language": "python"
             }
@@ -2264,7 +2437,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 437,
+              "line": 451,
               "kind": "function",
               "language": "python"
             }
@@ -2277,8 +2450,8 @@
     "test_shared_mtf_account_reconciles_overlapping_markets_and_costs": {
       "source": {
         "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 437,
-        "end": 501
+        "start": 451,
+        "end": 515
       },
       "symbol_dependencies": [
         {
@@ -2286,7 +2459,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 33,
+              "line": 34,
               "kind": "class",
               "language": "python"
             }
@@ -2298,7 +2471,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 69,
+              "line": 70,
               "kind": "class",
               "language": "python"
             }
@@ -2310,7 +2483,7 @@
           "definitions": [
             {
               "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 462,
+              "line": 463,
               "kind": "function",
               "language": "python"
             }
@@ -2322,7 +2495,7 @@
           "definitions": [
             {
               "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 28,
+              "line": 29,
               "kind": "function",
               "language": "python"
             }

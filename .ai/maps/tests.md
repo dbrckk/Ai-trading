@@ -2169,6 +2169,14 @@ outcomes = summarize_economic_trade_quality([0.02, 0.01, -0.04, 0.0])
 ⋮----
 sized = payload["method"]["economic_gate"]["sized_research_account"]
 ⋮----
+# A rolling Yahoo period must not put any prospective bars into the
+# historical parameter selection, even when downloaded successfully.
+earlier = sample_market(n=5).tz_localize("UTC")
+future = earlier.iloc[-1:].copy()
+⋮----
+combined = pd.concat([earlier, future])
+allowed = frozen_preprospective_history(combined, symbol="GC=F")
+⋮----
 stress = payload["ranking"][0]["markets"][0]["economic_cost_stress"]
 ⋮----
 def test_btc_focused_grid_is_bounded_and_longer_horizon() -> None

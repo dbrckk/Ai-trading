@@ -156,24 +156,26 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-26T06:18:33Z
+Generated: 2026-10-26T06:29:48Z
 
 ### Git
 - Branch: `main`
-- Head: `5f07ee862d03`
-- Commit date: 2026-10-26T02:18:23-04:00
-- Commit: research: add 1x/2x/3x after-cost MTF trade robustness (#233)
-- Tracked files: 528
+- Head: `d4c018cc03af`
+- Commit date: 2026-10-26T02:29:38-04:00
+- Commit: fix(research): isolate retrospective selectors from future OHLCV (#234)
+- Tracked files: 530
 
 ### Recently changed files
+- `.github/workflows/mtf-net-cost-evidence.yml`
+- `research/retrospective-precutoff-enforcement.md`
+- `src/ai_trading/command_app.py`
 - `src/ai_trading/mtf_parameter_benchmark.py`
+- `src/ai_trading/research_history.py`
 - `tests/test_mtf_parameter_benchmark.py`
 - `src/ai_trading/dashboard.py`
 - `src/ai_trading/scheduler_endpoint.py`
 - `tests/test_scheduler_endpoint.py`
 - `tests/test_dashboard.py`
-- `src/ai_trading/forward_paper_signal.py`
-- `tests/test_dashboard_health.py`
 
 ### Project signals
 - `pyproject.toml`
