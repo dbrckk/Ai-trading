@@ -1,24 +1,18 @@
 # Change impact
 
-Base: 3f9802bb3720428aef981f54c7da000a83cb108b
-Head: d4c018cc03afa3cbd12b06676d404e848bcb61af
+Base: 2aa95994900ce3b9637f54bb3a708d1adfcbb6e8
+Head: aea64247f6792e68869b157259f15648d96e5016
 
 ## Changed files
-- M .github/workflows/mtf-net-cost-evidence.yml
-- A research/retrospective-precutoff-enforcement.md
-- M src/ai_trading/command_app.py
-- M src/ai_trading/mtf_parameter_benchmark.py
-- A src/ai_trading/research_history.py
-- M tests/test_mtf_parameter_benchmark.py
+- M src/ai_trading/risk_governor.py
+- M tests/test_risk_governor.py
 
 ## Affected areas
-- .github
-- research
 - src
 - tests
 
 ## Related test candidates
-- tests/test_mtf_parameter_benchmark.py
+- tests/test_risk_governor.py
 
 ## Agent guidance
 - Read this file before broad repository exploration.

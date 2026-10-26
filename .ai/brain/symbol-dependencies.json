@@ -5,183 +5,19 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "paper_cycle": {
+    "GovernorPolicy": {
       "source": {
-        "file": "src/ai_trading/command_app.py",
-        "start": 17,
-        "end": 43
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "PaperCycleServiceError",
-          "definitions": [
-            {
-              "file": "src/ai_trading/paper_cycle_service.py",
-              "line": 26,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "ProductionPaperCycleSettings",
-          "definitions": [
-            {
-              "file": "src/ai_trading/paper_cycle_service.py",
-              "line": 16,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_production_paper_cycle",
-          "definitions": [
-            {
-              "file": "src/ai_trading/paper_cycle_service.py",
-              "line": 98,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "turnover_study": {
-      "source": {
-        "file": "src/ai_trading/command_app.py",
-        "start": 47,
-        "end": 118
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_completed_market_bars",
-          "definitions": [
-            {
-              "file": "src/ai_trading/paper_cycle.py",
-              "line": 32,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "compare_rebalance_thresholds",
-          "definitions": [
-            {
-              "file": "src/ai_trading/turnover_study.py",
-              "line": 62,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "frozen_preprospective_history",
-          "definitions": [
-            {
-              "file": "src/ai_trading/research_history.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "load_history",
-          "definitions": [
-            {
-              "file": "src/ai_trading/data.py",
-              "line": 85,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "paper",
-          "definitions": [
-            {
-              "file": "src/ai_trading/cli.py",
-              "line": 191,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "paper_cycle",
-          "definitions": [
-            {
-              "file": "src/ai_trading/command_app.py",
-              "line": 17,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "risk_config_for_symbol",
-          "definitions": [
-            {
-              "file": "src/ai_trading/execution_costs.py",
-              "line": 13,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 7
-    },
-    "MTFBenchmarkConfig": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 34,
-        "end": 66
+        "file": "src/ai_trading/risk_governor.py",
+        "start": 8,
+        "end": 48
       },
       "symbol_dependencies": [
         {
           "symbol": "__post_init__",
           "definitions": [
             {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 41,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "horizon_minutes",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 54,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 58,
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 20,
               "kind": "function",
               "language": "python"
             }
@@ -189,982 +25,73 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 3
+      "dependency_count": 1
     },
     "__post_init__": {
       "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 41,
-        "end": 51
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "horizon_minutes": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 54,
-        "end": 55
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "name": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 58,
-        "end": 66
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "horizon_minutes",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 54,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "MTFResearchTrade": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 70,
-        "end": 77
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "EconomicTradeQuality": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 81,
-        "end": 99
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "summarize_economic_trade_quality": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 102,
-        "end": 149
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "EconomicTradeQuality",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 81,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "MarketBenchmarkResult": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 153,
-        "end": 186
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "EconomicTradeQuality",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 81,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "MTFResearchTrade",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 70,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "AggregateBenchmarkResult": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 190,
-        "end": 198
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "MarketBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 153,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "economic_cost_stress_report": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 202,
-        "end": 264
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MarketBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 153,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "summarize_economic_trade_quality",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 102,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "default_benchmark_grid": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 267,
-        "end": 287
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "btc_focused_benchmark_grid": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 290,
-        "end": 305
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "market_selections": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 308,
-        "end": 357
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 190,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "MarketBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 153,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "_macro_recall": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 360,
-        "end": 367
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "_selection_score": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 370,
-        "end": 386
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "_fold_test_windows": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 389,
-        "end": 414
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "_mark_sized_paper_trade": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 417,
-        "end": 460
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "evaluate_market_config": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 463,
-        "end": 683
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "EnsembleDirectionModel",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "MTFResearchTrade",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 70,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "MarketBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 153,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_fold_test_windows",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 389,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_macro_recall",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 360,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_mark_sized_paper_trade",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 417,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_selection_score",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 370,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "detect_regime",
-          "definitions": [
-            {
-              "file": "src/ai_trading/regime.py",
-              "line": 18,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_model_quality",
-          "definitions": [
-            {
-              "file": "src/ai_trading/model_quality.py",
-              "line": 18,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fit",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 78,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "make_multi_timeframe_challenger_features",
-          "definitions": [
-            {
-              "file": "src/ai_trading/multi_timeframe_features.py",
-              "line": 100,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "make_volatility_adaptive_labels",
-          "definitions": [
-            {
-              "file": "src/ai_trading/multi_timeframe_features.py",
-              "line": 201,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 58,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "predict_one",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 106,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "summarize_economic_trade_quality",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 102,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 16
-    },
-    "run_parameter_benchmark": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 686,
-        "end": 751
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 190,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "default_benchmark_grid",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 267,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 463,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "run_chronological_holdout": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 754,
-        "end": 858
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "benchmark_payload",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 861,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 463,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 308,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run_parameter_benchmark",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 686,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 5
-    },
-    "benchmark_payload": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 861,
-        "end": 926
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 190,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "economic_cost_stress_report",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 202,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 308,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 58,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "write_benchmark_report": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 929,
-        "end": 1090
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 190,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "benchmark_payload",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 861,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "economic_cost_stress_report",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 202,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 308,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 58,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 5
-    },
-    "main": {
-      "source": {
-        "file": "src/ai_trading/mtf_parameter_benchmark.py",
-        "start": 1093,
-        "end": 1152
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "benchmark_payload",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 861,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "btc_focused_benchmark_grid",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 290,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "default_benchmark_grid",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 267,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "frozen_preprospective_history",
-          "definitions": [
-            {
-              "file": "src/ai_trading/research_history.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "load_history",
-          "definitions": [
-            {
-              "file": "src/ai_trading/data.py",
-              "line": 85,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_parameter_benchmark",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 686,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "write_benchmark_report",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 929,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 7
-    },
-    "frozen_preprospective_history": {
-      "source": {
-        "file": "src/ai_trading/research_history.py",
-        "start": 16,
-        "end": 35
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "sample_market": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 29,
+        "file": "src/ai_trading/risk_governor.py",
+        "start": 20,
         "end": 48
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "test_market_benchmark_is_purged_and_reports_directional_evidence": {
+    "GovernorSignals": {
       "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 51,
-        "end": 101
+        "file": "src/ai_trading/risk_governor.py",
+        "start": 52,
+        "end": 64
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "GovernorDecision": {
+      "source": {
+        "file": "src/ai_trading/risk_governor.py",
+        "start": 68,
+        "end": 74
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "evaluate_governor": {
+      "source": {
+        "file": "src/ai_trading/risk_governor.py",
+        "start": 77,
+        "end": 188
       },
       "symbol_dependencies": [
         {
-          "symbol": "MTFBenchmarkConfig",
+          "symbol": "GovernorDecision",
           "definitions": [
             {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 68,
               "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 463,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 58,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 29,
-              "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "test_parameter_benchmark_ranks_configs_across_markets": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 104,
-        "end": 130
-      },
-      "symbol_dependencies": [
+        },
         {
-          "symbol": "MTFBenchmarkConfig",
+          "symbol": "GovernorPolicy",
           "definitions": [
             {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 8,
               "kind": "class",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
         },
         {
-          "symbol": "run_parameter_benchmark",
+          "symbol": "GovernorSignals",
           "definitions": [
             {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 686,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 29,
-              "kind": "function",
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 52,
+              "kind": "class",
               "language": "python"
             }
           ],
@@ -1173,67 +100,41 @@
       ],
       "dependency_count": 3
     },
-    "test_benchmark_payload_is_reproducible_and_explicit": {
+    "base_signals": {
       "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 133,
-        "end": 205
+        "file": "tests/test_risk_governor.py",
+        "start": 8,
+        "end": 24
       },
       "symbol_dependencies": [
         {
-          "symbol": "MTFBenchmarkConfig",
+          "symbol": "GovernorSignals",
           "definitions": [
             {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 52,
               "kind": "class",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        },
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_governor_trade_when_all_gates_pass": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 27,
+        "end": 29
+      },
+      "symbol_dependencies": [
         {
-          "symbol": "benchmark_payload",
+          "symbol": "base_signals",
           "definitions": [
             {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 861,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "frozen_preprospective_history",
-          "definitions": [
-            {
-              "file": "src/ai_trading/research_history.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_parameter_benchmark",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 686,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 29,
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
               "kind": "function",
               "language": "python"
             }
@@ -1241,11 +142,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "summarize_economic_trade_quality",
+          "symbol": "evaluate_governor",
           "definitions": [
             {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 102,
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 77,
               "kind": "function",
               "language": "python"
             }
@@ -1253,21 +154,405 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 6
+      "dependency_count": 2
     },
-    "test_btc_focused_grid_is_bounded_and_longer_horizon": {
+    "test_governor_reduces_on_elevated_risk": {
       "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 210,
-        "end": 223
+        "file": "tests/test_risk_governor.py",
+        "start": 32,
+        "end": 35
       },
       "symbol_dependencies": [
         {
-          "symbol": "MTFBenchmarkConfig",
+          "symbol": "base_signals",
           "definitions": [
             {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_governor",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 77,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_governor_freezes_on_failed_risk_gate": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 38,
+        "end": 41
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "base_signals",
+          "definitions": [
+            {
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_governor",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 77,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_governor_flattens_on_extreme_drawdown": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 44,
+        "end": 47
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "base_signals",
+          "definitions": [
+            {
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_governor",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 77,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_governor_halts_on_critical_data_failure": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 50,
+        "end": 53
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "base_signals",
+          "definitions": [
+            {
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_governor",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 77,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_failed_stress_test_reduces_instead_of_freezing": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 56,
+        "end": 64
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "base_signals",
+          "definitions": [
+            {
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_governor",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 77,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_governor_reduces_when_recovery_health_is_degraded": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 68,
+        "end": 78
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "base_signals",
+          "definitions": [
+            {
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_governor",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 77,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_governor_halts_after_repeated_recovery_failures": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 81,
+        "end": 90
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "base_signals",
+          "definitions": [
+            {
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_governor",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 77,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_governor_halts_on_excessive_recovery_fallback_depth": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 93,
+        "end": 102
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "base_signals",
+          "definitions": [
+            {
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_governor",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 77,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_governor_returns_to_trade_after_recovery_health_normalizes": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 105,
+        "end": 110
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "base_signals",
+          "definitions": [
+            {
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_governor",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 77,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_governor_halts_on_invalid_numeric_risk_evidence": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 128,
+        "end": 137
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "base_signals",
+          "definitions": [
+            {
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "evaluate_governor",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 77,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_governor_rejects_unsafe_policy_config": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 154,
+        "end": 156
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "GovernorPolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 8,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_governor_policy_rejects_reversed_risk_thresholds": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 167,
+        "end": 169
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "GovernorPolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 8,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_valid_governor_policy_keeps_default_trade_behavior": {
+      "source": {
+        "file": "tests/test_risk_governor.py",
+        "start": 172,
+        "end": 174
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "GovernorPolicy",
+          "definitions": [
+            {
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 8,
               "kind": "class",
               "language": "python"
             }
@@ -1275,23 +560,23 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "btc_focused_benchmark_grid",
+          "symbol": "base_signals",
           "definitions": [
             {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 290,
+              "file": "tests/test_risk_governor.py",
+              "line": 8,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
         },
         {
-          "symbol": "horizon_minutes",
+          "symbol": "evaluate_governor",
           "definitions": [
             {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 54,
+              "file": "src/ai_trading/risk_governor.py",
+              "line": 77,
               "kind": "function",
               "language": "python"
             }
@@ -1300,1222 +585,6 @@
         }
       ],
       "dependency_count": 3
-    },
-    "test_market_selections_choose_gate_passing_config_per_symbol": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 226,
-        "end": 250
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 308,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_parameter_benchmark",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 686,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "test_payload_exposes_per_market_selection": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 253,
-        "end": 267
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "benchmark_payload",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 861,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 308,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_parameter_benchmark",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 686,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 5
-    },
-    "test_parameter_grid_uses_same_random_seed_for_every_config": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 271,
-        "end": 330
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "MarketBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 153,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 463,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fake_evaluate_market_config",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 274,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 58,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_parameter_benchmark",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 686,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 7
-    },
-    "fake_evaluate_market_config": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 274,
-        "end": 394
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AlwaysLongModel",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 336,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "EnsembleDirectionModel",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "MarketBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 153,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "economic_cost_stress_report",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 202,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 463,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fit",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 340,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 58,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "predict_one",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 344,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run_parameter_benchmark",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 686,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_cost_aware_mtf_gate_rejects_directional_wins_erased_by_fees",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 333,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 12
-    },
-    "test_cost_aware_mtf_gate_rejects_directional_wins_erased_by_fees": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 333,
-        "end": 448
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 190,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "AlwaysLongModel",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 336,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "EnsembleDirectionModel",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "economic_cost_stress_report",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 202,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 463,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fit",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 340,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 308,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 58,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "predict_one",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 344,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run_chronological_holdout",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 754,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 12
-    },
-    "AlwaysLongModel": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 336,
-        "end": 456
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 190,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "EnsembleDirectionModel",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "economic_cost_stress_report",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 202,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 463,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fit",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 340,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 308,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 58,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "predict_one",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 344,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run_chronological_holdout",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 754,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_shared_mtf_account_reconciles_overlapping_markets_and_costs",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 451,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 12
-    },
-    "__init__": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 337,
-        "end": 457
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 190,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "AlwaysLongModel",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 336,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "EnsembleDirectionModel",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "economic_cost_stress_report",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 202,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 463,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fit",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 340,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 308,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 58,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "predict_one",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 344,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run_chronological_holdout",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 754,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_shared_mtf_account_reconciles_overlapping_markets_and_costs",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 451,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 13
-    },
-    "fit": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 340,
-        "end": 460
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 190,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "AlwaysLongModel",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 336,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "EnsembleDirectionModel",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "economic_cost_stress_report",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 202,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 463,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 308,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 58,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "predict_one",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 344,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "run_chronological_holdout",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 754,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_shared_mtf_account_reconciles_overlapping_markets_and_costs",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 451,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 12
-    },
-    "predict_one": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 344,
-        "end": 464
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AggregateBenchmarkResult",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 190,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "AlwaysLongModel",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 336,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "EnsembleDirectionModel",
-          "definitions": [
-            {
-              "file": "src/ai_trading/ensemble.py",
-              "line": 24,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "economic_cost_stress_report",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 202,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 463,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "market_selections",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 308,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "name",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 58,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "run_chronological_holdout",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 754,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_shared_mtf_account_reconciles_overlapping_markets_and_costs",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 451,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 11
-    },
-    "test_shared_mtf_account_reconciles_overlapping_markets_and_costs": {
-      "source": {
-        "file": "tests/test_mtf_parameter_benchmark.py",
-        "start": 451,
-        "end": 515
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MTFBenchmarkConfig",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "MTFResearchTrade",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 70,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "evaluate_market_config",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_parameter_benchmark.py",
-              "line": 463,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sample_market",
-          "definitions": [
-            {
-              "file": "tests/test_mtf_parameter_benchmark.py",
-              "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "simulate_shared_mtf_portfolio",
-          "definitions": [
-            {
-              "file": "src/ai_trading/mtf_shared_portfolio.py",
-              "line": 36,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 5
     }
   }
 }

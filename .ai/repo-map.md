@@ -9180,6 +9180,11 @@ halt_recovery_failures: int = 4
 halt_recovery_fallback_depth: int = 5
 degraded_recovery_exposure_scale: float = 0.35
 ⋮----
+def __post_init__(self) -> None
+⋮----
+"""Reject unsafe/undefined gates before a risk policy can authorize trade."""
+bounds = (
+⋮----
 @dataclass(frozen=True)
 class GovernorSignals
 ⋮----
@@ -14688,6 +14693,14 @@ degraded = evaluate_governor(base_signals(recovery_degraded=True))
 healthy = evaluate_governor(base_signals(recovery_degraded=False))
 ⋮----
 decision = evaluate_governor(base_signals(**{field: value}))
+⋮----
+def test_governor_rejects_unsafe_policy_config(field, value) -> None
+⋮----
+def test_governor_policy_rejects_reversed_risk_thresholds(overrides) -> None
+⋮----
+def test_valid_governor_policy_keeps_default_trade_behavior() -> None
+⋮----
+decision = evaluate_governor(base_signals(), GovernorPolicy())
 ````
 
 ## File: tests/test_risk_parity.py

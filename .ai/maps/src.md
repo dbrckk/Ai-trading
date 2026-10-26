@@ -7767,6 +7767,11 @@ halt_recovery_failures: int = 4
 halt_recovery_fallback_depth: int = 5
 degraded_recovery_exposure_scale: float = 0.35
 ⋮----
+def __post_init__(self) -> None
+⋮----
+"""Reject unsafe/undefined gates before a risk policy can authorize trade."""
+bounds = (
+⋮----
 @dataclass(frozen=True)
 class GovernorSignals
 ⋮----

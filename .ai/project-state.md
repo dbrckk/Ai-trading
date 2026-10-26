@@ -156,16 +156,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-26T06:29:48Z
+Generated: 2026-10-26T08:38:33Z
 
 ### Git
 - Branch: `main`
-- Head: `d4c018cc03af`
-- Commit date: 2026-10-26T02:29:38-04:00
-- Commit: fix(research): isolate retrospective selectors from future OHLCV (#234)
+- Head: `aea64247f679`
+- Commit date: 2026-10-26T04:38:23-04:00
+- Commit: fix(risk): validate governor policy fail-closed thresholds (#236)
 - Tracked files: 530
 
 ### Recently changed files
+- `src/ai_trading/risk_governor.py`
+- `tests/test_risk_governor.py`
 - `.github/workflows/mtf-net-cost-evidence.yml`
 - `research/retrospective-precutoff-enforcement.md`
 - `src/ai_trading/command_app.py`

@@ -4159,6 +4159,14 @@ degraded = evaluate_governor(base_signals(recovery_degraded=True))
 healthy = evaluate_governor(base_signals(recovery_degraded=False))
 ⋮----
 decision = evaluate_governor(base_signals(**{field: value}))
+⋮----
+def test_governor_rejects_unsafe_policy_config(field, value) -> None
+⋮----
+def test_governor_policy_rejects_reversed_risk_thresholds(overrides) -> None
+⋮----
+def test_valid_governor_policy_keeps_default_trade_behavior() -> None
+⋮----
+decision = evaluate_governor(base_signals(), GovernorPolicy())
 ```
 
 ## File: test_risk_parity.py
