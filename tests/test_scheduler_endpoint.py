@@ -5,7 +5,7 @@ import socket
 import time
 from datetime import UTC, datetime, timedelta
 from io import BytesIO
-from threading import Thread
+from threading import Event, Thread
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
@@ -616,3 +616,58 @@ def test_scheduler_fallback_classifies_503_safely_without_repeating_post() -> No
         assert "password=" not in str(failure.value)
         assert "test-scheduler-secret" not in str(failure.value)
         assert posts == ["https://test.example/internal/paper-cycle"]
+
+
+def test_http_scheduler_never_executes_overlapping_authorized_cycles(tmp_path) -> None:
+    """Real HTTP threads cannot concurrently advance the same paper account."""
+    entered = Event()
+    release = Event()
+    calls = 0
+
+    def occupied_cycle() -> PaperCycleResult:
+        nonlocal calls
+        calls += 1
+        entered.set()
+        assert release.wait(timeout=4.0)
+        return successful_result(processed=1)
+
+    port = _start_scheduler_dashboard(
+        tmp_path,
+        scheduler_token="server-secret",
+        paper_cycle_executor=occupied_cycle,
+    )
+    url = f"http://127.0.0.1:{port}/internal/paper-cycle"
+    headers = {"Authorization": "Bearer server-secret"}
+    first_response: list[tuple[int, str]] = []
+
+    first = Thread(
+        target=lambda: first_response.append(
+            _request(url, method="POST", headers=headers)
+        )
+    )
+    first.start()
+    try:
+        assert entered.wait(timeout=2.0)
+        # Concurrent authorized request is rejected, not fabricated as a
+        # successful cycle. Unauthorized probes retain their 401 response.
+        status, body = _request(url, method="POST", headers=headers)
+        assert status == 409
+        assert json.loads(body) == {"ok": False, "error": "cycle already running"}
+        unauthorized_status, _ = _request(url, method="POST")
+        assert unauthorized_status == 401
+        assert calls == 1
+    finally:
+        release.set()
+        first.join(timeout=3.0)
+
+    assert not first.is_alive()
+    assert len(first_response) == 1
+    assert first_response[0][0] == 200
+    assert json.loads(first_response[0][1])["ok"] is True
+    assert calls == 1
+
+    # Once finished, a genuine later cycle can start normally.
+    status, body = _request(url, method="POST", headers=headers)
+    assert status == 200
+    assert json.loads(body)["ok"] is True
+    assert calls == 2

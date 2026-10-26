@@ -178,6 +178,11 @@ def handle_scheduler_request(
     try:
         result = run_cycle()
     except PaperCycleServiceError as exc:
+        if exc.code == "cycle_in_progress":
+            return SchedulerHttpResponse(
+                status_code=409,
+                payload={"ok": False, "error": "cycle already running"},
+            )
         if exc.code == "storage_unavailable":
             return SchedulerHttpResponse(
                 status_code=503,
