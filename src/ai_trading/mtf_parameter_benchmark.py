@@ -950,9 +950,9 @@ def write_benchmark_report(
         "trades, an approximation despite nonoverlapping research positions.",
         "No result here is a new prospective holdout or an automatic trade gate.",
         "",
-        "| Market | Frozen config | Win / loss / flat | Net win rate (all) | "
-        "Decisive 95% Wilson interval | Break-even decisive win rate | "
-        "Mean win / mean loss | Net profit factor |",
+        ("| Market | Frozen config | Win / loss / flat | Net win rate (all) | "
+         "Decisive 95% Wilson interval | Break-even decisive win rate | "
+         "Mean win / mean loss | Net profit factor |"),
         "| --- | --- | ---: | ---: | --- | ---: | --- | ---: |",
     ])
     for result in results:
