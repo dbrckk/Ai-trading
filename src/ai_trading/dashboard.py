@@ -601,6 +601,9 @@ def render_dashboard(
                 if scheduler_overview["last_status_code"] is None
                 else str(scheduler_overview["last_status_code"])
             )
+            scheduler_last_outcome = str(
+                scheduler_overview["last_delivery_outcome"] or "-"
+            )
             scheduler_last_delivery = str(
                 scheduler_overview["last_delivery_timestamp_utc"] or "-"
             )
@@ -619,6 +622,7 @@ def render_dashboard(
 <div class="metric"><small>Recent deliveries</small><strong>{scheduler_delivery_count}</strong></div>
 <div class="metric"><small>Last source</small><strong>{html.escape(scheduler_last_source)}</strong></div>
 <div class="metric"><small>Last HTTP status</small><strong>{html.escape(scheduler_last_status)}</strong></div>
+<div class="metric"><small>Last delivery outcome</small><strong>{html.escape(scheduler_last_outcome)}</strong></div>
 <div class="metric"><small>Last delivery</small><strong>{html.escape(scheduler_last_delivery)}</strong></div>
 <div class="metric"><small>Last delivery age</small><strong>{html.escape(scheduler_last_age)}</strong></div>
 <div class="metric"><small>Freshness window</small><strong>{html.escape(scheduler_freshness_window)}</strong></div>
