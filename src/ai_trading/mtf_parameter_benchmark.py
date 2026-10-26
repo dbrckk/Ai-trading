@@ -1075,13 +1075,14 @@ def write_benchmark_report(
     for result in results:
         for row in result.markets:
             scenarios = economic_cost_stress_report(row)["scenarios"]
-            def _display(key: str) -> str:
+            formatted = []
+            for key in ("1x", "2x", "3x"):
                 value = scenarios[key]["compounded_net_return"]
-                return f"{value:+.2%}" if value is not None else "N/A"
+                formatted.append(f"{value:+.2%}" if value is not None else "N/A")
             twice = scenarios["2x"]["compounded_net_return"]
             lines.append(
                 f"| {row.symbol} | {row.config_name} | {row.economic_trades} | "
-                f"{_display('1x')} | {_display('2x')} | {_display('3x')} | "
+                f"{formatted[0]} | {formatted[1]} | {formatted[2]} | "
                 f"{'yes' if twice is not None and twice > 0.0 else 'no'} |"
             )
     lines.append("")
