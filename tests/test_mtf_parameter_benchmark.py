@@ -22,7 +22,10 @@ from ai_trading.mtf_parameter_benchmark import (
     run_parameter_benchmark,
     summarize_economic_trade_quality,
 )
-from ai_trading.mtf_shared_portfolio import (\n    shared_portfolio_cost_stress,\n    simulate_shared_mtf_portfolio,\n)
+from ai_trading.mtf_shared_portfolio import (
+    shared_portfolio_cost_stress,
+    simulate_shared_mtf_portfolio,
+)
 from ai_trading.research_history import frozen_preprospective_history
 
 
