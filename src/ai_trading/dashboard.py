@@ -6,8 +6,8 @@ import os
 from collections.abc import Callable
 from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from threading import Lock
 from pathlib import Path
+from threading import Lock
 from re import fullmatch
 from urllib.parse import urlsplit
 
