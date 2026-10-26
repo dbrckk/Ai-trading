@@ -123,6 +123,13 @@ def test_governor_returns_to_trade_after_recovery_health_normalizes() -> None:
         ("drawdown", -0.1),
         ("recovery_recent_failures", math.nan),
         ("recovery_fallback_depth", math.inf),
+        ("data_quality", "healthy"),
+        ("model_confidence", True),
+        ("stressed_cvar", None),
+        ("drawdown", "0.01"),
+        ("recovery_recent_failures", 1.5),
+        ("recovery_recent_failures", True),
+        ("recovery_fallback_depth", "0"),
     ],
 )
 def test_governor_halts_on_invalid_numeric_risk_evidence(
@@ -172,3 +179,22 @@ def test_governor_policy_rejects_reversed_risk_thresholds(overrides) -> None:
 def test_valid_governor_policy_keeps_default_trade_behavior() -> None:
     decision = evaluate_governor(base_signals(), GovernorPolicy())
     assert decision.verdict == "TRADE"
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("system_healthy", "yes"),
+        ("portfolio_risk_approved", 1),
+        ("stress_approved", None),
+        ("liquidity_stressed", "false"),
+        ("recovery_degraded", 0),
+        ("crisis_mode", None),
+    ],
+)
+def test_governor_halts_on_malformed_boolean_or_mode_telemetry(field, value) -> None:
+    decision = evaluate_governor(base_signals(**{field: value}))
+    assert decision.verdict == "HALT"
+    assert decision.halt is True
+    assert decision.allow_rebalance is False
+    assert decision.exposure_scale == 0.0
