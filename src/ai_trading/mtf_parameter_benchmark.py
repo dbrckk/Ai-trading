@@ -1059,6 +1059,31 @@ def write_benchmark_report(
                 f"{quality.winning_trades}/{quality.losing_trades}/{quality.flat_trades} | "
                 f"{hit_rate} | {interval} | {break_even} | {payoff} | {profit_factor} |"
             )
+    lines.extend([
+        "",
+        "## Execution-cost stress, same research fills",
+        "",
+        "Replays precisely the original non-overlapping, next-open/horizon-close",
+        "research trades with 1x, 2x and 3x assumed round-trip fees + slippage.",
+        "Does not retune signals, simulate new executions, account for broker",
+        "fills or establish prospective edge. Higher assumed costs may erase",
+        "apparently favorable hit rates or compounded returns.",
+        "",
+        "| Market | Frozen config | Trades | 1x net | 2x net | 3x net | 2x profitable? |",
+        "| --- | --- | ---: | ---: | ---: | ---: | --- |",
+    ])
+    for result in results:
+        for row in result.markets:
+            scenarios = economic_cost_stress_report(row)["scenarios"]
+            def _display(key: str) -> str:
+                value = scenarios[key]["compounded_net_return"]
+                return f"{value:+.2%}" if value is not None else "N/A"
+            twice = scenarios["2x"]["compounded_net_return"]
+            lines.append(
+                f"| {row.symbol} | {row.config_name} | {row.economic_trades} | "
+                f"{_display('1x')} | {_display('2x')} | {_display('3x')} | "
+                f"{'yes' if twice is not None and twice > 0.0 else 'no'} |"
+            )
     lines.append("")
     markdown_target.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
