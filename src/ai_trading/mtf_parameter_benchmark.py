@@ -197,6 +197,72 @@ class AggregateBenchmarkResult:
     markets_passing_directional_gate: int
 
 
+
+def economic_cost_stress_report(result: MarketBenchmarkResult) -> dict[str, object]:
+    """Replay the SAME retrospective trades under higher *assumed* costs.
+
+    Cost sensitivity is diagnostic only; it must not select a configuration,
+    refit a model or alter the frozen prospective registration. Holding fills
+    and sides fixed also means this cannot model price impact or a broker.
+    """
+    if len(result.paper_trades) != result.economic_trades:
+        raise ValueError("economic stress needs complete research trade evidence")
+    if (
+        not isfinite(result.transaction_cost_bps)
+        or not isfinite(result.slippage_bps)
+        or min(result.transaction_cost_bps, result.slippage_bps) < 0.0
+    ):
+        raise ValueError("economic stress costs must be finite and nonnegative")
+    for trade in result.paper_trades:
+        if (
+            trade.side not in (-1, 1)
+            or not isfinite(trade.entry_price)
+            or not isfinite(trade.exit_price)
+            or trade.entry_price <= 0.0
+            or trade.exit_price <= 0.0
+        ):
+            raise ValueError("economic stress requires valid signed research fills")
+
+    baseline_round_trip_bps = 2.0 * (
+        result.transaction_cost_bps + result.slippage_bps
+    )
+    scenarios: dict[str, object] = {}
+    for multiplier in (1, 2, 3):
+        round_trip_fraction = baseline_round_trip_bps * multiplier / 10_000.0
+        returns = tuple(
+            trade.side * (trade.exit_price / trade.entry_price - 1.0)
+            - round_trip_fraction
+            for trade in result.paper_trades
+        )
+        if any(not isfinite(value) for value in returns):
+            raise ValueError("economic cost stress resulted in a non-finite return")
+        compounded = prod(max(0.0, 1.0 + ret) for ret in returns) - 1.0
+        if not isfinite(compounded):
+            raise ValueError("economic cost stress compounded return must be finite")
+        diagnostics = summarize_economic_trade_quality(returns)
+        scenarios[f"{multiplier}x"] = {
+            "assumed_round_trip_cost_bps": baseline_round_trip_bps * multiplier,
+            "trades": len(returns),
+            "mean_net_return": fmean(returns) if returns else None,
+            "compounded_net_return": float(compounded) if returns else None,
+            "net_win_rate": diagnostics.win_rate_all_trades,
+            "net_profit_factor": diagnostics.net_profit_factor,
+        }
+
+    # Guard against reporting a cost sensitivity series from unrelated fills.
+    if result.paper_trades and abs(
+        float(scenarios["1x"]["compounded_net_return"])
+        - result.economic_compounded_net_return
+    ) > 1e-9:
+        raise ValueError("economic stress baseline does not reconcile")
+    return {
+        "scope": "retrospective_same_fills_hypothetical_no_promotion",
+        "live_execution_validated": False,
+        "stress_is_not_a_selection_gate": True,
+        "scenarios": scenarios,
+    }
+
+
 def default_benchmark_grid() -> tuple[MTFBenchmarkConfig, ...]:
     """Refined grid after the first coarse 10m/15m/30m benchmark.
 
@@ -849,7 +915,10 @@ def benchmark_payload(results: tuple[AggregateBenchmarkResult, ...]) -> dict[str
                 "markets_passing_directional_gate": (
                     result.markets_passing_directional_gate
                 ),
-                "markets": [asdict(row) for row in result.markets],
+                "markets": [
+                    {**asdict(row), "economic_cost_stress": economic_cost_stress_report(row)}
+                    for row in result.markets
+                ],
             }
             for rank, result in enumerate(results, start=1)
         ],
@@ -989,6 +1058,32 @@ def write_benchmark_report(
                 f"| {row.symbol} | {row.config_name} | "
                 f"{quality.winning_trades}/{quality.losing_trades}/{quality.flat_trades} | "
                 f"{hit_rate} | {interval} | {break_even} | {payoff} | {profit_factor} |"
+            )
+    lines.extend([
+        "",
+        "## Execution-cost stress, same research fills",
+        "",
+        "Replays precisely the original non-overlapping, next-open/horizon-close",
+        "research trades with 1x, 2x and 3x assumed round-trip fees + slippage.",
+        "Does not retune signals, simulate new executions, account for broker",
+        "fills or establish prospective edge. Higher assumed costs may erase",
+        "apparently favorable hit rates or compounded returns.",
+        "",
+        "| Market | Frozen config | Trades | 1x net | 2x net | 3x net | 2x profitable? |",
+        "| --- | --- | ---: | ---: | ---: | ---: | --- |",
+    ])
+    for result in results:
+        for row in result.markets:
+            scenarios = economic_cost_stress_report(row)["scenarios"]
+            formatted = []
+            for key in ("1x", "2x", "3x"):
+                value = scenarios[key]["compounded_net_return"]
+                formatted.append(f"{value:+.2%}" if value is not None else "N/A")
+            twice = scenarios["2x"]["compounded_net_return"]
+            lines.append(
+                f"| {row.symbol} | {row.config_name} | {row.economic_trades} | "
+                f"{formatted[0]} | {formatted[1]} | {formatted[2]} | "
+                f"{'yes' if twice is not None and twice > 0.0 else 'no'} |"
             )
     lines.append("")
     markdown_target.write_text("\n".join(lines) + "\n", encoding="utf-8")
